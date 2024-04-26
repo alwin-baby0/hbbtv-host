@@ -1,9 +1,37 @@
 import { Launch } from '@lightningjs/sdk';
 import App from './App.js';
+import Settings from '../settings.json';
 import { getDevice } from './utils/device.js';
-export default function () {
-  const device = getDevice();
 
+function getPerformanceFactor() {
+  return 1;
+}
+
+export default function (appSettings, platformSettings) {
+  if (Settings) {
+    Settings.appSettings.stage.h = window.innerHeight;
+    Settings.appSettings.stage.w = window.innerWidth;
+
+    // Determine precision based on resolution and performance
+    const resolution = { height: window.innerHeight, width: window.innerWidth };
+    const performanceFactor = getPerformanceFactor();
+
+    if (resolution.height === 720 && resolution.width === 1280) {
+      // 720p
+      Settings.appSettings.stage.precision = (2 / 3) * performanceFactor;
+    } else if (resolution.height === 2160 && resolution.width === 3840) {
+      // 4K
+      Settings.appSettings.stage.precision = 2 * performanceFactor;
+    } else if (resolution.height === 4320 && resolution.width === 7680) {
+      // 8K
+      Settings.appSettings.stage.precision = 4 * performanceFactor;
+    } else {
+      // FHD
+      Settings.appSettings.stage.precision = 1 * performanceFactor;
+    }
+  }
+
+  const device = getDevice();
   let keyCodes = {};
 
   if (device === 'tizen') {
@@ -29,6 +57,6 @@ export default function () {
   // Assign the key codes to the arguments
   arguments[0].keys = keyCodes;
 
-  window.App = Launch(App, ...arguments);
+  window.App = Launch(App, Settings.appSettings, Settings.platformSettings);
   return window.App;
 }
