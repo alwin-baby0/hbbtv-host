@@ -7,10 +7,11 @@ function getPerformanceFactor() {
   return 1;
 }
 
-export default function (appSettings, platformSettings) {
-  if (Settings) {
-    Settings.appSettings.stage.h = window.innerHeight;
-    Settings.appSettings.stage.w = window.innerWidth;
+export default function () {
+  const { appSettings, platformSettings } = Settings;
+  if (appSettings) {
+    appSettings.stage.h = window.innerHeight;
+    appSettings.stage.w = window.innerWidth;
 
     // Determine precision based on resolution and performance
     const resolution = { height: window.innerHeight, width: window.innerWidth };
@@ -18,19 +19,18 @@ export default function (appSettings, platformSettings) {
 
     if (resolution.height === 720 && resolution.width === 1280) {
       // 720p
-      Settings.appSettings.stage.precision = (2 / 3) * performanceFactor;
+      appSettings.stage.precision = (2 / 3) * performanceFactor;
     } else if (resolution.height === 2160 && resolution.width === 3840) {
       // 4K
-      Settings.appSettings.stage.precision = 2 * performanceFactor;
+      appSettings.stage.precision = 2 * performanceFactor;
     } else if (resolution.height === 4320 && resolution.width === 7680) {
       // 8K
-      Settings.appSettings.stage.precision = 4 * performanceFactor;
+      appSettings.stage.precision = 4 * performanceFactor;
     } else {
       // FHD
-      Settings.appSettings.stage.precision = 1 * performanceFactor;
+      appSettings.stage.precision = 1 * performanceFactor;
     }
   }
-
   const device = getDevice();
   let keyCodes = {};
 
@@ -57,6 +57,6 @@ export default function (appSettings, platformSettings) {
   // Assign the key codes to the arguments
   arguments[0].keys = keyCodes;
 
-  window.App = Launch(App, Settings.appSettings, Settings.platformSettings);
+  window.App = Launch(App, appSettings, platformSettings);
   return window.App;
 }
