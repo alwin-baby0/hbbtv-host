@@ -1,14 +1,16 @@
-import request, { axiosInstance2 } from '../index';
+import request, { V2 } from '../index';
 
 export const getPages = () =>
   request({
-    url: axiosInstance2.defaults.baseURL + `/getPageTabs`,
+    url: `/getPageTabs`,
+    apiVersion: V2,
     method: 'GET',
   });
 
 export const getSinglePage = (pageId) =>
   request({
-    url: axiosInstance2.defaults.baseURL + `/getPage`,
+    url: `/getPage`,
+    apiVersion: V2,
     method: 'GET',
     params: {
       id: pageId,

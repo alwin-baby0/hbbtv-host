@@ -1,8 +1,9 @@
-import request, { axiosInstance2 } from '../index';
+import request, { V2 } from '../index';
 
 export const getSearch = (keyword, category) => {
   return request({
-    url: axiosInstance2.defaults.baseURL + '/search',
+    url: '/search',
+    apiVersion: V2,
     method: 'GET',
     params: {
       keyword,

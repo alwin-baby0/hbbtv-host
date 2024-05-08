@@ -1,8 +1,9 @@
-import request, { axiosInstance, axiosInstance2 } from '../index';
+import request, { V1, V2 } from '../index';
 
 export const getChannels = () =>
   request({
-    url: axiosInstance.defaults.baseURL + `channels`,
+    url: `channels`,
+    apiVersion: V1,
     method: 'GET',
     params: {
       page: 1,
@@ -12,7 +13,8 @@ export const getChannels = () =>
 
 export const getSingleChannel = (channelId) =>
   request({
-    url: axiosInstance.defaults.baseURL + `/getChannel`,
+    url: `/getChannel`,
+    apiVersion: V1,
     method: 'GET',
     params: {
       channel_id: `${channelId}`,
@@ -21,7 +23,8 @@ export const getSingleChannel = (channelId) =>
 
 export const getLiveChannels = (channelId) =>
   request({
-    url: axiosInstance2.defaults.baseURL + `/getLiveChannel`,
+    url: `/getLiveChannel`,
+    apiVersion: V2,
     method: 'GET',
     params: {
       id: channelId,
@@ -30,7 +33,8 @@ export const getLiveChannels = (channelId) =>
 
 export const getEPG = (channelId) =>
   request({
-    url: axiosInstance2.defaults.baseURL + `/getEpg`,
+    url: `/getEpg`,
+    apiVersion: V2,
     method: 'GET',
     params: {
       type: 'livechannel',
@@ -39,7 +43,8 @@ export const getEPG = (channelId) =>
   });
 export const getEPGV2 = (channelId) =>
   request({
-    url: axiosInstance2.defaults.baseURL + `/epg_program`,
+    url: `/epg_program`,
+    apiVersion: V2,
     method: 'GET',
     params: {
       start_time: start_time,

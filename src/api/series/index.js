@@ -1,9 +1,9 @@
-import { Router, Storage } from '@lightningjs/sdk';
-import request, { axiosInstance, axiosInstance2 } from '../index';
+import request, { V1, V2 } from '../index';
 
 export const getSeries = (page, limit) => {
   return request({
-    url: axiosInstance.defaults.baseURL + '/series',
+    url: '/series',
+    apiVersion: V1,
     method: 'GET',
     params: {
       page,
@@ -14,7 +14,8 @@ export const getSeries = (page, limit) => {
 
 export const getSingleSeries = (seriesId) => {
   return request({
-    url: axiosInstance2.defaults.baseURL + '/getSerie',
+    url: '/getSerie',
+    apiVersion: V2,
     method: 'GET',
     params: {
       id: seriesId,
@@ -24,7 +25,8 @@ export const getSingleSeries = (seriesId) => {
 
 export const getSeason = (seriesId) => {
   return request({
-    url: axiosInstance2.defaults.baseURL + `/series/${seriesId}/seasons`,
+    url: `/series/${seriesId}/seasons`,
+    apiVersion: V2,
     method: 'GET',
     params: {
       id: seriesId,

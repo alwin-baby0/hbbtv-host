@@ -1,8 +1,9 @@
-import request, { axiosInstance2 } from '../index';
+import request, { V2 } from '../index';
 
 export const getSports = (page, limit) => {
   return request({
-    url: axiosInstance2.defaults.baseURL + '/sports',
+    url: '/sports',
+    apiVersion: V2,
     method: 'GET',
     params: {
       page,
@@ -13,7 +14,8 @@ export const getSports = (page, limit) => {
 
 export const getEvents = (page, type = 'events', limit) => {
   return request({
-    url: axiosInstance2.defaults.baseURL + '/getSportEvents',
+    url: '/getSportEvents',
+    apiVersion: V2,
     method: 'GET',
     params: {
       type,
@@ -25,7 +27,8 @@ export const getEvents = (page, type = 'events', limit) => {
 
 export const getSingleEvent = (sportId) => {
   return request({
-    url: axiosInstance2.defaults.baseURL + '/getSportEvent',
+    url: '/getSportEvent',
+    apiVersion: V2,
     method: 'GET',
     params: {
       id: sportId,

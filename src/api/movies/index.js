@@ -1,4 +1,4 @@
-import request, { axiosInstance, axiosInstance2 } from '../index';
+import request, { V1, V2 } from '../index';
 
 export const getGenres = (category, type) => {
   if (category === undefined) {
@@ -9,7 +9,8 @@ export const getGenres = (category, type) => {
   }
 
   return request({
-    url: axiosInstance2.defaults.baseURL + '/getGenres',
+    url: '/getGenres',
+    apiVersion: V2,
     method: 'GET',
     params: {
       category,
@@ -20,14 +21,16 @@ export const getGenres = (category, type) => {
 
 export const getMovies = () => {
   return request({
-    url: axiosInstance.defaults.baseURL + '/movies',
+    url: '/movies',
+    apiVersion: V2,
     method: 'GET',
   });
 };
 
 export const getSingleMovie = (movieId) => {
   return request({
-    url: axiosInstance2.defaults.baseURL + `/getMovie`,
+    url: `/getMovie`,
+    apiVersion: V2,
     method: 'GET',
     params: {
       id: movieId,
