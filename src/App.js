@@ -1,5 +1,7 @@
 import { Colors, Router } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
+import routes from './pages/routes';
+import Navbar from './components/widgets/Navbar/Navbar';
 
 export default class App extends Router.App {
   static _template() {
@@ -17,7 +19,11 @@ export default class App extends Router.App {
         zIndex: -900,
         // src: Utils.asset('images/background.jpg'),
       },
-      Widgets: {},
+      Widgets: {
+        Menu: {
+          type: Navbar,
+        },
+      },
     };
   }
 
@@ -27,7 +33,9 @@ export default class App extends Router.App {
 
   _init() {}
 
-  _setup() {}
+  /* _setup() {
+    Router.startRouter(routes, this);
+  } */
 
   $punchHole() {
     this.tag('Background').shader = {
