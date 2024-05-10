@@ -1,4 +1,5 @@
 {
   "background": "#17191A",
-  "focus": "#A61619"
+  "focus": "#A61619",
+  "unfocus": "#FFFFFF"
 }
