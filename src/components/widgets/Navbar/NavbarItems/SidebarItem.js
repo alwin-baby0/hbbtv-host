@@ -6,6 +6,7 @@ export default class SidebarItem extends lng.Component {
   _props = {
     selected: false,
   };
+
   static _template() {
     return {
       flex: { direction: 'column', alignItems: 'center' },
@@ -53,8 +54,8 @@ export default class SidebarItem extends lng.Component {
         color: Colors(colors.focus).get(),
       });
     } else {
-      this._Title.patch({ color: Colors('#fff').get() });
-      this._Line.patch({ color: Colors('#fff').get() });
+      this._Title.patch({ color: Colors(colors.unfocus).get() });
+      this._Line.patch({ color: Colors(colors.unfocus).get() });
       this._Icon.patch({
         color: Colors(colors.unfocus).get(),
       });
@@ -115,6 +116,6 @@ export default class SidebarItem extends lng.Component {
   }
 
   _handleEnter() {
-    this.fireAncestors('$changePage', this._props);
+    this.fireAncestors('$changePage', this._props.index);
   }
 }

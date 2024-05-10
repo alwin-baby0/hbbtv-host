@@ -1,8 +1,9 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { Row } from '@lightningjs/ui-components';
 import { Colors, Router, Utils } from '@lightningjs/sdk';
-import SidebarItem from './SidebarItem';
+import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import colors from '../../../../../reskin/colors.json';
+import SidebarItem from './SidebarItem';
 
 const menuItems = [
   { id: 0, label: 'Home', route: 'home', icon: '' },
@@ -14,11 +15,12 @@ const menuItems = [
   { id: 6, label: 'settings', route: 'settings', icon: 'images/navbar/settings.svg' },
   { id: 7, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
 ];
-let sidebarLength = menuItems.length;
-let index = 0;
 
 export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
+  _sidebarLength = menuItems.length;
+  _index = 0;
+
   static _template() {
     return {
       flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
@@ -51,62 +53,31 @@ export default class SidebarItems extends Lightning.Component {
     };
   }
 
-  _init() {
-    this._selectedLink = this._Column;
+  get _Column() {
+    return this.tag('Column');
+  }
+
+  _firstActive() {
     this._Column.items[0].patch({
       props: { selected: true },
     });
   }
 
-  _setManualFocus() {
-    switch (Router.getActiveHash()) {
-      case 'home':
-        index = 0;
-        return index;
-      case 'movies':
-        index = 1;
-        return index;
-      case 'series':
-        index = 2;
-        return index;
-      case 'sports':
-        index = 3;
-        return index;
-      case 'live':
-        index = 4;
-        return index;
-      case 'search':
-        index = 5;
-        return index;
-      case 'settings':
-        index = 6;
-        return index;
-      case 'help':
-        index = 7;
-        return index;
-      default:
-        index = 8;
-        return index;
-    }
+  _focus() {
+    this._index = getRouteNavbarIndex(Router.getActiveHash());
   }
 
   _incrementFocus() {
-    return index < sidebarLength - 1 ? ++index : index;
+    return this._index < this._sidebarLength - 1 ? ++this._index : this._index;
   }
 
   _decrementFocus() {
-    return index > 0 ? --index : index;
+    return this._index > 0 ? --this._index : this._index;
   }
 
-  _focus() {
-    this._selectedLink = this._Column.items[this._setManualFocus()];
-  }
+  $changePage(index) {
+    const route = menuItems[index].route;
 
-  $changePage(selectedItem) {
-    const { route } = selectedItem.data;
-    const { index } = selectedItem;
-
-    // Check if the index is different from the current selected item
     if (this._selectedMenuItem !== index) {
       this._Column.items[index].patch({
         props: { selected: true },
@@ -116,19 +87,19 @@ export default class SidebarItems extends Lightning.Component {
       });
       this._selectedMenuItem = index;
     }
+
     Router.navigate(route);
   }
 
   $decrementSidebar() {
-    this._selectedLink = this.tag('Column').items[this._decrementFocus()];
+    this._decrementFocus();
   }
+
   $incrementSidebar() {
-    this._selectedLink = this.tag('Column').items[this._incrementFocus()];
+    this._incrementFocus();
   }
-  get _Column() {
-    return this.tag('Column');
-  }
+
   _getFocused() {
-    return this._selectedLink;
+    return this.tag('Column').items[this._index];
   }
 }
