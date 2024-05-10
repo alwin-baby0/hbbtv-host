@@ -1,4 +1,4 @@
-import { Colors, Router } from '@lightningjs/sdk';
+import { Colors, Router, Utils } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
 import routes from './pages/routes';
 import Navbar from './components/widgets/Navbar/Navbar';
@@ -33,9 +33,9 @@ export default class App extends Router.App {
 
   _init() {}
 
-  /* _setup() {
+  _setup() {
     Router.startRouter(routes, this);
-  } */
+  }
 
   $punchHole() {
     this.tag('Background').shader = {
@@ -52,6 +52,16 @@ export default class App extends Router.App {
       w: 0,
       h: 0,
     };
+  }
+
+  static getFonts() {
+    return [
+      {
+        family: 'Inter',
+        url: Utils.asset('fonts/Inter.ttf'),
+        descriptors: {},
+      },
+    ];
   }
 
   _handleAppClose() {}
