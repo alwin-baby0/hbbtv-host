@@ -2,14 +2,16 @@ import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 
 export default class Button extends Lightning.Component {
-  _width = 0;
-  _height = 0;
-  _buttonLabel = '';
-  _buttonIcon = '';
-  _iconWidth = 0;
-  _iconHeight = 0;
-  _radius = 0;
-  _strokeWidth = 0;
+  _props = {
+    width: 285,
+    height: 78,
+    buttonLabel: '',
+    buttonIcon: '',
+    iconWidth: 25,
+    iconHeight: 25,
+    radius: 0,
+    strokeWidth: 4,
+  };
 
   static _template() {
     return {
@@ -35,24 +37,17 @@ export default class Button extends Lightning.Component {
   }
 
   set props(props) {
-    const { width, height, buttonLabel, buttonIcon, iconWidth, iconHeight, radius, strokeWidth } =
-      props;
+    this._props = { ...this._props, ...props };
 
-    this._width = width;
-    this._height = height;
-    this._buttonLabel = buttonLabel;
-    this._buttonIcon = buttonIcon;
-    this._iconWidth = iconWidth;
-    this._iconHeight = iconHeight;
-    this._radius = radius;
-    this._strokeWidth = strokeWidth;
+    const { width, height, buttonLabel, buttonIcon, iconWidth, iconHeight, radius, strokeWidth } =
+      this._props;
 
     this._Button.patch({
       texture: Lightning.Tools.getRoundRect(
-        this._width,
-        this._height,
-        this._radius,
-        this._strokeWidth,
+        width,
+        height,
+        radius,
+        strokeWidth,
         Colors(colors.focus).get(),
         true,
         Colors(colors.focus).get()
@@ -60,12 +55,12 @@ export default class Button extends Lightning.Component {
     });
 
     this._Icon.patch({
-      texture: lng.Tools.getSvgTexture(this._buttonIcon, this._iconWidth, this._iconHeight),
+      texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
     });
 
     this._Label.patch({
       text: {
-        text: this._buttonLabel,
+        text: buttonLabel,
       },
     });
   }
@@ -83,12 +78,13 @@ export default class Button extends Lightning.Component {
   }
 
   _focus() {
+    const { width, height, radius, strokeWidth } = this._props;
     this._Button.patch({
       texture: Lightning.Tools.getRoundRect(
-        this._width,
-        this._height,
-        this._radius,
-        this._strokeWidth,
+        width,
+        height,
+        radius,
+        strokeWidth,
         Colors(colors.focus).get(),
         true,
         Colors(colors.focus).get()
@@ -97,12 +93,13 @@ export default class Button extends Lightning.Component {
   }
 
   _unfocus() {
+    const { width, height, radius, strokeWidth } = this._props;
     this._Button.patch({
       texture: Lightning.Tools.getRoundRect(
-        this._width,
-        this._height,
-        this._radius,
-        this._strokeWidth,
+        width,
+        height,
+        radius,
+        strokeWidth,
         Colors(colors.unfocus).get(),
         false
       ),

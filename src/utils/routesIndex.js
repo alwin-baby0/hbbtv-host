@@ -10,5 +10,6 @@ const ROUTES_INDEX = {
 };
 
 export function getRouteNavbarIndex(route) {
-  return ROUTES_INDEX[route];
+  if (!route) return 0;
+  return ROUTES_INDEX[route.split('/')[0]] ?? 0;
 }
