@@ -1,6 +1,7 @@
 import { Router } from '@lightningjs/sdk';
 import Splash from '../components/SplashScreen/Splash';
 import Home from './Home/Home';
+import home from './Home/provider/home';
 
 export default {
   root: 'splash',
@@ -13,6 +14,7 @@ export default {
       path: 'home',
       component: Home,
       widgets: ['Menu'],
+      on: home,
     },
     /* {
       path: '*',
