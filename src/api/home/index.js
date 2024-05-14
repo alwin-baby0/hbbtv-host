@@ -1,4 +1,5 @@
 import request, { V2 } from '../index';
+import HomeRailItem from './HomeRailItem';
 export const getHomePage = (row, page, limit) =>
   request({
     url: '/start',
@@ -9,4 +10,13 @@ export const getHomePage = (row, page, limit) =>
       page,
       limit,
     },
-  });
+  }).then(parseHomePageData);
+
+
+function parseHomePageData(result) {
+  const { data } = result;
+  return {
+    sectionTitle: data.title,
+    items: data.entry?.map(item => new HomeRailItem(item)),
+  }
+}
