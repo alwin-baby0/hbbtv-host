@@ -12,11 +12,10 @@ export const getHomePage = (row, page, limit) =>
     },
   }).then(parseHomePageData);
 
-
 function parseHomePageData(result) {
   const { data } = result;
   return {
     sectionTitle: data.title,
-    items: data.entry?.map(item => new HomeRailItem(item)),
-  }
+    items: data.entry?.map((item) => new HomeRailItem(item)),
+  };
 }

@@ -2,13 +2,13 @@ class HomeRailItem {
   constructor(data) {
     const { title, summary, type, content, extensions, media_group } = data;
 
-    this.titl = title;
+    this.title = title;
     this.summary = summary;
     this.type = type?.value;
     this.content = {
       type: content?.type,
       src: content?.src,
-    }
+    };
 
     this.duration = extensions?.duration;
     this.description = extensions?.description;
@@ -20,7 +20,7 @@ class HomeRailItem {
     this.landscapePosters = [];
     this.portraitPosters = [];
 
-    media_group.media_item.forEach(item => {
+    media_group[0]?.media_item?.forEach((item) => {
       switch (true) {
         case item.key.includes('thumbnail'): {
           this.thumbnails.push(item);
@@ -34,22 +34,24 @@ class HomeRailItem {
           this.portraitPosters.push(item);
           break;
         }
+        default:
+          break;
       }
-    })
+    });
   }
 
   getThumbnailImage(size) {
-    const thumbnail = this.thumbnails.find(thumbnail => thumbnail.key.includes(size))
+    const thumbnail = this.thumbnails.find((thumbnail) => thumbnail.key.includes(size));
     return thumbnail ?? this.thumbnails[0];
   }
 
   getLandscapePoster(size) {
-    const poster = this.landscapePosters.find(poster => poster.key.includes(size))
+    const poster = this.landscapePosters.find((poster) => poster.key.includes(size));
     return poster ?? this.landscapePosters[0];
   }
 
-  getLandscapePortrait(size) {
-    const poster = this.portraitPosters.find(poster => poster.key.includes(size))
+  getPortraitPoster(size) {
+    const poster = this.portraitPosters.find((poster) => poster.key.includes(size));
     return poster ?? this.portraitPosters[0];
   }
 }

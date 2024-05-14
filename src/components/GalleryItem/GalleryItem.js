@@ -1,6 +1,7 @@
-import { Colors, Lightning, Utils } from '@lightningjs/sdk';
+import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import Button from '../Button/Button';
 import colors from '../../../reskin/colors.json';
+import HomeRailItem from '../../api/home/HomeRailItem';
 
 export default class GalleryItem extends Lightning.Component {
   _props = {};
@@ -61,14 +62,13 @@ export default class GalleryItem extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-
     const { galleryItem } = this._props;
 
     this._BackgroundImage.patch({
       w: 1220,
       h: 800,
       x: 700,
-      src: galleryItem.media_group[0].media_item[11].src,
+      src: galleryItem.getLandscapePoster(HomeRailItem.extraLarge).src,
     });
 
     this._Title.patch({
@@ -79,7 +79,15 @@ export default class GalleryItem extends Lightning.Component {
 
     this._Description.patch({
       text: {
-        text: galleryItem.extensions.description,
+        text: galleryItem.description,
+      },
+    });
+
+    this._HeroButton.patch({
+      props: {
+        callback: () => {
+          // console.log('Navigate ', galleryItem.content.src);
+        },
       },
     });
   }
@@ -98,13 +106,5 @@ export default class GalleryItem extends Lightning.Component {
 
   get _BackgroundImage() {
     return this.tag('BackgroundImage');
-  }
-
-  _init() {}
-
-  _getFocused() {}
-
-  static _states() {
-    return [];
   }
 }

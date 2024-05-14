@@ -11,6 +11,7 @@ export default class Button extends Lightning.Component {
     iconHeight: 25,
     radius: 0,
     strokeWidth: 4,
+    callback: () => null,
   };
 
   static _template() {
@@ -104,5 +105,10 @@ export default class Button extends Lightning.Component {
         false
       ),
     });
+  }
+
+  _handleEnter() {
+    const { callback } = this._props;
+    callback();
   }
 }

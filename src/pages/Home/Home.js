@@ -26,8 +26,8 @@ export default class Home extends Lightning.Component {
     };
   }
 
-  set homePageData(val) {
-    return (this._homePageData = val);
+  set props(props) {
+    this._props = { ...this._props, ...props };
   }
 
   get _Gallery() {
@@ -43,57 +43,35 @@ export default class Home extends Lightning.Component {
   }
 
   _active() {
-    this._getHomePage();
-  }
-
-  _nextVideo() {
-    this._Gallery.patch({
-      props: {
-        galleryItem: this._sliderTrailers[this._sliderIndex],
-      },
-    });
-
-    Registry.clearTimeout(this._timeoutId);
-
-    this._timeoutId = Registry.setTimeout(() => {
-      this._sliderIndex =
-        this._sliderIndex < this._sliderTrailers.length - 1 ? this._sliderIndex + 1 : 0;
-      this._nextVideo();
-    }, 10000);
-  }
-
-  _getHomePage() {
-    var videosArray = this._homePageData;
-    for (var i = 0; i < videosArray.length; i++) {
-      if (videosArray[i].title != 'Slider') {
-        this._rowVideos.push(videosArray[i]);
-      } else {
-        var sliderArray = videosArray[i].entry;
-        sliderArray.forEach((item) => {
-          this._sliderTrailers.push(item);
-        });
-      }
-    }
-
     this._nextVideo();
   }
 
+  _nextVideo() {
+    const { sliderData } = this._props;
+
+    this._Gallery.patch({
+      props: {
+        galleryItem: sliderData.items[this._sliderIndex],
+      },
+    });
+  }
+
   _handleLeft() {
-    if (this._homePageData[0].entry.length > 1) {
-      console.log('videosArray.length', this._homePageData[0].entry.length);
-      Registry.clearTimeout(this._timeoutId);
+    const { sliderData } = this._props;
+
+    if (sliderData.items.length > 1) {
       this._sliderIndex =
-        this._sliderIndex > 0 ? this._sliderIndex - 1 : this._sliderTrailers.length - 1;
+        this._sliderIndex > 0 ? this._sliderIndex - 1 : sliderData.items.length - 1;
       this._nextVideo();
     }
   }
 
   _handleRight() {
-    if (this._homePageData[0].entry.length > 1) {
-      console.log('videosArray.length', this._homePageData[0].entry.length);
-      Registry.clearTimeout(this._timeoutId);
+    const { sliderData } = this._props;
+
+    if (sliderData.items.length > 1) {
       this._sliderIndex =
-        this._sliderIndex < this._sliderTrailers.length - 1 ? this._sliderIndex + 1 : 0;
+        this._sliderIndex < sliderData.items.length - 1 ? this._sliderIndex + 1 : 0;
       this._nextVideo();
     }
   }
