@@ -21,6 +21,7 @@ export default class App extends Router.App {
       },
       Widgets: {
         Menu: {
+          zIndex: 1,
           type: Navbar,
         },
       },
