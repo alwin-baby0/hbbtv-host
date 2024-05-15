@@ -48,7 +48,7 @@ export default class GalleryItem extends Lightning.Component {
             maxLines: 2,
           },
         },
-        HeroButton: {
+        GalleryButton: {
           type: Button,
           y: 30,
           props: {
@@ -83,10 +83,10 @@ export default class GalleryItem extends Lightning.Component {
       },
     });
 
-    this._HeroButton.patch({
+    this._GalleryButton.patch({
       props: {
         callback: () => {
-          // console.log('Navigate ', galleryItem.content.src);
+          console.log('Navigate ', galleryItem.content.src);
         },
       },
     });
@@ -100,8 +100,8 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('Description');
   }
 
-  get _HeroButton() {
-    return this.tag('HeroButton');
+  get _GalleryButton() {
+    return this.tag('GalleryButton');
   }
 
   get _BackgroundImage() {

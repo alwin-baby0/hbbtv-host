@@ -1,10 +1,7 @@
-import { Lightning, Registry, Router, Utils } from '@lightningjs/sdk';
-import GalleryItem from '../../components/GalleryItem/GalleryItem';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import Gallery from '../../components/Gallery/Gallery';
 
 export default class Home extends Lightning.Component {
-  _sliderIndex = 0;
-  _sliderTrailers = [];
-  _rowVideos = [];
   static _template() {
     return {
       Content: {
@@ -13,74 +10,30 @@ export default class Home extends Lightning.Component {
           h: 2080,
           src: Utils.asset('images/background.jpg'),
         },
-        HeroSection: {
+        GallerySection: {
           x: 0,
           y: 0,
           w: 1920,
           h: 800,
-          Gallery: {
-            type: GalleryItem,
-          },
+          type: Gallery,
         },
       },
     };
   }
 
-  set props(props) {
-    this._props = { ...this._props, ...props };
-  }
-
-  get _Gallery() {
-    return this.tag('Gallery');
+  get _GallerySection() {
+    return this.tag('GallerySection');
   }
 
   _enable() {
-    this._setState('WachNowButton');
-  }
-
-  _init() {
-    this._setState('TrailorButton');
-  }
-
-  _active() {
-    this._nextVideo();
-  }
-
-  _nextVideo() {
-    const { sliderData } = this._props;
-
-    this._Gallery.patch({
-      props: {
-        galleryItem: sliderData.items[this._sliderIndex],
-      },
-    });
-  }
-
-  _handleLeft() {
-    const { sliderData } = this._props;
-
-    if (sliderData.items.length > 1) {
-      this._sliderIndex =
-        this._sliderIndex > 0 ? this._sliderIndex - 1 : sliderData.items.length - 1;
-      this._nextVideo();
-    }
-  }
-
-  _handleRight() {
-    const { sliderData } = this._props;
-
-    if (sliderData.items.length > 1) {
-      this._sliderIndex =
-        this._sliderIndex < sliderData.items.length - 1 ? this._sliderIndex + 1 : 0;
-      this._nextVideo();
-    }
+    this._setState('GallerySection');
   }
 
   static _states() {
     return [
-      class WachNowButton extends this {
+      class GallerySection extends this {
         _getFocused() {
-          return this.tag('Gallery.HeroButton');
+          return this._GallerySection;
         }
 
         _handleUp() {
