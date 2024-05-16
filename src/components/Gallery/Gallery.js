@@ -62,17 +62,7 @@ export default class Gallery extends Lightning.Component {
 
   _nextVideo() {
     const { sliderData } = this._props;
-    this._updateBulletColors();
 
-    this._Gallery.patch({
-      props: {
-        galleryItems: sliderData.items,
-        galleryItem: sliderData.items[this._sliderIndex],
-      },
-    });
-  }
-
-  _updateBulletColors() {
     this._Bullet.items.forEach((item, index) => {
       const color =
         index === this._sliderIndex
@@ -81,6 +71,13 @@ export default class Gallery extends Lightning.Component {
       item._Icon.patch({
         color: color,
       });
+    });
+
+    this._Gallery.patch({
+      props: {
+        galleryItems: sliderData.items,
+        galleryItem: sliderData.items[this._sliderIndex],
+      },
     });
   }
 
