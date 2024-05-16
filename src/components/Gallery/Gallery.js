@@ -3,8 +3,10 @@ import GalleryItem from '../GalleryItem/GalleryItem';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
-  _sliderTrailers = [];
-  _rowVideos = [];
+  _props = {
+    sliderData: [],
+  };
+
   static _template() {
     return {
       x: 0,
@@ -18,15 +20,12 @@ export default class Gallery extends Lightning.Component {
   }
 
   set props(props) {
+    this._sliderIndex = 0;
     this._props = { ...this._props, ...props };
   }
 
   get _Gallery() {
     return this.tag('Gallery');
-  }
-
-  get _GalleryButton() {
-    return this.tag('Gallery.GalleryButton');
   }
 
   _active() {
@@ -64,6 +63,6 @@ export default class Gallery extends Lightning.Component {
   }
 
   _getFocused() {
-    return this._GalleryButton;
+    return this._Gallery;
   }
 }

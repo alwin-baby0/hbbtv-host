@@ -86,7 +86,7 @@ export default class GalleryItem extends Lightning.Component {
     this._GalleryButton.patch({
       props: {
         callback: () => {
-          console.log('Navigate ', galleryItem.content.src);
+          // console.log('Navigate ', galleryItem.content.src);
         },
       },
     });
@@ -106,5 +106,9 @@ export default class GalleryItem extends Lightning.Component {
 
   get _BackgroundImage() {
     return this.tag('BackgroundImage');
+  }
+
+  _getFocused() {
+    return this._GalleryButton;
   }
 }
