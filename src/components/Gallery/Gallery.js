@@ -16,7 +16,7 @@ export default class Gallery extends Lightning.Component {
       y: 0,
       w: 1920,
       h: 800,
-      Gallery: {
+      HeroSection: {
         type: GalleryItem,
       },
       Bullet: {
@@ -48,8 +48,8 @@ export default class Gallery extends Lightning.Component {
     });
   }
 
-  get _Gallery() {
-    return this.tag('Gallery');
+  get _HeroSection() {
+    return this.tag('HeroSection');
   }
 
   get _Bullet() {
@@ -73,9 +73,8 @@ export default class Gallery extends Lightning.Component {
       });
     });
 
-    this._Gallery.patch({
+    this._HeroSection.patch({
       props: {
-        galleryItems: sliderData.items,
         galleryItem: sliderData.items[this._sliderIndex],
       },
     });
@@ -102,6 +101,6 @@ export default class Gallery extends Lightning.Component {
   }
 
   _getFocused() {
-    return this._Gallery;
+    return this._HeroSection;
   }
 }

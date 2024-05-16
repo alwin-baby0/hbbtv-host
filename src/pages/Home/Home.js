@@ -2,6 +2,10 @@ import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import Gallery from '../../components/Gallery/Gallery';
 
 export default class Home extends Lightning.Component {
+  _props = {
+    sliderData: null,
+    railData: [],
+  };
   static _template() {
     return {
       Content: {
@@ -19,6 +23,16 @@ export default class Home extends Lightning.Component {
         },
       },
     };
+  }
+
+  set props(props) {
+    this._props = { ...this._props, ...props };
+    const { sliderData, railData } = this._props;
+    this._GallerySection.patch({
+      props: {
+        sliderData,
+      },
+    });
   }
 
   get _GallerySection() {

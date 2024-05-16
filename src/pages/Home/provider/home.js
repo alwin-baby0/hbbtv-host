@@ -10,7 +10,7 @@ export default async function (page) {
 
     const allResults = resultsData.filter((item) => item.items);
 
-    page._GallerySection.props = {
+    page.props = {
       sliderData: allResults[0],
       railData: allResults.slice(1, allResults.length - 1),
     };
