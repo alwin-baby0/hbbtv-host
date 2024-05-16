@@ -1,5 +1,8 @@
-import { Lightning } from '@lightningjs/sdk';
+import { Lightning, Colors } from '@lightningjs/sdk';
+import { Row } from '@lightningjs/ui-components';
+import colors from '../../../reskin/colors.json';
 import GalleryItem from '../GalleryItem/GalleryItem';
+import Bullet from '../Bullet/Bullet';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
@@ -16,16 +19,41 @@ export default class Gallery extends Lightning.Component {
       Gallery: {
         type: GalleryItem,
       },
+      Bullet: {
+        type: Row,
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+        y: 820,
+        w: 1920,
+        h: 20,
+      },
     };
   }
 
   set props(props) {
     this._sliderIndex = 0;
     this._props = { ...this._props, ...props };
+    const { sliderData } = this._props;
+
+    const bulletItem = sliderData.items.map((_item, index) => {
+      return {
+        type: Bullet,
+        w: 20,
+        h: 20,
+        index,
+      };
+    });
+
+    this._Bullet.patch({
+      items: bulletItem,
+    });
   }
 
   get _Gallery() {
     return this.tag('Gallery');
+  }
+
+  get _Bullet() {
+    return this.tag('Bullet');
   }
 
   _active() {
@@ -34,11 +62,25 @@ export default class Gallery extends Lightning.Component {
 
   _nextVideo() {
     const { sliderData } = this._props;
+    this._updateBulletColors();
 
     this._Gallery.patch({
       props: {
+        galleryItems: sliderData.items,
         galleryItem: sliderData.items[this._sliderIndex],
       },
+    });
+  }
+
+  _updateBulletColors() {
+    this._Bullet.items.forEach((item, index) => {
+      const color =
+        index === this._sliderIndex
+          ? Colors(colors.focusedBullet).get()
+          : Colors(colors.unfocusedBullet).get();
+      item._Icon.patch({
+        color: color,
+      });
     });
   }
 
