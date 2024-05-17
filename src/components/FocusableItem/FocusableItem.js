@@ -4,7 +4,8 @@ import colors from '../../../reskin/colors.json';
 
 export default class FocusableItem extends Lightning.Component {
   _props = {
-    imageSrc: '',
+    width: 0,
+    height: 0,
     radius: 6,
     strokeWidth: 4,
   };
@@ -19,15 +20,24 @@ export default class FocusableItem extends Lightning.Component {
     };
   }
 
-  _focus() {
-    const { radius, strokeWidth } = this._props;
+  set props(props) {
+    this._props = { ...this._props, ...props };
+
+    const { width, height } = this._props;
 
     this.tag('FocusBorder').patch({
-      w: this.w,
-      h: this.h,
+      w: width,
+      h: height,
+    });
+  }
+
+  _focus() {
+    const { radius, strokeWidth, width, height } = this._props;
+
+    this.tag('FocusBorder').patch({
       texture: lng.Tools.getRoundRect(
-        this.w + 2,
-        this.h + 2,
+        width + 2,
+        height + 2,
         radius,
         strokeWidth,
         Colors(colors.focus).get(),

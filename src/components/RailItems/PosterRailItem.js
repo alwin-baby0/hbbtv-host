@@ -1,6 +1,7 @@
-import FocusableItem from '../../components/FocusableItem/FocusableItem';
+import FocusableItem from '../FocusableItem/FocusableItem';
+import { CARD_SIZES } from './constants';
 
-export default class RailItem extends FocusableItem {
+export default class PosterRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
     radius: 6,
@@ -38,28 +39,19 @@ export default class RailItem extends FocusableItem {
     this._props = { ...this._props, ...props };
     const { imageSrc, radius } = this._props;
 
+    super.props({
+      ...CARD_SIZES.POSTER,
+    });
+
     this.tag('MovieImg').patch({
-      w: 265,
-      h: 375,
+      w: CARD_SIZES.POSTER.width,
+      h: CARD_SIZES.POSTER.height,
       src: imageSrc,
       shader: {
         type: lng.shaders.RoundedRectangle,
         radius: radius,
       },
     });
-  }
-
-  set w(value) {
-    super.w = value;
-  }
-  get w() {
-    return super.w;
-  }
-  set h(value) {
-    super.h = value - 60;
-  }
-  get h() {
-    return super.h;
   }
 
   _focus() {
