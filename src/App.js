@@ -1,3 +1,4 @@
+// App.js
 import { Colors, Router, Utils } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
 import routes from './pages/routes';
@@ -21,7 +22,7 @@ export default class App extends Router.App {
       },
       Widgets: {
         Menu: {
-          zIndex: 1,
+          zIndex: 2,
           type: Navbar,
         },
       },
@@ -32,7 +33,9 @@ export default class App extends Router.App {
     return this.tag('Widgets');
   }
 
-  _init() {}
+  $hideNavbar(isVisible) {
+    isVisible ? (this.tag('Menu').visible = true) : (this.tag('Menu').visible = false);
+  }
 
   _setup() {
     Router.startRouter(routes, this);

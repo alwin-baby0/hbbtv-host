@@ -1,3 +1,4 @@
+// PosterRailItem
 import FocusableItem from '../FocusableItem/FocusableItem';
 import { CARD_SIZES } from './constants';
 
@@ -37,10 +38,16 @@ export default class PosterRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius } = this._props;
+    const { imageSrc, radius, itemTitle } = this._props;
 
-    super.props({
+    this.setProps({
       ...CARD_SIZES.POSTER,
+    });
+
+    this.tag('Title').patch({
+      text: {
+        text: itemTitle,
+      },
     });
 
     this.tag('MovieImg').patch({

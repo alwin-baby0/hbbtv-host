@@ -1,3 +1,4 @@
+// FocusableItem.js
 import { Colors } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import colors from '../../../reskin/colors.json';
@@ -20,15 +21,8 @@ export default class FocusableItem extends Lightning.Component {
     };
   }
 
-  set props(props) {
+  setProps(props) {
     this._props = { ...this._props, ...props };
-
-    const { width, height } = this._props;
-
-    this.tag('FocusBorder').patch({
-      w: width,
-      h: height,
-    });
   }
 
   _focus() {
@@ -36,8 +30,8 @@ export default class FocusableItem extends Lightning.Component {
 
     this.tag('FocusBorder').patch({
       texture: lng.Tools.getRoundRect(
-        width + 2,
-        height + 2,
+        width,
+        height,
         radius,
         strokeWidth,
         Colors(colors.focus).get(),

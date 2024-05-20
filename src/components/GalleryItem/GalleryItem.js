@@ -1,3 +1,4 @@
+// GalleryItem.js
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import Button from '../Button/Button';
 import colors from '../../../reskin/colors.json';
@@ -63,7 +64,6 @@ export default class GalleryItem extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     const { galleryItem } = this._props;
-
     this._BackgroundImage.patch({
       w: 1220,
       h: 800,

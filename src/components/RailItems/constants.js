@@ -1,14 +1,15 @@
+// constants.js
 export const CARD_SIZES = {
-  'POSTER': {
+  POSTER: {
     width: 265,
     height: 375,
   },
-  'THUMBNAIL': {
+  THUMBNAIL: {
     width: 0,
     height: 0,
   },
-  'SPORTS': {
+  SPORTS: {
     width: 0,
     height: 0,
-  }
-}
+  },
+};
