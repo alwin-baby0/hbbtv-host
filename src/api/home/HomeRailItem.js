@@ -40,6 +40,24 @@ class HomeRailItem {
     });
   }
 
+  preloadImages(size) {
+    const imageUrls = [
+      this.getThumbnailImage(size).src,
+      this.getLandscapePoster(size).src,
+      this.getPortraitPoster(size).src,
+    ];
+
+    imageUrls.forEach((url) => {
+      try {
+        const urlObj = new URL(url);
+        const image = new Image();
+        image.src = urlObj.toString();
+      } catch {
+        // skip
+      }
+    });
+  }
+
   getThumbnailImage(size) {
     const thumbnail = this.thumbnails.find((thumbnail) => thumbnail.key.includes(size));
     return thumbnail ?? this.thumbnails[0];

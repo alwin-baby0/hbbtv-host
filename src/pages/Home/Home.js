@@ -36,9 +36,8 @@ export default class Home extends Lightning.Component {
         Column: {
           y: 30,
           type: Column,
+
           // plinko: true,
-          lazyUpCount: 2,
-          lazyUpCountBuffer: 1,
         },
       },
     };
@@ -74,6 +73,8 @@ export default class Home extends Lightning.Component {
         return row.items
           ? {
               type: VODRow,
+              lazyUpCount: 5,
+              lazyUpCountBuffer: 2,
               title: row.sectionTitle ?? '',
               itemSpacing: 52,
               h: 600,
@@ -82,7 +83,10 @@ export default class Home extends Lightning.Component {
           : null;
       })
       .filter(Boolean);
-
+    this.tag('Column').patch({
+      lazyUpCount: 1,
+      lazyUpCountBuffer: 0,
+    });
     this.tag('Column').items = items;
   }
 
