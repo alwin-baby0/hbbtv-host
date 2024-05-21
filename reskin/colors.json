@@ -1,5 +1,8 @@
 {
   "background": "#17191A",
   "focus": "#A61619",
-  "unfocus": "#FFFFFF"
+  "unfocus": "#FFFFFF",
+  "sliderDescription": "#BDBDBD",
+  "focusedBullet": "#FFFFFF",
+  "unfocusedBullet": "#818181"
 }

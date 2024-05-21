@@ -44,7 +44,11 @@ export default class SidebarItems extends Lightning.Component {
               type: SidebarItem,
               w: item.id < 5 ? 150 : 50,
               h: 70,
-              props: { index: item.id, data: item },
+              props: {
+                selected: false,
+                index: item.id,
+                data: item,
+              },
               color: Colors(colors.unfocus).get(),
             };
           }),
@@ -58,21 +62,16 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _firstActive() {
-    this._Column.items[0].patch({
-      props: { selected: true },
+    this._index = getRouteNavbarIndex(Router.getActiveHash());
+    this._Column.items[this._index].patch({
+      props: {
+        selected: true,
+      },
     });
   }
 
-  _focus() {
+  _unfocus() {
     this._index = getRouteNavbarIndex(Router.getActiveHash());
-  }
-
-  _incrementFocus() {
-    return this._index < this._sidebarLength - 1 ? ++this._index : this._index;
-  }
-
-  _decrementFocus() {
-    return this._index > 0 ? --this._index : this._index;
   }
 
   $changePage(index) {
@@ -85,21 +84,22 @@ export default class SidebarItems extends Lightning.Component {
       this._Column.items[this._selectedMenuItem].patch({
         props: { selected: false },
       });
-      this._selectedMenuItem = index;
-    }
 
-    Router.navigate(route);
+      this._selectedMenuItem = index;
+
+      Router.navigate(route);
+    }
   }
 
   $decrementSidebar() {
-    this._decrementFocus();
+    this._index > 0 ? --this._index : this._index;
   }
 
   $incrementSidebar() {
-    this._incrementFocus();
+    this._index < this._sidebarLength - 1 ? ++this._index : this._index;
   }
 
   _getFocused() {
-    return this.tag('Column').items[this._index];
+    return this._Column.items[this._index];
   }
 }
