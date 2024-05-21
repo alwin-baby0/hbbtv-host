@@ -36,11 +36,26 @@ export default class Home extends Lightning.Component {
         Column: {
           y: 30,
           type: Column,
-
           // plinko: true,
         },
       },
     };
+  }
+
+  get _Content() {
+    return this.tag('Content');
+  }
+
+  get _GallerySection() {
+    return this.tag('GallerySection');
+  }
+
+  get _Column() {
+    return this.tag('Column');
+  }
+
+  get _Wrapper() {
+    return this.tag('Wrapper');
   }
 
   set props(props) {
@@ -56,16 +71,12 @@ export default class Home extends Lightning.Component {
       .map((row) => {
         const rowItems = Array.isArray(row.items)
           ? row.items.map((movie) => {
-              // console.log('MOVIE ', movie);
               return {
                 type: PosterRailItem,
                 props: {
                   itemTitle: movie.title,
                   imageSrc: movie.getPortraitPoster(HomeRailItem.small).src,
                 },
-                w: 270,
-                h: 384,
-                data: movie,
               };
             })
           : undefined;
@@ -73,29 +84,17 @@ export default class Home extends Lightning.Component {
         return row.items
           ? {
               type: VODRow,
-              lazyUpCount: 5,
-              lazyUpCountBuffer: 2,
               title: row.sectionTitle ?? '',
-              itemSpacing: 52,
               h: 600,
               items: rowItems,
+              style: {
+                itemSpacing: 24,
+              },
             }
           : null;
       })
       .filter(Boolean);
-    this.tag('Column').patch({
-      lazyUpCount: 1,
-      lazyUpCountBuffer: 0,
-    });
-    this.tag('Column').items = items;
-  }
-
-  get _GallerySection() {
-    return this.tag('GallerySection');
-  }
-
-  get _Wrapper() {
-    return this.tag('Wrapper');
+    this._Column.items = items;
   }
 
   _enable() {
@@ -106,8 +105,11 @@ export default class Home extends Lightning.Component {
     return [
       class GallerySection extends this {
         _getFocused() {
-          this.fireAncestors('$hideNavbar', true);
           return this._GallerySection;
+        }
+
+        $enter() {
+          this.fireAncestors('$hideNavbar', true);
         }
 
         _handleUp() {
@@ -116,10 +118,10 @@ export default class Home extends Lightning.Component {
 
         _handleDown() {
           this._setState('Items');
-          this.tag('Content').patch({
+          this._Content.patch({
             y: -305,
           });
-          this.tag('Wrapper').patch({
+          this._Wrapper.patch({
             y: 500,
           });
         }
@@ -127,43 +129,43 @@ export default class Home extends Lightning.Component {
 
       class Items extends this {
         _getFocused() {
-          const focusedItem = this.tag('Column');
+          const focusedItem = this._Column;
           if (focusedItem._selectedIndex === 0) {
             this.fireAncestors('$hideNavbar', false);
-            this.tag('Column').patch({
+            this._Column.patch({
               y: 30,
             });
-            this.tag('Content').patch({
+            this._Content.patch({
               y: -400,
             });
-            this.tag('Wrapper').patch({
+            this._Wrapper.patch({
               y: 500,
             });
           }
           if (focusedItem._selectedIndex === 1) {
             this.fireAncestors('$hideNavbar', false);
-            this.tag('Content').patch({
+            this._Content.patch({
               y: -900,
             });
-            this.tag('Wrapper').patch({
+            this._Wrapper.patch({
               y: 0,
               h: 1920,
             });
-            this.tag('Column').patch({
+            this._Column.patch({
               y: 200,
             });
           }
 
-          return this.tag('Column');
+          return this._Column;
         }
 
         _handleUp() {
           this._setState('GallerySection');
 
-          this.tag('Content').patch({
+          this._Content.patch({
             y: 0,
           });
-          this.tag('Wrapper').patch({
+          this._Wrapper.patch({
             y: 900,
           });
         }

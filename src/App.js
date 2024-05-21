@@ -33,8 +33,16 @@ export default class App extends Router.App {
     return this.tag('Widgets');
   }
 
+  get _Menu() {
+    return this.tag('Menu');
+  }
+
+  get _Background() {
+    return this.tag('Background');
+  }
+
   $hideNavbar(isVisible) {
-    isVisible ? (this.tag('Menu').visible = true) : (this.tag('Menu').visible = false);
+    isVisible ? (this._Menu.visible = true) : (this._Menu.visible = false);
   }
 
   _setup() {
@@ -42,7 +50,7 @@ export default class App extends Router.App {
   }
 
   $punchHole() {
-    this.tag('Background').shader = {
+    this._Background.shader = {
       type: lng.shaders.Hole,
       x: 0,
       y: 0,
@@ -52,7 +60,7 @@ export default class App extends Router.App {
   }
 
   $unpunchHole() {
-    this.tag('Background').shader = {
+    this._Background.shader = {
       w: 0,
       h: 0,
     };

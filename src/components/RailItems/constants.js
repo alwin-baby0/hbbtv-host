@@ -1,7 +1,7 @@
 // constants.js
 export const CARD_SIZES = {
   POSTER: {
-    width: 265,
+    width: 273,
     height: 375,
   },
   THUMBNAIL: {

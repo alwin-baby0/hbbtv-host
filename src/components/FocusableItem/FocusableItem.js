@@ -21,6 +21,10 @@ export default class FocusableItem extends Lightning.Component {
     };
   }
 
+  get _FocusBorder() {
+    return this.tag('FocusBorder');
+  }
+
   setProps(props) {
     this._props = { ...this._props, ...props };
   }
@@ -28,7 +32,7 @@ export default class FocusableItem extends Lightning.Component {
   _focus() {
     const { radius, strokeWidth, width, height } = this._props;
 
-    this.tag('FocusBorder').patch({
+    this._FocusBorder.patch({
       texture: lng.Tools.getRoundRect(
         width,
         height,
@@ -41,7 +45,7 @@ export default class FocusableItem extends Lightning.Component {
   }
 
   _unfocus() {
-    this.tag('FocusBorder').patch({
+    this._FocusBorder.patch({
       texture: null,
     });
   }

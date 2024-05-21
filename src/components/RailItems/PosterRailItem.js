@@ -11,6 +11,8 @@ export default class PosterRailItem extends FocusableItem {
   static _template() {
     return {
       ...super._template(),
+      w: CARD_SIZES.POSTER.width,
+      h: CARD_SIZES.POSTER.height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -22,18 +24,26 @@ export default class PosterRailItem extends FocusableItem {
         Title: {
           y: 15,
           h: 45,
-          w: 265,
+          w: 273,
           text: {
             text: 'Title',
             fontFamily: 'Inter',
             fontSize: 18,
             lineHeight: 22,
             maxLines: 2,
-            wordWrapWidth: 265,
+            wordWrapWidth: 273,
           },
         },
       },
     };
+  }
+
+  get _Title() {
+    return this.tag('Title');
+  }
+
+  get _MovieImg() {
+    return this.tag('MovieImg');
   }
 
   set props(props) {
@@ -44,13 +54,13 @@ export default class PosterRailItem extends FocusableItem {
       ...CARD_SIZES.POSTER,
     });
 
-    this.tag('Title').patch({
+    this._Title.patch({
       text: {
         text: itemTitle,
       },
     });
 
-    this.tag('MovieImg').patch({
+    this._MovieImg.patch({
       w: CARD_SIZES.POSTER.width,
       h: CARD_SIZES.POSTER.height,
       src: imageSrc,

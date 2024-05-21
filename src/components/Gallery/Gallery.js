@@ -33,7 +33,6 @@ export default class Gallery extends Lightning.Component {
   _preloadSliderDataImages(sliderData) {
     sliderData.items.forEach((item) => {
       item.preloadImages(HomeRailItem.extraLarge);
-      // console.log('items ', item);
     });
   }
 
