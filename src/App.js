@@ -1,3 +1,4 @@
+// App.js
 import { Colors, Router, Utils } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
 import routes from './pages/routes';
@@ -21,7 +22,7 @@ export default class App extends Router.App {
       },
       Widgets: {
         Menu: {
-          zIndex: 1,
+          zIndex: 2,
           type: Navbar,
         },
       },
@@ -32,14 +33,24 @@ export default class App extends Router.App {
     return this.tag('Widgets');
   }
 
-  _init() {}
+  get _Menu() {
+    return this.tag('Menu');
+  }
+
+  get _Background() {
+    return this.tag('Background');
+  }
+
+  $hideNavbar(isVisible) {
+    isVisible ? (this._Menu.visible = true) : (this._Menu.visible = false);
+  }
 
   _setup() {
     Router.startRouter(routes, this);
   }
 
   $punchHole() {
-    this.tag('Background').shader = {
+    this._Background.shader = {
       type: lng.shaders.Hole,
       x: 0,
       y: 0,
@@ -49,7 +60,7 @@ export default class App extends Router.App {
   }
 
   $unpunchHole() {
-    this.tag('Background').shader = {
+    this._Background.shader = {
       w: 0,
       h: 0,
     };

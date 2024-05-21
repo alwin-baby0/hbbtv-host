@@ -100,6 +100,6 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _getFocused() {
-    return this.tag('Column').items[this._index];
+    return this._Column.items[this._index];
   }
 }

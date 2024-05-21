@@ -3,6 +3,7 @@ import { Row } from '@lightningjs/ui-components';
 import colors from '../../../reskin/colors.json';
 import GalleryItem from '../GalleryItem/GalleryItem';
 import Bullet from '../Bullet/Bullet';
+import HomeRailItem from '../../api/home/HomeRailItem';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
@@ -29,10 +30,17 @@ export default class Gallery extends Lightning.Component {
     };
   }
 
+  _preloadSliderDataImages(sliderData) {
+    sliderData.items.forEach((item) => {
+      item.preloadImages(HomeRailItem.extraLarge);
+    });
+  }
+
   set props(props) {
     this._sliderIndex = 0;
     this._props = { ...this._props, ...props };
     const { sliderData } = this._props;
+    this._preloadSliderDataImages(sliderData);
 
     const bulletItem = sliderData.items.map((_item, index) => {
       return {
