@@ -1,13 +1,6 @@
 import request, { V1, V2 } from '../index';
 
 export const getGenres = (category, type) => {
-  if (category === undefined) {
-    category === 'action';
-  }
-  if (type === undefined) {
-    type === '';
-  }
-
   return request({
     url: '/getGenres',
     apiVersion: V2,
