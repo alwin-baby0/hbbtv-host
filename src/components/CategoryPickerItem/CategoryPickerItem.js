@@ -69,7 +69,7 @@ export default class CategoryPickerItem extends Lightning.Component {
   }
 
   _handleEnter() {
-    // const { itemInfo } = this._props;
-    // Router.navigate(`filteredPage?filter=${itemInfo.title}&type=${itemInfo.type.value}`);
+    const { url } = this._props;
+    Router.navigate(url);
   }
 }

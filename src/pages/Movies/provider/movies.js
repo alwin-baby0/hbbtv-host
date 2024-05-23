@@ -3,6 +3,7 @@ import { getGenres, getMovies } from '../../../api/movies';
 import CategoryPickerItem from '../../../components/CategoryPickerItem/CategoryPickerItem';
 import PosterRailItem from '../../../components/RailItems/PosterRailItem';
 import MoviesRailItem from '../../../api/movies/MoviesRailItem';
+import { Router } from '@lightningjs/sdk';
 
 const fetchGenres = (page) => {
   return getGenres('movies', 'genre_movies').then(({ data }) => {
@@ -19,6 +20,7 @@ const fetchGenres = (page) => {
         w: 171,
         props: {
           itemInfo: item,
+          url: `filterPage/:${item.id}/:${item.type.value}`,
           w: 170,
           h: 64,
           radius: 30,
@@ -52,6 +54,9 @@ const fetchMovies = async (page) => {
           props: {
             itemTitle: item.title,
             imageSrc: item.getPortraitPoster(MoviesRailItem.small).src,
+            callback: () => {
+              Router.navigate(`movie-details/${item.id}`);
+            },
           },
         };
       }),

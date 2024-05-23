@@ -1,7 +1,7 @@
 class MoviesRailItem {
   constructor(data) {
-    const { title, type, media_group } = data;
-
+    const { id, title, type, media_group } = data;
+    this.id = id;
     this.title = title;
     this.type = type?.value;
 
@@ -9,24 +9,26 @@ class MoviesRailItem {
     this.landscapePosters = [];
     this.portraitPosters = [];
 
-    media_group[0]?.media_item?.forEach((item) => {
-      switch (true) {
-        case item.key.includes('thumbnail'): {
-          this.thumbnails.push(item);
-          break;
+    if (media_group) {
+      media_group[0]?.media_item?.forEach((item) => {
+        switch (true) {
+          case item.key.includes('thumbnail'): {
+            this.thumbnails.push(item);
+            break;
+          }
+          case item.key.includes('poster_landscape'): {
+            this.landscapePosters.push(item);
+            break;
+          }
+          case item.key.includes('poster_portrait'): {
+            this.portraitPosters.push(item);
+            break;
+          }
+          default:
+            break;
         }
-        case item.key.includes('poster_landscape'): {
-          this.landscapePosters.push(item);
-          break;
-        }
-        case item.key.includes('poster_portrait'): {
-          this.portraitPosters.push(item);
-          break;
-        }
-        default:
-          break;
-      }
-    });
+      });
+    }
   }
 
   preloadImages(size) {

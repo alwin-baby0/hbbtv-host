@@ -1,5 +1,6 @@
 import request, { V1, V2 } from '../index';
 import MoviesRailItem from './MoviesRailItem';
+import SingleMovieRailItem from './SingleMovieRailItem';
 
 export const getGenres = (category, type) => {
   return request({
@@ -35,13 +36,17 @@ function parseMoviesPageData(result) {
   };
 }
 
-export const getSingleMovie = (movieId) => {
-  return request({
+export const getSingleMovie = (movieId) =>
+  request({
     url: `/getMovie`,
     apiVersion: V2,
     method: 'GET',
     params: {
       id: movieId,
     },
-  });
-};
+  }).then(parseSingleMoviePageData);
+
+function parseSingleMoviePageData(result) {
+  const { data } = result;
+  return new SingleMovieRailItem(data.entry[0]);
+}
