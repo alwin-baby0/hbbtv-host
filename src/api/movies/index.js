@@ -1,4 +1,5 @@
 import request, { V1, V2 } from '../index';
+import MoviesRailItem from './MoviesRailItem';
 
 export const getGenres = (category, type) => {
   return request({
@@ -12,13 +13,27 @@ export const getGenres = (category, type) => {
   });
 };
 
-export const getMovies = () => {
-  return request({
-    url: '/movies',
+export const getMovies = () =>
+  request({
+    url: '/search',
     apiVersion: V2,
     method: 'GET',
-  });
-};
+    params: {
+      keyword: 'all',
+      category: 'movie',
+      orderBy: 'date:desc',
+      limit: 24,
+    },
+  }).then(parseMoviesPageData);
+
+function parseMoviesPageData(result) {
+  const { data } = result;
+
+  return {
+    sectionTitle: data.title,
+    items: data.entry?.map((item) => new MoviesRailItem(item)),
+  };
+}
 
 export const getSingleMovie = (movieId) => {
   return request({

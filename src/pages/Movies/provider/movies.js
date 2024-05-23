@@ -1,5 +1,8 @@
-import { getGenres } from '../../../api/movies';
+import { Row } from '@lightningjs/ui-components';
+import { getGenres, getMovies } from '../../../api/movies';
 import CategoryPickerItem from '../../../components/CategoryPickerItem/CategoryPickerItem';
+import PosterRailItem from '../../../components/RailItems/PosterRailItem';
+import MoviesRailItem from '../../../api/movies/MoviesRailItem';
 
 const fetchGenres = (page) => {
   return getGenres('movies', 'genre_movies').then(({ data }) => {
@@ -27,6 +30,38 @@ const fetchGenres = (page) => {
   });
 };
 
+const fetchMovies = async (page) => {
+  const ROW_SIZE = 6;
+  const { items } = await getMovies();
+  const flattenedVideos = items.flat();
+
+  const rows = [];
+  for (let i = 0; i < flattenedVideos.length; i += ROW_SIZE) {
+    rows.push({ items: flattenedVideos.slice(i, i + ROW_SIZE) });
+  }
+
+  const mappedItems = rows.map((row) => {
+    return {
+      type: Row,
+      h: 500,
+      w: 1800,
+      items: row.items.map((item) => {
+        return {
+          w: 270,
+          type: PosterRailItem,
+          props: {
+            itemTitle: item.title,
+            imageSrc: item.getPortraitPoster(MoviesRailItem.small).src,
+          },
+        };
+      }),
+    };
+  });
+
+  page._Column.items = mappedItems;
+};
+
 export default async function (page) {
   await fetchGenres(page);
+  await fetchMovies(page);
 }
