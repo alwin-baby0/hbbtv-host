@@ -71,7 +71,7 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _unfocus() {
-    this._index = getRouteNavbarIndex(Router.getActiveHash());
+    this._index = this._selectedMenuItem;
   }
 
   $changePage(index) {
@@ -86,6 +86,7 @@ export default class SidebarItems extends Lightning.Component {
       });
 
       this._selectedMenuItem = index;
+      this._index = index;
 
       Router.navigate(route);
     }

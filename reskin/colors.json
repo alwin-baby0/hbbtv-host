@@ -4,5 +4,6 @@
   "unfocus": "#FFFFFF",
   "sliderDescription": "#BDBDBD",
   "focusedBullet": "#FFFFFF",
-  "unfocusedBullet": "#818181"
+  "unfocusedBullet": "#818181",
+  "categoryPicker": "#1D1F2E"
 }

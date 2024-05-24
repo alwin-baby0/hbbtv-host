@@ -10,7 +10,7 @@ export default class Splash extends Lightning.Component {
     };
   }
 
-  _init() {
+  _firstActive() {
     setTimeout(() => {
       Router.navigate('home', false);
     }, 3000);
@@ -19,6 +19,6 @@ export default class Splash extends Lightning.Component {
   _inactive() {
     setTimeout(() => {
       Registry.clearTimeouts();
-    }, 1000);
+    }, 3000);
   }
 }

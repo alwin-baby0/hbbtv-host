@@ -7,6 +7,7 @@ export default class PosterRailItem extends FocusableItem {
     imageSrc: '',
     radius: 6,
     strokeWidth: 4,
+    callback: () => null,
   };
   static _template() {
     return {
@@ -77,5 +78,10 @@ export default class PosterRailItem extends FocusableItem {
 
   _unfocus() {
     super._unfocus();
+  }
+
+  _handleEnter() {
+    const { callback } = this._props;
+    callback();
   }
 }

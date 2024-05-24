@@ -49,9 +49,8 @@ export default class Button extends Lightning.Component {
         height,
         radius,
         strokeWidth,
-        Colors(colors.focus).get(),
-        true,
-        Colors(colors.focus).get()
+        Colors(colors.unfocus).get(),
+        false
       ),
     });
 
