@@ -2,8 +2,8 @@ import { Router } from '@lightningjs/sdk';
 import Splash from '../components/SplashScreen/Splash';
 import Home from './Home/Home';
 import home from './Home/provider/home';
-import Movies from './Movies/Movie';
-import movies from './Movies/provider/movies';
+import VodPreview from './VodPreview/VodPreview';
+import onVodPage from './VodPreview/provider/onVodPage';
 import SingleMovie from './SingleMovie/SingleMovie';
 import singleMovie from './SingleMovie/provider/singleMovie';
 
@@ -21,10 +21,10 @@ export default {
       on: home,
     },
     {
-      path: 'movies',
-      component: Movies,
+      path: 'vod/:vodType',
+      component: VodPreview,
       widgets: ['Menu'],
-      on: movies,
+      on: onVodPage,
     },
     {
       path: 'movie-details/:movieId',

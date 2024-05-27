@@ -2,7 +2,9 @@
 export const CARD_SIZES = {
   POSTER: {
     width: 273,
-    height: 375,
+    height: 420,
+    image_width: 273,
+    image_height: 375,
   },
   THUMBNAIL: {
     width: 0,

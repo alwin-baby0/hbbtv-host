@@ -1,45 +1,33 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
-import { Row } from '@lightningjs/ui-components';
 import colors from '../../../reskin/colors.json';
+import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 
 export default class CategoryPicker extends Lightning.Component {
   _props = {
     x: 110,
     y: 150,
-    width: 1700,
     height: 64,
   };
+
   static _template() {
     return {
-      Wrapper: {
-        w: 1700,
-        x: 110,
-        y: 150,
-        h: 64,
+      CaterogyItems: {
+        type: HorizontalContainer,
         clipping: true,
-        CaterogyItem: {
-          type: Row,
-          scrollIndex: 8,
-          /* lazyScroll: true,
-          startLazyScrollIndex: 0,
-          stopLazyScrollIndex: 8, */
-        },
       },
     };
   }
 
-  get _Wrapper() {
-    return this.tag('Wrapper');
-  }
-
-  get _CaterogyItem() {
-    return this.tag('CaterogyItem');
+  get _CaterogyItems() {
+    return this.tag('CaterogyItems');
   }
 
   set props(props) {
     this._props = { ...this._props, ...props };
+
     const { x, y, width, height } = this._props;
-    this._Wrapper.patch({
+
+    this.patch({
       x: x,
       y: y,
       w: width,
@@ -54,9 +42,14 @@ export default class CategoryPicker extends Lightning.Component {
         Colors(colors.categoryPicker).get()
       ),
     });
+
+    this._CaterogyItems.patch({
+      w: width,
+      h: height,
+    })
   }
 
   _getFocused() {
-    return this._CaterogyItem;
+    return this._CaterogyItems;
   }
 }

@@ -1,4 +1,3 @@
-// PosterRailItem
 import FocusableItem from '../FocusableItem/FocusableItem';
 import { CARD_SIZES } from './constants';
 
@@ -52,7 +51,8 @@ export default class PosterRailItem extends FocusableItem {
     const { imageSrc, radius, itemTitle } = this._props;
 
     this.setProps({
-      ...CARD_SIZES.POSTER,
+      width: CARD_SIZES.POSTER.image_width,
+      height: CARD_SIZES.POSTER.image_height,
     });
 
     this._Title.patch({
@@ -62,8 +62,8 @@ export default class PosterRailItem extends FocusableItem {
     });
 
     this._MovieImg.patch({
-      w: CARD_SIZES.POSTER.width,
-      h: CARD_SIZES.POSTER.height,
+      w: CARD_SIZES.POSTER.image_width,
+      h: CARD_SIZES.POSTER.image_height,
       src: imageSrc,
       shader: {
         type: lng.shaders.RoundedRectangle,
