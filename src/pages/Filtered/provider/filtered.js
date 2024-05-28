@@ -1,16 +1,11 @@
-import { getSearch } from '../../../api/search';
-import PosterRailItem from '../../../components/RailItems/PosterRailItem';
-import MoviesRailItem from '../../../api/movies/MoviesRailItem';
 import { Router } from '@lightningjs/sdk';
+import { getSearch } from '../../../api/search';
+import MoviesRailItem from '../../../api/movies/MoviesRailItem';
 import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
-import VerticalContainer from '../../../components/VerticalContainer/VerticalContainer';
-import { Row } from '@lightningjs/ui-components';
+import PosterRailItem from '../../../components/RailItems/PosterRailItem';
 
 const getGenresInfo = async (page, props) => {
   const ROW_SIZE = 6;
-
-  // console.log('Genres:', props);
-  // console.log('Category:', props);
 
   const category = props.action;
   const type = props.genre_movies;
@@ -55,6 +50,9 @@ const getGenresInfo = async (page, props) => {
     };
   } else {
     page._Column.items = [];
+    page._Column.props = {
+      items: [],
+    };
     page._Title.text = 'NOTHING';
   }
 };

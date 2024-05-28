@@ -1,10 +1,10 @@
-import { getGenres, getMovies } from '../../../api/movies';
-import CategoryPickerItem from '../../../components/CategoryPickerItem/CategoryPickerItem';
-import PosterRailItem from '../../../components/RailItems/PosterRailItem';
-import MoviesRailItem from '../../../api/movies/MoviesRailItem';
 import { Router } from '@lightningjs/sdk';
 import { VOD_TYPES } from '../utils';
+import { getGenres, getMovies } from '../../../api/movies';
+import MoviesRailItem from '../../../api/movies/MoviesRailItem';
 import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
+import CategoryPickerItem from '../../../components/CategoryPickerItem/CategoryPickerItem';
+import PosterRailItem from '../../../components/RailItems/PosterRailItem';
 import { CARD_SIZES } from '../../../components/RailItems/constants';
 
 const movies = {
@@ -38,6 +38,8 @@ const fetchGenres = async (page) => {
         },
       };
     });
+
+    genres.timestamp = new Date().getTime();
   }
 
   page._Categories._CaterogyItems.props = {

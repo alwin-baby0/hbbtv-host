@@ -63,12 +63,12 @@ export default class VerticalContainer extends Lightning.Component {
 
     if (!currentFocus) return;
 
-    // console.log('INDEX ', this._focusedIndex);
     if (this._focusedIndex === 0) {
-      this.Items.patch({ y: -this._focusedIndex * currentFocus.finalH });
+      this.Items.patch({ y: 0 });
     } else {
-      this.Items.patch({ y: -this._focusedIndex * currentFocus.finalH + 150 });
-      // this.fireAncestors('$hideNavbar', false);
+      this.Items.patch({
+        y: -this._focusedIndex * currentFocus.finalH + this.finalH / 2 - currentFocus.finalH / 2,
+      });
     }
   }
 

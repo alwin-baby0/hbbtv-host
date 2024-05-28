@@ -1,8 +1,6 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
-import { Column } from '@lightningjs/ui-components';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import Route from '@lightningjs/sdk/src/Router/model/Route';
+import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 
 export default class VodPreview extends Lightning.Component {
   static _template() {
@@ -31,6 +29,8 @@ export default class VodPreview extends Lightning.Component {
         clipping: true,
         Column: {
           y: 30,
+          h: 795,
+          w: 1760,
           type: VerticalContainer,
         },
       },
@@ -61,13 +61,8 @@ export default class VodPreview extends Lightning.Component {
       this._setState('Content');
       setTimeout(() => {
         Router.focusWidget('menu');
+        Router.focusPage();
       }, 1);
-    }
-    if (this._getState() === 'VodContainer') {
-      // console.log('VodContainer _active');
-      this.fireAncestors('$hideNavbar', true);
-      this.fireAncestors('$hideNavbar', false);
-      Router.focusPage();
     }
   }
 
@@ -78,6 +73,11 @@ export default class VodPreview extends Lightning.Component {
   _handleBack() {
     if (!Router.isNavigating()) {
       this._Column.patch({
+        props: {
+          items: [],
+        },
+      });
+      this._Categories._CaterogyItems.patch({
         props: {
           items: [],
         },
@@ -139,7 +139,10 @@ export default class VodPreview extends Lightning.Component {
             });
             this.tag('VodContainer').patch({
               y: 100,
-              h: 1920,
+              h: 1080,
+            });
+            this._Column.patch({
+              h: 795,
             });
           }
           if (this._Column._focusedIndex >= 1 && this._extended === false) {
@@ -149,6 +152,9 @@ export default class VodPreview extends Lightning.Component {
             });
             this._Content.patch({
               y: -200,
+            });
+            this._Column.patch({
+              h: 1040,
             });
           }
         }

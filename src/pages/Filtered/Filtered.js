@@ -22,8 +22,9 @@ export default class Filtered extends Lightning.Component {
           h: 100,
         },
         Column: {
+          w: 1920,
+          h: 1080,
           type: VerticalContainer,
-          // plinko: true,
         },
       },
     };
@@ -37,13 +38,7 @@ export default class Filtered extends Lightning.Component {
     return this.tag('Title');
   }
 
-  _init() {}
-
   _getFocused() {
     return this._Column;
-  }
-
-  static _states() {
-    return [];
   }
 }
