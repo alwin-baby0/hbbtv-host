@@ -1,10 +1,10 @@
-import Lightning from "@lightningjs/sdk/src/Lightning";
+import Lightning from '@lightningjs/sdk/src/Lightning';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
     items: [],
     carryRowPosition: true,
-  }
+  };
   _focusedIndex = -1;
   _scrollPosition = 0;
 
@@ -12,10 +12,10 @@ export default class VerticalContainer extends Lightning.Component {
     return {
       Items: {
         flex: {
-          direction: "column",
-        }
-      }
-    }
+          direction: 'column',
+        },
+      },
+    };
   }
 
   get Items() {
@@ -24,6 +24,10 @@ export default class VerticalContainer extends Lightning.Component {
 
   get _focusedIndex() {
     return this._focusedIndex;
+  }
+
+  set _focusedIndex(val) {
+    return (this._focusedIndex = val);
   }
 
   /**
@@ -38,7 +42,7 @@ export default class VerticalContainer extends Lightning.Component {
 
       this._focusedIndex = -1;
       this._scrollPosition = 0;
-      this.Items.x = 0;
+      this.Items.y = 0;
 
       this.Items.childList.clear();
       if (items.length > 0) {
@@ -59,7 +63,13 @@ export default class VerticalContainer extends Lightning.Component {
 
     if (!currentFocus) return;
 
-    this.Items.patch({ y: -this._focusedIndex * currentFocus.finalH })
+    // console.log('INDEX ', this._focusedIndex);
+    if (this._focusedIndex === 0) {
+      this.Items.patch({ y: -this._focusedIndex * currentFocus.finalH });
+    } else {
+      this.Items.patch({ y: -this._focusedIndex * currentFocus.finalH + 150 });
+      // this.fireAncestors('$hideNavbar', false);
+    }
   }
 
   _getFocused() {
@@ -99,7 +109,7 @@ export default class VerticalContainer extends Lightning.Component {
 
   $horizontalContainerIndexChange(newIndex) {
     if (this._props.carryRowPosition) {
-      this.Items.children.forEach(child => child._focusedIndex = newIndex);
+      this.Items.children.forEach((child) => (child._focusedIndex = newIndex));
     }
     this.fireAncestors('$horizontalContainerIndexChange', newIndex);
   }

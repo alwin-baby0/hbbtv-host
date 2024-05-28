@@ -3,7 +3,7 @@ import Lightning from '@lightningjs/sdk/src/Lightning';
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
     items: [],
-  }
+  };
   _focusedIndex = -1;
   _scrollPosition = 0;
 
@@ -11,10 +11,10 @@ export default class HorizontalContainer extends Lightning.Component {
     return {
       Items: {
         flex: {
-          direction: "row",
-        }
-      }
-    }
+          direction: 'row',
+        },
+      },
+    };
   }
 
   get Items() {
@@ -25,12 +25,9 @@ export default class HorizontalContainer extends Lightning.Component {
     return this._focusedIndex;
   }
 
-  /**
-   * @param {number} newIndex
-   */
   set _focusedIndex(newIndex) {
-    if (newIndex > 0 && newIndex < this._props.items.length) {
-      _focusedIndex = newIndex;
+    if (newIndex >= 0 && newIndex < this._props.items.length) {
+      this._focusedIndex = newIndex;
       this._reCalibrateScroll();
     }
   }
@@ -43,16 +40,16 @@ export default class HorizontalContainer extends Lightning.Component {
     this._props = { ...this._props, ...rest };
 
     if (items !== this._props.items) {
-      this._props = { ...this._props, items };
+      this._props.items = items;
 
       this._focusedIndex = -1;
       this._scrollPosition = 0;
       this.Items.x = 0;
 
-      this.Items.childList.clear();
+      // this.Items.childList.clear();
       if (items.length > 0) {
+        // console.log('Adding items to HorizontalContainer:', items); // Log items
         this.Items.childList.a(items);
-
         this.stage.update();
       }
 
@@ -78,7 +75,7 @@ export default class HorizontalContainer extends Lightning.Component {
       this._scrollPosition = -(elementX + elementW - containerFinalWidth);
     }
 
-    this.Items.patch({ x: this._scrollPosition })
+    this.Items.patch({ x: this._scrollPosition });
   }
 
   _getFocused() {
@@ -86,12 +83,12 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleDown() {
-    console.log('handle down')
+    // console.log('handle down');
     return false;
   }
 
   _handleUp() {
-    console.log('handle up')
+    // console.log('handle up');
     return false;
   }
 

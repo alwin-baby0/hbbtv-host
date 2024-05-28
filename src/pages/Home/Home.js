@@ -71,26 +71,26 @@ export default class Home extends Lightning.Component {
       .map((row) => {
         const rowItems = Array.isArray(row.items)
           ? row.items.map((movie) => {
-            return {
-              type: PosterRailItem,
-              props: {
-                itemTitle: movie.title,
-                imageSrc: movie.getPortraitPoster(HomeRailItem.small).src,
-              },
-            };
-          })
+              return {
+                type: PosterRailItem,
+                props: {
+                  itemTitle: movie.title,
+                  imageSrc: movie.getPortraitPoster(HomeRailItem.small).src,
+                },
+              };
+            })
           : undefined;
 
         return row.items
           ? {
-            type: VODRow,
-            title: row.sectionTitle ?? '',
-            h: 600,
-            items: rowItems,
-            style: {
-              itemSpacing: 24,
-            },
-          }
+              type: VODRow,
+              title: row.sectionTitle ?? '',
+              h: 600,
+              items: rowItems,
+              style: {
+                itemSpacing: 24,
+              },
+            }
           : null;
       })
       .filter(Boolean);
@@ -98,7 +98,12 @@ export default class Home extends Lightning.Component {
   }
 
   _enable() {
+    // Router.focusWidget('menu');
     this._setState('GallerySection');
+    setTimeout(() => {
+      Router.focusWidget('menu');
+    }, 1);
+    // this._setState('GallerySection');
   }
 
   static _states() {

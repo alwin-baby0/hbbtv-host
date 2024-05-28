@@ -76,7 +76,7 @@ export default class App extends Router.App {
     ];
   }
 
-  _handleAppClose() { }
+  _handleAppClose() {}
 
   /**
    * Show app close dialogue

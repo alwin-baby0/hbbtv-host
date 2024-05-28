@@ -2,6 +2,7 @@ import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import { Column } from '@lightningjs/ui-components';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import Route from '@lightningjs/sdk/src/Router/model/Route';
 
 export default class VodPreview extends Lightning.Component {
   static _template() {
@@ -17,9 +18,9 @@ export default class VodPreview extends Lightning.Component {
           props: {
             x: 110,
             y: 150,
-            width: 1700,
+            width: 1760,
             height: 64,
-          }
+          },
         },
       },
       VodContainer: {
@@ -50,19 +51,40 @@ export default class VodPreview extends Lightning.Component {
 
   _firstActive() {
     this._setState('Content');
+    setTimeout(() => {
+      Router.focusWidget('menu');
+    }, 1);
   }
 
   _active() {
+    if (this._getState() !== 'VodContainer') {
+      this._setState('Content');
+      setTimeout(() => {
+        Router.focusWidget('menu');
+      }, 1);
+    }
     if (this._getState() === 'VodContainer') {
-      console.log('VodContainer _active')
+      // console.log('VodContainer _active');
       this.fireAncestors('$hideNavbar', true);
       this.fireAncestors('$hideNavbar', false);
-      Router.focusPage()
+      Router.focusPage();
     }
   }
 
   _handleDown() {
-    console.log('parent down')
+    // console.log('parent down');
+  }
+
+  _handleBack() {
+    if (!Router.isNavigating()) {
+      this._Column.patch({
+        props: {
+          items: [],
+        },
+      });
+      this._setState('Content');
+      Router.back();
+    }
   }
 
   static _states() {
@@ -73,7 +95,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         $enter() {
-          console.log('entering Content state')
+          // console.log('entering Content state');
           this._Content.patch({
             y: 0,
           });
@@ -99,7 +121,14 @@ export default class VodPreview extends Lightning.Component {
         $enter() {
           this.fireAncestors('$hideNavbar', false);
           this._extended = this._Column._focusedIndex > 0;
-          this.correctContainerSize();
+          this._extended = false;
+          this._Content.patch({
+            y: -130,
+          });
+          this.tag('VodContainer').patch({
+            y: 100,
+            h: 1920,
+          });
         }
 
         correctContainerSize() {
@@ -125,11 +154,12 @@ export default class VodPreview extends Lightning.Component {
         }
 
         $exit() {
-          console.log('exit VodContainer state')
+          // console.log('exit VodContainer state');
           this.fireAncestors('$hideNavbar', true);
         }
 
         _getFocused() {
+          this.fireAncestors('$hideNavbar', false);
           return this._Column;
         }
 

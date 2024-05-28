@@ -1,5 +1,5 @@
 import lng from '@lightningjs/core';
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
 
 export default class SidebarItem extends lng.Component {
@@ -36,6 +36,13 @@ export default class SidebarItem extends lng.Component {
         visible: false,
       },
     };
+  }
+
+  getSelectedIndex() {
+    if (this._props.selected) {
+      return this._props.index;
+    }
+    return -1;
   }
 
   set props(props) {
@@ -117,5 +124,7 @@ export default class SidebarItem extends lng.Component {
 
   _handleEnter() {
     this.fireAncestors('$changePage', this._props.index);
+    Router.focusPage('MyListPage');
+    // Router.restoreFocus();
   }
 }
