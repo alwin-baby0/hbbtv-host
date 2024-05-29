@@ -1,11 +1,13 @@
 import { Router } from '@lightningjs/sdk';
-import { VOD_TYPES } from '../utils';
 import { getGenres, getMovies } from '../../../api/movies';
-import MoviesRailItem from '../../../api/movies/MoviesRailItem';
+import { getSeries } from '../../../api/series';
+import { VOD_TYPES } from '../utils';
+import { CARD_SIZES } from '../../../components/RailItems/constants';
 import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
 import CategoryPickerItem from '../../../components/CategoryPickerItem/CategoryPickerItem';
 import PosterRailItem from '../../../components/RailItems/PosterRailItem';
-import { CARD_SIZES } from '../../../components/RailItems/constants';
+import MoviesRailItem from '../../../api/movies/MoviesRailItem';
+import SeriesRailItem from '../../../api/series/SeriesRailItem';
 
 const movies = {
   items: [],
@@ -14,32 +16,51 @@ const movies = {
 
 const genres = {
   items: [],
+  type: '',
   timestamp: 0,
 };
 
-const fetchGenres = async (page) => {
-  if (genres.timestamp + 1000 * 60 * 30 <= new Date().getTime()) {
-    const { data } = await getGenres('movies', 'genre_movies');
-    let itemType;
-    genres.items = data.entry.map((item) => {
-      if (item.type.value === 'genre_movies') {
-        itemType = 'movie';
-      }
+const series = {
+  items: [],
+  timestamp: 0,
+};
+const genresNames = {
+  movies: 'movie',
+  series: 'series',
+};
+const genresType = {
+  movies: 'genres_movies',
+  series: 'genres_series',
+};
+const fetchGenres = async (page, vodType) => {
+  let genreType;
+  if (genres.timestamp + 1000 * 60 * 30 <= new Date().getTime() || genres.type !== vodType) {
+    const { data } = await getGenres(vodType, genresType[vodType]);
 
-      return {
-        type: CategoryPickerItem,
-        props: {
-          itemInfo: item,
-          url: `filterPage/${item.id}/${itemType}`,
-          w: 170,
-          h: 64,
-          radius: 30,
-          strokeWidth: 6,
-        },
-      };
-    });
+    if (vodType === 'movies') {
+      genreType = 'movie';
+    } else if (vodType === 'series') {
+      genreType = 'series';
+    } else if (vodType === 'sports') {
+      genreType = 'sports';
+    }
+
+    genres.items = data.entry.map((item) => ({
+      type: CategoryPickerItem,
+      props: {
+        itemInfo: item,
+        url: `filterPage`,
+        category: item.id,
+        type: genreType,
+        w: 170,
+        h: 64,
+        radius: 30,
+        strokeWidth: 6,
+      },
+    }));
 
     genres.timestamp = new Date().getTime();
+    genres.type = vodType;
   }
 
   page._Categories._CaterogyItems.props = {
@@ -97,16 +118,66 @@ const fetchMovies = async (page) => {
   };
 };
 
+const fetchSeries = async (page) => {
+  if (series.timestamp + 1000 * 60 * 30 <= new Date().getTime()) {
+    const ROW_SIZE = 6;
+    const { items } = await getSeries(1, 6);
+    const flattenedVideos = items.flat();
+
+    const rows = [];
+    for (let i = 0; i < flattenedVideos.length; i += ROW_SIZE) {
+      rows.push({ items: flattenedVideos.slice(i, i + ROW_SIZE) });
+    }
+
+    series.items = rows.map((row) => {
+      return {
+        type: HorizontalContainer,
+        h: CARD_SIZES.POSTER.height,
+        w: 1760,
+        h: 485,
+        itemSpacing: 52,
+        props: {
+          items: row.items.map((item) => {
+            return {
+              w: 270,
+              type: PosterRailItem,
+              flexItem: {
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 10,
+                marginBottom: 10,
+              },
+              props: {
+                itemTitle: item.title,
+                imageSrc: item.getPortraitPoster(SeriesRailItem.small).src,
+                callback: () => {
+                  Router.navigate(`series-details/${item.id}`);
+                },
+              },
+            };
+          }),
+        },
+      };
+    });
+
+    series.timestamp = new Date().getTime();
+  }
+
+  page._Column.props = {
+    items: series.items,
+  };
+};
+
 export default async function (page, { vodType }) {
   switch (vodType) {
     case VOD_TYPES.MOVIE: {
-      await fetchGenres(page);
+      await fetchGenres(page, vodType);
       await fetchMovies(page);
       break;
     }
     case VOD_TYPES.SERIES: {
-      await fetchGenres(page);
-      await fetchMovies(page);
+      await fetchGenres(page, vodType);
+      await fetchSeries(page);
       break;
     }
     case VOD_TYPES.SPORT: {

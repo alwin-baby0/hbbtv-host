@@ -1,7 +1,8 @@
 import request, { V1, V2 } from '../index';
+import SeriesRailItem from './SeriesRailItem';
 
-export const getSeries = (page, limit) => {
-  return request({
+export const getSeries = (page, limit) =>
+  request({
     url: '/series',
     apiVersion: V1,
     method: 'GET',
@@ -9,8 +10,16 @@ export const getSeries = (page, limit) => {
       page,
       limit,
     },
-  });
-};
+  }).then(parseSeriesPageData);
+
+function parseSeriesPageData(result) {
+  const { data } = result;
+
+  return {
+    sectionTitle: data.title,
+    items: data.items?.map((item) => new SeriesRailItem(item)),
+  };
+}
 
 export const getSingleSeries = (seriesId) => {
   return request({

@@ -45,6 +45,7 @@ const getGenresInfo = async (page, props) => {
     });
 
     page._Title.text = '';
+    // page._Title.text = `${props.genre_movies}>${props.action}`;
     page._Column.props = {
       items: items,
     };

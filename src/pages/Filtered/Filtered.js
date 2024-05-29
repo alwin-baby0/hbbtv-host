@@ -1,7 +1,5 @@
 import { Lightning, Utils } from '@lightningjs/sdk';
-import { Column } from '@lightningjs/ui-components';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
 export default class Filtered extends Lightning.Component {
   static _template() {
@@ -24,6 +22,7 @@ export default class Filtered extends Lightning.Component {
         Column: {
           w: 1920,
           h: 1080,
+          // y: 100,
           type: VerticalContainer,
         },
       },

@@ -1,6 +1,7 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 
+let genreType;
 export default class CategoryPickerItem extends Lightning.Component {
   _props = {
     itemInfo: null,
@@ -25,15 +26,17 @@ export default class CategoryPickerItem extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { itemInfo, w, h, } = this._props;
+    const { itemInfo, w, h, type } = this._props;
     const { title } = itemInfo;
+    genreType = type;
 
     this.patch({
-      w, h,
+      w,
+      h,
       flexItem: {
         shrink: false,
-      }
-    })
+      },
+    });
     this._Title.patch({
       text: {
         text: title.toUpperCase(),
@@ -75,7 +78,8 @@ export default class CategoryPickerItem extends Lightning.Component {
   }
 
   _handleEnter() {
-    const { url } = this._props;
+    this._genreType = this._props.type;
+    const url = `${this._props.url}/${this._props.category}/${genreType}`;
     Router.navigate(url);
   }
 }

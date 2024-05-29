@@ -8,8 +8,8 @@ export const getGenres = (category, type) => {
     apiVersion: V2,
     method: 'GET',
     params: {
-      category,
-      type,
+      category: category,
+      type: type,
     },
   });
 };

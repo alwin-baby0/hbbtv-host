@@ -49,13 +49,6 @@ export default class VodPreview extends Lightning.Component {
     return this.tag('VodContainer.Column');
   }
 
-  _firstActive() {
-    this._setState('Content');
-    setTimeout(() => {
-      Router.focusWidget('menu');
-    }, 1);
-  }
-
   _active() {
     if (this._getState() !== 'VodContainer') {
       this._setState('Content');
@@ -63,11 +56,17 @@ export default class VodPreview extends Lightning.Component {
         Router.focusWidget('menu');
         Router.focusPage();
       }, 1);
+    } else {
+      this._setState('VodContainer');
     }
   }
 
   _handleDown() {
     // console.log('parent down');
+  }
+
+  _getFocused() {
+    return this._setState('Content');
   }
 
   _handleBack() {

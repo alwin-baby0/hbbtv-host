@@ -8,7 +8,7 @@ import SidebarItem from './SidebarItem';
 const menuItems = [
   { id: 0, label: 'Home', route: 'home', icon: '' },
   { id: 1, label: 'Movies', route: 'vod/movies', icon: '' },
-  { id: 2, label: 'Series', route: 'series', icon: '' },
+  { id: 2, label: 'Series', route: 'vod/series', icon: '' },
   { id: 3, label: 'Sports', route: 'sports', icon: '' },
   { id: 4, label: 'Live TV', route: 'live', icon: '' },
   { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },

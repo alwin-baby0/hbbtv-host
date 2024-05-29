@@ -46,7 +46,7 @@ export default class CategoryPicker extends Lightning.Component {
     this._CaterogyItems.patch({
       w: width,
       h: height,
-    })
+    });
   }
 
   _getFocused() {

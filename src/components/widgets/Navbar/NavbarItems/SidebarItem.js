@@ -124,7 +124,7 @@ export default class SidebarItem extends lng.Component {
 
   _handleEnter() {
     this.fireAncestors('$changePage', this._props.index);
-    Router.focusPage('MyListPage');
+    Router.focusPage();
     // Router.restoreFocus();
   }
 }
