@@ -1,36 +1,33 @@
-class SeriesRailItem {
+class SimpleRailItem {
   constructor(data) {
-    const { id, title, images } = data;
+    const { id, title, type, media_group } = data;
     this.id = id;
     this.title = title;
-    this.image = images;
+    this.type = type?.value;
 
     this.thumbnails = [];
     this.landscapePosters = [];
     this.portraitPosters = [];
 
-    for (const key in images) {
-      if (images.hasOwnProperty(key)) {
-        const imageType = key.split('_')[0];
-        const imageSize = key.split('_')[2];
-
-        switch (imageType) {
-          case 'thumbnail': {
-            this.thumbnails.push({ key: key, src: images[key] });
+    if (media_group) {
+      media_group[0]?.media_item?.forEach((item) => {
+        switch (true) {
+          case item.key.includes('thumbnail'): {
+            this.thumbnails.push(item);
             break;
           }
-          case 'poster': {
-            if (key.includes('landscape')) {
-              this.landscapePosters.push({ key: key, src: images[key] });
-            } else if (key.includes('portrait')) {
-              this.portraitPosters.push({ key: key, src: images[key] });
-            }
+          case item.key.includes('poster_landscape'): {
+            this.landscapePosters.push(item);
+            break;
+          }
+          case item.key.includes('poster_portrait'): {
+            this.portraitPosters.push(item);
             break;
           }
           default:
             break;
         }
-      }
+      });
     }
   }
 
@@ -68,9 +65,4 @@ class SeriesRailItem {
   }
 }
 
-SeriesRailItem.small = '360';
-SeriesRailItem.medium = '480';
-SeriesRailItem.larg = '720';
-SeriesRailItem.extraLarge = '1080';
-
-export default SeriesRailItem;
+export default SimpleRailItem;

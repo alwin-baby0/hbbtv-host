@@ -1,6 +1,6 @@
 import request, { V2 } from '../index';
 
-export const getSports = (page, limit) => {
+export const getSports = async (page, limit) => {
   return request({
     url: '/sports',
     apiVersion: V2,
@@ -12,7 +12,7 @@ export const getSports = (page, limit) => {
   });
 };
 
-export const getEvents = (page, type = 'events', limit) => {
+export const getEvents = async (page, type = 'events', limit) => {
   return request({
     url: '/getSportEvents',
     apiVersion: V2,
@@ -25,7 +25,7 @@ export const getEvents = (page, type = 'events', limit) => {
   });
 };
 
-export const getSingleEvent = (sportId) => {
+export const getSingleEvent = async (sportId) => {
   return request({
     url: '/getSportEvent',
     apiVersion: V2,

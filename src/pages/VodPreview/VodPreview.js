@@ -61,10 +61,6 @@ export default class VodPreview extends Lightning.Component {
     }
   }
 
-  _handleDown() {
-    // console.log('parent down');
-  }
-
   _getFocused() {
     return this._setState('Content');
   }

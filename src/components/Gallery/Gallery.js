@@ -3,7 +3,7 @@ import { Row } from '@lightningjs/ui-components';
 import colors from '../../../reskin/colors.json';
 import GalleryItem from '../GalleryItem/GalleryItem';
 import Bullet from '../Bullet/Bullet';
-import HomeRailItem from '../../api/home/HomeRailItem';
+import { imageSizes } from '../../api/models/utils';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
@@ -20,7 +20,7 @@ export default class Gallery extends Lightning.Component {
       HeroSection: {
         type: GalleryItem,
       },
-      Bullet: {
+      Bullets: {
         type: Row,
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         y: 820,
@@ -32,7 +32,7 @@ export default class Gallery extends Lightning.Component {
 
   _preloadSliderDataImages(sliderData) {
     sliderData.items.forEach((item) => {
-      item.preloadImages(HomeRailItem.extraLarge);
+      item.preloadImages(imageSizes.XL);
     });
   }
 
@@ -51,7 +51,7 @@ export default class Gallery extends Lightning.Component {
       };
     });
 
-    this._Bullet.patch({
+    this._Bullets.patch({
       items: bulletItem,
     });
   }
@@ -60,8 +60,8 @@ export default class Gallery extends Lightning.Component {
     return this.tag('HeroSection');
   }
 
-  get _Bullet() {
-    return this.tag('Bullet');
+  get _Bullets() {
+    return this.tag('Bullets');
   }
 
   _active() {
@@ -71,7 +71,7 @@ export default class Gallery extends Lightning.Component {
   _nextVideo() {
     const { sliderData } = this._props;
 
-    this._Bullet.items.forEach((item, index) => {
+    this._Bullets.items.forEach((item, index) => {
       const color =
         index === this._sliderIndex
           ? Colors(colors.focusedBullet).get()

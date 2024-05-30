@@ -1,5 +1,6 @@
 import request, { V2 } from '../index';
-import HomeRailItem from './HomeRailItem';
+import { SimpleRailItem, GalleryRailItem } from '../models';
+
 export const getHomePage = (row, page, limit) =>
   request({
     url: '/start',
@@ -10,12 +11,30 @@ export const getHomePage = (row, page, limit) =>
       page,
       limit,
     },
-  }).then(parseHomePageData);
+  }).then(parseHomePageRailData);
 
-function parseHomePageData(result) {
-  const { data } = result;
+export const getHomePageHeroSection = () =>
+  request({
+    url: '/start',
+    apiVersion: V2,
+    method: 'GET',
+    params: {
+      row: 1,
+      page: 1,
+      limit: 6,
+    },
+  }).then(parseHomePageHeroSection);
+
+function parseHomePageRailData({ data }) {
   return {
     sectionTitle: data.title,
-    items: data.entry?.map((item) => new HomeRailItem(item)),
+    items: data.entry?.map((item) => new SimpleRailItem(item)),
+  };
+}
+
+function parseHomePageHeroSection({ data }) {
+  return {
+    sectionTitle: data.title,
+    items: data.entry?.map((item) => new GalleryRailItem(item)),
   };
 }

@@ -1,14 +1,28 @@
 import request, { V1, V2 } from '../index';
-import SeriesRailItem from './SeriesRailItem';
+import { SimpleRailItem } from '../models';
 
-export const getSeries = (page, limit) =>
-  request({
-    url: '/series',
-    apiVersion: V1,
+export const getSeriesGenres = async () => {
+  return request({
+    url: '/getGenres',
+    apiVersion: V2,
     method: 'GET',
     params: {
-      page,
-      limit,
+      category: 'series',
+      type: 'genres_series',
+    },
+  });
+};
+
+export const getSeries = async () =>
+  request({
+    url: '/search',
+    apiVersion: V2,
+    method: 'GET',
+    params: {
+      keyword: 'all',
+      category: 'series',
+      orderBy: 'date:desc',
+      limit: 24,
     },
   }).then(parseSeriesPageData);
 
@@ -17,11 +31,11 @@ function parseSeriesPageData(result) {
 
   return {
     sectionTitle: data.title,
-    items: data.items?.map((item) => new SeriesRailItem(item)),
+    items: data.entry?.map((item) => new SimpleRailItem(item)),
   };
 }
 
-export const getSingleSeries = (seriesId) => {
+export const getSingleSeries = async (seriesId) => {
   return request({
     url: '/getSerie',
     apiVersion: V2,
@@ -32,7 +46,7 @@ export const getSingleSeries = (seriesId) => {
   });
 };
 
-export const getSeason = (seriesId) => {
+export const getSeason = async (seriesId) => {
   return request({
     url: `/series/${seriesId}/seasons`,
     apiVersion: V2,

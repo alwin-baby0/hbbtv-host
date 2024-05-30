@@ -1,6 +1,6 @@
-import MoviesRailItem from './MoviesRailItem';
+import SimpleRailItem from './SimpleRailItem';
 
-class SingleMovieRailItem extends MoviesRailItem {
+class MovieRailItem extends SimpleRailItem {
   constructor(data) {
     super(data);
     const { content, extensions, summary } = data;
@@ -15,4 +15,4 @@ class SingleMovieRailItem extends MoviesRailItem {
   }
 }
 
-export default SingleMovieRailItem;
+export default MovieRailItem;
