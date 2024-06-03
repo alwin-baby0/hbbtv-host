@@ -30,17 +30,10 @@ export default class Gallery extends Lightning.Component {
     };
   }
 
-  _preloadSliderDataImages(sliderData) {
-    sliderData.items.forEach((item) => {
-      item.preloadImages(imageSizes.XL);
-    });
-  }
-
   set props(props) {
     this._sliderIndex = 0;
     this._props = { ...this._props, ...props };
     const { sliderData } = this._props;
-    this._preloadSliderDataImages(sliderData);
 
     const bulletItem = sliderData.items.map((_item, index) => {
       return {
@@ -54,6 +47,8 @@ export default class Gallery extends Lightning.Component {
     this._Bullets.patch({
       items: bulletItem,
     });
+
+    this._nextVideo();
   }
 
   get _HeroSection() {
@@ -62,10 +57,6 @@ export default class Gallery extends Lightning.Component {
 
   get _Bullets() {
     return this.tag('Bullets');
-  }
-
-  _active() {
-    this._nextVideo();
   }
 
   _nextVideo() {

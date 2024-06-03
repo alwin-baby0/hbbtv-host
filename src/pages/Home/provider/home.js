@@ -1,4 +1,5 @@
 import { getHomePage, getHomePageHeroSection } from '../../../api/home';
+import { imageSizes } from '../../../api/models/utils';
 
 export default async function (page) {
   const rows = Array.from({ length: 19 }, (_, index) => index + 2);
@@ -12,7 +13,10 @@ export default async function (page) {
     .reduce((accumulator, data) => {
       return accumulator.concat(data);
     }, [])
-    .filter((item) => item.items);
+    .filter((rail) => rail.items);
+
+  //preload images for gallery
+  sliderData.items.forEach((item) => item.preloadImages(imageSizes.XL));
 
   page.props = {
     sliderData,

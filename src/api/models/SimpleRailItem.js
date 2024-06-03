@@ -65,4 +65,4 @@ class SimpleRailItem {
   }
 }
 
-export default SimpleRailItem;
+export { SimpleRailItem };

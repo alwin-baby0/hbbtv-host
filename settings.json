@@ -10,12 +10,12 @@
       "readPixelsAfterDraw": true,
       "pauseRafLoopOnIdle": true
     },
-    "debug": false
+    "debug": true
   },
   "platformSettings": {
     "path": "./static",
     "log": false,
     "showVersion": false,
-    "inspector": false
+    "inspector": true
   }
 }

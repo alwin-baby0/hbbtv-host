@@ -1,4 +1,4 @@
-import SimpleRailItem from './SimpleRailItem';
+import { SimpleRailItem } from './SimpleRailItem';
 
 class MovieRailItem extends SimpleRailItem {
   constructor(data) {
@@ -15,4 +15,4 @@ class MovieRailItem extends SimpleRailItem {
   }
 }
 
-export default MovieRailItem;
+export { MovieRailItem };

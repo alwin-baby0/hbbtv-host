@@ -101,7 +101,7 @@ export default class Home extends Lightning.Component {
   }
 
   _firstActive() {
-    this.setState('GallerySection');
+    this._setState('GallerySection');
   }
 
   static _states() {

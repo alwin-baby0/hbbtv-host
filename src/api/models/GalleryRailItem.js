@@ -68,4 +68,4 @@ class GalleryRailItem {
   }
 }
 
-export default GalleryRailItem;
+export { GalleryRailItem };
