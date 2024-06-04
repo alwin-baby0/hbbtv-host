@@ -1,5 +1,5 @@
-import FocusableItem from '../FocusableItem/FocusableItem';
 import { CARD_SIZES } from './constants';
+import FocusableItem from '../FocusableItem/FocusableItem';
 
 export default class PosterRailItem extends FocusableItem {
   _props = {

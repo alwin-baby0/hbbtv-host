@@ -46,9 +46,8 @@ export default class HorizontalContainer extends Lightning.Component {
       this._scrollPosition = 0;
       this.Items.x = 0;
 
-      // this.Items.childList.clear();
+      this.Items.childList.clear();
       if (items.length > 0) {
-        // console.log('Adding items to HorizontalContainer:', items); // Log items
         this.Items.childList.a(items);
         this.stage.update();
       }
@@ -83,12 +82,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleDown() {
-    // console.log('handle down');
     return false;
   }
 
   _handleUp() {
-    // console.log('handle up');
     return false;
   }
 

@@ -84,6 +84,8 @@ export default class Gallery extends Lightning.Component {
     this._HeroSection.patch({
       props: {
         galleryItem: sliderData.items[this._sliderIndex],
+        height: 800,
+        yPos: 215,
       },
     });
   }

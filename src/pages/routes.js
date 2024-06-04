@@ -1,4 +1,3 @@
-import { Router } from '@lightningjs/sdk';
 import Splash from '../components/SplashScreen/Splash';
 import Home from './Home/Home';
 import home from './Home/provider/home';
@@ -8,6 +7,8 @@ import SingleMovie from './SingleMovie/SingleMovie';
 import singleMovie from './SingleMovie/provider/singleMovie';
 import Filtered from './Filtered/Filtered';
 import filtered from './Filtered/provider/filtered';
+import SingleSeries from './SingleSeries/SingleSeries';
+import singleSeries from './SingleSeries/provider/singleSeries';
 
 export default {
   root: 'splash',
@@ -32,6 +33,11 @@ export default {
       path: 'movie-details/:movieId',
       component: SingleMovie,
       on: singleMovie,
+    },
+    {
+      path: 'series-details/:seriesId',
+      component: SingleSeries,
+      on: singleSeries,
     },
     {
       path: 'filterPage/:action/:genre_movies',
