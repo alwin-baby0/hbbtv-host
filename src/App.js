@@ -34,7 +34,7 @@ export default class App extends Router.App {
   }
 
   get _Menu() {
-    return this.tag('Menu');
+    return this.tag('Widgets.Menu');
   }
 
   get _Background() {

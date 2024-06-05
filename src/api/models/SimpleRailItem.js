@@ -1,9 +1,10 @@
-class MoviesRailItem {
+class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, media_group } = data;
+    const { id, title, type, media_group, summary, content } = data;
     this.id = id;
     this.title = title;
     this.type = type?.value;
+    this.summary = summary;
 
     this.thumbnails = [];
     this.landscapePosters = [];
@@ -65,9 +66,4 @@ class MoviesRailItem {
   }
 }
 
-MoviesRailItem.small = '360';
-MoviesRailItem.medium = '480';
-MoviesRailItem.larg = '720';
-MoviesRailItem.extraLarge = '1080';
-
-export default MoviesRailItem;
+export { SimpleRailItem };

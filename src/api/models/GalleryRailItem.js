@@ -1,20 +1,14 @@
-class HomeRailItem {
+class GalleryRailItem {
   constructor(data) {
-    const { title, summary, type, content, extensions, media_group } = data;
+    const { title, content, extensions, media_group } = data;
 
     this.title = title;
-    this.summary = summary;
-    this.type = type?.value;
     this.content = {
       type: content?.type,
       src: content?.src,
     };
 
-    this.duration = extensions?.duration;
     this.description = extensions?.description;
-    this.cast = extensions?.cast;
-    this.director = extensions?.director;
-    this.year = extensions?.year;
     this.previewPlayback = extensions?.preview_playback;
     this.thumbnails = [];
     this.landscapePosters = [];
@@ -74,9 +68,4 @@ class HomeRailItem {
   }
 }
 
-HomeRailItem.small = '360';
-HomeRailItem.medium = '480';
-HomeRailItem.larg = '720';
-HomeRailItem.extraLarge = '1080';
-
-export default HomeRailItem;
+export { GalleryRailItem };

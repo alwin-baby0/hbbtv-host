@@ -1,16 +1,51 @@
 import request, { V1, V2 } from '../index';
+import { MovieRailItem, SimpleRailItem } from '../models';
+import SingleSeriesRailItem from '../models/SingleSeriesRailItem';
+
+export const getSeriesGenres = async () => {
+  return request({
+    url: '/getGenres',
+    apiVersion: V2,
+    method: 'GET',
+    params: {
+      category: 'series',
+      type: 'genres_series',
+    },
+  });
+};
 
 export const getSeries = (page, limit) => {
   return request({
     url: '/series',
-    apiVersion: V1,
+    apiVersion: V2,
     method: 'GET',
     params: {
       page,
-      limit,
+      limit: 26,
     },
-  });
+  }).then(parseSeriesPageData);
 };
+
+/* export const getSeries = async () =>
+  request({
+    url: '/search',
+    apiVersion: V2,
+    method: 'GET',
+    params: {
+      keyword: 'all',
+      category: 'series',
+      orderBy: 'date:desc',
+      limit: 24,
+    },
+  }).then(parseSeriesPageData); */
+
+function parseSeriesPageData(result) {
+  const { data } = result;
+  return {
+    sectionTitle: data.title,
+    items: data.entry?.map((item) => new SimpleRailItem(item)),
+  };
+}
 
 export const getSingleSeries = (seriesId) => {
   return request({
@@ -20,8 +55,14 @@ export const getSingleSeries = (seriesId) => {
     params: {
       id: seriesId,
     },
-  });
+  }).then(parseSingleSeriesPageData);
 };
+function parseSingleSeriesPageData(result) {
+  const { data } = result;
+  return {
+    items: data.entry?.map((item) => new SingleSeriesRailItem(item)),
+  };
+}
 
 export const getSeason = (seriesId) => {
   return request({
@@ -29,7 +70,16 @@ export const getSeason = (seriesId) => {
     apiVersion: V2,
     method: 'GET',
     params: {
-      id: seriesId,
+      row: 1,
+      limit: 6,
     },
-  });
+  }).then(parseSeasonData);
 };
+
+function parseSeasonData(result) {
+  const { data } = result;
+  return {
+    items: data.entry?.map((item) => new SimpleRailItem(item)),
+    sectionTitle: data.title,
+  };
+}

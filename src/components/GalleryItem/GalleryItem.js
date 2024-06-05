@@ -1,29 +1,23 @@
-// GalleryItem.js
-import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import Button from '../Button/Button';
 import colors from '../../../reskin/colors.json';
-import HomeRailItem from '../../api/home/HomeRailItem';
+import { imageSizes } from '../../api/models/utils';
 
 export default class GalleryItem extends Lightning.Component {
   _props = {};
   static _template() {
     return {
       w: 1920,
-      h: 800,
       BackgroundImage: {
         w: 1420,
-        h: 800,
       },
       GradientOverlay: {
         zIndex: 1,
         w: 1920,
-        h: 800,
-        texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, 800),
       },
       Info: {
         zIndex: 2,
         x: 110,
-        y: 215,
         w: 700,
         h: 415,
         flex: { direction: 'column' },
@@ -34,11 +28,24 @@ export default class GalleryItem extends Lightning.Component {
             fontFamily: 'Inter',
             fontStyle: 'normal bold',
             fontSize: 32,
-            lineHeight: 40,
+          },
+        },
+        EpisodeCount: {
+          flexItem: {
+            marginTop: 10,
+          },
+          text: {
+            textColor: Colors(colors.focus).get(),
+            fontFamily: 'Inter',
+            fontStyle: 'normal bold',
+            fontSize: 20,
           },
         },
         Description: {
-          y: 15,
+          flexItem: {
+            marginTop: 10,
+            marginBottom: 5,
+          },
           text: {
             textColor: Colors(colors.sliderDescription).get(),
             wordWrapWidth: 650,
@@ -46,12 +53,14 @@ export default class GalleryItem extends Lightning.Component {
             fontStyle: 'normal normal',
             fontSize: 18,
             lineHeight: 31,
-            maxLines: 2,
+            maxLines: 8,
           },
         },
         GalleryButton: {
           type: Button,
-          y: 30,
+          flexItem: {
+            marginTop: 10,
+          },
           props: {
             buttonLabel: 'WATCH NOW',
             buttonIcon: Utils.asset('icons/home/play.svg'),
@@ -63,12 +72,21 @@ export default class GalleryItem extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem } = this._props;
+    const { galleryItem, height, yPos } = this._props;
+
     this._BackgroundImage.patch({
       w: 1220,
-      h: 800,
+      h: height,
       x: 700,
-      src: galleryItem.getLandscapePoster(HomeRailItem.extraLarge).src,
+      src: galleryItem.getLandscapePoster(imageSizes.XL).src,
+    });
+
+    this._GradientOverlay.patch({
+      texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
+    });
+
+    this._Info.patch({
+      y: yPos,
     });
 
     this._Title.patch({
@@ -76,6 +94,13 @@ export default class GalleryItem extends Lightning.Component {
         text: galleryItem.title,
       },
     });
+
+    galleryItem.episodeCount &&
+      this._EpisodeCount.patch({
+        text: {
+          text: galleryItem.episodeCount,
+        },
+      });
 
     this._Description.patch({
       text: {
@@ -92,8 +117,20 @@ export default class GalleryItem extends Lightning.Component {
     });
   }
 
+  get _GradientOverlay() {
+    return this.tag('GradientOverlay');
+  }
+
+  get _Info() {
+    return this.tag('Info');
+  }
+
   get _Title() {
     return this.tag('Title');
+  }
+
+  get _EpisodeCount() {
+    return this.tag('EpisodeCount');
   }
 
   get _Description() {

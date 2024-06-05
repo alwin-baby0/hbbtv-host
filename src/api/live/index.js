@@ -1,6 +1,6 @@
 import request, { V1, V2 } from '../index';
 
-export const getChannels = () =>
+export const getChannels = async () =>
   request({
     url: `channels`,
     apiVersion: V1,
@@ -11,7 +11,7 @@ export const getChannels = () =>
     },
   });
 
-export const getSingleChannel = (channelId) =>
+export const getSingleChannel = async (channelId) =>
   request({
     url: `/getChannel`,
     apiVersion: V1,
@@ -21,7 +21,7 @@ export const getSingleChannel = (channelId) =>
     },
   });
 
-export const getLiveChannels = (channelId) =>
+export const getLiveChannels = async (channelId) =>
   request({
     url: `/getLiveChannel`,
     apiVersion: V2,
@@ -31,7 +31,7 @@ export const getLiveChannels = (channelId) =>
     },
   });
 
-export const getEPG = (channelId) =>
+export const getEPG = async (channelId) =>
   request({
     url: `/getEpg`,
     apiVersion: V2,
@@ -41,7 +41,7 @@ export const getEPG = (channelId) =>
       id: channelId,
     },
   });
-export const getEPGV2 = (channelId) =>
+export const getEPGV2 = async (channelId) =>
   request({
     url: `/epg_program`,
     apiVersion: V2,

@@ -1,12 +1,14 @@
-import MoviesRailItem from './MoviesRailItem';
+import { SimpleRailItem } from './SimpleRailItem';
 
-class SingleMovieRailItem extends MoviesRailItem {
+class MovieRailItem extends SimpleRailItem {
   constructor(data) {
     super(data);
     const { content, extensions, summary } = data;
 
     this.summary = summary;
-    this.videoSrc = content.src;
+    if (content) {
+      this.videoSrc = content.src;
+    }
     this.buttonText = extensions.button_text;
     this.description = extensions.description;
     this.genre = extensions.genre;
@@ -15,4 +17,4 @@ class SingleMovieRailItem extends MoviesRailItem {
   }
 }
 
-export default SingleMovieRailItem;
+export { MovieRailItem };

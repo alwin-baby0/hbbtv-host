@@ -1,10 +1,12 @@
-import { Colors, Lightning } from '@lightningjs/sdk';
+import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 
 export default class CategoryPickerItem extends Lightning.Component {
   _props = {
     itemInfo: null,
+    navigateTo: '',
   };
+
   static _template() {
     return {
       h: 64,
@@ -25,9 +27,16 @@ export default class CategoryPickerItem extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { itemInfo } = this._props;
+    const { itemInfo, w, h } = this._props;
     const { title } = itemInfo;
 
+    this.patch({
+      w,
+      h,
+      flexItem: {
+        shrink: false,
+      },
+    });
     this._Title.patch({
       text: {
         text: title.toUpperCase(),
@@ -69,7 +78,7 @@ export default class CategoryPickerItem extends Lightning.Component {
   }
 
   _handleEnter() {
-    const { url } = this._props;
-    Router.navigate(url);
+    const { navigateTo } = this._props;
+    Router.navigate(navigateTo);
   }
 }

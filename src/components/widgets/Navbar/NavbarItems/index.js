@@ -7,8 +7,8 @@ import SidebarItem from './SidebarItem';
 
 const menuItems = [
   { id: 0, label: 'Home', route: 'home', icon: '' },
-  { id: 1, label: 'Movies', route: 'movies', icon: '' },
-  { id: 2, label: 'Series', route: 'series', icon: '' },
+  { id: 1, label: 'Movies', route: 'vod/movies', icon: '' },
+  { id: 2, label: 'Series', route: 'vod/series', icon: '' },
   { id: 3, label: 'Sports', route: 'sports', icon: '' },
   { id: 4, label: 'Live TV', route: 'live', icon: '' },
   { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
@@ -63,32 +63,40 @@ export default class SidebarItems extends Lightning.Component {
 
   _firstActive() {
     this._index = getRouteNavbarIndex(Router.getActiveHash());
-    this._Column.items[this._index].patch({
-      props: {
-        selected: true,
-      },
-    });
+    this._setSelected(this._index);
   }
 
-  _unfocus() {
-    this._index = this._selectedMenuItem;
+  _focus() {
+    let focusedId = getRouteNavbarIndex(Router.getActiveHash());
+    this._updateFocus();
+    this.$changePage(focusedId);
+  }
+
+  _setSelected(index) {
+    this._Column.items.forEach((item, i) => {
+      item.patch({
+        props: {
+          selected: i === index,
+        },
+      });
+    });
   }
 
   $changePage(index) {
     const route = menuItems[index].route;
+    this._setSelected(index);
+    this._index = index;
 
-    if (this._selectedMenuItem !== index) {
-      this._Column.items[index].patch({
-        props: { selected: true },
-      });
-      this._Column.items[this._selectedMenuItem].patch({
-        props: { selected: false },
-      });
-
-      this._selectedMenuItem = index;
-      this._index = index;
-
+    if (route) {
       Router.navigate(route);
+    }
+  }
+
+  _updateFocus() {
+    const newIndex = getRouteNavbarIndex(Router.getActiveHash());
+    if (newIndex !== this._index) {
+      this._setSelected(newIndex);
+      this._index = newIndex;
     }
   }
 
