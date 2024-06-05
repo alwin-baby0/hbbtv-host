@@ -1,19 +1,10 @@
-import MoviesRailItem from './MoviesRailItem';
-
-class SingleMovieRailItem extends MoviesRailItem {
+class SimpleRailItem {
   constructor(data) {
-    super(data);
-    const { content, extensions, summary, media_group } = data;
-
+    const { id, title, type, media_group, summary } = data;
+    this.id = id;
+    this.title = title;
+    this.type = type?.value;
     this.summary = summary;
-    if (content) {
-      this.videoSrc = content.src;
-    }
-    this.buttonText = extensions.button_text;
-    this.description = extensions.description;
-    this.genre = extensions.genre;
-    this.director = extensions.director;
-    this.subtitle = extensions.subtitle;
 
     this.thumbnails = [];
     this.landscapePosters = [];
@@ -41,6 +32,24 @@ class SingleMovieRailItem extends MoviesRailItem {
     }
   }
 
+  preloadImages(size) {
+    const imageUrls = [
+      this.getThumbnailImage(size).src,
+      this.getLandscapePoster(size).src,
+      this.getPortraitPoster(size).src,
+    ];
+
+    imageUrls.forEach((url) => {
+      try {
+        const urlObj = new URL(url);
+        const image = new Image();
+        image.src = urlObj.toString();
+      } catch {
+        // skip
+      }
+    });
+  }
+
   getThumbnailImage(size) {
     const thumbnail = this.thumbnails.find((thumbnail) => thumbnail.key.includes(size));
     return thumbnail ?? this.thumbnails[0];
@@ -57,9 +66,4 @@ class SingleMovieRailItem extends MoviesRailItem {
   }
 }
 
-SingleMovieRailItem.small = '360';
-SingleMovieRailItem.medium = '480';
-SingleMovieRailItem.larg = '720';
-SingleMovieRailItem.extraLarge = '1080';
-
-export default SingleMovieRailItem;
+export { SimpleRailItem };

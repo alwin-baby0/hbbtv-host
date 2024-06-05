@@ -1,8 +1,8 @@
 import { Router } from '@lightningjs/sdk';
 import { getSearch } from '../../../api/search';
-import MoviesRailItem from '../../../api/movies/MoviesRailItem';
 import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
 import PosterRailItem from '../../../components/RailItems/PosterRailItem';
+import { imageSizes } from '../../../api/models/utils';
 
 const getGenresInfo = async (page, props) => {
   const ROW_SIZE = 6;
@@ -34,7 +34,7 @@ const getGenresInfo = async (page, props) => {
             },
             props: {
               itemTitle: item.title,
-              imageSrc: item.getPortraitPoster(MoviesRailItem.small).src,
+              imageSrc: item.getPortraitPoster(imageSizes.S).src,
               callback: () => {
                 Router.navigate(`movie-details/${item.id}`);
               },

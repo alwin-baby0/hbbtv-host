@@ -2,7 +2,7 @@ const ROUTES_INDEX = {
   home: 0,
   'vod/movies': 1,
   'vod/series': 2,
-  sports: 3,
+  'vod/sports': 3,
   live: 4,
   search: 5,
   settings: 6,

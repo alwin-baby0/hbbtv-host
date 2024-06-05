@@ -1,10 +1,10 @@
 // Home.js
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { Column } from '@lightningjs/ui-components';
-import HomeRailItem from '../../api/home/HomeRailItem';
 import VODRow from '../../components/VODRow/VODRow';
 import Gallery from '../../components/Gallery/Gallery';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
+import { imageSizes } from '../../api/models/utils';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -58,6 +58,9 @@ export default class Home extends Lightning.Component {
     return this.tag('Wrapper');
   }
 
+  /**
+   * @param {{ sliderData: GalleryItem | null; railData: SimpleRailItem[]; }} props
+   */
   set props(props) {
     this._props = { ...this._props, ...props };
     const { sliderData, railData } = this._props;
@@ -71,39 +74,34 @@ export default class Home extends Lightning.Component {
       .map((row) => {
         const rowItems = Array.isArray(row.items)
           ? row.items.map((movie) => {
-              return {
-                type: PosterRailItem,
-                props: {
-                  itemTitle: movie.title,
-                  imageSrc: movie.getPortraitPoster(HomeRailItem.small).src,
-                },
-              };
-            })
+            return {
+              type: PosterRailItem,
+              props: {
+                itemTitle: movie.title,
+                imageSrc: movie.getPortraitPoster(imageSizes.S).src,
+              },
+            };
+          })
           : undefined;
 
         return row.items
           ? {
-              type: VODRow,
-              title: row.sectionTitle ?? '',
-              h: 600,
-              items: rowItems,
-              style: {
-                itemSpacing: 24,
-              },
-            }
+            type: VODRow,
+            title: row.sectionTitle ?? '',
+            h: 600,
+            items: rowItems,
+            style: {
+              itemSpacing: 24,
+            },
+          }
           : null;
       })
       .filter(Boolean);
     this._Column.items = items;
   }
 
-  _enable() {
-    // Router.focusWidget('menu');
+  _firstActive() {
     this._setState('GallerySection');
-    setTimeout(() => {
-      Router.focusWidget('menu');
-    }, 1);
-    // this._setState('GallerySection');
   }
 
   static _states() {

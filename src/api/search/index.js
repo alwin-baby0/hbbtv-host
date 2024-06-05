@@ -1,7 +1,7 @@
 import request, { V2 } from '../index';
-import MoviesRailItem from '../movies/MoviesRailItem';
+import { SimpleRailItem } from '../models';
 
-export const getSearch = (keyword, category) =>
+export const getSearch = async (keyword, category) =>
   request({
     url: '/search',
     apiVersion: V2,
@@ -19,6 +19,6 @@ function parseSearchPageData(result) {
 
   return {
     sectionTitle: data.title,
-    items: data.entry?.map((item) => new MoviesRailItem(item)),
+    items: data.entry?.map((item) => new SimpleRailItem(item)),
   };
 }

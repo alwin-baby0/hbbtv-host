@@ -1,9 +1,9 @@
 import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import SingleSeriesRailItem from '../../api/series/SingleSeriesRailItem';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
+import { imageSizes } from '../../api/models/utils';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -72,7 +72,7 @@ export default class SingleSeries extends Lightning.Component {
         text: sectionTitle,
       },
     });
-
+    console.log('episodesInfo:', episodesInfo);
     const episodes = episodesInfo.map((episode) => {
       return {
         type: LandscapeRailItem,
@@ -85,7 +85,7 @@ export default class SingleSeries extends Lightning.Component {
         props: {
           itemTitle: episode.title,
           itemDescription: episode.summary,
-          imageSrc: episode.getLandscapePoster(SingleSeriesRailItem.medium).src,
+          imageSrc: episode.getThumbnailImage(imageSizes.M).src,
           /* callback: () => {
             console.log('Navigate to player:', episode.content.src);
           }, */

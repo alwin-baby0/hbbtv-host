@@ -1,7 +1,7 @@
 import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import Button from '../Button/Button';
 import colors from '../../../reskin/colors.json';
-import HomeRailItem from '../../api/home/HomeRailItem';
+import { imageSizes } from '../../api/models/utils';
 
 export default class GalleryItem extends Lightning.Component {
   _props = {};
@@ -28,11 +28,24 @@ export default class GalleryItem extends Lightning.Component {
             fontFamily: 'Inter',
             fontStyle: 'normal bold',
             fontSize: 32,
-            lineHeight: 40,
+          },
+        },
+        EpisodeCount: {
+          flexItem: {
+            marginTop: 10,
+          },
+          text: {
+            textColor: Colors(colors.focus).get(),
+            fontFamily: 'Inter',
+            fontStyle: 'normal bold',
+            fontSize: 20,
           },
         },
         Description: {
-          y: 15,
+          flexItem: {
+            marginTop: 10,
+            marginBottom: 5,
+          },
           text: {
             textColor: Colors(colors.sliderDescription).get(),
             wordWrapWidth: 650,
@@ -45,7 +58,9 @@ export default class GalleryItem extends Lightning.Component {
         },
         GalleryButton: {
           type: Button,
-          y: 30,
+          flexItem: {
+            marginTop: 10,
+          },
           props: {
             buttonLabel: 'WATCH NOW',
             buttonIcon: Utils.asset('icons/home/play.svg'),
@@ -63,7 +78,7 @@ export default class GalleryItem extends Lightning.Component {
       w: 1220,
       h: height,
       x: 700,
-      src: galleryItem.getLandscapePoster(HomeRailItem.extraLarge).src,
+      src: galleryItem.getLandscapePoster(imageSizes.XL).src,
     });
 
     this._GradientOverlay.patch({
@@ -79,6 +94,13 @@ export default class GalleryItem extends Lightning.Component {
         text: galleryItem.title,
       },
     });
+
+    galleryItem.episodeCount &&
+      this._EpisodeCount.patch({
+        text: {
+          text: galleryItem.episodeCount,
+        },
+      });
 
     this._Description.patch({
       text: {
@@ -105,6 +127,10 @@ export default class GalleryItem extends Lightning.Component {
 
   get _Title() {
     return this.tag('Title');
+  }
+
+  get _EpisodeCount() {
+    return this.tag('EpisodeCount');
   }
 
   get _Description() {

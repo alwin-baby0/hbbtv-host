@@ -1,20 +1,19 @@
 import request, { V1, V2 } from '../index';
-import MoviesRailItem from './MoviesRailItem';
-import SingleMovieRailItem from './SingleMovieRailItem';
+import { MovieRailItem, SimpleRailItem } from '../models';
 
-export const getGenres = (category, type) => {
+export const getMovieGenres = async () => {
   return request({
     url: '/getGenres',
     apiVersion: V2,
     method: 'GET',
     params: {
-      category: category,
-      type: type,
+      category: 'movies',
+      type: 'genres_movies',
     },
   });
 };
 
-export const getMovies = () =>
+export const getMovies = async () =>
   request({
     url: '/search',
     apiVersion: V2,
@@ -32,11 +31,11 @@ function parseMoviesPageData(result) {
 
   return {
     sectionTitle: data.title,
-    items: data.entry?.map((item) => new MoviesRailItem(item)),
+    items: data.entry?.map((item) => new SimpleRailItem(item)),
   };
 }
 
-export const getSingleMovie = (movieId) =>
+export const getSingleMovie = async (movieId) =>
   request({
     url: `/getMovie`,
     apiVersion: V2,
@@ -48,5 +47,5 @@ export const getSingleMovie = (movieId) =>
 
 function parseSingleMoviePageData(result) {
   const { data } = result;
-  return new SingleMovieRailItem(data.entry[0]);
+  return new MovieRailItem(data.entry[0]);
 }

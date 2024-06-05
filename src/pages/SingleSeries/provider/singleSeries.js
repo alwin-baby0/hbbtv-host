@@ -7,6 +7,7 @@ const fetchSingleSeries = async ({ seriesId }) => {
 
 const fetchSeason = async ({ seriesId }) => {
   const season = await getSeason(seriesId);
+  console.log('season123: ', season);
   return {
     seasonInfo: season,
   };
