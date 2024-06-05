@@ -1,5 +1,5 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
-
+import { clamp } from '../../utils/index';
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
     items: [],
@@ -25,11 +25,8 @@ export default class HorizontalContainer extends Lightning.Component {
     return this._focusedIndex;
   }
 
-  set _focusedIndex(newIndex) {
-    if (newIndex >= 0 && newIndex < this._props.items.length) {
-      this._focusedIndex = newIndex;
-      this._reCalibrateScroll();
-    }
+  _setFocusedIndex(newIndex) {
+    this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
   }
 
   /**

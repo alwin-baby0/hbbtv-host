@@ -1,6 +1,6 @@
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, media_group, summary } = data;
+    const { id, title, type, media_group, summary, content } = data;
     this.id = id;
     this.title = title;
     this.type = type?.value;

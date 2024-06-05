@@ -109,7 +109,7 @@ export default class VerticalContainer extends Lightning.Component {
 
   $horizontalContainerIndexChange(newIndex) {
     if (this._props.carryRowPosition) {
-      this.Items.children.forEach((child) => (child._focusedIndex = newIndex));
+      this.Items.children.forEach((child) => child._setFocusedIndex(newIndex));
     }
     this.fireAncestors('$horizontalContainerIndexChange', newIndex);
   }

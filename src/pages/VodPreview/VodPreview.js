@@ -90,7 +90,6 @@ export default class VodPreview extends Lightning.Component {
         }
 
         $enter() {
-          // console.log('entering Content state');
           this._Content.patch({
             y: 0,
           });
@@ -155,7 +154,6 @@ export default class VodPreview extends Lightning.Component {
         }
 
         $exit() {
-          // console.log('exit VodContainer state');
           this.fireAncestors('$hideNavbar', true);
         }
 

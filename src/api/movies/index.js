@@ -13,16 +13,14 @@ export const getMovieGenres = async () => {
   });
 };
 
-export const getMovies = async () =>
+export const getMovies = async (page, limit) =>
   request({
-    url: '/search',
+    url: '/movies',
     apiVersion: V2,
     method: 'GET',
     params: {
-      keyword: 'all',
-      category: 'movie',
-      orderBy: 'date:desc',
-      limit: 24,
+      page,
+      limit: 12,
     },
   }).then(parseMoviesPageData);
 

@@ -67,12 +67,18 @@ export default class SingleSeries extends Lightning.Component {
       },
     });
 
+    this._HeroSection._GalleryButton.patch({
+      props: {
+        width: 400,
+        buttonLabel: 'WATCH FIRST EPISODE',
+      },
+    });
+
     this._Seasson.patch({
       text: {
         text: sectionTitle,
       },
     });
-    console.log('episodesInfo:', episodesInfo);
     const episodes = episodesInfo.map((episode) => {
       return {
         type: LandscapeRailItem,
@@ -86,9 +92,9 @@ export default class SingleSeries extends Lightning.Component {
           itemTitle: episode.title,
           itemDescription: episode.summary,
           imageSrc: episode.getThumbnailImage(imageSizes.M).src,
-          /* callback: () => {
-            console.log('Navigate to player:', episode.content.src);
-          }, */
+          callback: () => {
+            // console.log('Navigate to player:', episode.content.src);
+          },
         },
       };
     });

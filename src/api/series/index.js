@@ -14,7 +14,19 @@ export const getSeriesGenres = async () => {
   });
 };
 
-export const getSeries = async () =>
+export const getSeries = (page, limit) => {
+  return request({
+    url: '/series',
+    apiVersion: V2,
+    method: 'GET',
+    params: {
+      page,
+      limit: 26,
+    },
+  }).then(parseSeriesPageData);
+};
+
+/* export const getSeries = async () =>
   request({
     url: '/search',
     apiVersion: V2,
@@ -25,7 +37,7 @@ export const getSeries = async () =>
       orderBy: 'date:desc',
       limit: 24,
     },
-  }).then(parseSeriesPageData);
+  }).then(parseSeriesPageData); */
 
 function parseSeriesPageData(result) {
   const { data } = result;
@@ -47,7 +59,6 @@ export const getSingleSeries = (seriesId) => {
 };
 function parseSingleSeriesPageData(result) {
   const { data } = result;
-
   return {
     items: data.entry?.map((item) => new SingleSeriesRailItem(item)),
   };
