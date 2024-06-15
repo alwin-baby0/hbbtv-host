@@ -9,6 +9,7 @@ import Filtered from './Filtered/Filtered';
 import filtered from './Filtered/provider/filtered';
 import SingleSeries from './SingleSeries/SingleSeries';
 import singleSeries from './SingleSeries/provider/singleSeries';
+import Search from './Search/Search';
 
 export default {
   root: 'splash',
@@ -43,6 +44,18 @@ export default {
       path: 'filterPage/:action/:genre_movies',
       component: Filtered,
       on: filtered,
+      // cache: 30,
+    },
+    {
+      path: 'sports-details/:seriesId',
+      component: SingleSeries,
+      on: singleSeries,
+    },
+    {
+      path: 'search',
+      component: Search,
+      widgets: ['Menu'],
+      // on: singleSeries,
     },
     /* {
       path: '*',

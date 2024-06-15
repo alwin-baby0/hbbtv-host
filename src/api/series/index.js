@@ -1,5 +1,6 @@
+import { VOD_TYPES } from '../../pages/utils';
 import request, { V1, V2 } from '../index';
-import { MovieRailItem, SimpleRailItem } from '../models';
+import { SimpleRailItem } from '../models';
 import SingleSeriesRailItem from '../models/SingleSeriesRailItem';
 
 export const getSeriesGenres = async () => {
@@ -14,40 +15,30 @@ export const getSeriesGenres = async () => {
   });
 };
 
-export const getSeries = (page, limit) => {
+export const getSeries = async (page, limit) => {
   return request({
     url: '/series',
     apiVersion: V2,
     method: 'GET',
     params: {
       page,
-      limit: 26,
+      limit,
     },
   }).then(parseSeriesPageData);
 };
 
-/* export const getSeries = async () =>
-  request({
-    url: '/search',
-    apiVersion: V2,
-    method: 'GET',
-    params: {
-      keyword: 'all',
-      category: 'series',
-      orderBy: 'date:desc',
-      limit: 24,
-    },
-  }).then(parseSeriesPageData); */
+function parseSeriesPageData({ data }) {
+  const railItems = data.entry?.map((item) => new SimpleRailItem(item))
+  if (!railItems || railItems.length === 0) return;
 
-function parseSeriesPageData(result) {
-  const { data } = result;
   return {
-    sectionTitle: data.title,
-    items: data.entry?.map((item) => new SimpleRailItem(item)),
+    railType: VOD_TYPES.SERIE,
+    cardType: 'POSTER',
+    items: railItems,
   };
 }
 
-export const getSingleSeries = (seriesId) => {
+export const getSingleSeries = async (seriesId) => {
   return request({
     url: '/getSerie',
     apiVersion: V2,
@@ -57,14 +48,19 @@ export const getSingleSeries = (seriesId) => {
     },
   }).then(parseSingleSeriesPageData);
 };
-function parseSingleSeriesPageData(result) {
-  const { data } = result;
+
+function parseSingleSeriesPageData({ data }) {
+  const railItems = data.entry?.map((item) => new SingleSeriesRailItem(item))
+  if (!railItems || railItems.length === 0) return;
+
   return {
-    items: data.entry?.map((item) => new SingleSeriesRailItem(item)),
+    railType: VOD_TYPES.SERIE,
+    cardType: 'POSTER',
+    items: railItems,
   };
 }
 
-export const getSeason = (seriesId) => {
+export const getSeason = async (seriesId) => {
   return request({
     url: `/series/${seriesId}/seasons`,
     apiVersion: V2,
@@ -76,10 +72,15 @@ export const getSeason = (seriesId) => {
   }).then(parseSeasonData);
 };
 
-function parseSeasonData(result) {
-  const { data } = result;
+function parseSeasonData({ data }) {
+  const railItems = data.entry?.map((item) => new SimpleRailItem({ ...item, type: { value: 'sport' } }))
+  if (!railItems || railItems.length === 0) return;
+
   return {
-    items: data.entry?.map((item) => new SimpleRailItem(item)),
-    sectionTitle: data.title,
+    railType: VOD_TYPES.EPISODE,
+    cardType: 'POSTER',
+    items: railItems,
+    railTitle: data.title,
+    itemsPerRow: 5,
   };
 }

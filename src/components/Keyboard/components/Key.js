@@ -1,0 +1,102 @@
+import { Colors, Utils } from '@lightningjs/sdk';
+import Lightning from '@lightningjs/sdk/src/Lightning';
+
+export default class Key extends Lightning.Component {
+  static _template() {
+    return {
+      collision: true,
+      Key: {
+        zIndex: 400,
+        collision: true,
+        rect: true,
+        color: Colors('#1b1b1b').get(),
+        flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
+        Title: {},
+      },
+    };
+  }
+
+  get _Key() {
+    return this.tag('Key');
+  }
+
+  get _Title() {
+    return this.tag('Key.Title');
+  }
+
+  set index(val) {
+    this._index = val;
+  }
+
+  set rowIndex(val) {
+    this._rowIndex = val;
+  }
+
+  set data({ w, h, key, icon }) {
+    this._data = { w, h, key, icon };
+  }
+
+  _enable() {
+    if (this._data.icon) {
+      this._Title.patch({
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(`/images/${this._data.icon}`), 60, 60),
+      });
+    } else {
+      this._Title.patch({
+        text: { text: this._data.key, fontSize: 30 },
+      });
+    }
+
+    this.patch({
+      w: this._data.w,
+      h: this._data.h,
+    });
+    this._Key.patch({
+      w: this._data.w,
+      h: this._data.h,
+    });
+  }
+
+  _focus() {
+    this._Key.patch({
+      zIndex: 500,
+      w: this._data.w,
+      h: this._data.h,
+      color: Colors('#ffffff').get(),
+    });
+    this._Key.smooth = { scale: 1.2 };
+    this._Title.patch({
+      color: Colors('#000000').get(),
+    });
+  }
+
+  _unfocus() {
+    this._Key.patch({
+      zIndex: 400,
+      w: this._data.w,
+      h: this._data.h,
+      color: Colors('#1b1b1b').get(),
+    });
+    this._Key.smooth = { scale: 1.0 };
+    this._Title.patch({
+      color: Colors('#ffffff').get(),
+    });
+  }
+
+  _handleHover() {
+    this.fireAncestors('$setFocusKey', { row: this._rowIndex, index: this._index });
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleEnter() {
+    this.fireAncestors('$onSoftKey', { key: this._data.key });
+  }
+
+  _handleClick() {
+    this._handleEnter();
+  }
+}

@@ -1,25 +1,32 @@
 import { getSeason, getSingleSeries } from '../../../api/series';
-
-const fetchSingleSeries = async ({ seriesId }) => {
-  const series = await getSingleSeries(seriesId);
-  return series;
-};
-
-const fetchSeason = async ({ seriesId }) => {
-  const season = await getSeason(seriesId);
-  return {
-    seasonInfo: season,
-  };
-};
+import { VOD_TYPES, constructRails } from '../../utils';
 
 export default async function (page, { seriesId }) {
   const [series, season] = await Promise.all([
-    fetchSingleSeries({ seriesId }),
-    fetchSeason({ seriesId }),
+    getSingleSeries(seriesId),
+    getSeason(seriesId),
   ]);
 
+  if (!series) {
+    throw new Error('Series data not found');
+  }
+
+  let episodes = [];
+  let sectionTitle = 'No Season Available';
+
+  if (season && season.items) {
+    episodes = constructRails(season);
+    sectionTitle = season.sectionTitle;
+  } else {
+    console.warn('Season data not found or empty');
+  }
+
   page.props = {
-    ...series,
-    ...season,
+    sectionTitle: sectionTitle,
+    galleryItem: series.items[0],
+  };
+
+  page._Column.props = {
+    items: episodes,
   };
 }

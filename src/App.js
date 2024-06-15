@@ -9,6 +9,7 @@ export default class App extends Router.App {
     return {
       ...super._template(),
       Pages: {
+        collision: true,
         w: 1920,
         h: 1080,
       },

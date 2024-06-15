@@ -9,7 +9,17 @@ export default class HorizontalContainer extends Lightning.Component {
 
   static _template() {
     return {
+      flex: { direction: 'column' },
+      Title: {
+        text: {
+          fontFamily: 'Inter',
+          fontStyle: 'normal bold',
+          fontSize: 32,
+          lineHeight: 39,
+        },
+      },
       Items: {
+        y: 0,
         flex: {
           direction: 'row',
         },
@@ -19,6 +29,10 @@ export default class HorizontalContainer extends Lightning.Component {
 
   get Items() {
     return this.tag('Items');
+  }
+
+  get Title() {
+    return this.tag('Title');
   }
 
   get _focusedIndex() {
@@ -35,6 +49,28 @@ export default class HorizontalContainer extends Lightning.Component {
   set props(props) {
     const { items, ...rest } = props;
     this._props = { ...this._props, ...rest };
+    const { railTitle } = rest;
+    if (railTitle == '' || railTitle === undefined) {
+      this.Items.patch({
+        y: 0,
+      });
+      this.patch({
+        Title: undefined,
+      });
+    } else {
+      this.patch({
+        h: this.h + 50,
+      });
+      this.Items.patch({
+        // y: 80,
+      });
+      this.Title.patch({
+        y: 10,
+        text: {
+          text: railTitle,
+        },
+      });
+    }
 
     if (items !== this._props.items) {
       this._props.items = items;

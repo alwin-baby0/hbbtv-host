@@ -1,15 +1,13 @@
-import { Colors, Lightning, Utils } from '@lightningjs/sdk';
-import colors from '../../../reskin/colors.json';
-import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
-import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
+import { Lightning, Utils } from '@lightningjs/sdk';
+
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import { imageSizes } from '../../api/models/utils';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
   static _template() {
     return {
-      Asd: {
+      SeriesWrapper: {
         Content: {
           Background: {
             w: 1920,
@@ -19,32 +17,18 @@ export default class SingleSeries extends Lightning.Component {
           HeroSection: {
             type: GalleryItem,
           },
-          Seasson: {
-            x: 110,
-            y: 715,
-            w: 150,
-            h: 40,
-            color: Colors(colors.unfocus).get(),
-            text: {
-              fontFamily: 'Inter',
-              fontStyle: 'normal bold',
-              fontSize: 32,
-              lineHeight: 39,
-            },
-          },
         },
-        Wrapper: {
-          x: 110,
-          y: 795,
+      },
+      Wrapper: {
+        x: 110,
+        y: 715,
+        h: 600,
+        w: 1700,
+        clipping: true,
+        Column: {
           h: 600,
           w: 1700,
-          clipping: true,
-          Column: {
-            // y: 30,
-            h: 600,
-            w: 1700,
-            type: HorizontalContainer,
-          },
+          type: VerticalContainer,
         },
       },
     };
@@ -56,12 +40,11 @@ export default class SingleSeries extends Lightning.Component {
     };
 
     this._props = { ...this._props, ...props };
-    const { items, seasonInfo } = this._props;
-    const { sectionTitle, items: episodesInfo } = seasonInfo;
+    const { galleryItem } = this._props;
 
     this._HeroSection.patch({
       props: {
-        galleryItem: items[0],
+        galleryItem: galleryItem,
         height: 650,
         yPos: 100,
       },
@@ -73,35 +56,6 @@ export default class SingleSeries extends Lightning.Component {
         buttonLabel: 'WATCH FIRST EPISODE',
       },
     });
-
-    this._Seasson.patch({
-      text: {
-        text: sectionTitle,
-      },
-    });
-    const episodes = episodesInfo.map((episode) => {
-      return {
-        type: LandscapeRailItem,
-        flexItem: {
-          marginLeft: 10,
-          marginRight: 10,
-          marginTop: 10,
-          marginBottom: 10,
-        },
-        props: {
-          itemTitle: episode.title,
-          itemDescription: episode.summary,
-          imageSrc: episode.getThumbnailImage(imageSizes.M).src,
-          callback: () => {
-            // console.log('Navigate to player:', episode.content.src);
-          },
-        },
-      };
-    });
-
-    this._Column.props = {
-      items: episodes,
-    };
   }
 
   _active() {
@@ -112,8 +66,8 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('HeroSection');
   }
 
-  get _Seasson() {
-    return this.tag('Seasson');
+  get _SeriesWrapper() {
+    return this.tag('SeriesWrapper');
   }
 
   get _Column() {
@@ -128,7 +82,7 @@ export default class SingleSeries extends Lightning.Component {
     return [
       class HeroSection extends this {
         _getFocused() {
-          this.tag('Asd').patch({
+          this._SeriesWrapper.patch({
             y: 0,
           });
           return this._HeroSection;
@@ -141,11 +95,44 @@ export default class SingleSeries extends Lightning.Component {
 
       class Items extends this {
         _getFocused() {
-          const focusedItem = this._Column;
-          this.tag('Asd').patch({
-            y: -140,
-          });
           return this._Column;
+        }
+
+        $enter() {
+          this.$verticalContainerIndexChange();
+        }
+
+        $exit() {
+          this.tag('Wrapper').patch({
+            y: 715,
+            h: 600,
+          });
+        }
+
+        $verticalContainerIndexChange(index) {
+          if (index > 0 && index !== undefined) {
+            this._SeriesWrapper.patch({
+              y: -650,
+            });
+            this.tag('Wrapper').patch({
+              y: 0,
+              h: 1080,
+            });
+            this.tag('Column').patch({
+              h: 1080,
+            });
+          } else {
+            this._SeriesWrapper.patch({
+              y: -140,
+            });
+            this.tag('Wrapper').patch({
+              y: 500,
+              h: 1080,
+            });
+            this.tag('Column').patch({
+              h: 1080,
+            });
+          }
         }
 
         _handleUp() {

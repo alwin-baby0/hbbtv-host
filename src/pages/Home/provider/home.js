@@ -1,25 +1,14 @@
-import { getHomePage, getHomePageHeroSection } from '../../../api/home';
-import { imageSizes } from '../../../api/models/utils';
+import { HomePageService } from '../../../api/services/HomePageService';
 
 export default async function (page) {
-  const rows = Array.from({ length: 19 }, (_, index) => index + 2);
-  const promises = rows.map((row) => getHomePage(row, 1, 6));
+  if (page._props.sliderData !== null && page._props.railData.length > 2) {
+    return;
+  }
 
-  const sliderData = await getHomePageHeroSection();
-
-  const railDataRows = await Promise.all(promises);
-
-  const railData = railDataRows
-    .reduce((accumulator, data) => {
-      return accumulator.concat(data);
-    }, [])
-    .filter((rail) => rail.items);
-
-  //preload images for gallery
-  sliderData.items.forEach((item) => item.preloadImages(imageSizes.XL));
+  await HomePageService.initialFetch();
 
   page.props = {
-    sliderData,
-    railData,
+    sliderData: HomePageService.heroSectionItems,
+    railData: HomePageService.stripes,
   };
 }

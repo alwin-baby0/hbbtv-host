@@ -1,10 +1,27 @@
+// This class is used as generic class for:
+// Home, Search, Movies, Series, Sports screens rails
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, media_group, summary, content } = data;
+    const { id, title, type, media_group, summary } = data;
+
     this.id = id;
     this.title = title;
     this.type = type?.value;
     this.summary = summary;
+
+    switch (this.type) {
+      case 'movie':
+        this.url = `movie-details/${this.id}`;
+        break;
+      case 'sport':
+      case 'serie':
+      case 'show':
+      case 'event':
+        this.url = `series-details/${this.id}`;
+        break;
+      default:
+        console.warn('unknown rail item type', this.type);
+    }
 
     this.thumbnails = [];
     this.landscapePosters = [];

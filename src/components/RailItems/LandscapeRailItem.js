@@ -26,6 +26,7 @@ export default class LandscapeRailItem extends FocusableItem {
         Border: {
           flex: { justifyContent: 'center', alignItems: 'center' },
           MovieImg: {
+            w: CARD_SIZES.LANDSCAPE.width,
             rect: true,
           },
         },
@@ -41,10 +42,11 @@ export default class LandscapeRailItem extends FocusableItem {
             fontSize: 21,
             lineHeight: 25,
             maxLines: 1,
+            wordWrapWidth: 275,
           },
         },
         Description: {
-          h: 115,
+          h: 160,
           w: 275,
           flexItem: {
             marginTop: 5,

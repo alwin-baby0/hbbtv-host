@@ -3,13 +3,19 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 
 export default class VodPreview extends Lightning.Component {
+  _props = {
+    focusedState: 'Content',
+    ancestorIndex: 0,
+  };
   static _template() {
     return {
+      collision: true,
       Background: {
         w: 1920,
         h: 2080,
         src: Utils.asset('images/background.jpg'),
       },
+
       Content: {
         Categories: {
           type: CategoryPicker,
@@ -20,21 +26,37 @@ export default class VodPreview extends Lightning.Component {
             height: 64,
           },
         },
+        LiveEvents: {
+          collision: true,
+          x: 110,
+          y: 200,
+          h: 500,
+          w: 1920,
+          type: VerticalContainer,
+        },
       },
       VodContainer: {
         x: 110,
-        y: 285,
+        y: 670,
         w: 1760,
-        h: 795,
+        h: 670,
         clipping: true,
         Column: {
-          y: 30,
+          // y: 30,
           h: 795,
           w: 1760,
           type: VerticalContainer,
         },
       },
     };
+  }
+
+  get _VodContainer() {
+    return this.tag('VodContainer');
+  }
+
+  get _LiveEvents() {
+    return this.tag('LiveEvents');
   }
 
   get _Content() {
@@ -49,13 +71,19 @@ export default class VodPreview extends Lightning.Component {
     return this.tag('VodContainer.Column');
   }
 
-  _active() {
+  set props(props) {
+    this._props = { ...this._props, ...props };
+    const { focusedState } = this._props;
     if (this._getState() !== 'VodContainer') {
-      this._setState('Content');
-      setTimeout(() => {
-        Router.focusWidget('menu');
-        Router.focusPage();
-      }, 1);
+      if (focusedState === 'Events') {
+        if (this._LiveEvents.Items.children.length > 0) {
+          this._setState('Events');
+        } else {
+          this._setState('VodContainer');
+        }
+      } else if (focusedState === 'Content') {
+        this._setState('Content');
+      }
     } else {
       this._setState('VodContainer');
     }
@@ -64,6 +92,8 @@ export default class VodPreview extends Lightning.Component {
   _getFocused() {
     return this._setState('Content');
   }
+
+  _handleClick() {}
 
   _handleBack() {
     if (!Router.isNavigating()) {
@@ -94,8 +124,8 @@ export default class VodPreview extends Lightning.Component {
             y: 0,
           });
 
-          this.tag('VodContainer').patch({
-            y: 285,
+          this._VodContainer.patch({
+            y: 200,
             h: 1920,
           });
         }
@@ -108,31 +138,110 @@ export default class VodPreview extends Lightning.Component {
           this._setState('VodContainer');
         }
       },
-
-      class VodContainer extends this {
-        _extended = true;
+      /*  */
+      class Events extends this {
+        _getFocused() {
+          return this._LiveEvents;
+        }
 
         $enter() {
-          this.fireAncestors('$hideNavbar', false);
-          this._extended = this._Column._focusedIndex > 0;
-          this._extended = false;
+          this.$verticalContainerIndexChange();
+
           this._Content.patch({
-            y: -130,
+            y: 0,
           });
-          this.tag('VodContainer').patch({
-            y: 100,
+
+          this._VodContainer.patch({
             h: 1920,
           });
         }
 
+        _handleUp() {
+          Router.focusWidget('Menu');
+        }
+
+        _handleDown() {
+          this._setState('VodContainer');
+        }
+
+        $verticalContainerIndexChange(index) {
+          const currentIndex = index;
+          currentIndex == undefined ? this._props.ancestorIndex : index;
+          this._props.ancestorIndex = index !== undefined ? index : this._props.ancestorIndex;
+          if (this._props.ancestorIndex === 0) {
+            this.fireAncestors('$hideNavbar', true);
+          } else {
+            this.fireAncestors('$hideNavbar', false);
+          }
+          if (this._LiveEvents.Items.children.length > 1) {
+            if (this._props.ancestorIndex === this._LiveEvents.Items.children.length - 1) {
+              this._VodContainer.patch({
+                y: 670,
+              });
+            } else {
+              this._VodContainer.patch({
+                y: 1080,
+              });
+            }
+            this._LiveEvents.patch({
+              y: 200,
+            });
+          } else {
+            this._LiveEvents.patch({
+              y: 200,
+            });
+            this._VodContainer.patch({
+              y: 670,
+            });
+          }
+
+          this.correctContainerSize();
+        }
+      },
+      /*  */
+      class VodContainer extends this {
+        _extended = true;
+
+        $enter() {
+          this._extended = this._Column._focusedIndex > 0;
+          this._extended = false;
+          this.correctContainerSize();
+          if (this._LiveEvents.Items.children.length > 0) {
+            if (this._props.focusedState === 'Events') {
+              this.fireAncestors('$hideNavbar', false);
+              this._Content.patch({
+                y: -450,
+              });
+              this._VodContainer.patch({
+                y: 200,
+                h: 1080,
+              });
+            }
+          } else {
+            this._VodContainer.patch({
+              y: 200,
+              h: 1080,
+            });
+          }
+        }
+
         correctContainerSize() {
           if (this._Column._focusedIndex === 0 && this._extended === true) {
+            this.fireAncestors('$hideNavbar', false);
             this._extended = false;
-            this._Content.patch({
-              y: -130,
-            });
-            this.tag('VodContainer').patch({
-              y: 100,
+
+            if (this._props.focusedState === 'Events') {
+              this._Content.patch({
+                y: -450,
+              });
+            } else {
+              this.fireAncestors('$hideNavbar', true);
+              this._Content.patch({
+                y: 0,
+              });
+            }
+            this._VodContainer.patch({
+              y: 200,
               h: 1080,
             });
             this._Column.patch({
@@ -140,12 +249,13 @@ export default class VodPreview extends Lightning.Component {
             });
           }
           if (this._Column._focusedIndex >= 1 && this._extended === false) {
+            this.fireAncestors('$hideNavbar', false);
             this._extended = true;
-            this.tag('VodContainer').patch({
+            this._VodContainer.patch({
               y: 0,
             });
             this._Content.patch({
-              y: -200,
+              y: -700,
             });
             this._Column.patch({
               h: 1040,
@@ -158,14 +268,18 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _getFocused() {
-          this.fireAncestors('$hideNavbar', false);
           return this._Column;
         }
 
         _handleUp() {
-          this.correctContainerSize();
-          this._setState('Content');
-          return false;
+          if (this._Categories.visible) {
+            this._setState('Content');
+          } else if (this._LiveEvents.Items.children.length > 0) {
+            this._setState('Events');
+          } else {
+            Router.focusWidget('Menu');
+          }
+          // return false;
         }
 
         $verticalContainerIndexChange(index) {

@@ -1,4 +1,5 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
+import { getClosestElementIndex } from '../../utils/focus';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
@@ -99,17 +100,26 @@ export default class VerticalContainer extends Lightning.Component {
     return true;
   }
 
-  _handleRight() {
-    return false;
-  }
+  _appendItems(items) {
+    items?.forEach((item) => {
+      this._props.items.push(item);
+      this.Items.childList.a(item);
+    });
 
-  _handleLeft() {
-    return false;
+    this.stage.update();
   }
 
   $horizontalContainerIndexChange(newIndex) {
-    if (this._props.carryRowPosition) {
-      this.Items.children.forEach((child) => child._setFocusedIndex(newIndex));
+    if (this._props.carryRowPosition && this.Items.children.length > 1) {
+      this.Items.children.forEach((child) => {
+        const focusedContainer = this.Items.children[this._focusedIndex];
+        const focusedItem = focusedContainer.Items.children[focusedContainer._focusedIndex];
+        if (focusedItem) {
+          child._setFocusedIndex(getClosestElementIndex(child, focusedItem));
+        } else {
+          child._setFocusedIndex(newIndex);
+        }
+      });
     }
     this.fireAncestors('$horizontalContainerIndexChange', newIndex);
   }
