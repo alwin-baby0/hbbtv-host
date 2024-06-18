@@ -14,7 +14,7 @@ export const VOD_PREVIEW_TYPES = {
   MOVIES: 'movies',
   SERIES: 'series',
   SPORTS: 'sports',
-}
+};
 
 export const VOD_TYPES = {
   MOVIE: 'movie',
@@ -52,31 +52,29 @@ export const constructCategoryItems = (categories, vodType) => {
   });
 };
 
-
 export const constructRails = (rails) =>
-  !Array.isArray(rails) ? constructRails([rails]) :
-    rails.map((rail) => {
-      const { items, itemsPerRow } = rail;
+  !Array.isArray(rails)
+    ? constructRails([rails])
+    : rails
+        .map((rail) => {
+          const { items, itemsPerRow } = rail;
 
-      if (itemsPerRow && items.length - 1 >= itemsPerRow) {
-        const chunkedItems = chunkArray(items, itemsPerRow); // chunk the items into rows
+          if (itemsPerRow && items.length - 1 >= itemsPerRow) {
+            const chunkedItems = chunkArray(items, itemsPerRow); // chunk the items into rows
 
-        return chunkedItems.map((chunkedRailItem, index) => {
-          return cronstructSingleLineRail(
-            {
-              ...rail,
-              railTitle: index === 0 ? rail.railTitle : '', // leave title only for first row
-              items: chunkedRailItem, // each line has its items
-            },
-          )
-        });
-      }
+            return chunkedItems.map((chunkedRailItem, index) => {
+              return cronstructSingleLineRail({
+                ...rail,
+                railTitle: index === 0 ? rail.railTitle : '', // leave title only for first row
+                items: chunkedRailItem, // each line has its items
+              });
+            });
+          }
 
-      return cronstructSingleLineRail(rail)
-    })
-      .flat() // Flatten the array of arrays if chunking occurred
-      .filter(Boolean); // Remove null/undefined values
-
+          return cronstructSingleLineRail(rail);
+        })
+        .flat() // Flatten the array of arrays if chunking occurred
+        .filter(Boolean); // Remove null/undefined values
 
 const cronstructSingleLineRail = (rail) => {
   const { items, railType, cardType, railTitle, railItemsOptions, ...rest } = rail;
@@ -92,7 +90,7 @@ const cronstructSingleLineRail = (rail) => {
       items: railItemConstructor(items, railType, railItemsOptions),
     },
   };
-}
+};
 
 const chunkArray = (array, size) => {
   if (!Array.isArray(array) || size <= 0) {

@@ -2,12 +2,12 @@
 // Home, Search, Movies, Series, Sports screens rails
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, media_group, summary } = data;
-
+    const { id, title, type, media_group, summary, extensions } = data;
     this.id = id;
     this.title = title;
     this.type = type?.value;
     this.summary = summary;
+    this.duration = extensions?.duration;
 
     switch (this.type) {
       case 'movie':
@@ -15,9 +15,15 @@ class SimpleRailItem {
         break;
       case 'sport':
       case 'serie':
+        this.url = `series-details/${this.id}`;
+        break;
       case 'show':
       case 'event':
-        this.url = `series-details/${this.id}`;
+        this.url = `event-details/${this.id}`;
+        break;
+      case 'episode':
+        this.url = data.content.src;
+        this.duration = data.extensions.duration;
         break;
       default:
         console.warn('unknown rail item type', this.type);

@@ -8,6 +8,8 @@ class SingleSeriesRailItem extends SimpleRailItem {
       type: type.value,
       src: extensions.first_episode_mp4,
     };
+
+    this.url = data.extensions.first_episode_mp4;
     this.description = extensions.description;
     this.episodeCount = summary;
     this.extensions = extensions;

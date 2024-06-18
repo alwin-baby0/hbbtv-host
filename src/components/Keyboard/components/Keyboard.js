@@ -21,8 +21,6 @@ export default class Keyboard extends Lightning.Component {
           itemSpacing: 0,
         },
         neverScroll: true,
-        // w: this.w,
-        // h: this.h,
       },
     };
   }
@@ -45,9 +43,6 @@ export default class Keyboard extends Lightning.Component {
         collision: true,
         index,
         rowIndex: rowIndex,
-        // w: 100,
-        // h: 70,
-        // title:
       })),
     }));
 
@@ -71,27 +66,14 @@ export default class Keyboard extends Lightning.Component {
   }
 
   $setFocusKey({ row, index }) {
-    // console.log(index, 'INDEX');
-    // console.log(row, 'ROW');
-    // console.log(this._Keyboard);
     this._Keyboard.selectedIndex = row;
     this._Keyboard.items[row].selectedIndex = index;
   }
 
-  /* _handleHover() {
-    console.log('HOVERED');
-    this.fireAncestors('$setFocusKeyboard');
-    return false;
-  } */
-
   $onSoftKey({ key }) {
-    // console.log(key);
     const inputTag = this.parent._InputField.tag('Input');
 
-    // console.log(inputTag.listening);
-
     if (!inputTag.listening) return;
-    // console.log('upao je dole');
     switch (key) {
       case 'space':
         inputTag.text = ' ';
@@ -107,9 +89,7 @@ export default class Keyboard extends Lightning.Component {
         this.fireAncestors('$pressedDone');
         break;
       default:
-        // console.log('default je');
         if (inputTag.value.length < this._limit) {
-          // console.log('default je');
           inputTag.insert(key);
         }
     }

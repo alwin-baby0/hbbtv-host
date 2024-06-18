@@ -1,7 +1,6 @@
 import { Lightning, Utils } from '@lightningjs/sdk';
-
-import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import GalleryItem from '../../components/GalleryItem/GalleryItem';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -41,7 +40,6 @@ export default class SingleSeries extends Lightning.Component {
 
     this._props = { ...this._props, ...props };
     const { galleryItem } = this._props;
-
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
@@ -89,7 +87,11 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleDown() {
-          this._setState('Items');
+          if (this.tag('Column').Items.children.length > 0) {
+            this._setState('Items');
+          } else {
+            return false;
+          }
         }
       },
 

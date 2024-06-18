@@ -1,8 +1,8 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import Gallery from '../../components/Gallery/Gallery';
 import { constructRails } from '../utils';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { HomePageService } from '../../api/services';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import Gallery from '../../components/Gallery/Gallery';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -75,6 +75,12 @@ export default class Home extends Lightning.Component {
         },
       });
     }
+
+    this._HeroSection._HeroSection._GalleryButton.patch({
+      props: {
+        buttonLabel: 'WATCH NOW',
+      },
+    });
   }
 
   _firstActive() {
