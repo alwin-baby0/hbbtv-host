@@ -23,6 +23,7 @@ function parseSportsPageData({ data }) {
 
   return {
     railType: VOD_TYPES.SPORT,
+    railTitle: data.title,
     cardType: 'POSTER',
     items: railItems,
   };
@@ -49,7 +50,7 @@ function parseSportsEventsData({ data }) {
     railTitle: data.title,
     cardType: 'POSTER',
     items: railItems,
-    itemsPerRow: 5,
+    // itemsPerRow: 30,
     h: 400,
     railItemsOptions: {
       h: 341,

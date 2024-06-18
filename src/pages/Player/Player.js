@@ -123,6 +123,7 @@ export default class Player extends lng.Component {
   }
 
   _active() {
+    console.log('this._params.', this._params.type);
     if (this._params.videoUrl === '') {
       this.tag('ErrorMessage').visible = true;
       this._hideWrapper();
