@@ -3,8 +3,14 @@ import { ProgressBar, Row } from '@lightningjs/ui-components';
 import { loader, unloader } from '../../components/Player/HLS';
 import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 
 export default class Player extends lng.Component {
+  _props = {
+    pausedItemId: 1,
+  };
+
   static _template() {
     return {
       Wrapper: {
@@ -14,14 +20,14 @@ export default class Player extends lng.Component {
         ControlsWrapper: {
           h: 100,
           w: 1920,
+          flex: { direction: 'row', alignItems: 'center' },
           Controls: {
-            type: Row,
+            type: HorizontalContainer,
             h: 100,
             w: 1920,
-            flex: {},
+            flex: { direction: 'row', alignItems: 'center' },
             rect: true,
             y: 0,
-            x: 40,
             color: Colors('#000000').alpha(0).get(),
           },
         },
@@ -38,7 +44,7 @@ export default class Player extends lng.Component {
             Text: {
               flexItem: { alignSelf: 'center' },
               text: {
-                text: '00:00:00',
+                text: '',
                 fontSize: 30,
                 textAlign: 'center',
               },
@@ -66,6 +72,7 @@ export default class Player extends lng.Component {
         },
       },
       ErrorMessage: {
+        visible: false,
         color: Colors('#1e1e1e').get(),
         rect: true,
         w: 1920,
@@ -87,6 +94,7 @@ export default class Player extends lng.Component {
       },
     };
   }
+
   get id() {
     return 'PlayerPage';
   }
@@ -99,13 +107,26 @@ export default class Player extends lng.Component {
     return this.tag('Controls');
   }
 
+  set props(props) {
+    const { controlsItems: items, liveItems } = props;
+    const itemComponents = this._params.videoType === 'Stream now' ? liveItems : items;
+
+    this._props.pausedItemId = this._params.videoType === 'Stream now' ? 1 : 2;
+
+    const formattedItems = itemComponents.map((data) => ({
+      type: PlayerButtons,
+      props: {
+        buttonInfo: data,
+      },
+    }));
+
+    this._Controls.props = {
+      items: formattedItems,
+    };
+  }
+
   set params({ videoUrl, videoType, type, duration }) {
-    return (this._params = {
-      videoUrl,
-      videoType,
-      type,
-      duration,
-    });
+    this._params = { videoUrl, videoType, type, duration };
   }
 
   _enable() {
@@ -122,35 +143,61 @@ export default class Player extends lng.Component {
     VideoPlayer.consumer(this);
   }
 
-  _active() {
-    console.log('this._params.', this._params.type);
-    if (this._params.videoUrl === '') {
-      this.tag('ErrorMessage').visible = true;
-      this._hideWrapper();
-      this.fireAncestors('$unpunchHole');
-      clearInterval(this._progressInterval);
-      VideoPlayer.close();
-      return;
-    } else {
-      this.tag('ErrorMessage').visible = false;
+  async _checkVideoUrl(url) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error(`Error fetching video URL: ${response.statusText}`);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error(`Error fetching video URL: ${error.message}`);
+      return false;
+    }
+  }
+
+  _showErrorMessage() {
+    this.tag('ErrorMessage').visible = true;
+    this._hideWrapper();
+    this.fireAncestors('$unpunchHole');
+    clearInterval(this._progressInterval);
+    VideoPlayer.close();
+  }
+
+  async _active() {
+    if (this._params.videoType === 'Stream now') {
+      this.tag('CurrentTime').patch({ text: { text: '' } });
     }
 
+    if (!this._params.videoUrl) {
+      this._showErrorMessage();
+      return;
+    }
+
+    const isValid = await this._checkVideoUrl(this._params.videoUrl);
+
+    if (!isValid) {
+      this._showErrorMessage();
+      return;
+    }
+
+    this.tag('ErrorMessage').visible = false;
     this._setState('Controls');
     this._showWrapper(true);
 
     const durationInSeconds = parseFloat(this._params.duration);
     const formattedDuration = this._formatDuration(durationInSeconds);
-    this.tag('EndTime.Text').text = formattedDuration;
+    this.tag('EndTime.Text').text =
+      this._params.videoType === 'Stream now' ? '' : formattedDuration;
 
     this._duration = durationInSeconds;
     this.fireAncestors('$punchHole');
-
     VideoPlayer.open(this._params.videoUrl);
 
-    // Start interval to update progress bar every 500ms
-    this._progressInterval = setInterval(() => {
-      this._updateProgressBar();
-    }, 500);
+    if (this._params.videoType !== 'Stream now') {
+      this._progressInterval = setInterval(this._updateProgressBar.bind(this), 500);
+    }
   }
 
   _disable() {
@@ -163,24 +210,22 @@ export default class Player extends lng.Component {
   _skipVideo(offset) {
     const newTime = VideoPlayer.currentTime + offset;
     VideoPlayer.seek(newTime);
-    if (VideoPlayer.playing === false) {
+    this._showWrapper(); // Show wrapper on skip
+    if (!VideoPlayer.playing) {
       VideoPlayer.play();
-      this._Controls.items[2]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/pause.svg'), 60, 60),
+      this._Controls.items[this._props.pausedItemId]._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
       });
     }
   }
 
   $skippingTime(time) {
-    const isVisible = this.tag('Wrapper').visible;
-    if (isVisible) {
-      this._skipVideo(time);
-    } else {
-      this._showWrapper();
-    }
+    this._showWrapper();
+    this._skipVideo(time);
   }
 
   _handleBack() {
+    this._showWrapper();
     Router.back();
     VideoPlayer.close();
     clearInterval(this._progressInterval);
@@ -188,72 +233,57 @@ export default class Player extends lng.Component {
   }
 
   $exitVideo() {
-    const isVisible = this.tag('Wrapper').visible;
-    if (isVisible) {
+    this._showWrapper();
+    if (this.tag('Wrapper').visible) {
       this._handleBack();
-    } else {
-      this._showWrapper();
     }
   }
 
   $videoPlayerEnded() {
+    this._showWrapper();
     this._handleBack();
   }
 
   $playVideo() {
     this._showWrapper();
     VideoPlayer.play();
-    console.log(VideoPlayer.duration);
-    this._Controls.items[2]._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/pause.svg'), 60, 60),
+    this._Controls.items[this._props.pausedItemId]._Icon.patch({
+      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
     });
   }
 
   $pauseVideo() {
     this._showWrapper();
     VideoPlayer.pause();
-    this._Controls.items[2]._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/play.svg'), 60, 60),
+    this._Controls.items[this._props.pausedItemId]._Icon.patch({
+      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
     });
   }
 
   $startStopVideo(isStopped) {
-    const isVisible = this.tag('Wrapper').visible;
-
-    if (isVisible) {
-      if (isStopped) {
-        VideoPlayer.pause();
-      } else {
-        VideoPlayer.play();
-      }
-    } else {
-      this._showWrapper();
+    this._showWrapper();
+    if (this.tag('Wrapper').visible) {
+      isStopped ? VideoPlayer.pause() : VideoPlayer.play();
     }
   }
 
   _updateProgressBar() {
-    // Get current playback time (in seconds)
     const currentTime = VideoPlayer.currentTime;
-    // Calculate progress as a percentage
     const progress = currentTime / VideoPlayer.duration;
-    // Update progress bar
     this.tag('ProgressBar').progress = progress;
-
-    const formattedTime = this._formatTime(currentTime);
+    const formattedTime =
+      this._params.videoType === 'Stream now' ? 'Live' : this._formatTime(currentTime);
     this.tag('CurrentTime.Text').text = formattedTime;
   }
 
   _showWrapper() {
     this.tag('Wrapper').visible = true;
-    // Schedule a timeout to hide the Wrapper after 10 seconds
-    this._hideWrapperTimeout = setTimeout(() => {
-      this._hideWrapper();
-    }, 10000); // 10 seconds in milliseconds
+    clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
+    this._hideWrapperTimeout = setTimeout(() => this._hideWrapper(), 10000); // Set new timeout
   }
 
   _hideWrapper() {
     this.tag('Wrapper').visible = false;
-    // Clear the timeout to prevent it from hiding the Wrapper if it's already visible
     clearTimeout(this._hideWrapperTimeout);
   }
 
@@ -261,28 +291,26 @@ export default class Player extends lng.Component {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = Math.floor(seconds % 60);
-
     return `${hours.toString().padStart(2, '0')}:${minutes
       .toString()
       .padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
   _formatDuration(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-
-    return `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return this._formatTime(seconds);
   }
 
   $videoPlayerPlaying() {
-    // Update progress bar during playback
     this._updateProgressBar();
     const durationInSeconds = parseFloat(VideoPlayer.duration);
     const formattedDuration = this._formatDuration(durationInSeconds);
-    this.tag('EndTime.Text').text = formattedDuration;
+    const progressBarStyle = {
+      progressColor: Colors(colors.focus).get(),
+      barColor: this._params.videoType === 'Stream now' ? Colors(colors.focus).get() : undefined,
+    };
+    this.tag('ProgressBar').patch({ style: progressBarStyle });
+    this.tag('EndTime.Text').text =
+      this._params.videoType === 'Stream now' ? '' : formattedDuration;
     this._duration = durationInSeconds;
   }
 

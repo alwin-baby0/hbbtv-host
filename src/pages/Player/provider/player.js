@@ -1,24 +1,42 @@
 import PlayerButtons from '../components/PlayerButtons/PlayerButtons';
-const controlsItems = [
+export const controlsItems = [
   {
     label: 'back',
-    icon: `/icons/player/back.svg`,
+    icon: `/icons/player/commands/back.svg`,
+    onLiveContent: true,
     position: 60,
   },
   {
     label: 'backward',
-    icon: `/icons/player/backward.svg`,
-    position: 640,
+    icon: `/icons/player/commands/fast-backward.svg`,
+    onLiveContent: false,
+    position: 660,
   },
   {
     label: 'pause',
-    icon: `/icons/player/pause.svg`,
-    position: 670,
+    icon: `/icons/player/commands/pause.svg`,
+    onLiveContent: true,
+    position: 690,
   },
   {
     label: 'forward',
-    icon: `/icons/player/forward.svg`,
-    position: 700,
+    icon: `/icons/player/commands/fast-forward.svg`,
+    onLiveContent: false,
+    position: 720,
+  },
+];
+export const liveItems = [
+  {
+    label: 'back',
+    icon: `/icons/player/commands/back.svg`,
+    onLiveContent: true,
+    position: 60,
+  },
+  {
+    label: 'pause',
+    icon: `/icons/player/commands/pause.svg`,
+    onLiveContent: true,
+    position: 810,
   },
 ];
 export default async function (page) {
@@ -31,5 +49,8 @@ export default async function (page) {
     };
   });
 
-  page._Controls.items = items;
+  page.props = {
+    controlsItems: controlsItems,
+    liveItems: liveItems,
+  };
 }

@@ -3,6 +3,7 @@ import { Colors, Router, Utils } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
 import routes from './pages/routes';
 import Navbar from './components/widgets/Navbar/Navbar';
+import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 
 export default class App extends Router.App {
   static _template() {
@@ -12,6 +13,14 @@ export default class App extends Router.App {
         collision: true,
         w: 1920,
         h: 1080,
+      },
+      Loading: {
+        type: LoadingScreenComponent,
+        rect: true,
+        w: 1920,
+        h: 1080,
+        zIndex: 102,
+        color: Colors('#000000').get(),
       },
       Background: {
         w: 1920,

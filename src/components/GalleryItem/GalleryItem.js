@@ -1,7 +1,7 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
-import Button from '../Button/Button';
 import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../api/models/utils';
+import Button from '../Button/Button';
 
 export default class GalleryItem extends Lightning.Component {
   _props = {};
@@ -114,6 +114,7 @@ export default class GalleryItem extends Lightning.Component {
           Router.navigate('player', {
             videoUrl: galleryItem.url,
             duration: galleryItem.duration,
+            videoType: galleryItem.buttonLabel,
           });
         },
       },

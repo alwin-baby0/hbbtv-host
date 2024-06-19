@@ -50,7 +50,6 @@ export const getSingleSeries = async (seriesId) => {
 };
 
 function parseSingleSeriesPageData({ data }) {
-  // console.log('single data', data);
   const railItems = data.entry?.map((item) => new SingleSeriesRailItem(item));
   if (!railItems || railItems.length === 0) return;
 
@@ -75,7 +74,6 @@ export const getSeason = async (seriesId) => {
 
 function parseSeasonData(result) {
   const { data } = result;
-  console.log('dataa:', data);
   const railItems = data.entry?.map(
     (item) => new SimpleRailItem({ ...item, type: { value: 'episode' } })
   );

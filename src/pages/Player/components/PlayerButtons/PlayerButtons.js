@@ -12,6 +12,8 @@ export default class PlayerButtons extends lng.Component {
       h: 100,
       w: 100,
       Button: {
+        flex: { direction: 'row', alignItems: 'center' },
+        h: 90,
         Icon: {},
       },
     };
@@ -31,10 +33,11 @@ export default class PlayerButtons extends lng.Component {
 
   _enable() {
     const { buttonInfo } = this._props;
-
+    let width = buttonInfo.label === 'pause' ? 90 : 66;
+    let height = buttonInfo.label === 'pause' ? 90 : 66;
     this._Icon.patch({
       x: buttonInfo.position,
-      texture: lng.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), 60, 60),
+      texture: lng.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
     });
   }
 

@@ -3,8 +3,7 @@ import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch'
 import InputField from './components/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { getSearch } from '../../api/search';
-import { getHomePage } from '../../api/home';
-import { VOD_TYPES, constructRails } from '../utils';
+import { constructRails } from '../utils';
 import { HomePageService } from '../../api/services/HomePageService';
 const sports = {
   items: [],
@@ -92,10 +91,12 @@ export default class Search extends Lightning.Component {
 
     if (inputValue.length > 2) {
       getSearch(inputValue, '').then((data) => {
-        data.items && this.$changedVODGenre(data);
-      })
+        if (data?.items) {
+          data.items && this.$changedVODGenre(data);
+        }
+      });
     } else {
-      await HomePageService.initialFetch()
+      await HomePageService.initialFetch();
       this.$changedVODGenre(HomePageService.stripes[0]);
     }
   }
@@ -142,11 +143,28 @@ export default class Search extends Lightning.Component {
           this._Input.tag('InputWrapper').patch({
             color: Colors('#1D1F2E').get(),
           });
+          this._Input.tag('InputWrapper').patch({
+            texture: Lightning.Tools.getRoundRect(
+              1700,
+              110,
+              10,
+              1,
+              Colors('#1D1F2E').get(),
+              Colors('#1D1F2E').get()
+            ),
+          });
         }
 
         _unfocus() {
           this._Input.tag('InputWrapper').patch({
+            color: Colors('#1e1e1e').get(),
+          });
+
+          this._Input.tag('InputWrapper').patch({
             color: Colors('#383942').get(),
+            w: 1700,
+            h: 110,
+            texture: Lightning.Tools.getRoundRect(1700, 110, 10, 1, Colors('#fff').get(), false),
           });
         }
 
@@ -155,8 +173,12 @@ export default class Search extends Lightning.Component {
         }
 
         _handleDown() {
-          this._Input.tag('Input').listening = false;
-          this._setState('VODSection');
+          if (this._VODSection.Items.children.length > 0) {
+            this._Input.tag('Input').listening = false;
+            this._setState('VODSection');
+          } else {
+            return false;
+          }
         }
 
         _handleClick() {
