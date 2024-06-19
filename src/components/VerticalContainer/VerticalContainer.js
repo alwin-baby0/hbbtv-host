@@ -5,6 +5,7 @@ export default class VerticalContainer extends Lightning.Component {
   _props = {
     items: [],
     carryRowPosition: true,
+    enableScroll: true,
   };
   _focusedIndex = -1;
   _scrollPosition = 0;
@@ -58,6 +59,8 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _reCalibrateScroll() {
+    const { enableScroll } = this._props;
+    if (!enableScroll) return;
     this.stage.update();
 
     const currentFocus = this.Items.children[this._focusedIndex];
