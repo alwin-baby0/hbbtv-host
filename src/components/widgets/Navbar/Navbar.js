@@ -1,9 +1,7 @@
-import { Lightning, Router } from '@lightningjs/sdk';
+import { Lightning } from '@lightningjs/sdk';
 import SidebarItems from './NavbarItems';
-import { getRouteNavbarIndex } from '../../../utils/routesIndex';
 
 export default class Navbar extends Lightning.Component {
-  _visible = true;
   static _template() {
     return {
       Items: {
@@ -15,8 +13,8 @@ export default class Navbar extends Lightning.Component {
     };
   }
 
-  _active() {
-    this.tag('Items').visible = this._visible;
+  get Items() {
+    return this.tag('Items')
   }
 
   _focus() {
@@ -36,6 +34,6 @@ export default class Navbar extends Lightning.Component {
   }
 
   _getFocused() {
-    return this.tag('Items');
+    return this.Items;
   }
 }

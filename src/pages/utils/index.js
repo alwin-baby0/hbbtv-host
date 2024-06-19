@@ -42,7 +42,7 @@ export const constructCategoryItems = (categories, vodType) => {
       type: CategoryPickerItem,
       props: {
         itemInfo: item,
-        navigateTo: `filterPage/${item.id}/${mapVodTypeToNavigationUrl(vodType)}`,
+        callback: () => Router.navigate(`filterPage/${item.id}/${mapVodTypeToNavigationUrl(vodType)}`),
         w: 170,
         h: 64,
         radius: 30,

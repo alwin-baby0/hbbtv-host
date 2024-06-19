@@ -56,7 +56,13 @@ export default class App extends Router.App {
   }
 
   _setup() {
-    Router.startRouter(routes, this);
+    Router.startRouter({
+      ...routes,
+      afterEachRoute: () => {
+        // after each route update nav bar
+        this._Menu.Items._updateFocus();
+      },
+    }, this);
   }
 
   $punchHole() {
@@ -86,7 +92,7 @@ export default class App extends Router.App {
     ];
   }
 
-  _handleAppClose() {}
+  _handleAppClose() { }
 
   /**
    * Show app close dialogue

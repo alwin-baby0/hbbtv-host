@@ -4,7 +4,7 @@ import colors from '../../../reskin/colors.json';
 export default class CategoryPickerItem extends Lightning.Component {
   _props = {
     itemInfo: null,
-    navigateTo: '',
+    callback: () => null,
   };
 
   static _template() {
@@ -78,7 +78,7 @@ export default class CategoryPickerItem extends Lightning.Component {
   }
 
   _handleEnter() {
-    const { navigateTo } = this._props;
-    Router.navigate(navigateTo);
+    const { callback } = this._props;
+    callback();
   }
 }
