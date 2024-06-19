@@ -6,7 +6,6 @@ export default async function (page) {
   }
 
   await HomePageService.initialFetch();
-
   page.props = {
     sliderData: HomePageService.heroSectionItems,
     railData: HomePageService.stripes,

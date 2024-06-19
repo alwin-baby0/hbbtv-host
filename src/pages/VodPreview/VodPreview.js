@@ -42,7 +42,7 @@ export default class VodPreview extends Lightning.Component {
         h: 670,
         clipping: true,
         Column: {
-          // y: 30,
+          y: 50,
           h: 795,
           w: 1760,
           type: VerticalContainer,
@@ -138,7 +138,7 @@ export default class VodPreview extends Lightning.Component {
           this._setState('VodContainer');
         }
       },
-      /*  */
+
       class Events extends this {
         _getFocused() {
           return this._LiveEvents;
@@ -198,7 +198,7 @@ export default class VodPreview extends Lightning.Component {
           this.correctContainerSize();
         }
       },
-      /*  */
+
       class VodContainer extends this {
         _extended = true;
 
@@ -279,7 +279,6 @@ export default class VodPreview extends Lightning.Component {
           } else {
             Router.focusWidget('Menu');
           }
-          // return false;
         }
 
         $verticalContainerIndexChange(index) {

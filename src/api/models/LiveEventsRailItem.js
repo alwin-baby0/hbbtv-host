@@ -2,7 +2,7 @@ import { SimpleRailItem } from './SimpleRailItem';
 
 class LiveEventsRailItem extends SimpleRailItem {
   constructor(data) {
-    super({ ...data, type: { value: 'sport' } });
+    super({ ...data, type: { value: 'event' } });
     const { title, extensions, media_group } = data;
     const { description, date_as_string_with_time } = extensions;
 

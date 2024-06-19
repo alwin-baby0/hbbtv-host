@@ -1,13 +1,14 @@
 class GalleryRailItem {
   constructor(data) {
     const { title, content, extensions, media_group } = data;
-
     this.title = title;
     this.content = {
       type: content?.type,
       src: content?.src,
     };
 
+    this.url = data.content.src;
+    this.duration = extensions.duration;
     this.description = extensions?.description;
     this.previewPlayback = extensions?.preview_playback;
     this.thumbnails = [];

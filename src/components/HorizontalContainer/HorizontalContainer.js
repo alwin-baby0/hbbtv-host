@@ -9,7 +9,7 @@ export default class HorizontalContainer extends Lightning.Component {
 
   static _template() {
     return {
-      flex: { direction: 'column' },
+      flex: { direction: 'column', wrap: true },
       Title: {
         text: {
           fontFamily: 'Inter',

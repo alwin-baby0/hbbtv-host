@@ -1,4 +1,4 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { Row } from '@lightningjs/ui-components';
 
 import Button from '../../components/Button/Button';
@@ -150,8 +150,17 @@ export default class SingleMovie extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { title, description, director, genre, summary, subtitle, portraitPosters, videoSrc } =
-      this._props;
+    const {
+      title,
+      description,
+      duration,
+      director,
+      genre,
+      summary,
+      subtitle,
+      portraitPosters,
+      videoSrc,
+    } = this._props;
 
     this._Category.patch({
       text: {
@@ -204,7 +213,10 @@ export default class SingleMovie extends Lightning.Component {
           buttonLabel: buttonLabel,
           buttonIcon: Utils.asset(icon),
           callback: () => {
-            // console.log('action ', url);
+            Router.navigate('player', {
+              videoUrl: url,
+              duration: duration,
+            });
           },
         },
       };

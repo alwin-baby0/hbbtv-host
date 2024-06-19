@@ -1,7 +1,7 @@
-import { Colors, Lightning, Utils } from '@lightningjs/sdk';
-import Button from '../Button/Button';
+import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../api/models/utils';
+import Button from '../Button/Button';
 
 export default class GalleryItem extends Lightning.Component {
   _props = {};
@@ -94,7 +94,6 @@ export default class GalleryItem extends Lightning.Component {
         text: galleryItem.title,
       },
     });
-
     galleryItem.episodeCount &&
       this._EpisodeCount.patch({
         text: {
@@ -110,8 +109,13 @@ export default class GalleryItem extends Lightning.Component {
 
     this._GalleryButton.patch({
       props: {
+        buttonLabel: galleryItem.buttonLabel,
         callback: () => {
-          // console.log('Navigate ', galleryItem.content.src);
+          Router.navigate('player', {
+            videoUrl: galleryItem.url,
+            duration: galleryItem.duration,
+            videoType: galleryItem.buttonLabel,
+          });
         },
       },
     });

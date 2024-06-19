@@ -1,7 +1,6 @@
-import request, { V2 } from "..";
-import { GalleryRailItem, SimpleRailItem } from "../models";
-import { imageSizes } from "../models/utils";
-
+import request, { V2 } from '..';
+import { GalleryRailItem, SimpleRailItem } from '../models';
+import { imageSizes } from '../models/utils';
 
 class HomePageService {
   #heroSectionItems;
@@ -55,14 +54,14 @@ class HomePageService {
       const stripeData = await this.#getHomePage(this.#pointer, 1, 6);
       this.#pointer++;
 
-      if (stripeData.items.length > 0) {
+      if (stripeData?.items.length > 0) {
         this.stripesFetched++;
         counter++;
         // each stripe has unique id
         stripeData.stripeId = this.#pointer - 1;
         // each stripe page number so we can fetch more after
         stripeData.page = 1;
-        newStripes.push(stripeData)
+        newStripes.push(stripeData);
       }
     }
 
@@ -79,7 +78,7 @@ class HomePageService {
    */
   async fetchMoreItemsForStripeId(stripeId) {
     this.#loading = true;
-    const stripe = this.#stripes.find(stripe => stripe.stripeId === stripeId);
+    const stripe = this.#stripes.find((stripe) => stripe.stripeId === stripeId);
     if (stripe && stripe.hasMore) {
       const stripeData = await this.#getHomePage(stripeId, stripe.page++, 6);
 
@@ -105,29 +104,29 @@ class HomePageService {
   }
 
   /**
-    * @returns {{ type: string, sectionTitle: string, items: GalleryItem[] }}
-    */
+   * @returns {{ type: string, sectionTitle: string, items: GalleryItem[] }}
+   */
   get heroSectionItems() {
     return this.#heroSectionItems;
   }
 
   /**
-    * @returns {{ type: string, sectionTitle: string, items: SimpleRailItem[] }}
-    */
+   * @returns {{ type: string, sectionTitle: string, items: SimpleRailItem[] }}
+   */
   get stripes() {
     return this.#stripes;
   }
 
   /**
-    * @returns {boolean} - 'true' if we can fetch more stripes
-    */
+   * @returns {boolean} - 'true' if we can fetch more stripes
+   */
   get hasMore() {
     return this.#pointer < 25;
   }
 
   /**
-  * @returns {boolean} - 'true' if we are fetching atm
-  */
+   * @returns {boolean} - 'true' if we are fetching atm
+   */
   get isLoading() {
     return this.#loading;
   }
@@ -142,7 +141,7 @@ class HomePageService {
         page: 1,
         limit: 6,
       },
-    }).then(this.#parseHomePageHeroSection)
+    }).then(this.#parseHomePageHeroSection);
 
   #parseHomePageHeroSection({ data }) {
     const galleryItems = data.entry?.map((item) => new GalleryRailItem(item));
@@ -166,7 +165,7 @@ class HomePageService {
         page,
         limit,
       },
-    }).then(this.#parseHomePageRailData) // parse the data
+    }).then(this.#parseHomePageRailData); // parse the data
 
   #parseHomePageRailData({ data }) {
     const railItems = data.entry?.map((item) => new SimpleRailItem(item));

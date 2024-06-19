@@ -33,7 +33,6 @@ export default class Button extends Lightning.Component {
           letterSpacing: 2,
         },
       },
-
     };
   }
 
@@ -44,6 +43,8 @@ export default class Button extends Lightning.Component {
       this._props;
 
     this.patch({
+      w: width,
+      h: height,
       texture: Lightning.Tools.getRoundRect(
         width,
         height,
@@ -51,7 +52,7 @@ export default class Button extends Lightning.Component {
         strokeWidth,
         Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
         this._isFocused,
-        this._isFocused ? Colors(colors.focus).get() : undefined,
+        this._isFocused ? Colors(colors.focus).get() : undefined
       ),
     });
 

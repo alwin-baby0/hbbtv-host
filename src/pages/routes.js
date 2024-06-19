@@ -10,6 +10,10 @@ import filtered from './Filtered/provider/filtered';
 import SingleSeries from './SingleSeries/SingleSeries';
 import singleSeries from './SingleSeries/provider/singleSeries';
 import Search from './Search/Search';
+import SingleLiveEvent from './SingleLiveEvent/SingleLiveEvent';
+import singleLiveEvent from './SingleLiveEvent/provider/singleLiveEvent';
+import Player from './Player/Player';
+import player from './Player/provider/player';
 
 export default {
   root: 'splash',
@@ -52,10 +56,20 @@ export default {
       on: singleSeries,
     },
     {
+      path: 'event-details/:eventId',
+      component: SingleLiveEvent,
+      on: singleLiveEvent,
+    },
+    {
       path: 'search',
       component: Search,
       widgets: ['Menu'],
       // on: singleSeries,
+    },
+    {
+      path: 'player',
+      component: Player,
+      on: player,
     },
     /* {
       path: '*',

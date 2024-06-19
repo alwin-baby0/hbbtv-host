@@ -164,7 +164,7 @@ const fetchSportsEvents = async (page) => {
 
     const event1 = await getEvents();
 
-    sportsEvents.items = constructRails(event1);
+    sportsEvents.items = constructRails([event1]);
     sportsEvents.timestamp = new Date().getTime();
   }
 

@@ -9,7 +9,9 @@ class MovieRailItem extends SimpleRailItem {
     if (content) {
       this.videoSrc = content.src;
     }
+
     this.buttonText = extensions.button_text;
+    this.duration = extensions.duration;
     this.description = extensions.description;
     this.genre = extensions.genre;
     this.director = extensions.director;

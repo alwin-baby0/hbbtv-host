@@ -28,7 +28,7 @@ export const getSeries = async (page, limit) => {
 };
 
 function parseSeriesPageData({ data }) {
-  const railItems = data.entry?.map((item) => new SimpleRailItem(item))
+  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems.length === 0) return;
 
   return {
@@ -50,7 +50,7 @@ export const getSingleSeries = async (seriesId) => {
 };
 
 function parseSingleSeriesPageData({ data }) {
-  const railItems = data.entry?.map((item) => new SingleSeriesRailItem(item))
+  const railItems = data.entry?.map((item) => new SingleSeriesRailItem(item));
   if (!railItems || railItems.length === 0) return;
 
   return {
@@ -72,8 +72,11 @@ export const getSeason = async (seriesId) => {
   }).then(parseSeasonData);
 };
 
-function parseSeasonData({ data }) {
-  const railItems = data.entry?.map((item) => new SimpleRailItem({ ...item, type: { value: 'sport' } }))
+function parseSeasonData(result) {
+  const { data } = result;
+  const railItems = data.entry?.map(
+    (item) => new SimpleRailItem({ ...item, type: { value: 'episode' } })
+  );
   if (!railItems || railItems.length === 0) return;
 
   return {

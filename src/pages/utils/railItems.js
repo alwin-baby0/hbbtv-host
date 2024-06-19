@@ -1,9 +1,9 @@
-import { Router } from "@lightningjs/sdk";
-import { VOD_TYPES } from ".";
-import { imageSizes } from "../../api/models/utils";
-import LandscapeRailItem from "../../components/RailItems/LandscapeRailItem";
-import PosterRailItem from "../../components/RailItems/PosterRailItem";
-import SportsRailItem from "../../components/RailItems/SportsRailItem";
+import { Router } from '@lightningjs/sdk';
+import { VOD_TYPES } from '.';
+import { imageSizes } from '../../api/models/utils';
+import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
+import PosterRailItem from '../../components/RailItems/PosterRailItem';
+import SportsRailItem from '../../components/RailItems/SportsRailItem';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -23,8 +23,8 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   }
 };
 
-const constructSimpleRailItems = (railItems, railItemsOptions) =>
-  railItems.map((railItem) => ({
+const constructSimpleRailItems = (railItems, railItemsOptions) => {
+  return railItems.map((railItem) => ({
     type: PosterRailItem,
     w: 270,
     flexItem: {
@@ -35,7 +35,7 @@ const constructSimpleRailItems = (railItems, railItemsOptions) =>
     },
     ...railItemsOptions,
     props: {
-      itemTitle: railItem.title,
+      itemTitle: railItem.title ? railItem.title : '',
       imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
       itemType: railItem.type,
       callback: () => {
@@ -43,7 +43,7 @@ const constructSimpleRailItems = (railItems, railItemsOptions) =>
       },
     },
   }));
-
+};
 const constructEpisodeRailItems = (railItems, railItemsOptions) =>
   railItems.map((railItem) => {
     return {
@@ -60,7 +60,10 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) =>
         itemDescription: railItem.summary,
         imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
         callback: () => {
-          Router.navigate(railItem.url);
+          Router.navigate('player', {
+            videoUrl: railItem.url,
+            duration: railItem.duration,
+          });
         },
       },
     };

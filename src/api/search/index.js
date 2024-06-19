@@ -17,11 +17,12 @@ export const getSearch = async (keyword, category) =>
   }).then(parseSearchPageData);
 
 function parseSearchPageData({ data }) {
-  const railItems = data.entry?.map((item) => new SimpleRailItem(item))
-  if (!railItems || railItems.length === 0) return;
+  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  if (!railItems) return;
 
   return {
     railType: VOD_TYPES.MOVIE,
+    railTitle: data.title,
     cardType: 'POSTER',
     items: railItems,
   };
