@@ -61,9 +61,12 @@ export default class SidebarItems extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _firstActive() {
-    this._index = getRouteNavbarIndex(Router.getActiveHash());
-    this._setSelected(this._index);
+  _active() {
+    // setTimeout is used to give time for url hash to change before asign the right one
+    setTimeout(() => {
+      this._index = getRouteNavbarIndex(Router.getActiveHash());
+      this._setSelected(this._index);
+    })
   }
 
   _focus() {
