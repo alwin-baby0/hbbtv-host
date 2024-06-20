@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import colors from '../../../reskin/colors.json';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 
 export default class Settings extends Lightning.Component {
   _props = {
@@ -53,17 +53,11 @@ export default class Settings extends Lightning.Component {
     this._props.lastId = id;
   }
 
-  static _states() {
-    return [
-      class LanguageItems extends this {
-        _getFocused() {
-          return this.tag('Wrapper.Column');
-        }
+  _getFocused() {
+    return this.tag('Wrapper.Column');
+  }
 
-        _handleUp() {
-          Router.focusWidget('Menu');
-        }
-      },
-    ];
+  _handleUp() {
+    Router.focusWidget('Menu');
   }
 }

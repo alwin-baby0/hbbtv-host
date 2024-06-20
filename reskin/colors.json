@@ -9,5 +9,7 @@
   "categoryPicker": "#1D1F2E",
   "landscapeBackground": "#1D1E2E",
   "focusedLanguage": "#1D1F2E",
-  "unfocusedLanguage": "#17191A"
+  "unfocusedLanguage": "#17191A",
+  "focusedHelpButton": "#1D1F2E",
+  "unfocusedHelpButton": "#17191A"
 }
