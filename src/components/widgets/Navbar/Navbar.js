@@ -1,6 +1,7 @@
 import { Lightning } from '@lightningjs/sdk';
 import SidebarItems from './NavbarItems';
 
+export let visibility = true;
 export default class Navbar extends Lightning.Component {
   static _template() {
     return {
@@ -13,16 +14,13 @@ export default class Navbar extends Lightning.Component {
     };
   }
 
+  set setVisibility(visible) {
+    this.Items.visible = visible;
+    visibility = visible;
+  }
+
   get Items() {
-    return this.tag('Items')
-  }
-
-  _focus() {
-    super._focus();
-  }
-
-  _unfocus() {
-    super._unfocus();
+    return this.tag('Items');
   }
 
   _handleLeft() {

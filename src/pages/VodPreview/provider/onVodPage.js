@@ -3,6 +3,7 @@ import { getMovieGenres, getMovies } from '../../../api/movies';
 import { getSeries, getSeriesGenres } from '../../../api/series';
 import { getEvents, getSports } from '../../../api/sports';
 import { VOD_PREVIEW_TYPES, VOD_TYPES, constructCategoryItems, constructRails } from '../../utils';
+import { CONTENT_TYPE } from '../../../components/VodContentContainer/VodContentContainer';
 
 const movies = {
   items: [],
@@ -30,12 +31,8 @@ const sportsEvents = {
   timestamp: 0,
 };
 
-const fetchGenres = async (page, vodType) => {
+const fetchGenres = async (vodType) => {
   if (genres.timestamp + 1000 * 60 * 30 <= new Date().getTime() || genres.type !== vodType) {
-    page._Categories._CaterogyItems.props = {
-      items: [],
-    };
-
     const fetcher = vodType === 'movies' ? getMovieGenres : getSeriesGenres;
     const {
       data: { entry },
@@ -47,25 +44,14 @@ const fetchGenres = async (page, vodType) => {
     genres.type = vodType;
   }
 
-  page._Categories._CaterogyItems.props = {
-    items: genres.items,
-    yPos: 0,
-  };
+  return {
+    contentType: CONTENT_TYPE.CATEGORIES,
+    categoryItems: genres.items,
+  }
 };
 
-const fetchMovies = async (page) => {
-  page._Categories.patch({
-    visible: true,
-  });
-  page._LiveEvents.patch({
-    visible: false,
-  });
-
+const fetchMovies = async () => {
   if (movies.timestamp + 1000 * 60 * 30 <= new Date().getTime()) {
-    page._Column.props = {
-      items: [],
-    };
-
     // trebalo bi da se napravi neki servis kao sto imamo za home da se fetchuje sa paginacijom
     const newMovies1 = await getMovies(1, 6);
     const newMovies2 = await getMovies(2, 6);
@@ -77,28 +63,11 @@ const fetchMovies = async (page) => {
     movies.timestamp = new Date().getTime();
   }
 
-  page._Column.props = {
-    items: movies.items,
-  };
-  page.props = {
-    focusedState: 'Content',
-  };
+  return movies.items;
 };
 
-const fetchSeries = async (page) => {
-  page._Categories.patch({
-    visible: true,
-  });
-  page._LiveEvents.patch({
-    visible: false,
-  });
-
-  sports.timestamp = 0;
+const fetchSeries = async () => {
   if (series.timestamp + 1000 * 60 * 30 <= new Date().getTime()) {
-    page._Column.props = {
-      items: [],
-    };
-
     const series1 = await getSeries(1, 6);
     const series2 = await getSeries(2, 6);
     const series3 = await getSeries(3, 6);
@@ -107,30 +76,11 @@ const fetchSeries = async (page) => {
     series.timestamp = new Date().getTime();
   }
 
-  page._Column.props = {
-    items: series.items,
-  };
-
-  page.props = {
-    focusedState: 'Content',
-  };
+  return series.items;
 };
 
 const fetchSports = async (page) => {
-  page._Categories.patch({
-    visible: false,
-  });
-  page._LiveEvents.patch({
-    visible: true,
-  });
-
-  series.timestamp = 0;
-
   if (sports.timestamp + 1000 * 60 * 30 <= new Date().getTime()) {
-    page._VodContainer.patch({});
-    page._Column.props = {
-      items: [],
-    };
 
     const sports1 = await getSports(1, 7);
     const sports2 = await getSports(2, 7);
@@ -140,66 +90,47 @@ const fetchSports = async (page) => {
     sports.timestamp = new Date().getTime();
   }
 
-  page._Column.props = {
-    items: sports.items,
-  };
-  page.props = {
-    focusedState: 'Events',
-  };
+  return sports.items;
 };
 
 const fetchSportsEvents = async (page) => {
-  page._Categories.patch({
-    visible: false,
-  });
-  page._LiveEvents.patch({
-    visible: true,
-  });
-
   if (sportsEvents.timestamp + 1000 * 60 * 30 <= new Date().getTime()) {
-    page._LiveEvents.patch({});
-    page._LiveEvents.props = {
-      items: [],
-    };
-
     const event1 = await getEvents();
 
     sportsEvents.items = constructRails([event1]);
+
     sportsEvents.timestamp = new Date().getTime();
   }
 
-  sportsEvents.timestamp = new Date().getTime();
-
-  // Check if sportsEvents.items exist and log appropriate message
-  if (sportsEvents.items && sportsEvents.items.length > 0) {
-    page._LiveEvents.props = {
-      items: sportsEvents.items,
-    };
-  } else {
-    page._LiveEvents.props = {
-      items: [],
-    };
+  return {
+    contentType: CONTENT_TYPE.EVENTS,
+    eventItems: sportsEvents.items,
   }
 };
 
 export default async function (page, { vodType }) {
+  let items;
+  let content;
+
   switch (vodType) {
     case VOD_PREVIEW_TYPES.MOVIES: {
-      await fetchGenres(page, vodType);
-      await fetchMovies(page);
+      content = await fetchGenres(vodType);
+      items = await fetchMovies();
       break;
     }
     case VOD_PREVIEW_TYPES.SERIES: {
-      await fetchGenres(page, vodType);
-      await fetchSeries(page);
+      content = await fetchGenres(vodType);
+      items = await fetchSeries();
       break;
     }
     case VOD_PREVIEW_TYPES.SPORTS: {
-      await fetchSportsEvents(page);
-      await fetchSports(page);
+      content = await fetchSportsEvents();
+      items = await fetchSports();
       break;
     }
     default:
       Router.back();
   }
+
+  page.props = { items, content, vodType };
 }

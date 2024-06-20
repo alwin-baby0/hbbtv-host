@@ -51,8 +51,8 @@ export default class App extends Router.App {
     return this.tag('Background');
   }
 
-  $hideNavbar(isVisible) {
-    isVisible ? (this._Menu.visible = true) : (this._Menu.visible = false);
+  $setNavbarVisibility(isVisible) {
+    this._Menu.setVisibility = isVisible;
   }
 
   _setup() {

@@ -52,7 +52,7 @@ export default class Home extends Lightning.Component {
   _active() {
     if (this._getState() === 'Items') {
       setTimeout(() => {
-        this.fireAncestors('$hideNavbar', false);
+        this.fireAncestors('$setNavbarVisibility', false);
       });
     }
   }
@@ -95,7 +95,7 @@ export default class Home extends Lightning.Component {
         }
 
         $enter() {
-          this.fireAncestors('$hideNavbar', true);
+          this.fireAncestors('$setNavbarVisibility', true);
         }
 
         _handleUp() {
@@ -109,7 +109,7 @@ export default class Home extends Lightning.Component {
 
       class Items extends this {
         $enter() {
-          this.fireAncestors('$hideNavbar', false);
+          this.fireAncestors('$setNavbarVisibility', false);
           this._HeroSection.patch({
             y: -305,
           });
@@ -119,7 +119,7 @@ export default class Home extends Lightning.Component {
         }
 
         $exit() {
-          this.fireAncestors('$hideNavbar', true);
+          this.fireAncestors('$setNavbarVisibility', true);
           this._HeroSection.patch({
             y: 0,
           });

@@ -61,7 +61,7 @@ export default class SidebarItems extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _firstActive() {
+  _active() {
     // setTimeout is used to give time for url hash to change before asign the right one
     setTimeout(() => {
       this._index = getRouteNavbarIndex(Router.getActiveHash());
@@ -71,7 +71,6 @@ export default class SidebarItems extends Lightning.Component {
 
   _focus() {
     let focusedId = getRouteNavbarIndex(Router.getActiveHash());
-    this._updateFocus();
     this.$changePage(focusedId);
   }
 
