@@ -215,7 +215,7 @@ export default class Search extends Lightning.Component {
         }
 
         $enter() {
-          this.fireAncestors('$hideNavbar', false);
+          this.fireAncestors('$setNavbarVisibility', false);
           this._extended = this._VODSection._focusedIndex > 0;
           this._extended = false;
           this._Content.patch({
@@ -228,7 +228,7 @@ export default class Search extends Lightning.Component {
         }
 
         $exit() {
-          this.fireAncestors('$hideNavbar', true);
+          this.fireAncestors('$setNavbarVisibility', true);
         }
 
         correctContainerSize() {

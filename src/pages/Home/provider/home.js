@@ -1,7 +1,7 @@
 import { HomePageService } from '../../../api/services/HomePageService';
 
 export default async function (page) {
-  if (page._props.sliderData !== null && page._props.railData.length > 2) {
+  if (page._props.sliderData !== null && page._props.railData) {
     return;
   }
 
