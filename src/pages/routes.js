@@ -16,6 +16,8 @@ import Player from './Player/Player';
 import player from './Player/provider/player';
 import Settings from './Settings/Settings';
 import settings from './Settings/provider/settings';
+import HelpScreen from './Help/HelpScreen';
+import help from './Help/provider/help';
 
 export default {
   root: 'splash',
@@ -73,6 +75,12 @@ export default {
       component: Settings,
       widgets: ['Menu'],
       on: settings,
+    },
+    {
+      path: 'help',
+      component: HelpScreen,
+      widgets: ['Menu'],
+      on: help,
     },
     {
       path: 'player',

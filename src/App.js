@@ -21,6 +21,10 @@ export default class App extends Router.App {
         h: 1080,
         zIndex: 102,
         color: Colors('#000000').get(),
+        props: {
+          xPos: 960,
+          yPos: 540,
+        },
       },
       Background: {
         w: 1920,
@@ -51,18 +55,12 @@ export default class App extends Router.App {
     return this.tag('Background');
   }
 
-  $setNavbarVisibility(isVisible) {
-    this._Menu.setVisibility = isVisible;
+  $hideNavbar(isVisible) {
+    isVisible ? (this._Menu.visible = true) : (this._Menu.visible = false);
   }
 
   _setup() {
-    Router.startRouter({
-      ...routes,
-      afterEachRoute: () => {
-        // after each route update nav bar
-        this._Menu.Items._updateFocus();
-      },
-    }, this);
+    Router.startRouter(routes, this);
   }
 
   $punchHole() {
@@ -92,7 +90,7 @@ export default class App extends Router.App {
     ];
   }
 
-  _handleAppClose() { }
+  _handleAppClose() {}
 
   /**
    * Show app close dialogue

@@ -2,11 +2,13 @@ import { Utils } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
 
 export default class LoadingScreenComponent extends lng.Component {
+  _props = {
+    xPos: 960,
+    yPos: 540,
+  };
   static _template() {
     return {
       Spinner: {
-        x: 960,
-        y: 540,
         w: 80,
         h: 80,
         texture: lng.Tools.getSvgTexture(Utils.asset('images/spinner.svg'), 80, 80),
@@ -14,6 +16,15 @@ export default class LoadingScreenComponent extends lng.Component {
         rotation: 0,
       },
     };
+  }
+
+  set props(props) {
+    this._props = { ...this._props, ...props };
+    const { xPos, yPos } = this._props;
+    this.tag('Spinner').patch({
+      x: xPos,
+      y: yPos,
+    });
   }
 
   _init() {
