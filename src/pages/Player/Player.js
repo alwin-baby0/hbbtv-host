@@ -245,17 +245,21 @@ export default class Player extends lng.Component {
   }
 
   $playVideo() {
+    const { pausedItemId } = this._props;
+
     this._showWrapper();
     VideoPlayer.play();
-    this._Controls.items[this._props.pausedItemId]._Icon.patch({
+    this._Controls.Items.children[pausedItemId]._Icon.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
     });
   }
 
   $pauseVideo() {
+    const { pausedItemId } = this._props;
     this._showWrapper();
     VideoPlayer.pause();
-    this._Controls.items[this._props.pausedItemId]._Icon.patch({
+
+    this._Controls.Items.children[pausedItemId]._Icon.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
     });
   }

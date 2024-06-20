@@ -14,6 +14,8 @@ import SingleLiveEvent from './SingleLiveEvent/SingleLiveEvent';
 import singleLiveEvent from './SingleLiveEvent/provider/singleLiveEvent';
 import Player from './Player/Player';
 import player from './Player/provider/player';
+import Settings from './Settings/Settings';
+import settings from './Settings/provider/settings';
 
 export default {
   root: 'splash',
@@ -65,6 +67,12 @@ export default {
       component: Search,
       widgets: ['Menu'],
       // on: singleSeries,
+    },
+    {
+      path: 'settings',
+      component: Settings,
+      widgets: ['Menu'],
+      on: settings,
     },
     {
       path: 'player',

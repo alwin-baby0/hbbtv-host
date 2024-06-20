@@ -11,6 +11,7 @@ export default class HorizontalContainer extends Lightning.Component {
     return {
       flex: { direction: 'column', wrap: true },
       Title: {
+        h: 55,
         text: {
           fontFamily: 'Inter',
           fontStyle: 'normal bold',
