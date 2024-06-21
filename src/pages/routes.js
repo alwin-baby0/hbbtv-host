@@ -1,0 +1,98 @@
+import Splash from '../components/SplashScreen/Splash';
+import Home from './Home/Home';
+import home from './Home/provider/home';
+import VodPreview from './VodPreview/VodPreview';
+import onVodPage from './VodPreview/provider/onVodPage';
+import SingleMovie from './SingleMovie/SingleMovie';
+import singleMovie from './SingleMovie/provider/singleMovie';
+import Filtered from './Filtered/Filtered';
+import filtered from './Filtered/provider/filtered';
+import SingleSeries from './SingleSeries/SingleSeries';
+import singleSeries from './SingleSeries/provider/singleSeries';
+import Search from './Search/Search';
+import SingleLiveEvent from './SingleLiveEvent/SingleLiveEvent';
+import singleLiveEvent from './SingleLiveEvent/provider/singleLiveEvent';
+import Player from './Player/Player';
+import player from './Player/provider/player';
+import Settings from './Settings/Settings';
+import settings from './Settings/provider/settings';
+import HelpScreen from './Help/HelpScreen';
+import help from './Help/provider/help';
+
+export default {
+  root: 'splash',
+  routes: [
+    {
+      path: 'splash',
+      component: Splash,
+    },
+    {
+      path: 'home',
+      component: Home,
+      widgets: ['Menu'],
+      on: home,
+    },
+    {
+      path: 'vod/:vodType',
+      component: VodPreview,
+      widgets: ['Menu'],
+      on: onVodPage,
+    },
+    {
+      path: 'movie-details/:movieId',
+      component: SingleMovie,
+      on: singleMovie,
+    },
+    {
+      path: 'series-details/:seriesId',
+      component: SingleSeries,
+      on: singleSeries,
+    },
+    {
+      path: 'filterPage/:action/:genre_movies',
+      component: Filtered,
+      on: filtered,
+      // cache: 30,
+    },
+    {
+      path: 'sports-details/:seriesId',
+      component: SingleSeries,
+      on: singleSeries,
+    },
+    {
+      path: 'event-details/:eventId',
+      component: SingleLiveEvent,
+      on: singleLiveEvent,
+    },
+    {
+      path: 'search',
+      component: Search,
+      widgets: ['Menu'],
+      // on: singleSeries,
+    },
+    {
+      path: 'settings',
+      component: Settings,
+      widgets: ['Menu'],
+      on: settings,
+    },
+    {
+      path: 'help',
+      component: HelpScreen,
+      widgets: ['Menu'],
+      on: help,
+    },
+    {
+      path: 'player',
+      component: Player,
+      on: player,
+    },
+    /* {
+      path: '*',
+      component: NotFound,
+      beforeNavigate() {
+        Router.navigate('home', false);
+      },
+    }, */
+  ],
+};

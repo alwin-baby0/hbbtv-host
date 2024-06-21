@@ -1,0 +1,166 @@
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import VodContentContainer, { CONTENT_TYPE } from '../../components/VodContentContainer/VodContentContainer';
+
+export default class VodPreview extends Lightning.Component {
+  _props = {
+    vodType: undefined,
+  };
+
+  static _template() {
+    return {
+      collision: true,
+      Background: {
+        w: 1920,
+        h: 2080,
+        src: Utils.asset('images/background.jpg'),
+      },
+      VodContentContainer: {
+        type: VodContentContainer,
+      },
+      VodContainer: {
+        x: 110,
+        y: 670,
+        w: 1760,
+        h: 670,
+        clipping: true,
+        Column: {
+          y: 50,
+          h: 795,
+          w: 1760,
+          type: VerticalContainer,
+        },
+      },
+    };
+  }
+
+  get _VodContainer() {
+    return this.tag('VodContainer');
+  }
+
+  get _VodContentContainer() {
+    return this.tag('VodContentContainer');
+  }
+
+  get _Column() {
+    return this.tag('VodContainer.Column');
+  }
+
+  set props(props) {
+    const { vodType } = props;
+
+    if (this._props.vodType !== vodType) {
+      this._props = { ...this._props, ...props };
+      const { content, items } = this._props;
+
+      this._VodContentContainer.props = { ...content };
+      this._Column.props = { items };
+
+      this._setState('VodContentContainer');
+    }
+  }
+
+  calculateContentOffset(contentType) {
+    switch (contentType) {
+      case CONTENT_TYPE.EVENTS: return 530;
+      case CONTENT_TYPE.CATEGORIES: return 200;
+      case CONTENT_TYPE.EMPTY:
+      default: return 80;
+    }
+  }
+
+  static _states() {
+    return [
+      class VodContentContainer extends this {
+        $enter() {
+          this.fireAncestors('$setNavbarVisibility', true);
+
+          if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
+            this._setState('VodContainer');
+          }
+
+          this._VodContentContainer.patch({
+            y: 0,
+          });
+
+          this._VodContainer.patch({
+            y: this.calculateContentOffset(this._VodContentContainer.contentType),
+            h: 1920,
+          })
+        }
+
+        _enable() {
+          this.fireAncestors('$setNavbarVisibility', true);
+        }
+
+        _handleUp() {
+          Router.focusWidget('Menu');
+        }
+
+        _handleDown() {
+          this._setState('VodContainer');
+        }
+
+        _getFocused() {
+          return this._VodContentContainer;
+        }
+      },
+      class VodContainer extends this {
+        $enter() {
+          this.correctContainerSize();
+
+          this._VodContainer.patch({
+            y: this.calculateContentOffset(this._VodContentContainer.contentType),
+            h: 1080,
+          });
+        }
+
+        correctContainerSize() {
+          if (this._Column._focusedIndex === 0) {
+            this._VodContentContainer.patch({
+              y: 0,
+            });
+
+            this._VodContainer.patch({
+              y: this.calculateContentOffset(this._VodContentContainer.contentType),
+              h: 1920,
+            });
+
+            this.fireAncestors('$setNavbarVisibility', true);
+          }
+          if (this._Column._focusedIndex >= 1) {
+            this._VodContainer.patch({
+              y: 0,
+              h: 1080,
+            });
+            this._VodContentContainer.patch({
+              y: -700,
+            });
+
+            this.fireAncestors('$setNavbarVisibility', false);
+          }
+        }
+
+        _enable() {
+          this.correctContainerSize();
+        }
+
+        _getFocused() {
+          return this._Column;
+        }
+
+        _handleUp() {
+          if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
+            Router.focusWidget('Menu');
+          } else {
+            this._setState('VodContentContainer');
+          }
+        }
+
+        $verticalContainerIndexChange() {
+          this.correctContainerSize();
+        }
+      },
+    ];
+  }
+}
