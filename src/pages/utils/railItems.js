@@ -3,7 +3,7 @@ import { VOD_TYPES } from '.';
 import { imageSizes } from '../../api/models/utils';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
-import SportsRailItem from '../../components/RailItems/SportsRailItem';
+import SportsEventsRailItem from '../../components/RailItems/SportsEventsRailItem';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -73,7 +73,7 @@ const constructSportsLiveRailItems = (railItems, railItemsOptions) =>
   railItems.map((railItem) => {
     return {
       w: 260,
-      type: SportsRailItem,
+      type: SportsEventsRailItem,
       flexItem: {
         marginLeft: 10,
         marginRight: 10,

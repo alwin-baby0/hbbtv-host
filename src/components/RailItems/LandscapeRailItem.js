@@ -1,11 +1,13 @@
-import { Colors } from '@lightningjs/sdk';
+import { Colors, Utils } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
+import Image from '../Image/Image';
 
 export default class LandscapeRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
+    placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,
@@ -25,9 +27,8 @@ export default class LandscapeRailItem extends FocusableItem {
         flex: { direction: 'column' },
         Border: {
           flex: { justifyContent: 'center', alignItems: 'center' },
-          MovieImg: {
-            w: CARD_SIZES.LANDSCAPE.width,
-            rect: true,
+          LandscapeImage: {
+            type: Image,
           },
         },
         Title: {
@@ -72,13 +73,13 @@ export default class LandscapeRailItem extends FocusableItem {
     return this.tag('Description');
   }
 
-  get _MovieImg() {
-    return this.tag('MovieImg');
+  get _LandscapeImage() {
+    return this.tag('LandscapeImage');
   }
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle, itemDescription } = this._props;
+    const { imageSrc, radius, itemTitle, itemDescription, placeholderSrc } = this._props;
 
     this.setProps({
       width: 315,
@@ -97,12 +98,12 @@ export default class LandscapeRailItem extends FocusableItem {
       },
     });
 
-    this._MovieImg.patch({
-      w: CARD_SIZES.LANDSCAPE.image_width,
-      h: CARD_SIZES.LANDSCAPE.image_height,
-      src: imageSrc,
-      shader: {
-        type: lng.shaders.RoundedRectangle,
+    this._LandscapeImage.patch({
+      props: {
+        width: CARD_SIZES.LANDSCAPE.image_width,
+        height: CARD_SIZES.LANDSCAPE.image_height,
+        imageSrc: imageSrc,
+        placeholderSrc: placeholderSrc,
         radius: radius,
       },
     });

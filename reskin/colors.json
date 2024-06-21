@@ -11,5 +11,6 @@
   "focusedLanguage": "#1D1F2E",
   "unfocusedLanguage": "#17191A",
   "focusedHelpButton": "#1D1F2E",
-  "unfocusedHelpButton": "#17191A"
+  "unfocusedHelpButton": "#17191A",
+  "eventCardBackground": "#23273A"
 }

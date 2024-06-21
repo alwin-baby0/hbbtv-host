@@ -1,13 +1,17 @@
 import { CARD_SIZES } from './constants';
+import { Utils } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
+import Image from '../Image/Image';
 
 export default class PosterRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
+    placeholderSrc: Utils.asset('images/rail-placeholder.png'),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,
   };
+
   static _template() {
     return {
       ...super._template(),
@@ -17,8 +21,8 @@ export default class PosterRailItem extends FocusableItem {
         flex: { direction: 'column' },
         Border: {
           flex: { justifyContent: 'center', alignItems: 'center' },
-          MovieImg: {
-            rect: true,
+          PosterImage: {
+            type: Image,
           },
         },
         Title: {
@@ -42,13 +46,13 @@ export default class PosterRailItem extends FocusableItem {
     return this.tag('Title');
   }
 
-  get _MovieImg() {
-    return this.tag('MovieImg');
+  get _PosterImage() {
+    return this.tag('PosterImage');
   }
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle } = this._props;
+    const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;
 
     this.setProps({
       width: CARD_SIZES.POSTER.image_width,
@@ -61,12 +65,12 @@ export default class PosterRailItem extends FocusableItem {
       },
     });
 
-    this._MovieImg.patch({
-      w: CARD_SIZES.POSTER.image_width,
-      h: CARD_SIZES.POSTER.image_height,
-      src: imageSrc,
-      shader: {
-        type: lng.shaders.RoundedRectangle,
+    this._PosterImage.patch({
+      props: {
+        width: CARD_SIZES.POSTER.image_width,
+        height: CARD_SIZES.POSTER.image_height,
+        imageSrc: imageSrc,
+        placeholderSrc: placeholderSrc,
         radius: radius,
       },
     });

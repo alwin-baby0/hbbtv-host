@@ -1,14 +1,8 @@
 import { Router } from '@lightningjs/sdk';
-import CategoryPickerItem from '../../components/CategoryPickerItem/CategoryPickerItem';
-import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-
-import PosterRailItem from '../../components/RailItems/PosterRailItem';
-import { imageSizes } from '../../api/models/utils';
 import { CARD_SIZES } from '../../components/RailItems/constants';
-import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
-import SportsRailItem from '../../components/RailItems/SportsRailItem';
 import { railItemConstructor } from './railItems';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import CategoryPickerItem from '../../components/CategoryPickerItem/CategoryPickerItem';
 
 export const VOD_PREVIEW_TYPES = {
   MOVIES: 'movies',
@@ -42,7 +36,8 @@ export const constructCategoryItems = (categories, vodType) => {
       type: CategoryPickerItem,
       props: {
         itemInfo: item,
-        callback: () => Router.navigate(`filterPage/${item.id}/${mapVodTypeToNavigationUrl(vodType)}`),
+        callback: () =>
+          Router.navigate(`filterPage/${item.id}/${mapVodTypeToNavigationUrl(vodType)}`),
         w: 170,
         h: 64,
         radius: 30,

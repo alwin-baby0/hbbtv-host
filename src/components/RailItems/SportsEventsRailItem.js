@@ -1,10 +1,13 @@
-import { Colors } from '@lightningjs/sdk';
+import { Colors, Utils } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
+import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
+import Image from '../Image/Image';
 
-export default class SportsRailItem extends FocusableItem {
+export default class SportsEventsRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
+    placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,
@@ -15,16 +18,11 @@ export default class SportsRailItem extends FocusableItem {
       rect: true,
       w: CARD_SIZES.SPORTS.width,
       h: CARD_SIZES.SPORTS.height,
-      color: Colors('#23273A').get(),
+      color: Colors(colors.eventCardBackground).get(),
       EventImage: {
         x: 3,
         y: 3,
-        w: 255,
-        h: 150,
-        shader: {
-          type: lng.shaders.RoundedRectangle,
-          radius: [6, 6, 0, 0],
-        },
+        type: Image,
       },
       EventTime: {
         x: 3,
@@ -32,7 +30,7 @@ export default class SportsRailItem extends FocusableItem {
         rect: true,
         w: 180,
         h: 30,
-        color: Colors('#A61619').get(),
+        color: Colors(colors.focus).get(),
         shader: {
           type: lng.shaders.RoundedRectangle,
           radius: [0, 4, 4, 0],
@@ -110,8 +108,15 @@ export default class SportsRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { itemTitle, itemDescription, itemDateWithTime, imageSrc, radius, strokeWidth } =
-      this._props;
+    const {
+      itemTitle,
+      itemDescription,
+      itemDateWithTime,
+      imageSrc,
+      placeholderSrc,
+      radius,
+      strokeWidth,
+    } = this._props;
 
     this.setProps({
       width: CARD_SIZES.SPORTS.width,
@@ -140,7 +145,13 @@ export default class SportsRailItem extends FocusableItem {
     });
 
     this._EventImage.patch({
-      src: imageSrc,
+      props: {
+        width: 255,
+        height: 150,
+        imageSrc: imageSrc,
+        placeholderSrc: placeholderSrc,
+        radius: [6, 6, 0, 0],
+      },
     });
   }
 
