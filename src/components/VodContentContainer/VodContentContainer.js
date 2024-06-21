@@ -3,13 +3,14 @@ import CategoryPicker from "../CategoryPicker/CategoryPicker";
 import VerticalContainer from "../VerticalContainer/VerticalContainer";
 
 export const CONTENT_TYPE = {
-  CATEGORIES: 'categories',
-  EVENTS: 'events',
+  CATEGORIES: '_Categories',
+  EVENTS: '_LiveEvents',
+  EMPTY: 'empty',
 }
 
 export default class VodContentContainer extends Lightning.Component {
   _props = {
-    contentType: undefined,
+    contentType: CONTENT_TYPE.EMPTY,
   }
   static _template() {
     return {
@@ -35,34 +36,44 @@ export default class VodContentContainer extends Lightning.Component {
   }
 
   set props(props) {
-    const { contentType } = props;
-
+    const { contentType, items } = props;
     this._props.contentType = contentType;
 
+    this.#changeContentVisibility(contentType)
+    this.#renderContent(items, contentType);
+
     if (contentType === CONTENT_TYPE.CATEGORIES) {
-      this._Categories.visible = true;
-      this._LiveEvents.visible = false;
+      this._Categories._CaterogyItems._setFocusedIndex(0);
+    }
+  }
 
-      const { categoryItems } = props;
+  /**
+   * Resets visibility of content containers.
+   * @param {string} visibleContentType - type of container to show.
+   */
+  #changeContentVisibility(visibleContentType) {
+    Object.values(CONTENT_TYPE).forEach(contentType => {
+      // escape empty state
+      if (contentType === CONTENT_TYPE.EMPTY) return;
+      this[contentType].visible = visibleContentType === contentType;
+    })
+  }
 
-      if (categoryItems && categoryItems !== this._props.categoryItems) {
-        this._props = { ...this._props, ...props };
+  /**
+   * Initiates content container with items.
+   * @param {Rails[]} items - items to add to container props.
+   * @param {string} contentType - type of container to populate.
+   */
+  #renderContent(items, contentType) {
+    if (items) {
+      if (items !== this._props.items) {
+        this._props.items = items;
 
-        this._Categories._CaterogyItems.props = {
-          items: categoryItems,
-        };
+        this[contentType].props = { items };
       }
-    } else if (contentType === CONTENT_TYPE.EVENTS) {
-      this._Categories.visible = false;
-      this._LiveEvents.visible = true;
-      const { eventItems } = props;
-
-      if (eventItems && eventItems !== this._props.eventItems) {
-        this._props = { ...this._props, ...props };
-
-        this._LiveEvents.props = {
-          items: eventItems,
-        };
+      // content is empty
+      if (items.length === 0) {
+        this._props.contentType = CONTENT_TYPE.EMPTY;
       }
     }
   }
@@ -71,6 +82,8 @@ export default class VodContentContainer extends Lightning.Component {
     switch (this._props.contentType) {
       case CONTENT_TYPE.CATEGORIES: return this._Categories;
       case CONTENT_TYPE.EVENTS: return this._LiveEvents;
+      case CONTENT_TYPE.EMPTY:
+      default: return null;
     }
   }
 

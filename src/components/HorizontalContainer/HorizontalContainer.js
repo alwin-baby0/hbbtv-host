@@ -81,12 +81,12 @@ export default class HorizontalContainer extends Lightning.Component {
       this.Items.x = 0;
 
       this.Items.childList.clear();
-      if (items.length > 0) {
+      if (items?.length > 0) {
         this.Items.childList.a(items);
         this.stage.update();
       }
 
-      this._focusedIndex = items.length > 0 ? 0 : -1;
+      this._focusedIndex = items?.length > 0 ? 0 : -1;
       this._scrollPosition = 0;
     }
   }

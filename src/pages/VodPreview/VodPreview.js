@@ -56,8 +56,6 @@ export default class VodPreview extends Lightning.Component {
       this._VodContentContainer.props = { ...content };
       this._Column.props = { items };
 
-      this._VodContentContainer._Categories._CaterogyItems._setFocusedIndex(0);
-
       this._setState('VodContentContainer');
     }
   }
@@ -65,21 +63,20 @@ export default class VodPreview extends Lightning.Component {
   calculateContentOffset(contentType) {
     switch (contentType) {
       case CONTENT_TYPE.EVENTS: return 530;
-      case CONTENT_TYPE.CATEGORIES:
-      default: {
-        return 200;
-      }
+      case CONTENT_TYPE.CATEGORIES: return 200;
+      case CONTENT_TYPE.EMPTY:
+      default: return 80;
     }
   }
 
   static _states() {
     return [
       class VodContentContainer extends this {
-        _getFocused() {
-          return this._VodContentContainer;
-        }
-
         $enter() {
+          if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
+            this._setState('VodContainer');
+          }
+
           this._VodContentContainer.patch({
             y: 0,
           });
@@ -100,6 +97,10 @@ export default class VodPreview extends Lightning.Component {
 
         _handleDown() {
           this._setState('VodContainer');
+        }
+
+        _getFocused() {
+          return this._VodContentContainer;
         }
       },
       class VodContainer extends this {
@@ -147,7 +148,11 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          this._setState('VodContentContainer');
+          if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
+            Router.focusWidget('Menu');
+          } else {
+            this._setState('VodContentContainer');
+          }
         }
 
         $verticalContainerIndexChange() {

@@ -46,7 +46,7 @@ const fetchGenres = async (vodType) => {
 
   return {
     contentType: CONTENT_TYPE.CATEGORIES,
-    categoryItems: genres.items,
+    items: genres.items,
   }
 };
 
@@ -79,7 +79,7 @@ const fetchSeries = async () => {
   return series.items;
 };
 
-const fetchSports = async (page) => {
+const fetchSports = async () => {
   if (sports.timestamp + 1000 * 60 * 30 <= new Date().getTime()) {
 
     const sports1 = await getSports(1, 7);
@@ -93,18 +93,18 @@ const fetchSports = async (page) => {
   return sports.items;
 };
 
-const fetchSportsEvents = async (page) => {
+const fetchSportsEvents = async () => {
   if (sportsEvents.timestamp + 1000 * 60 * 30 <= new Date().getTime()) {
     const event1 = await getEvents();
 
-    sportsEvents.items = constructRails([event1]);
+    sportsEvents.items = constructRails(event1);
 
     sportsEvents.timestamp = new Date().getTime();
   }
 
   return {
     contentType: CONTENT_TYPE.EVENTS,
-    eventItems: sportsEvents.items,
+    items: sportsEvents.items,
   }
 };
 
