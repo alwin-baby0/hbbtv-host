@@ -73,6 +73,8 @@ export default class VodPreview extends Lightning.Component {
     return [
       class VodContentContainer extends this {
         $enter() {
+          this.fireAncestors('$setNavbarVisibility', true);
+
           if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
             this._setState('VodContainer');
           }
