@@ -41,7 +41,7 @@ WEDOTV is lightning.js based TV application developed by Shindiri Studio.
 
 - **axios.js** - fetching
 
-### Fetching Logic
+### Fetching Logic (MVC)
 
 1. there are 2 versions of the API
 2. we use **Services** to fetch and store data (*Controller layer*)
@@ -52,15 +52,20 @@ WEDOTV is lightning.js based TV application developed by Shindiri Studio.
 ### Rails
 
 Rails are used to describe one row of data nodes in the app.
-We use constructRails function to construct Rails
-constructRails creates HorizontalContainer with different types of RailItems
-RailItems are different depending on type of the data and/or type of the cards(poster,landscape...)
+
+We use constructRails function to construct Rails.
+
+constructRails creates HorizontalContainer with different types of RailItems.
+
+RailItems are different depending on type of the data and/or type of the cards(poster,landscape...).
 
 ### Containers
 
-There are 2 types of item containers: Horizontal and Vertical containers
-They are used to store collection of data in specific orientation
-They handle adding/focusing/removing items from the collection
+There are 2 types of item containers: Horizontal and Vertical containers.
+
+They are used to store collection of data in specific orientation.
+
+They handle adding/focusing/removing items from the collection.
 
 ### Players
 
@@ -69,18 +74,20 @@ They handle adding/focusing/removing items from the collection
 ### Gitflow
 
 We have 3 main branches:
+
+
   - master - production code only
   - staging - finished features that are ready to be tested or are already tested
   - development - containes finished untested features
       - feature - created from develop and used to develop a feature
 
-We **ONLY** create new branches from **development** and only merge in **development**
-Once PR is Accepted, it can be merged into **development**
+We **ONLY** create new branches from **development** and only merge in **development**. 
+Once PR is Accepted, it can be merged into **development**.
 
-New updates should be merged to **staging** once a full feature is finished
-After all the testing, and 100% sure its okay to merge, merge from **staging** to **master**
+New updates should be merged to **staging** once a full feature is finished.
+After all the testing, and 100% sure its okay to merge, merge from **staging** to **master**.
 
-**master** branch is use to create production builds :shipit:
+**master** branch is use to create production builds.
 
 #### Keeping up with develpment
 
