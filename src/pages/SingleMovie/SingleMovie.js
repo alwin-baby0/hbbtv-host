@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { Row } from '@lightningjs/ui-components';
 
-import Button from '../../components/Button/Button';
+import Button from '../../Components/Button/Button';
 const buttons = [
   {
     icon: 'icons/home/play.svg',

@@ -1,9 +1,9 @@
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { ProgressBar, Row } from '@lightningjs/ui-components';
-import { loader, unloader } from '../../components/Player/HLS';
+import { loader, unloader } from '../../Components/Player/HLS';
 import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
-import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 
 export default class Player extends lng.Component {

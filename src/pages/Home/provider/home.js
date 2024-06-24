@@ -1,4 +1,4 @@
-import { HomePageService } from '../../../api/services/HomePageService';
+import { HomePageService } from '../../../Services/HomePageService';
 
 export default async function (page) {
   if (page._props.sliderData !== null && page._props.railData) {

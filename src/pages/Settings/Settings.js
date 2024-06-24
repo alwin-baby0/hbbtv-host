@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 
 export default class Settings extends Lightning.Component {
   _props = {

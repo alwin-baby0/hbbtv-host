@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import { imageSizes } from '../../api/models/utils';
+import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
 
 export default class GalleryItem extends Lightning.Component {
@@ -78,7 +78,7 @@ export default class GalleryItem extends Lightning.Component {
       w: 1220,
       h: height,
       x: 700,
-      src: galleryItem.getLandscapePoster(imageSizes.XL).src,
+      src: galleryItem.getLandscapePoster(imageSizes.XL)?.src,
     });
 
     this._GradientOverlay.patch({

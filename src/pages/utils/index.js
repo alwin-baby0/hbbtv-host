@@ -1,8 +1,6 @@
-import { Router } from '@lightningjs/sdk';
-import { CARD_SIZES } from '../../components/RailItems/constants';
+import { CARD_SIZES } from '../../Components/RailItems/constants';
 import { railItemConstructor } from './railItems';
-import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
-import CategoryPickerItem from '../../components/CategoryPickerItem/CategoryPickerItem';
+import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
 
 export const VOD_PREVIEW_TYPES = {
   MOVIES: 'movies',
@@ -10,41 +8,14 @@ export const VOD_PREVIEW_TYPES = {
   SPORTS: 'sports',
 };
 
-export const VOD_TYPES = {
+export const RAIL_TYPES = {
   MOVIE: 'movie',
   SERIE: 'serie',
   SPORT: 'sport',
   SPORT_LIVE: 'sport_live',
   EPISODE: 'episode',
   SEARCH: 'search',
-};
-
-const mapVodTypeToNavigationUrl = (vodType) => {
-  switch (vodType) {
-    case VOD_PREVIEW_TYPES.MOVIES:
-      return 'movie';
-    case VOD_PREVIEW_TYPES.SERIES:
-      return 'series';
-    default:
-      return '';
-  }
-};
-
-export const constructCategoryItems = (categories, vodType) => {
-  return categories.map((item) => {
-    return {
-      type: CategoryPickerItem,
-      props: {
-        itemInfo: item,
-        callback: () =>
-          Router.navigate(`filterPage/${item.id}/${mapVodTypeToNavigationUrl(vodType)}`),
-        w: 170,
-        h: 64,
-        radius: 30,
-        strokeWidth: 6,
-      },
-    };
-  });
+  CATEGORY: 'category',
 };
 
 export const constructRails = (rails) => {

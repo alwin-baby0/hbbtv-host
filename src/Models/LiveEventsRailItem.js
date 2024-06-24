@@ -3,14 +3,13 @@ import { SimpleRailItem } from './SimpleRailItem';
 class LiveEventsRailItem extends SimpleRailItem {
   constructor(data) {
     super({ ...data, type: { value: 'event' } });
-    const { title, extensions, media_group } = data;
-    const { description, date_as_string_with_time } = extensions;
+    const { extensions, media_group } = data;
+    const { description, date_as_string_with_time, button_text } = extensions;
 
     this.dateWithTime = date_as_string_with_time;
-    this.title = title;
     this.description = description;
 
-    this.buttonText = extensions.button_text;
+    this.buttonText = button_text;
 
     this.landscapePosters = [];
 
