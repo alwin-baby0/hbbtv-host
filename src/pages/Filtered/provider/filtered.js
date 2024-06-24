@@ -1,8 +1,8 @@
 import { Router } from '@lightningjs/sdk';
 import { getSearch } from '../../../api/search';
-import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
-import PosterRailItem from '../../../components/RailItems/PosterRailItem';
-import { imageSizes } from '../../../api/models/utils';
+import HorizontalContainer from '../../../Components/HorizontalContainer/HorizontalContainer';
+import PosterRailItem from '../../../Components/RailItems/PosterRailItem';
+import { imageSizes } from '../../../Models/utils';
 
 const FILTER_TYPES = {
   MOVIE: 'movie',

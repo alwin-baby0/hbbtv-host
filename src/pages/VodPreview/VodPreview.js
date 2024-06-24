@@ -1,10 +1,12 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import VodContentContainer, { CONTENT_TYPE } from '../../components/VodContentContainer/VodContentContainer';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VodContentContainer, { CONTENT_TYPE } from '../../Components/VodContentContainer/VodContentContainer';
+import { constructRails } from '../utils';
 
 export default class VodPreview extends Lightning.Component {
   _props = {
     vodType: undefined,
+    fetchMoreStripes: () => null,
   };
 
   static _template() {
@@ -157,8 +159,17 @@ export default class VodPreview extends Lightning.Component {
           }
         }
 
-        $verticalContainerIndexChange() {
+        async $verticalContainerIndexChange(index) {
+          const { fetchMoreStripes } = this._props;
+
           this.correctContainerSize();
+          if (fetchMoreStripes) {
+            const newStripes = await fetchMoreStripes(index);
+            if (newStripes) {
+              const rails = constructRails(newStripes);
+              rails && this._Column._appendItems(rails);
+            }
+          }
         }
       },
     ];

@@ -1,5 +1,5 @@
 import { getPages } from '../../../api/help';
-import HelpButton from '../../../components/Buttons/HelpButton/HelpButton';
+import HelpButton from '../../../Components/Buttons/HelpButton/HelpButton';
 
 const fetchPages = (page) => {
   return getPages().then(({ data }) => {

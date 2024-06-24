@@ -1,9 +1,9 @@
 // App.js
 import { Colors, Router, Utils } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
-import routes from './pages/routes';
-import Navbar from './components/widgets/Navbar/Navbar';
-import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
+import routes from './Pages/routes';
+import Navbar from './Components/widgets/Navbar/Navbar';
+import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinScreenComponent';
 
 export default class App extends Router.App {
   static _template() {
@@ -99,7 +99,7 @@ export default class App extends Router.App {
     ];
   }
 
-  _handleAppClose() {}
+  _handleAppClose() { }
 
   /**
    * Show app close dialogue

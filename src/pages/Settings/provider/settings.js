@@ -1,4 +1,4 @@
-import LanguageButton from '../../../components/Buttons/LanguageButton/LanguageButton';
+import LanguageButton from '../../../Components/Buttons/LanguageButton/LanguageButton';
 
 const languagesData = [
   {

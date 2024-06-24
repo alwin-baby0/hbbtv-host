@@ -1,6 +1,6 @@
 import { Lightning, Utils } from '@lightningjs/sdk';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import GalleryItem from '../../components/GalleryItem/GalleryItem';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -72,9 +72,9 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _init() {}
+  _init() { }
 
-  _getFocused() {}
+  _getFocused() { }
 
   static _states() {
     return [

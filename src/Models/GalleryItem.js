@@ -1,14 +1,11 @@
-class GalleryRailItem {
+class GalleryItem {
   constructor(data) {
-    const { title, content, extensions, media_group } = data;
-    this.title = title;
-    this.content = {
-      type: content?.type,
-      src: content?.src,
-    };
+    const { id, title, content, extensions, media_group } = data;
 
-    this.url = data.content.src;
-    this.duration = extensions.duration;
+    this.id = id;
+    this.title = title;
+    this.url = content?.src;
+    this.duration = extensions?.duration;
     this.description = extensions?.description;
     this.previewPlayback = extensions?.preview_playback;
     this.thumbnails = [];
@@ -69,4 +66,4 @@ class GalleryRailItem {
   }
 }
 
-export { GalleryRailItem };
+export { GalleryItem };

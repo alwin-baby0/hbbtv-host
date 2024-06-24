@@ -3,7 +3,6 @@ import { Row } from '@lightningjs/ui-components';
 import colors from '../../../reskin/colors.json';
 import GalleryItem from '../GalleryItem/GalleryItem';
 import Bullet from '../Bullet/Bullet';
-import { imageSizes } from '../../api/models/utils';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;

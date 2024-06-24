@@ -1,20 +1,18 @@
-import request, { V2 } from '..';
-import { GalleryRailItem, SimpleRailItem } from '../models';
-import { imageSizes } from '../models/utils';
+import FetchingService from './FetchingService';
+import { GalleryItem, SimpleRailItem } from '../Models';
+import { V2 } from './utils';
+import { imageSizes } from '../Models/utils';
 
-class HomePageService {
+class HomePageService extends FetchingService {
   #heroSectionItems;
   #stripes = [];
   #pointer = 2;
   stripesFetched = 0;
 
-  #loading = false;
-
   /**
    * Fetches initial stripes for Home page
    */
   async initialFetch() {
-    this.#loading = true;
     if (!this.#heroSectionItems) {
       //get gallery data
       const galleryItems = await this.#getHomePageHeroSection();
@@ -39,14 +37,12 @@ class HomePageService {
         this.#stripes.push(stripeData);
       }
     }
-    this.#loading = false;
   }
 
   /**
    * Fetches more stripes for Home page
    */
   async fetchMoreStripes() {
-    this.#loading = true;
     let counter = 0;
     const newStripes = [];
 
@@ -66,7 +62,6 @@ class HomePageService {
     }
 
     this.#stripes.push(...newStripes);
-    this.#loading = false;
 
     return newStripes;
   }
@@ -77,7 +72,6 @@ class HomePageService {
    * @returns {SimpleRailItem[]} Returns array of new SimpleRailItems
    */
   async fetchMoreItemsForStripeId(stripeId) {
-    this.#loading = true;
     const stripe = this.#stripes.find((stripe) => stripe.stripeId === stripeId);
     if (stripe && stripe.hasMore) {
       const stripeData = await this.#getHomePage(stripeId, stripe.page++, 6);
@@ -88,19 +82,20 @@ class HomePageService {
         stripe.items.push(...stripeData.items);
       }
 
-      this.#loading = false;
       return stripeData.items;
     }
 
-    this.#loading = false;
     return [];
   }
 
+  /**
+   * Resets data for home page service
+   */
   resetData() {
     this.#heroSectionItems = undefined;
     this.#stripes = [];
     this.#pointer = 2;
-    stripesFetched = 0;
+    this.stripesFetched = 0;
   }
 
   /**
@@ -124,15 +119,8 @@ class HomePageService {
     return this.#pointer < 25;
   }
 
-  /**
-   * @returns {boolean} - 'true' if we are fetching atm
-   */
-  get isLoading() {
-    return this.#loading;
-  }
-
   #getHomePageHeroSection = async () =>
-    await request({
+    this._request({
       url: '/start',
       apiVersion: V2,
       method: 'GET',
@@ -144,7 +132,7 @@ class HomePageService {
     }).then(this.#parseHomePageHeroSection);
 
   #parseHomePageHeroSection({ data }) {
-    const galleryItems = data.entry?.map((item) => new GalleryRailItem(item));
+    const galleryItems = data.entry?.map((item) => new GalleryItem(item));
     if (!galleryItems && galleryItems.length === 0) return;
 
     return {
@@ -156,7 +144,7 @@ class HomePageService {
   }
 
   #getHomePage = async (row, page, limit) =>
-    await request({
+    this._request({
       url: '/start',
       apiVersion: V2,
       method: 'GET',

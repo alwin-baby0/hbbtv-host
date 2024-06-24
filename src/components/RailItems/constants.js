@@ -19,4 +19,7 @@ export const CARD_SIZES = {
     width: 260,
     height: 335,
   },
+  CATEGORY: {
+    height: 14,
+  }
 };
