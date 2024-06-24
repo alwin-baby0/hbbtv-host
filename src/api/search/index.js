@@ -1,6 +1,7 @@
-import { VOD_TYPES } from '../../pages/utils';
+import { SimpleRailItem } from '../../Models';
+import { RAIL_TYPES } from '../../Pages/utils';
 import request, { V2 } from '../index';
-import { SimpleRailItem } from '../models';
+
 
 export const getSearch = async (keyword, category) =>
   request({
@@ -21,7 +22,7 @@ function parseSearchPageData({ data }) {
   if (!railItems) return;
 
   return {
-    railType: VOD_TYPES.MOVIE,
+    railType: RAIL_TYPES.MOVIE,
     railTitle: data.title,
     cardType: 'POSTER',
     items: railItems,

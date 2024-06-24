@@ -112,11 +112,12 @@ export default class VerticalContainer extends Lightning.Component {
     this.stage.update();
   }
 
+  // find better solution to not pass though all the children
   $horizontalContainerIndexChange(newIndex) {
     if (this._props.carryRowPosition && this.Items.children.length > 1) {
+      const focusedContainer = this.Items.children[this._focusedIndex];
+      const focusedItem = focusedContainer.Items.children[focusedContainer._focusedIndex];
       this.Items.children.forEach((child) => {
-        const focusedContainer = this.Items.children[this._focusedIndex];
-        const focusedItem = focusedContainer.Items.children[focusedContainer._focusedIndex];
         if (focusedItem) {
           child._setFocusedIndex(getClosestElementIndex(child, focusedItem));
         } else {

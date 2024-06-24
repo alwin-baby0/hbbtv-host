@@ -1,7 +1,7 @@
 import { Lightning, Utils } from '@lightningjs/sdk';
 
-import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import GalleryItem from '../../Components/GalleryItem/GalleryItem';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
@@ -77,9 +77,9 @@ export default class SingleLiveEvent extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _init() {}
+  _init() { }
 
-  _getFocused() {}
+  _getFocused() { }
 
   static _states() {
     return [

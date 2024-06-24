@@ -1,5 +1,5 @@
 import { getEvents, getSingleEvent } from '../../../api/sports';
-import { VOD_TYPES, constructRails } from '../../utils';
+import { RAIL_TYPES, constructRails } from '../../utils';
 
 const fetchSingleEvent = async ({ eventId }) => {
   return await getSingleEvent(eventId);
@@ -11,7 +11,7 @@ const fetchEvents = async () => {
 
 export default async function (page, { eventId }) {
   const [event, events] = await Promise.all([fetchSingleEvent({ eventId }), fetchEvents()]);
-
+  console.log('event', event)
   if (!event) {
     throw new Error('Event data not found');
   }
@@ -23,7 +23,7 @@ export default async function (page, { eventId }) {
     const filteredEvents = events.items.filter((e) => e.id !== eventId);
 
     episodes = constructRails([{ ...events, items: filteredEvents }], {
-      railItemType: VOD_TYPES.SPORT_LIVE,
+      railItemType: RAIL_TYPES.SPORT_LIVE,
       posterType: 'SPORTS',
       railTitle: true,
       railOption: {

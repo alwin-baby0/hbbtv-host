@@ -1,7 +1,7 @@
-import { VOD_TYPES } from '../../pages/utils';
+import { LiveEventsRailItem, SimpleRailItem } from '../../Models';
+import { Event } from '../../Models/Event';
+import { RAIL_TYPES } from '../../Pages/utils';
 import request, { V2 } from '../index';
-import { LiveEventsRailItem, SimpleRailItem } from '../models';
-import SingleEventRailItem from '../models/SingleEventRailItem';
 
 export const getSports = async (page, limit) => {
   return request({
@@ -22,7 +22,7 @@ function parseSportsPageData({ data }) {
   if (!railItems || railItems.length === 0) return;
 
   return {
-    railType: VOD_TYPES.SPORT,
+    railType: RAIL_TYPES.SPORT,
     railTitle: data.title,
     cardType: 'POSTER',
     items: railItems,
@@ -46,7 +46,7 @@ function parseSportsEventsData({ data }) {
   if (!railItems || railItems.length === 0) return;
 
   return {
-    railType: VOD_TYPES.SPORT_LIVE,
+    railType: RAIL_TYPES.SPORT_LIVE,
     railTitle: data.title,
     cardType: 'POSTER',
     items: railItems,
@@ -69,15 +69,15 @@ export const getSingleEvent = async (eventId) => {
   }).then(parseSingleEventsData);
 };
 
-function parseSingleEventsData(result) {
-  const { data } = result;
+function parseSingleEventsData({ data }) {
+  console.log('data', data)
   const railItems = data.entry?.map(
-    (item) => new SingleEventRailItem({ ...item, type: { value: 'sport' } })
+    (item) => new Event({ ...item, type: { value: 'sport' } })
   );
   if (!railItems || railItems.length === 0) return;
 
   return {
-    railType: VOD_TYPES.SPORT_LIVE,
+    railType: RAIL_TYPES.SPORT_LIVE,
     cardType: 'SPORTS',
     items: railItems,
     railTitle: data.title,

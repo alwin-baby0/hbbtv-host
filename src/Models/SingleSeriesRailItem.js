@@ -16,4 +16,4 @@ class SingleSeriesRailItem extends SimpleRailItem {
   }
 }
 
-export default SingleSeriesRailItem;
+export { SingleSeriesRailItem };

@@ -1,8 +1,8 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
-import { HomePageService } from '../../api/services';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import Gallery from '../../components/Gallery/Gallery';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import Gallery from '../../Components/Gallery/Gallery';
+import { HomePageService } from '../../Services/HomePageService'
 
 export default class Home extends Lightning.Component {
   _props = {

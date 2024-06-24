@@ -1,6 +1,6 @@
-import { VOD_TYPES } from '../../pages/utils';
-import request, { V1, V2 } from '../index';
-import { MovieRailItem, SimpleRailItem } from '../models';
+import { MovieRailItem, SimpleRailItem } from '../../Models';
+import { RAIL_TYPES } from '../../Pages/utils';
+import request, { V2 } from '../index';
 
 export const getMovieGenres = async () => {
   return request({
@@ -30,7 +30,7 @@ function parseMoviesPageData({ data }) {
   if (!railItems || railItems.length === 0) return;
 
   return {
-    railType: VOD_TYPES.MOVIE,
+    railType: RAIL_TYPES.MOVIE,
     cardType: 'POSTER',
     items: railItems,
   };

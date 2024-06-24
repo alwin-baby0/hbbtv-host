@@ -1,6 +1,6 @@
 import Lightning from "@lightningjs/sdk/src/Lightning";
-import HorizontalContainer from "../components/HorizontalContainer/HorizontalContainer";
-import VerticalContainer from "../components/VerticalContainer/VerticalContainer";
+import HorizontalContainer from "../Components/HorizontalContainer/HorizontalContainer";
+import VerticalContainer from "../Components/VerticalContainer/VerticalContainer";
 
 /**
  * Finds closest element to target in a container

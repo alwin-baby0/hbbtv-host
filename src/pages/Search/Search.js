@@ -1,10 +1,10 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
-import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch';
+import KeyboardSearch from '../../Components/Keyboard/components/KeyboardSearch';
 import InputField from './components/Input';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import { getSearch } from '../../api/search';
 import { constructRails } from '../utils';
-import { HomePageService } from '../../api/services/HomePageService';
+import { HomePageService } from '../../Services/HomePageService';
 const sports = {
   items: [],
   timestamp: 0,

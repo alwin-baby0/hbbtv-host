@@ -1,5 +1,5 @@
 import { Lightning, Utils } from '@lightningjs/sdk';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 
 export default class Filtered extends Lightning.Component {
   static _template() {
