@@ -1,29 +1,15 @@
-import { getSeason, getSingleSeries } from '../../../api/series';
+import { DetailService } from '../../../Services/DetailService';
 import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId }) {
-  const [series, season] = await Promise.all([getSingleSeries(seriesId), getSeason(seriesId)]);
-
-  if (!series) {
-    throw new Error('Series data not found');
-  }
-
-  let episodes = [];
-  let sectionTitle = 'No Season Available';
-
-  if (season && season.items) {
-    episodes = constructRails([season]);
-    sectionTitle = season.sectionTitle;
-  } else {
-    console.warn('Season data not found or empty');
-  }
+  const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
 
   page.props = {
-    sectionTitle: sectionTitle,
-    galleryItem: series.items[0],
+    sectionTitle: seasons[0]?.sectionTitle,
+    galleryItem: galleryItem,
   };
 
   page._Column.props = {
-    items: episodes,
+    items: constructRails(seasons),
   };
 }

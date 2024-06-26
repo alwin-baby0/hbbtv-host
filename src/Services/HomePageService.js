@@ -1,7 +1,8 @@
 import FetchingService from './FetchingService';
-import { GalleryItem, SimpleRailItem } from '../Models';
+import { SimpleRailItem } from '../Models';
 import { V2 } from './utils';
 import { imageSizes } from '../Models/utils';
+import { parseHomePageHeroSection, parseHomePageRailData } from '../Models/parsers';
 
 class HomePageService extends FetchingService {
   #heroSectionItems;
@@ -129,19 +130,7 @@ class HomePageService extends FetchingService {
         page: 1,
         limit: 6,
       },
-    }).then(this.#parseHomePageHeroSection);
-
-  #parseHomePageHeroSection({ data }) {
-    const galleryItems = data.entry?.map((item) => new GalleryItem(item));
-    if (!galleryItems && galleryItems.length === 0) return;
-
-    return {
-      railType: galleryItems[0].type,
-      railTitle: data.title,
-      cardType: 'GALLERY_ITEM',
-      items: galleryItems,
-    };
-  }
+    }).then(parseHomePageHeroSection);
 
   #getHomePage = async (row, page, limit) =>
     this._request({
@@ -153,19 +142,7 @@ class HomePageService extends FetchingService {
         page,
         limit,
       },
-    }).then(this.#parseHomePageRailData); // parse the data
-
-  #parseHomePageRailData({ data }) {
-    const railItems = data.entry?.map((item) => new SimpleRailItem(item));
-    if (!railItems || railItems.length === 0) return;
-
-    return {
-      railType: railItems[0].type,
-      railTitle: data.title,
-      cardType: 'POSTER',
-      items: railItems,
-    };
-  }
+    }).then(parseHomePageRailData);
 }
 
 const homePageService = new HomePageService();

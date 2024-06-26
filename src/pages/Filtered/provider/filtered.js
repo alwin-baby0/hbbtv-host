@@ -4,6 +4,8 @@ import HorizontalContainer from '../../../Components/HorizontalContainer/Horizon
 import PosterRailItem from '../../../Components/RailItems/PosterRailItem';
 import { imageSizes } from '../../../Models/utils';
 
+// TODO: create service to handle the logic for filtered page
+
 const FILTER_TYPES = {
   MOVIE: 'movie',
   SERIES: 'series',

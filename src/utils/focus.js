@@ -16,7 +16,8 @@ export const getClosestElementIndex = (container, target) => {
   let closestElementIndex = 0;
 
   elements.children.forEach((item, index) => {
-    if (!isElementInsideContainersVisibleArea(container, item)) return;
+    // fix this !!!!
+    // if (!isElementInsideContainersVisibleArea(container, item)) return;
 
     const itemPos = getElementPosition(item);
     const distance = calculateDistance(

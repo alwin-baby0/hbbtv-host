@@ -1,6 +1,31 @@
-import { Category, SimpleRailItem, LiveEventsRailItem } from "./";
+import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from "./";
 import { VODS_PER_ROW } from "../Services/VodSerivce";
 import { RAIL_TYPES } from "../Pages/utils";
+
+// Home page
+export const parseHomePageRailData = ({ data }) => {
+  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  if (!railItems || railItems.length === 0) return;
+
+  return {
+    railType: railItems[0].type,
+    railTitle: data.title,
+    cardType: 'POSTER',
+    items: railItems,
+  };
+}
+
+export const parseHomePageHeroSection = ({ data }) => {
+  const galleryItems = data.entry?.map((item) => new GalleryItem(item));
+  if (!galleryItems && galleryItems.length === 0) return;
+
+  return {
+    railType: galleryItems[0].type,
+    railTitle: data.title,
+    cardType: 'GALLERY_ITEM',
+    items: galleryItems,
+  };
+}
 
 // VodPreview
 // Movies
@@ -36,6 +61,7 @@ export const parseVodCategories = ({ data }, vodType) => {
 
   return {
     railType: RAIL_TYPES.CATEGORY,
+    cardType: 'CATEGORY',
     items: railItems,
   };
 }
@@ -70,5 +96,28 @@ export const parseSportsEventsData = ({ data }) => {
     railItemsOptions: {
       h: 341,
     },
+  };
+}
+
+// Single assets
+// Movie
+export const parseDetailsData = ({ data }) => {
+  console.log('data', data)
+  return new GalleryItem(data?.entry[0])
+};
+
+// Season
+export const parseSeasonData = ({ data }) => {
+  const railItems = data.entry?.map(
+    (item) => new SimpleRailItem({ ...item, type: { value: 'episode' } })
+  );
+  if (!railItems || railItems.length === 0) return;
+
+  return {
+    railType: RAIL_TYPES.EPISODE,
+    cardType: 'POSTER',
+    items: railItems,
+    railTitle: data.title,
+    itemsPerRow: 5,
   };
 }

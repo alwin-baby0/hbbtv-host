@@ -1,4 +1,5 @@
 import PlayerButtons from '../components/PlayerButtons/PlayerButtons';
+// TODO: refactor and create service to handle all the functionality for the player, move components in components folder
 export const controlsItems = [
   {
     label: 'back',

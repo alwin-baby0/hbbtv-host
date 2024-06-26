@@ -1,13 +1,57 @@
 class GalleryItem {
   constructor(data) {
-    const { id, title, content, extensions, media_group } = data;
-
+    const { id, title, content, extensions, media_group, summary } = data;
     this.id = id;
+
     this.title = title;
-    this.url = content?.src;
-    this.duration = extensions?.duration;
-    this.description = extensions?.description;
-    this.previewPlayback = extensions?.preview_playback;
+    this.summary = summary;
+    this.trailerSrc = ''; // this is not returned by backend
+    this.buttonLabel = 'WATCH NOW';
+
+    if (content) {
+      this.url = content.src;
+    }
+
+    if (extensions) {
+      const {
+        button_text,
+        description,
+        duration,
+        genre,
+        director,
+        subtitle,
+        first_episode_mp4,
+      } = extensions;
+
+      if (button_text && button_text !== '') {
+        this.buttonLabel = button_text;
+      }
+
+      if (!this.url) {
+        this.url = first_episode_mp4;
+      }
+
+      if (!this.summary || this.summary === '') {
+        const { date, time, venue } = extensions;
+        this.summary = ''
+        if (date) {
+          this.summary += `${extensions.date} - `
+        }
+        if (time) {
+          this.summary += `${extensions.time} | `
+        }
+        if (venue) {
+          this.summary += `${extensions.venue}`
+        }
+      }
+
+      this.description = description;
+      this.duration = duration;
+      this.genre = genre;
+      this.director = director;
+      this.subtitle = subtitle;
+    }
+
     this.thumbnails = [];
     this.landscapePosters = [];
     this.portraitPosters = [];
@@ -25,6 +69,9 @@ class GalleryItem {
         case item.key.includes('poster_portrait'): {
           this.portraitPosters.push(item);
           break;
+        }
+        case item.key.includes('stream_placeholder'): {
+          this.landscapePosters.push(item);
         }
         default:
           break;

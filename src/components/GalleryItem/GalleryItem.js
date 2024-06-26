@@ -18,6 +18,7 @@ export default class GalleryItem extends Lightning.Component {
       Info: {
         zIndex: 2,
         x: 110,
+        y: 110,
         w: 700,
         h: 415,
         flex: { direction: 'column' },
@@ -30,7 +31,7 @@ export default class GalleryItem extends Lightning.Component {
             fontSize: 32,
           },
         },
-        EpisodeCount: {
+        Summary: {
           flexItem: {
             marginTop: 10,
           },
@@ -72,7 +73,8 @@ export default class GalleryItem extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem, height, yPos } = this._props;
+    const { galleryItem, height } = this._props;
+    const { title, summary, description, buttonLabel, url, duration } = galleryItem;
 
     this._BackgroundImage.patch({
       w: 1220,
@@ -85,36 +87,33 @@ export default class GalleryItem extends Lightning.Component {
       texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
     });
 
-    this._Info.patch({
-      y: yPos,
-    });
-
     this._Title.patch({
       text: {
-        text: galleryItem.title,
+        text: title,
       },
     });
-    galleryItem.episodeCount &&
-      this._EpisodeCount.patch({
+
+    galleryItem.summary &&
+      this._Summary.patch({
         text: {
-          text: galleryItem.episodeCount,
+          text: summary,
         },
       });
 
     this._Description.patch({
       text: {
-        text: galleryItem.description,
+        text: description,
       },
     });
 
     this._GalleryButton.patch({
       props: {
-        buttonLabel: galleryItem.buttonLabel,
+        buttonLabel: buttonLabel,
         callback: () => {
           Router.navigate('player', {
-            videoUrl: galleryItem.url,
-            duration: galleryItem.duration,
-            videoType: galleryItem.buttonLabel,
+            videoUrl: url,
+            duration: duration,
+            videoType: buttonLabel,
           });
         },
       },
@@ -133,8 +132,8 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('Title');
   }
 
-  get _EpisodeCount() {
-    return this.tag('EpisodeCount');
+  get _Summary() {
+    return this.tag('Summary');
   }
 
   get _Description() {

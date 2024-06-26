@@ -43,7 +43,6 @@ export default class VerticalContainer extends Lightning.Component {
       this._props = { ...this._props, items };
 
       this._focusedIndex = -1;
-      this._scrollPosition = 0;
       this.Items.y = 0;
 
       this.Items.childList.clear();
@@ -58,24 +57,6 @@ export default class VerticalContainer extends Lightning.Component {
     }
   }
 
-  _reCalibrateScroll() {
-    const { enableScroll } = this._props;
-    if (!enableScroll) return;
-    this.stage.update();
-
-    const currentFocus = this.Items.children[this._focusedIndex];
-
-    if (!currentFocus) return;
-
-    if (this._focusedIndex === 0) {
-      this.Items.patch({ y: 0 });
-    } else {
-      this.Items.patch({
-        y: -this._focusedIndex * currentFocus.finalH + this.finalH / 2 - currentFocus.finalH / 2,
-      });
-    }
-  }
-
   _getFocused() {
     return this.Items?.children?.[this._focusedIndex];
   }
@@ -83,8 +64,9 @@ export default class VerticalContainer extends Lightning.Component {
   _handleDown() {
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
+      this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
+      this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
       this._focusedIndex += 1;
-      this._reCalibrateScroll();
       this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
     } else {
       return false;
@@ -94,8 +76,9 @@ export default class VerticalContainer extends Lightning.Component {
 
   _handleUp() {
     if (this._focusedIndex > 0) {
+      this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 1);
+      this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 1);
       this._focusedIndex -= 1;
-      this._reCalibrateScroll();
       this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
     } else {
       return false;
@@ -112,19 +95,43 @@ export default class VerticalContainer extends Lightning.Component {
     this.stage.update();
   }
 
-  // find better solution to not pass though all the children
-  $horizontalContainerIndexChange(newIndex) {
-    if (this._props.carryRowPosition && this.Items.children.length > 1) {
-      const focusedContainer = this.Items.children[this._focusedIndex];
-      const focusedItem = focusedContainer.Items.children[focusedContainer._focusedIndex];
-      this.Items.children.forEach((child) => {
-        if (focusedItem) {
-          child._setFocusedIndex(getClosestElementIndex(child, focusedItem));
-        } else {
-          child._setFocusedIndex(newIndex);
-        }
-      });
+  /**
+   * move items container to the side if there are more items off the screen
+   * @param {number} oldIndex
+   * @param {number} newIndex
+   */
+  _reCalibrateScroll(oldIndex, newIndex) {
+    const { enableScroll } = this._props;
+    if (!enableScroll) return;
+
+    this.stage.update();
+
+    const currentFocus = this.Items.children[newIndex];
+    const prevFocus = this.Items.children[oldIndex];
+
+    if (!currentFocus) return;
+
+    if (newIndex === 0) {
+      this._scrollPosition = 0;
+      this.Items.patch({ y: 0 });
+    } else {
+      const multiplier = oldIndex > newIndex ? 1 : -1;
+      this._scrollPosition += multiplier * prevFocus.finalH;
+      this.Items.patch({ y: this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition });
     }
-    this.fireAncestors('$horizontalContainerIndexChange', newIndex);
+  }
+
+  /**
+   * carry the focus to next container
+   * @param {number} oldIndex
+   * @param {number} newIndex
+   */
+  _handleCarryFocus(oldIndex, newIndex) {
+    if (this._props.carryRowPosition && this.Items.children.length > 1) {
+      const previousContainer = this.Items.children[oldIndex];
+      const previouslyFocusedItem = previousContainer.Items.children[previousContainer._focusedIndex];
+      const nextContainer = this.Items.children[newIndex];
+      nextContainer._setFocusedIndex(getClosestElementIndex(nextContainer, previouslyFocusedItem));
+    }
   }
 }

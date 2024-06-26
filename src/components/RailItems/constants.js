@@ -1,7 +1,7 @@
 export const CARD_SIZES = {
   POSTER: {
     width: 273,
-    height: 440,
+    height: 460,
     image_width: 273,
     image_height: 375,
   },
@@ -20,6 +20,7 @@ export const CARD_SIZES = {
     height: 335,
   },
   CATEGORY: {
-    height: 14,
+    height: 64,
+    width: 1740,
   }
 };

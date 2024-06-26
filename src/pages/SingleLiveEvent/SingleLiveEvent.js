@@ -77,9 +77,9 @@ export default class SingleLiveEvent extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _init() { }
-
-  _getFocused() { }
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
 
   static _states() {
     return [
@@ -92,7 +92,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleDown() {
-          if (this.tag('Column').Items.children.length > 0) {
+          if (this._Column.Items.children.length > 0) {
             this._setState('Items');
           } else {
             return false;
@@ -110,7 +110,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         $exit() {
-          this.tag('Wrapper').patch({
+          this._Wrapper.patch({
             y: 715,
             h: 600,
           });
@@ -121,22 +121,22 @@ export default class SingleLiveEvent extends Lightning.Component {
             this._SeriesWrapper.patch({
               y: -650,
             });
-            this.tag('Wrapper').patch({
+            this._Wrapper.patch({
               y: 0,
               h: 1080,
             });
-            this.tag('Column').patch({
+            this._Column.patch({
               h: 1080,
             });
           } else {
             this._SeriesWrapper.patch({
               y: -140,
             });
-            this.tag('Wrapper').patch({
+            this._Wrapper.patch({
               y: 500,
               h: 1080,
             });
-            this.tag('Column').patch({
+            this._Column.patch({
               h: 1080,
             });
           }

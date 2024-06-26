@@ -1,13 +1,15 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import { Row } from '@lightningjs/ui-components';
 
 import Button from '../../Components/Button/Button';
+import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
+import { imageSizes } from '../../Models/utils';
+
 const buttons = [
   {
     icon: 'icons/home/play.svg',
     buttonLabel: 'WATCH NOW',
     width: 285,
-    action: 'videoSrc',
+    action: 'url',
   },
   {
     icon: 'icons/movies/trailer-icon.svg',
@@ -16,6 +18,7 @@ const buttons = [
     action: 'trailerSrc',
   },
 ];
+
 export default class SingleMovie extends Lightning.Component {
   _props = {};
   static _template() {
@@ -41,7 +44,7 @@ export default class SingleMovie extends Lightning.Component {
                 lineHeight: 30,
               },
             },
-            Duration: {
+            Summary: {
               w: 405,
               h: 29,
               text: {
@@ -106,8 +109,8 @@ export default class SingleMovie extends Lightning.Component {
             },
           },
           Buttons: {
-            type: Row,
-            w: 545,
+            type: HorizontalContainer,
+            w: 550,
             h: 78,
             y: 196,
           },
@@ -120,8 +123,8 @@ export default class SingleMovie extends Lightning.Component {
     return this.tag('Category');
   }
 
-  get _Duration() {
-    return this.tag('Duration');
+  get _Summary() {
+    return this.tag('Summary');
   }
 
   get _Subtitle() {
@@ -150,6 +153,9 @@ export default class SingleMovie extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
+
+    const { movie } = this._props;
+
     const {
       title,
       description,
@@ -158,9 +164,7 @@ export default class SingleMovie extends Lightning.Component {
       genre,
       summary,
       subtitle,
-      portraitPosters,
-      videoSrc,
-    } = this._props;
+    } = movie;
 
     this._Category.patch({
       text: {
@@ -168,7 +172,7 @@ export default class SingleMovie extends Lightning.Component {
       },
     });
 
-    this._Duration.patch({
+    this._Summary.patch({
       text: {
         text: summary,
       },
@@ -181,7 +185,7 @@ export default class SingleMovie extends Lightning.Component {
     });
 
     this._Image.patch({
-      src: portraitPosters[2].src,
+      src: movie.getPortraitPoster(imageSizes.XL)?.src,
     });
 
     this._Title.patch({
@@ -204,17 +208,22 @@ export default class SingleMovie extends Lightning.Component {
 
     const mappedButtons = buttons.map((button) => {
       const { buttonLabel, icon, width, action } = button;
-      const url = action === 'videoSrc' ? videoSrc : action;
       return {
         type: Button,
         w: width,
+        flexItem: {
+          marginRight: 30,
+        },
         props: {
           width: width,
           buttonLabel: buttonLabel,
           buttonIcon: Utils.asset(icon),
           callback: () => {
+            const { movie } = this._props;
+            if (!movie[action]) return;
+
             Router.navigate('player', {
-              videoUrl: url,
+              videoUrl: movie[action],
               duration: duration,
             });
           },
@@ -222,7 +231,7 @@ export default class SingleMovie extends Lightning.Component {
       };
     });
 
-    this._Buttons.items = mappedButtons;
+    this._Buttons.props = { items: mappedButtons };
   }
 
   _getFocused() {

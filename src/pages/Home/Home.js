@@ -13,7 +13,7 @@ export default class Home extends Lightning.Component {
     return {
       Background: {
         w: 1920,
-        h: 2080,
+        h: 1080,
         src: Utils.asset('images/background.jpg'),
       },
       HeroSection: {
@@ -25,12 +25,12 @@ export default class Home extends Lightning.Component {
       },
       Wrapper: {
         x: 80,
-        y: 900,
+        y: 850,
         h: 1080,
-        w: 1760,
+        w: 1700,
         Column: {
           h: 1080,
-          w: 1760,
+          w: 1700,
           type: VerticalContainer,
         },
       },
@@ -76,10 +76,8 @@ export default class Home extends Lightning.Component {
       });
     }
 
-    this._HeroSection._HeroSection._GalleryButton.patch({
-      props: {
-        buttonLabel: 'WATCH NOW',
-      },
+    this._HeroSection._HeroSection._Info.patch({
+      y: 150,
     });
   }
 

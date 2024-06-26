@@ -18,16 +18,16 @@ export default class VodContentContainer extends Lightning.Component {
       Categories: {
         type: CategoryPicker,
         props: {
-          x: 110,
+          x: 90,
           y: 150,
-          width: 1760,
+          width: 1740,
           height: 64,
         },
       },
       LiveEvents: {
         type: VerticalContainer,
         collision: true,
-        x: 110,
+        x: 90,
         y: 150,
         h: 500,
         w: 1920,

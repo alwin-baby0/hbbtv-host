@@ -21,15 +21,15 @@ export default class VodPreview extends Lightning.Component {
         type: VodContentContainer,
       },
       VodContainer: {
-        x: 110,
+        x: 90,
         y: 670,
-        w: 1760,
+        w: 1740,
         h: 670,
         clipping: true,
         Column: {
           y: 50,
           h: 795,
-          w: 1760,
+          w: 1740,
           type: VerticalContainer,
         },
       },

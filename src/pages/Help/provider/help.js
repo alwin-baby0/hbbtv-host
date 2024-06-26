@@ -1,6 +1,7 @@
 import { getPages } from '../../../api/help';
 import HelpButton from '../../../Components/Buttons/HelpButton/HelpButton';
 
+// TODO: create service to handle this logic
 const fetchPages = (page) => {
   return getPages().then(({ data }) => {
     const items = data.entry.map((pageInfo, index) => ({

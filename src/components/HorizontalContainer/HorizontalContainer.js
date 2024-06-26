@@ -10,15 +10,7 @@ export default class HorizontalContainer extends Lightning.Component {
   static _template() {
     return {
       flex: { direction: 'column', wrap: true },
-      Title: {
-        h: 55,
-        text: {
-          fontFamily: 'Inter',
-          fontStyle: 'normal bold',
-          fontSize: 32,
-          lineHeight: 39,
-        },
-      },
+      Title: {},
       Items: {
         y: 0,
         flex: {
@@ -48,47 +40,44 @@ export default class HorizontalContainer extends Lightning.Component {
    * @param {{ items: any[]; }} props
    */
   set props(props) {
-    const { items, ...rest } = props;
+    const { items, railTitle, ...rest } = props;
     this._props = { ...this._props, ...rest };
-    const { railTitle } = rest;
-    if (railTitle == '' || railTitle === undefined) {
-      this.Items.patch({
-        y: 0,
-      });
+
+    if (railTitle && railTitle !== '') {
+      const { h } = rest;
       this.patch({
-        Title: undefined,
+        h: h + 95,
+        Title: {
+          y: 10,
+          h: 55,
+          text: {
+            text: railTitle,
+            fontFamily: 'Inter',
+            fontStyle: 'normal bold',
+            fontSize: 32,
+            lineHeight: 39,
+          },
+        }
       });
     } else {
-      this.patch({
-        h: this.h + 50,
-      });
-      this.Items.patch({
-        // y: 80,
-      });
-      this.Title.patch({
-        y: 10,
-        text: {
-          text: railTitle,
-        },
-      });
+      this.patch({ ...rest });
     }
 
     if (items !== this._props.items) {
       this._props.items = items;
 
-      this._focusedIndex = -1;
-      this._scrollPosition = 0;
       this.Items.x = 0;
 
       this.Items.childList.clear();
       if (items?.length > 0) {
         this.Items.childList.a(items);
-        this.stage.update();
       }
 
       this._focusedIndex = items?.length > 0 ? 0 : -1;
       this._scrollPosition = 0;
     }
+
+    this.stage.update();
   }
 
   _reCalibrateScroll() {
@@ -124,6 +113,7 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleRight() {
+
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
       this._focusedIndex += 1;
@@ -136,6 +126,7 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
+
     if (this._focusedIndex > 0) {
       this._focusedIndex -= 1;
       this._reCalibrateScroll();

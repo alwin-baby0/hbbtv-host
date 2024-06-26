@@ -48,15 +48,14 @@ export const constructRails = (rails) => {
 };
 
 const cronstructSingleLineRail = (rail) => {
-  const { items, railType, cardType, railTitle, railItemsOptions, ...rest } = rail;
-
+  const { items, railType, cardType = 'POSTER', railTitle, railItemsOptions, ...rest } = rail;
+  const elementHeight = CARD_SIZES[cardType].height;
   return {
     type: HorizontalContainer,
-    h: CARD_SIZES[cardType]?.height + 50,
     w: 1760,
     ...rest,
     props: {
-      h: CARD_SIZES[cardType]?.height + 50,
+      h: elementHeight,
       railTitle: railTitle,
       items: railItemConstructor(items, railType, railItemsOptions),
     },

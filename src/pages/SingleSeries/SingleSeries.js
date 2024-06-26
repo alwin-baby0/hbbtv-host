@@ -3,19 +3,18 @@ import VerticalContainer from '../../Components/VerticalContainer/VerticalContai
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 
 export default class SingleSeries extends Lightning.Component {
-  _props = {};
   static _template() {
     return {
+      h: 1080,
+      w: 1920,
+      Background: {
+        w: 1920,
+        h: 1080,
+        src: Utils.asset('images/background.jpg'),
+      },
       SeriesWrapper: {
-        Content: {
-          Background: {
-            w: 1920,
-            h: 2080,
-            src: Utils.asset('images/background.jpg'),
-          },
-          HeroSection: {
-            type: GalleryItem,
-          },
+        HeroSection: {
+          type: GalleryItem,
         },
       },
       Wrapper: {
@@ -34,17 +33,11 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   set props(props) {
-    this._Column.props = {
-      items: [],
-    };
-
-    this._props = { ...this._props, ...props };
-    const { galleryItem } = this._props;
+    const { galleryItem } = props;
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
         height: 650,
-        yPos: 100,
       },
     });
 

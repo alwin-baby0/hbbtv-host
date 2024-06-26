@@ -1,12 +1,7 @@
-import { getSingleMovie } from '../../../api/movies';
-
-const fetchSingleMovie = async (page, { movieId }) => {
-  const movie = await getSingleMovie(movieId);
-  page.props = {
-    ...movie,
-  };
-};
+import { DetailService } from '../../../Services/DetailService';
 
 export default async function (page, { movieId }) {
-  await fetchSingleMovie(page, { movieId });
+  const movie = await DetailService.getMovie(movieId)
+
+  page.props = { movie };
 }

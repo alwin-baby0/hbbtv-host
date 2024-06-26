@@ -1,46 +1,20 @@
-import { getEvents, getSingleEvent } from '../../../api/sports';
-import { RAIL_TYPES, constructRails } from '../../utils';
-
-const fetchSingleEvent = async ({ eventId }) => {
-  return await getSingleEvent(eventId);
-};
-
-const fetchEvents = async () => {
-  return await getEvents();
-};
+import { DetailService } from '../../../Services/DetailService';
+import { VodService } from '../../../Services/VodSerivce';
+import { VOD_PREVIEW_TYPES, constructRails } from '../../utils';
 
 export default async function (page, { eventId }) {
-  const [event, events] = await Promise.all([fetchSingleEvent({ eventId }), fetchEvents()]);
-  console.log('event', event)
-  if (!event) {
-    throw new Error('Event data not found');
-  }
+  const galleryItem = await DetailService.getEvent(eventId)
 
-  let episodes = [];
-  let sectionTitle = 'No Events Available';
-
-  if (events && events.items) {
-    const filteredEvents = events.items.filter((e) => e.id !== eventId);
-
-    episodes = constructRails([{ ...events, items: filteredEvents }], {
-      railItemType: RAIL_TYPES.SPORT_LIVE,
-      posterType: 'SPORTS',
-      railTitle: true,
-      railOption: {
-        height: 385,
-      },
-    });
-    sectionTitle = events.sectionTitle;
-  } else {
-    console.warn('Events data not found or empty');
-  }
+  VodService.vodType = VOD_PREVIEW_TYPES.SPORTS;
+  await VodService.initialFetch();
 
   page.props = {
-    sectionTitle: event.sectionTitle,
-    galleryItem: event.items[0],
+    galleryItem,
   };
+
   page._Column.props = {
-    items: episodes,
+    items: constructRails(VodService.contentStripes),
   };
+
   page._setState('HeroSection');
 }
