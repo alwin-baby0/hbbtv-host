@@ -41,13 +41,13 @@ WEDOTV is lightning.js based TV application developed by Shindiri Studio.
 
 - **axios.js** - fetching
 
-### Fetching Logic (MVC)
+### Fetching Logic
 
 1. there are 2 versions of the API
-2. we use **Services** to fetch and store data (*Controller layer*)
-3. **Services** parse the data, to keep only the things we need, for this we use different **Models** (*Model layer*)
+2. we use **Services** to fetch and store data
+3. **Services** parse the data, to keep only the things we need, for this we use different **Models**
 4. **Services** also caches the data
-5. We then use the data we have in **Services** and present it in different **Views** (Pages/Components/Widgets) (*View layer*)
+5. We then use the data we have in **Services** and present it in different **Views** (Pages/Components/Widgets)
 
 ### Rails
 
