@@ -1,12 +1,14 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import VodContentContainer, { CONTENT_TYPE } from '../../Components/VodContentContainer/VodContentContainer';
+import VodContentContainer, {
+  CONTENT_TYPE,
+} from '../../Components/VodContentContainer/VodContentContainer';
 import { constructRails } from '../utils';
 
 export default class VodPreview extends Lightning.Component {
   _props = {
     vodType: undefined,
-    fetchMoreStripes: () => null,
+    fetchMoreStripes: async () => null,
   };
 
   static _template() {
@@ -64,16 +66,26 @@ export default class VodPreview extends Lightning.Component {
 
   calculateContentOffset(contentType) {
     switch (contentType) {
-      case CONTENT_TYPE.EVENTS: return 530;
-      case CONTENT_TYPE.CATEGORIES: return 200;
+      case CONTENT_TYPE.EVENTS:
+        return 530;
+      case CONTENT_TYPE.CATEGORIES:
+        return 200;
       case CONTENT_TYPE.EMPTY:
-      default: return 80;
+      default:
+        return 80;
     }
   }
 
   static _states() {
     return [
       class VodContentContainer extends this {
+        _active() {
+          this._VodContainer.patch({
+            y: this.calculateContentOffset(this._VodContentContainer.contentType),
+            h: 1920,
+          });
+        }
+
         $enter() {
           this.fireAncestors('$setNavbarVisibility', true);
 
@@ -88,7 +100,7 @@ export default class VodPreview extends Lightning.Component {
           this._VodContainer.patch({
             y: this.calculateContentOffset(this._VodContentContainer.contentType),
             h: 1920,
-          })
+          });
         }
 
         _enable() {
@@ -166,7 +178,10 @@ export default class VodPreview extends Lightning.Component {
           if (fetchMoreStripes) {
             const newStripes = await fetchMoreStripes(index);
             if (newStripes) {
-              const rails = constructRails(newStripes);
+              const rails = constructRails(newStripes).reduce((acc, rail) => {
+                acc.push(...rail);
+                return acc;
+              }, []);
               rails && this._Column._appendItems(rails);
             }
           }

@@ -2,7 +2,6 @@ import { SimpleRailItem } from '../../Models';
 import { RAIL_TYPES } from '../../Pages/utils';
 import request, { V2 } from '../index';
 
-
 export const getSearch = async (keyword, category) =>
   request({
     url: '/search',
@@ -10,7 +9,7 @@ export const getSearch = async (keyword, category) =>
     method: 'GET',
     params: {
       keyword,
-      limit: 15,
+      limit: 500,
       page: 1,
       orderBy: 'name:desc',
       category,

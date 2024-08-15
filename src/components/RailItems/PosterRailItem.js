@@ -16,7 +16,7 @@ export default class PosterRailItem extends FocusableItem {
     return {
       ...super._template(),
       w: CARD_SIZES.POSTER.width,
-      h: CARD_SIZES.POSTER.height,
+      h: CARD_SIZES.POSTER.height - 30, // todo: find better solution
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -31,7 +31,7 @@ export default class PosterRailItem extends FocusableItem {
           w: 273,
           text: {
             text: 'Title',
-            fontFamily: 'Inter',
+            fontFace: 'Montserrat-Regular',
             fontSize: 18,
             lineHeight: 22,
             maxLines: 2,

@@ -5,7 +5,7 @@ import VerticalContainer from '../../Components/VerticalContainer/VerticalContai
 import { getSearch } from '../../api/search';
 import { constructRails } from '../utils';
 import { HomePageService } from '../../Services/HomePageService';
-const sports = {
+const search = {
   items: [],
   timestamp: 0,
 };
@@ -47,8 +47,8 @@ export default class Search extends Lightning.Component {
           h: 1080,
           type: VerticalContainer,
           plinko: true,
-          lazyUpCount: 2,
-          lazyUpCountBuffer: 2,
+          // lazyUpCount: 2,
+          // lazyUpCountBuffer: 2,
         },
       },
     };
@@ -86,6 +86,10 @@ export default class Search extends Lightning.Component {
     this.$updatedVOD();
   }
 
+  _inactive() {
+    this._Input.tag('Input').listening = false;
+  }
+
   async $updatedVOD(keyword, category) {
     let inputValue = this._Input.tag('Input').value.toLowerCase();
 
@@ -102,16 +106,25 @@ export default class Search extends Lightning.Component {
   }
 
   async $changedVODGenre(data) {
-    sports.items = constructRails(data);
+    const rows = [];
+    for (let i = 0, j = data.items.length; i < j; i += 6) {
+      rows.push({
+        items: data.items.slice(i, i + 6),
+        railTitle: i === 0 ? data.railTitle : '',
+        cardType: 'POSTER',
+        railType: 'search',
+      });
+    }
+    search.timestamp = new Date().getTime();
 
-    sports.timestamp = new Date().getTime();
+    search.items = constructRails(rows);
 
     this.tag('VODSection').props = {
-      items: sports.items,
+      items: search.items,
     };
   }
 
-  _enable() {
+  _firstEnable() {
     this._setState('Input');
     this.$updatedVOD();
   }

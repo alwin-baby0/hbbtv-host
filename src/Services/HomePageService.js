@@ -9,6 +9,7 @@ class HomePageService extends FetchingService {
   #stripes = [];
   #pointer = 2;
   stripesFetched = 0;
+  #currentRailLimit = 7; // Početni limit je 6
 
   /**
    * Fetches initial stripes for Home page
@@ -18,20 +19,20 @@ class HomePageService extends FetchingService {
       //get gallery data
       const galleryItems = await this.#getHomePageHeroSection();
       // preload gallry items
-      if (galleryItems.items) {
+      if (galleryItems?.items) {
         galleryItems.items.forEach((item) => item.preloadImages(imageSizes.XL));
+        this.#heroSectionItems = galleryItems;
       }
-
-      this.#heroSectionItems = galleryItems;
     }
 
     // fetch untill get 3 stripes with data or try 25 times
     while (this.stripesFetched < 3 && this.#pointer < 25) {
-      const stripeData = await this.#getHomePage(this.#pointer, 1, 6);
+      const stripeData = await this.#getHomePage(this.#pointer, 1, this.#currentRailLimit);
       this.#pointer++;
 
       if (stripeData) {
         this.stripesFetched++;
+        stripeData.hasMore = stripeData.items.length === this.#currentRailLimit;
 
         stripeData.stripeId = this.#pointer - 1;
         stripeData.page = 1;
@@ -48,7 +49,7 @@ class HomePageService extends FetchingService {
     const newStripes = [];
 
     while (counter < 2 && this.#pointer < 25) {
-      const stripeData = await this.#getHomePage(this.#pointer, 1, 6);
+      const stripeData = await this.#getHomePage(this.#pointer, 1, this.#currentRailLimit);
       this.#pointer++;
 
       if (stripeData?.items.length > 0) {
@@ -58,6 +59,7 @@ class HomePageService extends FetchingService {
         stripeData.stripeId = this.#pointer - 1;
         // each stripe page number so we can fetch more after
         stripeData.page = 1;
+        stripeData.hasMore = stripeData.items.length === this.#currentRailLimit;
         newStripes.push(stripeData);
       }
     }
@@ -70,23 +72,24 @@ class HomePageService extends FetchingService {
   /**
    * Fetches more items for stripe on Home page, updates cache
    * @param {number} stripeId Stripe Id - unique to a stripe
-   * @returns {SimpleRailItem[]} Returns array of new SimpleRailItems
+   * @returns {Promise<SimpleRailItem[]>} Returns array of new SimpleRailItems
    */
   async fetchMoreItemsForStripeId(stripeId) {
     const stripe = this.#stripes.find((stripe) => stripe.stripeId === stripeId);
     if (stripe && stripe.hasMore) {
-      const stripeData = await this.#getHomePage(stripeId, stripe.page++, 6);
-
-      stripe.hasMore = stripeData.items.length === 6;
-
+      const stripeData = await this.#getHomePage(stripeId, stripe.page + 1, this.#currentRailLimit);
       if (stripeData) {
-        stripe.items.push(...stripeData.items);
+        stripe.page += 1;
+        stripe.hasMore = stripeData.items.length === this.#currentRailLimit;
+
+        if (stripeData) {
+          stripe.items.push(...stripeData.items);
+        }
+
+        return stripeData;
       }
-
-      return stripeData.items;
+      stripe.hasMore = false;
     }
-
-    return [];
   }
 
   /**
@@ -97,6 +100,7 @@ class HomePageService extends FetchingService {
     this.#stripes = [];
     this.#pointer = 2;
     this.stripesFetched = 0;
+    this.#currentRailLimit = 7; // Reset limit to initial value
   }
 
   /**

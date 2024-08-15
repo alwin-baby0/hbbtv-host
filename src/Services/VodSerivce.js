@@ -19,12 +19,12 @@ class VodService extends FetchingService {
     pointer: 1,
     stripesFetched: 0,
     hasMore: true,
-  }
+  };
 
   #initState = {
-    [VOD_PREVIEW_TYPES.MOVIES]: { ...this.#emptyState },
-    [VOD_PREVIEW_TYPES.SERIES]: { ...this.#emptyState },
-    [VOD_PREVIEW_TYPES.SPORTS]: { ...this.#emptyState },
+    ['movies']: { ...this.#emptyState },
+    ['series']: { ...this.#emptyState },
+    ['sports']: { ...this.#emptyState },
   };
 
   // type of vod to preview
@@ -106,7 +106,7 @@ class VodService extends FetchingService {
    * Reset vod service
    */
   resetData() {
-    this.#state = { ... this.#initState };
+    this.#state = { ...this.#initState };
   }
 
   /**
@@ -146,21 +146,29 @@ class VodService extends FetchingService {
 
   #getContent = async () => {
     switch (this.#vodType) {
-      case VOD_PREVIEW_TYPES.MOVIES: return await this.#getGenres(this.#vodType);
-      case VOD_PREVIEW_TYPES.SERIES: return await this.#getGenres(this.#vodType);
-      case VOD_PREVIEW_TYPES.SPORTS: return await this.#getSportsEvents();
-      default: console.warn('wrong vodType getContent')
+      case VOD_PREVIEW_TYPES.MOVIES:
+        return await this.#getGenres(this.#vodType);
+      case VOD_PREVIEW_TYPES.SERIES:
+        return await this.#getGenres(this.#vodType);
+      case VOD_PREVIEW_TYPES.SPORTS:
+        return await this.#getSportsEvents();
+      default:
+        console.warn('wrong vodType getContent');
     }
-  }
+  };
 
   #getVods = async (params) => {
     switch (this.#vodType) {
-      case VOD_PREVIEW_TYPES.MOVIES: return await this.#getMovies(params);
-      case VOD_PREVIEW_TYPES.SERIES: return await this.#getSeries(params);
-      case VOD_PREVIEW_TYPES.SPORTS: return await this.#getSports(params);
-      default: console.warn('wrong vodType getVods')
+      case VOD_PREVIEW_TYPES.MOVIES:
+        return await this.#getMovies(params);
+      case VOD_PREVIEW_TYPES.SERIES:
+        return await this.#getSeries(params);
+      case VOD_PREVIEW_TYPES.SPORTS:
+        return await this.#getSports(params);
+      default:
+        console.warn('wrong vodType getVods');
     }
-  }
+  };
 
   #getGenres = async (vodType) =>
     await this._request({
@@ -171,7 +179,7 @@ class VodService extends FetchingService {
         category: vodType,
         type: `genres_${vodType}`,
       },
-    }).then((result) => parseVodCategories(result, vodType))
+    }).then((result) => parseVodCategories(result, vodType));
 
   #getMovies = async (params) =>
     await this._request({
@@ -197,7 +205,6 @@ class VodService extends FetchingService {
       params,
     }).then(parseSportsPageData);
 
-
   #getSportsEvents = async (type = 'video', language = 'en') =>
     await this._request({
       url: '/getSportEvents',
@@ -208,8 +215,7 @@ class VodService extends FetchingService {
         language,
       },
     }).then(parseSportsEventsData);
-};
-
+}
 
 const vodService = new VodService();
 

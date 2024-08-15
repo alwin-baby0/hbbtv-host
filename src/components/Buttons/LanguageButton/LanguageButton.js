@@ -54,6 +54,7 @@ export default class LanguageButton extends Lightning.Component {
     this.tag('Column.Text').patch({
       text: languageInfo.code,
       color: Colors(colors.white).get(),
+      fontFace: 'Montserrat-SemiBold',
     });
   }
 

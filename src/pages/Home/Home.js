@@ -2,7 +2,8 @@ import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import Gallery from '../../Components/Gallery/Gallery';
-import { HomePageService } from '../../Services/HomePageService'
+import { HomePageService } from '../../Services/HomePageService';
+import { railItemConstructor } from '../utils/railItems';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -74,11 +75,15 @@ export default class Home extends Lightning.Component {
           sliderData,
         },
       });
+      this._HeroSection._HeroSection._Info.patch({
+        y: 150,
+      });
+    } else {
+      this._setState('Items');
+      this.patch({
+        HeroSection: undefined,
+      });
     }
-
-    this._HeroSection._HeroSection._Info.patch({
-      y: 150,
-    });
   }
 
   _firstActive() {
@@ -89,6 +94,7 @@ export default class Home extends Lightning.Component {
     return [
       class Hero extends this {
         _getFocused() {
+          this.fireAncestors('$setNavbarVisibility', true);
           return this._HeroSection;
         }
 
@@ -108,7 +114,7 @@ export default class Home extends Lightning.Component {
       class Items extends this {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
-          this._HeroSection.patch({
+          this._HeroSection?.patch({
             y: -305,
           });
           this._Wrapper.patch({
@@ -118,7 +124,7 @@ export default class Home extends Lightning.Component {
 
         $exit() {
           this.fireAncestors('$setNavbarVisibility', true);
-          this._HeroSection.patch({
+          this._HeroSection?.patch({
             y: 0,
           });
           this._Wrapper.patch({
@@ -134,16 +140,27 @@ export default class Home extends Lightning.Component {
           this._setState('Hero');
         }
 
+        async $horizontalContainerIndexChange(index) {
+          const currentItem = this._Column.Items.children[this._Column._focusedIndex];
+          if (currentItem.Items.children.length - 1 === index) {
+            const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
+            if (newRails && newRails?.items?.length > 0) {
+              const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
+              currentItem._appendItems(parsedItems);
+            }
+          }
+        }
+
         async $verticalContainerIndexChange(index) {
           if (index > 0) {
-            this._HeroSection.patch({
+            this._HeroSection?.patch({
               visible: false,
             });
             this._Wrapper.patch({
               y: 0,
             });
           } else {
-            this._HeroSection.patch({
+            this._HeroSection?.patch({
               visible: true,
               y: -305,
             });

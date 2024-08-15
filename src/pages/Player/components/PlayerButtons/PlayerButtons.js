@@ -7,10 +7,12 @@ export default class PlayerButtons extends lng.Component {
     buttonInfo: {},
     isStopped: false,
   };
+
   static _template() {
     return {
       h: 100,
-      w: 100,
+      w: 120,
+      flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
       Button: {
         flex: { direction: 'row', alignItems: 'center' },
         h: 90,
@@ -31,59 +33,90 @@ export default class PlayerButtons extends lng.Component {
     return this.tag('Icon');
   }
 
+  _firstActive() {
+    this._Icon.patch({
+      color: Colors(colors.unfocus).alpha(0.3).get(),
+    });
+  }
+
   _enable() {
     const { buttonInfo } = this._props;
-    let width = buttonInfo.label === 'pause' ? 90 : 66;
-    let height = buttonInfo.label === 'pause' ? 90 : 66;
+    const width = buttonInfo.label === 'pause' ? 90 : 66;
+    const height = buttonInfo.label === 'pause' ? 90 : 66;
     this._Icon.patch({
-      x: buttonInfo.position,
+      // x: buttonInfo.position,
       texture: lng.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
     });
   }
 
   _handleEnter() {
     const { buttonInfo, isStopped } = this._props;
-
+    this.fireAncestors('$changeFocusOnControl', true);
     switch (buttonInfo.label) {
       case 'forward':
-        this._props.isStopped = false;
-        this.fireAncestors('$skippingTime', 30);
-        this.fireAncestors('$startStopVideo', false);
-        return;
+        this._handleForward();
+        break;
       case 'backward':
-        this.fireAncestors('$skippingTime', -30);
-        this.fireAncestors('$startStopVideo', false);
-        return;
+        this._handleBackward();
+        break;
       case 'pause':
-        this._props.isStopped = !isStopped;
-        if (this._props.isStopped) {
-          this._Icon.patch({
-            texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/play.svg'), 60, 60),
-          });
-          this.fireAncestors('$pauseVideo');
-        } else {
-          this._Icon.patch({
-            texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/pause.svg'), 60, 60),
-          });
-          this.fireAncestors('$playVideo');
-        }
-        return;
+        this._handlePause(isStopped);
+        break;
+      case 'subtitles':
+        this._handleSubtitles();
+        break;
       case 'back':
-        this.fireAncestors('$exitVideo');
-        return;
+        this._handleBack();
+        break;
       default:
-        return;
+        break;
     }
+  }
+
+  _handleForward() {
+    this._props.isStopped = false;
+    this.fireAncestors('$skippingTime', 30);
+    this.fireAncestors('$startStopVideo', false);
+  }
+
+  _handleBackward() {
+    this.fireAncestors('$skippingTime', -30);
+    this.fireAncestors('$startStopVideo', false);
+  }
+
+  _handlePause(isStopped) {
+    this._props.isStopped = !isStopped;
+    if (this._props.isStopped) {
+      this._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/play.svg'), 60, 60),
+      });
+      this.fireAncestors('$pauseVideo');
+    } else {
+      this._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/pause.svg'), 60, 60),
+      });
+      this.fireAncestors('$playVideo');
+    }
+  }
+
+  _handleSubtitles() {
+    this.fireAncestors('$showSubtitles');
+    this.fireAncestors('$setFocusOnItem', true);
+  }
+
+  _handleBack() {
+    this.fireAncestors('$exitVideo');
   }
 
   _focus() {
     this._Icon.patch({
-      color: Colors(colors.focus).get(),
+      color: Colors(colors.focus).alpha(1).get(),
     });
   }
+
   _unfocus() {
     this._Icon.patch({
-      color: Colors(colors.unfocus).get(),
+      color: Colors(colors.unfocus).alpha(0.3).get(),
     });
   }
 }

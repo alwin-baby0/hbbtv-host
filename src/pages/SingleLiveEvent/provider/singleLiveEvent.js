@@ -3,7 +3,7 @@ import { VodService } from '../../../Services/VodSerivce';
 import { VOD_PREVIEW_TYPES, constructRails } from '../../utils';
 
 export default async function (page, { eventId }) {
-  const galleryItem = await DetailService.getEvent(eventId)
+  const galleryItem = await DetailService.getEvent(eventId);
 
   VodService.vodType = VOD_PREVIEW_TYPES.SPORTS;
   await VodService.initialFetch();

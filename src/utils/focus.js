@@ -1,6 +1,6 @@
-import Lightning from "@lightningjs/sdk/src/Lightning";
-import HorizontalContainer from "../Components/HorizontalContainer/HorizontalContainer";
-import VerticalContainer from "../Components/VerticalContainer/VerticalContainer";
+import Lightning from '@lightningjs/sdk/src/Lightning';
+import HorizontalContainer from '../Components/HorizontalContainer/HorizontalContainer';
+import VerticalContainer from '../Components/VerticalContainer/VerticalContainer';
 
 /**
  * Finds closest element to target in a container
@@ -15,26 +15,21 @@ export const getClosestElementIndex = (container, target) => {
   let shortestDistance = Number.POSITIVE_INFINITY;
   let closestElementIndex = 0;
 
-  elements.children.forEach((item, index) => {
-    // fix this !!!!
-    // if (!isElementInsideContainersVisibleArea(container, item)) return;
+  for (let index = 0; index < elements.children.length; index++) {
+    const item = elements.children[index];
+    if (!isElementInsideContainersVisibleArea(container, item)) continue;
 
     const itemPos = getElementPosition(item);
-    const distance = calculateDistance(
-      currentPos[0],
-      currentPos[1],
-      itemPos[0],
-      itemPos[1],
-    );
+    const distance = calculateDistance(currentPos[0], currentPos[1], itemPos[0], itemPos[1]);
 
     if (distance < shortestDistance) {
       shortestDistance = distance;
       closestElementIndex = index;
     }
-  });
+  }
 
   return closestElementIndex;
-}
+};
 
 /**
  * Finds if item in a container is visible currently
@@ -42,10 +37,7 @@ export const getClosestElementIndex = (container, target) => {
  * @param {Lightning.Element} item - reference item
  * @returns {boolean}
  */
-const isElementInsideContainersVisibleArea = (
-  container,
-  item,
-) => {
+const isElementInsideContainersVisibleArea = (container, item) => {
   const elements = container.Items;
   if (container.flex?.direction === 'column') {
     if (
@@ -70,8 +62,7 @@ const isElementInsideContainersVisibleArea = (
   }
 
   return true;
-}
-
+};
 
 /**
  * Calculates coordinates of middle point of an Lightning Element
@@ -86,7 +77,7 @@ const getElementPosition = (element) => {
   const middle = [elementX + elementW / 2, elementY + elementH / 2];
 
   return middle;
-}
+};
 
 /**
  * Calculates distance between 2 points
@@ -100,4 +91,4 @@ const calculateDistance = (A, B, C, D) => {
   const xDiff = A - C;
   const yDiff = B - D;
   return Math.sqrt(Math.pow(xDiff, 2) + Math.sqrt(Math.pow(yDiff, 2)));
-}
+};

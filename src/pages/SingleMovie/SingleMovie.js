@@ -70,49 +70,63 @@ export default class SingleMovie extends Lightning.Component {
         CardInfo: {
           x: 670,
           y: 350,
+          // y: 250,
+          flex: { direction: 'column' },
           AboutMovie: {
             w: 700,
-            h: 275,
+            // h: 275,
+            h: 460,
             flex: { direction: 'column' },
             Title: {
               w: 445,
               h: 35,
               text: {
-                text: 'asd',
+                text: '',
                 fontSize: 28,
                 lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
               },
             },
             Description: {
               w: 700,
-              h: 62,
+              // h: 62,
               y: 24,
               text: {
                 fontSize: 22,
                 lineHeight: 31,
-                maxLines: 2,
+                maxLines: 10,
                 wordWrapWidth: 700,
-                fontFamily: 'Inter',
-                fontStyle: 'normal bold',
+                fontFace: 'Montserrat-SemiBold',
               },
             },
             Director: {
               w: 700,
-              h: 31,
+              // h: 31,
               y: 48,
               text: {
                 fontSize: 22,
                 lineHeight: 31,
-                fontFamily: 'Inter',
-                fontStyle: 'normal bold',
+                fontFace: 'Montserrat-SemiBold',
               },
             },
-          },
-          Buttons: {
-            type: HorizontalContainer,
-            w: 550,
-            h: 78,
-            y: 196,
+            Cast: {
+              w: 700,
+              // h: 31,
+              y: 50,
+              text: {
+                text: 'cast',
+                fontSize: 22,
+                lineHeight: 31,
+                fontFace: 'Montserrat-SemiBold',
+              },
+            },
+            Buttons: {
+              type: HorizontalContainer,
+              w: 550,
+              // h: 78,
+              // y: 196,
+              y: 72,
+            },
           },
         },
       },
@@ -147,6 +161,10 @@ export default class SingleMovie extends Lightning.Component {
     return this.tag('Director');
   }
 
+  get _Cast() {
+    return this.tag('Cast');
+  }
+
   get _Buttons() {
     return this.tag('Buttons');
   }
@@ -156,15 +174,7 @@ export default class SingleMovie extends Lightning.Component {
 
     const { movie } = this._props;
 
-    const {
-      title,
-      description,
-      duration,
-      director,
-      genre,
-      summary,
-      subtitle,
-    } = movie;
+    const { title, description, duration, director, genre, summary, subtitle, cast } = movie;
 
     this._Category.patch({
       text: {
@@ -203,6 +213,12 @@ export default class SingleMovie extends Lightning.Component {
     this._Director.patch({
       text: {
         text: director,
+      },
+    });
+
+    this._Cast.patch({
+      text: {
+        text: cast,
       },
     });
 

@@ -1,8 +1,10 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
+
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
     items: [],
+    paddingLeft: 0,
   };
   _focusedIndex = -1;
   _scrollPosition = 0;
@@ -10,6 +12,7 @@ export default class HorizontalContainer extends Lightning.Component {
   static _template() {
     return {
       flex: { direction: 'column', wrap: true },
+      Title: {},
       Title: {},
       Items: {
         y: 0,
@@ -32,19 +35,31 @@ export default class HorizontalContainer extends Lightning.Component {
     return this._focusedIndex;
   }
 
-  _setFocusedIndex(newIndex) {
-    this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
+  _appendItems(items) {
+    items?.forEach((item) => {
+      this._props.items.push(item);
+      this.Items.childList.a(item);
+    });
+    this.stage.update();
   }
 
-  /**
-   * @param {{ items: any[]; }} props
-   */
+  _setFocusedIndex(newIndex) {
+    this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
+    this._focusedIndex = newIndex;
+    this._reCalibrateScroll();
+    this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex, this._scrollPosition);
+  }
+
   set props(props) {
     const { items, railTitle, ...rest } = props;
     this._props = { ...this._props, ...rest };
+    const { cardType, targetIndex } = rest;
 
     if (railTitle && railTitle !== '') {
       const { h } = rest;
+      this.Items.patch({
+        y: 0,
+      });
       this.patch({
         h: h + 95,
         Title: {
@@ -52,16 +67,20 @@ export default class HorizontalContainer extends Lightning.Component {
           h: 55,
           text: {
             text: railTitle,
-            fontFamily: 'Inter',
-            fontStyle: 'normal bold',
+            fontFace: 'Montserrat-Bold',
             fontSize: 32,
             lineHeight: 39,
           },
-        }
+        },
       });
     } else {
       this.patch({ ...rest });
+      this.Items.patch({ h: rest.h });
     }
+
+    this.patch({
+      w: this._props.w,
+    });
 
     if (items !== this._props.items) {
       this._props.items = items;
@@ -73,11 +92,29 @@ export default class HorizontalContainer extends Lightning.Component {
         this.Items.childList.a(items);
       }
 
-      this._focusedIndex = items?.length > 0 ? 0 : -1;
-      this._scrollPosition = 0;
-    }
+      if (targetIndex) {
+        this._setFocusedIndex(targetIndex);
+      } else {
+        this._focusedIndex = items?.length > 0 ? 0 : -1;
+      }
+      // todo: change to paddingLeft
+      if (cardType === 'EPG_CARD_ITEM') {
+        this.Items.children[0].patch({
+          flex: {
+            paddingLeft: this._props.paddingLeft,
+          },
+        });
 
+        //todo: check
+        this._scrollPosition = this._props.paddingLeft + this.w || 0;
+      }
+    }
     this.stage.update();
+  }
+
+  _setScrollPosition(x) {
+    this._scrollPosition = x;
+    this.Items.patch({ x: this._scrollPosition });
   }
 
   _reCalibrateScroll() {
@@ -113,12 +150,15 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleRight() {
-
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
       this._focusedIndex += 1;
       this._reCalibrateScroll();
-      this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex);
+      this.fireAncestors(
+        '$horizontalContainerIndexChange',
+        this._focusedIndex,
+        this._scrollPosition
+      );
     } else {
       return false;
     }
@@ -126,11 +166,14 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
-
     if (this._focusedIndex > 0) {
       this._focusedIndex -= 1;
       this._reCalibrateScroll();
-      this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex);
+      this.fireAncestors(
+        '$horizontalContainerIndexChange',
+        this._focusedIndex,
+        this._scrollPosition
+      );
     } else {
       return false;
     }

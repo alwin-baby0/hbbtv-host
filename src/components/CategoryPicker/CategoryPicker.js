@@ -1,12 +1,12 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
+import { CARD_SIZES } from '../RailItems/constants';
 
 export default class CategoryPicker extends Lightning.Component {
   _props = {
     x: 110,
     y: 150,
-    height: 64,
   };
 
   static _template() {
@@ -24,18 +24,18 @@ export default class CategoryPicker extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { x, y, width, height, items } = this._props;
+    const { x, y, items } = this._props;
 
     this._CaterogyItems.props = { items };
 
     this.patch({
       x: x,
       y: y,
-      w: width,
-      h: height,
+      w: CARD_SIZES.CATEGORY.width,
+      h: CARD_SIZES.CATEGORY.height,
       texture: Lightning.Tools.getRoundRect(
-        width,
-        height,
+        CARD_SIZES.CATEGORY.width,
+        CARD_SIZES.CATEGORY.height,
         30,
         6,
         Colors(colors.categoryPicker).get(),
@@ -45,8 +45,8 @@ export default class CategoryPicker extends Lightning.Component {
     });
 
     this._CaterogyItems.patch({
-      w: width,
-      h: height,
+      w: CARD_SIZES.CATEGORY.width,
+      h: CARD_SIZES.CATEGORY.height,
     });
   }
 

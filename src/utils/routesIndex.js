@@ -3,6 +3,8 @@ const ROUTES_INDEX = {
   'vod/movies': 1,
   'vod/series': 2,
   'vod/sports': 3,
+  'filterPage/movie': 1,
+  'filterPage/series': 2,
   live: 4,
   search: 5,
   settings: 6,

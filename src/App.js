@@ -1,10 +1,35 @@
 // App.js
 import { Colors, Router, Utils } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
+import Lightning from '@lightningjs/sdk/src/Lightning';
 import routes from './Pages/routes';
 import Navbar from './Components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinScreenComponent';
-
+let keys = [
+  'MediaPlay',
+  'MediaPause',
+  'MediaStop',
+  'ColorF0Red',
+  'ColorF1Green',
+  'ColorF2Yellow',
+  'ColorF3Blue',
+  'ChannelUp',
+  'ChannelDown',
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  'MediaRewind',
+  'MediaFastForward',
+  'MediaRecord',
+  'MediaPlayPause',
+];
 export default class App extends Router.App {
   static _template() {
     return {
@@ -29,10 +54,8 @@ export default class App extends Router.App {
       Background: {
         w: 1920,
         h: 1080,
-        rect: true,
-        color: Colors(colors.background).get(),
         zIndex: -900,
-        // src: Utils.asset('images/background.jpg'),
+        src: Utils.asset('images/background.jpg'),
       },
       Widgets: {
         Menu: {
@@ -89,17 +112,84 @@ export default class App extends Router.App {
     };
   }
 
+  /* $punchHoleTV(x, y, w, h) {
+    y = 105;
+    x = 1065;
+    w = 736;
+    h = 412;
+    this.tag('Background').shader = {
+      type: Lightning.shaders.Hole,
+      x,
+      y,
+      w,
+      h,
+    };
+  } */
+  $punchHoleTV(x, y, w, h) {
+    y = 106;
+    x = 1071;
+    w = 736;
+    h = 412;
+    const radius = 20; // Set your desired radius here
+    this.tag('Background').shader = {
+      type: Lightning.shaders.Hole,
+      x,
+      y,
+      w,
+      h,
+      radius: radius,
+    };
+  }
+
+  $unpunchHoleTV() {
+    this.tag('Background').shader = {
+      w: 0,
+      h: 0,
+    };
+  }
+
   static getFonts() {
     return [
+      // 300
       {
-        family: 'Inter',
-        url: Utils.asset('fonts/Inter.ttf'),
+        family: 'Montserrat-Light',
+        url: Utils.asset('fonts/Montserrat/Montserrat-Light.ttf'),
+        descriptors: {},
+      },
+      // 400
+      {
+        family: 'Montserrat-Regular',
+        url: Utils.asset('fonts/Montserrat/Montserrat-Regular.ttf'),
+        descriptors: {},
+      },
+      // 500
+      {
+        family: 'Montserrat-Medium',
+        url: Utils.asset('fonts/Montserrat/Montserrat-Medium.ttf'),
+        descriptors: {},
+      },
+      // 600
+      {
+        family: 'Montserrat-SemiBold',
+        url: Utils.asset('fonts/Montserrat/Montserrat-SemiBold.ttf'),
+        descriptors: {},
+      },
+      // 700
+      {
+        family: 'Montserrat-Bold',
+        url: Utils.asset('fonts/Montserrat/Montserrat-Bold.ttf'),
+        descriptors: {},
+      },
+      // 800
+      {
+        family: 'Montserrat-ExtraBold',
+        url: Utils.asset('fonts/Montserrat/Montserrat-ExtraBold.ttf'),
         descriptors: {},
       },
     ];
   }
 
-  _handleAppClose() { }
+  _handleAppClose() {}
 
   /**
    * Show app close dialogue

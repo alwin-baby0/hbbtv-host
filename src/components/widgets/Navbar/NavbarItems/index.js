@@ -28,11 +28,14 @@ export default class SidebarItems extends Lightning.Component {
         w: 1840,
         h: 70,
         Logo: {
-          texture: Lightning.Tools.getSvgTexture(
-            Utils.asset(`/images/navbar/nav-logo.svg`),
-            235,
-            70
-          ),
+          // texture: Lightning.Tools.getSvgTexture(
+          //   Utils.asset(`/images/navbar/nav-logo.svg`),
+          //   235,
+          //   70
+          // ),
+          w: 235,
+          h: 70,
+          src: Utils.asset('/images/navbar/logo.png'),
         },
         Column: {
           type: Row,
@@ -64,13 +67,40 @@ export default class SidebarItems extends Lightning.Component {
   _active() {
     // setTimeout is used to give time for url hash to change before asign the right one
     setTimeout(() => {
+      const activeHash = Router.getActiveHash();
+      // Check if activeHash contains both 'filtered' and 'movies'
+      if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
+        this._index = getRouteNavbarIndex('filterPage/movie');
+        this._setSelected(this._index);
+        return;
+      } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
+        this._index = getRouteNavbarIndex('filterPage/series');
+        this._setSelected(this._index);
+        return;
+      } else {
+        // console.log('activeHash does not contain both "filtered" and "movies"');
+      }
       this._index = getRouteNavbarIndex(Router.getActiveHash());
       this._setSelected(this._index);
-    })
+    });
   }
 
   _focus() {
-    let focusedId = getRouteNavbarIndex(Router.getActiveHash());
+    const activeHash = Router.getActiveHash();
+    // Check if activeHash contains both 'filtered' and 'movies'
+    if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
+      // console.log('activeHash contains both "filtered" and "movies"');
+      this._index = getRouteNavbarIndex('filterPage/movie');
+      this._setSelected(this._index);
+      return;
+    } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
+      this._index = getRouteNavbarIndex('filterPage/series');
+      this._setSelected(this._index);
+      return;
+    } else {
+      // console.log('activeHash does not contain both "filtered" and "movies"');
+    }
+    let focusedId = getRouteNavbarIndex(activeHash);
     this.$changePage(focusedId);
   }
 
@@ -95,6 +125,18 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _updateFocus() {
+    const activeHash = Router.getActiveHash();
+    if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
+      this._index = getRouteNavbarIndex('filterPage/movie');
+      this._setSelected(this._index);
+      return;
+    } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
+      this._index = getRouteNavbarIndex('filterPage/series');
+      this._setSelected(this._index);
+      return;
+    } else {
+      // console.log('activeHash does not contain both "filtered" and "movies"');
+    }
     const newIndex = getRouteNavbarIndex(Router.getActiveHash());
     if (newIndex !== this._index) {
       this._setSelected(newIndex);

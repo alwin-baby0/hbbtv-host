@@ -26,8 +26,7 @@ export default class Button extends Lightning.Component {
         h: 25,
         color: Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
         text: {
-          fontFamily: 'Inter',
-          fontStyle: 'normal bold',
+          fontFace: 'Montserrat-Bold',
           fontSize: 20,
           lineHeight: 25,
           letterSpacing: 2,

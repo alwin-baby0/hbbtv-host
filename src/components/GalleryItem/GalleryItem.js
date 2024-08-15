@@ -20,14 +20,13 @@ export default class GalleryItem extends Lightning.Component {
         x: 110,
         y: 110,
         w: 700,
-        h: 415,
+        h: 460,
         flex: { direction: 'column' },
         Title: {
           w: 440,
           h: 40,
           text: {
-            fontFamily: 'Inter',
-            fontStyle: 'normal bold',
+            fontFace: 'Montserrat-Bold',
             fontSize: 32,
           },
         },
@@ -37,8 +36,7 @@ export default class GalleryItem extends Lightning.Component {
           },
           text: {
             textColor: Colors(colors.focus).get(),
-            fontFamily: 'Inter',
-            fontStyle: 'normal bold',
+            fontFace: 'Montserrat-Medium',
             fontSize: 20,
           },
         },
@@ -50,8 +48,7 @@ export default class GalleryItem extends Lightning.Component {
           text: {
             textColor: Colors(colors.sliderDescription).get(),
             wordWrapWidth: 650,
-            fontFamily: 'Inter',
-            fontStyle: 'normal normal',
+            family: 'Montserrat-Regular',
             fontSize: 18,
             lineHeight: 31,
             maxLines: 8,

@@ -39,7 +39,7 @@ export default class LandscapeRailItem extends FocusableItem {
             marginRight: 20,
           },
           text: {
-            fontFamily: 'Inter',
+            fontFace: 'Montserrat-Bold',
             fontSize: 21,
             lineHeight: 25,
             maxLines: 1,
@@ -55,7 +55,7 @@ export default class LandscapeRailItem extends FocusableItem {
             marginRight: 20,
           },
           text: {
-            fontFamily: 'Inter',
+            fontFace: 'Montserrat-Regular',
             fontSize: 16,
             lineHeight: 20,
             wordWrapWidth: 275,

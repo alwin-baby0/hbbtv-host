@@ -1,25 +1,53 @@
-import request, { V1, V2 } from '../index';
+import { RAIL_TYPES } from '../../pages/utils';
+import request, { V2 } from '../index';
+import { LiveChannelsRailItem } from '../../Models/LiveChannelsRailItem';
+import { EPGRailItem } from '../../Models/utils/EPGRailItem';
 
 export const getChannels = async () =>
   request({
-    url: `channels`,
-    apiVersion: V1,
+    url: `/epg_channels?id&include&exclude=channel`,
+    apiVersion: V2,
     method: 'GET',
     params: {
       page: 1,
       limit: 6,
     },
-  });
+  }).then(parseLiveChannelsData);
+
+function parseLiveChannelsData({ data }) {
+  const railItems = data.entry?.map((item) => new LiveChannelsRailItem(item));
+  if (!railItems) return;
+
+  return {
+    railType: RAIL_TYPES.LIVETV,
+    railTitle: data.title,
+    cardType: 'POSTER',
+    items: railItems,
+    itemsPerRow: 1,
+  };
+}
 
 export const getSingleChannel = async (channelId) =>
   request({
-    url: `/getChannel`,
-    apiVersion: V1,
+    url: `/epg_program`,
+    apiVersion: V2,
     method: 'GET',
     params: {
-      channel_id: `${channelId}`,
+      id: `${channelId}`,
     },
-  });
+  }).then(parseLiveEPGData);
+
+function parseLiveEPGData({ data }) {
+  const railItems = data.entry?.map((item) => new EPGRailItem(item));
+  if (!railItems) return;
+
+  return {
+    railType: RAIL_TYPES.LIVETV,
+    cardType: 'POSTER',
+    items: railItems,
+    itemsPerRow: 1,
+  };
+}
 
 export const getLiveChannels = async (channelId) =>
   request({

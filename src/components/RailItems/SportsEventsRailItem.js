@@ -41,8 +41,7 @@ export default class SportsEventsRailItem extends FocusableItem {
           h: 16,
           text: {
             text: '',
-            fontFamily: 'Inter',
-            fontStyle: 'normal bold',
+            fontFace: 'Montserrat-SemiBold',
             fontSize: 13,
             lineHeight: 16,
           },
@@ -61,8 +60,7 @@ export default class SportsEventsRailItem extends FocusableItem {
           },
           text: {
             text: '',
-            fontFamily: 'Inter',
-            fontStyle: 'normal bold',
+            fontFace: 'Montserrat-Bold',
             fontSize: 13,
             lineHeight: 16,
             wordWrapWidth: 220,
@@ -74,8 +72,7 @@ export default class SportsEventsRailItem extends FocusableItem {
             marginLeft: 21,
           },
           text: {
-            fontFamily: 'Inter',
-            fontStyle: 'normal [100]',
+            fontFace: 'Montserrat-Regular',
             fontSize: 11,
             lineHeight: 16,
             wordWrapWidth: 220,

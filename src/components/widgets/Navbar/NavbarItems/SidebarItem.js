@@ -18,7 +18,7 @@ export default class SidebarItem extends lng.Component {
           textColor: Colors(colors.unfocus).get(),
           fontSize: 24,
           lineHeight: 27,
-          fontStyle: 'normal bold',
+          fontFace: 'Montserrat-Bold',
         },
       },
       Icon: {

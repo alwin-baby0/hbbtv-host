@@ -21,6 +21,7 @@ export default class PageItem extends Lightning.Component {
             marginLeft: 20,
           },
           text: {
+            fontFace: 'Montserrat-Medium',
             fontSize: 20,
             lineHeight: 25,
             letterSpacing: 1.2,

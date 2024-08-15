@@ -1,14 +1,18 @@
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import { ProgressBar, Row } from '@lightningjs/ui-components';
-import { loader, unloader } from '../../Components/Player/HLS';
+import { Column, ProgressBar } from '@lightningjs/ui-components';
+import { getPlayer, loader, unloader } from '../../Components/Player/HLS';
 import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
 import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
+import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+let lastIndex = 0;
 
 export default class Player extends lng.Component {
   _props = {
     pausedItemId: 1,
+    lastId: 0,
   };
 
   static _template() {
@@ -16,56 +20,70 @@ export default class Player extends lng.Component {
       Wrapper: {
         h: 100,
         y: 750,
-        w: 1920,
+        w: 1690,
         ControlsWrapper: {
+          w: 1690,
           h: 100,
-          w: 1920,
+          x: 115,
           flex: { direction: 'row', alignItems: 'center' },
           Controls: {
             type: HorizontalContainer,
             h: 100,
-            w: 1920,
-            flex: { direction: 'row', alignItems: 'center' },
+            w: 1690,
+            flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
             rect: true,
             y: 0,
             color: Colors('#000000').alpha(0).get(),
           },
         },
         ProgressBarWrapper: {
+          w: 1670,
+          x: 115,
           y: 100,
-          w: 1920,
           flex: { flex: 'row', justifyContent: 'center', alignItems: 'center' },
           CurrentTime: {
+            y: -2,
             flex: { justifyContent: 'center', alignItems: 'center' },
-            w: 150,
-            h: 50,
-            y: 8,
+            w: 140,
+            h: 35,
+            // y: 8,
             color: Colors('#000').get(),
             Text: {
+              w: 140,
+              h: 35,
               flexItem: { alignSelf: 'center' },
               text: {
                 text: '',
                 fontSize: 30,
                 textAlign: 'center',
+                fontFace: 'Montserrat-Bold',
               },
             },
           },
           ProgressBar: {
             type: ProgressBar,
-            w: 1500,
+            w: 1400,
+            flexItem: {
+              marginLeft: 20,
+              marginRight: 20,
+            },
           },
           EndTime: {
+            y: -2,
             flex: { justifyContent: 'center', alignItems: 'center' },
-            w: 150,
-            h: 50,
-            y: 8,
+            // w: 120,
+            w: 140,
+            h: 35,
             color: Colors('#000').get(),
             Text: {
-              flexItem: { alignSelf: 'center' },
+              flex: { justifyContent: 'center', alignItems: 'center' },
+              h: 35,
+              w: 140,
               text: {
                 text: '00:00:00',
                 fontSize: 30,
                 textAlign: 'center',
+                fontFace: 'Montserrat-Bold',
               },
             },
           },
@@ -111,7 +129,7 @@ export default class Player extends lng.Component {
     const { controlsItems: items, liveItems } = props;
     const itemComponents = this._params.videoType === 'Stream now' ? liveItems : items;
 
-    this._props.pausedItemId = this._params.videoType === 'Stream now' ? 1 : 2;
+    this._props.pausedItemId = this._params.videoType === 'Stream now' ? 1 : 1;
 
     const formattedItems = itemComponents.map((data) => ({
       type: PlayerButtons,
@@ -120,9 +138,67 @@ export default class Player extends lng.Component {
       },
     }));
 
+    if (this._params.videoType === 'Stream now') {
+      this.tag('ProgressBarWrapper').patch({
+        x: 180,
+      });
+    } else {
+      this.tag('ProgressBarWrapper').patch({
+        x: 115,
+      });
+    }
+    this.tag('ProgressBar').patch({
+      w: this._params.videoType === 'Stream now' ? 1550 : 1400,
+      x: this._params.videoType === 'Stream now' ? 0 : 0,
+      flexItem: {
+        marginLeft: this._params.videoType === 'Stream now' ? 0 : 20,
+        marginRight: this._params.videoType === 'Stream now' ? 0 : 20,
+      },
+    });
+
     this._Controls.props = {
       items: formattedItems,
+      w: 1920,
     };
+
+    this._Controls._setFocusedIndex(1);
+
+    this._Controls.tag('Items').patch({
+      w: 1690,
+      flex: { direction: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    });
+
+    if (this._params.videoType === 'Stream now') {
+      this._Controls.tag('Items').patch({
+        w: 1690,
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'space-between' },
+      });
+    } else {
+      this._Controls.tag('Items').patch({
+        w: 1690,
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+      });
+    }
+    if (this._params.videoType === 'Stream now') {
+      this.tag('Wrapper').patch({
+        Back: undefined,
+      });
+    } else {
+      this.tag('Wrapper').patch({
+        Back: {
+          x: 115,
+          type: PlayerButtons,
+          props: {
+            buttonInfo: {
+              label: 'back',
+              icon: `/icons/player/commands/back.svg`,
+              onLiveContent: true,
+              position: 60,
+            },
+          },
+        },
+      });
+    }
   }
 
   set params({ videoUrl, videoType, type, duration }) {
@@ -136,7 +212,7 @@ export default class Player extends lng.Component {
     VideoPlayer.loader(loader);
     VideoPlayer.unloader(unloader);
     VideoPlayer.loop(false);
-    VideoPlayer.mute();
+    clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
   }
 
   _firstActive() {
@@ -157,7 +233,7 @@ export default class Player extends lng.Component {
     }
   }
 
-  _showErrorMessage() {
+  async _showErrorMessage() {
     this.tag('ErrorMessage').visible = true;
     this._hideWrapper();
     this.fireAncestors('$unpunchHole');
@@ -166,6 +242,7 @@ export default class Player extends lng.Component {
   }
 
   async _active() {
+    lastIndex = 0;
     if (this._params.videoType === 'Stream now') {
       this.tag('CurrentTime').patch({ text: { text: '' } });
     }
@@ -183,8 +260,6 @@ export default class Player extends lng.Component {
     }
 
     this.tag('ErrorMessage').visible = false;
-    this._setState('Controls');
-    this._showWrapper(true);
 
     const durationInSeconds = parseFloat(this._params.duration);
     const formattedDuration = this._formatDuration(durationInSeconds);
@@ -198,24 +273,142 @@ export default class Player extends lng.Component {
     if (this._params.videoType !== 'Stream now') {
       this._progressInterval = setInterval(this._updateProgressBar.bind(this), 500);
     }
+    this._setState('Controls');
+    this._showWrapper(true);
+    this._setState('Controls');
   }
 
   _disable() {
+    clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
     VideoPlayer.close();
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
     this.tag('ProgressBar').progress = 0;
+    // this._hideWrapper();
   }
 
   _skipVideo(offset) {
     const newTime = VideoPlayer.currentTime + offset;
     VideoPlayer.seek(newTime);
     this._showWrapper(); // Show wrapper on skip
-    if (!VideoPlayer.playing) {
-      VideoPlayer.play();
-      this._Controls.items[this._props.pausedItemId]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
+  }
+
+  $setFocusOnItem(value) {
+    if (value === true) {
+      this._setState('Subtitles');
+    } else {
+      this._setState('Controls');
+      this._showWrapper();
+      this.patch({
+        Subtitles: undefined,
       });
+    }
+  }
+
+  $showSubtitles(val) {
+    const player = getPlayer();
+    const getTracks = player.subtitleTrackController.tracks;
+
+    const offButton = {
+      name: 'OFF',
+      type: 'SUBTITLES',
+    };
+
+    let items;
+    if (false) {
+      // If all tracks are disabled, only use the 'OFF' track
+      items = [
+        {
+          type: SubtitlesButtons,
+          props: {
+            // languageInfo: offTrack,
+          },
+          w: 250,
+          h: 100,
+        },
+      ];
+    } else {
+      // Otherwise, include all tracks plus the 'OFF' track
+      let newArray = [offButton, ...getTracks];
+
+      items = newArray.map((language, index) => ({
+        type: SubtitlesButtons,
+        props: {
+          languageInfo: language,
+          index: index,
+        },
+        w: 250,
+        h: 60,
+      }));
+    }
+
+    // Patch the Subtitles section with the appropriate items
+    this.patch({
+      Subtitles: {
+        w: 600,
+        h: 1080,
+        x: 1320,
+        rect: true,
+        color: Colors('#1B1C23').get(),
+        zIndex: 5,
+        Title: {
+          x: 50,
+          y: 70,
+          text: {
+            text: 'Subtitles',
+            fontSize: 32,
+          },
+        },
+        Languages: {
+          // type: VerticalContainer,
+          type: Column,
+          items: items,
+          props: {
+            w: 600,
+            h: 1080,
+            items: items,
+          },
+        },
+      },
+    });
+  }
+
+  $setInitial() {
+    this.tag('Subtitles.Languages').items[lastIndex]._selectButton();
+    this.tag('Subtitles.Languages').selectedIndex = lastIndex;
+  }
+
+  $setFocus(id) {
+    const { lastId } = this._props;
+
+    if (typeof lastId !== 'undefined') {
+      // Unselect the button of the last ID before setting a new one
+      this.tag('Subtitles.Languages').items[lastIndex]._unselectButton();
+    }
+    // Set the new ID
+    if (!id) {
+      this.tag('Subtitles.Languages').items[0]._selectButton();
+    } else {
+      this.tag('Subtitles.Languages').items[id]._selectButton();
+    }
+    // Update the lastId variable with the current ID
+    this._props.lastId = id;
+    lastIndex = id;
+  }
+
+  $updateSubtitle(languageIndex) {
+    const player = getPlayer();
+    player.subtitleTrack = languageIndex;
+  }
+
+  $videoPlayerLoadedData() {
+    const player = getPlayer();
+    // Ensure player is not null or undefined
+    if (player && player.subtitleTrackController) {
+      // Set the subtitle track to -1 if the player and subtitleTrackController exist
+      player.subtitleTrackController.subtitleTrack = -1;
+    } else {
+      console.error('Player or subtitleTrackController is not initialized.');
     }
   }
 
@@ -226,10 +419,12 @@ export default class Player extends lng.Component {
 
   _handleBack() {
     this._showWrapper();
-    Router.back();
+    VideoPlayer.clear();
     VideoPlayer.close();
+    VideoPlayer.unloader(unloader);
     clearInterval(this._progressInterval);
     this.fireAncestors('$unpunchHole');
+    Router.back();
   }
 
   $exitVideo() {
@@ -267,7 +462,7 @@ export default class Player extends lng.Component {
   $startStopVideo(isStopped) {
     this._showWrapper();
     if (this.tag('Wrapper').visible) {
-      isStopped ? VideoPlayer.pause() : VideoPlayer.play();
+      VideoPlayer.pause();
     }
   }
 
@@ -280,15 +475,33 @@ export default class Player extends lng.Component {
     this.tag('CurrentTime.Text').text = formattedTime;
   }
 
+  $changeFocusOnControl(val) {
+    if (val === true) {
+      this._setState('Controls');
+    } else {
+      this._setState('Back');
+    }
+  }
+
   _showWrapper() {
     this.tag('Wrapper').visible = true;
     clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
-    this._hideWrapperTimeout = setTimeout(() => this._hideWrapper(), 10000); // Set new timeout
+    this._hideWrapperTimeout = setTimeout(() => {
+      if (this._getState() !== 'Subtitles') {
+        // Check if the state is not Subtitles
+        this._hideWrapper();
+        this._setState('Controls');
+      }
+    }, 5000); // Set new timeout
   }
 
   _hideWrapper() {
-    this.tag('Wrapper').visible = false;
-    clearTimeout(this._hideWrapperTimeout);
+    if (this._getState() !== 'Subtitles') {
+      this._setState('ProgressBar');
+      this.tag('Wrapper').visible = false;
+      clearTimeout(this._hideWrapperTimeout);
+      this._Controls._setFocusedIndex(1);
+    }
   }
 
   _formatTime(seconds) {
@@ -318,11 +531,94 @@ export default class Player extends lng.Component {
     this._duration = durationInSeconds;
   }
 
+  // COMANDS
+  _handleMediaPlayPause() {
+    const { pausedItemId } = this._props;
+
+    // Check the current playing state before toggling
+    const isCurrentlyPlaying = VideoPlayer.playing;
+
+    // Toggle play/pause
+    VideoPlayer.playPause();
+
+    // Show the UI elements when toggling play/pause
+    this._showWrapper();
+
+    // Update the icon based on the current state
+    if (isCurrentlyPlaying) {
+      // The video was playing, now it will be paused
+      this._Controls.Items.children[pausedItemId]._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
+      });
+    } else {
+      // The video was paused, now it will be playing
+      this._Controls.Items.children[pausedItemId]._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
+      });
+    }
+  }
+
+  _handleMediaRewind() {
+    // console.log('MediaRewind ');
+    this._showWrapper(); // Show the UI elements when video starts playing
+    this._skipVideo(-10);
+    VideoPlayer.play();
+  }
+  _handleMediaFastForward() {
+    // console.log('MediaFastForward ');
+    this._showWrapper(); // Show the UI elements when video starts playing
+    this._skipVideo(10);
+  }
+  _handleMediaPlay() {
+    // console.log('MediaPlay ');
+    this._showWrapper(); // Show the UI elements when video starts playing
+    VideoPlayer.play();
+  }
+  _handleMediaPause() {
+    // console.log('MediaPause ');
+    this._showWrapper(); // Show the UI elements when video starts playing
+    VideoPlayer.pause();
+  }
+  _handleMediaStop() {
+    // console.log('MediaStop ');
+    Router.back();
+    VideoPlayer.close();
+  }
+  //
+
   static _states() {
     return [
       class Controls extends this {
         _getFocused() {
           return this._Controls;
+        }
+        _handleLeft() {
+          if (this._params.videoType === 'Stream now') {
+            return;
+          } else {
+            this._setState('Back');
+          }
+        }
+      },
+      class Subtitles extends this {
+        _getFocused() {
+          return this.tag('Subtitles.Languages');
+        }
+      },
+
+      class ProgressBar extends this {
+        _getFocused() {
+          return this.tag('ProgressBar');
+        }
+      },
+
+      class Back extends this {
+        _getFocused() {
+          return this.tag('Back');
+        }
+
+        _handleRight() {
+          this._setState('Controls');
         }
       },
     ];

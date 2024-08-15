@@ -24,7 +24,7 @@ const getGenresInfo = async (page, props) => {
 
   const category = props.action;
   const type = props.genre_movies;
-
+  const title = props?.title?.toUpperCase();
   let searchType;
   if (type === FILTER_TYPES.MOVIE) {
     searchType = 'movie';
@@ -44,7 +44,6 @@ const getGenresInfo = async (page, props) => {
     filtered.type = type;
     filtered.category = category;
     filtered.timestamp = new Date().getTime();
-
     const rows = [];
     if (row.length > 0) {
       for (let i = 0; i < row.length; i += ROW_SIZE) {
@@ -54,7 +53,7 @@ const getGenresInfo = async (page, props) => {
       const items = rows.map((row) => {
         return {
           type: HorizontalContainer,
-          h: 500,
+          h: 460,
           w: 1760,
           itemSpacing: 520,
           props: {
@@ -86,9 +85,26 @@ const getGenresInfo = async (page, props) => {
     }
 
     page._Title.text = filtered.title;
+    page._Title.patch({
+      y: 200,
+    });
     page._Column.props = {
       items: filtered.items,
     };
+
+    page._Button.patch({
+      props: {
+        itemInfo: { category, title: type == 'movie' ? 'MOVIES' : type },
+        w: 170,
+        h: 64,
+        radius: 30,
+        strokeWidth: 3,
+      },
+    });
+
+    page._Genre.patch({
+      text: { text: title },
+    });
   }
 };
 export default async function (page, props) {

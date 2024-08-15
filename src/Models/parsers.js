@@ -1,6 +1,6 @@
-import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from "./";
-import { VODS_PER_ROW } from "../Services/VodSerivce";
-import { RAIL_TYPES } from "../Pages/utils";
+import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
+import { VODS_PER_ROW } from '../Services/VodSerivce';
+import { RAIL_TYPES } from '../Pages/utils';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
@@ -13,25 +13,25 @@ export const parseHomePageRailData = ({ data }) => {
     cardType: 'POSTER',
     items: railItems,
   };
-}
+};
 
 export const parseHomePageHeroSection = ({ data }) => {
   const galleryItems = data.entry?.map((item) => new GalleryItem(item));
-  if (!galleryItems && galleryItems.length === 0) return;
-
+  if (!galleryItems || galleryItems?.length === 0) return;
+  //if (!(galleryItems && galleryItems.length > 0)) return;
   return {
     railType: galleryItems[0].type,
     railTitle: data.title,
     cardType: 'GALLERY_ITEM',
     items: galleryItems,
   };
-}
+};
 
 // VodPreview
 // Movies
 export const parseVodMoviesPageData = ({ data }) => {
-  const railItems = data.entry?.map((item) => new SimpleRailItem(item))
-  if (!railItems || railItems.length === 0) return;
+  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.MOVIE,
@@ -39,12 +39,12 @@ export const parseVodMoviesPageData = ({ data }) => {
     items: railItems,
     itemsPerRow: VODS_PER_ROW,
   };
-}
+};
 
 // Series
 export const parseSeriesPageData = ({ data }) => {
   const railItems = data.entry?.map((item) => new SimpleRailItem(item));
-  if (!railItems || railItems.length === 0) return;
+  if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.SERIE,
@@ -52,26 +52,30 @@ export const parseSeriesPageData = ({ data }) => {
     items: railItems,
     itemsPerRow: VODS_PER_ROW,
   };
-}
+};
 
 // Categories
 export const parseVodCategories = ({ data }, vodType) => {
-  const railItems = data?.entry.map(category => new Category({ ...category, type: vodType }))
-  if (!railItems || railItems.length === 0) return;
+  // const railItems = data?.entry.map((category) => new Category({ ...category, type: vodType }));
+  const railItems = data?.entry.map((category) => {
+    // console.log('CAT', category);
+    return new Category({ ...category, type: vodType });
+  });
+  if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.CATEGORY,
     cardType: 'CATEGORY',
     items: railItems,
   };
-}
+};
 
 // Sports
 export const parseSportsPageData = ({ data }) => {
   const railItems = data.entry?.map(
     (item) => new SimpleRailItem({ ...item, type: { value: 'sport' } })
   );
-  if (!railItems || railItems.length === 0) return;
+  if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.SPORT,
@@ -80,12 +84,12 @@ export const parseSportsPageData = ({ data }) => {
     items: railItems,
     itemsPerRow: VODS_PER_ROW,
   };
-}
+};
 
 // Live Events
 export const parseSportsEventsData = ({ data }) => {
   const railItems = data.entry?.map((item) => new LiveEventsRailItem(item));
-  if (!railItems || railItems.length === 0) return;
+  if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.SPORT_LIVE,
@@ -97,13 +101,12 @@ export const parseSportsEventsData = ({ data }) => {
       h: 341,
     },
   };
-}
+};
 
 // Single assets
 // Movie
 export const parseDetailsData = ({ data }) => {
-  console.log('data', data)
-  return new GalleryItem(data?.entry[0])
+  return new GalleryItem(data?.entry[0]);
 };
 
 // Season
@@ -111,7 +114,7 @@ export const parseSeasonData = ({ data }) => {
   const railItems = data.entry?.map(
     (item) => new SimpleRailItem({ ...item, type: { value: 'episode' } })
   );
-  if (!railItems || railItems.length === 0) return;
+  if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.EPISODE,
@@ -120,4 +123,4 @@ export const parseSeasonData = ({ data }) => {
     railTitle: data.title,
     itemsPerRow: 5,
   };
-}
+};

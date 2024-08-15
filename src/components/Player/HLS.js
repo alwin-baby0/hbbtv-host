@@ -1,6 +1,6 @@
 import { VideoPlayer } from '@lightningjs/sdk';
 import Hls from 'hls.js';
-let player = null;
+export let player = null;
 const defaults = {
   debug: false,
 };
@@ -39,6 +39,13 @@ const destroyPlayer = () => {
     player = null;
   }
 };
+export function getSubtitleTracks() {
+  return player.subtitleTrackController.tracks || []; // Accessing the subtitle tracks
+}
+export function getPlayer() {
+  return player;
+}
+function exportPlayer() {}
 const unload = (videoEl) => {
   destroyPlayer();
   videoEl.removeAttribute('src');
@@ -55,7 +62,14 @@ export const loader = (url, videoEl, options = {}) => {
       // HLS stream
       player = createPlayer(options);
       player.autoLevelCapping = options.autoLevelCapping || -1;
-      player.on(Hls.Events.MANIFEST_PARSED, () => resolve());
+      //  player.on(Hls.Events., () => {})
+      player.on(Hls.Events.MANIFEST_PARSED, () => {
+        // console.log('New manifest parsed', videoEl);
+        const subtitleTracks = getSubtitleTracks();
+        // console.log('Available subtitle tracks:', subtitleTracks);
+        resolve(subtitleTracks); // Optionally resolve with tracks
+        resolve();
+      });
       player.on(Hls.Events.ERROR, (event, data) => {
         if (data.fatal) {
           switch (data.type) {

@@ -21,6 +21,7 @@ class GalleryItem {
         director,
         subtitle,
         first_episode_mp4,
+        cast,
       } = extensions;
 
       if (button_text && button_text !== '') {
@@ -33,15 +34,15 @@ class GalleryItem {
 
       if (!this.summary || this.summary === '') {
         const { date, time, venue } = extensions;
-        this.summary = ''
+        this.summary = '';
         if (date) {
-          this.summary += `${extensions.date} - `
+          this.summary += `${extensions.date} - `;
         }
         if (time) {
-          this.summary += `${extensions.time} | `
+          this.summary += `${extensions.time} | `;
         }
         if (venue) {
-          this.summary += `${extensions.venue}`
+          this.summary += `${extensions.venue}`;
         }
       }
 
@@ -50,11 +51,13 @@ class GalleryItem {
       this.genre = genre;
       this.director = director;
       this.subtitle = subtitle;
+      this.cast = cast;
     }
 
     this.thumbnails = [];
     this.landscapePosters = [];
     this.portraitPosters = [];
+    this.buttonLabel = 'WATCH NOW';
 
     media_group[0]?.media_item?.forEach((item) => {
       switch (true) {

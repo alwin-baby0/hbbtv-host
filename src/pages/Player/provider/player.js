@@ -1,12 +1,12 @@
 import PlayerButtons from '../components/PlayerButtons/PlayerButtons';
 // TODO: refactor and create service to handle all the functionality for the player, move components in components folder
 export const controlsItems = [
-  {
-    label: 'back',
-    icon: `/icons/player/commands/back.svg`,
-    onLiveContent: true,
-    position: 60,
-  },
+  // {
+  //   label: 'back',
+  //   icon: `/icons/player/commands/back.svg`,
+  //   onLiveContent: true,
+  //   position: 60,
+  // },
   {
     label: 'backward',
     icon: `/icons/player/commands/fast-backward.svg`,
@@ -39,17 +39,14 @@ export const liveItems = [
     onLiveContent: true,
     position: 810,
   },
+  {
+    label: 'subtitles',
+    icon: `/icons/player/commands/subtitles.svg`,
+    onLiveContent: true,
+    position: 810,
+  },
 ];
 export default async function (page) {
-  const items = controlsItems.map((data) => {
-    return {
-      type: PlayerButtons,
-      props: {
-        buttonInfo: data,
-      },
-    };
-  });
-
   page.props = {
     controlsItems: controlsItems,
     liveItems: liveItems,

@@ -16,6 +16,7 @@ export default class CategoryPickerItem extends Lightning.Component {
         text: {
           fontSize: 20,
           lineHeight: 25,
+          fontFace: 'Montserrat-Medium',
         },
       },
     };
@@ -46,7 +47,12 @@ export default class CategoryPickerItem extends Lightning.Component {
   }
 
   _focus() {
-    const { w, h, radius, strokeWidth } = this._props;
+    const { w, h, radius, strokeWidth, itemInfo } = this._props;
+    const { title } = itemInfo;
+
+    this.patch({
+      Title: undefined,
+    });
     this.patch({
       texture: Lightning.Tools.getRoundRect(
         w,
@@ -57,28 +63,46 @@ export default class CategoryPickerItem extends Lightning.Component {
         true,
         Colors(colors.focus).get()
       ),
-    });
-    this._Title.patch({
-      text: {
-        textColor: Colors(colors.unfocus).get(),
+      Title: {
+        h: 24,
+        text: {
+          text: title.toUpperCase(),
+          fontSize: 20,
+          lineHeight: 25,
+          textColor: Colors(colors.unfocus).get(),
+        },
       },
     });
   }
 
   _unfocus() {
-    const { w, h } = this._props;
+    const { w, h, itemInfo } = this._props;
+    const { title } = itemInfo;
+
+    this.patch({
+      Title: undefined,
+    });
     this.patch({
       texture: Lightning.Tools.getRoundRect(w, h),
-    });
-    this._Title.patch({
-      text: {
-        textColor: Colors(colors.focus).get(),
+      Title: {
+        h: 24,
+        text: {
+          text: title.toUpperCase(),
+          fontSize: 20,
+          lineHeight: 25,
+          textColor: Colors(colors.focus).get(),
+        },
       },
     });
   }
 
-  _handleEnter() {
+  async _handleEnter() {
     const { callback } = this._props;
-    callback();
+    try {
+      this.fireAncestors('$updateChannels', this._props);
+      callback();
+    } catch (error) {
+      console.error('Error fetching category type:', error);
+    }
   }
 }

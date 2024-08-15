@@ -1,10 +1,13 @@
-import { Router } from "@lightningjs/sdk";
-import { VOD_PREVIEW_TYPES } from "../Pages/utils";
+import { Router } from '@lightningjs/sdk';
 
 export const CATEGORY_TYPES = {
-  ...VOD_PREVIEW_TYPES,
-  LIVE_TV: 'live_tv',
-}
+  MOVIES: 'movies',
+  SERIES: 'series',
+  SPORTS: 'sports',
+  LIVE_TV: 'live',
+  CHANNELS: 'channel',
+  SERIE: 'genres_series',
+};
 
 class Category {
   constructor(data) {
@@ -12,26 +15,33 @@ class Category {
     this.id = id;
     this.title = title;
     this.type = type;
+    this.data = data;
   }
 
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
-        Router.navigate(`filterPage/${this.id}/movie`);
+        Router.navigate(`filterPage/${this.id}/movie`, this.data);
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        Router.navigate(`filterPage/${this.id}/series`);
+        Router.navigate(`filterPage/${this.id}/series`, this.data);
         break;
       }
       case CATEGORY_TYPES.LIVE_TV: {
-        Router.navigate(`live_tv/${this.id}`);
+        this.changeGenre = this.data;
+        break;
+      }
+      case CATEGORY_TYPES.CHANNELS: {
+        // console.log('Router CHANNEL:', this.data);
+        this.changeGenre = this.data;
+        Router.navigate(`live/:${this.id}?`);
         break;
       }
       default:
         console.warn('unknown category type:', this.type);
     }
-  }
+  };
 }
 
 export { Category };

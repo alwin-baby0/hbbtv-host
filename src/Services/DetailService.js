@@ -1,9 +1,7 @@
-import { Event, GalleryItem } from "../Models";
-import { parseDetailsData, parseSeasonData } from "../Models/parsers";
-import { VOD_PREVIEW_TYPES } from "../Pages/utils";
-import FetchingService from "./FetchingService";
-import { VodService } from "./VodSerivce";
-import { V2 } from "./utils";
+import { GalleryItem } from '../Models';
+import { parseDetailsData, parseSeasonData } from '../Models/parsers';
+import FetchingService from './FetchingService';
+import { V2 } from './utils';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) =>
@@ -33,30 +31,47 @@ class DetailService extends FetchingService {
       params: {
         series_id: seriesId,
       },
-    }).then(({ data }) => data?.entry?.map((tab) => tab.id));
+    })
+      .then(({ data }) => {
+        if (data && data.entry) {
+          return data.entry.map((tab) => tab.id);
+        }
+        // Handle case when data or data.entry is undefined
+        return [];
+      })
+      .catch((error) => {
+        // Handle the error appropriately
+        console.error('Error fetching season tabs:', error);
+        return [];
+      });
 
-    const seasonsPromises =
-      seasonTabs.map((id) =>
-        this._request({
-          url: '/getSeason',
-          apiVersion: V2,
-          method: 'GET',
-          params: {
-            season_id: id,
-          },
-        }))
+    const seasonsPromises = seasonTabs.map((id) =>
+      this._request({
+        url: '/getSeason',
+        apiVersion: V2,
+        method: 'GET',
+        params: {
+          season_id: id,
+        },
+      }).then(parseSeasonData)
+    );
 
-    const seasons = await Promise.allSettled(seasonsPromises);
-
-    return {
-      galleryItem,
-      seasons: seasons.map(({ value }) => parseSeasonData(value)),
+    try {
+      const seasons = await Promise.all(seasonsPromises);
+      return {
+        galleryItem,
+        seasons,
+      };
+    } catch (error) {
+      console.error('Error fetching seasons:', error);
+      // Handle or throw the error based on your application's error handling policy
+      throw error;
     }
-  }
+  };
 
   getSport = async (sportId) => {
     return await this.getSerie(sportId);
-  }
+  };
 
   getEvent = async (eventId) =>
     this._request({
@@ -66,7 +81,7 @@ class DetailService extends FetchingService {
       params: {
         id: eventId,
       },
-    }).then(({ data }) => new GalleryItem(data?.entry[0]))
+    }).then(({ data }) => new GalleryItem(data?.entry[0]));
 }
 
 const detailService = new DetailService();

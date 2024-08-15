@@ -18,6 +18,9 @@ import Settings from './Settings/Settings';
 import settings from './Settings/provider/settings';
 import HelpScreen from './Help/HelpScreen';
 import help from './Help/provider/help';
+import LiveTV from './LiveTV/LiveTV';
+import livetv from './LiveTV/providers/livetv';
+import onSearchPage from './Search/provider/onSearchPage';
 
 export default {
   root: 'splash',
@@ -52,6 +55,7 @@ export default {
       path: 'filterPage/:action/:genre_movies',
       component: Filtered,
       on: filtered,
+      widgets: ['Menu'],
       // cache: 30,
     },
     {
@@ -65,9 +69,16 @@ export default {
       on: singleLiveEvent,
     },
     {
+      path: 'live',
+      component: LiveTV,
+      widgets: ['Menu'],
+      on: livetv,
+    },
+    {
       path: 'search',
       component: Search,
       widgets: ['Menu'],
+      on: onSearchPage,
       // on: singleSeries,
     },
     {

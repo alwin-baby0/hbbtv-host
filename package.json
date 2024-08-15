@@ -30,6 +30,7 @@
     "axios": "^1.4.0",
     "hls.js": "^1.5.8",
     "qrcode": "^1.5.3",
+    "shaka-player": "^4.10.3",
     "srt-parser-2": "^1.2.3",
     "webvtt-parser": "^2.2.0"
   },

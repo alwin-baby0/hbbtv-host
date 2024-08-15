@@ -13,6 +13,7 @@ export default class VerticalContainer extends Lightning.Component {
   static _template() {
     return {
       Items: {
+        w: (w) => w,
         flex: {
           direction: 'column',
         },
@@ -29,7 +30,7 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   set _focusedIndex(val) {
-    return (this._focusedIndex = val);
+    this._focusedIndex = val;
   }
 
   /**
@@ -61,9 +62,47 @@ export default class VerticalContainer extends Lightning.Component {
     return this.Items?.children?.[this._focusedIndex];
   }
 
-  _handleDown() {
+  throttle(func, limit) {
+    let inThrottle;
+    return function () {
+      const args = arguments;
+      const context = this;
+      if (!inThrottle) {
+        func.apply(context, args);
+        inThrottle = true;
+        setTimeout(() => (inThrottle = false), limit);
+      }
+    };
+  }
+
+  handleDownEPG = this.throttle(() => {
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
+      this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
+      this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
+      this._focusedIndex += 1;
+      this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+    } else {
+      return false;
+    }
+    return true;
+  }, 50);
+
+  _handleDown() {
+    const { items } = this._props;
+    // console.log('ITEMS: ', this._props);
+    if (items && items[0].channelId) {
+      return this.handleDownEPG();
+    } else {
+      return this.handleDown();
+    }
+  }
+  handleDown() {
+    const { items } = this._props;
+    // TODO
+    // if (this._focusedIndex < items.length - 1) {
+    if (this._focusedIndex < this.Items.children.length - 1) {
+      // this.Items.children.length;
       this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
       this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
       this._focusedIndex += 1;
@@ -86,12 +125,28 @@ export default class VerticalContainer extends Lightning.Component {
     return true;
   }
 
+  // _appendItems(items) {
+  //   this._props.items.push(...items);
+  //   this.Items.childList.a(items);
+
+  //   this.stage.update();
+  // }
+
   _appendItems(items) {
     items?.forEach((item) => {
       this._props.items.push(item);
       this.Items.childList.a(item);
     });
 
+    this.stage.update();
+  }
+
+  _clear() {
+    this._props.items = [];
+    this.Items.childList.clear();
+    this._focusedIndex = 0;
+    this._scrollPosition = 0;
+    this.Items.y = 0;
     this.stage.update();
   }
 
@@ -117,7 +172,9 @@ export default class VerticalContainer extends Lightning.Component {
     } else {
       const multiplier = oldIndex > newIndex ? 1 : -1;
       this._scrollPosition += multiplier * prevFocus.finalH;
-      this.Items.patch({ y: this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition });
+      this.Items.patch({
+        y: Math.min(this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition, 0),
+      });
     }
   }
 
@@ -128,10 +185,16 @@ export default class VerticalContainer extends Lightning.Component {
    */
   _handleCarryFocus(oldIndex, newIndex) {
     if (this._props.carryRowPosition && this.Items.children.length > 1) {
-      const previousContainer = this.Items.children[oldIndex];
-      const previouslyFocusedItem = previousContainer.Items.children[previousContainer._focusedIndex];
       const nextContainer = this.Items.children[newIndex];
-      nextContainer._setFocusedIndex(getClosestElementIndex(nextContainer, previouslyFocusedItem));
+      if (nextContainer.Items) {
+        const previousContainer = this.Items.children[oldIndex];
+        const previouslyFocusedItem =
+          previousContainer.Items.children[previousContainer._focusedIndex];
+
+        nextContainer._setFocusedIndex(
+          getClosestElementIndex(nextContainer, previouslyFocusedItem)
+        );
+      }
     }
   }
 }
