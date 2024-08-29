@@ -7,7 +7,7 @@ import Image from '../Image/Image';
 export default class LandscapeRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
+    placeholderSrc: Utils.asset('images/landscape-rail-placeholder-empty.png'),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,

@@ -6,7 +6,7 @@ import Image from '../Image/Image';
 export default class PosterRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/rail-placeholder.png'),
+    placeholderSrc: Utils.asset('images/rail-placeholder-empty.png'),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,

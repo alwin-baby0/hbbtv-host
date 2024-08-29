@@ -102,7 +102,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) =>
 
 const constructSportsLiveRailItems = (railItems, railItemsOptions) =>
   railItems.map((railItem) => ({
-    w: 260,
+    w: 350,
     type: SportsEventsRailItem,
     flexItem: {
       marginLeft: 10,
