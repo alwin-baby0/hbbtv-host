@@ -31,16 +31,18 @@ export default class HelpScreen extends lng.Component {
         Description: {
           w: 1390,
           h: 760,
-          y: 105,
+          // y: 105,
+          // x: 290,
+          y: 85,
           x: 290,
           color: Colors(colors.white).get(),
-          QRCode: {
-            x: 30,
-            w: 160,
-            h: 160,
-          },
+          // QRCode: {
+          //   x: 30,
+          //   w: 160,
+          //   h: 160,
+          // },
           QRDesc: {
-            y: 220,
+            // y: 220,
             w: 250,
             h: 250,
             Wrapper: {
@@ -109,23 +111,23 @@ export default class HelpScreen extends lng.Component {
 
           this._setScrollWrapperContent(decodedText);
 
-          let isQrCodeExist = resolvedPage.data.entry[0].extensions.qr;
-          if (isQrCodeExist !== null) {
-            this.tag('QRCode').patch({
-              src: isQrCodeExist,
-              visible: true,
-            });
-            this.tag('QRDesc').patch({
-              y: 220,
-            });
-          } else {
-            this.tag('QRCode').patch({
-              visible: false,
-            });
-            this.tag('QRDesc').patch({
-              y: 0,
-            });
-          }
+          // let isQrCodeExist = resolvedPage.data.entry[0].extensions.qr;
+          // if (isQrCodeExist !== null) {
+          //   this.tag('QRCode').patch({
+          //     src: isQrCodeExist,
+          //     visible: true,
+          //   });
+          //   this.tag('QRDesc').patch({
+          //     y: 220,
+          //   });
+          // } else {
+          //   this.tag('QRCode').patch({
+          //     visible: false,
+          //   });
+          //   this.tag('QRDesc').patch({
+          //     y: 0,
+          //   });
+          // }
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -146,23 +148,23 @@ export default class HelpScreen extends lng.Component {
 
       this._setScrollWrapperContent(decodedText);
 
-      const isQrCodeExist = resolvedPage.data.entry[0].extensions.qr;
-      if (isQrCodeExist !== null) {
-        this.tag('QRCode').patch({
-          src: isQrCodeExist,
-          visible: true,
-        });
-        this.tag('QRDesc').patch({
-          y: 220,
-        });
-      } else {
-        this.tag('QRCode').patch({
-          visible: false,
-        });
-        this.tag('QRDesc').patch({
-          y: 0,
-        });
-      }
+      // const isQrCodeExist = resolvedPage.data.entry[0].extensions.qr;
+      // if (isQrCodeExist !== null) {
+      //   this.tag('QRCode').patch({
+      //     src: isQrCodeExist,
+      //     visible: true,
+      //   });
+      //   this.tag('QRDesc').patch({
+      //     y: 220,
+      //   });
+      // } else {
+      //   this.tag('QRCode').patch({
+      //     visible: false,
+      //   });
+      //   this.tag('QRDesc').patch({
+      //     y: 0,
+      //   });
+      // }
     } catch (error) {
       console.error('Error:', error);
     } finally {
