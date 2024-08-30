@@ -15,7 +15,7 @@ export default class Settings extends Lightning.Component {
         rect: true,
       },
       Wrapper: {
-        x: 100,
+        x: 435,
         y: 120,
         h: 300,
         w: 1720,

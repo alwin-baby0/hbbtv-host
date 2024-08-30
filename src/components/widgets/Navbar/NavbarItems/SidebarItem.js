@@ -80,7 +80,7 @@ export default class SidebarItem extends lng.Component {
     } else {
       this._Title.patch({
         text: {
-          text: label,
+          text: label.toUpperCase(),
         },
       });
     }
