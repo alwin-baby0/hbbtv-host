@@ -23,7 +23,6 @@ export default class SidebarItems extends Lightning.Component {
 
   static _template() {
     return {
-      flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
       NavWrapper: {
         w: 1840,
         h: 70,
@@ -39,7 +38,7 @@ export default class SidebarItems extends Lightning.Component {
         },
         Column: {
           type: Row,
-          x: 550,
+          x: 300,
           h: 70,
           style: { itemSpacing: 30 },
           items: menuItems.map((item) => {

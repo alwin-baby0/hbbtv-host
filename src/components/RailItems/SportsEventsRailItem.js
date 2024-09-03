@@ -7,7 +7,7 @@ import Image from '../Image/Image';
 export default class SportsEventsRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
+    placeholderSrc: Utils.asset('images/landscape-rail-placeholder-empty.png'),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,
@@ -50,7 +50,8 @@ export default class SportsEventsRailItem extends FocusableItem {
       Description: {
         x: 3,
         y: 170,
-        w: 255,
+        // w: 255,
+        w: 350,
         h: 165,
         flex: { direction: 'column' },
         Title: {
@@ -75,7 +76,7 @@ export default class SportsEventsRailItem extends FocusableItem {
             fontFace: 'Montserrat-Regular',
             fontSize: 11,
             lineHeight: 16,
-            wordWrapWidth: 220,
+            wordWrapWidth: 300,
             maxLines: 8,
           },
         },
@@ -143,7 +144,8 @@ export default class SportsEventsRailItem extends FocusableItem {
 
     this._EventImage.patch({
       props: {
-        width: 255,
+        // width: 255,
+        width: 350,
         height: 150,
         imageSrc: imageSrc,
         placeholderSrc: placeholderSrc,

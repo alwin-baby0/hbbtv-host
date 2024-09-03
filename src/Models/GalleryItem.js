@@ -1,6 +1,6 @@
 class GalleryItem {
   constructor(data) {
-    const { id, title, content, extensions, media_group, summary } = data;
+    const { id, title, content, extensions, media_group, summary, type } = data;
     this.id = id;
 
     this.title = title;
@@ -10,6 +10,7 @@ class GalleryItem {
 
     if (content) {
       this.url = content.src;
+      this.videoType = content.type;
     }
 
     if (extensions) {
@@ -22,6 +23,7 @@ class GalleryItem {
         subtitle,
         first_episode_mp4,
         cast,
+        venue,
       } = extensions;
 
       if (button_text && button_text !== '') {
@@ -52,6 +54,7 @@ class GalleryItem {
       this.director = director;
       this.subtitle = subtitle;
       this.cast = cast;
+      this.venue = venue;
     }
 
     this.thumbnails = [];

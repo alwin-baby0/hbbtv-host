@@ -22,7 +22,7 @@ export default class SidebarItem extends lng.Component {
         },
       },
       Icon: {
-        x: 200,
+        x: 450,
         y: 10,
         zIndex: 0,
         color: Colors(colors.unfocus).get(),
@@ -80,7 +80,7 @@ export default class SidebarItem extends lng.Component {
     } else {
       this._Title.patch({
         text: {
-          text: label,
+          text: label.toUpperCase(),
         },
       });
     }

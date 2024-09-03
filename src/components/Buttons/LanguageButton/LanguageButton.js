@@ -9,8 +9,8 @@ export default class LanguageButton extends Lightning.Component {
     return {
       Column: {
         flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
-        w: 1720,
-        h: 100,
+        w: 1045,
+        h: 85,
         rect: true,
         Text: {},
       },

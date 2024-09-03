@@ -127,9 +127,15 @@ export default class Player extends lng.Component {
 
   set props(props) {
     const { controlsItems: items, liveItems } = props;
-    const itemComponents = this._params.videoType === 'Stream now' ? liveItems : items;
+    const itemComponents =
+      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
+        ? liveItems
+        : items;
 
-    this._props.pausedItemId = this._params.videoType === 'Stream now' ? 1 : 1;
+    this._props.pausedItemId =
+      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
+        ? 1
+        : 1;
 
     const formattedItems = itemComponents.map((data) => ({
       type: PlayerButtons,
@@ -138,7 +144,10 @@ export default class Player extends lng.Component {
       },
     }));
 
-    if (this._params.videoType === 'Stream now') {
+    if (
+      this._params.videoType === 'Stream now' ||
+      this._params.videoType === 'application/x-mpegURL'
+    ) {
       this.tag('ProgressBarWrapper').patch({
         x: 180,
       });
@@ -148,11 +157,27 @@ export default class Player extends lng.Component {
       });
     }
     this.tag('ProgressBar').patch({
-      w: this._params.videoType === 'Stream now' ? 1550 : 1400,
-      x: this._params.videoType === 'Stream now' ? 0 : 0,
+      w:
+        this._params.videoType === 'Stream now' ||
+        this._params.videoType === 'application/x-mpegURL'
+          ? 1550
+          : 1400,
+      x:
+        this._params.videoType === 'Stream now' ||
+        this._params.videoType === 'application/x-mpegURL'
+          ? 0
+          : 0,
       flexItem: {
-        marginLeft: this._params.videoType === 'Stream now' ? 0 : 20,
-        marginRight: this._params.videoType === 'Stream now' ? 0 : 20,
+        marginLeft:
+          this._params.videoType === 'Stream now' ||
+          this._params.videoType === 'application/x-mpegURL'
+            ? 0
+            : 20,
+        marginRight:
+          this._params.videoType === 'Stream now' ||
+          this._params.videoType === 'application/x-mpegURL'
+            ? 0
+            : 20,
       },
     });
 
@@ -168,7 +193,10 @@ export default class Player extends lng.Component {
       flex: { direction: 'row', alignItems: 'center', justifyContent: 'space-between' },
     });
 
-    if (this._params.videoType === 'Stream now') {
+    if (
+      this._params.videoType === 'Stream now' ||
+      this._params.videoType === 'application/x-mpegURL'
+    ) {
       this._Controls.tag('Items').patch({
         w: 1690,
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'space-between' },
@@ -179,7 +207,10 @@ export default class Player extends lng.Component {
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
       });
     }
-    if (this._params.videoType === 'Stream now') {
+    if (
+      this._params.videoType === 'Stream now' ||
+      this._params.videoType === 'application/x-mpegURL'
+    ) {
       this.tag('Wrapper').patch({
         Back: undefined,
       });
@@ -243,7 +274,10 @@ export default class Player extends lng.Component {
 
   async _active() {
     lastIndex = 0;
-    if (this._params.videoType === 'Stream now') {
+    if (
+      this._params.videoType === 'Stream now' ||
+      this._params.videoType === 'application/x-mpegURL'
+    ) {
       this.tag('CurrentTime').patch({ text: { text: '' } });
     }
 
@@ -264,13 +298,18 @@ export default class Player extends lng.Component {
     const durationInSeconds = parseFloat(this._params.duration);
     const formattedDuration = this._formatDuration(durationInSeconds);
     this.tag('EndTime.Text').text =
-      this._params.videoType === 'Stream now' ? '' : formattedDuration;
+      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
+        ? ''
+        : formattedDuration;
 
     this._duration = durationInSeconds;
     this.fireAncestors('$punchHole');
     VideoPlayer.open(this._params.videoUrl);
 
-    if (this._params.videoType !== 'Stream now') {
+    if (
+      this._params.videoType !== 'Stream now' ||
+      this._params.videoType !== 'application/x-mpegURL'
+    ) {
       this._progressInterval = setInterval(this._updateProgressBar.bind(this), 500);
     }
     this._setState('Controls');
@@ -471,7 +510,9 @@ export default class Player extends lng.Component {
     const progress = currentTime / VideoPlayer.duration;
     this.tag('ProgressBar').progress = progress;
     const formattedTime =
-      this._params.videoType === 'Stream now' ? 'Live' : this._formatTime(currentTime);
+      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
+        ? 'Live'
+        : this._formatTime(currentTime);
     this.tag('CurrentTime.Text').text = formattedTime;
   }
 
@@ -523,11 +564,17 @@ export default class Player extends lng.Component {
     const formattedDuration = this._formatDuration(durationInSeconds);
     const progressBarStyle = {
       progressColor: Colors(colors.focus).get(),
-      barColor: this._params.videoType === 'Stream now' ? Colors(colors.focus).get() : undefined,
+      barColor:
+        this._params.videoType === 'Stream now' ||
+        this._params.videoType === 'application/x-mpegURL'
+          ? Colors(colors.focus).get()
+          : undefined,
     };
     this.tag('ProgressBar').patch({ style: progressBarStyle });
     this.tag('EndTime.Text').text =
-      this._params.videoType === 'Stream now' ? '' : formattedDuration;
+      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
+        ? ''
+        : formattedDuration;
     this._duration = durationInSeconds;
   }
 
@@ -593,7 +640,10 @@ export default class Player extends lng.Component {
           return this._Controls;
         }
         _handleLeft() {
-          if (this._params.videoType === 'Stream now') {
+          if (
+            this._params.videoType === 'Stream now' ||
+            this._params.videoType === 'application/x-mpegURL'
+          ) {
             return;
           } else {
             this._setState('Back');

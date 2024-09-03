@@ -22,6 +22,15 @@ export default class GalleryItem extends Lightning.Component {
         w: 700,
         h: 460,
         flex: { direction: 'column' },
+        Date: {
+          w: 698,
+          h: 30,
+          text: {
+            fontSize: 18,
+            fontFace: 'Montserrat-Regular',
+            textColor: Colors('#A61619').get(),
+          },
+        },
         Title: {
           w: 440,
           h: 40,
@@ -54,6 +63,16 @@ export default class GalleryItem extends Lightning.Component {
             maxLines: 8,
           },
         },
+        Venue: {
+          w: 698,
+          h: 31,
+          text: {
+            wordWrapWidth: 650,
+            family: 'Montserrat-Regular',
+            color: Colors('#BDBDBD').get(),
+            fontSize: 18,
+          },
+        },
         GalleryButton: {
           type: Button,
           flexItem: {
@@ -71,13 +90,46 @@ export default class GalleryItem extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     const { galleryItem, height } = this._props;
-    const { title, summary, description, buttonLabel, url, duration } = galleryItem;
+    const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
+      galleryItem;
+
+    if (videoType !== 'application/x-mpegURL') {
+      this._Info.patch({
+        Date: undefined,
+        Venue: undefined,
+      });
+      galleryItem.summary &&
+        this._Summary.patch({
+          text: {
+            text: summary,
+          },
+        });
+    } else {
+      this._Info.patch({
+        Summary: undefined,
+      });
+      this.tag('Info.Date').patch({
+        text: {
+          text: summary,
+        },
+      });
+      this.tag('Info.Venue').patch({
+        text: {
+          text: venue,
+        },
+      });
+    }
 
     this._BackgroundImage.patch({
       w: 1220,
       h: height,
       x: 700,
-      src: galleryItem.getLandscapePoster(imageSizes.XL)?.src,
+      // src: galleryItem.getLandscapePoster(imageSizes.XL)?.src,
+      src:
+        galleryItem.getLandscapePoster(imageSizes.XL)?.src !== null
+          ? galleryItem.getLandscapePoster(imageSizes.XL)?.src
+          : // : Utils.asset('images/gradient.png'),
+            Utils.asset('images/gradient.png'),
     });
 
     this._GradientOverlay.patch({
@@ -89,13 +141,6 @@ export default class GalleryItem extends Lightning.Component {
         text: title,
       },
     });
-
-    galleryItem.summary &&
-      this._Summary.patch({
-        text: {
-          text: summary,
-        },
-      });
 
     this._Description.patch({
       text: {
@@ -110,7 +155,8 @@ export default class GalleryItem extends Lightning.Component {
           Router.navigate('player', {
             videoUrl: url,
             duration: duration,
-            videoType: buttonLabel,
+            // videoType: buttonLabel,
+            videoType: videoType,
           });
         },
       },
