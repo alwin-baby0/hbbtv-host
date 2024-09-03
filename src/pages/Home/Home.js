@@ -12,11 +12,7 @@ export default class Home extends Lightning.Component {
   };
   static _template() {
     return {
-      Background: {
-        w: 1920,
-        h: 1080,
-        src: Utils.asset('images/background.jpg'),
-      },
+      Background: {},
       HeroSection: {
         x: 0,
         y: 0,

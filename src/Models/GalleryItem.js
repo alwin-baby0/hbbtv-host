@@ -2,11 +2,14 @@ class GalleryItem {
   constructor(data) {
     const { id, title, content, extensions, media_group, summary, type } = data;
     this.id = id;
-
+    console.log('ITEMMM', data);
     this.title = title;
     this.summary = summary;
     this.trailerSrc = ''; // this is not returned by backend
     this.buttonLabel = 'WATCH NOW';
+
+    this.type = type;
+    this.trailerUrl = extensions.preview_playback;
 
     if (content) {
       this.url = content.src;

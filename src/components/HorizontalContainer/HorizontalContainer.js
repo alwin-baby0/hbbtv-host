@@ -1,3 +1,4 @@
+// HorizontalContainer.js
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
 
@@ -12,7 +13,6 @@ export default class HorizontalContainer extends Lightning.Component {
   static _template() {
     return {
       flex: { direction: 'column', wrap: true },
-      Title: {},
       Title: {},
       Items: {
         y: 0,
@@ -33,6 +33,10 @@ export default class HorizontalContainer extends Lightning.Component {
 
   get _focusedIndex() {
     return this._focusedIndex;
+  }
+
+  set _focusedIndex(val) {
+    this._focusedIndex = val;
   }
 
   _appendItems(items) {

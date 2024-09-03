@@ -1,8 +1,12 @@
-import { Lightning, Colors } from '@lightningjs/sdk';
+import { Lightning, Colors, VideoPlayer } from '@lightningjs/sdk';
 import { Row } from '@lightningjs/ui-components';
 import colors from '../../../reskin/colors.json';
 import GalleryItem from '../GalleryItem/GalleryItem';
 import Bullet from '../Bullet/Bullet';
+import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
+import { imageSizes } from '../../Models/utils';
+import { railItemConstructor } from '../../pages/utils/railItems';
+import { loader, unloader } from '../Player/HLS';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
@@ -20,34 +24,45 @@ export default class Gallery extends Lightning.Component {
         type: GalleryItem,
       },
       Bullets: {
-        type: Row,
-        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-        y: 820,
-        w: 1920,
-        h: 20,
+        type: HorizontalContainer,
+        y: 820 - 115,
+        x: 110,
+        w: 1760,
+        h: 215,
+        props: {
+          w: 1760,
+          h: 215,
+        },
       },
     };
   }
 
   set props(props) {
     this._sliderIndex = 0;
+    this._Bullets._focusedIndex = 0;
     this._props = { ...this._props, ...props };
     const { sliderData } = this._props;
 
-    const bulletItem = sliderData.items.map((_item, index) => {
-      return {
-        type: Bullet,
-        w: 20,
-        h: 20,
-        index,
-      };
-    });
+    const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
 
     this._Bullets.patch({
-      items: bulletItem,
+      props: {
+        items: parsedItems,
+      },
     });
 
-    this._nextVideo();
+    // const bulletItem = sliderData.items.map((_item, index) => {
+    //   return {
+    //     type: Bullet,
+    //     w: 20,
+    //     h: 20,
+    //     index,
+    //   };
+    // });
+
+    // this.$nextVideo();
+
+    // this._nextVideo();
   }
 
   get _HeroSection() {
@@ -58,49 +73,54 @@ export default class Gallery extends Lightning.Component {
     return this.tag('Bullets');
   }
 
-  _nextVideo() {
+  _enable() {
+    // Postavljamo VideoPlayer
+    // VideoPlayer.position(-15, 700);
+    VideoPlayer.position(0, 700);
+    VideoPlayer.size(1220, 700);
+    VideoPlayer.consumer(this);
+    VideoPlayer.loader(loader);
+    VideoPlayer.unloader(unloader);
+  }
+
+  _disable() {
+    VideoPlayer.loader(null);
+    VideoPlayer.unloader(null);
+    VideoPlayer.clear();
+  }
+
+  $playTrailer(trailer) {
+    this._HeroSection._BackgroundImage.visible = false;
+    VideoPlayer.loop(true);
+    console.log('trailer.', trailer);
+    VideoPlayer.open(trailer.trailer);
+    VideoPlayer.play();
+  }
+
+  $stopVideo() {
+    VideoPlayer.clear();
+  }
+
+  $nextVideo() {
     const { sliderData } = this._props;
-
-    this._Bullets.items.forEach((item, index) => {
-      const color =
-        index === this._sliderIndex
-          ? Colors(colors.focusedBullet).get()
-          : Colors(colors.unfocusedBullet).get();
-      item._Icon.patch({
-        color: color,
-      });
-    });
-
     this._HeroSection.patch({
       props: {
-        galleryItem: sliderData.items[this._sliderIndex],
-        height: 800,
+        galleryItem: sliderData.items[this._Bullets._focusedIndex],
+        height: 815,
         yPos: 215,
       },
     });
-  }
 
-  _handleLeft() {
-    const { sliderData } = this._props;
-
-    if (sliderData.items.length > 1) {
-      this._sliderIndex =
-        this._sliderIndex > 0 ? this._sliderIndex - 1 : sliderData.items.length - 1;
-      this._nextVideo();
-    }
-  }
-
-  _handleRight() {
-    const { sliderData } = this._props;
-
-    if (sliderData.items.length > 1) {
-      this._sliderIndex =
-        this._sliderIndex < sliderData.items.length - 1 ? this._sliderIndex + 1 : 0;
-      this._nextVideo();
-    }
+    this._HeroSection._BackgroundImage.patch({
+      visible: true,
+      w: 1220,
+      h: 815 - 115,
+      x: 700,
+      src: sliderData.items[this._Bullets._focusedIndex].getLandscapePoster(imageSizes.XL)?.src,
+    });
   }
 
   _getFocused() {
-    return this._HeroSection;
+    return this._Bullets;
   }
 }

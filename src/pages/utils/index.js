@@ -19,6 +19,7 @@ export const RAIL_TYPES = {
   CATEGORY: 'category',
   LIVETV: 'live',
   EPGS: 'epg-channel-programs',
+  HERO: 'HeroRails',
 };
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,

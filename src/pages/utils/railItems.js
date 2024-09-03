@@ -7,6 +7,8 @@ import PosterRailItem from '../../Components/RailItems/PosterRailItem';
 import SportsEventsRailItem from '../../Components/RailItems/SportsEventsRailItem';
 import CategoryPickerItem from '../../Components/CategoryPickerItem/CategoryPickerItem';
 import EPGRailItems from '../../components/RailItems/EPGRailItems';
+import HeroRailItem from '../../components/RailItems/HeroRailItems';
+import { CATEGORY_TYPES } from '../../Models/Category';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -25,6 +27,8 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
       return constructCategoryItems(railItems, railItemsOptions);
     case RAIL_TYPES.EPGS:
       return constructEPGS(railItems, railItemsOptions);
+    case RAIL_TYPES.HERO:
+      return constructHeroRailItems(railItems, railItemsOptions);
     default: {
       console.warn('unknown rail type:', railType, ', defaulting to simple rail items');
       return constructSimpleRailItems(railItems, railItemsOptions);
@@ -75,6 +79,51 @@ const constructEPGS = (railItems, railItemsOptions) => {
   );
 
   return items;
+};
+
+const constructHeroRailItems = (railItems, railItemsOptions) => {
+  return railItems.map((railItem, index) => {
+    console.log('GGG', railItem);
+    return {
+      type: HeroRailItem,
+      flexItem: {
+        marginLeft: 15,
+        marginRight: 15,
+      },
+      ...railItemsOptions,
+      props: {
+        index,
+        imageSrc: railItem.getLandscapePoster(imageSizes.L).src,
+        callback: () => {
+          switch (railItem.type.value) {
+            case CATEGORY_TYPES.MOVIE: {
+              Router.navigate(`movie-details/${railItem.id}`);
+              break;
+            }
+            case 'serie': {
+              Router.navigate(`series-details/${railItem.id}`);
+              break;
+            }
+            case CATEGORY_TYPES.EVENTS: {
+              Router.navigate(`event-details/${railItem.id}`);
+              break;
+            }
+            case CATEGORY_TYPES.VIDEO: {
+              Router.navigate('player', {
+                videoUrl: railItem.url,
+                duration: railItem.duration,
+              });
+              break;
+            }
+            default:
+              console.warn('unknown category type:', railItem.type);
+          }
+        },
+        // url: railItem.preview_playback,
+        url: railItem.trailerUrl,
+      },
+    };
+  });
 };
 
 const constructEpisodeRailItems = (railItems, railItemsOptions) =>
