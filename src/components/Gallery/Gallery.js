@@ -43,6 +43,14 @@ export default class Gallery extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const { sliderData } = this._props;
 
+    this._HeroSection.tag('Info').patch({
+      GalleryButton: undefined,
+    });
+
+    this._HeroSection.tag('Info').patch({
+      Summary: undefined,
+    });
+
     const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
 
     this._Bullets.patch({
@@ -76,8 +84,8 @@ export default class Gallery extends Lightning.Component {
   _enable() {
     // Postavljamo VideoPlayer
     // VideoPlayer.position(-15, 700);
-    VideoPlayer.position(0, 700);
-    VideoPlayer.size(1220, 700);
+    VideoPlayer.position(-3, 700);
+    VideoPlayer.size(1220, 690);
     VideoPlayer.consumer(this);
     VideoPlayer.loader(loader);
     VideoPlayer.unloader(unloader);
@@ -89,10 +97,17 @@ export default class Gallery extends Lightning.Component {
     VideoPlayer.clear();
   }
 
+  _unfocus() {
+    this._HeroSection._BackgroundImage.visible = true;
+    VideoPlayer.loader(null);
+    VideoPlayer.unloader(null);
+    VideoPlayer.clear();
+  }
+
   $playTrailer(trailer) {
     this._HeroSection._BackgroundImage.visible = false;
     VideoPlayer.loop(true);
-    console.log('trailer.', trailer);
+
     VideoPlayer.open(trailer.trailer);
     VideoPlayer.play();
   }
@@ -106,7 +121,8 @@ export default class Gallery extends Lightning.Component {
     this._HeroSection.patch({
       props: {
         galleryItem: sliderData.items[this._Bullets._focusedIndex],
-        height: 815,
+        // height: 815,
+        height: 690,
         yPos: 215,
       },
     });
@@ -114,7 +130,8 @@ export default class Gallery extends Lightning.Component {
     this._HeroSection._BackgroundImage.patch({
       visible: true,
       w: 1220,
-      h: 815 - 115,
+      // h: 815 - 115,
+      h: 690,
       x: 700,
       src: sliderData.items[this._Bullets._focusedIndex].getLandscapePoster(imageSizes.XL)?.src,
     });

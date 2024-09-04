@@ -22,7 +22,8 @@ export default class Home extends Lightning.Component {
       },
       Wrapper: {
         x: 80,
-        y: 850,
+        // y: 850,
+        y: 980,
         h: 1080,
         w: 1700,
         Column: {
@@ -96,6 +97,10 @@ export default class Home extends Lightning.Component {
 
         $enter() {
           this.fireAncestors('$setNavbarVisibility', true);
+
+          this._Wrapper.patch({
+            y: 980,
+          });
         }
 
         _handleUp() {
@@ -105,16 +110,35 @@ export default class Home extends Lightning.Component {
         _handleDown() {
           this._setState('Items');
         }
+
+        async $horizontalContainerIndexChange(index) {
+          if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
+            const newRails = await HomePageService.fetchMoreItemsForHeroSection();
+            if (newRails && newRails?.items?.length > 0) {
+              const parsedItems = railItemConstructor(newRails.items, 'HeroRails', {});
+              this._HeroSection._Bullets._appendItems(parsedItems);
+            }
+            console.log('newRails:', newRails);
+          }
+          // if (currentItem.Items.children.length - 1 === index) {
+          //   const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
+          //   if (newRails && newRails?.items?.length > 0) {
+          //     const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
+          //     currentItem._appendItems(parsedItems);
+          //   }
+          // }
+        }
       },
 
       class Items extends this {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
           this._HeroSection?.patch({
-            y: -305,
+            // y: -305,
+            y: -980,
           });
           this._Wrapper.patch({
-            y: 500,
+            y: 0,
           });
         }
 
@@ -158,10 +182,12 @@ export default class Home extends Lightning.Component {
           } else {
             this._HeroSection?.patch({
               visible: true,
-              y: -305,
+              // y: -305,
+              y: 980,
             });
             this._Wrapper.patch({
-              y: 500,
+              // y: 500,
+              y: 0,
             });
           }
 

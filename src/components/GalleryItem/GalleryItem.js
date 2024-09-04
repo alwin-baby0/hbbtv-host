@@ -99,7 +99,7 @@ export default class GalleryItem extends Lightning.Component {
         Venue: undefined,
       });
       galleryItem.summary &&
-        this._Summary.patch({
+        this._Summary?.patch({
           text: {
             text: summary,
           },
@@ -148,19 +148,20 @@ export default class GalleryItem extends Lightning.Component {
       },
     });
 
-    this._GalleryButton.patch({
-      props: {
-        buttonLabel: buttonLabel,
-        callback: () => {
-          Router.navigate('player', {
-            videoUrl: url,
-            duration: duration,
-            // videoType: buttonLabel,
-            videoType: videoType,
-          });
+    this._GalleryButton &&
+      this._GalleryButton.patch({
+        props: {
+          buttonLabel: buttonLabel,
+          callback: () => {
+            Router.navigate('player', {
+              videoUrl: url,
+              duration: duration,
+              // videoType: buttonLabel,
+              videoType: videoType,
+            });
+          },
         },
-      },
-    });
+      });
   }
 
   get _GradientOverlay() {

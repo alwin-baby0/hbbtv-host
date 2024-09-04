@@ -83,7 +83,6 @@ const constructEPGS = (railItems, railItemsOptions) => {
 
 const constructHeroRailItems = (railItems, railItemsOptions) => {
   return railItems.map((railItem, index) => {
-    console.log('GGG', railItem);
     return {
       type: HeroRailItem,
       flexItem: {

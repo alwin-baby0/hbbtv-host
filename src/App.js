@@ -125,14 +125,14 @@ export default class App extends Router.App {
       h,
     };
   } */
-  $punchHoleTV(x, y, w, h) {
+  $punchHoleTV(x, y, w, h, radius) {
     if (!x) {
       y = 106;
       x = 1071;
       w = 736;
       h = 412;
+      radius = 20;
     }
-    const radius = 20; // Set your desired radius here
     this.tag('Background').shader = {
       type: Lightning.shaders.Hole,
       x: x,

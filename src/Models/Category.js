@@ -8,6 +8,7 @@ export const CATEGORY_TYPES = {
   LIVE_TV: 'live',
   CHANNELS: 'channel',
   SERIE: 'genres_series',
+  VIDEO: 'video',
 };
 
 class Category {
