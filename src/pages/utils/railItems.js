@@ -9,6 +9,7 @@ import CategoryPickerItem from '../../Components/CategoryPickerItem/CategoryPick
 import EPGRailItems from '../../components/RailItems/EPGRailItems';
 import HeroRailItem from '../../components/RailItems/HeroRailItems';
 import { CATEGORY_TYPES } from '../../Models/Category';
+import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -29,6 +30,8 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
       return constructEPGS(railItems, railItemsOptions);
     case RAIL_TYPES.HERO:
       return constructHeroRailItems(railItems, railItemsOptions);
+    case RAIL_TYPES.COLLECTION:
+      return constructLandscapeRailItems(railItems, railItemsOptions);
     default: {
       console.warn('unknown rail type:', railType, ', defaulting to simple rail items');
       return constructSimpleRailItems(railItems, railItemsOptions);
@@ -50,6 +53,29 @@ const constructSimpleRailItems = (railItems, railItemsOptions) => {
     props: {
       itemTitle: railItem.title ? railItem.title : '',
       imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
+      itemType: railItem.type,
+      callback: () => {
+        Router.navigate(railItem.url);
+      },
+    },
+  }));
+};
+
+const constructLandscapeRailItems = (railItems, railItemsOptions) => {
+  return railItems.map((railItem) => ({
+    type: CollectionRailItem,
+    w: 420,
+    flexItem: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    ...railItemsOptions,
+    props: {
+      itemTitle: railItem.title ? railItem.title : '',
+      // imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
+      imageSrc: railItem.getLandscapePoster(imageSizes.M).src,
       itemType: railItem.type,
       callback: () => {
         Router.navigate(railItem.url);
@@ -112,6 +138,10 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
                 videoUrl: railItem.url,
                 duration: railItem.duration,
               });
+              break;
+            }
+            case CATEGORY_TYPES.COLLECTION: {
+              Router.navigate(`collection-details/${railItem.id}`);
               break;
             }
             default:

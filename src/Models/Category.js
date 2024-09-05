@@ -9,6 +9,7 @@ export const CATEGORY_TYPES = {
   CHANNELS: 'channel',
   SERIE: 'genres_series',
   VIDEO: 'video',
+  COLLECTION: 'collection',
 };
 
 class Category {

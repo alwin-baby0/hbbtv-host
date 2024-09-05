@@ -21,6 +21,8 @@ import help from './Help/provider/help';
 import LiveTV from './LiveTV/LiveTV';
 import livetv from './LiveTV/providers/livetv';
 import onSearchPage from './Search/provider/onSearchPage';
+import Collection from './Collection/Collection';
+import collection from './Collection/provider/collection';
 
 export default {
   root: 'splash',
@@ -97,6 +99,11 @@ export default {
       path: 'player',
       component: Player,
       on: player,
+    },
+    {
+      path: 'collection-details/:collectionId',
+      component: Collection,
+      on: collection,
     },
     /* {
       path: '*',

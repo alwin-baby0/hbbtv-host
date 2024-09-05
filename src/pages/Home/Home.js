@@ -63,6 +63,7 @@ export default class Home extends Lightning.Component {
     const { sliderData, railData } = this._props;
 
     const rails = constructRails(railData);
+    console.log('HOME RAILD', rails);
     this._Column.props = { items: rails };
 
     if (sliderData) {

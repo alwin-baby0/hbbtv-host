@@ -20,6 +20,7 @@ export const RAIL_TYPES = {
   LIVETV: 'live',
   EPGS: 'epg-channel-programs',
   HERO: 'HeroRails',
+  COLLECTION: 'Collection',
 };
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,
@@ -32,6 +33,7 @@ const RAIL_WIDTHS = {
   [RAIL_TYPES.LIVETV]: 100,
   [RAIL_TYPES.EPGS]: 1615,
   [RAIL_TYPES.SEARCH]: 1760,
+  [RAIL_TYPES.COLLECTION]: 1760,
 };
 
 export const constructRails = (rails) => {
@@ -96,6 +98,7 @@ export const cronstructSingleLineRail = (rail) => {
       console.error('items[0].startTime is undefined or null');
     }
   }
+  console.log('CARD_SIZES[cardType]', CARD_SIZES[cardType]);
   return {
     type: HorizontalContainer,
     ...rest,
