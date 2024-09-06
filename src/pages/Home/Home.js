@@ -22,7 +22,6 @@ export default class Home extends Lightning.Component {
       },
       Wrapper: {
         x: 80,
-        // y: 850,
         y: 980,
         h: 1080,
         w: 1700,
@@ -63,7 +62,6 @@ export default class Home extends Lightning.Component {
     const { sliderData, railData } = this._props;
 
     const rails = constructRails(railData);
-    console.log('HOME RAILD', rails);
     this._Column.props = { items: rails };
 
     if (sliderData) {
@@ -119,15 +117,7 @@ export default class Home extends Lightning.Component {
               const parsedItems = railItemConstructor(newRails.items, 'HeroRails', {});
               this._HeroSection._Bullets._appendItems(parsedItems);
             }
-            console.log('newRails:', newRails);
           }
-          // if (currentItem.Items.children.length - 1 === index) {
-          //   const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
-          //   if (newRails && newRails?.items?.length > 0) {
-          //     const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
-          //     currentItem._appendItems(parsedItems);
-          //   }
-          // }
         }
       },
 
@@ -135,7 +125,6 @@ export default class Home extends Lightning.Component {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
           this._HeroSection?.patch({
-            // y: -305,
             y: -980,
           });
           this._Wrapper.patch({
@@ -183,11 +172,9 @@ export default class Home extends Lightning.Component {
           } else {
             this._HeroSection?.patch({
               visible: true,
-              // y: -305,
               y: 980,
             });
             this._Wrapper.patch({
-              // y: 500,
               y: 0,
             });
           }

@@ -98,7 +98,6 @@ export const cronstructSingleLineRail = (rail) => {
       console.error('items[0].startTime is undefined or null');
     }
   }
-  console.log('CARD_SIZES[cardType]', CARD_SIZES[cardType]);
   return {
     type: HorizontalContainer,
     ...rest,
