@@ -23,6 +23,9 @@ import livetv from './LiveTV/providers/livetv';
 import onSearchPage from './Search/provider/onSearchPage';
 import Collection from './Collection/Collection';
 import collection from './Collection/provider/collection';
+import CMP from './CMP/CMP';
+import cmp from './CMP/provider/cmp';
+import CMPCustomize from './CMP/components/Customize';
 
 export default {
   root: 'splash',
@@ -104,6 +107,16 @@ export default {
       path: 'collection-details/:collectionId',
       component: Collection,
       on: collection,
+    },
+    {
+      path: 'cmp',
+      component: CMP,
+      on: cmp,
+    },
+    {
+      path: 'cmp-customize',
+      component: CMPCustomize,
+      // on: cmp,
     },
     /* {
       path: '*',

@@ -1,0 +1,51 @@
+import { Lightning } from '@lightningjs/sdk';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+
+export default class CMP extends Lightning.Component {
+  static _template() {
+    return {
+      Wrapper: {
+        w: 1920,
+        y: 225,
+        flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
+        Title: {
+          w: 450,
+          h: 50,
+          text: {
+            text: 'We value you privacy',
+            fontSize: 40,
+            fontFace: 'Montserrat-Bold',
+            lineHeight: 50,
+            textAlign: 'center',
+          },
+        },
+        Description: {
+          w: 1000,
+          h: 100,
+          y: 30,
+          text: {
+            text: 'We use cookies to enhance browsing experience. By clicking “Yes” you consent to our use of cookies. You can customize your consent preferences by clicking “Customize”',
+            fontSize: 24,
+            fontFace: 'Montserrat-Regular',
+            lineHeight: 30,
+            textAlign: 'center',
+          },
+        },
+        Buttons: {
+          w: 1050,
+          h: 400,
+          y: 100,
+          type: VerticalContainer,
+        },
+      },
+    };
+  }
+
+  get _Buttons() {
+    return this.tag('Buttons');
+  }
+
+  _getFocused() {
+    return this._Buttons;
+  }
+}
