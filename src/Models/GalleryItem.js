@@ -8,6 +8,9 @@ class GalleryItem {
     this.trailerSrc = ''; // this is not returned by backend
     this.buttonLabel = 'WATCH NOW';
 
+    this.type = type;
+    this.trailerUrl = extensions.preview_playback;
+
     if (content) {
       this.url = content.src;
       this.videoType = content.type;

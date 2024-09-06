@@ -27,4 +27,16 @@ export const CARD_SIZES = {
   EPG_CARD_ITEM: {
     height: 105,
   },
+  HERO: {
+    width: 385,
+    height: 215,
+    image_width: 385,
+    image_height: 215,
+  },
+  COLLECTION: {
+    width: 415,
+    height: 285,
+    image_width: 415,
+    image_height: 230,
+  },
 };

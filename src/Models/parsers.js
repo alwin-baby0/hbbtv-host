@@ -124,3 +124,18 @@ export const parseSeasonData = ({ data }) => {
     itemsPerRow: 5,
   };
 };
+
+// Collectin Page
+export const parseCollectionData = ({ data }) => {
+  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  if (!railItems || railItems.length === 0) return;
+
+  return {
+    // railType: railItems[0].type,
+    railType: RAIL_TYPES.COLLECTION,
+    railTitle: data.title,
+    cardType: 'COLLECTION',
+    items: railItems,
+    itemsPerRow: 4,
+  };
+};

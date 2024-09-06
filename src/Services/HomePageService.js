@@ -10,6 +10,8 @@ class HomePageService extends FetchingService {
   #pointer = 2;
   stripesFetched = 0;
   #currentRailLimit = 7; // Početni limit je 6
+  #heroSectionPage = 1; // Page counter for Hero Section
+  #isLastFetchEmpty = false; // Initialize to false
 
   /**
    * Fetches initial stripes for Home page
@@ -92,6 +94,42 @@ class HomePageService extends FetchingService {
     }
   }
 
+  // async fetchMoreItemsForHeroSection() {
+  //   if (this.#heroSectionItems) {
+  //     const nextPage = this.#heroSectionPage + 1;
+  //     const heroSectionData = await this.#getHomePageHeroSection(nextPage);
+
+  //     if (heroSectionData?.items.length > 0) {
+  //       this.#heroSectionPage = nextPage;
+  //       this.#heroSectionItems.items.push(...heroSectionData.items);
+  //       return heroSectionData;
+  //     }
+  //   }
+  //   return [];
+  // }
+
+  async fetchMoreItemsForHeroSection() {
+    // Add a check for the previous fetch result
+    if (this.#heroSectionItems && !this.#isLastFetchEmpty) {
+      const nextPage = this.#heroSectionPage + 1;
+      const heroSectionData = await this.#getHomePageHeroSection(nextPage);
+
+      // Check if heroSectionData is null, undefined, or has no items
+      if (!heroSectionData || !heroSectionData.items || heroSectionData.items.length === 0) {
+        this.#isLastFetchEmpty = true; // Mark the fetch as empty
+        return []; // Return an empty array if no data or no items
+      }
+
+      // If data is valid and items exist, update page, items, and reset empty fetch flag
+      this.#heroSectionPage = nextPage;
+      this.#heroSectionItems.items.push(...heroSectionData.items);
+      this.#isLastFetchEmpty = false; // Reset the flag as fetch was successful
+      return heroSectionData;
+    }
+
+    return [];
+  }
+
   /**
    * Resets data for home page service
    */
@@ -124,14 +162,14 @@ class HomePageService extends FetchingService {
     return this.#pointer < 25;
   }
 
-  #getHomePageHeroSection = async () =>
+  #getHomePageHeroSection = async (page = 1) =>
     this._request({
       url: '/start',
       apiVersion: V2,
       method: 'GET',
       params: {
         row: 1,
-        page: 1,
+        page: page, // Use the passed page parameter
         limit: 6,
       },
     }).then(parseHomePageHeroSection);

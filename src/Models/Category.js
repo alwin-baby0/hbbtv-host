@@ -2,11 +2,14 @@ import { Router } from '@lightningjs/sdk';
 
 export const CATEGORY_TYPES = {
   MOVIES: 'movies',
+  MOVIE: 'movie',
   SERIES: 'series',
   SPORTS: 'sports',
   LIVE_TV: 'live',
   CHANNELS: 'channel',
   SERIE: 'genres_series',
+  VIDEO: 'video',
+  COLLECTION: 'collection',
 };
 
 class Category {
