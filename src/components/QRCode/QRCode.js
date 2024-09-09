@@ -28,7 +28,7 @@ export default class QRCode extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    console.log('QR PROPS', props);
+
     const { qrCode } = this._props;
     const { name, link, qr } = qrCode;
 

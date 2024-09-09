@@ -25,10 +25,10 @@ import Collection from './Collection/Collection';
 import collection from './Collection/provider/collection';
 import CMP from './CMP/CMP';
 import cmp from './CMP/provider/cmp';
-import CMPCustomize from './CMP/components/Customize';
+import CMPCustomize from './CMP/components/CMPCustomize';
 
 export default {
-  root: 'splash',
+  // root: 'splash',
   routes: [
     {
       path: 'splash',

@@ -4,7 +4,6 @@ import { CMPService } from '../../../Services/CMPService';
 
 export default async function (page) {
   await CMPService.initialFetch();
-  // console.log('CMP DATA:', CMPService.cmpData);
 
   const buttonsResult = CMPService.cmpData.buttons;
 
@@ -24,11 +23,10 @@ export default async function (page) {
         borderColor: '#696969',
         callback: async () => {
           if (value.callback_url) {
-            console.log(value);
             const chosenValue = value.label === 'Yes, I Agree' ? 1 : 0;
             // CMPService.getCMPChoice('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09', chosenValue);
             await CMPService.selectCMPChoice('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09', chosenValue);
-
+            await Router.navigate('home');
             // getCMPChoice('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09', chosenValue);
             // d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09
           } else {
@@ -40,11 +38,4 @@ export default async function (page) {
   });
 
   page.tag('Buttons').props = { items: buttons };
-
-  // const buttons =
-  // if (CMPService.cmpData) {
-  //   console.log('CMP DATA:', CMPService.cmpData);
-  // } else {
-  //   console.log('CMP data is still null or undefined');
-  // }
 }

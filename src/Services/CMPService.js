@@ -59,8 +59,7 @@ class CMPService extends FetchingService {
   }
 
   async selectCMPChoice(deviceCode, choicePick) {
-    const choiseResult = await this.#getCMPChoice(deviceCode, choicePick);
-    console.log('RES', choiseResult);
+    await this.#getCMPChoice(deviceCode, choicePick);
   }
 
   get cmpData() {
@@ -68,7 +67,7 @@ class CMPService extends FetchingService {
   }
 
   #getCMP = async (deviceCode) => {
-    console.log('Sending request with deviceCode:', deviceCode); // Loguj zahtev
+    // console.log('Sending request with deviceCode:', deviceCode);
 
     const response = await this._request({
       url: `/cmp`,
@@ -79,7 +78,7 @@ class CMPService extends FetchingService {
       },
     });
 
-    console.log('Response from API:', response.data); // Loguj odgovor
+    // console.log('Response from API:', response.data);
 
     return response;
   };

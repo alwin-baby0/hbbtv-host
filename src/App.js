@@ -1,10 +1,14 @@
 // App.js
-import { Colors, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import routes from './Pages/routes';
 import Navbar from './Components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinScreenComponent';
+import Dialog from './components/widgets/Dialog/Dialog';
+import { getDevice } from './utils/device';
+let wasOffline = false; // Variable to track previous internet status
+
 let keys = [
   'MediaPlay',
   'MediaPause',
@@ -62,6 +66,11 @@ export default class App extends Router.App {
           zIndex: 2,
           type: Navbar,
         },
+        Dialog: {
+          visible: false,
+          type: Dialog,
+          zIndex: 101,
+        },
       },
     };
   }
@@ -93,6 +102,11 @@ export default class App extends Router.App {
       },
       this
     );
+
+    window.addEventListener('online', () => this.handleOnline());
+    window.addEventListener('offline', () => this.handleOffline());
+
+    this.checkNetworkStatusOnline(navigator.onLine);
   }
 
   $punchHole() {
@@ -191,7 +205,81 @@ export default class App extends Router.App {
     ];
   }
 
-  _handleAppClose() {}
+  handleOnline() {
+    if (wasOffline) {
+      VideoPlayer.play();
+      const networkDialog = this.tag('Dialog');
+      networkDialog.close();
+      wasOffline = false;
+    }
+  }
+
+  handleOffline() {
+    VideoPlayer.pause();
+    const networkDialog = this.tag('Dialog');
+    networkDialog.open({
+      message: 'Problem with Network?',
+      actions: [
+        {
+          label: 'Retry',
+          action: () => {
+            if (navigator.onLine) {
+              networkDialog.close();
+              wasOffline = true;
+              this.handleOnline();
+            }
+          },
+        },
+        {
+          label: 'Exit App',
+          action: () => {
+            const device = getDevice();
+            if (device === 'tizen') {
+              window.tizen.application.getCurrentApplication().exit();
+            } else if (device === 'web') {
+              window.location.href = '';
+            }
+          },
+        },
+      ],
+    });
+    wasOffline = true;
+  }
+
+  checkNetworkStatusOnline(isOnline) {
+    if (isOnline) {
+      this.handleOnline();
+    } else {
+      this.handleOffline();
+    }
+  }
+
+  _handleAppClose() {
+    const dialog = this.tag('Dialog');
+    dialog.open({
+      message: 'Are you sure you want to close the app?',
+      actions: [
+        {
+          label: 'No, resume',
+          action: () => {
+            dialog.close();
+          },
+        },
+        {
+          label: 'Yes, exit now',
+          action: () => {
+            const device = getDevice();
+            // Router navigation for "Yes, exit now"
+            if (device === 'tizen') {
+              window.tizen.application.getCurrentApplication().exit();
+            } else if (device === 'web') {
+              window.location.href = '';
+            }
+          },
+        },
+      ],
+    });
+  }
 
   /**
    * Show app close dialogue
