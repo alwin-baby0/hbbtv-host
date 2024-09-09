@@ -25,11 +25,14 @@ export default class Button extends Lightning.Component {
         x: 60,
         h: 25,
         color: Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
-        text: {
-          fontFace: 'Montserrat-Bold',
-          fontSize: 20,
-          lineHeight: 25,
-          letterSpacing: 2,
+        Text: {
+          h: 25,
+          text: {
+            fontFace: 'Montserrat-Bold',
+            fontSize: 20,
+            lineHeight: 25,
+            letterSpacing: 2,
+          },
         },
       },
     };
@@ -38,8 +41,26 @@ export default class Button extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
 
-    const { width, height, buttonLabel, buttonIcon, iconWidth, iconHeight, radius, strokeWidth } =
-      this._props;
+    const {
+      width,
+      height,
+      buttonLabel,
+      buttonIcon,
+      iconWidth,
+      iconHeight,
+      radius,
+      strokeWidth,
+      borderColor,
+    } = this._props;
+    const colorBorder = borderColor ? borderColor : colors.unfocus;
+
+    if (buttonIcon === '') {
+      this._Label.patch({
+        w: width,
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+        x: 0,
+      });
+    }
 
     this.patch({
       w: width,
@@ -49,7 +70,7 @@ export default class Button extends Lightning.Component {
         height,
         radius,
         strokeWidth,
-        Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
+        Colors(this._isFocused ? colors.focus : colorBorder).get(),
         this._isFocused,
         this._isFocused ? Colors(colors.focus).get() : undefined
       ),
@@ -59,7 +80,7 @@ export default class Button extends Lightning.Component {
       texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
     });
 
-    this._Label.patch({
+    this._Label.tag('Text').patch({
       text: {
         text: buttonLabel,
       },
@@ -91,7 +112,8 @@ export default class Button extends Lightning.Component {
   }
 
   _unfocus() {
-    const { width, height, radius, strokeWidth } = this._props;
+    const { width, height, radius, strokeWidth, borderColor } = this._props;
+    const colorBorder = borderColor ? borderColor : colors.unfocus;
     this._isFocused = false;
     this.patch({
       texture: Lightning.Tools.getRoundRect(
@@ -99,7 +121,7 @@ export default class Button extends Lightning.Component {
         height,
         radius,
         strokeWidth,
-        Colors(colors.unfocus).get(),
+        Colors(colorBorder).get(),
         false
       ),
     });

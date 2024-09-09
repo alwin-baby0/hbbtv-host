@@ -32,11 +32,12 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         Title: {
-          w: 440,
+          w: 750,
           h: 40,
           text: {
             fontFace: 'Montserrat-Bold',
             fontSize: 32,
+            maxLines: 1,
           },
         },
         Summary: {
