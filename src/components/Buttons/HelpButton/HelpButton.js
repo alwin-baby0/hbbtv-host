@@ -7,7 +7,7 @@ export default class PageItem extends Lightning.Component {
   static _template() {
     return {
       Column: {
-        flex: { direction: 'row', alignItems: 'center' },
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         w: 240,
         h: 65,
         type: Column,
@@ -15,12 +15,13 @@ export default class PageItem extends Lightning.Component {
         rect: true,
         shader: { type: Lightning.shaders.RoundedRectangle, radius: 6 },
         Text: {
-          w: 200,
+          w: 230,
           h: 25,
-          flexItem: {
-            marginLeft: 20,
-          },
+          // flexItem: {
+          //   marginLeft: 20,
+          // },
           text: {
+            textAlign: 'center',
             fontFace: 'Montserrat-Medium',
             fontSize: 20,
             lineHeight: 25,

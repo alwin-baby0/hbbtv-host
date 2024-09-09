@@ -12,7 +12,8 @@ const menuItems = [
   { id: 3, label: 'Sports', route: 'vod/sports', icon: '' },
   { id: 4, label: 'Live TV', route: 'live', icon: '' },
   { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-  { id: 6, label: 'settings', route: 'settings', icon: 'images/navbar/settings.svg' },
+  // { id: 6, label: 'settings', route: 'settings', icon: 'images/navbar/settings.svg' },
+  { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
   { id: 7, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
 ];
 

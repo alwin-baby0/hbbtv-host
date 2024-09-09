@@ -1,5 +1,5 @@
 import FetchingService from './FetchingService';
-import { V2 } from './utils';
+import { V2, auth } from './utils';
 
 const testAPI = {
   title: 'We value your privacy',
@@ -62,13 +62,48 @@ class CMPService extends FetchingService {
     await this.#getCMPChoice(deviceCode, choicePick);
   }
 
+  // async fetchDeviceCode() {
+  //   const response = await this.#getDeviceCode();
+  //   console.log('device code:', response.data.device_code);
+  //   return response.data;
+  // }
+  async fetchDeviceCode() {
+    try {
+      const response = await this.#getDeviceCode();
+      const deviceCode = response.data.device_code;
+      console.log('device code:', deviceCode);
+
+      this._intervalId = setInterval(async () => {
+        try {
+          const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
+          console.log('statusResponse', statusResponse.data);
+
+          if (statusResponse.data.status === 'approved') {
+            // clearInterval(intervalId);
+            this.clearPollingInterval(this._intervalId); // Use the clear function
+            console.log('Device code status condition met, stopping the interval.');
+            console.log('autorization code:', statusResponse.data.status);
+          }
+        } catch (statusError) {
+          console.error('Error fetching device code status:', statusError);
+        }
+      }, 5000);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching device code:', error);
+      this.clearPollingInterval(this._intervalId); // Use the clear function on error
+    }
+  }
+
+  clearPollingInterval() {
+    clearInterval(this._intervalId);
+  }
+
   get cmpData() {
     return this.#cmpData;
   }
 
   #getCMP = async (deviceCode) => {
-    // console.log('Sending request with deviceCode:', deviceCode);
-
     const response = await this._request({
       url: `/cmp`,
       apiVersion: V2,
@@ -77,8 +112,6 @@ class CMPService extends FetchingService {
         'X-DEVICE-ID': deviceCode,
       },
     });
-
-    // console.log('Response from API:', response.data);
 
     return response;
   };
@@ -102,17 +135,29 @@ class CMPService extends FetchingService {
       url: `/device.php`,
       apiVersion: auth,
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
+        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+      }),
     });
   };
 
   #getDeviceCodeStatus = async (deviceCode) => {
+    const body = `client_id=c8a895d28ee9c800298d4e55d4e75586e7cec291&client_secret=b6d16f854b572ac95e3bd0a12ac6ed9d921767d7&device_code=${encodeURIComponent(
+      deviceCode
+    )}`;
+
     return await this._request({
-      url: `/device.php`,
+      url: `/device-status.php`,
       apiVersion: auth,
       method: 'POST',
-      body: JSON.stringify({
-        device_code: deviceCode,
-      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: body,
     });
   };
 

@@ -65,7 +65,7 @@ export default class LanguageButton extends Lightning.Component {
 
     // Set the new selected language and update the UI
     this._selectedLanguage = selectedLanguage;
-    this.fireAncestors('$setFocus', selectedLanguage);
+    this.fireAncestors('$setFocusLanguage', selectedLanguage);
   }
 
   _init() {}
