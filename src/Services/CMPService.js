@@ -71,18 +71,29 @@ class CMPService extends FetchingService {
     try {
       const response = await this.#getDeviceCode();
       const deviceCode = response.data.device_code;
+      let authCode = '';
       console.log('device code:', deviceCode);
 
       this._intervalId = setInterval(async () => {
         try {
           const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
           console.log('statusResponse', statusResponse.data);
+          console.log(authCode);
 
           if (statusResponse.data.status === 'approved') {
             // clearInterval(intervalId);
             this.clearPollingInterval(this._intervalId); // Use the clear function
             console.log('Device code status condition met, stopping the interval.');
-            console.log('autorization code:', statusResponse.data.status);
+            console.log('status:', statusResponse.data.status);
+            console.log('autorization code:', statusResponse.data.authorization_code);
+            authCode = statusResponse.data.authorization_code;
+            const timestamp = Math.floor(Date.now() / 1000);
+
+            const tokenData = await this.#getToken(
+              statusResponse.data.authorization_code,
+              timestamp
+            );
+            console.log(tokenData);
           }
         } catch (statusError) {
           console.error('Error fetching device code status:', statusError);
@@ -135,37 +146,40 @@ class CMPService extends FetchingService {
       url: `/device.php`,
       apiVersion: auth,
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify({
+      params: {
         client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
         client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
-      }),
+      },
     });
   };
 
   #getDeviceCodeStatus = async (deviceCode) => {
-    const body = `client_id=c8a895d28ee9c800298d4e55d4e75586e7cec291&client_secret=b6d16f854b572ac95e3bd0a12ac6ed9d921767d7&device_code=${encodeURIComponent(
-      deviceCode
-    )}`;
-
     return await this._request({
       url: `/device-status.php`,
       apiVersion: auth,
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+      params: {
+        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
+        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        device_code: deviceCode,
       },
-      data: body,
     });
   };
 
-  #getToken = async () => {
+  #getToken = async (authorizationCode, timestamp) => {
     return await this._request({
       url: `/token.php`,
       apiVersion: auth,
       method: 'POST',
+      headers: {
+        'X-nocache': timestamp,
+      },
+      params: {
+        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
+        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        grant_type: 'authorization_code',
+        code: authorizationCode,
+      },
     });
   };
 }
