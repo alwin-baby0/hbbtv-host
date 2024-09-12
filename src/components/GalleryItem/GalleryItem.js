@@ -2,7 +2,6 @@ import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
-
 export default class GalleryItem extends Lightning.Component {
   _props = {};
   static _template() {
@@ -84,16 +83,25 @@ export default class GalleryItem extends Lightning.Component {
             buttonIcon: Utils.asset('icons/home/play.svg'),
           },
         },
+        FavoriteButton: {
+          alpha: 0,
+          type: Button,
+          flexItem: {
+            marginTop: 20,
+          },
+          props: {
+            buttonLabel: 'FAV',
+            buttonIcon: Utils.asset('icons/home/bullet.svg'),
+          },
+        },
       },
     };
   }
-
   set props(props) {
     this._props = { ...this._props, ...props };
     const { galleryItem, height } = this._props;
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
-
     if (videoType !== 'application/x-mpegURL') {
       this._Info.patch({
         Date: undefined,
@@ -120,7 +128,6 @@ export default class GalleryItem extends Lightning.Component {
         },
       });
     }
-
     this._BackgroundImage.patch({
       w: 1220,
       h: height,
@@ -132,23 +139,19 @@ export default class GalleryItem extends Lightning.Component {
           : // : Utils.asset('images/gradient.png'),
             Utils.asset('images/gradient.png'),
     });
-
     this._GradientOverlay.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
     });
-
     this._Title.patch({
       text: {
         text: title,
       },
     });
-
     this._Description.patch({
       text: {
         text: description,
       },
     });
-
     this._GalleryButton &&
       this._GalleryButton.patch({
         props: {
@@ -164,36 +167,52 @@ export default class GalleryItem extends Lightning.Component {
         },
       });
   }
-
   get _GradientOverlay() {
     return this.tag('GradientOverlay');
   }
-
   get _Info() {
     return this.tag('Info');
   }
-
   get _Title() {
     return this.tag('Title');
   }
-
   get _Summary() {
     return this.tag('Summary');
   }
-
   get _Description() {
     return this.tag('Description');
   }
-
   get _GalleryButton() {
     return this.tag('GalleryButton');
   }
-
+  get _FavoriteButton() {
+    return this.tag('FavoriteButton');
+  }
   get _BackgroundImage() {
     return this.tag('BackgroundImage');
   }
-
-  _getFocused() {
-    return this._GalleryButton;
+  _firstActive() {
+    this._setState('GalleryButton');
+  }
+  static _states() {
+    return [
+      class GalleryButton extends this {
+        _getFocused() {
+          return this._GalleryButton;
+        }
+        _handleDown() {
+          if (this._FavoriteButton.alpha > 0) this._setState('FavoriteButton');
+          else return false;
+        }
+      },
+      class FavoriteButton extends this {
+        _getFocused() {
+          return this._FavoriteButton;
+        }
+        _handleUp() {
+          this._setState('GalleryButton');
+        }
+      },
+    ];
   }
 }

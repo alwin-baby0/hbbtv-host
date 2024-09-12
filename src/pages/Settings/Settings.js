@@ -4,6 +4,8 @@ import VerticalContainer from '../../Components/VerticalContainer/VerticalContai
 import { CMPService } from '../../Services/CMPService';
 import qrcode from 'qrcode';
 import LanguageButton from '../../Components/Buttons/LanguageButton/LanguageButton';
+import { parseVodMoviesPageData } from '../../Models';
+import { constructRails } from '../utils';
 const languagesData = [
   {
     code: 'EN',
@@ -48,6 +50,7 @@ export default class Settings extends Lightning.Component {
         h: 920,
         x: 480,
         y: 225,
+        clipping: true,
       },
     };
   }
@@ -99,6 +102,7 @@ export default class Settings extends Lightning.Component {
     this.tag('Content').patch({
       QRCode: undefined,
       Languages: undefined,
+      Favorites: undefined,
     });
     if (contentId !== 0) {
       CMPService.clearPollingInterval();
@@ -141,7 +145,28 @@ export default class Settings extends Lightning.Component {
           },
         },
       });
-    } else {
+    } else if (contentId === 3) {
+      const favorites = await CMPService.getFavorites();
+      const parsedMovies = parseVodMoviesPageData({
+        data: {
+          entry: favorites.data.favorites,
+        },
+        itemsPerRow: 4,
+      });
+
+      this.tag('Content').patch({
+        Favorites: {
+          type: VerticalContainer,
+          w: 1310,
+          h: 920,
+          props: {
+            items: constructRails(parsedMovies),
+            h: 920,
+          },
+        },
+      });
+
+      console.log(parsedMovies);
     }
   }
 
@@ -160,12 +185,29 @@ export default class Settings extends Lightning.Component {
           if (this.tag('Content.Languages')) {
             this._setState('Languages');
           }
+          if (this.tag('Content.Favorites')) {
+            this._setState('Favorites');
+          }
         }
       },
 
       class Languages extends this {
         _getFocused() {
           return this.tag('Content.Languages');
+        }
+
+        _handleUp() {
+          Router.focusWidget('Menu');
+        }
+
+        _handleLeft() {
+          this._setState('DefaultState');
+        }
+      },
+
+      class Favorites extends this {
+        _getFocused() {
+          return this.tag('Content.Favorites');
         }
 
         _handleUp() {

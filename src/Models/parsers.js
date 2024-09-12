@@ -29,7 +29,7 @@ export const parseHomePageHeroSection = ({ data }) => {
 
 // VodPreview
 // Movies
-export const parseVodMoviesPageData = ({ data }) => {
+export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
   const railItems = data.entry?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
@@ -37,7 +37,7 @@ export const parseVodMoviesPageData = ({ data }) => {
     railType: RAIL_TYPES.MOVIE,
     cardType: 'POSTER',
     items: railItems,
-    itemsPerRow: VODS_PER_ROW,
+    itemsPerRow,
   };
 };
 
@@ -121,7 +121,7 @@ export const parseSeasonData = ({ data }) => {
     cardType: 'POSTER',
     items: railItems,
     railTitle: data.title,
-    itemsPerRow: 5,
+    itemsPerRow: data.entry.length,
   };
 };
 

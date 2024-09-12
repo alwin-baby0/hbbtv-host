@@ -1,23 +1,8 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-
 import Button from '../../Components/Button/Button';
 import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
 import { imageSizes } from '../../Models/utils';
-
-const buttons = [
-  {
-    icon: 'icons/home/play.svg',
-    buttonLabel: 'WATCH NOW',
-    width: 285,
-    action: 'url',
-  },
-  {
-    icon: 'icons/movies/trailer-icon.svg',
-    buttonLabel: 'TRAILER',
-    width: 237,
-    action: 'trailerSrc',
-  },
-];
+import { CMPService } from '../../Services/CMPService';
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};
@@ -123,6 +108,9 @@ export default class SingleMovie extends Lightning.Component {
             Buttons: {
               type: HorizontalContainer,
               w: 550,
+              props: {
+                disableScroll: true,
+              },
               // h: 78,
               // y: 196,
               y: 72,
@@ -132,98 +120,101 @@ export default class SingleMovie extends Lightning.Component {
       },
     };
   }
-
   get _Category() {
     return this.tag('Category');
   }
-
   get _Summary() {
     return this.tag('Summary');
   }
-
   get _Subtitle() {
     return this.tag('Subtitle');
   }
-
   get _Image() {
     return this.tag('Image');
   }
-
   get _Title() {
     return this.tag('Title');
   }
-
   get _Description() {
     return this.tag('Description');
   }
-
   get _Director() {
     return this.tag('Director');
   }
-
   get _Cast() {
     return this.tag('Cast');
   }
-
   get _Buttons() {
     return this.tag('Buttons');
   }
-
   set props(props) {
     this._props = { ...this._props, ...props };
-
     const { movie } = this._props;
-
     const { title, description, duration, director, genre, summary, subtitle, cast } = movie;
-
     this._Category.patch({
       text: {
         text: genre,
       },
     });
-
     this._Summary.patch({
       text: {
         text: summary,
       },
     });
-
     this._Subtitle.patch({
       text: {
         text: subtitle,
       },
     });
-
     this._Image.patch({
       src: movie.getPortraitPoster(imageSizes.XL)?.src,
     });
-
     this._Title.patch({
       text: {
         text: title,
       },
     });
-
     this._Description.patch({
       text: {
         text: description,
       },
     });
-
     this._Director.patch({
       text: {
         text: director,
       },
     });
-
     this._Cast.patch({
       text: {
         text: cast,
       },
     });
 
+    const buttons = [
+      {
+        icon: 'icons/home/play.svg',
+        buttonLabel: 'WATCH NOW',
+        width: 285,
+        stream: 'url',
+      },
+      {
+        icon: 'icons/movies/trailer-icon.svg',
+        buttonLabel: 'TRAILER',
+        width: 237,
+        stream: 'trailerSrc',
+      },
+    ];
+
+    if (localStorage.getItem('userData')) {
+      buttons.push({
+        icon: 'icons/fav.svg',
+        buttonLabel: 'FAV',
+        width: 180,
+      });
+    }
+
     const mappedButtons = buttons.map((button) => {
-      const { buttonLabel, icon, width, action } = button;
+      const { buttonLabel, icon, width, stream } = button;
       return {
         type: Button,
         w: width,
@@ -236,20 +227,22 @@ export default class SingleMovie extends Lightning.Component {
           buttonIcon: Utils.asset(icon),
           callback: () => {
             const { movie } = this._props;
-            if (!movie[action]) return;
-
-            Router.navigate('player', {
-              videoUrl: movie[action],
-              duration: duration,
-            });
+            if (!movie[stream]) this.addToFavorite();
+            else
+              Router.navigate('player', {
+                videoUrl: movie[stream],
+                duration: duration,
+              });
           },
         },
       };
     });
-
     this._Buttons.props = { items: mappedButtons };
   }
-
+  async addToFavorite() {
+    const { movie } = this._props;
+    await CMPService.addToFavorites(movie.id, 'movie');
+  }
   _getFocused() {
     return this._Buttons;
   }

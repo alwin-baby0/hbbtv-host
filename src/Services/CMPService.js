@@ -94,6 +94,7 @@ class CMPService extends FetchingService {
               timestamp
             );
             console.log(tokenData);
+            localStorage.setItem('userData', JSON.stringify(tokenData.data));
           }
         } catch (statusError) {
           console.error('Error fetching device code status:', statusError);
@@ -172,13 +173,61 @@ class CMPService extends FetchingService {
       apiVersion: auth,
       method: 'POST',
       headers: {
-        'X-nocache': timestamp,
+        //'X-nocache': timestamp,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      params: {
+      data: {
         client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
         client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
         grant_type: 'authorization_code',
         code: authorizationCode,
+      },
+    });
+  };
+
+  getFavorites = async () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    console.log(userData);
+
+    return await this._request({
+      url: `/user/favorites`,
+      apiVersion: V2,
+      method: 'GET',
+      headers: {
+        'X-Authorization': `Bearer ${userData.access_token}`,
+      },
+    });
+  };
+
+  addToFavorites = async (videoID, vodType) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    console.log(userData);
+
+    return await this._request({
+      url: `/user/favorites`,
+      apiVersion: V2,
+      method: 'POST',
+      headers: {
+        'X-Authorization': `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: {
+        video_id: videoID,
+        type: vodType,
+      },
+    });
+  };
+
+  #removeFromFavorites = async (videoID) => {
+    return await this._request({
+      url: `/user/favorites`,
+      apiVersion: V2,
+      method: 'DELETE',
+      headers: {
+        'X-Authorization': `Bearer ${token}`,
+      },
+      data: {
+        video_id: videoID,
       },
     });
   };

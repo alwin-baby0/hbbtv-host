@@ -6,6 +6,7 @@ export default class HorizontalContainer extends Lightning.Component {
   _props = {
     items: [],
     paddingLeft: 0,
+    disableScroll: false,
   };
   _focusedIndex = -1;
   _scrollPosition = 0;
@@ -56,6 +57,7 @@ export default class HorizontalContainer extends Lightning.Component {
 
   set props(props) {
     const { items, railTitle, ...rest } = props;
+
     this._props = { ...this._props, ...rest };
     const { cardType, targetIndex } = rest;
 
@@ -122,23 +124,25 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _reCalibrateScroll() {
-    this.stage.update();
+    if (!this._props.disableScroll) {
+      this.stage.update();
 
-    const currentFocus = this.Items.children[this._focusedIndex];
+      const currentFocus = this.Items.children[this._focusedIndex];
 
-    if (!currentFocus) return;
+      if (!currentFocus) return;
 
-    const containerFinalWidth = this.finalW;
-    const elementX = currentFocus.finalX;
-    const elementW = currentFocus.finalW;
+      const containerFinalWidth = this.finalW;
+      const elementX = currentFocus.finalX;
+      const elementW = currentFocus.finalW;
 
-    if (elementX < -this._scrollPosition) {
-      this._scrollPosition = -elementX;
-    } else if (elementX + elementW > containerFinalWidth - this._scrollPosition) {
-      this._scrollPosition = -(elementX + elementW - containerFinalWidth);
+      if (elementX < -this._scrollPosition) {
+        this._scrollPosition = -elementX;
+      } else if (elementX + elementW > containerFinalWidth - this._scrollPosition) {
+        this._scrollPosition = -(elementX + elementW - containerFinalWidth);
+      }
+
+      this.Items.patch({ x: this._scrollPosition });
     }
-
-    this.Items.patch({ x: this._scrollPosition });
   }
 
   _getFocused() {

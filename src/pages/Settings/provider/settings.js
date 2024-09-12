@@ -16,25 +16,6 @@ const languagesData = [
   },
 ];
 
-const tabButtons = [
-  {
-    id: 0,
-    title: 'User',
-  },
-  {
-    id: 1,
-    title: 'Languages',
-  },
-  {
-    id: 2,
-    title: 'Continue Watching',
-  },
-  {
-    id: 3,
-    title: 'Favorites',
-  },
-];
-
 // const languages = (page) => {
 //   const items = languagesData.map((language) => ({
 //     type: LanguageButton,
@@ -50,7 +31,7 @@ const tabButtons = [
 //   };
 // };
 
-const memberArea = (page) => {
+const memberArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
     type: MemberTabButton,
     tabInfoData: tabInfo,
@@ -68,6 +49,29 @@ const memberArea = (page) => {
 };
 
 export default async function (page) {
+  const tabButtons = [
+    {
+      id: 0,
+      title: 'User',
+    },
+    {
+      id: 1,
+      title: 'Languages',
+    },
+  ];
+
+  if (localStorage.getItem('userData')) {
+    tabButtons.push(
+      {
+        id: 2,
+        title: 'Continue Watching',
+      },
+      {
+        id: 3,
+        title: 'Favorites',
+      }
+    );
+  }
   // languages(page);
-  memberArea(page);
+  memberArea(page, tabButtons);
 }

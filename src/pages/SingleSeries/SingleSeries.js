@@ -1,8 +1,10 @@
 import { Lightning, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
+import { CMPService } from '../../Services/CMPService';
 
 export default class SingleSeries extends Lightning.Component {
+  _props = {};
   static _template() {
     return {
       h: 1080,
@@ -21,11 +23,11 @@ export default class SingleSeries extends Lightning.Component {
         x: 110,
         y: 715,
         h: 600,
-        w: 1700,
+        w: 1770,
         clipping: true,
         Column: {
           h: 600,
-          w: 1700,
+          w: 1770,
           type: VerticalContainer,
         },
       },
@@ -33,7 +35,8 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   set props(props) {
-    const { galleryItem } = props;
+    this._props = { ...this._props, ...props };
+    const { galleryItem } = this._props;
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
@@ -47,6 +50,25 @@ export default class SingleSeries extends Lightning.Component {
         buttonLabel: 'WATCH FIRST EPISODE',
       },
     });
+
+    if (localStorage.getItem('userData')) {
+      this._HeroSection._FavoriteButton.patch({
+        alpha: 1,
+        props: {
+          callback: () => {
+            this.addToFavorite();
+          },
+        },
+      });
+    }
+  }
+
+  async addToFavorite() {
+    console.log(this);
+    const { id } = this._props.galleryItem;
+    await CMPService.addToFavorites(id, 'video');
+    const favoriteees = await CMPService.getFavorites();
+    console.log(favoriteees);
   }
 
   _active() {
@@ -65,9 +87,9 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _init() { }
+  _init() {}
 
-  _getFocused() { }
+  _getFocused() {}
 
   static _states() {
     return [
