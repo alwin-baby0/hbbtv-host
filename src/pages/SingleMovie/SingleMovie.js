@@ -147,9 +147,10 @@ export default class SingleMovie extends Lightning.Component {
   get _Buttons() {
     return this.tag('Buttons');
   }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { movie } = this._props;
+    const { movie, favorited } = this._props;
     const { title, description, duration, director, genre, summary, subtitle, cast } = movie;
     this._Category.patch({
       text: {
@@ -207,9 +208,9 @@ export default class SingleMovie extends Lightning.Component {
 
     if (localStorage.getItem('userData')) {
       buttons.push({
-        icon: 'icons/fav.svg',
-        buttonLabel: 'FAV',
-        width: 180,
+        icon: favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg',
+        buttonLabel: 'FAVORITE',
+        width: 255,
       });
     }
 
@@ -239,10 +240,33 @@ export default class SingleMovie extends Lightning.Component {
     });
     this._Buttons.props = { items: mappedButtons };
   }
+
   async addToFavorite() {
-    const { movie } = this._props;
-    await CMPService.addToFavorites(movie.id, 'movie');
+    try {
+      const { movie, favorited } = this._props;
+      if (favorited) {
+        await CMPService.removeFromFavorites(movie.id);
+      } else {
+        await CMPService.addToFavorites(movie.id, 'movie');
+      }
+
+      this._props.favorited = !this._props.favorited;
+
+      const { favorited: newFavorited } = this._props;
+
+      this._Buttons.Items.childList._items[2].patch({
+        props: {
+          buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+          buttonLabel: 'FAVORITE',
+          width: 255,
+        },
+      });
+    } catch (e) {
+      //skip
+      console.log('error', e);
+    }
   }
+
   _getFocused() {
     return this._Buttons;
   }

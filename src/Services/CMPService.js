@@ -62,45 +62,41 @@ class CMPService extends FetchingService {
     await this.#getCMPChoice(deviceCode, choicePick);
   }
 
-  // async fetchDeviceCode() {
-  //   const response = await this.#getDeviceCode();
-  //   console.log('device code:', response.data.device_code);
-  //   return response.data;
-  // }
-  async fetchDeviceCode() {
+  async setDeviceCodeStatusInterval(deviceCode) {
     try {
-      const response = await this.#getDeviceCode();
-      const deviceCode = response.data.device_code;
       let authCode = '';
       console.log('device code:', deviceCode);
 
-      this._intervalId = setInterval(async () => {
-        try {
-          const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
-          console.log('statusResponse', statusResponse.data);
-          console.log(authCode);
+      if (!localStorage.getItem('userData')) {
+        this._intervalId = setInterval(async () => {
+          try {
+            const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
+            console.log('statusResponse', statusResponse.data);
+            console.log(authCode);
 
-          if (statusResponse.data.status === 'approved') {
-            // clearInterval(intervalId);
-            this.clearPollingInterval(this._intervalId); // Use the clear function
-            console.log('Device code status condition met, stopping the interval.');
-            console.log('status:', statusResponse.data.status);
-            console.log('autorization code:', statusResponse.data.authorization_code);
-            authCode = statusResponse.data.authorization_code;
-            const timestamp = Math.floor(Date.now() / 1000);
+            if (statusResponse.data.status === 'approved') {
+              // clearInterval(intervalId);
+              this.clearPollingInterval(this._intervalId); // Use the clear function
+              console.log('Device code status condition met, stopping the interval.');
+              console.log('status:', statusResponse.data.status);
+              console.log('autorization code:', statusResponse.data.authorization_code);
+              authCode = statusResponse.data.authorization_code;
+              const timestamp = Math.floor(Date.now() / 1000);
 
-            const tokenData = await this.#getToken(
-              statusResponse.data.authorization_code,
-              timestamp
-            );
-            console.log(tokenData);
-            localStorage.setItem('userData', JSON.stringify(tokenData.data));
+              const tokenData = await this.#getToken(
+                statusResponse.data.authorization_code,
+                timestamp
+              );
+              console.log(tokenData);
+              localStorage.setItem('userData', JSON.stringify(tokenData.data));
+              const event = new CustomEvent('userLogIn');
+              window.dispatchEvent(event);
+            }
+          } catch (statusError) {
+            console.error('Error fetching device code status:', statusError);
           }
-        } catch (statusError) {
-          console.error('Error fetching device code status:', statusError);
-        }
-      }, 5000);
-      return response.data;
+        }, 5000);
+      }
     } catch (error) {
       console.error('Error fetching device code:', error);
       this.clearPollingInterval(this._intervalId); // Use the clear function on error
@@ -142,7 +138,7 @@ class CMPService extends FetchingService {
     });
   };
 
-  #getDeviceCode = async () => {
+  getDeviceCode = async () => {
     return await this._request({
       url: `/device.php`,
       apiVersion: auth,
@@ -187,7 +183,6 @@ class CMPService extends FetchingService {
 
   getFavorites = async () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    console.log(userData);
 
     return await this._request({
       url: `/user/favorites`,
@@ -201,7 +196,6 @@ class CMPService extends FetchingService {
 
   addToFavorites = async (videoID, vodType) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    console.log(userData);
 
     return await this._request({
       url: `/user/favorites`,
@@ -218,13 +212,15 @@ class CMPService extends FetchingService {
     });
   };
 
-  #removeFromFavorites = async (videoID) => {
+  removeFromFavorites = async (videoID) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
     return await this._request({
       url: `/user/favorites`,
       apiVersion: V2,
       method: 'DELETE',
       headers: {
-        'X-Authorization': `Bearer ${token}`,
+        'X-Authorization': `Bearer ${userData.access_token}`,
       },
       data: {
         video_id: videoID,

@@ -6,6 +6,7 @@ import qrcode from 'qrcode';
 import LanguageButton from '../../Components/Buttons/LanguageButton/LanguageButton';
 import { parseVodMoviesPageData } from '../../Models';
 import { constructRails } from '../utils';
+import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 const languagesData = [
   {
     code: 'EN',
@@ -25,7 +26,14 @@ export default class Settings extends Lightning.Component {
   _props = {
     lastId: 0,
     lastLanguage: 0,
+    deviceData: undefined,
   };
+
+  constructor(context) {
+    super(context);
+    this.userLoginButtonsUpdate = this.userLoginButtonsUpdate.bind(this);
+  }
+
   static _template() {
     return {
       Background: {
@@ -59,9 +67,18 @@ export default class Settings extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _firstActive() {
+  set props(props) {
+    this._props = { ...this._props, ...props };
+  }
+
+  _active() {
     this._setState('DefaultState');
     this.$changeContent(0);
+  }
+
+  _disable() {
+    CMPService.clearPollingInterval();
+    window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
   }
 
   $setFocus(id) {
@@ -100,24 +117,41 @@ export default class Settings extends Lightning.Component {
 
   async $changeContent(contentId) {
     this.tag('Content').patch({
-      QRCode: undefined,
+      QRContainer: undefined,
       Languages: undefined,
       Favorites: undefined,
     });
-    if (contentId !== 0) {
-      CMPService.clearPollingInterval();
-    }
+    CMPService.clearPollingInterval();
+    window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
     if (contentId === 0) {
-      const getQRCode = await CMPService.fetchDeviceCode();
-      const qrCode = getQRCode.verification_uri.url;
+      window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
+
+      const { device_code, verification_uri } = this._props.deviceData;
+      await CMPService.setDeviceCodeStatusInterval(device_code);
+      const qrCode = verification_uri.url;
 
       qrcode.toDataURL(qrCode).then((image) => {
         this.tag('Content').patch({
-          QRCode: {
-            w: 263,
-            h: 263,
-            src: image,
-            zIndex: 100,
+          QRContainer: {
+            flex: {
+              direction: 'column',
+            },
+            Text: {
+              h: 50,
+              text: {
+                text: 'Scan the QR Code to Login. Please stay on this page until the login process is finished.',
+                fontFace: 'Montserrat-Regular',
+                fontSize: 25,
+                lineHeight: 25,
+                letterSpacing: 2,
+              },
+            },
+            QRCode: {
+              w: 263,
+              h: 263,
+              src: image,
+              zIndex: 100,
+            },
           },
         });
       });
@@ -165,9 +199,32 @@ export default class Settings extends Lightning.Component {
           },
         },
       });
-
-      console.log(parsedMovies);
     }
+  }
+
+  userLoginButtonsUpdate() {
+    this._Column._appendItems([
+      {
+        type: MemberTabButton,
+        tabInfoData: {
+          id: 2,
+          title: 'Continue Watching',
+        },
+        w: 250,
+        h: 100,
+        tabIndex: 2,
+      },
+      {
+        type: MemberTabButton,
+        tabInfoData: {
+          id: 3,
+          title: 'Favorites',
+        },
+        w: 250,
+        h: 100,
+        tabIndex: 3,
+      },
+    ]);
   }
 
   static _states() {

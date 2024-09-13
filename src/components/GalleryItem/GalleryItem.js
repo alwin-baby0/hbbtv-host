@@ -89,10 +89,6 @@ export default class GalleryItem extends Lightning.Component {
           flexItem: {
             marginTop: 20,
           },
-          props: {
-            buttonLabel: 'FAV',
-            buttonIcon: Utils.asset('icons/home/bullet.svg'),
-          },
         },
       },
     };

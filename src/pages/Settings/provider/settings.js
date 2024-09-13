@@ -1,4 +1,5 @@
 import LanguageButton from '../../../Components/Buttons/LanguageButton/LanguageButton';
+import { CMPService } from '../../../Services/CMPService';
 import HelpButton from '../../../components/Buttons/HelpButton/HelpButton';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
 const languagesData = [
@@ -49,6 +50,11 @@ const memberArea = (page, tabButtons) => {
 };
 
 export default async function (page) {
+  const response = await CMPService.getDeviceCode();
+  page.props = {
+    deviceData: response.data,
+  };
+
   const tabButtons = [
     {
       id: 0,

@@ -36,7 +36,7 @@ export default class SingleSeries extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem } = this._props;
+    const { galleryItem, favorited } = this._props;
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
@@ -55,6 +55,9 @@ export default class SingleSeries extends Lightning.Component {
       this._HeroSection._FavoriteButton.patch({
         alpha: 1,
         props: {
+          buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+          buttonLabel: 'FAVORITE',
+          width: 255,
           callback: () => {
             this.addToFavorite();
           },
@@ -64,11 +67,36 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   async addToFavorite() {
-    console.log(this);
+    /* console.log(this);
     const { id } = this._props.galleryItem;
     await CMPService.addToFavorites(id, 'video');
     const favoriteees = await CMPService.getFavorites();
-    console.log(favoriteees);
+    console.log(favoriteees); */
+
+    try {
+      const { favorited } = this._props;
+      const { id } = this._props.galleryItem;
+      if (favorited) {
+        await CMPService.removeFromFavorites(id);
+      } else {
+        await CMPService.addToFavorites(id, 'series');
+      }
+
+      this._props.favorited = !this._props.favorited;
+
+      const { favorited: newFavorited } = this._props;
+
+      this._HeroSection._FavoriteButton.patch({
+        props: {
+          buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+          buttonLabel: 'FAVORITE',
+          width: 255,
+        },
+      });
+    } catch (e) {
+      //skip
+      console.log('error', e);
+    }
   }
 
   _active() {
