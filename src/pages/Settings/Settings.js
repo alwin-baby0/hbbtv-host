@@ -91,8 +91,10 @@ export default class Settings extends Lightning.Component {
     // Set the new ID
     if (!id) {
       this._Column.Items.children[0]._selectButton();
+      this._Column._focusedIndex = 0;
     } else {
       this._Column.Items.children[id]._selectButton();
+      this._Column._focusedIndex = id;
     }
     // Update the lastId variable with the current ID
     this._props.lastId = id;
@@ -181,6 +183,7 @@ export default class Settings extends Lightning.Component {
       });
     } else if (contentId === 3) {
       const favorites = await CMPService.getFavorites();
+      console.log(favorites.data.favorites);
       const parsedMovies = parseVodMoviesPageData({
         data: {
           entry: favorites.data.favorites,

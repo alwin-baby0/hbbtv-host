@@ -106,6 +106,7 @@ export const parseSportsEventsData = ({ data }) => {
 // Single assets
 // Movie
 export const parseDetailsData = ({ data }) => {
+  console.log(data);
   return new GalleryItem(data?.entry[0]);
 };
 

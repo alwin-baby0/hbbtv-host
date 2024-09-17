@@ -10,10 +10,12 @@ class SimpleRailItem {
 
     switch (this.type) {
       case 'movie':
+      case 'video':
         this.url = `movie-details/${this.id}`;
         break;
       case 'sport':
       case 'serie':
+      case 'series':
         this.url = `series-details/${this.id}`;
         break;
       case 'show':

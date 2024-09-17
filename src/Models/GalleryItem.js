@@ -1,6 +1,8 @@
 class GalleryItem {
   constructor(data) {
     const { id, title, content, extensions, media_group, summary, type } = data;
+
+    console.log(data);
     this.id = id;
 
     this.title = title;
@@ -27,7 +29,11 @@ class GalleryItem {
         first_episode_mp4,
         cast,
         venue,
+        is_favorite,
+        last_position,
       } = extensions;
+
+      console.log('FAV', is_favorite);
 
       if (button_text && button_text !== '') {
         this.buttonLabel = button_text;
@@ -58,6 +64,8 @@ class GalleryItem {
       this.subtitle = subtitle;
       this.cast = cast;
       this.venue = venue;
+      this.is_favorite = is_favorite;
+      this.last_position = last_position;
     }
 
     this.thumbnails = [];

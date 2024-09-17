@@ -4,13 +4,7 @@ import { DetailService } from '../../../Services/DetailService';
 export default async function (page, { movieId }) {
   const movie = await DetailService.getMovie(movieId);
 
-  let favorited = false;
+  console.log(movie);
 
-  if (localStorage.getItem('userData')) {
-    const response = await CMPService.getFavorites();
-
-    favorited = response.data.favorites.some((element) => element.id === movieId);
-  }
-
-  page.props = { movie, favorited };
+  page.props = { movie };
 }

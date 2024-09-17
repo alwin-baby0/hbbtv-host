@@ -163,13 +163,15 @@ class CMPService extends FetchingService {
     });
   };
 
-  #getToken = async (authorizationCode, timestamp) => {
+  #getToken = async (authorizationCode) => {
+    const timestamp = new Date().getTime();
+
     return await this._request({
       url: `/token.php`,
       apiVersion: auth,
       method: 'POST',
       headers: {
-        //'X-nocache': timestamp,
+        'X-nocache': timestamp,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       data: {
@@ -184,6 +186,8 @@ class CMPService extends FetchingService {
   getFavorites = async () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
+    const timestamp = new Date().getTime();
+
     return await this._request({
       url: `/user/favorites`,
       apiVersion: V2,
@@ -191,11 +195,16 @@ class CMPService extends FetchingService {
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
       },
+      params: {
+        _: timestamp,
+      },
     });
   };
 
   addToFavorites = async (videoID, vodType) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
 
     return await this._request({
       url: `/user/favorites`,
@@ -203,7 +212,11 @@ class CMPService extends FetchingService {
       method: 'POST',
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
+        'X-nocache': timestamp,
         'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      params: {
+        _: timestamp,
       },
       data: {
         video_id: videoID,
@@ -215,11 +228,72 @@ class CMPService extends FetchingService {
   removeFromFavorites = async (videoID) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
+    const timestamp = new Date().getTime();
+
     return await this._request({
       url: `/user/favorites`,
       apiVersion: V2,
       method: 'DELETE',
       headers: {
+        'X-Authorization': `Bearer ${userData.access_token}`,
+        'X-nocache': timestamp,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      params: {
+        _: timestamp,
+      },
+      data: {
+        video_id: videoID,
+      },
+    });
+  };
+
+  getRecentlyWatched = async () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    return await this._request({
+      url: `/user/recently_watched`,
+      apiVersion: V2,
+      method: 'GET',
+      headers: {
+        'X-Authorization': `Bearer ${userData.access_token}`,
+      },
+    });
+  };
+
+  addRecentlyWatched = async (videoID, vodType, vodPosition) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    return await this._request({
+      url: `/user/recently_watched`,
+      apiVersion: V2,
+      method: 'POST',
+      headers: {
+        'X-nocache': timestamp,
+        'X-Authorization': `Bearer ${userData.access_token}`,
+        //'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: {
+        video_id: videoID,
+        type: vodType,
+        position: vodPosition,
+      },
+    });
+  };
+
+  deleteRecentlyWatched = async (videoID) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    return await this._request({
+      url: `/user/recently_watched`,
+      apiVersion: V2,
+      method: 'GET',
+      headers: {
+        'X-nocache': timestamp,
         'X-Authorization': `Bearer ${userData.access_token}`,
       },
       data: {

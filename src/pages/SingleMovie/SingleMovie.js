@@ -150,7 +150,7 @@ export default class SingleMovie extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { movie, favorited } = this._props;
+    const { movie } = this._props;
     const { title, description, duration, director, genre, summary, subtitle, cast } = movie;
     this._Category.patch({
       text: {
@@ -208,7 +208,7 @@ export default class SingleMovie extends Lightning.Component {
 
     if (localStorage.getItem('userData')) {
       buttons.push({
-        icon: favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg',
+        icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonLabel: 'FAVORITE',
         width: 255,
       });
@@ -243,20 +243,20 @@ export default class SingleMovie extends Lightning.Component {
 
   async addToFavorite() {
     try {
-      const { movie, favorited } = this._props;
-      if (favorited) {
+      const { movie } = this._props;
+      if (movie.is_favorite) {
         await CMPService.removeFromFavorites(movie.id);
       } else {
-        await CMPService.addToFavorites(movie.id, 'movie');
+        await CMPService.addToFavorites(movie.id, 'video');
       }
 
-      this._props.favorited = !this._props.favorited;
+      this._props.movie.is_favorite = !this._props.movie.is_favorite;
 
-      const { favorited: newFavorited } = this._props;
+      const { is_favorite } = this._props.movie;
 
       this._Buttons.Items.childList._items[2].patch({
         props: {
-          buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+          buttonIcon: Utils.asset(is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
           buttonLabel: 'FAVORITE',
           width: 255,
         },
