@@ -6,5 +6,5 @@ export default async function (page, { movieId }) {
 
   console.log(movie);
 
-  page.props = { movie };
+  page.props = { movie, movieId };
 }

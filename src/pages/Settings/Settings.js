@@ -122,6 +122,7 @@ export default class Settings extends Lightning.Component {
       QRContainer: undefined,
       Languages: undefined,
       Favorites: undefined,
+      RecentlyWatched: undefined,
     });
     CMPService.clearPollingInterval();
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
@@ -158,7 +159,7 @@ export default class Settings extends Lightning.Component {
         });
       });
     } else if (contentId === 1) {
-      this._setState('Languages');
+      //this._setState('Languages');
       const items = languagesData.map((language) => ({
         type: LanguageButton,
         props: {
@@ -178,6 +179,28 @@ export default class Settings extends Lightning.Component {
             enableScroll: false,
             w: 1050,
             h: 300,
+          },
+        },
+      });
+    } else if (contentId === 2) {
+      const recentlyWatched = await CMPService.getRecentlyWatched();
+      console.log(recentlyWatched.data.recently_watched);
+
+      const parsedMovies = parseVodMoviesPageData({
+        data: {
+          entry: recentlyWatched.data.recently_watched,
+        },
+        itemsPerRow: 4,
+      });
+
+      this.tag('Content').patch({
+        RecentlyWatched: {
+          type: VerticalContainer,
+          w: 1310,
+          h: 920,
+          props: {
+            items: constructRails(parsedMovies),
+            h: 920,
           },
         },
       });
@@ -248,6 +271,9 @@ export default class Settings extends Lightning.Component {
           if (this.tag('Content.Favorites')) {
             this._setState('Favorites');
           }
+          if (this.tag('Content.RecentlyWatched')) {
+            this._setState('RecentlyWatched');
+          }
         }
       },
 
@@ -268,6 +294,20 @@ export default class Settings extends Lightning.Component {
       class Favorites extends this {
         _getFocused() {
           return this.tag('Content.Favorites');
+        }
+
+        _handleUp() {
+          Router.focusWidget('Menu');
+        }
+
+        _handleLeft() {
+          this._setState('DefaultState');
+        }
+      },
+
+      class RecentlyWatched extends this {
+        _getFocused() {
+          return this.tag('Content.RecentlyWatched');
         }
 
         _handleUp() {

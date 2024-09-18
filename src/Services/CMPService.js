@@ -1,46 +1,6 @@
 import FetchingService from './FetchingService';
 import { V2, auth } from './utils';
 
-const testAPI = {
-  title: 'We value your privacy',
-  description:
-    "We use cookies to enhance your browsing experience. By clicking 'Yes', you consent to our use of cookies. You can customize your consent preferences by clicking 'Customize'.",
-  buttons: {
-    yes: {
-      label: 'Yes, I Agree',
-      callback_url: 'https://api-applicaster.wedo.tv/cmp?choice=1',
-    },
-    no: {
-      label: 'No, I Do Not Agree',
-      callback_url: 'https://api-applicaster.wedo.tv/cmp?choice=0',
-    },
-    customize: {
-      label: 'Customize Preferences',
-      options: [
-        {
-          name: 'Privacy Settings',
-          link: 'https://cmp.wedo.tv/privacy-settings?device_id=d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-          qr: 'https://api-applicaster.wedo.tv/cmp/qr?url=https%3A%2F%2Fexample.com%2Fprivacy-settings%3Fdevice_id%3Dd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-        },
-        {
-          name: 'Cookie Preferences',
-          link: 'https://cmp.wedo.tv/cookie-preferences?device_id=d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-          qr: 'https://api-applicaster.wedo.tv/cmp/qr?url=https%3A%2F%2Fexample.com%2Fprivacy-settings%3Fdevice_id%3Dd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-        },
-      ],
-    },
-  },
-  consent: {
-    device_id: 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-    tcf_string: '',
-    tcf_version: '2.2',
-    expire: {
-      date: '2024-09-11T12:52:31Z',
-      timestamp: 1726059151,
-    },
-  },
-};
-
 class CMPService extends FetchingService {
   #cmpData;
 
@@ -251,12 +211,17 @@ class CMPService extends FetchingService {
   getRecentlyWatched = async () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
+    const timestamp = new Date().getTime();
+
     return await this._request({
       url: `/user/recently_watched`,
       apiVersion: V2,
       method: 'GET',
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
+      },
+      params: {
+        _: timestamp,
       },
     });
   };
@@ -273,7 +238,7 @@ class CMPService extends FetchingService {
       headers: {
         'X-nocache': timestamp,
         'X-Authorization': `Bearer ${userData.access_token}`,
-        //'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       data: {
         video_id: videoID,
@@ -295,6 +260,7 @@ class CMPService extends FetchingService {
       headers: {
         'X-nocache': timestamp,
         'X-Authorization': `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       data: {
         video_id: videoID,

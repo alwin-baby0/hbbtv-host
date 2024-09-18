@@ -150,8 +150,9 @@ export default class SingleMovie extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { movie } = this._props;
+    const { movie, movieId } = this._props;
     const { title, description, duration, director, genre, summary, subtitle, cast } = movie;
+
     this._Category.patch({
       text: {
         text: genre,
@@ -233,6 +234,7 @@ export default class SingleMovie extends Lightning.Component {
               Router.navigate('player', {
                 videoUrl: movie[stream],
                 duration: duration,
+                videoId: movieId,
               });
           },
         },
