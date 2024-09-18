@@ -2,11 +2,15 @@
 // Home, Search, Movies, Series, Sports screens rails
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, media_group, summary } = data;
+    const { id, title, type, media_group, summary, extensions } = data;
     this.id = id;
     this.title = title;
     this.type = type?.value;
     this.summary = summary;
+
+    if (extensions) {
+      this.description = extensions.description;
+    }
 
     switch (this.type) {
       case 'movie':

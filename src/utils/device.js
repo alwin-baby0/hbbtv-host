@@ -35,7 +35,7 @@ export const getTVInfo = () => {
       break;
     case 'web':
       // Definišite neke simulirane vrednosti za web
-      var _serialNumber = 'simulated-serial-number';
+      var _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
       var _model = 'simulated-model';
       var _brand = 'simulated-brand';
       var _macAddress = 'simulated-mac-address';
@@ -46,6 +46,9 @@ export const getTVInfo = () => {
       console.log('Model:', _model);
       console.log('Brand:', _brand);
       console.log('MAC Address:', _macAddress);
+
+      // Postavljanje serijskog broja u localStorage
+      localStorage.setItem('serialNumber', _serialNumber);
 
       // Ako želite da postavite ove informacije, možete koristiti setTvInfo
       setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });

@@ -256,7 +256,7 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/user/recently_watched`,
       apiVersion: V2,
-      method: 'GET',
+      method: 'DELETE',
       headers: {
         'X-nocache': timestamp,
         'X-Authorization': `Bearer ${userData.access_token}`,

@@ -9,13 +9,13 @@ class DetailService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
+    const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
+
     return await this._request({
       url: `/getMovie`,
       apiVersion: V2,
       method: 'GET',
-      headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
-      },
+      headers: headers,
       params: {
         _: timestamp,
         id: movieId,
@@ -28,13 +28,13 @@ class DetailService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
+    const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
+
     const galleryItem = await this._request({
       url: '/getSerie',
       apiVersion: V2,
       method: 'GET',
-      headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
-      },
+      headers: headers,
       params: {
         _: timestamp,
         id: seriesId,

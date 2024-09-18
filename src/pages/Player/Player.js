@@ -248,10 +248,8 @@ export default class Player extends lng.Component {
     }
   }
 
-  set params({ videoUrl, videoType, type, duration, videoId }) {
-    this._params = { videoUrl, videoType, type, duration, videoId };
-    console.log(videoUrl);
-    console.log('parami', this._params);
+  set params({ videoUrl, videoType, type, duration, videoId, continueTime }) {
+    this._params = { videoUrl, videoType, type, duration, videoId, continueTime };
   }
 
   _enable() {
@@ -292,6 +290,7 @@ export default class Player extends lng.Component {
 
   async _active() {
     lastIndex = 0;
+    console.log('Time:', this._params.continueTime);
     if (
       this._params.videoType === 'Stream now' ||
       this._params.videoType === 'application/x-mpegURL'
@@ -328,16 +327,20 @@ export default class Player extends lng.Component {
       this._params.videoType !== 'Stream now' ||
       this._params.videoType !== 'application/x-mpegURL'
     ) {
-      this._progressInterval = setInterval(this._updateProgressBar.bind(this), 500);
+      this._progressInterval = setInterval(this._updateProgressBar.bind(this), 1000);
     }
     this._setState('Controls');
     this._showWrapper(true);
     this._setState('Controls');
+
+    if (this._params.continueTime)
+      setTimeout(() => {
+        VideoPlayer.seek(this._params.continueTime);
+      }, 500);
   }
 
   _disable() {
     clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
-    CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
     VideoPlayer.close();
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
@@ -475,7 +478,7 @@ export default class Player extends lng.Component {
     this._skipVideo(time);
   }
 
-  _handleBack() {
+  closeVideoPlayer() {
     this._showWrapper();
     VideoPlayer.clear();
     VideoPlayer.close();
@@ -483,6 +486,11 @@ export default class Player extends lng.Component {
     clearInterval(this._progressInterval);
     this.fireAncestors('$unpunchHole');
     Router.back();
+  }
+
+  _handleBack() {
+    CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+    this.closeVideoPlayer();
   }
 
   $exitVideo() {
@@ -493,8 +501,8 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerEnded() {
-    this._showWrapper();
-    this._handleBack();
+    CMPService.deleteRecentlyWatched(this._params.videoId);
+    this.closeVideoPlayer();
   }
 
   $playVideo() {
@@ -538,8 +546,8 @@ export default class Player extends lng.Component {
         : this._formatTime(currentTime);
     this.tag('CurrentTime.Text').text = formattedTime;
 
-    console.log(formattedTime);
-    console.log(currentTime);
+    // console.log(formattedTime);
+    // console.log(currentTime);
   }
 
   $changeFocusOnControl(val) {
@@ -586,7 +594,7 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerPlaying() {
-    this._updateProgressBar();
+    // this._updateProgressBar();
     const durationInSeconds = parseFloat(VideoPlayer.duration);
     const formattedDuration = this._formatDuration(durationInSeconds);
     const progressBarStyle = {

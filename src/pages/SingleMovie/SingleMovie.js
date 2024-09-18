@@ -147,11 +147,24 @@ export default class SingleMovie extends Lightning.Component {
   get _Buttons() {
     return this.tag('Buttons');
   }
+  get _ContinueButton() {
+    return this.tag('ContinueButton');
+  }
 
   set props(props) {
     this._props = { ...this._props, ...props };
     const { movie, movieId } = this._props;
-    const { title, description, duration, director, genre, summary, subtitle, cast } = movie;
+    const {
+      title,
+      description,
+      duration,
+      director,
+      genre,
+      summary,
+      subtitle,
+      cast,
+      last_position,
+    } = movie;
 
     this._Category.patch({
       text: {
@@ -196,7 +209,8 @@ export default class SingleMovie extends Lightning.Component {
       {
         icon: 'icons/home/play.svg',
         buttonLabel: 'WATCH NOW',
-        width: 285,
+        // width: 285,
+        width: 405,
         stream: 'url',
       },
       {
@@ -213,10 +227,37 @@ export default class SingleMovie extends Lightning.Component {
         buttonLabel: 'FAVORITE',
         width: 255,
       });
+
+      this.tag('CardInfo.AboutMovie').patch({
+        ContinueButton: {
+          y: 170,
+          type: Button,
+          w: 405,
+          flexItem: {
+            marginRight: 30,
+          },
+          props: {
+            width: 405,
+            buttonLabel: 'CONTINUE WATCHING',
+            buttonIcon: Utils.asset('icons/home/play.svg'),
+            callback: () => {
+              console.log('continue:', last_position);
+              Router.navigate('player', {
+                videoUrl: movie.url,
+                duration: duration,
+                videoId: movieId,
+                continueTime: last_position,
+              });
+            },
+          },
+        },
+      });
     }
 
     const mappedButtons = buttons.map((button) => {
+      const { movie } = this._props;
       const { buttonLabel, icon, width, stream } = button;
+
       return {
         type: Button,
         w: width,
@@ -228,19 +269,24 @@ export default class SingleMovie extends Lightning.Component {
           buttonLabel: buttonLabel,
           buttonIcon: Utils.asset(icon),
           callback: () => {
-            const { movie } = this._props;
-            if (!movie[stream]) this.addToFavorite();
-            else
+            if (buttonLabel === 'FAVORITE') {
+              this.addToFavorite();
+            } else {
               Router.navigate('player', {
                 videoUrl: movie[stream],
                 duration: duration,
                 videoId: movieId,
               });
+            }
           },
         },
       };
     });
     this._Buttons.props = { items: mappedButtons };
+  }
+
+  _firstActive() {
+    this._setState('Buttons');
   }
 
   async addToFavorite() {
@@ -269,7 +315,26 @@ export default class SingleMovie extends Lightning.Component {
     }
   }
 
-  _getFocused() {
-    return this._Buttons;
+  static _states() {
+    return [
+      class Buttons extends this {
+        _getFocused() {
+          return this._Buttons;
+        }
+
+        _handleDown() {
+          this._setState('ContinueBtn');
+        }
+      },
+      class ContinueBtn extends this {
+        _getFocused() {
+          return this._ContinueButton;
+        }
+
+        _handleUp() {
+          this._setState('Buttons');
+        }
+      },
+    ];
   }
 }

@@ -114,7 +114,7 @@ export const cronstructSingleLineRail = (rail) => {
   };
 };
 
-const chunkArray = (array, size) => {
+export const chunkArray = (array, size) => {
   if (!Array.isArray(array) || size <= 0) {
     return;
   }
