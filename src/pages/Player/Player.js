@@ -81,7 +81,7 @@ export default class Player extends lng.Component {
               h: 35,
               w: 140,
               text: {
-                text: '00:00:00',
+                text: '',
                 fontSize: 30,
                 textAlign: 'center',
                 fontFace: 'Montserrat-Bold',
@@ -312,26 +312,26 @@ export default class Player extends lng.Component {
 
     this.tag('ErrorMessage').visible = false;
 
-    const durationInSeconds = parseFloat(this._params.duration);
-    const formattedDuration = this._formatDuration(durationInSeconds);
-    this.tag('EndTime.Text').text =
-      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
-        ? ''
-        : formattedDuration;
+    // const durationInSeconds = parseFloat(this._params.duration);
+    // const formattedDuration = this._formatDuration(durationInSeconds);
+    // this.tag('EndTime.Text').text =
+    //   this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
+    //     ? ''
+    //     : formattedDuration;
 
-    this._duration = durationInSeconds;
+    // this._duration = durationInSeconds;
     this.fireAncestors('$punchHole');
     VideoPlayer.open(this._params.videoUrl);
 
-    if (
-      this._params.videoType !== 'Stream now' ||
-      this._params.videoType !== 'application/x-mpegURL'
-    ) {
-      this._progressInterval = setInterval(this._updateProgressBar.bind(this), 1000);
-    }
-    this._setState('Controls');
-    this._showWrapper(true);
-    this._setState('Controls');
+    // if (
+    //   this._params.videoType !== 'Stream now' ||
+    //   this._params.videoType !== 'application/x-mpegURL'
+    // ) {
+    //   this._progressInterval = setInterval(this._updateProgressBar.bind(this), 1000);
+    // }
+    // this._setState('Controls');
+    // this._showWrapper(true);
+    // this._setState('Controls');
 
     if (this._params.continueTime)
       setTimeout(() => {
@@ -352,6 +352,17 @@ export default class Player extends lng.Component {
     const newTime = VideoPlayer.currentTime + offset;
     VideoPlayer.seek(newTime);
     this._showWrapper(); // Show wrapper on skip
+  }
+
+  $videoPlayerCanPlay() {
+    this._setState('Controls');
+    this._showWrapper(true);
+    if (
+      this._params.videoType !== 'Stream now' ||
+      this._params.videoType !== 'application/x-mpegURL'
+    ) {
+      this._progressInterval = setInterval(this._updateProgressBar.bind(this), 1000);
+    }
   }
 
   $setFocusOnItem(value) {
@@ -546,6 +557,15 @@ export default class Player extends lng.Component {
         : this._formatTime(currentTime);
     this.tag('CurrentTime.Text').text = formattedTime;
 
+    const durationInSeconds = parseFloat(VideoPlayer.duration);
+    const formattedDuration = this._formatDuration(durationInSeconds);
+
+    this.tag('EndTime.Text').text =
+      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
+        ? ''
+        : formattedDuration;
+    this._duration = durationInSeconds;
+
     // console.log(formattedTime);
     // console.log(currentTime);
   }
@@ -595,8 +615,8 @@ export default class Player extends lng.Component {
 
   $videoPlayerPlaying() {
     // this._updateProgressBar();
-    const durationInSeconds = parseFloat(VideoPlayer.duration);
-    const formattedDuration = this._formatDuration(durationInSeconds);
+    // const durationInSeconds = parseFloat(VideoPlayer.duration);
+    // const formattedDuration = this._formatDuration(durationInSeconds);
     const progressBarStyle = {
       progressColor: Colors(colors.focus).get(),
       barColor:
@@ -606,11 +626,11 @@ export default class Player extends lng.Component {
           : undefined,
     };
     this.tag('ProgressBar').patch({ style: progressBarStyle });
-    this.tag('EndTime.Text').text =
-      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
-        ? ''
-        : formattedDuration;
-    this._duration = durationInSeconds;
+    // this.tag('EndTime.Text').text =
+    //   this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
+    //     ? ''
+    //     : formattedDuration;
+    // this._duration = durationInSeconds;
   }
 
   // COMANDS
