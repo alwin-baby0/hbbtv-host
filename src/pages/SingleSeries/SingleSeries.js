@@ -14,7 +14,7 @@ export default class SingleSeries extends Lightning.Component {
         type: BackBtn,
         texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
         x: 85,
-        y: 30,
+        y: 20,
         zIndex: 100,
       },
       Background: {
@@ -139,7 +139,7 @@ export default class SingleSeries extends Lightning.Component {
             y: 0,
           });
           this._BackButton.patch({
-            y: 30,
+            y: 20,
           });
           return this._HeroSection;
         }

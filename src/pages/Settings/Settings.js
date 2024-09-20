@@ -136,24 +136,70 @@ export default class Settings extends Lightning.Component {
       qrcode.toDataURL(qrCode).then((image) => {
         this.tag('Content').patch({
           QRContainer: {
+            w: 1310,
+            h: 800,
             flex: {
-              direction: 'column',
+              direction: 'row',
             },
-            Text: {
-              h: 50,
-              text: {
-                text: 'Scan the QR Code to Login. Please stay on this page until the login process is finished.',
-                fontFace: 'Montserrat-Regular',
-                fontSize: 25,
-                lineHeight: 25,
-                letterSpacing: 2,
+            Info: {
+              flex: {
+                direction: 'column',
+              },
+              w: 650,
+              h: 800,
+              Title: {
+                h: 120,
+                w: 450,
+                text: {
+                  text: `Sign up for unlimited entertainment - it's free!`,
+                  fontFace: 'Montserrat-Bold',
+                  fontSize: 30,
+                  lineHeight: 35,
+                  letterSpacing: 2,
+                },
+              },
+              Text: {
+                h: 200,
+                w: 500,
+                text: {
+                  text: 'Sign up now for free and unlock even more features! Sync wedotv across all your devices and enjoy seamless streaming of your favorite movies and series – anytime, anywhere.',
+                  fontFace: 'Montserrat-Regular',
+                  fontSize: 25,
+                  lineHeight: 30,
+                  letterSpacing: 2,
+                },
               },
             },
-            QRCode: {
-              w: 263,
-              h: 263,
-              src: image,
-              zIndex: 100,
+            Divider: {
+              w: 1,
+              h: 350,
+              rect: true,
+              color: Colors('#ffffff').alpha(0.5).get(),
+            },
+            QRCodeInfo: {
+              x: 200,
+              flex: {
+                direction: 'column',
+                alignItems: 'center',
+              },
+              QRCode: {
+                w: 280,
+                h: 280,
+                src: image,
+                zIndex: 100,
+              },
+              QRText: {
+                flexItem: {
+                  marginTop: 10,
+                },
+                text: {
+                  text: 'Scan the QR code',
+                  fontFace: 'Montserrat-Bold',
+                  fontSize: 25,
+                  lineHeight: 30,
+                  letterSpacing: 2,
+                },
+              },
             },
           },
         });
