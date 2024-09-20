@@ -2,6 +2,7 @@ import { Lightning, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import { CMPService } from '../../Services/CMPService';
+import BackBtn from '../../components/BackButton/BackBtn';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -9,6 +10,13 @@ export default class SingleSeries extends Lightning.Component {
     return {
       h: 1080,
       w: 1920,
+      BackButton: {
+        type: BackBtn,
+        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        x: 85,
+        y: 30,
+        zIndex: 100,
+      },
       Background: {
         w: 1920,
         h: 1080,
@@ -115,6 +123,10 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('Column');
   }
 
+  get _BackButton() {
+    return this.tag('BackButton');
+  }
+
   _init() {}
 
   _getFocused() {}
@@ -126,6 +138,9 @@ export default class SingleSeries extends Lightning.Component {
           this._SeriesWrapper.patch({
             y: 0,
           });
+          this._BackButton.patch({
+            y: 30,
+          });
           return this._HeroSection;
         }
 
@@ -135,6 +150,19 @@ export default class SingleSeries extends Lightning.Component {
           } else {
             return false;
           }
+        }
+
+        _handleUp() {
+          this._setState('BackButton');
+        }
+      },
+
+      class BackButton extends this {
+        _getFocused() {
+          return this._BackButton;
+        }
+        _handleDown() {
+          this._setState('HeroSection');
         }
       },
 
@@ -167,6 +195,9 @@ export default class SingleSeries extends Lightning.Component {
               h: 1080,
             });
           } else {
+            this._BackButton.patch({
+              y: -180,
+            });
             this._SeriesWrapper.patch({
               y: -140,
             });

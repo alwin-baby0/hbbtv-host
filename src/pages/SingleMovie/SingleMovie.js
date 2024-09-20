@@ -1,8 +1,9 @@
-import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import Button from '../../Components/Button/Button';
 import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
 import { imageSizes } from '../../Models/utils';
 import { CMPService } from '../../Services/CMPService';
+import BackBtn from '../../components/BackButton/BackBtn';
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};
@@ -11,6 +12,12 @@ export default class SingleMovie extends Lightning.Component {
       Content: {
         w: 1920,
         h: 1080,
+        BackButton: {
+          type: BackBtn,
+          texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+          x: 45,
+          y: 30,
+        },
         Card: {
           x: 70,
           y: 120,
@@ -150,6 +157,9 @@ export default class SingleMovie extends Lightning.Component {
   get _ContinueButton() {
     return this.tag('ContinueButton');
   }
+  get _BackButton() {
+    return this.tag('BackButton');
+  }
 
   set props(props) {
     this._props = { ...this._props, ...props };
@@ -204,6 +214,9 @@ export default class SingleMovie extends Lightning.Component {
         text: cast,
       },
     });
+    /* this._BackButton.patch({
+      texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 24, 24),
+    }); */
 
     const buttons = [
       {
@@ -285,7 +298,7 @@ export default class SingleMovie extends Lightning.Component {
     this._Buttons.props = { items: mappedButtons };
   }
 
-  _firstActive() {
+  _active() {
     this._setState('Buttons');
   }
 
@@ -325,6 +338,14 @@ export default class SingleMovie extends Lightning.Component {
         _handleDown() {
           this._setState('ContinueBtn');
         }
+
+        _handleLeft() {
+          this._setState('BackButton');
+        }
+
+        _handleUp() {
+          this._setState('BackButton');
+        }
       },
       class ContinueBtn extends this {
         _getFocused() {
@@ -332,6 +353,24 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
+          this._setState('Buttons');
+        }
+
+        _handleLeft() {
+          this._setState('BackButton');
+        }
+      },
+
+      class BackButton extends this {
+        _getFocused() {
+          return this._BackButton;
+        }
+
+        _handleDown() {
+          this._setState('Buttons');
+        }
+
+        _handleRight() {
           this._setState('Buttons');
         }
       },
