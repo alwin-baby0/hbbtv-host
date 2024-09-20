@@ -52,7 +52,7 @@ export default class LanguageButton extends Lightning.Component {
     });
 
     this.tag('Column.Text').patch({
-      text: languageInfo.code,
+      text: languageInfo,
       color: Colors(colors.white).get(),
       fontFace: 'Montserrat-SemiBold',
     });
@@ -72,7 +72,7 @@ export default class LanguageButton extends Lightning.Component {
 
   _handleEnter() {
     const { languageInfo } = this._props;
-    const languageCode = languageInfo.value;
+    const languageCode = languageInfo;
     localStorage.setItem('languageCode', languageCode);
 
     Router.navigate('home');
