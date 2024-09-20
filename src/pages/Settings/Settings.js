@@ -23,7 +23,7 @@ const languagesData = [
   },
 ];
 
-const userLanguageTranslations = [
+/* const userLanguageTranslations = [
   {
     lang: 'de',
     title: `Kostenlos anmelden für unbegrenzte Unterhaltung!`,
@@ -84,7 +84,7 @@ const userLanguageTranslations = [
     text: `Rekisteröidy nyt ilmaiseksi ja saat käyttöösi vielä enemmän ominaisuuksia! Synkronoi wedotv kaikilla laitteillasi ja nauti suosikkielokuviesi ja -sarjojesi saumattomasta katselusta milloin ja missä tahansa.`,
     scanText: `Skannaa QR-koodi`,
   },
-];
+]; */
 
 export default class Settings extends Lightning.Component {
   _props = {
@@ -191,6 +191,10 @@ export default class Settings extends Lightning.Component {
     CMPService.clearPollingInterval();
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
     if (contentId === 0) {
+      console.log(this._props);
+      const userLanguageTranslations = this._props.userLanguageTranslations;
+      console.log(userLanguageTranslations);
+
       const selectedLanguageCode = localStorage.getItem('languageCode');
 
       const languageObject = userLanguageTranslations.find(
@@ -222,7 +226,7 @@ export default class Settings extends Lightning.Component {
                 h: 120,
                 w: 500,
                 text: {
-                  text: languageObject.title,
+                  text: languageObject?.title,
                   fontFace: 'Montserrat-Bold',
                   fontSize: 30,
                   lineHeight: 35,
@@ -233,7 +237,7 @@ export default class Settings extends Lightning.Component {
                 h: 300,
                 w: 650,
                 text: {
-                  text: languageObject.text,
+                  text: languageObject?.text,
                   fontFace: 'Montserrat-Regular',
                   fontSize: 25,
                   lineHeight: 30,
@@ -264,7 +268,7 @@ export default class Settings extends Lightning.Component {
                   marginTop: 10,
                 },
                 text: {
-                  text: languageObject.scanText,
+                  text: languageObject?.scanText,
                   fontFace: 'Montserrat-Bold',
                   fontSize: 25,
                   lineHeight: 30,
