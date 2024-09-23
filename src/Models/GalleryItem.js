@@ -1,5 +1,6 @@
 class GalleryItem {
   constructor(data) {
+    console.log('PROPSSS:', data);
     const { id, title, content, extensions, media_group, summary, type } = data;
 
     this.id = id;
@@ -11,6 +12,8 @@ class GalleryItem {
 
     this.type = type;
     this.trailerUrl = extensions.preview_playback;
+
+    this.dateRange = extensions.date_range?.timestamp;
 
     if (content) {
       this.url = content.src;
