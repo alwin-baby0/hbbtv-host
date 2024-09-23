@@ -20,6 +20,7 @@ export default class LanguageButton extends Lightning.Component {
   set props(props) {
     const { items, ...rest } = props;
     this._props = { ...this._props, ...rest };
+    console.log('LANG PROPS', props);
   }
 
   get _Column() {
@@ -28,13 +29,11 @@ export default class LanguageButton extends Lightning.Component {
 
   _selectButton() {
     this._selected = true;
-    var languageCode = localStorage.getItem('languageCode');
-    let selectedLanguage =
-      languageCode === 'en' ? 0 : languageCode === 'de' ? 1 : languageCode === 'it' ? 2 : undefined;
+    const languageCode = localStorage.getItem('languageCode');
+    const isSelected = this._props.languageInfo === languageCode;
 
     this.tag('Column').patch({
-      color:
-        selectedLanguage === 0 ? Colors(colors.focus).get() : Colors(colors.focusedLanguage).get(),
+      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
     });
   }
 
@@ -58,23 +57,25 @@ export default class LanguageButton extends Lightning.Component {
     });
   }
 
-  _active() {
-    var languageCode = localStorage.getItem('languageCode');
-    let selectedLanguage =
-      languageCode === 'en' ? 0 : languageCode === 'de' ? 1 : languageCode === 'it' ? 2 : undefined;
+  _findLanguageIndex() {
+    const languageCode = localStorage.getItem('languageCode');
+    const index = this._props.languageInfo.findIndex((info) => info.languageInfo === languageCode);
+    return index; // Vratiće -1 ako nije pronađen
+  }
 
-    // Set the new selected language and update the UI
-    this._selectedLanguage = selectedLanguage;
-    this.fireAncestors('$setFocusLanguage', selectedLanguage);
+  _active() {
+    const languageCode = localStorage.getItem('languageCode');
+    const isSelected = this._props.languageInfo === languageCode;
+
+    if (isSelected) {
+      this.fireAncestors('$setFocusLanguage', this._props.languageIndex);
+    }
   }
 
   _init() {}
 
   _handleEnter() {
-    const { languageInfo } = this._props;
-    const languageCode = languageInfo;
-    localStorage.setItem('languageCode', languageCode);
-
+    localStorage.setItem('languageCode', this._props.languageInfo);
     Router.navigate('home');
     window.location.reload();
   }
@@ -86,15 +87,12 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   _unfocus() {
-    if (this._selected) {
-      this.tag('Column').patch({
-        color: Colors(colors.focusedLanguage).get(),
-      });
-    } else {
-      this.tag('Column').patch({
-        color: Colors(colors.unfocusedLanguage).get(),
-      });
-    }
+    const languageCode = localStorage.getItem('languageCode');
+    const isSelected = this._props.languageInfo === languageCode;
+
+    this.tag('Column').patch({
+      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
+    });
   }
 
   _getFocused() {}

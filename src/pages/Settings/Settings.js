@@ -135,6 +135,10 @@ export default class Settings extends Lightning.Component {
     this._props = { ...this._props, ...props };
   }
 
+  _enable() {
+    if (!localStorage.getItem('languageCode')) localStorage.setItem('languageCode', 'en');
+  }
+
   _active() {
     this._setState('DefaultState');
     this.$changeContent(0);
@@ -283,10 +287,11 @@ export default class Settings extends Lightning.Component {
       const { languages } = this._props.languagesData;
       const languagesArr = languages.split(',');
 
-      const items = languagesArr.map((language) => ({
+      const items = languagesArr.map((language, index) => ({
         type: LanguageButton,
         props: {
           languageInfo: language,
+          languageIndex: index,
         },
         w: 1050,
         h: 100,
