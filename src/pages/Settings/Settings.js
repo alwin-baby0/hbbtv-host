@@ -7,6 +7,8 @@ import LanguageButton from '../../Components/Buttons/LanguageButton/LanguageButt
 import { parseVodMoviesPageData } from '../../Models';
 import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
+import UserRecentlyWatched from './UserRecentlyWatched';
+import UserFavorites from './UserFavorites';
 
 const languagesData = [
   {
@@ -91,6 +93,7 @@ export default class Settings extends Lightning.Component {
     lastId: 0,
     lastLanguage: 0,
     deviceData: undefined,
+    isLoggedIn: false,
   };
 
   constructor(context) {
@@ -196,6 +199,7 @@ export default class Settings extends Lightning.Component {
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
     if (contentId === 0) {
       console.log(this._props);
+      const { isLoggedIn } = this._props;
       const userLanguageTranslations = this._props.userLanguageTranslations;
       console.log(userLanguageTranslations);
 
@@ -209,80 +213,143 @@ export default class Settings extends Lightning.Component {
 
       const { device_code, verification_uri } = this._props.deviceData;
 
-      await CMPService.setDeviceCodeStatusInterval(device_code);
-      const qrCode = verification_uri.url;
+      if (!localStorage.getItem('userData')) {
+        await CMPService.setDeviceCodeStatusInterval(device_code);
+        const qrCode = verification_uri.url;
 
-      qrcode.toDataURL(qrCode).then((image) => {
+        qrcode.toDataURL(qrCode).then((image) => {
+          this.tag('Content').patch({
+            QRContainer: {
+              w: 1310,
+              h: 800,
+              flex: {
+                direction: 'row',
+              },
+              Info: {
+                flex: {
+                  direction: 'column',
+                },
+                w: 750,
+                h: 800,
+                Title: {
+                  h: 120,
+                  w: 500,
+                  text: {
+                    text: languageObject?.title,
+                    fontFace: 'Montserrat-Bold',
+                    fontSize: 30,
+                    lineHeight: 35,
+                    letterSpacing: 2,
+                  },
+                },
+                Text: {
+                  h: 300,
+                  w: 650,
+                  text: {
+                    text: languageObject?.text,
+                    fontFace: 'Montserrat-Regular',
+                    fontSize: 25,
+                    lineHeight: 30,
+                    letterSpacing: 2,
+                  },
+                },
+              },
+              Divider: {
+                w: 1,
+                h: 450,
+                rect: true,
+                color: Colors('#ffffff').alpha(0.5).get(),
+              },
+              QRCodeInfo: {
+                x: 150,
+                flex: {
+                  direction: 'column',
+                  alignItems: 'center',
+                },
+                QRCode: {
+                  w: 280,
+                  h: 280,
+                  src: image,
+                  zIndex: 100,
+                },
+                QRText: {
+                  flexItem: {
+                    marginTop: 10,
+                  },
+                  text: {
+                    text: languageObject?.scanText,
+                    fontFace: 'Montserrat-Bold',
+                    fontSize: 25,
+                    lineHeight: 30,
+                    letterSpacing: 2,
+                  },
+                },
+              },
+            },
+          });
+        });
+      } else {
+        const recentlyWatched = await CMPService.getRecentlyWatched();
+        console.log(recentlyWatched.data.recently_watched);
+        console.log(recentlyWatched.data.recently_watched.length);
+
+        const parsedMovies = parseVodMoviesPageData({
+          data: {
+            entry: recentlyWatched.data.recently_watched,
+          },
+          itemsPerRow: recentlyWatched.data.recently_watched.length,
+        });
+
+        const favorites = await CMPService.getFavorites();
+        console.log(favorites.data.favorites);
+        const parsedFavorites = parseVodMoviesPageData({
+          data: {
+            entry: favorites.data.favorites,
+          },
+          itemsPerRow: favorites.data.favorites.length,
+        });
+
         this.tag('Content').patch({
           QRContainer: {
-            w: 1310,
+            w: 1400,
             h: 800,
             flex: {
-              direction: 'row',
+              direction: 'column',
             },
             Info: {
-              flex: {
-                direction: 'column',
-              },
-              w: 750,
-              h: 800,
+              w: 1310,
+              h: 100,
               Title: {
                 h: 120,
-                w: 500,
+                w: 1310,
                 text: {
-                  text: languageObject?.title,
+                  text: 'Hello, you are logged in. Ready for new discoveries?',
                   fontFace: 'Montserrat-Bold',
                   fontSize: 30,
                   lineHeight: 35,
                   letterSpacing: 2,
                 },
               },
-              Text: {
-                h: 300,
-                w: 650,
-                text: {
-                  text: languageObject?.text,
-                  fontFace: 'Montserrat-Regular',
-                  fontSize: 25,
-                  lineHeight: 30,
-                  letterSpacing: 2,
-                },
+            },
+            RecentlyWatched: {
+              type: UserRecentlyWatched,
+              w: 1400,
+              h: 500,
+              props: {
+                items: parsedMovies,
               },
             },
-            Divider: {
-              w: 1,
-              h: 450,
-              rect: true,
-              color: Colors('#ffffff').alpha(0.5).get(),
-            },
-            QRCodeInfo: {
-              x: 150,
-              flex: {
-                direction: 'column',
-                alignItems: 'center',
-              },
-              QRCode: {
-                w: 280,
-                h: 280,
-                src: image,
-                zIndex: 100,
-              },
-              QRText: {
-                flexItem: {
-                  marginTop: 10,
-                },
-                text: {
-                  text: languageObject?.scanText,
-                  fontFace: 'Montserrat-Bold',
-                  fontSize: 25,
-                  lineHeight: 30,
-                  letterSpacing: 2,
-                },
+            Favorites: {
+              type: UserFavorites,
+              w: 1400,
+              h: 920,
+              props: {
+                items: parsedFavorites,
               },
             },
           },
         });
-      });
+      }
     } else if (contentId === 1) {
       const { languages } = this._props.languagesData;
       const languagesArr = languages.split(',');
@@ -313,6 +380,7 @@ export default class Settings extends Lightning.Component {
     } else if (contentId === 2) {
       const recentlyWatched = await CMPService.getRecentlyWatched();
       console.log(recentlyWatched.data.recently_watched);
+      console.log(recentlyWatched.data.recently_watched.length);
 
       const parsedMovies = parseVodMoviesPageData({
         data: {
@@ -353,10 +421,15 @@ export default class Settings extends Lightning.Component {
           },
         },
       });
+    } else if (contentId === 4) {
+      localStorage.removeItem('userData');
     }
   }
 
   userLoginButtonsUpdate() {
+    //this._props.isLoggedIn = true;
+    this.$changeContent(0);
+
     this._Column._appendItems([
       {
         type: MemberTabButton,
@@ -377,6 +450,16 @@ export default class Settings extends Lightning.Component {
         w: 250,
         h: 100,
         tabIndex: 3,
+      },
+      {
+        type: MemberTabButton,
+        tabInfoData: {
+          id: 4,
+          title: 'Logout',
+        },
+        w: 250,
+        h: 100,
+        tabIndex: 4,
       },
     ]);
   }
@@ -401,6 +484,9 @@ export default class Settings extends Lightning.Component {
           }
           if (this.tag('Content.RecentlyWatched')) {
             this._setState('RecentlyWatched');
+          }
+          if (this.tag('Content.QRContainer.RecentlyWatched')) {
+            this._setState('UserRecentlyWatched');
           }
         }
       },
@@ -440,6 +526,38 @@ export default class Settings extends Lightning.Component {
 
         _handleUp() {
           Router.focusWidget('Menu');
+        }
+
+        _handleLeft() {
+          this._setState('DefaultState');
+        }
+      },
+
+      class UserRecentlyWatched extends this {
+        _getFocused() {
+          return this.tag('Content.QRContainer.RecentlyWatched');
+        }
+
+        _handleUp() {
+          Router.focusWidget('Menu');
+        }
+
+        _handleDown() {
+          this._setState('UserFavorites');
+        }
+
+        _handleLeft() {
+          this._setState('DefaultState');
+        }
+      },
+
+      class UserFavorites extends this {
+        _getFocused() {
+          return this.tag('Content.QRContainer.Favorites');
+        }
+
+        _handleUp() {
+          this._setState('UserRecentlyWatched');
         }
 
         _handleLeft() {
