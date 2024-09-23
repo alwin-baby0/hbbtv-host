@@ -295,6 +295,7 @@ export default class Settings extends Lightning.Component {
 
         const parsedMovies = parseVodMoviesPageData({
           data: {
+            railTitle: 'Continue Watching',
             entry: recentlyWatched.data.recently_watched,
           },
           itemsPerRow: recentlyWatched.data.recently_watched.length,
@@ -304,6 +305,7 @@ export default class Settings extends Lightning.Component {
         console.log(favorites.data.favorites);
         const parsedFavorites = parseVodMoviesPageData({
           data: {
+            railTitle: 'Favorites',
             entry: favorites.data.favorites,
           },
           itemsPerRow: favorites.data.favorites.length,

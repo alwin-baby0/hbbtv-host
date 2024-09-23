@@ -35,6 +35,7 @@ export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => 
 
   return {
     railType: RAIL_TYPES.MOVIE,
+    railTitle: data.railTitle,
     cardType: 'POSTER',
     items: railItems,
     itemsPerRow,
