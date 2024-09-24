@@ -7,9 +7,10 @@ export default class UserFavorites extends Lightning.Component {
     return {
       Favorites: {
         type: VerticalContainer,
-        w: 1400,
+        w: 1450,
         h: 500,
         props: {
+          w: 1450,
           h: 920,
         },
       },

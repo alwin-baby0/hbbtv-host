@@ -140,3 +140,16 @@ export const parseCollectionData = ({ data }) => {
     itemsPerRow: 4,
   };
 };
+
+export const parseVodUserContentData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
+  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  if (!railItems || railItems?.length === 0) return;
+
+  return {
+    railType: RAIL_TYPES.USER_CONTENT,
+    railTitle: data.railTitle,
+    cardType: 'POSTER',
+    items: railItems,
+    itemsPerRow,
+  };
+};

@@ -4,7 +4,7 @@ import VerticalContainer from '../../Components/VerticalContainer/VerticalContai
 import { CMPService } from '../../Services/CMPService';
 import qrcode from 'qrcode';
 import LanguageButton from '../../Components/Buttons/LanguageButton/LanguageButton';
-import { parseVodMoviesPageData } from '../../Models';
+import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
@@ -57,8 +57,10 @@ export default class Settings extends Lightning.Component {
         },
       },
       Content: {
-        w: 1310,
-        h: 920,
+        // w: 1310,
+        w: 1450,
+        // h: 920,
+        h: 1020,
         x: 480,
         y: 225,
         clipping: true,
@@ -230,7 +232,7 @@ export default class Settings extends Lightning.Component {
         console.log(recentlyWatched.data.recently_watched);
         console.log(recentlyWatched.data.recently_watched.length);
 
-        const parsedMovies = parseVodMoviesPageData({
+        const parsedMovies = parseVodUserContentData({
           data: {
             railTitle: 'Continue Watching',
             entry: recentlyWatched.data.recently_watched,
@@ -240,7 +242,7 @@ export default class Settings extends Lightning.Component {
 
         const favorites = await CMPService.getFavorites();
         console.log(favorites.data.favorites);
-        const parsedFavorites = parseVodMoviesPageData({
+        const parsedFavorites = parseVodUserContentData({
           data: {
             railTitle: 'Favorites',
             entry: favorites.data.favorites,
@@ -250,7 +252,7 @@ export default class Settings extends Lightning.Component {
 
         this.tag('Content').patch({
           QRContainer: {
-            w: 1400,
+            w: 1450,
             h: 800,
             flex: {
               direction: 'column',
@@ -262,6 +264,7 @@ export default class Settings extends Lightning.Component {
                 h: 120,
                 w: 1310,
                 text: {
+                  // text: languageObject?.loggedInText,
                   text: languageObject?.loggedInText,
                   fontFace: 'Montserrat-Bold',
                   fontSize: 30,
@@ -272,7 +275,7 @@ export default class Settings extends Lightning.Component {
             },
             RecentlyWatched: {
               type: UserRecentlyWatched,
-              w: 1400,
+              w: 1450,
               h: 500,
               props: {
                 items: parsedMovies,
@@ -280,7 +283,7 @@ export default class Settings extends Lightning.Component {
             },
             Favorites: {
               type: UserFavorites,
-              w: 1400,
+              w: 1450,
               h: 920,
               props: {
                 items: parsedFavorites,
@@ -455,6 +458,38 @@ export default class Settings extends Lightning.Component {
           return this.tag('Content.QRContainer.RecentlyWatched');
         }
 
+        $enter() {
+          const userLanguageTranslations = this._props.userLanguageTranslations;
+          console.log(userLanguageTranslations);
+
+          const selectedLanguageCode = localStorage.getItem('languageCode');
+
+          const languageObject = userLanguageTranslations.find(
+            (item) => item.lang === selectedLanguageCode
+          );
+          // this.tag('Content.QRContainer.Info.Title').patch({
+          //   visible: true,
+          // });
+          this.tag('Content.QRContainer.Info').patch({
+            Title: {
+              h: 120,
+              w: 1310,
+              text: {
+                // text: languageObject?.loggedInText,
+                text: languageObject?.loggedInText,
+                fontFace: 'Montserrat-Bold',
+                fontSize: 30,
+                lineHeight: 35,
+                letterSpacing: 2,
+              },
+            },
+            h: 100,
+          });
+          this.tag('Content').patch({
+            y: 225,
+          });
+        }
+
         _handleUp() {
           Router.focusWidget('Menu');
         }
@@ -471,6 +506,21 @@ export default class Settings extends Lightning.Component {
       class UserFavorites extends this {
         _getFocused() {
           return this.tag('Content.QRContainer.Favorites');
+        }
+
+        $enter() {
+          console.log('entered');
+          // this.tag('Content.QRContainer.Info.Title').patch({
+          //   visible: false,
+          // });
+          this.tag('Content.QRContainer.Info').patch({
+            Title: undefined,
+            h: 0,
+          });
+
+          this.tag('Content').patch({
+            y: 80,
+          });
         }
 
         _handleUp() {

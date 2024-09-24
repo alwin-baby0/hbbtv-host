@@ -7,10 +7,11 @@ export default class UserRecentlyWatched extends Lightning.Component {
     return {
       RecentlyWatched: {
         type: VerticalContainer,
-        w: 1400,
+        w: 1450,
         h: 500,
         props: {
           h: 920,
+          w: 1450,
         },
       },
     };
