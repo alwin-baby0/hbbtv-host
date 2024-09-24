@@ -8,7 +8,8 @@ const ROUTES_INDEX = {
   live: 4,
   search: 5,
   settings: 6,
-  help: 7,
+  langsettings: 7,
+  help: 8,
 };
 
 /* export function getRouteNavbarIndex(route) {

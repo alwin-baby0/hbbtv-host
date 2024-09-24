@@ -22,7 +22,7 @@ export default class SidebarItem extends lng.Component {
         },
       },
       Icon: {
-        x: 450,
+        x: 380,
         y: 10,
         zIndex: 0,
         color: Colors(colors.unfocus).get(),
