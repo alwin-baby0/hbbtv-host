@@ -325,7 +325,7 @@ export default class Settings extends Lightning.Component {
                 h: 120,
                 w: 1310,
                 text: {
-                  text: 'Hello, you are logged in. Ready for new discoveries?',
+                  text: languageObject?.loggedInText,
                   fontFace: 'Montserrat-Bold',
                   fontSize: 30,
                   lineHeight: 35,
