@@ -163,7 +163,7 @@ export default class SingleMovie extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { movie, movieId } = this._props;
+    const { movie, movieId, movieTrailerId, movieTrailerUrl } = this._props;
     const {
       title,
       description,
@@ -284,11 +284,16 @@ export default class SingleMovie extends Lightning.Component {
           callback: () => {
             if (buttonLabel === 'FAVORITE') {
               this.addToFavorite();
-            } else {
+            } else if (buttonLabel === 'WATCH NOW') {
               Router.navigate('player', {
                 videoUrl: movie[stream],
                 duration: duration,
                 videoId: movieId,
+              });
+            } else {
+              Router.navigate('player', {
+                videoUrl: movieTrailerUrl,
+                videoId: movieTrailerId,
               });
             }
           },

@@ -124,14 +124,11 @@ const memberArea = (page, tabButtons) => {
 };
 
 export default async function (page) {
-  const response = await CMPService.getDeviceCode();
-
   const languages = await LanguageService.getLanguages();
 
   console.log(languages);
 
   page.props = {
-    deviceData: response.data,
     languagesData: languages.data,
     userLanguageTranslations: userLanguageTranslations,
   };
@@ -141,21 +138,21 @@ export default async function (page) {
       id: 0,
       title: 'User',
     },
-    {
-      id: 1,
-      title: 'Languages',
-    },
   ];
 
   if (localStorage.getItem('userData')) {
     tabButtons.push(
       {
-        id: 2,
+        id: 1,
         title: 'Continue Watching',
       },
       {
-        id: 3,
+        id: 2,
         title: 'Favorites',
+      },
+      {
+        id: 3,
+        title: 'Logout',
       }
     );
   }

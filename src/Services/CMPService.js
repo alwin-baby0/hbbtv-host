@@ -143,6 +143,19 @@ class CMPService extends FetchingService {
     });
   };
 
+  revokeToken = async (token) => {
+    return await this._request({
+      url: `/revoke.php`,
+      apiVersion: auth,
+      method: 'POST',
+      data: {
+        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
+        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        token: token,
+      },
+    });
+  };
+
   getFavorites = async () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 

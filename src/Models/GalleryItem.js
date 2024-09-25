@@ -30,6 +30,7 @@ class GalleryItem {
         venue,
         is_favorite,
         last_position,
+        trailer,
       } = extensions;
 
       if (button_text && button_text !== '') {
@@ -63,6 +64,7 @@ class GalleryItem {
       this.venue = venue;
       this.is_favorite = is_favorite;
       this.last_position = last_position;
+      this.trailer = trailer;
     }
 
     this.thumbnails = [];

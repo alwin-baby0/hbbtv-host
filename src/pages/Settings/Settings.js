@@ -24,70 +24,6 @@ const languagesData = [
     value: 'it',
   },
 ];
-
-/* const userLanguageTranslations = [
-  {
-    lang: 'de',
-    title: `Kostenlos anmelden für unbegrenzte Unterhaltung!`,
-    text: `Melde dich jetzt kostenlos an und erhalte Zugang zu noch mehr Funktionen! Synchronisiere wedotv auf all deinen Geräten und geniesse nahtloses Weiterschauen deiner Lieblingsfilme und -serien – jederzeit und überall.`,
-    scanText: `Scann den QR-Code`,
-  },
-  {
-    lang: 'en',
-    title: `Sign up for unlimited entertainment – it's free!`,
-    text: `Sign up now for free and unlock even more features! Sync wedotv across all your devices and enjoy seamless streaming of your favorite movies and series – anytime, anywhere.`,
-    scanText: `Scan the QR code`,
-  },
-  {
-    lang: 'it',
-    title: `Registrati gratuitamente per un intrattenimento illimitato!`,
-    text: `Registrati ora gratuitamente e accedi a ancora più funzioni! Sincronizza wedotv su tutti i tuoi dispositivi e goditi la visione senza interruzioni dei tuoi film e serie preferiti, sempre e ovunque.`,
-    scanText: `Scansiona il codice QR`,
-  },
-  {
-    lang: 'fr',
-    title: `Inscrivez-vous gratuitement pour un divertissement illimité !`,
-    text: `Inscrivez-vous gratuitement dès maintenant et accédez à encore plus de fonctionnalités ! Synchronisez wedotv sur tous vos appareils et profitez de vos films et séries préférés sans interruption, à tout moment et où que vous soyez.`,
-    scanText: `Scannez le code QR`,
-  },
-  {
-    lang: 'es',
-    title: `¡Regístrate gratis para entretenimiento ilimitado!`,
-    text: `Regístrate ahora gratis y accede a aún más funciones. Sincroniza wedotv en todos tus dispositivos y disfruta de tus películas y series favoritas sin interrupciones, en cualquier momento y lugar.`,
-    scanText: `Escanea el código QR`,
-  },
-  {
-    lang: 'nl',
-    title: `Meld je gratis aan voor onbeperkt entertainment!`,
-    text: `Meld je nu gratis aan en krijg toegang tot nog meer functies! Synchroniseer wedotv op al je apparaten en geniet van naadloze streaming van je favoriete films en series, altijd en overal.`,
-    scanText: `Scan de QR-code`,
-  },
-  {
-    lang: 'sv',
-    title: `Registrera dig gratis för obegränsad underhållning!`,
-    text: `Registrera dig nu gratis och få tillgång till ännu fler funktioner! Synkronisera wedotv på alla dina enheter och njut av sömlös streaming av dina favoritfilmer och serier – när som helst, var som helst.`,
-    scanText: `Skanna QR-koden`,
-  },
-  {
-    lang: 'no',
-    title: `Registrer deg gratis for ubegrenset underholdning!`,
-    text: `Registrer deg nå gratis og få tilgang til enda flere funksjoner! Synkroniser wedotv på alle enhetene dine og nyt sømløs strømming av dine favorittfilmer og serier – når som helst, hvor som helst.`,
-    scanText: `Skann QR-koden`,
-  },
-  {
-    lang: 'da',
-    title: `Tilmeld dig gratis for ubegrænset underholdning!`,
-    text: `Tilmeld dig nu gratis og få adgang til endnu flere funktioner! Synkroniser wedotv på alle dine enheder, og nyd problemfri streaming af dine yndlingsfilm og -serier – når som helst og hvor som helst.`,
-    scanText: `Scan QR-koden`,
-  },
-  {
-    lang: 'fi',
-    title: `Rekisteröidy ilmaiseksi rajattomaan viihteeseen!`,
-    text: `Rekisteröidy nyt ilmaiseksi ja saat käyttöösi vielä enemmän ominaisuuksia! Synkronoi wedotv kaikilla laitteillasi ja nauti suosikkielokuviesi ja -sarjojesi saumattomasta katselusta milloin ja missä tahansa.`,
-    scanText: `Skannaa QR-koodi`,
-  },
-]; */
-
 export default class Settings extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -198,8 +134,11 @@ export default class Settings extends Lightning.Component {
     CMPService.clearPollingInterval();
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
     if (contentId === 0) {
-      console.log(this._props);
-      const { isLoggedIn } = this._props;
+      const response = await CMPService.getDeviceCode();
+
+      const device_code = response.data.device_code;
+      const verification_uri = response.data.verification_uri;
+
       const userLanguageTranslations = this._props.userLanguageTranslations;
       console.log(userLanguageTranslations);
 
@@ -210,8 +149,6 @@ export default class Settings extends Lightning.Component {
       );
 
       window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
-
-      const { device_code, verification_uri } = this._props.deviceData;
 
       if (!localStorage.getItem('userData')) {
         await CMPService.setDeviceCodeStatusInterval(device_code);
@@ -353,33 +290,6 @@ export default class Settings extends Lightning.Component {
         });
       }
     } else if (contentId === 1) {
-      const { languages } = this._props.languagesData;
-      const languagesArr = languages.split(',');
-
-      const items = languagesArr.map((language, index) => ({
-        type: LanguageButton,
-        props: {
-          languageInfo: language,
-          languageIndex: index,
-        },
-        w: 1050,
-        h: 100,
-      }));
-
-      this.tag('Content').patch({
-        Languages: {
-          type: VerticalContainer,
-          w: 1050,
-          h: 300,
-          props: {
-            items: items,
-            enableScroll: false,
-            w: 1050,
-            h: 300,
-          },
-        },
-      });
-    } else if (contentId === 2) {
       const recentlyWatched = await CMPService.getRecentlyWatched();
       console.log(recentlyWatched.data.recently_watched);
       console.log(recentlyWatched.data.recently_watched.length);
@@ -402,7 +312,7 @@ export default class Settings extends Lightning.Component {
           },
         },
       });
-    } else if (contentId === 3) {
+    } else if (contentId === 2) {
       const favorites = await CMPService.getFavorites();
       console.log(favorites.data.favorites);
       const parsedMovies = parseVodMoviesPageData({
@@ -423,8 +333,13 @@ export default class Settings extends Lightning.Component {
           },
         },
       });
-    } else if (contentId === 4) {
+    } else if (contentId === 3) {
+      CMPService.revokeToken(localStorage.getItem('userData').access_token);
       localStorage.removeItem('userData');
+      CMPService.clearPollingInterval();
+      this.$setFocus(0);
+      this._Column._removeLastItems(3);
+      this.$changeContent(0);
     }
   }
 
@@ -436,8 +351,18 @@ export default class Settings extends Lightning.Component {
       {
         type: MemberTabButton,
         tabInfoData: {
-          id: 2,
+          id: 1,
           title: 'Continue Watching',
+        },
+        w: 250,
+        h: 100,
+        tabIndex: 1,
+      },
+      {
+        type: MemberTabButton,
+        tabInfoData: {
+          id: 2,
+          title: 'Favorites',
         },
         w: 250,
         h: 100,
@@ -447,21 +372,11 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 3,
-          title: 'Favorites',
-        },
-        w: 250,
-        h: 100,
-        tabIndex: 3,
-      },
-      {
-        type: MemberTabButton,
-        tabInfoData: {
-          id: 4,
           title: 'Logout',
         },
         w: 250,
         h: 100,
-        tabIndex: 4,
+        tabIndex: 3,
       },
     ]);
   }

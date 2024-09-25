@@ -93,7 +93,7 @@ export default {
       component: Settings,
       widgets: ['Menu'],
       on: settings,
-      cache: 24 * 60 * 60, //24h ex
+      //cache: 24 * 60 * 60, //24h ex
     },
     {
       path: 'langsettings',
