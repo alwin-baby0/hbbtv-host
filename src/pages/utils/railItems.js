@@ -133,6 +133,10 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
               Router.navigate(`event-details/${railItem.id}`);
               break;
             }
+            case CATEGORY_TYPES.EVENT: {
+              Router.navigate(`event-details/${railItem.id}`);
+              break;
+            }
             case CATEGORY_TYPES.VIDEO: {
               Router.navigate('player', {
                 videoUrl: railItem.url,

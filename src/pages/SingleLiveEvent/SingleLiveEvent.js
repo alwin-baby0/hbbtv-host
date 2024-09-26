@@ -60,29 +60,30 @@ export default class SingleLiveEvent extends Lightning.Component {
     });
 
     // if (currentDate >= startDate && currentDate <= endDate) {
-    if (currentDate >= startDate && currentDate <= endDate) {
-      this._HeroSection.tag('Info').patch({
-        GalleryButton: {
-          type: Button,
-          flexItem: {
-            marginTop: 10,
-          },
-          props: {
-            buttonLabel: 'WATCH NOW',
-            buttonIcon: Utils.asset('icons/home/play.svg'),
-          },
-        },
-      });
-      this._HeroSection._GalleryButton.patch({
-        props: {
-          width: 400,
-        },
-      });
-    } else {
-      this._HeroSection.tag('Info').patch({
-        GalleryButton: undefined,
-      });
-    }
+    // Hide Button
+    // if (currentDate >= startDate && currentDate <= endDate) {
+    //   this._HeroSection.tag('Info').patch({
+    //     GalleryButton: {
+    //       type: Button,
+    //       flexItem: {
+    //         marginTop: 10,
+    //       },
+    //       props: {
+    //         buttonLabel: 'WATCH NOW',
+    //         buttonIcon: Utils.asset('icons/home/play.svg'),
+    //       },
+    //     },
+    //   });
+    //   this._HeroSection._GalleryButton.patch({
+    //     props: {
+    //       width: 400,
+    //     },
+    //   });
+    // } else {
+    //   this._HeroSection.tag('Info').patch({
+    //     GalleryButton: undefined,
+    //   });
+    // }
   }
 
   _active() {
@@ -90,11 +91,12 @@ export default class SingleLiveEvent extends Lightning.Component {
     const endDate = new Date(this._props.galleryItem.dateRange[1]);
     const currentDate = new Date();
 
-    if (currentDate >= startDate && currentDate <= endDate) {
-      this._setState('HeroSection');
-    } else {
-      this._setState('Items');
-    }
+    // Hide Button
+    // if (currentDate >= startDate && currentDate <= endDate) {
+    //   this._setState('HeroSection');
+    // } else {
+    //   this._setState('Items');
+    // }
   }
 
   _getFocused() {
@@ -183,12 +185,14 @@ export default class SingleLiveEvent extends Lightning.Component {
           const endDate = new Date(this._props.galleryItem.dateRange[1]);
           const currentDate = new Date();
 
-          if (currentDate >= startDate && currentDate <= endDate) {
-            this._setState('HeroSection');
-          } else {
-            this._setState('Items');
-          }
-          // this._setState('HeroSection');
+          this._setState('HeroSection');
+
+          // Hide Button
+          // if (currentDate >= startDate && currentDate <= endDate) {
+          //   this._setState('HeroSection');
+          // } else {
+          //   this._setState('Items');
+          // }
         }
       },
     ];
