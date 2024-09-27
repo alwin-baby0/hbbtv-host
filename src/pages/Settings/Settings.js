@@ -132,6 +132,7 @@ export default class Settings extends Lightning.Component {
       Languages: undefined,
       Favorites: undefined,
       RecentlyWatched: undefined,
+      y: 225,
     });
     CMPService.clearPollingInterval();
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
@@ -142,7 +143,7 @@ export default class Settings extends Lightning.Component {
       const verification_uri = response.data.verification_uri;
 
       const userLanguageTranslations = this._props.userLanguageTranslations;
-      console.log(userLanguageTranslations);
+      // console.log(userLanguageTranslations);
 
       const selectedLanguageCode = localStorage.getItem('languageCode');
 
@@ -229,8 +230,8 @@ export default class Settings extends Lightning.Component {
         });
       } else {
         const recentlyWatched = await CMPService.getRecentlyWatched();
-        console.log(recentlyWatched.data.recently_watched);
-        console.log(recentlyWatched.data.recently_watched.length);
+        // console.log(recentlyWatched.data.recently_watched);
+        // console.log(recentlyWatched.data.recently_watched.length);
 
         const parsedMovies = parseVodUserContentData({
           data: {
@@ -241,7 +242,7 @@ export default class Settings extends Lightning.Component {
         });
 
         const favorites = await CMPService.getFavorites();
-        console.log(favorites.data.favorites);
+
         const parsedFavorites = parseVodUserContentData({
           data: {
             railTitle: 'Favorites',

@@ -126,8 +126,6 @@ const memberArea = (page, tabButtons) => {
 export default async function (page) {
   const languages = await LanguageService.getLanguages();
 
-  console.log(languages);
-
   page.props = {
     languagesData: languages.data,
     userLanguageTranslations: userLanguageTranslations,

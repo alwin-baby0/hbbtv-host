@@ -61,8 +61,8 @@ export default class SingleMovie extends Lightning.Component {
         },
         CardInfo: {
           x: 670,
-          y: 350,
-          // y: 250,
+          // y: 350,
+          y: 250,
           flex: { direction: 'column' },
           AboutMovie: {
             w: 700,

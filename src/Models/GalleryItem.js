@@ -1,6 +1,5 @@
 class GalleryItem {
   constructor(data) {
-    console.log('PROPSSS:', data);
     const { id, title, content, extensions, media_group, summary, type } = data;
 
     this.id = id;

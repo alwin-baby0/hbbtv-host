@@ -30,6 +30,9 @@ export const getTVInfo = () => {
       console.log('Brand:', _brand);
       console.log('MAC Address:', _macAddress);
 
+      // Postavljanje serijskog broja u localStorage
+      localStorage.setItem('serialNumber', _serialNumber);
+
       setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
       createAxiosInstance();
       break;

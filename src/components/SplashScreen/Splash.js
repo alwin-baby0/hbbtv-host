@@ -14,10 +14,10 @@ export default class Splash extends Lightning.Component {
     };
   }
 
-  async _enable() {
+  async _active() {
     await CMPService.initialFetch();
     const buttonsResult = CMPService.cmpData;
-    const expireTimeInMS = buttonsResult.consent.expire.timestamp;
+    const expireTimeInMS = buttonsResult.consent?.expire.timestamp;
 
     setTimeout(() => {
       const currentTimeInMS = Math.floor(Date.now() / 1000);
