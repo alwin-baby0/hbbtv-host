@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Language, Lightning, Router, Utils } from '@lightningjs/sdk';
 import Button from '../../Components/Button/Button';
 import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
 import { imageSizes } from '../../Models/utils';
@@ -271,7 +271,8 @@ export default class SingleMovie extends Lightning.Component {
     const mappedButtons = buttons.map((button) => {
       const { movie } = this._props;
       const { buttonLabel, icon, width, stream } = button;
-
+      const translatedTitle = Language.translate(buttonLabel);
+      console.log('translatedText', translatedTitle);
       return {
         type: Button,
         w: width,
@@ -280,7 +281,7 @@ export default class SingleMovie extends Lightning.Component {
         },
         props: {
           width: width,
-          buttonLabel: buttonLabel,
+          buttonLabel: translatedTitle,
           buttonIcon: Utils.asset(icon),
           callback: () => {
             if (buttonLabel === 'FAVORITE') {

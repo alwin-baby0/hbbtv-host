@@ -1,5 +1,5 @@
 import lng from '@lightningjs/core';
-import { Colors, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Language, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
 
 export default class SidebarItem extends lng.Component {
@@ -22,7 +22,8 @@ export default class SidebarItem extends lng.Component {
         },
       },
       Icon: {
-        x: 380,
+        // x: 380,
+        x: 330,
         y: 10,
         zIndex: 0,
         color: Colors(colors.unfocus).get(),
@@ -51,9 +52,10 @@ export default class SidebarItem extends lng.Component {
       ...props,
     };
 
-    const { selected } = this._props;
+    const { selected, index } = this._props;
     const { label, icon } = this._props.data;
-
+    const translatedText = Language.translate(label);
+    console.log('home index', index);
     if (selected) {
       this._Title.patch({ color: Colors(colors.focus).get() });
       this._Line.patch({ color: Colors(colors.focus).get() });
@@ -78,11 +80,25 @@ export default class SidebarItem extends lng.Component {
         texture: lng.Tools.getSvgTexture(Utils.asset(icon), 48, 48),
       });
     } else {
-      this._Title.patch({
-        text: {
-          text: label.toUpperCase(),
+      this.patch({
+        w: index === 4 && translatedText.length > 10 ? 200 : 150,
+        Title: {
+          text: {
+            maxLines: 1,
+            wordWrapWidth: index === 4 && translatedText.length > 10 ? 200 : 150,
+            family: 'Montserrat-Regular',
+            text: translatedText.toUpperCase(),
+          },
         },
       });
+      // this._Title.patch({
+      //   text: {
+      //     maxLines: 1,
+      //     wordWrapWidth: 200,
+      //     family: 'Montserrat-Regular',
+      //     text: homeText.toUpperCase(),
+      //   },
+      // });
     }
   }
 
@@ -99,6 +115,23 @@ export default class SidebarItem extends lng.Component {
   }
 
   _focus() {
+    const { index } = this._props;
+    const { label, icon } = this._props.data;
+
+    // if (index === 4) {
+    //   this._Line.patch({
+    //     w: 200,
+    //   });
+    // } else if (icon === '') {
+    //   this._Line.patch({
+    //     w: 150,
+    //   });
+    // }
+    const translatedText = Language.translate(label);
+    this._Line.patch({
+      w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni
+    });
+
     this._Line.visible = true;
     this._Icon.patch({
       color: Colors(colors.focus).get(),

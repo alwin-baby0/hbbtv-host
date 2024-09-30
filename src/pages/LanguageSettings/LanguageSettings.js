@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router } from '@lightningjs/sdk';
+import { Colors, Language, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../Components/Buttons/LanguageButton/LanguageButton';
@@ -116,7 +116,8 @@ export default class LanguageSettings extends Lightning.Component {
           props: {
             width: 1050,
             height: 72,
-            buttonLabel: value.label,
+            // buttonLabel: value.label,
+            buttonLabel: Language.translate(value.label),
             buttonIcon: '',
             strokeWidth: 1.5,
             borderColor: '#696969',
@@ -142,7 +143,8 @@ export default class LanguageSettings extends Lightning.Component {
             w: 450,
             h: 50,
             text: {
-              text: 'We value you privacy',
+              // text: 'We value you privacy',
+              text: Language.translate('CMPTitle'),
               fontSize: 40,
               fontFace: 'Montserrat-Bold',
               lineHeight: 50,
@@ -154,7 +156,8 @@ export default class LanguageSettings extends Lightning.Component {
             h: 100,
             y: 30,
             text: {
-              text: 'We use cookies to enhance browsing experience. By clicking “Yes” you consent to our use of cookies. You can customize your consent preferences by clicking “Customize”',
+              // text: 'We use cookies to enhance browsing experience. By clicking “Yes” you consent to our use of cookies. You can customize your consent preferences by clicking “Customize”',
+              text: Language.translate('CMPDescription'),
               fontSize: 24,
               fontFace: 'Montserrat-Regular',
               lineHeight: 30,

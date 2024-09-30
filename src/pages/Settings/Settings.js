@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Language, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import { CMPService } from '../../Services/CMPService';
@@ -235,7 +235,8 @@ export default class Settings extends Lightning.Component {
 
         const parsedMovies = parseVodUserContentData({
           data: {
-            railTitle: 'Continue Watching',
+            // railTitle: 'Continue Watching',
+            railTitle: Language.translate('continueWatching'),
             entry: recentlyWatched.data.recently_watched,
           },
           itemsPerRow: recentlyWatched.data.recently_watched.length,
@@ -245,7 +246,8 @@ export default class Settings extends Lightning.Component {
 
         const parsedFavorites = parseVodUserContentData({
           data: {
-            railTitle: 'Favorites',
+            // railTitle: 'Favorites',
+            railTitle: Language.translate('favorites'),
             entry: favorites.data.favorites,
           },
           itemsPerRow: favorites.data.favorites.length,
@@ -356,7 +358,8 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 1,
-          title: 'Continue Watching',
+          // title: 'Continue Watching',
+          title: Language.translate('continueWatching'),
         },
         w: 250,
         h: 100,
@@ -366,7 +369,8 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 2,
-          title: 'Favorites',
+          // title: 'Favorites',
+          title: Language.translate('favorites'),
         },
         w: 250,
         h: 100,
@@ -376,7 +380,8 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 3,
-          title: 'Logout',
+          // title: 'Logout',
+          title: Language.translate('logout'),
         },
         w: 250,
         h: 100,

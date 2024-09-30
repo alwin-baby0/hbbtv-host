@@ -1,7 +1,8 @@
 // App.js
-import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
+import { Colors, Router, Storage, Utils, VideoPlayer } from '@lightningjs/sdk';
 import colors from '../reskin/colors.json';
 import Lightning from '@lightningjs/sdk/src/Lightning';
+import { Language } from '@lightningjs/sdk';
 import routes from './Pages/routes';
 import Navbar from './Components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinScreenComponent';
@@ -205,6 +206,21 @@ export default class App extends Router.App {
     ];
   }
 
+  // _active() {
+  //   const homeText = Language.translate('back');
+  //   console.log(homeText);
+  // }
+
+  static language() {
+    // const selectedLanguage = Storage.get('languageCode') || 'en';
+    const selectedLanguage = localStorage.getItem('languageCode') || 'en';
+    console.log('prevod:', selectedLanguage);
+    return {
+      file: Utils.asset('translations/translations.json'),
+      language: selectedLanguage,
+    };
+  }
+
   handleOnline() {
     if (wasOffline) {
       VideoPlayer.play();
@@ -256,17 +272,20 @@ export default class App extends Router.App {
 
   _handleAppClose() {
     const dialog = this.tag('Dialog');
+    const noResume = Language.translate('noResume');
+    const yesExit = Language.translate('yesExit');
+    console.log('NO RESUME:', noResume);
     dialog.open({
       message: 'Are you sure you want to close the app?',
       actions: [
         {
-          label: 'No, resume',
+          label: noResume,
           action: () => {
             dialog.close();
           },
         },
         {
-          label: 'Yes, exit now',
+          label: yesExit,
           action: () => {
             const device = getDevice();
             // Router navigation for "Yes, exit now"
