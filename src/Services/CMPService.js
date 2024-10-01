@@ -240,7 +240,7 @@ class CMPService extends FetchingService {
     });
   };
 
-  addRecentlyWatched = async (videoID, vodType, vodPosition) => {
+  addRecentlyWatched = async (videoID, vodType, vodPosition, seriesID) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
     const timestamp = new Date().getTime();
@@ -258,6 +258,7 @@ class CMPService extends FetchingService {
         video_id: videoID,
         type: vodType,
         position: vodPosition,
+        ...(seriesID && { series_id: seriesID }),
       },
     });
   };

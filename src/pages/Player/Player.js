@@ -500,7 +500,9 @@ export default class Player extends lng.Component {
   }
 
   _handleBack() {
-    CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+    if (parseFloat(VideoPlayer.duration) > 300) {
+      CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+    }
     this.closeVideoPlayer();
   }
 
@@ -532,8 +534,11 @@ export default class Player extends lng.Component {
     VideoPlayer.pause();
 
     console.log('pausiran video', this._params.videoId, 'video', VideoPlayer.currentTime);
+    console.log('duzina videa', parseFloat(VideoPlayer.duration));
 
-    CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+    if (parseFloat(VideoPlayer.duration) > 300) {
+      CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+    }
 
     this._Controls.Items.children[pausedItemId]._Icon.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),

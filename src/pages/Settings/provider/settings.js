@@ -134,7 +134,7 @@ export default async function (page) {
   const tabButtons = [
     {
       id: 0,
-      title: 'User',
+      title: 'My Account',
     },
   ];
 

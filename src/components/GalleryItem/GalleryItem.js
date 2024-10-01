@@ -58,7 +58,7 @@ export default class GalleryItem extends Lightning.Component {
             textColor: Colors(colors.sliderDescription).get(),
             wordWrapWidth: 650,
             family: 'Montserrat-Regular',
-            fontSize: 18,
+            fontSize: 23,
             lineHeight: 31,
             maxLines: 8,
           },

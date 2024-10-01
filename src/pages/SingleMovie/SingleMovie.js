@@ -268,40 +268,46 @@ export default class SingleMovie extends Lightning.Component {
       });
     }
 
-    const mappedButtons = buttons.map((button) => {
-      const { movie } = this._props;
-      const { buttonLabel, icon, width, stream } = button;
-      const translatedTitle = Language.translate(buttonLabel);
-      console.log('translatedText', translatedTitle);
-      return {
-        type: Button,
-        w: width,
-        flexItem: {
-          marginRight: 30,
-        },
-        props: {
-          width: width,
-          buttonLabel: translatedTitle,
-          buttonIcon: Utils.asset(icon),
-          callback: () => {
-            if (buttonLabel === 'FAVORITE') {
-              this.addToFavorite();
-            } else if (buttonLabel === 'WATCH NOW') {
-              Router.navigate('player', {
-                videoUrl: movie[stream],
-                duration: duration,
-                videoId: movieId,
-              });
-            } else {
-              Router.navigate('player', {
-                videoUrl: movieTrailerUrl,
-                videoId: movieTrailerId,
-              });
-            }
+    const mappedButtons = buttons
+      .map((button) => {
+        const { movie } = this._props;
+        const { buttonLabel, icon, width, stream } = button;
+        const translatedTitle = Language.translate(buttonLabel);
+        console.log('translatedText', translatedTitle);
+
+        if (buttonLabel === 'TRAILER' && !movieTrailerUrl) {
+          return null; // Skip this button by returning null if there is no trailer url
+        }
+        return {
+          type: Button,
+          w: width,
+          flexItem: {
+            marginRight: 30,
           },
-        },
-      };
-    });
+          props: {
+            width: width,
+            buttonLabel: translatedTitle,
+            buttonIcon: Utils.asset(icon),
+            callback: () => {
+              if (buttonLabel === 'FAVORITE') {
+                this.addToFavorite();
+              } else if (buttonLabel === 'WATCH NOW') {
+                Router.navigate('player', {
+                  videoUrl: movie[stream],
+                  duration: duration,
+                  videoId: movieId,
+                });
+              } else if (buttonLabel === 'TRAILER') {
+                Router.navigate('player', {
+                  videoUrl: movieTrailerUrl,
+                  videoId: movieTrailerId,
+                });
+              }
+            },
+          },
+        };
+      })
+      .filter((button) => button !== null);
     this._Buttons.props = { items: mappedButtons };
   }
 
@@ -311,7 +317,7 @@ export default class SingleMovie extends Lightning.Component {
 
   async addToFavorite() {
     try {
-      const { movie } = this._props;
+      const { movie, movieTrailerUrl } = this._props;
       if (movie.is_favorite) {
         await CMPService.removeFromFavorites(movie.id);
       } else {
@@ -322,7 +328,9 @@ export default class SingleMovie extends Lightning.Component {
 
       const { is_favorite } = this._props.movie;
 
-      this._Buttons.Items.childList._items[2].patch({
+      const id = movieTrailerUrl ? 2 : 1; //depending on movieTrailerUrl, we will know on which position is add to fav btn
+
+      this._Buttons.Items.childList._items[id].patch({
         props: {
           buttonIcon: Utils.asset(is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
           buttonLabel: 'FAVORITE',
