@@ -10,6 +10,7 @@ class SimpleRailItem {
 
     if (extensions) {
       this.description = extensions.description;
+      this.episodeSeriesID = extensions?.series_id;
     }
 
     switch (this.type) {
@@ -20,7 +21,11 @@ class SimpleRailItem {
       case 'sport':
       case 'serie':
       case 'series':
-        this.url = `series-details/${this.id}`;
+        if (this.episodeSeriesID) {
+          this.url = `series-details/${this.episodeSeriesID}`;
+        } else {
+          this.url = `series-details/${this.id}`;
+        }
         break;
       case 'show':
       case 'event':
@@ -29,6 +34,7 @@ class SimpleRailItem {
       case 'episode':
         this.url = data.content?.src;
         this.duration = data.extensions?.duration;
+        this.seriesId = data.seriesId;
         break;
       default:
         console.warn('unknown rail item type', this.type);

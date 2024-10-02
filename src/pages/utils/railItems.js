@@ -179,7 +179,10 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       callback: () => {
         Router.navigate('player', {
           videoUrl: railItem.url,
+          videoId: railItem.id,
           duration: railItem.duration,
+          videoType: 'series',
+          seriesID: railItem.seriesId,
         });
       },
     },

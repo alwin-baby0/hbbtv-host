@@ -248,8 +248,10 @@ export default class Player extends lng.Component {
     }
   }
 
-  set params({ videoUrl, videoType, type, duration, videoId, continueTime }) {
-    this._params = { videoUrl, videoType, type, duration, videoId, continueTime };
+  set params({ videoUrl, videoType, type, duration, videoId, continueTime, seriesID }) {
+    this._params = { videoUrl, videoType, type, duration, videoId, continueTime, seriesID };
+
+    console.log('paraMSSSS', this._params);
   }
 
   _enable() {
@@ -500,8 +502,18 @@ export default class Player extends lng.Component {
   }
 
   _handleBack() {
+    console.log('HANDLEBEK DATA', this._params);
     if (parseFloat(VideoPlayer.duration) > 300) {
-      CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+      if (this._params.seriesID) {
+        CMPService.addRecentlyWatched(
+          this._params.videoId,
+          'series',
+          VideoPlayer.currentTime,
+          this._params.seriesID
+        );
+      } else {
+        CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+      }
     }
     this.closeVideoPlayer();
   }

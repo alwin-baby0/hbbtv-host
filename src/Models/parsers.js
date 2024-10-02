@@ -112,9 +112,9 @@ export const parseDetailsData = ({ data }) => {
 };
 
 // Season
-export const parseSeasonData = ({ data }) => {
+export const parseSeasonData = ({ data }, seriesId) => {
   const railItems = data.entry?.map(
-    (item) => new SimpleRailItem({ ...item, type: { value: 'episode' } })
+    (item) => new SimpleRailItem({ ...item, type: { value: 'episode' }, seriesId: seriesId })
   );
   if (!railItems || railItems?.length === 0) return;
 

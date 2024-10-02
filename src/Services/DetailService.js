@@ -70,7 +70,7 @@ class DetailService extends FetchingService {
         params: {
           season_id: id,
         },
-      }).then(parseSeasonData)
+      }).then((data) => parseSeasonData(data, seriesId))
     );
 
     try {
