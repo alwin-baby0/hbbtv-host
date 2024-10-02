@@ -17,6 +17,7 @@ export default async function (page, { seriesId }) {
     sectionTitle: seasons[0]?.sectionTitle,
     galleryItem: galleryItem,
     favorited,
+    duration: seasons.duration,
   };
 
   page._Column.props = {

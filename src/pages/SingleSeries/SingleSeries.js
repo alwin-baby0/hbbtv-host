@@ -1,4 +1,4 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import { CMPService } from '../../Services/CMPService';
@@ -44,7 +44,9 @@ export default class SingleSeries extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem, favorited } = this._props;
+    const { galleryItem, favorited, duration } = this._props;
+    const { url, id, lastPlayedId, position } = galleryItem;
+    console.log(galleryItem);
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
@@ -60,6 +62,24 @@ export default class SingleSeries extends Lightning.Component {
     });
 
     if (localStorage.getItem('userData')) {
+      this._HeroSection._ContinueWatching.patch({
+        alpha: 1,
+        props: {
+          buttonIcon: Utils.asset('icons/home/play.svg'),
+          buttonLabel: 'CONTINUE WATCHING',
+          width: 400,
+          callback: () => {
+            Router.navigate('player', {
+              videoUrl: url,
+              duration: duration,
+              videoType: 'series',
+              seriesID: id,
+              videoId: lastPlayedId,
+              continueTime: position,
+            });
+          },
+        },
+      });
       this._HeroSection._FavoriteButton.patch({
         alpha: 1,
         props: {

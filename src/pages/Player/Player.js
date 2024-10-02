@@ -549,7 +549,16 @@ export default class Player extends lng.Component {
     console.log('duzina videa', parseFloat(VideoPlayer.duration));
 
     if (parseFloat(VideoPlayer.duration) > 300) {
-      CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+      if (this._params.seriesID) {
+        CMPService.addRecentlyWatched(
+          this._params.videoId,
+          'series',
+          VideoPlayer.currentTime,
+          this._params.seriesID
+        );
+      } else {
+        CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+      }
     }
 
     this._Controls.Items.children[pausedItemId]._Icon.patch({

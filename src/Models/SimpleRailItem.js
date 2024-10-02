@@ -11,6 +11,7 @@ class SimpleRailItem {
     if (extensions) {
       this.description = extensions.description;
       this.episodeSeriesID = extensions?.series_id;
+      this.duration = extensions?.duration;
     }
 
     switch (this.type) {
@@ -22,6 +23,7 @@ class SimpleRailItem {
       case 'serie':
       case 'series':
         if (this.episodeSeriesID) {
+          //case if you are coming from recently watched list
           this.url = `series-details/${this.episodeSeriesID}`;
         } else {
           this.url = `series-details/${this.id}`;

@@ -19,6 +19,12 @@ class GalleryItem {
       this.videoType = content.type;
     }
 
+    if (extensions.last_played_episode) {
+      this.url = extensions.last_played_episode.hls;
+      this.position = extensions.last_played_episode.position;
+      this.lastPlayedId = extensions.last_played_episode.video_id;
+    }
+
     if (extensions) {
       const {
         button_text,

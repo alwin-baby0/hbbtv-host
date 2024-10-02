@@ -83,6 +83,13 @@ export default class GalleryItem extends Lightning.Component {
             buttonIcon: Utils.asset('icons/home/play.svg'),
           },
         },
+        ContinueWatching: {
+          alpha: 0,
+          type: Button,
+          flexItem: {
+            marginTop: 20,
+          },
+        },
         FavoriteButton: {
           alpha: 0,
           type: Button,
@@ -181,6 +188,9 @@ export default class GalleryItem extends Lightning.Component {
   get _GalleryButton() {
     return this.tag('GalleryButton');
   }
+  get _ContinueWatching() {
+    return this.tag('ContinueWatching');
+  }
   get _FavoriteButton() {
     return this.tag('FavoriteButton');
   }
@@ -197,7 +207,21 @@ export default class GalleryItem extends Lightning.Component {
           return this._GalleryButton;
         }
         _handleDown() {
-          if (this._FavoriteButton.alpha > 0) this._setState('FavoriteButton');
+          if (this._FavoriteButton.alpha > 0) this._setState('ContinueWatching');
+          else return false;
+        }
+      },
+      class ContinueWatching extends this {
+        _getFocused() {
+          return this._ContinueWatching;
+        }
+
+        _handleUp() {
+          this._setState('GalleryButton');
+        }
+
+        _handleDown() {
+          if (this._ContinueWatching.alpha > 0) this._setState('FavoriteButton');
           else return false;
         }
       },
@@ -206,7 +230,7 @@ export default class GalleryItem extends Lightning.Component {
           return this._FavoriteButton;
         }
         _handleUp() {
-          this._setState('GalleryButton');
+          this._setState('ContinueWatching');
         }
       },
     ];
