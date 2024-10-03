@@ -3,7 +3,9 @@ import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
 export default class GalleryItem extends Lightning.Component {
-  _props = {};
+  _props = {
+    enabled: true,
+  };
   static _template() {
     return {
       w: 1920,
@@ -102,7 +104,9 @@ export default class GalleryItem extends Lightning.Component {
   }
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem, height } = this._props;
+    console.log(this._props);
+    const { galleryItem, height, enabled } = this._props;
+    console.log(enabled);
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
     if (videoType !== 'application/x-mpegURL') {
@@ -156,19 +160,32 @@ export default class GalleryItem extends Lightning.Component {
       },
     });
     this._GalleryButton &&
-      this._GalleryButton.patch({
-        props: {
-          buttonLabel: buttonLabel,
-          callback: () => {
+      (() => {
+        // Define the callback based on the enabled prop
+        let callback = () => null;
+        let btnIcon = '';
+
+        if (enabled) {
+          callback = () => {
             Router.navigate('player', {
               videoUrl: url,
               duration: duration,
-              // videoType: buttonLabel,
               videoType: videoType,
             });
+          };
+
+          btnIcon = Utils.asset('icons/home/play.svg');
+        }
+
+        // Patch the button with the correct props, including the conditionally set callback
+        this._GalleryButton.patch({
+          props: {
+            buttonLabel: buttonLabel,
+            callback: callback,
+            buttonIcon: btnIcon,
           },
-        },
-      });
+        });
+      })();
   }
   get _GradientOverlay() {
     return this.tag('GradientOverlay');
@@ -200,6 +217,11 @@ export default class GalleryItem extends Lightning.Component {
   _firstActive() {
     this._setState('GalleryButton');
   }
+
+  _disable() {
+    this._props.enabled = true;
+  }
+
   static _states() {
     return [
       class GalleryButton extends this {

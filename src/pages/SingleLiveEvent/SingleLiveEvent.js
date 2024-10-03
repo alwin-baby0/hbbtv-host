@@ -1,4 +1,4 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
@@ -59,31 +59,49 @@ export default class SingleLiveEvent extends Lightning.Component {
       },
     });
 
-    // if (currentDate >= startDate && currentDate <= endDate) {
-    // Hide Button
-    // if (currentDate >= startDate && currentDate <= endDate) {
-    //   this._HeroSection.tag('Info').patch({
-    //     GalleryButton: {
-    //       type: Button,
-    //       flexItem: {
-    //         marginTop: 10,
-    //       },
-    //       props: {
-    //         buttonLabel: 'WATCH NOW',
-    //         buttonIcon: Utils.asset('icons/home/play.svg'),
-    //       },
-    //     },
-    //   });
-    //   this._HeroSection._GalleryButton.patch({
-    //     props: {
-    //       width: 400,
-    //     },
-    //   });
-    // } else {
-    //   this._HeroSection.tag('Info').patch({
-    //     GalleryButton: undefined,
-    //   });
-    // }
+    //Hide Button
+    if (currentDate >= startDate && currentDate <= endDate) {
+      this._HeroSection.tag('Info').patch({
+        GalleryButton: {
+          type: Button,
+          flexItem: {
+            marginTop: 10,
+          },
+          props: {
+            buttonLabel: 'WATCH NOW',
+            buttonIcon: Utils.asset('icons/home/play.svg'),
+          },
+        },
+      });
+      this._HeroSection._GalleryButton.patch({
+        props: {
+          width: 400,
+        },
+      });
+    } /* else {
+      this._HeroSection.tag('Info').patch({
+        GalleryButton: undefined,
+      });
+    } */ else {
+      this._HeroSection.patch({
+        props: {
+          enabled: false,
+        },
+      });
+      this._HeroSection.tag('Info').patch({
+        GalleryButton: {
+          type: Button,
+          flexItem: {
+            marginTop: 10,
+          },
+          props: {
+            width: 400,
+            buttonLabel: 'COMING SOON',
+            enabled: false,
+          },
+        },
+      });
+    }
   }
 
   _active() {

@@ -13,6 +13,7 @@ export default class Button extends Lightning.Component {
     radius: 0,
     strokeWidth: 4,
     callback: () => null,
+    enabled: true,
   };
 
   static _template() {
@@ -51,6 +52,7 @@ export default class Button extends Lightning.Component {
       radius,
       strokeWidth,
       borderColor,
+      enabled,
     } = this._props;
     const colorBorder = borderColor ? borderColor : colors.unfocus;
 
@@ -62,6 +64,23 @@ export default class Button extends Lightning.Component {
       });
     }
 
+    let focusingColors;
+    let fillColor;
+
+    if (enabled) {
+      focusingColors = Colors(this._isFocused ? colors.focus : colorBorder).get();
+    }
+    if (!enabled) {
+      focusingColors = Colors(
+        this._isFocused ? colors.focusDisabled : colors.unfocusDisabled
+      ).get();
+      fillColor = Colors(colors.focusDisabled).get();
+    }
+
+    console.log('focusingColors', focusingColors);
+
+    console.log('da li je enabled', enabled);
+
     this.patch({
       w: width,
       h: height,
@@ -70,9 +89,9 @@ export default class Button extends Lightning.Component {
         height,
         radius,
         strokeWidth,
-        Colors(this._isFocused ? colors.focus : colorBorder).get(),
+        focusingColors,
         this._isFocused,
-        this._isFocused ? Colors(colors.focus).get() : undefined
+        this._isFocused ? fillColor : undefined
       ),
     });
 
@@ -104,9 +123,10 @@ export default class Button extends Lightning.Component {
         height,
         radius,
         strokeWidth,
-        Colors(colors.focus).get(),
+        Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get(),
         true,
-        Colors(colors.focus).get()
+        // Colors(colors.focus).get()
+        Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get()
       ),
     });
   }
@@ -121,10 +141,14 @@ export default class Button extends Lightning.Component {
         height,
         radius,
         strokeWidth,
-        Colors(colorBorder).get(),
+        Colors(this._props.enabled ? colorBorder : colors.unfocusDisabled).get(),
         false
       ),
     });
+  }
+
+  _disable() {
+    this._props.enabled = true;
   }
 
   _handleEnter() {
