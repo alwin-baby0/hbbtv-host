@@ -50,7 +50,8 @@ export default class SingleSeries extends Lightning.Component {
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
-        height: 650,
+        // height: 650,
+        height: 620,
       },
     });
 

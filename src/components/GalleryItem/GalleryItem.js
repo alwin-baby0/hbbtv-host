@@ -21,7 +21,8 @@ export default class GalleryItem extends Lightning.Component {
         x: 110,
         y: 110,
         w: 700,
-        h: 460,
+        // h: 460,
+        // h: 600,
         flex: { direction: 'column' },
         Date: {
           w: 698,
@@ -85,18 +86,22 @@ export default class GalleryItem extends Lightning.Component {
             buttonIcon: Utils.asset('icons/home/play.svg'),
           },
         },
-        ContinueWatching: {
-          alpha: 0,
-          type: Button,
-          flexItem: {
-            marginTop: 20,
+        AuthorizedButtons: {
+          flex: { direction: 'row' },
+          ContinueWatching: {
+            alpha: 0,
+            type: Button,
+            flexItem: {
+              marginTop: 20,
+            },
           },
-        },
-        FavoriteButton: {
-          alpha: 0,
-          type: Button,
-          flexItem: {
-            marginTop: 20,
+          FavoriteButton: {
+            alpha: 0,
+            type: Button,
+            flexItem: {
+              marginTop: 20,
+              marginLeft: 10,
+            },
           },
         },
       },
@@ -109,6 +114,9 @@ export default class GalleryItem extends Lightning.Component {
     console.log(enabled);
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
+    this._Info.patch({
+      h: height,
+    });
     if (videoType !== 'application/x-mpegURL') {
       this._Info.patch({
         Date: undefined,
@@ -206,10 +214,10 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('GalleryButton');
   }
   get _ContinueWatching() {
-    return this.tag('ContinueWatching');
+    return this.tag('AuthorizedButtons.ContinueWatching');
   }
   get _FavoriteButton() {
-    return this.tag('FavoriteButton');
+    return this.tag('AuthorizedButtons.FavoriteButton');
   }
   get _BackgroundImage() {
     return this.tag('BackgroundImage');
@@ -242,9 +250,17 @@ export default class GalleryItem extends Lightning.Component {
           this._setState('GalleryButton');
         }
 
-        _handleDown() {
+        _handleRight() {
           if (this._ContinueWatching.alpha > 0) this._setState('FavoriteButton');
           else return false;
+        }
+
+        // _handleDown() {
+        //   if (this._ContinueWatching.alpha > 0) this._setState('FavoriteButton');
+        //   else return false;
+        // }
+        _handleDown() {
+          return false;
         }
       },
       class FavoriteButton extends this {
@@ -252,6 +268,9 @@ export default class GalleryItem extends Lightning.Component {
           return this._FavoriteButton;
         }
         _handleUp() {
+          this._setState('GalleryButton');
+        }
+        _handleLeft() {
           this._setState('ContinueWatching');
         }
       },

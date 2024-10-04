@@ -69,7 +69,9 @@ export default class Button extends Lightning.Component {
 
     if (enabled) {
       focusingColors = Colors(this._isFocused ? colors.focus : colorBorder).get();
+      fillColor = Colors(colors.focus).get();
     }
+
     if (!enabled) {
       focusingColors = Colors(
         this._isFocused ? colors.focusDisabled : colors.unfocusDisabled
