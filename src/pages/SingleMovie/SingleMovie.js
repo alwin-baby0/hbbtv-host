@@ -241,7 +241,7 @@ export default class SingleMovie extends Lightning.Component {
         buttonLabel: 'FAVORITE',
         width: 255,
       });
-
+      console.log('MOVIEEE', movie);
       this.tag('CardInfo.AboutMovie').patch({
         ContinueButton: {
           y: 170,
@@ -296,6 +296,7 @@ export default class SingleMovie extends Lightning.Component {
                   videoUrl: movie[stream],
                   duration: duration,
                   videoId: movieId,
+                  ssai: movie.ssai,
                 });
               } else if (buttonLabel === 'TRAILER') {
                 Router.navigate('player', {

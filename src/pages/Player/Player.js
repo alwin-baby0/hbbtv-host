@@ -1,3 +1,4 @@
+// Player.js
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { Column, ProgressBar } from '@lightningjs/ui-components';
 import { getPlayer, loader, unloader } from '../../Components/Player/HLS';
@@ -14,7 +15,109 @@ export default class Player extends lng.Component {
   _props = {
     pausedItemId: 1,
     lastId: 0,
+    isAdVisible: false,
+    ads: [], // Inicijalizuj kao prazan niz
   };
+
+  _adData = [
+    {
+      slot: 'slot1',
+      total_duration: 30,
+      pods: [
+        {
+          pod: 'pod1',
+          ads: [
+            {
+              impression: 'https://springserve.com/vast/ad1',
+              cue: {
+                from: '00:00:00',
+                to: '00:00:10',
+              },
+              skipping_allowed: false,
+            },
+            {
+              impression: 'https://springserve.com/vast/ad2',
+              cue: {
+                from: '00:00:15',
+                to: '00:00:30',
+              },
+              skipping_allowed: true,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      slot: 'slot2',
+      total_duration: 50,
+      pods: [
+        {
+          pod: 'pod2',
+          ads: [
+            {
+              impression: 'https://springserve.com/vast/ad3',
+              cue: {
+                from: '00:01:00',
+                to: '00:01:10',
+              },
+              skipping_allowed: false,
+            },
+          ],
+        },
+        {
+          pod: 'pod3',
+          ads: [
+            {
+              impression: 'https://springserve.com/vast/ad4',
+              cue: {
+                from: '00:30:00',
+                to: '00:30:20',
+              },
+              skipping_allowed: true,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      slot: 'slot3',
+      total_duration: 25,
+      pods: [
+        {
+          pod: 'pod4',
+          ads: [
+            {
+              impression: 'https://springserve.com/vast/ad5',
+              cue: {
+                from: '01:00:00',
+                to: '01:00:25',
+              },
+              skipping_allowed: false,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      slot: 'slot4',
+      total_duration: 30,
+      pods: [
+        {
+          pod: 'pod5',
+          ads: [
+            {
+              impression: 'https://springserve.com/vast/ad6',
+              cue: {
+                from: '02:00:00',
+                to: '02:00:30',
+              },
+              skipping_allowed: true,
+            },
+          ],
+        },
+      ],
+    },
+  ];
 
   static _template() {
     return {
@@ -248,10 +351,9 @@ export default class Player extends lng.Component {
     }
   }
 
-  set params({ videoUrl, videoType, type, duration, videoId, continueTime, seriesID }) {
-    this._params = { videoUrl, videoType, type, duration, videoId, continueTime, seriesID };
-
-    console.log('paraMSSSS', this._params);
+  set params({ videoUrl, videoType, type, duration, videoId, continueTime, seriesID, ssai }) {
+    this._params = { videoUrl, videoType, type, duration, videoId, continueTime, seriesID, ssai };
+    console.log('ssai', ssai);
   }
 
   _enable() {
@@ -290,7 +392,91 @@ export default class Player extends lng.Component {
     VideoPlayer.close();
   }
 
+  setAdUI(value) {
+    // console.log('SAKRIJ KONTROLEEE:', value);
+    this._props.isAdVisible = value;
+  }
+
+  //!
+  _startMonitoringAds() {
+    // Clear any existing interval to prevent duplicates
+    if (this._adMonitoringInterval) {
+      clearInterval(this._adMonitoringInterval);
+    }
+
+    // Start a new interval to check ad cue points
+    this._adMonitoringInterval = setInterval(() => {
+      this._checkAdCuePoints();
+    }, 1000); // Check every second
+  }
+
+  // _checkAdCuePoints() {
+  //   const currentTime = VideoPlayer.currentTime;
+
+  //   // this._adData.forEach((slot) => {
+  //   // this._params.ssai
+  //   this._params.ssai.forEach((slot) => {
+  //     slot.pods.forEach((pod) => {
+  //       pod.ads.forEach((ad) => {
+  //         const from = this._convertCueTimeToSeconds(ad.cue.from);
+  //         const to = this._convertCueTimeToSeconds(ad.cue.to);
+  //         if (currentTime >= from && currentTime < to) {
+  //           console.log('Ad is playing:', ad.impression);
+  //           console.log('Skipping allowed:', ad.skipping_allowed);
+  //           // Perform any additional actions when ad is active
+  //           this._handleAdPlayback(ad);
+  //         }
+  //       });
+  //     });
+  //   });
+  // }
+  _checkAdCuePoints() {
+    const currentTime = VideoPlayer.currentTime;
+
+    // Check if `ssai` has a `slots` array
+    if (this._params.ssai && Array.isArray(this._params.ssai.slots)) {
+      // Iterate over each slot in the `slots` array
+      this._params.ssai.slots.forEach((slot) => {
+        // Iterate over each pod in the current slot
+        slot.pods.forEach((pod) => {
+          // Iterate over each ad in the current pod
+          pod.ads.forEach((ad) => {
+            const from = this._convertCueTimeToSeconds(ad.cue.from);
+            const to = this._convertCueTimeToSeconds(ad.cue.to);
+            if (currentTime >= from && currentTime < to) {
+              console.log('Ad is playing:', ad.impression);
+              console.log('Skipping allowed:', ad.skipping_allowed);
+              // Perform any additional actions when ad is active
+              this._handleAdPlayback(ad);
+            }
+          });
+        });
+      });
+    } else {
+      console.error('Invalid ssai structure or missing slots.');
+    }
+  }
+
+  _convertCueTimeToSeconds(cue) {
+    const parts = cue.split(':');
+    return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
+  }
+
+  _handleAdPlayback(ad) {
+    // Logic to handle ad playback, such as displaying the ad, hiding player controls, etc.
+    console.log('Displaying Ad:', ad.impression);
+    if (!ad.skipping_allowed) {
+      console.log('Skipping not allowed for this ad.');
+      // Additional logic to disable skipping
+    }
+  }
+  //!
   async _active() {
+    this._startMonitoringAds();
+    // this._params.ssai
+    // this._props.ads = this._adData; // Postavi ads iz niza
+    this._props.ads = this._params.ssai; // Postavi ads iz niza
+
     lastIndex = 0;
     console.log('Time:', this._params.continueTime);
     if (
@@ -314,26 +500,10 @@ export default class Player extends lng.Component {
 
     this.tag('ErrorMessage').visible = false;
 
-    // const durationInSeconds = parseFloat(this._params.duration);
-    // const formattedDuration = this._formatDuration(durationInSeconds);
-    // this.tag('EndTime.Text').text =
-    //   this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
-    //     ? ''
-    //     : formattedDuration;
-
-    // this._duration = durationInSeconds;
     this.fireAncestors('$punchHole');
     VideoPlayer.open(this._params.videoUrl);
-
-    // if (
-    //   this._params.videoType !== 'Stream now' ||
-    //   this._params.videoType !== 'application/x-mpegURL'
-    // ) {
-    //   this._progressInterval = setInterval(this._updateProgressBar.bind(this), 1000);
-    // }
-    // this._setState('Controls');
-    // this._showWrapper(true);
-    // this._setState('Controls');
+    // VideoPlayer.open('https://cdn-05.wedo.tv/04/hls/NVJE243JDKK1/video_segment000_part1.ts');
+    // VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
 
     if (this._params.continueTime)
       setTimeout(() => {
@@ -347,7 +517,9 @@ export default class Player extends lng.Component {
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
     this.tag('ProgressBar').progress = 0;
-    // this._hideWrapper();
+    if (this._adMonitoringInterval) {
+      clearInterval(this._adMonitoringInterval);
+    }
   }
 
   _skipVideo(offset) {
@@ -591,9 +763,6 @@ export default class Player extends lng.Component {
         ? ''
         : formattedDuration;
     this._duration = durationInSeconds;
-
-    // console.log(formattedTime);
-    // console.log(currentTime);
   }
 
   $changeFocusOnControl(val) {
@@ -640,9 +809,6 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerPlaying() {
-    // this._updateProgressBar();
-    // const durationInSeconds = parseFloat(VideoPlayer.duration);
-    // const formattedDuration = this._formatDuration(durationInSeconds);
     const progressBarStyle = {
       progressColor: Colors(colors.focus).get(),
       barColor:
@@ -652,11 +818,6 @@ export default class Player extends lng.Component {
           : undefined,
     };
     this.tag('ProgressBar').patch({ style: progressBarStyle });
-    // this.tag('EndTime.Text').text =
-    //   this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
-    //     ? ''
-    //     : formattedDuration;
-    // this._duration = durationInSeconds;
   }
 
   // COMANDS
@@ -769,8 +930,10 @@ export default class Player extends lng.Component {
             });
           }
 
-          this._setState('Controls');
-          this._showWrapper();
+          if (!this._props.isAdVisible) {
+            this._setState('Controls');
+            this._showWrapper();
+          }
         }
       },
 

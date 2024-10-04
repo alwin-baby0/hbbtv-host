@@ -1,3 +1,4 @@
+// createApiCtx
 export const V1 = 'v1';
 export const V2 = 'v2';
 export const auth = 'auth';
@@ -8,7 +9,8 @@ export const createApiCtx = () =>
       languageCode: localStorage.getItem('languageCode') || 'en',
       version_name: '1.0.0',
       osVersion: 2,
-      deviceWidth: 1280,
+      deviceWidth: window.innerWidth,
+      deviceHeight: window.innerHeight,
       platform: 'lightningjs',
       bundleIdentifier: 'com.appwedotv',
     })

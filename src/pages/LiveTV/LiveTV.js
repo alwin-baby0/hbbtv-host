@@ -411,7 +411,9 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('menu');
+          if (!Router.isNavigating()) {
+            Router.focusWidget('menu');
+          }
         }
 
         _handleDown() {

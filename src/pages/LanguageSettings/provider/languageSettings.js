@@ -29,7 +29,7 @@ export default async function (page) {
   const tabButtons = [
     {
       id: 0,
-      title: 'CMP',
+      title: 'Cookie Preferences',
     },
     {
       id: 1,

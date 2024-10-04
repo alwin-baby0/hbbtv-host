@@ -1,3 +1,4 @@
+// SidebarItems.js
 import lng from '@lightningjs/core';
 import { Colors, Language, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
@@ -55,7 +56,6 @@ export default class SidebarItem extends lng.Component {
     const { selected, index } = this._props;
     const { label, icon } = this._props.data;
     const translatedText = Language.translate(label);
-    console.log('home index', index);
     if (selected) {
       this._Title.patch({ color: Colors(colors.focus).get() });
       this._Line.patch({ color: Colors(colors.focus).get() });

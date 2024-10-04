@@ -19,6 +19,10 @@ class GalleryItem {
       this.videoType = content.type;
     }
 
+    if (extensions.ssai) {
+      this.ssai = extensions.ssai;
+    }
+
     if (extensions.last_played_episode) {
       this.url = extensions.last_played_episode.hls;
       this.position = extensions.last_played_episode.position;
