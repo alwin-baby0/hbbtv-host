@@ -1,6 +1,7 @@
 class GalleryItem {
   constructor(data) {
     const { id, title, content, extensions, media_group, summary, type } = data;
+
     this.id = id;
 
     this.title = title;
@@ -11,9 +12,17 @@ class GalleryItem {
     this.type = type;
     this.trailerUrl = extensions.preview_playback;
 
+    this.dateRange = extensions.date_range?.timestamp;
+
     if (content) {
       this.url = content.src;
       this.videoType = content.type;
+    }
+
+    if (extensions.last_played_episode) {
+      this.url = extensions.last_played_episode.hls;
+      this.position = extensions.last_played_episode.position;
+      this.lastPlayedId = extensions.last_played_episode.video_id;
     }
 
     if (extensions) {
@@ -27,6 +36,9 @@ class GalleryItem {
         first_episode_mp4,
         cast,
         venue,
+        is_favorite,
+        last_position,
+        trailer,
       } = extensions;
 
       if (button_text && button_text !== '') {
@@ -58,6 +70,9 @@ class GalleryItem {
       this.subtitle = subtitle;
       this.cast = cast;
       this.venue = venue;
+      this.is_favorite = is_favorite;
+      this.last_position = last_position;
+      this.trailer = trailer;
     }
 
     this.thumbnails = [];

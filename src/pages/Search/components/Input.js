@@ -1,4 +1,4 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Language, Utils } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
 
@@ -42,7 +42,7 @@ export default class InputField extends lng.Component {
         color: Colors('#ffffff').alpha(0.3).get(),
         Text: {
           text: {
-            text: 'Search',
+            // text: 'Search',
             fontSize: 32,
             lineHeight: 40,
             textColor: Colors('#ffffff').alpha(0.3).get(),
@@ -75,6 +75,11 @@ export default class InputField extends lng.Component {
   }
 
   _active() {
+    this._Placeholder.patch({
+      Text: {
+        text: Language.translate('search'),
+      },
+    });
     this._setState('Input');
   }
 

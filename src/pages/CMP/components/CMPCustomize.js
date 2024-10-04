@@ -1,4 +1,4 @@
-import { Lightning, Router } from '@lightningjs/sdk';
+import { Language, Lightning, Router } from '@lightningjs/sdk';
 import QRCode from '../../../components/QRCode/QRCode';
 import HorizontalContainer from '../../../Components/HorizontalContainer/HorizontalContainer';
 import VerticalContainer from '../../../Components/VerticalContainer/VerticalContainer';
@@ -44,6 +44,10 @@ export default class CMPCustomize extends Lightning.Component {
     };
   }
 
+  get _Titles() {
+    return this.tag('Title');
+  }
+
   get _QRCodes() {
     return this.tag('QRCodes');
   }
@@ -65,6 +69,10 @@ export default class CMPCustomize extends Lightning.Component {
       };
     });
 
+    this._Titles.patch({
+      text: Language.translate('CMPTitle'),
+    });
+
     const buttons = customizeButtons.map((button) => {
       return {
         type: Button,
@@ -75,7 +83,8 @@ export default class CMPCustomize extends Lightning.Component {
         props: {
           width: 1050,
           height: 72,
-          buttonLabel: button.label,
+          // buttonLabel: button.label,
+          buttonLabel: Language.translate(button.label),
           buttonIcon: '',
           strokeWidth: 1.5,
           borderColor: '#696969',

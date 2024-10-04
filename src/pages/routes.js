@@ -26,6 +26,8 @@ import collection from './Collection/provider/collection';
 import CMP from './CMP/CMP';
 import cmp from './CMP/provider/cmp';
 import CMPCustomize from './CMP/components/CMPCustomize';
+import LanguageSettings from './LanguageSettings/LanguageSettings';
+import languageSettings from './LanguageSettings/provider/languageSettings';
 
 export default {
   // root: 'splash',
@@ -91,6 +93,13 @@ export default {
       component: Settings,
       widgets: ['Menu'],
       on: settings,
+      //cache: 24 * 60 * 60, //24h ex
+    },
+    {
+      path: 'langsettings',
+      component: LanguageSettings,
+      widgets: ['Menu'],
+      on: languageSettings,
     },
     {
       path: 'help',

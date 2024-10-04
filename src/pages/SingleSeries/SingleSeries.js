@@ -1,12 +1,22 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
+import { CMPService } from '../../Services/CMPService';
+import BackBtn from '../../components/BackButton/BackBtn';
 
 export default class SingleSeries extends Lightning.Component {
+  _props = {};
   static _template() {
     return {
       h: 1080,
       w: 1920,
+      BackButton: {
+        type: BackBtn,
+        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        x: 85,
+        y: 20,
+        zIndex: 100,
+      },
       Background: {
         w: 1920,
         h: 1080,
@@ -21,11 +31,11 @@ export default class SingleSeries extends Lightning.Component {
         x: 110,
         y: 715,
         h: 600,
-        w: 1700,
+        w: 1770,
         clipping: true,
         Column: {
           h: 600,
-          w: 1700,
+          w: 1770,
           type: VerticalContainer,
         },
       },
@@ -33,7 +43,10 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   set props(props) {
-    const { galleryItem } = props;
+    this._props = { ...this._props, ...props };
+    const { galleryItem, favorited, duration } = this._props;
+    const { url, id, lastPlayedId, position } = galleryItem;
+    console.log(galleryItem);
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
@@ -47,6 +60,71 @@ export default class SingleSeries extends Lightning.Component {
         buttonLabel: 'WATCH FIRST EPISODE',
       },
     });
+
+    if (localStorage.getItem('userData')) {
+      this._HeroSection._ContinueWatching.patch({
+        alpha: 1,
+        props: {
+          buttonIcon: Utils.asset('icons/home/play.svg'),
+          buttonLabel: 'CONTINUE WATCHING',
+          width: 400,
+          callback: () => {
+            Router.navigate('player', {
+              videoUrl: url,
+              duration: duration,
+              videoType: 'series',
+              seriesID: id,
+              videoId: lastPlayedId,
+              continueTime: position,
+            });
+          },
+        },
+      });
+      this._HeroSection._FavoriteButton.patch({
+        alpha: 1,
+        props: {
+          buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+          buttonLabel: 'FAVORITE',
+          width: 255,
+          callback: () => {
+            this.addToFavorite();
+          },
+        },
+      });
+    }
+  }
+
+  async addToFavorite() {
+    /* console.log(this);
+    const { id } = this._props.galleryItem;
+    await CMPService.addToFavorites(id, 'video');
+    const favoriteees = await CMPService.getFavorites();
+    console.log(favoriteees); */
+
+    try {
+      const { favorited } = this._props;
+      const { id } = this._props.galleryItem;
+      if (favorited) {
+        await CMPService.removeFromFavorites(id);
+      } else {
+        await CMPService.addToFavorites(id, 'series');
+      }
+
+      this._props.favorited = !this._props.favorited;
+
+      const { favorited: newFavorited } = this._props;
+
+      this._HeroSection._FavoriteButton.patch({
+        props: {
+          buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+          buttonLabel: 'FAVORITE',
+          width: 255,
+        },
+      });
+    } catch (e) {
+      //skip
+      console.log('error', e);
+    }
   }
 
   _active() {
@@ -65,9 +143,13 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _init() { }
+  get _BackButton() {
+    return this.tag('BackButton');
+  }
 
-  _getFocused() { }
+  _init() {}
+
+  _getFocused() {}
 
   static _states() {
     return [
@@ -75,6 +157,9 @@ export default class SingleSeries extends Lightning.Component {
         _getFocused() {
           this._SeriesWrapper.patch({
             y: 0,
+          });
+          this._BackButton.patch({
+            y: 20,
           });
           return this._HeroSection;
         }
@@ -85,6 +170,19 @@ export default class SingleSeries extends Lightning.Component {
           } else {
             return false;
           }
+        }
+
+        _handleUp() {
+          this._setState('BackButton');
+        }
+      },
+
+      class BackButton extends this {
+        _getFocused() {
+          return this._BackButton;
+        }
+        _handleDown() {
+          this._setState('HeroSection');
         }
       },
 
@@ -117,6 +215,9 @@ export default class SingleSeries extends Lightning.Component {
               h: 1080,
             });
           } else {
+            this._BackButton.patch({
+              y: -180,
+            });
             this._SeriesWrapper.patch({
               y: -140,
             });

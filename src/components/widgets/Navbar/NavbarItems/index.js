@@ -6,14 +6,16 @@ import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
 
 const menuItems = [
-  { id: 0, label: 'Home', route: 'home', icon: '' },
-  { id: 1, label: 'Movies', route: 'vod/movies', icon: '' },
-  { id: 2, label: 'Series', route: 'vod/series', icon: '' },
-  { id: 3, label: 'Sports', route: 'vod/sports', icon: '' },
-  { id: 4, label: 'Live TV', route: 'live', icon: '' },
+  { id: 0, label: 'home', route: 'home', icon: '' },
+  { id: 1, label: 'movies', route: 'vod/movies', icon: '' },
+  { id: 2, label: 'series', route: 'vod/series', icon: '' },
+  { id: 3, label: 'sports', route: 'vod/sports', icon: '' },
+  { id: 4, label: 'live-tv', route: 'live', icon: '' },
   { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-  { id: 6, label: 'settings', route: 'settings', icon: 'images/navbar/settings.svg' },
-  { id: 7, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
+  // { id: 6, label: 'settings', route: 'settings', icon: 'images/navbar/settings.svg' },
+  { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
+  { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
+  { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
 ];
 
 export default class SidebarItems extends Lightning.Component {

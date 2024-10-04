@@ -141,6 +141,22 @@ export default class VerticalContainer extends Lightning.Component {
     this.stage.update();
   }
 
+  _removeLastItems(count) {
+    const { items } = this._props;
+
+    if (items.length >= count) {
+      // Remove last `count` items from _props.items
+      this._props.items.splice(-count, count);
+
+      // Remove last `count` items from the visual container
+      for (let i = 0; i < count; i++) {
+        this.Items.childList.removeAt(this.Items.children.length - 1);
+      }
+
+      this.stage.update();
+    }
+  }
+
   _clear() {
     this._props.items = [];
     this.Items.childList.clear();

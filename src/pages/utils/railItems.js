@@ -133,6 +133,10 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
               Router.navigate(`event-details/${railItem.id}`);
               break;
             }
+            case CATEGORY_TYPES.EVENT: {
+              Router.navigate(`event-details/${railItem.id}`);
+              break;
+            }
             case CATEGORY_TYPES.VIDEO: {
               Router.navigate('player', {
                 videoUrl: railItem.url,
@@ -155,8 +159,10 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
   });
 };
 
-const constructEpisodeRailItems = (railItems, railItemsOptions) =>
-  railItems.map((railItem) => ({
+const constructEpisodeRailItems = (railItems, railItemsOptions) => {
+  console.log('Constructing episode rail items...', railItems); // Log your message here
+
+  return railItems.map((railItem) => ({
     type: LandscapeRailItem,
     flexItem: {
       marginLeft: 10,
@@ -167,16 +173,21 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) =>
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title,
-      itemDescription: railItem.summary,
+      itemSummary: railItem.summary,
+      itemDescription: railItem.description,
       imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
       callback: () => {
         Router.navigate('player', {
           videoUrl: railItem.url,
+          videoId: railItem.id,
           duration: railItem.duration,
+          videoType: 'series',
+          seriesID: railItem.seriesId,
         });
       },
     },
   }));
+};
 
 const constructSportsLiveRailItems = (railItems, railItemsOptions) =>
   railItems.map((railItem) => ({

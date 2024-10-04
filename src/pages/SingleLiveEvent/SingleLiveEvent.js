@@ -1,7 +1,8 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import Button from '../../Components/Button/Button';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
@@ -36,6 +37,13 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   set props(props) {
+    console.log('events props: ', props.galleryItem.dateRange[0]);
+
+    // Assuming dateRange[0] is the start date and dateRange[1] is the end date
+    const startDate = new Date(props.galleryItem.dateRange[0]);
+    const endDate = new Date(props.galleryItem.dateRange[1]);
+    const currentDate = new Date();
+
     this._Column.props = {
       items: [],
     };
@@ -51,15 +59,62 @@ export default class SingleLiveEvent extends Lightning.Component {
       },
     });
 
-    this._HeroSection._GalleryButton.patch({
-      props: {
-        width: 400,
-      },
-    });
+    //Hide Button
+    if (currentDate >= startDate && currentDate <= endDate) {
+      this._HeroSection.tag('Info').patch({
+        GalleryButton: {
+          type: Button,
+          flexItem: {
+            marginTop: 10,
+          },
+          props: {
+            buttonLabel: 'WATCH NOW',
+            buttonIcon: Utils.asset('icons/home/play.svg'),
+          },
+        },
+      });
+      this._HeroSection._GalleryButton.patch({
+        props: {
+          width: 400,
+        },
+      });
+    } /* else {
+      this._HeroSection.tag('Info').patch({
+        GalleryButton: undefined,
+      });
+    } */ else {
+      this._HeroSection.patch({
+        props: {
+          enabled: false,
+        },
+      });
+      this._HeroSection.tag('Info').patch({
+        GalleryButton: {
+          type: Button,
+          flexItem: {
+            marginTop: 10,
+          },
+          props: {
+            width: 400,
+            buttonLabel: 'COMING SOON',
+            enabled: false,
+          },
+        },
+      });
+    }
   }
 
   _active() {
-    this._setState('HeroSection');
+    const startDate = new Date(this._props.galleryItem.dateRange[0]);
+    const endDate = new Date(this._props.galleryItem.dateRange[1]);
+    const currentDate = new Date();
+
+    // Hide Button
+    // if (currentDate >= startDate && currentDate <= endDate) {
+    //   this._setState('HeroSection');
+    // } else {
+    //   this._setState('Items');
+    // }
   }
 
   _getFocused() {
@@ -144,7 +199,18 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleUp() {
+          const startDate = new Date(this._props.galleryItem.dateRange[0]);
+          const endDate = new Date(this._props.galleryItem.dateRange[1]);
+          const currentDate = new Date();
+
           this._setState('HeroSection');
+
+          // Hide Button
+          // if (currentDate >= startDate && currentDate <= endDate) {
+          //   this._setState('HeroSection');
+          // } else {
+          //   this._setState('Items');
+          // }
         }
       },
     ];

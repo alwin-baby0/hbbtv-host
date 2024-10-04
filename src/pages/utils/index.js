@@ -21,6 +21,7 @@ export const RAIL_TYPES = {
   EPGS: 'epg-channel-programs',
   HERO: 'HeroRails',
   COLLECTION: 'Collection',
+  USER_CONTENT: 'UserContent',
 };
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,
@@ -34,6 +35,7 @@ const RAIL_WIDTHS = {
   [RAIL_TYPES.EPGS]: 1615,
   [RAIL_TYPES.SEARCH]: 1760,
   [RAIL_TYPES.COLLECTION]: 1760,
+  [RAIL_TYPES.USER_CONTENT]: 1400,
 };
 
 export const constructRails = (rails) => {
@@ -114,7 +116,7 @@ export const cronstructSingleLineRail = (rail) => {
   };
 };
 
-const chunkArray = (array, size) => {
+export const chunkArray = (array, size) => {
   if (!Array.isArray(array) || size <= 0) {
     return;
   }

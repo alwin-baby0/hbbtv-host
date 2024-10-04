@@ -29,15 +29,16 @@ export const parseHomePageHeroSection = ({ data }) => {
 
 // VodPreview
 // Movies
-export const parseVodMoviesPageData = ({ data }) => {
+export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
   const railItems = data.entry?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.MOVIE,
+    railTitle: data.railTitle,
     cardType: 'POSTER',
     items: railItems,
-    itemsPerRow: VODS_PER_ROW,
+    itemsPerRow,
   };
 };
 
@@ -56,6 +57,7 @@ export const parseSeriesPageData = ({ data }) => {
 
 // Categories
 export const parseVodCategories = ({ data }, vodType) => {
+  console.log('DATA', data);
   // const railItems = data?.entry.map((category) => new Category({ ...category, type: vodType }));
   const railItems = data?.entry.map((category) => {
     // console.log('CAT', category);
@@ -110,9 +112,9 @@ export const parseDetailsData = ({ data }) => {
 };
 
 // Season
-export const parseSeasonData = ({ data }) => {
+export const parseSeasonData = ({ data }, seriesId) => {
   const railItems = data.entry?.map(
-    (item) => new SimpleRailItem({ ...item, type: { value: 'episode' } })
+    (item) => new SimpleRailItem({ ...item, type: { value: 'episode' }, seriesId: seriesId })
   );
   if (!railItems || railItems?.length === 0) return;
 
@@ -121,7 +123,7 @@ export const parseSeasonData = ({ data }) => {
     cardType: 'POSTER',
     items: railItems,
     railTitle: data.title,
-    itemsPerRow: 5,
+    itemsPerRow: data.entry.length,
   };
 };
 
@@ -137,5 +139,18 @@ export const parseCollectionData = ({ data }) => {
     cardType: 'COLLECTION',
     items: railItems,
     itemsPerRow: 4,
+  };
+};
+
+export const parseVodUserContentData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
+  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  if (!railItems || railItems?.length === 0) return;
+
+  return {
+    railType: RAIL_TYPES.USER_CONTENT,
+    railTitle: data.railTitle,
+    cardType: 'POSTER',
+    items: railItems,
+    itemsPerRow,
   };
 };

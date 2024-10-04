@@ -1,52 +1,13 @@
 import FetchingService from './FetchingService';
-import { V2 } from './utils';
-
-const testAPI = {
-  title: 'We value your privacy',
-  description:
-    "We use cookies to enhance your browsing experience. By clicking 'Yes', you consent to our use of cookies. You can customize your consent preferences by clicking 'Customize'.",
-  buttons: {
-    yes: {
-      label: 'Yes, I Agree',
-      callback_url: 'https://api-applicaster.wedo.tv/cmp?choice=1',
-    },
-    no: {
-      label: 'No, I Do Not Agree',
-      callback_url: 'https://api-applicaster.wedo.tv/cmp?choice=0',
-    },
-    customize: {
-      label: 'Customize Preferences',
-      options: [
-        {
-          name: 'Privacy Settings',
-          link: 'https://cmp.wedo.tv/privacy-settings?device_id=d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-          qr: 'https://api-applicaster.wedo.tv/cmp/qr?url=https%3A%2F%2Fexample.com%2Fprivacy-settings%3Fdevice_id%3Dd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-        },
-        {
-          name: 'Cookie Preferences',
-          link: 'https://cmp.wedo.tv/cookie-preferences?device_id=d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-          qr: 'https://api-applicaster.wedo.tv/cmp/qr?url=https%3A%2F%2Fexample.com%2Fprivacy-settings%3Fdevice_id%3Dd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-        },
-      ],
-    },
-  },
-  consent: {
-    device_id: 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09',
-    tcf_string: '',
-    tcf_version: '2.2',
-    expire: {
-      date: '2024-09-11T12:52:31Z',
-      timestamp: 1726059151,
-    },
-  },
-};
+import { V2, auth } from './utils';
 
 class CMPService extends FetchingService {
   #cmpData;
-
   async initialFetch() {
+    const deviceCode = localStorage.getItem('serialNumber');
     try {
-      const cmpResults = await this.#getCMP('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09');
+      // const cmpResults = await this.#getCMP('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09');
+      const cmpResults = await this.#getCMP(deviceCode);
       this.#cmpData = cmpResults;
       if (cmpResults && cmpResults.data) {
         this.#cmpData = cmpResults.data;
@@ -62,13 +23,56 @@ class CMPService extends FetchingService {
     await this.#getCMPChoice(deviceCode, choicePick);
   }
 
+  async setDeviceCodeStatusInterval(deviceCode) {
+    try {
+      let authCode = '';
+      console.log('device code:', deviceCode);
+
+      if (!localStorage.getItem('userData')) {
+        this._intervalId = setInterval(async () => {
+          try {
+            const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
+            console.log('statusResponse', statusResponse.data);
+            console.log(authCode);
+
+            if (statusResponse.data.status === 'approved') {
+              // clearInterval(intervalId);
+              this.clearPollingInterval(this._intervalId); // Use the clear function
+              console.log('Device code status condition met, stopping the interval.');
+              console.log('status:', statusResponse.data.status);
+              console.log('autorization code:', statusResponse.data.authorization_code);
+              authCode = statusResponse.data.authorization_code;
+              const timestamp = Math.floor(Date.now() / 1000);
+
+              const tokenData = await this.#getToken(
+                statusResponse.data.authorization_code,
+                timestamp
+              );
+              console.log(tokenData);
+              localStorage.setItem('userData', JSON.stringify(tokenData.data));
+              const event = new CustomEvent('userLogIn');
+              window.dispatchEvent(event);
+            }
+          } catch (statusError) {
+            console.error('Error fetching device code status:', statusError);
+          }
+        }, 5000);
+      }
+    } catch (error) {
+      console.error('Error fetching device code:', error);
+      this.clearPollingInterval(this._intervalId); // Use the clear function on error
+    }
+  }
+
+  clearPollingInterval() {
+    clearInterval(this._intervalId);
+  }
+
   get cmpData() {
     return this.#cmpData;
   }
 
   #getCMP = async (deviceCode) => {
-    // console.log('Sending request with deviceCode:', deviceCode);
-
     const response = await this._request({
       url: `/cmp`,
       apiVersion: V2,
@@ -77,8 +81,6 @@ class CMPService extends FetchingService {
         'X-DEVICE-ID': deviceCode,
       },
     });
-
-    // console.log('Response from API:', response.data);
 
     return response;
   };
@@ -97,30 +99,187 @@ class CMPService extends FetchingService {
     });
   };
 
-  #getDeviceCode = async () => {
+  getDeviceCode = async () => {
     return await this._request({
       url: `/device.php`,
       apiVersion: auth,
       method: 'GET',
+      params: {
+        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
+        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+      },
     });
   };
 
   #getDeviceCodeStatus = async (deviceCode) => {
     return await this._request({
-      url: `/device.php`,
+      url: `/device-status.php`,
       apiVersion: auth,
       method: 'POST',
-      body: JSON.stringify({
+      params: {
+        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
+        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
         device_code: deviceCode,
-      }),
+      },
     });
   };
 
-  #getToken = async () => {
+  #getToken = async (authorizationCode) => {
+    const timestamp = new Date().getTime();
+
     return await this._request({
       url: `/token.php`,
       apiVersion: auth,
       method: 'POST',
+      headers: {
+        'X-nocache': timestamp,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: {
+        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
+        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        grant_type: 'authorization_code',
+        code: authorizationCode,
+      },
+    });
+  };
+
+  revokeToken = async (token) => {
+    return await this._request({
+      url: `/revoke.php`,
+      apiVersion: auth,
+      method: 'POST',
+      data: {
+        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
+        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        token: token,
+      },
+    });
+  };
+
+  getFavorites = async () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    return await this._request({
+      url: `/user/favorites`,
+      apiVersion: V2,
+      method: 'GET',
+      headers: {
+        'X-Authorization': `Bearer ${userData.access_token}`,
+      },
+      params: {
+        _: timestamp,
+      },
+    });
+  };
+
+  addToFavorites = async (videoID, vodType) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    return await this._request({
+      url: `/user/favorites`,
+      apiVersion: V2,
+      method: 'POST',
+      headers: {
+        'X-Authorization': `Bearer ${userData.access_token}`,
+        'X-nocache': timestamp,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      params: {
+        _: timestamp,
+      },
+      data: {
+        video_id: videoID,
+        type: vodType,
+      },
+    });
+  };
+
+  removeFromFavorites = async (videoID) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    return await this._request({
+      url: `/user/favorites`,
+      apiVersion: V2,
+      method: 'DELETE',
+      headers: {
+        'X-Authorization': `Bearer ${userData.access_token}`,
+        'X-nocache': timestamp,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      params: {
+        _: timestamp,
+      },
+      data: {
+        video_id: videoID,
+      },
+    });
+  };
+
+  getRecentlyWatched = async () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    return await this._request({
+      url: `/user/recently_watched`,
+      apiVersion: V2,
+      method: 'GET',
+      headers: {
+        'X-Authorization': `Bearer ${userData.access_token}`,
+      },
+      params: {
+        _: timestamp,
+      },
+    });
+  };
+
+  addRecentlyWatched = async (videoID, vodType, vodPosition, seriesID) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    return await this._request({
+      url: `/user/recently_watched`,
+      apiVersion: V2,
+      method: 'POST',
+      headers: {
+        'X-nocache': timestamp,
+        'X-Authorization': `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: {
+        video_id: videoID,
+        type: vodType,
+        position: vodPosition,
+        ...(seriesID && { series_id: seriesID }),
+      },
+    });
+  };
+
+  deleteRecentlyWatched = async (videoID) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    return await this._request({
+      url: `/user/recently_watched`,
+      apiVersion: V2,
+      method: 'DELETE',
+      headers: {
+        'X-nocache': timestamp,
+        'X-Authorization': `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: {
+        video_id: videoID,
+      },
     });
   };
 }

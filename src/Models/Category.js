@@ -10,6 +10,7 @@ export const CATEGORY_TYPES = {
   SERIE: 'genres_series',
   VIDEO: 'video',
   COLLECTION: 'collection',
+  EVENT: 'event',
 };
 
 class Category {

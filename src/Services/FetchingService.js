@@ -1,14 +1,19 @@
-import axios from "axios";
-import { createApiCtx } from "./utils";
+import axios from 'axios';
+import { createApiCtx } from './utils';
 
 const API_BASE_URLS = {
   v1: process.env.APP_BASE_URL,
   v2: process.env.APP_BASE_URL_2,
+  auth: process.env.APP_BASE_OAUTH,
 };
 
 export default class FetchingService {
   // we create static instance of axios to be unique throught the project
   static axiosInstance = axios.create({
+    headers: {
+      'Cache-Control': 'no-cache, must-revalidate',
+      Pragma: 'no-cache',
+    },
     params: {
       ctx: createApiCtx(),
     },
@@ -22,16 +27,15 @@ export default class FetchingService {
 
   /**
    * Generic function for fetching
-   * @param {V1 | V2} apiVersion version of the api to use
+   * @param {V1 | V2 | auth} apiVersion version of the api to use
    * @param {string} url url to the endpoint
    * @param {string} method GET | PUT | DELETE...
    * @param {object} params params to pass to request
-   * @returns {Promise<any>} Returns Promise to await the request result 
+   * @returns {Promise<any>} Returns Promise to await the request result
    */
   async _request({ apiVersion, url, ...options }) {
     this.#loading = true;
-    return FetchingService
-      .axiosInstance({ url: API_BASE_URLS[apiVersion] + url, ...options })
+    return FetchingService.axiosInstance({ url: API_BASE_URLS[apiVersion] + url, ...options })
       .then(this.#onSuccess)
       .catch(this.#onError);
   }
@@ -39,7 +43,7 @@ export default class FetchingService {
   #onSuccess = (response) => {
     this.#loading = false;
     return response;
-  }
+  };
 
   #onError = (error) => {
     this.#loading = false;
@@ -58,5 +62,5 @@ export default class FetchingService {
 
       return Promise.reject(error.response || error.message);
     }
-  }
+  };
 }

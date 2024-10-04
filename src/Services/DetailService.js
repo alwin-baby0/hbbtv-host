@@ -4,22 +4,39 @@ import FetchingService from './FetchingService';
 import { V2 } from './utils';
 
 class DetailService extends FetchingService {
-  getMovie = async (movieId) =>
-    await this._request({
+  getMovie = async (movieId) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
+
+    return await this._request({
       url: `/getMovie`,
       apiVersion: V2,
       method: 'GET',
+      headers: headers,
       params: {
+        _: timestamp,
         id: movieId,
       },
     }).then(parseDetailsData);
+  };
 
   getSerie = async (seriesId) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const timestamp = new Date().getTime();
+
+    const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
+
     const galleryItem = await this._request({
       url: '/getSerie',
       apiVersion: V2,
       method: 'GET',
+      headers: headers,
       params: {
+        _: timestamp,
         id: seriesId,
       },
     }).then(parseDetailsData);
@@ -53,7 +70,7 @@ class DetailService extends FetchingService {
         params: {
           season_id: id,
         },
-      }).then(parseSeasonData)
+      }).then((data) => parseSeasonData(data, seriesId))
     );
 
     try {

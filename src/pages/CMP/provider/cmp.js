@@ -5,6 +5,8 @@ import { CMPService } from '../../../Services/CMPService';
 export default async function (page) {
   await CMPService.initialFetch();
 
+  const serialNumber = localStorage.getItem('serialNumber');
+
   const buttonsResult = CMPService.cmpData.buttons;
 
   const buttons = Object.values(buttonsResult).map((value) => {
@@ -24,11 +26,8 @@ export default async function (page) {
         callback: async () => {
           if (value.callback_url) {
             const chosenValue = value.label === 'Yes, I Agree' ? 1 : 0;
-            // CMPService.getCMPChoice('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09', chosenValue);
-            await CMPService.selectCMPChoice('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09', chosenValue);
+            await CMPService.selectCMPChoice(serialNumber, chosenValue);
             await Router.navigate('home');
-            // getCMPChoice('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09', chosenValue);
-            // d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09
           } else {
             Router.navigate('cmp-customize', { options: value.options });
           }
