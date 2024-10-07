@@ -57,9 +57,7 @@ export const parseSeriesPageData = ({ data }) => {
 
 // Categories
 export const parseVodCategories = ({ data }, vodType) => {
-  // const railItems = data?.entry.map((category) => new Category({ ...category, type: vodType }));
   const railItems = data?.entry.map((category) => {
-    // console.log('CAT', category);
     return new Category({ ...category, type: vodType });
   });
   if (!railItems || railItems?.length === 0) return;

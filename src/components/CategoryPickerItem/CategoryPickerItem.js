@@ -39,7 +39,10 @@ export default class CategoryPickerItem extends Lightning.Component {
       },
     });
     this._Title.patch({
+      h: title.length > 13 ? 48 : 24,
       text: {
+        maxLines: title.length > 13 ? 2 : 1,
+        wordWrapWidth: 150,
         text: title.toUpperCase(),
         textColor: Colors(colors.focus).get(),
       },
@@ -64,8 +67,10 @@ export default class CategoryPickerItem extends Lightning.Component {
         Colors(colors.focus).get()
       ),
       Title: {
-        h: 24,
+        h: title.length > 13 ? 48 : 24,
         text: {
+          maxLines: title.length > 13 ? 2 : 1,
+          wordWrapWidth: 150,
           text: title.toUpperCase(),
           fontSize: 20,
           lineHeight: 25,
@@ -85,8 +90,10 @@ export default class CategoryPickerItem extends Lightning.Component {
     this.patch({
       texture: Lightning.Tools.getRoundRect(w, h),
       Title: {
-        h: 24,
+        h: title.length > 13 ? 48 : 24,
         text: {
+          maxLines: title.length > 13 ? 2 : 1,
+          wordWrapWidth: 150,
           text: title.toUpperCase(),
           fontSize: 20,
           lineHeight: 25,
