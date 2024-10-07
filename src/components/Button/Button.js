@@ -79,10 +79,6 @@ export default class Button extends Lightning.Component {
       fillColor = Colors(colors.focusDisabled).get();
     }
 
-    console.log('focusingColors', focusingColors);
-
-    console.log('da li je enabled', enabled);
-
     this.patch({
       w: width,
       h: height,

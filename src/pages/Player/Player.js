@@ -16,6 +16,8 @@ export default class Player extends lng.Component {
     pausedItemId: 1,
     lastId: 0,
     isAdVisible: false,
+    currentAd: null,
+    skipTo: 0,
     ads: [], // Inicijalizuj kao prazan niz
   };
 
@@ -394,7 +396,7 @@ export default class Player extends lng.Component {
 
   setAdUI(value) {
     // console.log('SAKRIJ KONTROLEEE:', value);
-    this._props.isAdVisible = value;
+    // this._props.isAdVisible = value;
   }
 
   //!
@@ -406,7 +408,9 @@ export default class Player extends lng.Component {
 
     // Start a new interval to check ad cue points
     this._adMonitoringInterval = setInterval(() => {
-      this._checkAdCuePoints();
+      if (VideoPlayer.playing) {
+        this._checkAdCuePoints();
+      }
     }, 1000); // Check every second
   }
 
@@ -444,10 +448,55 @@ export default class Player extends lng.Component {
             const from = this._convertCueTimeToSeconds(ad.cue.from);
             const to = this._convertCueTimeToSeconds(ad.cue.to);
             if (currentTime >= from && currentTime < to) {
-              console.log('Ad is playing:', ad.impression);
-              console.log('Skipping allowed:', ad.skipping_allowed);
-              // Perform any additional actions when ad is active
-              this._handleAdPlayback(ad);
+              if (this._props.currentAd !== ad) {
+                this._props.skipTo = to;
+                // console.log('Ad is playing:', ad.impression);
+                // console.log('Skipping allowed:', ad.skipping_allowed);
+                if (ad.skipping_allowed) {
+                  this.patch({
+                    SkipButton: {
+                      type: HorizontalContainer,
+                      props: {
+                        w: 300,
+                        h: 75,
+                      },
+                      x: 1580,
+                      y: 910,
+                      w: 300,
+                      h: 75,
+                      rect: true,
+                      texture: lng.Tools.getRoundRect(
+                        300,
+                        75,
+                        3,
+                        4,
+                        Colors(colors.focus).get(),
+                        true,
+                        Colors(colors.background).get()
+                      ),
+                      flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
+                      Text: {
+                        flexItem: { alignSelf: 'center' },
+                        text: 'Skip Button',
+                        fontFace: 'Montserrat-Bold',
+                        fontSize: 24,
+                        lineHeight: 25,
+                        letterSpacing: 2,
+                      },
+                    },
+                  });
+                }
+                // Aktiviraj reklamu
+                this._handleAdPlayback(ad);
+                this._props.currentAd = ad; // Postavi trenutnu reklamu kao aktivnu
+              }
+            }
+
+            // Provera da li je trenutna reklama završena
+            if (currentTime >= to && this._props.currentAd === ad) {
+              // console.log('Ad finished:', ad.impression);
+              this._handleAdEnd(ad);
+              this._props.currentAd = null; // Oslobodi trenutnu reklamu
             }
           });
         });
@@ -457,17 +506,34 @@ export default class Player extends lng.Component {
     }
   }
 
+  _handleAdEnd(ad) {
+    // Logic to handle when the ad finishes
+    console.log('Ad has finished:', ad.impression);
+    this._props.isAdVisible = false;
+    this.patch({
+      SkipButton: undefined,
+    });
+    this._setState('ProgressBar');
+
+    // Show player controls again or perform any other post-ad actions
+    // this._showWrapper();
+  }
+
   _convertCueTimeToSeconds(cue) {
     const parts = cue.split(':');
     return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
   }
 
   _handleAdPlayback(ad) {
+    this._hideWrapper();
     // Logic to handle ad playback, such as displaying the ad, hiding player controls, etc.
     console.log('Displaying Ad:', ad.impression);
+    this._props.isAdVisible = true;
     if (!ad.skipping_allowed) {
       console.log('Skipping not allowed for this ad.');
       // Additional logic to disable skipping
+    } else {
+      this._setState('SkipButton');
     }
   }
   //!
@@ -478,7 +544,6 @@ export default class Player extends lng.Component {
     this._props.ads = this._params.ssai; // Postavi ads iz niza
 
     lastIndex = 0;
-    console.log('Time:', this._params.continueTime);
     if (
       this._params.videoType === 'Stream now' ||
       this._params.videoType === 'application/x-mpegURL'
@@ -523,9 +588,11 @@ export default class Player extends lng.Component {
   }
 
   _skipVideo(offset) {
-    const newTime = VideoPlayer.currentTime + offset;
-    VideoPlayer.seek(newTime);
-    this._showWrapper(); // Show wrapper on skip
+    if (!this._props.isAdVisible) {
+      const newTime = VideoPlayer.currentTime + offset;
+      VideoPlayer.seek(newTime);
+      this._showWrapper(); // Show wrapper on skip
+    }
   }
 
   $videoPlayerCanPlay() {
@@ -674,7 +741,6 @@ export default class Player extends lng.Component {
   }
 
   _handleBack() {
-    console.log('HANDLEBEK DATA', this._params);
     if (parseFloat(VideoPlayer.duration) > 300) {
       if (this._params.seriesID) {
         CMPService.addRecentlyWatched(
@@ -717,8 +783,8 @@ export default class Player extends lng.Component {
     this._showWrapper();
     VideoPlayer.pause();
 
-    console.log('pausiran video', this._params.videoId, 'video', VideoPlayer.currentTime);
-    console.log('duzina videa', parseFloat(VideoPlayer.duration));
+    // console.log('pausiran video', this._params.videoId, 'video', VideoPlayer.currentTime);
+    // console.log('duzina videa', parseFloat(VideoPlayer.duration));
 
     if (parseFloat(VideoPlayer.duration) > 300) {
       if (this._params.seriesID) {
@@ -774,16 +840,28 @@ export default class Player extends lng.Component {
   }
 
   _showWrapper() {
-    this._setState('Controls');
-    this.tag('Wrapper').visible = true;
-    clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
-    this._hideWrapperTimeout = setTimeout(() => {
-      if (this._getState() !== 'Subtitles') {
-        // Check if the state is not Subtitles
-        this._hideWrapper();
-        this._setState('ProgressBar');
-      }
-    }, 5000); // Set new timeout
+    if (!this._props.isAdVisible) {
+      this._setState('Controls');
+      this.tag('Wrapper').visible = true;
+      clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
+      this._hideWrapperTimeout = setTimeout(() => {
+        if (this._getState() !== 'Subtitles') {
+          // Check if the state is not Subtitles
+          this._hideWrapper();
+          this._setState('ProgressBar');
+        }
+      }, 5000); // Set new timeout
+    }
+    // this._setState('Controls');
+    // this.tag('Wrapper').visible = true;
+    // clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
+    // this._hideWrapperTimeout = setTimeout(() => {
+    //   if (this._getState() !== 'Subtitles') {
+    //     // Check if the state is not Subtitles
+    //     this._hideWrapper();
+    //     this._setState('ProgressBar');
+    //   }
+    // }, 5000); // Set new timeout
   }
 
   _hideWrapper() {
@@ -861,12 +939,16 @@ export default class Player extends lng.Component {
   _handleMediaPlay() {
     // console.log('MediaPlay ');
     this._showWrapper(); // Show the UI elements when video starts playing
-    VideoPlayer.play();
+    if (!this._props.isAdVisible) {
+      VideoPlayer.play();
+    }
   }
   _handleMediaPause() {
     // console.log('MediaPause ');
     this._showWrapper(); // Show the UI elements when video starts playing
-    VideoPlayer.pause();
+    if (!this._props.isAdVisible) {
+      VideoPlayer.pause();
+    }
   }
   _handleMediaStop() {
     // console.log('MediaStop ');
@@ -908,6 +990,16 @@ export default class Player extends lng.Component {
         }
       },
 
+      class SkipButton extends this {
+        _getFocused() {
+          return this.tag('SkipButton');
+        }
+
+        _handleEnter() {
+          VideoPlayer.seek(this._props.skipTo);
+        }
+      },
+
       class ProgressBar extends this {
         _getFocused() {
           return this.tag('ProgressBar');
@@ -915,10 +1007,9 @@ export default class Player extends lng.Component {
 
         _handleEnter() {
           const isCurrentlyPlaying = VideoPlayer.playing;
-
           if (isCurrentlyPlaying === false) {
             const { pausedItemId } = this._props;
-            this._showWrapper();
+            // this._showWrapper();
             VideoPlayer.pause();
 
             this._Controls.Items.children[pausedItemId]._Icon.patch({
@@ -930,7 +1021,7 @@ export default class Player extends lng.Component {
             });
           }
 
-          if (!this._props.isAdVisible) {
+          if (this._props.isAdVisible !== true) {
             this._setState('Controls');
             this._showWrapper();
           }

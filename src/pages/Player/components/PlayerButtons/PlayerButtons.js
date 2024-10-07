@@ -75,7 +75,8 @@ export default class PlayerButtons extends lng.Component {
 
   _handleForward() {
     this._props.isStopped = false;
-    this.fireAncestors('$skippingTime', 30);
+    // this.fireAncestors('$skippingTime', 30);
+    this.fireAncestors('$skippingTime', 10);
     this.fireAncestors('$startStopVideo', false);
   }
 

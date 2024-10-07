@@ -273,7 +273,6 @@ export default class SingleMovie extends Lightning.Component {
         const { movie } = this._props;
         const { buttonLabel, icon, width, stream } = button;
         const translatedTitle = Language.translate(buttonLabel);
-        console.log('translatedText', translatedTitle);
 
         if (buttonLabel === 'TRAILER' && !movieTrailerUrl) {
           return null; // Skip this button by returning null if there is no trailer url
