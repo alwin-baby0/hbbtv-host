@@ -10,6 +10,7 @@ import EPGRailItems from '../../components/RailItems/EPGRailItems';
 import HeroRailItem from '../../components/RailItems/HeroRailItems';
 import { CATEGORY_TYPES } from '../../Models/Category';
 import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
+import BannerRailItem from '../../components/RailItems/BannerRailItem';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -32,6 +33,8 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
       return constructHeroRailItems(railItems, railItemsOptions);
     case RAIL_TYPES.COLLECTION:
       return constructLandscapeRailItems(railItems, railItemsOptions);
+    case RAIL_TYPES.BANNER:
+      return constructBannerRailItems(railItems, railItemsOptions);
     default: {
       console.warn('unknown rail type:', railType, ', defaulting to simple rail items');
       return constructSimpleRailItems(railItems, railItemsOptions);
@@ -256,3 +259,27 @@ const constructCategoryItems = (railItems, railItemsOptions) =>
       },
     };
   });
+
+// Banner
+const constructBannerRailItems = (railItems, railItemsOptions) => {
+  console.log('Banner railItem:', railItems);
+  return railItems.map((railItem) => ({
+    type: BannerRailItem,
+    w: 1760,
+    flexItem: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    ...railItemsOptions,
+    props: {
+      itemTitle: railItem.title ? railItem.title : '',
+      imageSrc: railItem.getCtvPoster(1080).src,
+      itemType: railItem.type,
+      callback: () => {
+        // Router.navigate(railItem.url);
+      },
+    },
+  }));
+};

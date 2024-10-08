@@ -22,6 +22,7 @@ export const RAIL_TYPES = {
   HERO: 'HeroRails',
   COLLECTION: 'Collection',
   USER_CONTENT: 'UserContent',
+  BANNER: 'Banner',
 };
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,
@@ -36,6 +37,7 @@ const RAIL_WIDTHS = {
   [RAIL_TYPES.SEARCH]: 1760,
   [RAIL_TYPES.COLLECTION]: 1760,
   [RAIL_TYPES.USER_CONTENT]: 1400,
+  [RAIL_TYPES.BANNER]: 1760,
 };
 
 export const constructRails = (rails) => {

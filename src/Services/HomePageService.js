@@ -2,7 +2,11 @@ import FetchingService from './FetchingService';
 import { SimpleRailItem } from '../Models';
 import { V2 } from './utils';
 import { imageSizes } from '../Models/utils';
-import { parseHomePageHeroSection, parseHomePageRailData } from '../Models/parsers';
+import {
+  parseBannerData,
+  parseHomePageHeroSection,
+  parseHomePageRailData,
+} from '../Models/parsers';
 
 class HomePageService extends FetchingService {
   #heroSectionItems;
@@ -12,11 +16,15 @@ class HomePageService extends FetchingService {
   #currentRailLimit = 7; // Početni limit je 6
   #heroSectionPage = 1; // Page counter for Hero Section
   #isLastFetchEmpty = false; // Initialize to false
+  #banner = [];
 
   /**
    * Fetches initial stripes for Home page
    */
   async initialFetch() {
+    this.#banner = await this.#getBanner();
+    // this.#banner = [];
+
     if (!this.#heroSectionItems) {
       //get gallery data
       const galleryItems = await this.#getHomePageHeroSection();
@@ -139,6 +147,7 @@ class HomePageService extends FetchingService {
     this.#pointer = 2;
     this.stripesFetched = 0;
     this.#currentRailLimit = 7; // Reset limit to initial value
+    this.#banner = [];
   }
 
   /**
@@ -146,6 +155,10 @@ class HomePageService extends FetchingService {
    */
   get heroSectionItems() {
     return this.#heroSectionItems;
+  }
+
+  get banner() {
+    return this.#banner;
   }
 
   /**
@@ -185,6 +198,13 @@ class HomePageService extends FetchingService {
         limit,
       },
     }).then(parseHomePageRailData);
+
+  #getBanner = async () =>
+    this._request({
+      url: '/ads',
+      apiVersion: V2,
+      method: 'GET',
+    }).then(parseBannerData);
 }
 
 const homePageService = new HomePageService();
