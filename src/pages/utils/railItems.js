@@ -262,7 +262,6 @@ const constructCategoryItems = (railItems, railItemsOptions) =>
 
 // Banner
 const constructBannerRailItems = (railItems, railItemsOptions) => {
-  console.log('Banner railItem:', railItems);
   return railItems.map((railItem) => ({
     type: BannerRailItem,
     w: 1760,
@@ -275,7 +274,7 @@ const constructBannerRailItems = (railItems, railItemsOptions) => {
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getCtvPoster(1080).src,
+      imageSrc: railItem.getCtvPoster(1080),
       itemType: railItem.type,
       callback: () => {
         // Router.navigate(railItem.url);

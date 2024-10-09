@@ -97,32 +97,79 @@ export default class VerticalContainer extends Lightning.Component {
       return this.handleDown();
     }
   }
+
+  // handleDown() {
+  //   const { items } = this._props;
+  //   // TODO
+  //   // if (this._focusedIndex < items.length - 1) {
+  //   if (this._focusedIndex < this.Items.children.length - 1) {
+  //     // this.Items.children.length;
+  //     this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
+  //     this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
+  //     this._focusedIndex += 1;
+  //     this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+  //   } else {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
+  //With skipping focus
   handleDown() {
     const { items } = this._props;
-    // TODO
-    // if (this._focusedIndex < items.length - 1) {
-    if (this._focusedIndex < this.Items.children.length - 1) {
-      // this.Items.children.length;
-      this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
-      this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
+
+    while (this._focusedIndex < this.Items.children.length - 1) {
       this._focusedIndex += 1;
+      const nextItem = this.Items.children[this._focusedIndex];
+      console.log('NEXT ITEM:', nextItem._props.cardType);
+
+      // Proveri da li item ima `skipFocus` flag i nastavi dalje ako treba da se preskoči
+      if (nextItem._props.cardType === 'BANNER') {
+        this._handleCarryFocus(this._focusedIndex - 1, this._focusedIndex);
+        this._reCalibrateScroll(this._focusedIndex - 1, this._focusedIndex);
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+        continue;
+      }
+
+      this._handleCarryFocus(this._focusedIndex - 1, this._focusedIndex);
+      this._reCalibrateScroll(this._focusedIndex - 1, this._focusedIndex);
       this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
-    } else {
-      return false;
+      return true;
     }
-    return true;
+
+    return false;
   }
 
+  // _handleUp() {
+  //   if (this._focusedIndex > 0) {
+  //     this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 1);
+  //     this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 1);
+  //     this._focusedIndex -= 1;
+  //     this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+  //   } else {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
+  //With skipping focus
   _handleUp() {
-    if (this._focusedIndex > 0) {
-      this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 1);
-      this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 1);
+    while (this._focusedIndex > 0) {
       this._focusedIndex -= 1;
+      const prevItem = this.Items.children[this._focusedIndex];
+
+      // Proveri da li item ima `skipFocus` flag i nastavi dalje ako treba da se preskoči
+      if (prevItem._props.cardType === 'BANNER') {
+        continue;
+      }
+
+      this._handleCarryFocus(this._focusedIndex + 1, this._focusedIndex);
+      this._reCalibrateScroll(this._focusedIndex + 1, this._focusedIndex);
       this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
-    } else {
-      return false;
+      return true;
     }
-    return true;
+
+    return false;
   }
 
   // _appendItems(items) {

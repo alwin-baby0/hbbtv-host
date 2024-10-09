@@ -38,6 +38,9 @@ export default class LiveTVPlayer extends Lightning.Component {
   }
 
   _updateChannel(src) {
+    VideoPlayer.clear();
+    VideoPlayer.close();
+
     this.fireAncestors('$punchHoleTV');
     VideoPlayer.consumer(this);
     VideoPlayer.open(src);

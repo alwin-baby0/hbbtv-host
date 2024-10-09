@@ -157,6 +157,18 @@ class HomePageService extends FetchingService {
     return this.#heroSectionItems;
   }
 
+  /**
+   * Postavlja vrednost za banner
+   * @param {Array} newBanner - Nova vrednost za banner
+   */
+  set banner(newBanner) {
+    if (Array.isArray(newBanner)) {
+      this.#banner = newBanner;
+    } else {
+      console.error('Banner mora biti niz.');
+    }
+  }
+
   get banner() {
     return this.#banner;
   }

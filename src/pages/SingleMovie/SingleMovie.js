@@ -261,6 +261,7 @@ export default class SingleMovie extends Lightning.Component {
                 duration: duration,
                 videoId: movieId,
                 continueTime: last_position,
+                ssai: movie.ssai,
               });
             },
           },

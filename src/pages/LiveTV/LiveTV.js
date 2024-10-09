@@ -86,7 +86,8 @@ export default class LiveTV extends Lightning.Component {
                   type: lng.shaders.RoundedRectangle,
                   radius: 0,
                 },
-                w: 46,
+                // w: 46,
+                w: 50,
                 h: 22,
                 text: {
                   text: 'NOW',

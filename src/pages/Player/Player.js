@@ -10,7 +10,7 @@ import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import { CMPService } from '../../Services/CMPService';
 let lastIndex = 0;
-
+let offsetTime = 0;
 export default class Player extends lng.Component {
   _props = {
     pausedItemId: 1,
@@ -503,6 +503,7 @@ export default class Player extends lng.Component {
       });
     } else {
       console.error('Invalid ssai structure or missing slots.');
+      clearInterval(this._adMonitoringInterval);
     }
   }
 
@@ -589,8 +590,18 @@ export default class Player extends lng.Component {
 
   _skipVideo(offset) {
     if (!this._props.isAdVisible) {
-      const newTime = VideoPlayer.currentTime + offset;
-      VideoPlayer.seek(newTime);
+      offsetTime += offset;
+      // VideoPlayer.pause();
+      clearTimeout(this._seekTimeout);
+      const newTime = VideoPlayer.currentTime + offsetTime;
+      // VideoPlayer.seek(newTime);
+      // Set a new timeout to delay the seek operation by 500ms
+      this._seekTimeout = setTimeout(() => {
+        VideoPlayer.seek(newTime);
+        console.log('SEEK:', newTime);
+        offsetTime = 0;
+        VideoPlayer.play();
+      }, 500); // 500ms delay
       this._showWrapper(); // Show wrapper on skip
     }
   }
@@ -618,44 +629,143 @@ export default class Player extends lng.Component {
     }
   }
 
+  // $showSubtitles(val) {
+  //   const player = getPlayer();
+  //   const getTracks = player.subtitleTrackController.tracks;
+
+  //   const offButton = {
+  //     name: 'OFF',
+  //     type: 'SUBTITLES',
+  //   };
+
+  //   let items;
+  //   if (false) {
+  //     // If all tracks are disabled, only use the 'OFF' track
+  //     items = [
+  //       {
+  //         type: SubtitlesButtons,
+  //         props: {
+  //           // languageInfo: offTrack,
+  //         },
+  //         w: 250,
+  //         h: 100,
+  //       },
+  //     ];
+  //   } else {
+  //     // Otherwise, include all tracks plus the 'OFF' track
+  //     let newArray = [offButton, ...getTracks];
+
+  //     items = newArray.map((language, index) => ({
+  //       type: SubtitlesButtons,
+  //       props: {
+  //         languageInfo: language,
+  //         index: index,
+  //       },
+  //       w: 250,
+  //       h: 60,
+  //     }));
+  //   }
+
+  //   // Patch the Subtitles section with the appropriate items
+  //   this.patch({
+  //     Subtitles: {
+  //       w: 600,
+  //       h: 1080,
+  //       x: 1320,
+  //       rect: true,
+  //       color: Colors('#1B1C23').get(),
+  //       zIndex: 5,
+  //       Title: {
+  //         x: 50,
+  //         y: 70,
+  //         text: {
+  //           text: 'Subtitles',
+  //           fontSize: 32,
+  //         },
+  //       },
+  //       Languages: {
+  //         // type: VerticalContainer,
+  //         type: Column,
+  //         items: items,
+  //         props: {
+  //           w: 600,
+  //           h: 1080,
+  //           items: items,
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
+
   $showSubtitles(val) {
     const player = getPlayer();
-    const getTracks = player.subtitleTrackController.tracks;
 
+    // Define the 'OFF' button once at the top of the function
     const offButton = {
       name: 'OFF',
       type: 'SUBTITLES',
     };
 
-    let items;
-    if (false) {
-      // If all tracks are disabled, only use the 'OFF' track
-      items = [
-        {
-          type: SubtitlesButtons,
-          props: {
-            // languageInfo: offTrack,
-          },
-          w: 250,
-          h: 100,
-        },
-      ];
-    } else {
-      // Otherwise, include all tracks plus the 'OFF' track
-      let newArray = [offButton, ...getTracks];
+    if (!(player && player.subtitleTrackController && player.subtitleTrackController.tracks)) {
+      console.error('Tracks or subtitleTrackController is not available.');
 
-      items = newArray.map((language, index) => ({
-        type: SubtitlesButtons,
-        props: {
-          languageInfo: language,
-          index: index,
+      // Patch the Subtitles section with only the 'OFF' button
+      this.patch({
+        Subtitles: {
+          w: 600,
+          h: 1080,
+          x: 1320,
+          rect: true,
+          color: Colors('#1B1C23').get(),
+          zIndex: 5,
+          Title: {
+            x: 50,
+            y: 70,
+            text: {
+              text: 'Subtitles',
+              fontSize: 32,
+            },
+          },
+          Languages: {
+            type: Column,
+            items: [
+              {
+                type: SubtitlesButtons,
+                props: {
+                  languageInfo: offButton,
+                  index: 0,
+                },
+                w: 250,
+                h: 100,
+              },
+            ],
+            props: {
+              w: 600,
+              h: 1080,
+            },
+          },
         },
-        w: 250,
-        h: 60,
-      }));
+      });
+      return; // Exit function after patching with 'OFF' only
     }
 
-    // Patch the Subtitles section with the appropriate items
+    // Get the available tracks
+    const getTracks = player.subtitleTrackController.tracks;
+
+    // Create an array with 'OFF' button and other available tracks
+    let newArray = [offButton, ...getTracks];
+
+    let items = newArray.map((language, index) => ({
+      type: SubtitlesButtons,
+      props: {
+        languageInfo: language,
+        index: index,
+      },
+      w: 250,
+      h: 60,
+    }));
+
+    // Patch the Subtitles section with all available items
     this.patch({
       Subtitles: {
         w: 600,
@@ -673,7 +783,6 @@ export default class Player extends lng.Component {
           },
         },
         Languages: {
-          // type: VerticalContainer,
           type: Column,
           items: items,
           props: {
@@ -812,7 +921,11 @@ export default class Player extends lng.Component {
   }
 
   _updateProgressBar() {
-    const currentTime = VideoPlayer.currentTime;
+    // const currentTime = VideoPlayer.currentTime;
+    const currentTime = Math.max(
+      0,
+      Math.min(VideoPlayer.currentTime + offsetTime, VideoPlayer.duration)
+    );
     const progress = currentTime / VideoPlayer.duration;
     this.tag('ProgressBar').progress = progress;
     const formattedTime =
@@ -829,6 +942,9 @@ export default class Player extends lng.Component {
         ? ''
         : formattedDuration;
     this._duration = durationInSeconds;
+
+    // console.log(formattedTime);
+    // console.log(currentTime);
   }
 
   $changeFocusOnControl(val) {
