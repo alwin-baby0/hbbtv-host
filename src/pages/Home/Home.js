@@ -61,16 +61,6 @@ export default class Home extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const { sliderData, railData } = this._props;
 
-    // // Modify railData by inserting an empty array after the first element
-    // const modifiedRailData = [
-    //   railData[0], // Take the first element
-    //   [], // Insert an empty array
-    //   ...railData.slice(1), // Append the rest of the railData elements
-    // ];
-
-    // const rails = constructRails(modifiedRailData);
-    // this._Column.props = { items: rails };
-    console.log('railData', railData);
     const rails = constructRails(railData);
     this._Column.props = { items: rails };
 
@@ -172,38 +162,6 @@ export default class Home extends Lightning.Component {
         }
 
         async $verticalContainerIndexChange(index) {
-          // if (index === 1 ) {
-          //   console.log('ENTERED:', bannerState);
-          //   // bannerState === false;
-          //   if (bannerState === false) {
-          //     // this._Column._focusedIndex = 2;
-          //     // this._Column._reCalibrateScroll(0, 2);
-          //     this._Column._focusedIndex = 2;
-          //     this._Column._reCalibrateScroll(2, 0);
-          //     index += 1;
-          //   } else {
-          //     // this._Column._focusedIndex = 0;
-          //     // this._Column._reCalibrateScroll(2, 0);
-          //     his._Column._focusedIndex = 0;
-          //     this._Column._reCalibrateScroll(0, 2);
-          //   }
-          // }
-
-          // if (index === 0) {
-          //   console.log('ID 0');
-          //   this._Column._focusedIndex = 2;
-          //   this._Column._reCalibrateScroll(0, 2);
-          // } else if (index === 2) {
-          //   console.log('ID 2');
-          //   this._Column._focusedIndex = 0;
-          //   this._Column._reCalibrateScroll(2, 0);
-          // } else if (index === 1) {
-          //   // console.log('ID 1');
-          // } else {
-          //   console.log('ID UNKNOWN');
-          // }
-
-          // Upravljanje vidljivošću hero sekcije na osnovu index
           if (index > 0) {
             this._HeroSection?.patch({ visible: false });
             this._Wrapper.patch({ y: 0 });
@@ -213,78 +171,18 @@ export default class Home extends Lightning.Component {
             this._Wrapper.patch({ y: 0 });
           }
 
+          let hasBanner = !!HomePageService.banner;
+          let indexNumber = hasBanner ? 1 : 0;
           if (
             HomePageService.hasMore &&
             !HomePageService.isLoading &&
-            HomePageService.stripesFetched - 2 === index
+            HomePageService.stripesFetched - 2 === index - indexNumber
           ) {
             const newStripes = await HomePageService.fetchMoreStripes();
             const rails = constructRails(newStripes);
             this._Column._appendItems(rails);
           }
         }
-
-        // async $verticalContainerIndexChange(index) {
-        //   console.log('BEFORE: Vert index:', index);
-        //   let bannerState = false;
-        //   // if (index === 1 && this._Column.Items.children[1]._props.cardType === 'BANNER') {
-        //   //   console.log('DADADA 111');
-        //   //   this._Column._focusedIndex = 2;
-        //   //   this._Column._reCalibrateScroll(0, 2);
-        //   // } else if (index > 2) {
-        //   //   console.log('AAAAAAAAA 222');
-        //   // }
-        //   if (index < 2) {
-        //     bannerState = false;
-        //     console.log('111:', index);
-        //   } else {
-        //     bannerState = true;
-        //     console.log('222:', index);
-        //   }
-
-        //   if (bannerState) {
-        //     // this._Column._focusedIndex = 2;
-        //     // this._Column._reCalibrateScroll(0, 2);
-        //     this._Column._focusedIndex = 0;
-        //     this._Column._reCalibrateScroll(index, 0);
-        //     index -= 1;
-        //   } else {
-        //     // this._Column._focusedIndex = 0;
-        //     // this._Column._reCalibrateScroll(index, 0);
-        //     index += 1;
-        //     this._Column._focusedIndex = 2;
-        //     this._Column._reCalibrateScroll(0, 2);
-        //   }
-
-        //   console.log('AFTER: Vert index:', index);
-
-        //   if (index > 0) {
-        //     this._HeroSection?.patch({
-        //       visible: false,
-        //     });
-        //     this._Wrapper.patch({
-        //       y: 0,
-        //     });
-        //   } else {
-        //     this._HeroSection?.patch({
-        //       visible: true,
-        //       y: 980,
-        //     });
-        //     this._Wrapper.patch({
-        //       y: 0,
-        //     });
-        //   }
-
-        //   if (
-        //     HomePageService.hasMore &&
-        //     !HomePageService.isLoading &&
-        //     HomePageService.stripesFetched - 2 === index
-        //   ) {
-        //     const newStripes = await HomePageService.fetchMoreStripes();
-        //     const rails = constructRails(newStripes);
-        //     this._Column._appendItems(rails);
-        //   }
-        // }
       },
     ];
   }

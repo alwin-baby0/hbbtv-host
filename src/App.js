@@ -214,7 +214,7 @@ export default class App extends Router.App {
   static language() {
     // const selectedLanguage = Storage.get('languageCode') || 'en';
     const selectedLanguage = localStorage.getItem('languageCode') || 'en';
-    console.log('prevod:', selectedLanguage);
+    // console.log('prevod:', selectedLanguage);
     return {
       file: Utils.asset('translations/translations.json'),
       language: selectedLanguage,

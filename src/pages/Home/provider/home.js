@@ -1,28 +1,35 @@
 import { HomePageService } from '../../../Services/HomePageService';
 
+async function checkImageVisibility(imageUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = imageUrl;
+
+    img.onload = () => {
+      resolve(true);
+    };
+
+    img.onerror = () => {
+      resolve(false);
+    };
+  });
+}
+
 export default async function (page) {
   if (page._props.sliderData !== null && page._props.railData) {
     return;
   }
   await HomePageService.initialFetch();
 
-  // const modifiedRailData = [
-  //   HomePageService.stripes[0], // Take the first element
-  //   // [], // Insert an empty array
-  //   HomePageService.banner,
-  //   ...HomePageService.stripes.slice(1), // Append the rest of the railData elements
-  // ];
-  console.log('HomePageService.banner', HomePageService.banner);
+  const isBannerImageExist = await checkImageVisibility(
+    HomePageService.banner?.items[0].ctvPosters['1080']
+  );
   const modifiedRailData = [
-    HomePageService.stripes[0], // Take the first element
-    // [], // Insert an empty array
-    ...(HomePageService.banner?.items ? [HomePageService.banner] : []), // Conditionally include banner if not empty
-    ...HomePageService.stripes.slice(1), // Append the rest of the railData elements
+    HomePageService.stripes[0],
+    ...(isBannerImageExist && HomePageService.banner?.items ? [HomePageService.banner] : []),
+    ...HomePageService.stripes.slice(1),
   ];
 
-  // console.log('modifued:', modifiedRailData);
-
-  // console.log('PPPPPP:', HomePageService.banner);
   page.props = {
     sliderData: HomePageService.heroSectionItems,
     railData: modifiedRailData,

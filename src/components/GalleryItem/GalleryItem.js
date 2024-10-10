@@ -109,9 +109,9 @@ export default class GalleryItem extends Lightning.Component {
   }
   set props(props) {
     this._props = { ...this._props, ...props };
-    console.log(this._props);
+    // console.log(this._props);
     const { galleryItem, height, enabled } = this._props;
-    console.log(enabled);
+    // console.log(enabled);
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
     this._Info.patch({

@@ -241,7 +241,7 @@ export default class SingleMovie extends Lightning.Component {
         buttonLabel: 'FAVORITE',
         width: 255,
       });
-      console.log('MOVIEEE', movie);
+      // console.log('MOVIEEE', movie);
       this.tag('CardInfo.AboutMovie').patch({
         ContinueButton: {
           y: 170,

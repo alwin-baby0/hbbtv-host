@@ -90,7 +90,6 @@ export default class VerticalContainer extends Lightning.Component {
 
   _handleDown() {
     const { items } = this._props;
-    // console.log('ITEMS: ', this._props);
     if (items && items[0].channelId) {
       return this.handleDownEPG();
     } else {
@@ -98,86 +97,43 @@ export default class VerticalContainer extends Lightning.Component {
     }
   }
 
-  // handleDown() {
-  //   const { items } = this._props;
-  //   // TODO
-  //   // if (this._focusedIndex < items.length - 1) {
-  //   if (this._focusedIndex < this.Items.children.length - 1) {
-  //     // this.Items.children.length;
-  //     this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
-  //     this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
-  //     this._focusedIndex += 1;
-  //     this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
-  //   } else {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
-  //With skipping focus
   handleDown() {
-    const { items } = this._props;
-
-    while (this._focusedIndex < this.Items.children.length - 1) {
-      this._focusedIndex += 1;
-      const nextItem = this.Items.children[this._focusedIndex];
-      console.log('NEXT ITEM:', nextItem._props.cardType);
-
-      // Proveri da li item ima `skipFocus` flag i nastavi dalje ako treba da se preskoči
-      if (nextItem._props.cardType === 'BANNER') {
-        this._handleCarryFocus(this._focusedIndex - 1, this._focusedIndex);
-        this._reCalibrateScroll(this._focusedIndex - 1, this._focusedIndex);
+    if (this._focusedIndex < this.Items.children.length - 1) {
+      if (this.Items.children[this._focusedIndex + 1]._props?.cardType === 'BANNER') {
+        this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 2);
+        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 2);
+        this._focusedIndex += 2;
         this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
-        continue;
+      } else {
+        this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
+        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
+        this._focusedIndex += 1;
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
       }
-
-      this._handleCarryFocus(this._focusedIndex - 1, this._focusedIndex);
-      this._reCalibrateScroll(this._focusedIndex - 1, this._focusedIndex);
-      this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
-      return true;
+    } else {
+      return false;
     }
-
-    return false;
+    return true;
   }
 
-  // _handleUp() {
-  //   if (this._focusedIndex > 0) {
-  //     this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 1);
-  //     this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 1);
-  //     this._focusedIndex -= 1;
-  //     this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
-  //   } else {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
-  //With skipping focus
   _handleUp() {
-    while (this._focusedIndex > 0) {
-      this._focusedIndex -= 1;
-      const prevItem = this.Items.children[this._focusedIndex];
-
-      // Proveri da li item ima `skipFocus` flag i nastavi dalje ako treba da se preskoči
-      if (prevItem._props.cardType === 'BANNER') {
-        continue;
+    if (this._focusedIndex > 0) {
+      if (this.Items.children[this._focusedIndex - 1]._props?.cardType === 'BANNER') {
+        this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 2);
+        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 2);
+        this._focusedIndex -= 2;
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+      } else {
+        this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 1);
+        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 1);
+        this._focusedIndex -= 1;
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
       }
-
-      this._handleCarryFocus(this._focusedIndex + 1, this._focusedIndex);
-      this._reCalibrateScroll(this._focusedIndex + 1, this._focusedIndex);
-      this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
-      return true;
+    } else {
+      return false;
     }
-
-    return false;
+    return true;
   }
-
-  // _appendItems(items) {
-  //   this._props.items.push(...items);
-  //   this.Items.childList.a(items);
-
-  //   this.stage.update();
-  // }
 
   _appendItems(items) {
     items?.forEach((item) => {
@@ -233,7 +189,7 @@ export default class VerticalContainer extends Lightning.Component {
       this._scrollPosition = 0;
       this.Items.patch({ y: 0 });
     } else {
-      const multiplier = oldIndex > newIndex ? 1 : -1;
+      const multiplier = oldIndex - newIndex;
       this._scrollPosition += multiplier * prevFocus.finalH;
       this.Items.patch({
         y: Math.min(this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition, 0),

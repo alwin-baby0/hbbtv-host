@@ -176,7 +176,7 @@ export default class LanguageSettings extends Lightning.Component {
         },
       });
 
-      console.log('b8tt', buttonsResult);
+      // console.log('b8tt', buttonsResult);
     } else if (contentId === 1) {
       console.log(this._props);
       const { languages } = this._props.languagesData;

@@ -49,7 +49,7 @@ export default class BannerRailItem extends FocusableItem {
     });
 
     const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;
-    console.log('imageSrc', imageSrc);
+    // console.log('imageSrc', imageSrc);
     this._PosterImage.patch({
       props: {
         width: CARD_SIZES.BANNER.image_width,

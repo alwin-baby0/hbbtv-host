@@ -155,14 +155,13 @@ export const parseVodUserContentData = ({ data, itemsPerRow = VODS_PER_ROW }) =>
 
 // Banner
 export const parseBannerData = ({ data }) => {
-  console.log('DATAAA', data);
   const railItems = data.ads?.map((item) => new Banner(item));
   if (!railItems || railItems.length === 0) return;
 
   return {
     // railType: railItems[0].type,
     railType: RAIL_TYPES.BANNER,
-    railTitle: 'Advertisement',
+    // railTitle: 'Advertisement',
     cardType: 'BANNER',
     items: railItems,
     itemsPerRow: 4,
