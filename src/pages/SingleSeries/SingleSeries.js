@@ -44,14 +44,15 @@ export default class SingleSeries extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem, favorited, duration } = this._props;
+    const { galleryItem, favorited, duration, firstEpisodeVideoId } = this._props;
     const { url, id, lastPlayedId, position } = galleryItem;
-    console.log(galleryItem);
+    console.log('firstEpisodeVideoId:', firstEpisodeVideoId);
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
         // height: 650,
         height: 620,
+        firstEpisodeVideoId: firstEpisodeVideoId,
       },
     });
 

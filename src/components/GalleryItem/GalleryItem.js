@@ -110,10 +110,11 @@ export default class GalleryItem extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     // console.log(this._props);
-    const { galleryItem, height, enabled } = this._props;
+    const { galleryItem, height, enabled, firstEpisodeVideoId } = this._props;
     // console.log(enabled);
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
+    console.log('galleryItem:', props);
     this._Info.patch({
       h: height,
     });
@@ -179,6 +180,7 @@ export default class GalleryItem extends Lightning.Component {
               videoUrl: url,
               duration: duration,
               videoType: videoType,
+              videoId: firstEpisodeVideoId ? firstEpisodeVideoId : null,
             });
           };
 

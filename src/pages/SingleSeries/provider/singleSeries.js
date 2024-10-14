@@ -4,7 +4,6 @@ import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId }) {
   const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
-
   let favorited = false;
 
   if (localStorage.getItem('userData')) {
@@ -18,6 +17,7 @@ export default async function (page, { seriesId }) {
     galleryItem: galleryItem,
     favorited,
     duration: seasons.duration,
+    firstEpisodeVideoId: +seasons[0].items[0].id,
   };
 
   page._Column.props = {
