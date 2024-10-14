@@ -49,11 +49,12 @@ export default class SingleLiveEvent extends Lightning.Component {
     };
 
     this._props = { ...this._props, ...props };
-    const { galleryItem } = this._props;
+    const { galleryItem, fallbackImage } = this._props;
 
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
+        fallbackImage,
         height: 650,
         yPos: 100,
       },
