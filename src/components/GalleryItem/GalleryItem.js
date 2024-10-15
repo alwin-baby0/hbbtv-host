@@ -109,9 +109,8 @@ export default class GalleryItem extends Lightning.Component {
   }
   set props(props) {
     this._props = { ...this._props, ...props };
-    // console.log(this._props);
-    const { galleryItem, height, enabled } = this._props;
-    // console.log(enabled);
+    const { galleryItem, height, enabled, firstEpisodeVideoId, fallbackImage } = this._props;
+
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
     this._Info.patch({
@@ -143,16 +142,14 @@ export default class GalleryItem extends Lightning.Component {
         },
       });
     }
+
     this._BackgroundImage.patch({
       w: 1220,
       h: height,
       x: 700,
-      // src: galleryItem.getLandscapePoster(imageSizes.XL)?.src,
-      src:
-        galleryItem.getLandscapePoster(imageSizes.XL)?.src !== null
-          ? galleryItem.getLandscapePoster(imageSizes.XL)?.src
-          : // : Utils.asset('images/gradient.png'),
-            Utils.asset('images/gradient.png'),
+      src: galleryItem.getLandscapePoster(imageSizes.XL)?.src
+        ? galleryItem.getLandscapePoster(imageSizes.XL).src
+        : fallbackImage || Utils.asset('images/gradient.png'),
     });
     this._GradientOverlay.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
@@ -179,6 +176,7 @@ export default class GalleryItem extends Lightning.Component {
               videoUrl: url,
               duration: duration,
               videoType: videoType,
+              videoId: firstEpisodeVideoId ? firstEpisodeVideoId : null,
             });
           };
 

@@ -13,7 +13,6 @@ class SimpleRailItem {
       this.episodeSeriesID = extensions?.series_id;
       this.duration = extensions?.duration;
     }
-
     switch (this.type) {
       case 'movie':
       case 'video':

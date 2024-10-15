@@ -355,7 +355,8 @@ export default class Player extends lng.Component {
 
   set params({ videoUrl, videoType, type, duration, videoId, continueTime, seriesID, ssai }) {
     this._params = { videoUrl, videoType, type, duration, videoId, continueTime, seriesID, ssai };
-    console.log('ssai', ssai);
+    // console.log('ssai', ssai);
+    console.log('video_id:', videoId);
   }
 
   _enable() {
