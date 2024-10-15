@@ -28,7 +28,7 @@ export default class GalleryItem extends Lightning.Component {
           w: 698,
           h: 30,
           text: {
-            fontSize: 18,
+            fontSize: 24,
             fontFace: 'Montserrat-Regular',
             textColor: Colors('#A61619').get(),
           },
@@ -61,9 +61,9 @@ export default class GalleryItem extends Lightning.Component {
             textColor: Colors(colors.sliderDescription).get(),
             wordWrapWidth: 650,
             family: 'Montserrat-Regular',
-            fontSize: 23,
+            fontSize: 25,
             lineHeight: 31,
-            maxLines: 8,
+            maxLines: 6,
           },
         },
         Venue: {
@@ -73,7 +73,7 @@ export default class GalleryItem extends Lightning.Component {
             wordWrapWidth: 650,
             family: 'Montserrat-Regular',
             color: Colors('#BDBDBD').get(),
-            fontSize: 18,
+            fontSize: 22,
           },
         },
         GalleryButton: {
