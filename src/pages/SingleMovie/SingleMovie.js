@@ -75,7 +75,7 @@ export default class SingleMovie extends Lightning.Component {
               h: 35,
               text: {
                 text: '',
-                fontSize: 28,
+                fontSize: 32,
                 lineHeight: 34,
                 fontFace: 'Montserrat-SemiBold',
               },
