@@ -44,56 +44,6 @@ export default class SingleSeries extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem, favorited, duration, firstEpisodeVideoId } = this._props;
-    const { url, id, lastPlayedId, position } = galleryItem;
-    console.log('firstEpisodeVideoId:', firstEpisodeVideoId);
-    this._HeroSection.patch({
-      props: {
-        galleryItem: galleryItem,
-        // height: 650,
-        height: 620,
-        firstEpisodeVideoId: firstEpisodeVideoId,
-      },
-    });
-
-    this._HeroSection._GalleryButton.patch({
-      props: {
-        width: 400,
-        buttonLabel: 'WATCH FIRST EPISODE',
-      },
-    });
-
-    if (localStorage.getItem('userData')) {
-      this._HeroSection._ContinueWatching.patch({
-        alpha: 1,
-        props: {
-          buttonIcon: Utils.asset('icons/home/play.svg'),
-          buttonLabel: 'CONTINUE WATCHING',
-          width: 400,
-          callback: () => {
-            Router.navigate('player', {
-              videoUrl: url,
-              duration: duration,
-              videoType: 'series',
-              seriesID: id,
-              videoId: lastPlayedId,
-              continueTime: position,
-            });
-          },
-        },
-      });
-      this._HeroSection._FavoriteButton.patch({
-        alpha: 1,
-        props: {
-          buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: 'FAVORITE',
-          width: 255,
-          callback: () => {
-            this.addToFavorite();
-          },
-        },
-      });
-    }
   }
 
   async addToFavorite() {
@@ -130,6 +80,133 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   _active() {
+    const { galleryItem, favorited, duration, firstEpisodeVideoId } = this._props;
+    const { url, id, lastPlayedId, position } = galleryItem;
+    this._HeroSection.patch({
+      props: {
+        galleryItem: galleryItem,
+        // height: 650,
+        height: 620,
+        firstEpisodeVideoId: firstEpisodeVideoId,
+      },
+    });
+
+    this._HeroSection._GalleryButton.patch({
+      props: {
+        width: 400,
+        buttonLabel: 'WATCH FIRST EPISODE',
+      },
+    });
+
+    const isValidPosition =
+      position !== undefined && position !== null && !isNaN(position) && position > 0;
+
+    if (localStorage.getItem('userData')) {
+      if (isValidPosition) {
+        this._HeroSection.tag('Info').patch(
+          {
+            AuthorizedButtons: {
+              flex: { direction: 'row' },
+              ContinueWatching: {
+                alpha: 1,
+                flexItem: {
+                  marginRight: 10,
+                },
+                props: {
+                  buttonIcon: Utils.asset('icons/home/play.svg'),
+                  buttonLabel: 'CONTINUE WATCHING',
+                  width: 400,
+                  callback: () => {
+                    Router.navigate('player', {
+                      videoUrl: url,
+                      duration: duration,
+                      videoType: 'series',
+                      seriesID: id,
+                      videoId: lastPlayedId,
+                      continueTime: position,
+                    });
+                  },
+                },
+              },
+              FavoriteButton: {
+                y: 0,
+                flexItem: {
+                  marginTop: 10,
+                },
+              },
+            },
+          },
+          true
+        );
+      } else {
+        this._HeroSection.tag('Info').patch(
+          {
+            AuthorizedButtons: {
+              flex: undefined,
+              ContinueWatching: {
+                alpha: 0,
+                w: 0,
+                flexItem: {
+                  marginRight: 0,
+                },
+              },
+              FavoriteButton: {
+                y: 10,
+              },
+            },
+          },
+          true
+        );
+      }
+    }
+
+    // if (localStorage.getItem('userData')) {
+    //   console.log('lastPlayed');
+    //   position !== undefined
+    //     ? this._HeroSection.tag('Info.AuthorizedButtons').patch(
+    //         {
+    //           ContinueWatching: {
+    //             alpha: 1,
+    //             props: {
+    //               buttonIcon: Utils.asset('icons/home/play.svg'),
+    //               buttonLabel: 'CONTINUE WATCHING',
+    //               width: 400,
+    //               callback: () => {
+    //                 Router.navigate('player', {
+    //                   videoUrl: url,
+    //                   duration: duration,
+    //                   videoType: 'series',
+    //                   seriesID: id,
+    //                   videoId: lastPlayedId,
+    //                   continueTime: position,
+    //                 });
+    //               },
+    //             },
+    //           },
+    //         },
+    //         true
+    //       )
+    //     : this._HeroSection.tag('Info.AuthorizedButtons').patch(
+    //         {
+    //           ContinueWatching: undefined,
+    //         },
+    //         true
+    //       );
+
+    this._HeroSection._FavoriteButton.patch({
+      alpha: 1,
+      props: {
+        buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+        buttonLabel: 'FAVORITE',
+        width: 255,
+        callback: () => {
+          this.addToFavorite();
+        },
+      },
+    });
+    // this.stage.update();
+    // this._refocus();
+
     this._setState('HeroSection');
   }
 

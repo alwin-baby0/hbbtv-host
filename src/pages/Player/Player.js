@@ -569,6 +569,7 @@ export default class Player extends lng.Component {
 
     this.fireAncestors('$punchHole');
     VideoPlayer.open(this._params.videoUrl);
+    console.log('this._params.videoUrl', this._params.videoUrl);
     // VideoPlayer.open('https://cdn-05.wedo.tv/04/hls/NVJE243JDKK1/video_segment000_part1.ts');
     // VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
 

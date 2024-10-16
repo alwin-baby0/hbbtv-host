@@ -4,6 +4,7 @@ import HorizontalContainer from '../../Components/HorizontalContainer/Horizontal
 import { imageSizes } from '../../Models/utils';
 import { CMPService } from '../../Services/CMPService';
 import BackBtn from '../../components/BackButton/BackBtn';
+import { Column, Row } from '@lightningjs/ui-components';
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};
@@ -114,8 +115,11 @@ export default class SingleMovie extends Lightning.Component {
               },
             },
             Buttons: {
-              type: HorizontalContainer,
-              w: 550,
+              type: Column,
+              w: 1200,
+              style: {
+                itemSpacing: 100,
+              },
               props: {
                 disableScroll: true,
               },
@@ -235,14 +239,26 @@ export default class SingleMovie extends Lightning.Component {
       },
     ];
 
+    const filteredButtons = !movieTrailerUrl
+      ? buttons.filter((button) => button.buttonLabel !== 'TRAILER')
+      : buttons;
+
     if (localStorage.getItem('userData')) {
-      buttons.push({
+      filteredButtons.push({
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonLabel: 'FAVORITE',
         width: 255,
       });
+
+      last_position &&
+        filteredButtons.push({
+          icon: 'icons/home/play.svg',
+          buttonLabel: 'CONTINUE WATCHING',
+          width: 405,
+        });
+
       // console.log('MOVIEEE', movie);
-      this.tag('CardInfo.AboutMovie').patch({
+      /* this.tag('CardInfo.AboutMovie').patch({
         ContinueButton: {
           y: 170,
           type: Button,
@@ -266,7 +282,7 @@ export default class SingleMovie extends Lightning.Component {
             },
           },
         },
-      });
+      }); */
     }
 
     const mappedButtons = buttons
@@ -303,13 +319,75 @@ export default class SingleMovie extends Lightning.Component {
                   videoUrl: movieTrailerUrl,
                   videoId: movieTrailerId,
                 });
+              } else if (buttonLabel === 'CONTINUE WATCHING') {
+                Router.navigate('player', {
+                  videoUrl: movie.url,
+                  duration: duration,
+                  videoId: movieId,
+                  continueTime: last_position,
+                  ssai: movie.ssai,
+                });
               }
             },
           },
         };
       })
       .filter((button) => button !== null);
-    this._Buttons.props = { items: mappedButtons };
+
+    const rows = [];
+    console.log(mappedButtons, 'Buttons');
+    for (let i = 0, j = filteredButtons.length; i < j; i += 3) {
+      rows.push({ items: filteredButtons.slice(i, i + 3) });
+    }
+
+    console.log('ROWWW', rows);
+
+    this._Buttons.items = rows.map(
+      (row) => (
+        console.log(row, 'fired'),
+        {
+          type: Row,
+          items: row.items.map((item) => ({
+            type: Button,
+            w: item.width,
+            flexItem: {
+              marginRight: 30,
+            },
+            props: {
+              width: item.width,
+              // buttonLabel: translatedTitle,
+              buttonLabel: item.buttonLabel,
+              buttonIcon: Utils.asset(item.icon),
+              callback: () => {
+                if (item.buttonLabel === 'FAVORITE') {
+                  this.addToFavorite();
+                } else if (item.buttonLabel === 'WATCH NOW') {
+                  Router.navigate('player', {
+                    videoUrl: movie[item.stream],
+                    duration: duration,
+                    videoId: movieId,
+                    ssai: movie.ssai,
+                  });
+                } else if (item.buttonLabel === 'TRAILER') {
+                  Router.navigate('player', {
+                    videoUrl: movieTrailerUrl,
+                    videoId: movieTrailerId,
+                  });
+                } else if (item.buttonLabel === 'CONTINUE WATCHING') {
+                  Router.navigate('player', {
+                    videoUrl: movie.url,
+                    duration: duration,
+                    videoId: movieId,
+                    continueTime: last_position,
+                    ssai: movie.ssai,
+                  });
+                }
+              },
+            },
+          })),
+        }
+      )
+    );
   }
 
   _active() {
@@ -331,7 +409,12 @@ export default class SingleMovie extends Lightning.Component {
 
       const id = movieTrailerUrl ? 2 : 1; //depending on movieTrailerUrl, we will know on which position is add to fav btn
 
-      this._Buttons.Items.childList._items[id].patch({
+      console.log(this._Buttons.Items);
+      console.log(this._Buttons);
+
+      //this._Buttons.Items.childList._items[id]
+
+      this._Buttons.items[0].items[id].patch({
         props: {
           buttonIcon: Utils.asset(is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
           buttonLabel: 'FAVORITE',
@@ -351,9 +434,9 @@ export default class SingleMovie extends Lightning.Component {
           return this._Buttons;
         }
 
-        _handleDown() {
-          this._setState('ContinueBtn');
-        }
+        // _handleDown() {
+        //   this._setState('ContinueBtn');
+        // }
 
         _handleLeft() {
           this._setState('BackButton');

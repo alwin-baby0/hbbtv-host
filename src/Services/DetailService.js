@@ -47,6 +47,7 @@ class DetailService extends FetchingService {
       apiVersion: V2,
       method: 'GET',
       params: {
+        _: timestamp,
         series_id: seriesId,
       },
     })
@@ -69,6 +70,7 @@ class DetailService extends FetchingService {
         apiVersion: V2,
         method: 'GET',
         params: {
+          _: timestamp,
           season_id: id,
         },
       }).then((data) => parseSeasonData(data, seriesId))

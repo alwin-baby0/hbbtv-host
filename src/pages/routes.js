@@ -57,6 +57,9 @@ export default {
       path: 'series-details/:seriesId',
       component: SingleSeries,
       on: singleSeries,
+      options: {
+        reuseInstance: false,
+      },
     },
     {
       path: 'filterPage/:action/:genre_movies',
@@ -69,6 +72,9 @@ export default {
       path: 'sports-details/:seriesId',
       component: SingleSeries,
       on: singleSeries,
+      options: {
+        reuseInstance: false,
+      },
     },
     {
       path: 'event-details/:eventId',

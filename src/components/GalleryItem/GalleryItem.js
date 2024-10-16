@@ -92,15 +92,16 @@ export default class GalleryItem extends Lightning.Component {
             alpha: 0,
             type: Button,
             flexItem: {
-              marginTop: 20,
+              marginTop: 10,
+              // marginRight: 10,
             },
           },
           FavoriteButton: {
             alpha: 0,
             type: Button,
             flexItem: {
-              marginTop: 20,
-              marginLeft: 10,
+              marginTop: 10,
+              // marginLeft: 10,
             },
           },
         },
@@ -111,11 +112,13 @@ export default class GalleryItem extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const { galleryItem, height, enabled, firstEpisodeVideoId, fallbackImage } = this._props;
 
-    const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
+    const { id, title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
+
     this._Info.patch({
       h: height,
     });
+
     if (videoType !== 'application/x-mpegURL') {
       this._Info.patch({
         Date: undefined,
@@ -174,9 +177,11 @@ export default class GalleryItem extends Lightning.Component {
           callback = () => {
             Router.navigate('player', {
               videoUrl: url,
-              duration: duration,
-              videoType: videoType,
               videoId: firstEpisodeVideoId ? firstEpisodeVideoId : null,
+              duration: duration,
+              // videoType: videoType,
+              videoType: 'series',
+              seriesID: id,
             });
           };
 
@@ -235,8 +240,11 @@ export default class GalleryItem extends Lightning.Component {
           return this._GalleryButton;
         }
         _handleDown() {
-          if (this._FavoriteButton.alpha > 0) this._setState('ContinueWatching');
-          else return false;
+          if (this._FavoriteButton.alpha > 0 && this._ContinueWatching.alpha > 0) {
+            this._setState('ContinueWatching');
+          } else if (this._FavoriteButton.alpha > 0) {
+            this._setState('FavoriteButton');
+          } else return false;
         }
       },
       class ContinueWatching extends this {
@@ -269,7 +277,11 @@ export default class GalleryItem extends Lightning.Component {
           this._setState('GalleryButton');
         }
         _handleLeft() {
-          this._setState('ContinueWatching');
+          if (this._ContinueWatching.alpha > 0) {
+            this._setState('ContinueWatching');
+          } else {
+            return false;
+          }
         }
       },
     ];
