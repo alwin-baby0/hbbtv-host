@@ -110,6 +110,14 @@ export default class App extends Router.App {
     this.checkNetworkStatusOnline(navigator.onLine);
   }
 
+  _init() {
+    console.log('init');
+    const device = getDevice();
+    if (device === 'tizen') {
+      tizen.tvinputdevice.registerKeyBatch(keys);
+    }
+  }
+
   $punchHole() {
     this._Background.shader = {
       type: lng.shaders.Hole,
