@@ -170,7 +170,7 @@ class CMPService extends FetchingService {
         'X-Authorization': `Bearer ${userData.access_token}`,
       },
       params: {
-        _: timestamp,
+        cachebuster: timestamp,
       },
     });
   };
@@ -235,7 +235,7 @@ class CMPService extends FetchingService {
         'X-Authorization': `Bearer ${userData.access_token}`,
       },
       params: {
-        _: timestamp,
+        cachebuster: timestamp,
       },
     });
   };
