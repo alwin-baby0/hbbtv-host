@@ -1,6 +1,6 @@
 // Player.js
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import { Column, ProgressBar } from '@lightningjs/ui-components';
+import { Column, ProgressBar, Shadow } from '@lightningjs/ui-components';
 import { getPlayer, loader, unloader } from '../../Components/Player/HLS';
 import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
@@ -11,6 +11,93 @@ import VerticalContainer from '../../Components/VerticalContainer/VerticalContai
 import { CMPService } from '../../Services/CMPService';
 let lastIndex = 0;
 let offsetTime = 0;
+
+const test = {
+  adcues: {
+    slots: [
+      {
+        slot: 'slot1',
+        total_duration: 30,
+        pods: [
+          {
+            pod: 'pod1',
+            ads: [
+              {
+                impression: 'https://springserve.com/vast/ad1',
+                cue: { from: '00:00:00', to: '00:00:15' },
+                skipping_allowed: false,
+              },
+              {
+                impression: 'https://springserve.com/vast/ad2',
+                cue: { from: '00:00:15', to: '00:00:30' },
+                skipping_allowed: true,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        slot: 'slot2',
+        total_duration: 50,
+        pods: [
+          {
+            pod: 'pod2',
+            ads: [
+              {
+                impression: 'https://springserve.com/vast/ad3',
+                cue: { from: '00:10:00', to: '00:10:30' },
+                skipping_allowed: false,
+              },
+            ],
+          },
+          {
+            pod: 'pod3',
+            ads: [
+              {
+                impression: 'https://springserve.com/vast/ad4',
+                cue: { from: '00:30:00', to: '00:30:20' },
+                skipping_allowed: true,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        slot: 'slot3',
+        total_duration: 25,
+        pods: [
+          {
+            pod: 'pod4',
+            ads: [
+              {
+                impression: 'https://springserve.com/vast/ad5',
+                cue: { from: '01:00:00', to: '01:00:25' },
+                skipping_allowed: false,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        slot: 'slot4',
+        total_duration: 30,
+        pods: [
+          {
+            pod: 'pod5',
+            ads: [
+              {
+                impression: 'https://springserve.com/vast/ad6',
+                cue: { from: '02:00:00', to: '02:00:30' },
+                skipping_allowed: true,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+};
+
 export default class Player extends lng.Component {
   _props = {
     pausedItemId: 1,
@@ -21,105 +108,110 @@ export default class Player extends lng.Component {
     ads: [], // Inicijalizuj kao prazan niz
   };
 
-  _adData = [
-    {
-      slot: 'slot1',
-      total_duration: 30,
-      pods: [
-        {
-          pod: 'pod1',
-          ads: [
-            {
-              impression: 'https://springserve.com/vast/ad1',
-              cue: {
-                from: '00:00:00',
-                to: '00:00:10',
+  _adStarted = false;
+  _currentAdTime = 1;
+
+  _adData = {
+    slots: [
+      {
+        slot: 'slot1',
+        total_duration: 20,
+        pods: [
+          {
+            pod: 'pod1',
+            ads: [
+              {
+                impression: 'https://springserve.com/vast/ad1',
+                cue: {
+                  from: '00:00:40',
+                  to: '00:00:50',
+                },
+                skipping_allowed: true,
               },
-              skipping_allowed: false,
-            },
-            {
-              impression: 'https://springserve.com/vast/ad2',
-              cue: {
-                from: '00:00:15',
-                to: '00:00:30',
+              {
+                impression: 'https://springserve.com/vast/ad2',
+                cue: {
+                  from: '00:00:50',
+                  to: '00:01:00',
+                },
+                skipping_allowed: true,
               },
-              skipping_allowed: true,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      slot: 'slot2',
-      total_duration: 50,
-      pods: [
-        {
-          pod: 'pod2',
-          ads: [
-            {
-              impression: 'https://springserve.com/vast/ad3',
-              cue: {
-                from: '00:01:00',
-                to: '00:01:10',
-              },
-              skipping_allowed: false,
-            },
-          ],
-        },
-        {
-          pod: 'pod3',
-          ads: [
-            {
-              impression: 'https://springserve.com/vast/ad4',
-              cue: {
-                from: '00:30:00',
-                to: '00:30:20',
-              },
-              skipping_allowed: true,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      slot: 'slot3',
-      total_duration: 25,
-      pods: [
-        {
-          pod: 'pod4',
-          ads: [
-            {
-              impression: 'https://springserve.com/vast/ad5',
-              cue: {
-                from: '01:00:00',
-                to: '01:00:25',
-              },
-              skipping_allowed: false,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      slot: 'slot4',
-      total_duration: 30,
-      pods: [
-        {
-          pod: 'pod5',
-          ads: [
-            {
-              impression: 'https://springserve.com/vast/ad6',
-              cue: {
-                from: '02:00:00',
-                to: '02:00:30',
-              },
-              skipping_allowed: true,
-            },
-          ],
-        },
-      ],
-    },
-  ];
+            ],
+          },
+        ],
+      },
+      // {
+      //   slot: 'slot2',
+      //   total_duration: 50,
+      //   pods: [
+      //     {
+      //       pod: 'pod2',
+      //       ads: [
+      //         {
+      //           impression: 'https://springserve.com/vast/ad3',
+      //           cue: {
+      //             from: '00:01:00',
+      //             to: '00:01:10',
+      //           },
+      //           skipping_allowed: false,
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       pod: 'pod3',
+      //       ads: [
+      //         {
+      //           impression: 'https://springserve.com/vast/ad4',
+      //           cue: {
+      //             from: '00:30:00',
+      //             to: '00:30:20',
+      //           },
+      //           skipping_allowed: true,
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
+      // {
+      //   slot: 'slot3',
+      //   total_duration: 25,
+      //   pods: [
+      //     {
+      //       pod: 'pod4',
+      //       ads: [
+      //         {
+      //           impression: 'https://springserve.com/vast/ad5',
+      //           cue: {
+      //             from: '01:00:00',
+      //             to: '01:00:25',
+      //           },
+      //           skipping_allowed: false,
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
+      // {
+      //   slot: 'slot4',
+      //   total_duration: 30,
+      //   pods: [
+      //     {
+      //       pod: 'pod5',
+      //       ads: [
+      //         {
+      //           impression: 'https://springserve.com/vast/ad6',
+      //           cue: {
+      //             from: '02:00:00',
+      //             to: '02:00:30',
+      //           },
+      //           skipping_allowed: true,
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
+    ],
+  };
 
   static _template() {
     return {
@@ -435,40 +527,150 @@ export default class Player extends lng.Component {
   //     });
   //   });
   // }
+
+  _formatAdTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(1, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  _updateProgressBarAd(duration, adIndex, adsLength) {
+    console.log('currentTime: ', this._currentAdTime);
+    console.log('duration: ', duration);
+    const progress = this._currentAdTime / duration;
+
+    console.log('progress: ', progress);
+
+    this.tag('ProgressBarAd').progress = progress;
+
+    this.tag('AdNumber.Text').text = 'Ad ' + adIndex + ' of ' + adsLength;
+
+    const adTime = duration - this._currentAdTime;
+
+    if (adTime > -1) {
+      const adTimeFormated = this._formatAdTime(duration - this._currentAdTime);
+      this.tag('TimerAd.Text').text = adTimeFormated;
+    }
+
+    if (this._currentAdTime <= duration) {
+      this._currentAdTime++;
+    } else {
+      clearInterval(this._progressAdInterval);
+      this._adStarted = false;
+      this._currentAdTime = 1;
+    }
+  }
+
   _checkAdCuePoints() {
     const currentTime = VideoPlayer.currentTime;
 
+    // const ssai_params = this._params.ssai;
+    const ssai_params = this._adData;
+    console.log('ssai_params: ', ssai_params);
+
     // Check if `ssai` has a `slots` array
-    if (this._params.ssai && Array.isArray(this._params.ssai.slots)) {
+    if (ssai_params && Array.isArray(ssai_params.slots)) {
       // Iterate over each slot in the `slots` array
-      this._params.ssai.slots.forEach((slot) => {
+      ssai_params.slots.forEach((slot) => {
         // Iterate over each pod in the current slot
         slot.pods.forEach((pod) => {
           // Iterate over each ad in the current pod
-          pod.ads.forEach((ad) => {
+          pod.ads.forEach((ad, index) => {
             const from = this._convertCueTimeToSeconds(ad.cue.from);
             const to = this._convertCueTimeToSeconds(ad.cue.to);
             if (currentTime >= from && currentTime < to) {
               if (this._props.currentAd !== ad) {
-                this._props.skipTo = to;
+                const lastAd = pod.ads[pod.ads.length - 1];
+                const lastAdTo = this._convertCueTimeToSeconds(lastAd.cue.to);
+                // this._props.skipTo = to;
+                this._props.skipTo = lastAdTo;
                 // console.log('Ad is playing:', ad.impression);
                 // console.log('Skipping allowed:', ad.skipping_allowed);
+
+                this.patch({
+                  WrapperAd: {
+                    x: 0,
+                    y: 0,
+                    w: 1920,
+                    Overlay: {
+                      // Semi-transparent black background to simulate shadow/overlay
+                      rect: true,
+                      w: 1920,
+                      h: 200,
+                      y: 880,
+                      color: 0x66000000, // Semi-transparent black (0x66 is the alpha)
+                    },
+                    ProgressBarAd: {
+                      type: ProgressBar,
+                      x: 20,
+                      y: 1000,
+                      w: 1880,
+                      h: 10,
+                      // progress: 0.3,
+                    },
+                    AdInfoContainer: {
+                      x: 20,
+                      y: 930,
+                      w: 300,
+                      h: 35,
+                      flex: { direction: 'row', alignItems: 'center' },
+                      AdNumber: {
+                        w: 140,
+                        Text: {
+                          flex: { justifyContent: 'flex-start', alignItems: 'center' },
+                          h: 35,
+                          w: 140,
+                          text: {
+                            text: 'Ad 1 of 2',
+                            fontSize: 28,
+                            // textAlign: 'center',
+                            fontFace: 'Montserrat-SemiBold',
+                            textColor: Colors('#ffffff').get(),
+                            shadow: true,
+                            // textColor: 0xff000000,
+
+                            // shadowColor: Colors('#000000').get(),
+                          },
+                        },
+                      },
+                      TimerAd: {
+                        w: 140,
+                        Text: {
+                          flex: { justifyContent: 'flex-start', alignItems: 'center' },
+                          h: 35,
+                          w: 140,
+                          text: {
+                            text: '0:18',
+                            fontSize: 28,
+                            // textAlign: 'center',
+                            fontFace: 'Montserrat-SemiBold',
+                            textColor: Colors('#ffffff').get(),
+                            shadow: true,
+                            // shadowColor: Colors('#000000').get(),
+                          },
+                        },
+                      },
+                    },
+                  },
+                });
+
                 if (ad.skipping_allowed) {
-                  this.patch({
+                  this.tag('WrapperAd').patch({
                     SkipButton: {
                       type: HorizontalContainer,
                       props: {
-                        w: 300,
-                        h: 75,
+                        w: 200,
+                        h: 60,
                       },
-                      x: 1580,
-                      y: 910,
-                      w: 300,
-                      h: 75,
+                      x: 1700,
+                      y: 915,
+                      w: 200,
+                      h: 60,
                       rect: true,
                       texture: lng.Tools.getRoundRect(
-                        300,
-                        75,
+                        200,
+                        60,
                         3,
                         4,
                         Colors(colors.focus).get(),
@@ -478,15 +680,45 @@ export default class Player extends lng.Component {
                       flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
                       Text: {
                         flexItem: { alignSelf: 'center' },
-                        text: 'Skip Button',
-                        fontFace: 'Montserrat-Bold',
-                        fontSize: 24,
-                        lineHeight: 25,
-                        letterSpacing: 2,
+                        text: {
+                          text: 'Skip',
+                          fontFace: 'Montserrat-SemiBold',
+                          fontSize: 28,
+                          // lineHeight: 25,
+                          // letterSpacing: 2,
+                        },
                       },
                     },
                   });
                 }
+
+                const progressBarStyle = {
+                  progressColor: Colors(colors.focus).get(),
+                  // barColor: Colors('#000000').get(),
+                  barColor: undefined,
+                };
+
+                this.tag('ProgressBarAd').patch({ style: progressBarStyle });
+
+                if (!this._adStarted) {
+                  this._adStarted = true;
+
+                  const duration = to - from;
+
+                  // const progress = this._currentAdTime / duration;
+
+                  // this.tag('ProgressBarAd').progress = progress;
+
+                  // this._currentAdTime++;
+
+                  this._updateProgressBarAd(duration, index + 1, pod.ads.length);
+
+                  this._progressAdInterval = setInterval(
+                    () => this._updateProgressBarAd(duration, index + 1, pod.ads.length),
+                    1000
+                  );
+                }
+
                 // Aktiviraj reklamu
                 this._handleAdPlayback(ad);
                 this._props.currentAd = ad; // Postavi trenutnu reklamu kao aktivnu
@@ -512,8 +744,14 @@ export default class Player extends lng.Component {
     // Logic to handle when the ad finishes
     console.log('Ad has finished:', ad.impression);
     this._props.isAdVisible = false;
+    // this.patch({
+    //   SkipButton: undefined,
+    // });
+    clearInterval(this._progressAdInterval);
+    this._adStarted = false;
+    this._currentAdTime = 1;
     this.patch({
-      SkipButton: undefined,
+      WrapperAd: undefined,
     });
     this._setState('ProgressBar');
 
@@ -542,8 +780,8 @@ export default class Player extends lng.Component {
   async _active() {
     this._startMonitoringAds();
     // this._params.ssai
-    // this._props.ads = this._adData; // Postavi ads iz niza
-    this._props.ads = this._params.ssai; // Postavi ads iz niza
+    this._props.ads = this._adData; // Postavi ads iz niza
+    // this._props.ads = this._params.ssai; // Postavi ads iz niza
 
     lastIndex = 0;
     if (
@@ -568,10 +806,10 @@ export default class Player extends lng.Component {
     this.tag('ErrorMessage').visible = false;
 
     this.fireAncestors('$punchHole');
-    VideoPlayer.open(this._params.videoUrl);
+    // VideoPlayer.open(this._params.videoUrl);
     console.log('this._params.videoUrl', this._params.videoUrl);
     // VideoPlayer.open('https://cdn-05.wedo.tv/04/hls/NVJE243JDKK1/video_segment000_part1.ts');
-    // VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
+    VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
 
     if (this._params.continueTime)
       setTimeout(() => {
@@ -599,12 +837,48 @@ export default class Player extends lng.Component {
       // VideoPlayer.seek(newTime);
       // Set a new timeout to delay the seek operation by 500ms
       this._seekTimeout = setTimeout(() => {
-        VideoPlayer.seek(newTime);
-        console.log('SEEK:', newTime);
-        offsetTime = 0;
-        VideoPlayer.play();
+        // VideoPlayer.seek(newTime);
+        // console.log('SEEK:', newTime);
+        // offsetTime = 0;
+        // VideoPlayer.play();
+
+        this._checkAdCuePointsSeek(newTime);
       }, 500); // 500ms delay
       this._showWrapper(); // Show wrapper on skip
+    }
+  }
+
+  _checkAdCuePointsSeek(seekTime) {
+    const currentTime = seekTime;
+
+    // const ssai_params = this._params.ssai;
+    const ssai_params = this._adData;
+    // console.log('ssai_params: ', ssai_params);
+
+    // Check if `ssai` has a `slots` array
+    if (ssai_params && Array.isArray(ssai_params.slots)) {
+      // Iterate over each slot in the `slots` array
+      ssai_params.slots.forEach((slot) => {
+        // Iterate over each pod in the current slot
+        slot.pods.forEach((pod) => {
+          // Iterate over each ad in the current pod
+          pod.ads.forEach((ad, index) => {
+            const from = this._convertCueTimeToSeconds(ad.cue.from);
+            const to = this._convertCueTimeToSeconds(ad.cue.to);
+            if (currentTime >= from && currentTime < to) {
+              VideoPlayer.seek(from);
+              console.log('SEEK:', from);
+              offsetTime = 0;
+              VideoPlayer.play();
+            } else {
+              VideoPlayer.seek(currentTime);
+              console.log('SEEK:', currentTime);
+              offsetTime = 0;
+              VideoPlayer.play();
+            }
+          });
+        });
+      });
     }
   }
 
@@ -615,7 +889,7 @@ export default class Player extends lng.Component {
       this._params.videoType !== 'Stream now' ||
       this._params.videoType !== 'application/x-mpegURL'
     ) {
-      this._progressInterval = setInterval(this._updateProgressBar.bind(this), 1000);
+      this._progressInterval = setInterval(() => this._updateProgressBar(), 1000);
     }
   }
 
