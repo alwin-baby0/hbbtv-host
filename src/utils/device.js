@@ -1,5 +1,13 @@
 import { createAxiosInstance, setTvInfo } from '../api';
 
+var _serialNumber = '';
+var _model = '';
+var _brand = 'samsung';
+// var _macAddress = webapis.network.getMac();
+var _deviceType = 'SmartTV';
+var _os = '';
+var _os_Version = '';
+
 export const getDevice = () => {
   if (window.tizen) {
     return 'tizen';
@@ -18,9 +26,11 @@ export const getTVInfo = () => {
       console.log('webapis', webapis);
       console.log('webapis.productinfo', webapis.productinfo);
 
-      var _serialNumber = webapis.productinfo.getDuid();
-      var _model = webapis.productinfo.getModel();
-      var _brand = 'samsung';
+      _serialNumber = webapis.productinfo.getDuid();
+      _model = webapis.productinfo.getModel();
+      _brand = 'samsung';
+      _os = 'Tizen';
+      _os_Version = webapis.tvinfo.getVersion();
       var _macAddress = webapis.network.getMac();
 
       // Logovanje podataka u konzolu
@@ -38,9 +48,11 @@ export const getTVInfo = () => {
       break;
     case 'web':
       // Definišite neke simulirane vrednosti za web
-      var _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
-      var _model = 'simulated-model';
-      var _brand = 'simulated-brand';
+      _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
+      _model = 'simulated-model';
+      _brand = 'simulated-brand';
+      _os = 'Web';
+      _os_Version = '7.0';
       var _macAddress = 'simulated-mac-address';
 
       // Logovanje podataka u konzolu
@@ -57,5 +69,29 @@ export const getTVInfo = () => {
       setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
       createAxiosInstance();
       break;
+  }
+};
+
+export const eventTrackPayload = (event, id) => {
+  try {
+    w4track(
+      {
+        event,
+        app: 'wedotv.samsung',
+        app_domain: 'samsung.wedotv.app',
+        app_version: '1.0.0',
+        app_bundle: 'com.wedotv.app',
+        id,
+        device: _deviceType,
+        model: _model,
+        brand: _brand,
+        os: _os,
+        version: _os_Version,
+        device_id: _serialNumber,
+      },
+      '6d4bbea06e8ee78ca99183a6ffc7e16'
+    );
+  } catch (error) {
+    console.error('Script not loaded?', error);
   }
 };

@@ -88,6 +88,37 @@ export default class App extends Router.App {
     return this.tag('Background');
   }
 
+  loadExternalScript(src) {
+    const script = document.createElement('script');
+    script.src = src;
+    script.type = 'text/javascript';
+    script.onload = () => {
+      console.log('Script loaded successfully.');
+    };
+    script.onerror = () => {
+      console.error('Failed to load the script.');
+    };
+    document.head.appendChild(script);
+  }
+
+  loadGAScript(src) {
+    const script = document.createElement('script');
+    script.src = src;
+    script.type = 'text/javascript';
+    script.onload = () => {
+      console.log('Script loaded successfully.');
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      window.gtag = gtag;
+    };
+    script.onerror = () => {
+      console.error('Failed to load the script.');
+    };
+    document.head.appendChild(script);
+  }
+
   $setNavbarVisibility(isVisible) {
     this._Menu.setVisibility = isVisible;
   }
@@ -116,6 +147,11 @@ export default class App extends Router.App {
     if (device === 'tizen') {
       tizen.tvinputdevice.registerKeyBatch(keys);
     }
+
+    this.loadExternalScript('https://tracking.watch4.com/track.js');
+    this.loadGAScript(
+      'https://www.googletagmanager.com/gtag/js?id=6d4bbea06e8ee78ca99183a6ffc7e16'
+    );
   }
 
   $punchHole() {

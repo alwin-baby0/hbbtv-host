@@ -9,6 +9,7 @@ import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import { CMPService } from '../../Services/CMPService';
+import { eventTrackPayload } from '../../utils/device';
 let lastIndex = 0;
 let offsetTime = 0;
 
@@ -27,11 +28,11 @@ const test = {
                 cue: { from: '00:00:00', to: '00:00:15' },
                 skipping_allowed: false,
               },
-              {
-                impression: 'https://springserve.com/vast/ad2',
-                cue: { from: '00:00:15', to: '00:00:30' },
-                skipping_allowed: true,
-              },
+              // {
+              //   impression: 'https://springserve.com/vast/ad2',
+              //   cue: { from: '00:00:15', to: '00:00:30' },
+              //   skipping_allowed: true,
+              // },
             ],
           },
         ],
@@ -115,7 +116,7 @@ export default class Player extends lng.Component {
     slots: [
       {
         slot: 'slot1',
-        total_duration: 20,
+        total_duration: 10,
         pods: [
           {
             pod: 'pod1',
@@ -128,14 +129,14 @@ export default class Player extends lng.Component {
                 },
                 skipping_allowed: true,
               },
-              {
-                impression: 'https://springserve.com/vast/ad2',
-                cue: {
-                  from: '00:00:50',
-                  to: '00:01:00',
-                },
-                skipping_allowed: true,
-              },
+              // {
+              //   impression: 'https://springserve.com/vast/ad2',
+              //   cue: {
+              //     from: '00:00:50',
+              //     to: '00:01:00',
+              //   },
+              //   skipping_allowed: true,
+              // },
             ],
           },
         ],
@@ -565,8 +566,8 @@ export default class Player extends lng.Component {
   _checkAdCuePoints() {
     const currentTime = VideoPlayer.currentTime;
 
-    // const ssai_params = this._params.ssai;
-    const ssai_params = this._adData;
+    const ssai_params = this._params.ssai;
+    // const ssai_params = this._adData;
     console.log('ssai_params: ', ssai_params);
 
     // Check if `ssai` has a `slots` array
@@ -806,10 +807,10 @@ export default class Player extends lng.Component {
     this.tag('ErrorMessage').visible = false;
 
     this.fireAncestors('$punchHole');
-    // VideoPlayer.open(this._params.videoUrl);
+    VideoPlayer.open(this._params.videoUrl);
     console.log('this._params.videoUrl', this._params.videoUrl);
     // VideoPlayer.open('https://cdn-05.wedo.tv/04/hls/NVJE243JDKK1/video_segment000_part1.ts');
-    VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
+    // VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
 
     if (this._params.continueTime)
       setTimeout(() => {
@@ -1155,6 +1156,8 @@ export default class Player extends lng.Component {
 
   $playVideo() {
     const { pausedItemId } = this._props;
+
+    eventTrackPayload('video_start', this._params.videoId);
 
     this._showWrapper();
     VideoPlayer.play();
