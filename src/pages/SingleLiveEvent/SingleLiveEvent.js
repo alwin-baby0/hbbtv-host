@@ -3,6 +3,7 @@ import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import Button from '../../Components/Button/Button';
+import { eventTrackPayload } from '../../utils/device';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
@@ -106,6 +107,9 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   _active() {
+    const { galleryItem } = this._props;
+
+    eventTrackPayload('view_stream', galleryItem.id);
     const startDate = new Date(this._props.galleryItem.dateRange[0]);
     const endDate = new Date(this._props.galleryItem.dateRange[1]);
     const currentDate = new Date();

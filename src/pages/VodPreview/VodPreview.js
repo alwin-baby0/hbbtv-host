@@ -4,6 +4,7 @@ import VodContentContainer, {
   CONTENT_TYPE,
 } from '../../Components/VodContentContainer/VodContentContainer';
 import { constructRails } from '../utils';
+import { eventTrackPayload } from '../../utils/device';
 
 export default class VodPreview extends Lightning.Component {
   _props = {
@@ -52,6 +53,10 @@ export default class VodPreview extends Lightning.Component {
 
   set props(props) {
     const { vodType } = props;
+
+    if (vodType === 'movies') eventTrackPayload('browse_movies', 1);
+    if (vodType === 'series') eventTrackPayload('browse_series', 2);
+    if (vodType === 'sports') eventTrackPayload('browse_sports', 3);
 
     if (this._props.vodType !== vodType) {
       this._props = { ...this._props, ...props };

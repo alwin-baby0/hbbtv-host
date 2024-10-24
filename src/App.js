@@ -8,6 +8,7 @@ import Navbar from './Components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDevice } from './utils/device';
+import { eventTrackPayload } from './utils/device';
 let wasOffline = false; // Variable to track previous internet status
 
 let keys = [
@@ -142,7 +143,9 @@ export default class App extends Router.App {
   }
 
   _init() {
+    const deviceId = localStorage.getItem('serialNumber');
     console.log('init');
+
     const device = getDevice();
     if (device === 'tizen') {
       tizen.tvinputdevice.registerKeyBatch(keys);
@@ -152,6 +155,11 @@ export default class App extends Router.App {
     this.loadGAScript(
       'https://www.googletagmanager.com/gtag/js?id=6d4bbea06e8ee78ca99183a6ffc7e16'
     );
+
+    //when the app is loaded, send the event to the endpoint, timeout makes sure that the script is loaded
+    setTimeout(() => {
+      eventTrackPayload('launch_app', deviceId);
+    }, 2000);
   }
 
   $punchHole() {

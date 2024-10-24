@@ -5,6 +5,7 @@ import VerticalContainer from '../../Components/VerticalContainer/VerticalContai
 import { getSearch } from '../../api/search';
 import { constructRails } from '../utils';
 import { HomePageService } from '../../Services/HomePageService';
+import { eventTrackPayload } from '../../utils/device';
 const search = {
   items: [],
   timestamp: 0,
@@ -99,6 +100,8 @@ export default class Search extends Lightning.Component {
           data.items && this.$changedVODGenre(data);
         }
       });
+
+      eventTrackPayload('search', inputValue);
     } else {
       await HomePageService.initialFetch();
       this.$changedVODGenre(HomePageService.stripes[0]);

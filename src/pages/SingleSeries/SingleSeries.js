@@ -3,6 +3,7 @@ import VerticalContainer from '../../Components/VerticalContainer/VerticalContai
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import { CMPService } from '../../Services/CMPService';
 import BackBtn from '../../components/BackButton/BackBtn';
+import { eventTrackPayload } from '../../utils/device';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -82,6 +83,8 @@ export default class SingleSeries extends Lightning.Component {
   _active() {
     const { galleryItem, favorited, duration, firstEpisodeVideoId } = this._props;
     const { url, id, lastPlayedId, position } = galleryItem;
+
+    eventTrackPayload('view_serie', id);
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,

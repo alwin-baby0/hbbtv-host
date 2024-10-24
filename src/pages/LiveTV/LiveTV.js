@@ -9,6 +9,7 @@ import CategoryPicker from '../../Components/CategoryPicker/CategoryPicker';
 import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
+import { eventTrackPayload } from '../../utils/device';
 
 export default class LiveTV extends Lightning.Component {
   _props = {
@@ -245,6 +246,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   async _active() {
+    eventTrackPayload('browse_channels', 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 
     const result = this.createTimeArray(EPGService.startTime, EPGService.endTime);

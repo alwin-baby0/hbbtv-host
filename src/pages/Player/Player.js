@@ -129,14 +129,14 @@ export default class Player extends lng.Component {
                 },
                 skipping_allowed: true,
               },
-              // {
-              //   impression: 'https://springserve.com/vast/ad2',
-              //   cue: {
-              //     from: '00:00:50',
-              //     to: '00:01:00',
-              //   },
-              //   skipping_allowed: true,
-              // },
+              {
+                impression: 'https://springserve.com/vast/ad2',
+                cue: {
+                  from: '00:00:50',
+                  to: '00:01:00',
+                },
+                skipping_allowed: true,
+              },
             ],
           },
         ],
@@ -566,8 +566,8 @@ export default class Player extends lng.Component {
   _checkAdCuePoints() {
     const currentTime = VideoPlayer.currentTime;
 
-    const ssai_params = this._params.ssai;
-    // const ssai_params = this._adData;
+    //const ssai_params = this._params.ssai;
+    const ssai_params = this._adData;
     console.log('ssai_params: ', ssai_params);
 
     // Check if `ssai` has a `slots` array
@@ -730,6 +730,16 @@ export default class Player extends lng.Component {
             if (currentTime >= to && this._props.currentAd === ad) {
               // console.log('Ad finished:', ad.impression);
               this._handleAdEnd(ad);
+
+              //check if the current ad is the last ad in the pod
+              if (ad === pod.ads[pod.ads.length - 1]) {
+                this._handlePodEnd();
+              }
+
+              //check if the current pod is the last, and if the ad is the last in the pod
+              if (pod === slot.pods[slot.pods.length - 1] && ad === pod.ads[pod.ads.length - 1]) {
+                this._handleSlotEnd();
+              }
               this._props.currentAd = null; // Oslobodi trenutnu reklamu
             }
           });
@@ -741,9 +751,18 @@ export default class Player extends lng.Component {
     }
   }
 
+  _handleSlotEnd() {
+    eventTrackPayload('ad_slot_ended', this._params.videoId);
+  }
+  _handlePodEnd() {
+    eventTrackPayload('ad_pod_ended', this._params.videoId);
+  }
+
   _handleAdEnd(ad) {
     // Logic to handle when the ad finishes
     console.log('Ad has finished:', ad.impression);
+
+    eventTrackPayload('ad_ended', this._params.videoId);
     this._props.isAdVisible = false;
     // this.patch({
     //   SkipButton: undefined,
@@ -766,6 +785,9 @@ export default class Player extends lng.Component {
   }
 
   _handleAdPlayback(ad) {
+    eventTrackPayload('ad_slot_started', this._params.videoId);
+    eventTrackPayload('ad_pod_started', this._params.videoId);
+
     this._hideWrapper();
     // Logic to handle ad playback, such as displaying the ad, hiding player controls, etc.
     console.log('Displaying Ad:', ad.impression);
@@ -809,8 +831,8 @@ export default class Player extends lng.Component {
     this.fireAncestors('$punchHole');
     VideoPlayer.open(this._params.videoUrl);
     console.log('this._params.videoUrl', this._params.videoUrl);
-    // VideoPlayer.open('https://cdn-05.wedo.tv/04/hls/NVJE243JDKK1/video_segment000_part1.ts');
-    // VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
+    //VideoPlayer.open('https://cdn-05.wedo.tv/04/hls/NVJE243JDKK1/video_segment000_part1.ts');
+    //VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
 
     if (this._params.continueTime)
       setTimeout(() => {
@@ -852,8 +874,8 @@ export default class Player extends lng.Component {
   _checkAdCuePointsSeek(seekTime) {
     const currentTime = seekTime;
 
-    // const ssai_params = this._params.ssai;
-    const ssai_params = this._adData;
+    const ssai_params = this._params.ssai;
+    //const ssai_params = this._adData;
     // console.log('ssai_params: ', ssai_params);
 
     // Check if `ssai` has a `slots` array
@@ -1152,6 +1174,8 @@ export default class Player extends lng.Component {
   $videoPlayerEnded() {
     CMPService.deleteRecentlyWatched(this._params.videoId);
     this.closeVideoPlayer();
+
+    eventTrackPayload('video_end', this._params.videoId);
   }
 
   $playVideo() {
@@ -1168,6 +1192,9 @@ export default class Player extends lng.Component {
 
   $pauseVideo() {
     const { pausedItemId } = this._props;
+
+    eventTrackPayload('video_pause', this._params.videoId);
+
     this._showWrapper();
     VideoPlayer.pause();
 

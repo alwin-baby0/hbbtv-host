@@ -64,4 +64,6 @@ const request = async ({ apiVersion, url, ...options }) => {
 };
 
 export default request;
-getTVInfo();
+setTimeout(() => {
+  getTVInfo();
+});

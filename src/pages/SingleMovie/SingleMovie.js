@@ -5,6 +5,7 @@ import { imageSizes } from '../../Models/utils';
 import { CMPService } from '../../Services/CMPService';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { Column, Row } from '@lightningjs/ui-components';
+import { eventTrackPayload } from '../../utils/device';
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};
@@ -391,7 +392,11 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   _active() {
+    const { movieId } = this._props;
+
     this._setState('Buttons');
+
+    eventTrackPayload('view_movie', movieId);
   }
 
   async addToFavorite() {
