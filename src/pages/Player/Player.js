@@ -566,8 +566,8 @@ export default class Player extends lng.Component {
   _checkAdCuePoints() {
     const currentTime = VideoPlayer.currentTime;
 
-    //const ssai_params = this._params.ssai;
-    const ssai_params = this._adData;
+    const ssai_params = this._params.ssai;
+    // const ssai_params = this._adData;
     console.log('ssai_params: ', ssai_params);
 
     // Check if `ssai` has a `slots` array
@@ -610,6 +610,16 @@ export default class Player extends lng.Component {
                       h: 10,
                       // progress: 0.3,
                     },
+                    AdIcon: {
+                      x: 1835,
+                      y: 20,
+                      w: 65,
+                      h: 65,
+                      Icon: {
+                        color: Colors(colors.adProgress).get(),
+                        texture: lng.Tools.getSvgTexture(Utils.asset('icons/ad-icon.svg'), 65, 65),
+                      },
+                    },
                     AdInfoContainer: {
                       x: 20,
                       y: 930,
@@ -625,13 +635,9 @@ export default class Player extends lng.Component {
                           text: {
                             text: 'Ad 1 of 2',
                             fontSize: 28,
-                            // textAlign: 'center',
                             fontFace: 'Montserrat-SemiBold',
                             textColor: Colors('#ffffff').get(),
                             shadow: true,
-                            // textColor: 0xff000000,
-
-                            // shadowColor: Colors('#000000').get(),
                           },
                         },
                       },
@@ -644,11 +650,9 @@ export default class Player extends lng.Component {
                           text: {
                             text: '0:18',
                             fontSize: 28,
-                            // textAlign: 'center',
                             fontFace: 'Montserrat-SemiBold',
                             textColor: Colors('#ffffff').get(),
                             shadow: true,
-                            // shadowColor: Colors('#000000').get(),
                           },
                         },
                       },
@@ -694,7 +698,7 @@ export default class Player extends lng.Component {
                 }
 
                 const progressBarStyle = {
-                  progressColor: Colors(colors.focus).get(),
+                  progressColor: Colors(colors.adProgress).get(),
                   // barColor: Colors('#000000').get(),
                   barColor: undefined,
                 };
@@ -1181,7 +1185,7 @@ export default class Player extends lng.Component {
   $playVideo() {
     const { pausedItemId } = this._props;
 
-    eventTrackPayload('video_start', this._params.videoId);
+    // eventTrackPayload('video_start', this._params.videoId);
 
     this._showWrapper();
     VideoPlayer.play();
@@ -1318,6 +1322,7 @@ export default class Player extends lng.Component {
           : undefined,
     };
     this.tag('ProgressBar').patch({ style: progressBarStyle });
+    eventTrackPayload('video_start', this._params.videoId);
   }
 
   // COMANDS
