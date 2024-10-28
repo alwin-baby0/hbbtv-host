@@ -648,7 +648,7 @@ export default class Player extends lng.Component {
                           h: 35,
                           w: 140,
                           text: {
-                            text: '0:18',
+                            text: '',
                             fontSize: 28,
                             fontFace: 'Montserrat-SemiBold',
                             textColor: Colors('#ffffff').get(),
@@ -1148,6 +1148,12 @@ export default class Player extends lng.Component {
     VideoPlayer.close();
     VideoPlayer.unloader(unloader);
     clearInterval(this._progressInterval);
+    clearInterval(this._progressAdInterval);
+    this._adStarted = false;
+    this._currentAdTime = 1;
+    this.patch({
+      WrapperAd: undefined,
+    });
     this.fireAncestors('$unpunchHole');
     Router.back();
   }
