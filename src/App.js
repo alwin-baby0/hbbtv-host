@@ -151,10 +151,12 @@ export default class App extends Router.App {
       tizen.tvinputdevice.registerKeyBatch(keys);
     }
 
-    this.loadExternalScript('https://tracking.watch4.com/track.js');
-    this.loadGAScript(
-      'https://www.googletagmanager.com/gtag/js?id=6d4bbea06e8ee78ca99183a6ffc7e16'
+    this.loadExternalScript(
+      'https://tracking.watch4.com/track.js?api_key=6d4bbea06e8ee78ca99183a6ffc7e16'
     );
+    // this.loadGAScript(
+    //   'https://www.googletagmanager.com/gtag/js?id=6d4bbea06e8ee78ca99183a6ffc7e16'
+    // );
 
     //when the app is loaded, send the event to the endpoint, timeout makes sure that the script is loaded
     setTimeout(() => {

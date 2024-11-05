@@ -752,6 +752,14 @@ export default class Player extends lng.Component {
     } else {
       console.error('Invalid ssai structure or missing slots.');
       clearInterval(this._adMonitoringInterval);
+
+      clearInterval(this._progressAdInterval);
+      this._props.isAdVisible = false;
+      this._adStarted = false;
+      this._currentAdTime = 1;
+      this.patch({
+        WrapperAd: undefined,
+      });
     }
   }
 
@@ -853,6 +861,14 @@ export default class Player extends lng.Component {
     if (this._adMonitoringInterval) {
       clearInterval(this._adMonitoringInterval);
     }
+
+    clearInterval(this._progressAdInterval);
+    this._props.isAdVisible = false;
+    this._adStarted = false;
+    this._currentAdTime = 1;
+    this.patch({
+      WrapperAd: undefined,
+    });
   }
 
   _skipVideo(offset) {
@@ -1146,7 +1162,7 @@ export default class Player extends lng.Component {
     this._showWrapper();
     VideoPlayer.clear();
     VideoPlayer.close();
-    VideoPlayer.unloader(unloader);
+    // VideoPlayer.unloader(unloader);
     clearInterval(this._progressInterval);
     clearInterval(this._progressAdInterval);
     this._adStarted = false;
