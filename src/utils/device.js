@@ -26,6 +26,14 @@ const uuidToMac = (uuid) => {
   return macAddress;
 };
 
+const generateRandomUUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
+    const randomHex = Math.floor(Math.random() * 16);
+    const value = char === 'x' ? randomHex : (randomHex & 0x3) | 0x8;
+    return value.toString(16);
+  });
+};
+
 export const getTVInfo = () => {
   const device = getDevice();
   switch (device) {
@@ -56,7 +64,7 @@ export const getTVInfo = () => {
     case 'web':
       // Definišite neke simulirane vrednosti za web
       // _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
-      _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e11';
+      _serialNumber = localStorage.getItem('serialNumber') || generateRandomUUID();
       _model = 'simulated-model';
       _brand = 'simulated-brand';
       _os = 'Web';

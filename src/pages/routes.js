@@ -30,7 +30,7 @@ import LanguageSettings from './LanguageSettings/LanguageSettings';
 import languageSettings from './LanguageSettings/provider/languageSettings';
 
 export default {
-  // root: 'splash',
+  root: 'splash',
   routes: [
     {
       path: 'splash',
