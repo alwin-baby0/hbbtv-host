@@ -19,6 +19,13 @@ export const getDevice = () => {
   return 'web';
 };
 
+const uuidToMac = (uuid) => {
+  var uuidWithoutHyphens = uuid.replace(/-/g, '');
+  var macString = uuidWithoutHyphens.substring(0, 12);
+  var macAddress = macString.match(/.{1,2}/g).join(':');
+  return macAddress;
+};
+
 export const getTVInfo = () => {
   const device = getDevice();
   switch (device) {
@@ -48,7 +55,8 @@ export const getTVInfo = () => {
       break;
     case 'web':
       // Definišite neke simulirane vrednosti za web
-      _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
+      // _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
+      _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e11';
       _model = 'simulated-model';
       _brand = 'simulated-brand';
       _os = 'Web';
@@ -68,6 +76,53 @@ export const getTVInfo = () => {
       // Ako želite da postavite ove informacije, možete koristiti setTvInfo
       setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
       createAxiosInstance();
+      break;
+    case 'webos':
+      _os = 'webOS';
+      webOS.deviceInfo((device) => {
+        console.log('WEBOS MODEL', device.modelName);
+        console.log('WEBOS BRAND', device.brandName);
+        _model = device.modelName;
+        _brand = device.brandName;
+      });
+
+      // Get uuid
+      webOS.service.request('luna://com.webos.service.sm', {
+        method: 'deviceid/getIDs',
+        parameters: {
+          idType: ['LGUDID'],
+        },
+        onSuccess: function (inResponse) {
+          console.log('UUID: ' + inResponse.idList[0].idValue);
+          _macAddress = uuidToMac(inResponse.idList[0].idValue);
+          console.log('MAC ADDRESS', _macAddress);
+          // Call request for get SN
+          webOS.service.request('luna://com.webos.service.tv.systemproperty', {
+            method: 'getSystemInfo',
+            parameters: { keys: ['serialNumber', 'firmwareVersion'] },
+            onSuccess: function (result) {
+              _serialNumber = result.serialNumber;
+              _os_Version = result.firmwareVersion;
+              localStorage.setItem('serialNumber', _serialNumber);
+
+              console.log('Serial Number:', _serialNumber);
+              console.log('Model:', _model);
+              console.log('Brand:', _brand);
+              console.log('MAC Address:', _macAddress);
+
+              setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
+              createAxiosInstance();
+            },
+            onFailure: function (error) {
+              console.error('Failed to get serial number:', error);
+            },
+          });
+        },
+        onFailure: function (inError) {
+          console.log('Failed to get system ID information');
+          console.log('[' + inError.errorCode + ']: ' + inError.errorText);
+        },
+      });
       break;
   }
 };
