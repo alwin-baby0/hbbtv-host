@@ -1191,10 +1191,10 @@ export default class Player extends lng.Component {
     this.closeVideoPlayer();
   }
 
-  $exitVideo() {
+  $exitVideo(e) {
     this._showWrapper();
     if (this.tag('Wrapper').visible) {
-      this._handleBack();
+      this._handleBack(e);
     }
   }
 
