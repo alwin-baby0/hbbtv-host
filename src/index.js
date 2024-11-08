@@ -82,8 +82,9 @@ export default function () {
       appSettings.keys = {
         8: 'Back',
         412: 'MediaRewind',
-        417: 'MediaTrackNext',
+        417: 'MediaFastForward',
         415: 'MediaPlay',
+        19: 'MediaPause',
         413: 'MediaStop',
         179: 'MediaPlayPause',
       };
