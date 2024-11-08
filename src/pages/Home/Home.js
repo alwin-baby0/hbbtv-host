@@ -86,6 +86,15 @@ export default class Home extends Lightning.Component {
     this._setState('Hero');
   }
 
+  _handleBack(e) {
+    e.preventDefault();
+    if (Router.getHistory().length > 1) {
+      Router.back();
+    } else {
+      this.fireAncestors('$appClose');
+    }
+  }
+
   static _states() {
     return [
       class Hero extends this {
