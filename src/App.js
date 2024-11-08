@@ -324,7 +324,7 @@ export default class App extends Router.App {
     }
   }
 
-  _handleAppClose() {
+  $appClose() {
     const dialog = this.tag('Dialog');
     const noResume = Language.translate('noResume');
     const yesExit = Language.translate('yesExit');
@@ -346,7 +346,7 @@ export default class App extends Router.App {
             if (device === 'tizen') {
               window.tizen.application.getCurrentApplication().exit();
             } else if (device === 'web') {
-              window.location.href = '';
+              window.close();
             }
           },
         },

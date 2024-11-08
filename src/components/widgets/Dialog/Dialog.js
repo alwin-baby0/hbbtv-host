@@ -107,7 +107,8 @@ export default class Dialog extends Lightning.Component {
     }
   }
 
-  _handleBack() {
+  _handleBack(e) {
+    e.preventDefault();
     this.close();
   }
 

@@ -49,7 +49,7 @@ export default class PlayerButtons extends lng.Component {
     });
   }
 
-  _handleEnter() {
+  _handleEnter(e) {
     const { buttonInfo, isStopped } = this._props;
     this.fireAncestors('$changeFocusOnControl', true);
     switch (buttonInfo.label) {
@@ -66,7 +66,7 @@ export default class PlayerButtons extends lng.Component {
         this._handleSubtitles();
         break;
       case 'back':
-        this._handleBack();
+        this._handleBack(e);
         break;
       default:
         break;
@@ -105,8 +105,9 @@ export default class PlayerButtons extends lng.Component {
     this.fireAncestors('$setFocusOnItem', true);
   }
 
-  _handleBack() {
-    this.fireAncestors('$exitVideo');
+  _handleBack(e) {
+    e.preventDefault();
+    this.fireAncestors('$exitVideo', e);
   }
 
   _focus() {
