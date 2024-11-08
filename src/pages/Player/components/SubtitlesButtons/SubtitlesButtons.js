@@ -69,7 +69,8 @@ export default class SubtitlesButtons extends Lightning.Component {
     this.fireAncestors('$setInitial');
   }
 
-  _handleBack() {
+  _handleBack(e) {
+    e.preventDefault();
     this.fireAncestors('$setFocusOnItem', false);
   }
 

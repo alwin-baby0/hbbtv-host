@@ -285,7 +285,8 @@ export default class Search extends Lightning.Component {
           return this._Keyboard;
         }
 
-        _handleBack() {
+        _handleBack(e) {
+          e.preventDefault();
           this._Keyboard.visible = false;
           this._setState('Input');
         }
