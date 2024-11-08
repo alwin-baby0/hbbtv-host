@@ -869,6 +869,7 @@ export default class Player extends lng.Component {
     this.patch({
       WrapperAd: undefined,
     });
+    this._handleExitVideo();
   }
 
   _skipVideo(offset) {
@@ -1171,10 +1172,9 @@ export default class Player extends lng.Component {
       WrapperAd: undefined,
     });
     this.fireAncestors('$unpunchHole');
-    Router.back();
   }
 
-  _handleBack() {
+  _handleExitVideo() {
     if (parseFloat(VideoPlayer.duration) > 300) {
       if (this._params.seriesID) {
         CMPService.addRecentlyWatched(
@@ -1193,7 +1193,8 @@ export default class Player extends lng.Component {
   $exitVideo() {
     this._showWrapper();
     if (this.tag('Wrapper').visible) {
-      this._handleBack();
+      this._handleExitVideo();
+      Router.back();
     }
   }
 

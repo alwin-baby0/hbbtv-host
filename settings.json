@@ -17,6 +17,6 @@
     "log": false,
     "showVersion": false,
     "inspector": true,
-    "esEnv": "es5"
+    "esEnv": "es6"
   }
 }

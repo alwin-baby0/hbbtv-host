@@ -80,11 +80,12 @@ export default function () {
       // Ocilion Key Codes
       // 461 || 17: 'Back',
       appSettings.keys = {
-        17: 'Back',
+        8: 'Back',
         412: 'MediaRewind',
-        417: 'MediaFastForward',
+        417: 'MediaTrackNext',
+        415: 'MediaPlay',
         413: 'MediaStop',
-        463: 'MediaPlayPause',
+        179: 'MediaPlayPause',
       };
       // Ako nije prepoznat uređaj, neka ostane prazno
       break;
