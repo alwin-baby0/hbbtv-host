@@ -922,6 +922,11 @@ export default class Player extends lng.Component {
           });
         });
       });
+    } else {
+      VideoPlayer.seek(currentTime);
+      console.log('SEEK:', currentTime);
+      offsetTime = 0;
+      VideoPlayer.play();
     }
   }
 
