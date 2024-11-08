@@ -1174,7 +1174,8 @@ export default class Player extends lng.Component {
     Router.back();
   }
 
-  _handleBack() {
+  _handleBack(e) {
+    e.preventDefault();
     if (parseFloat(VideoPlayer.duration) > 300) {
       if (this._params.seriesID) {
         CMPService.addRecentlyWatched(

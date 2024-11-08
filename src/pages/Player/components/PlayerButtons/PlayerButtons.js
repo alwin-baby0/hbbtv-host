@@ -105,7 +105,8 @@ export default class PlayerButtons extends lng.Component {
     this.fireAncestors('$setFocusOnItem', true);
   }
 
-  _handleBack() {
+  _handleBack(e) {
+    e.preventDefault();
     this.fireAncestors('$exitVideo');
   }
 
