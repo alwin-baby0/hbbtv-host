@@ -345,7 +345,7 @@ export default class App extends Router.App {
             // Router navigation for "Yes, exit now"
             if (device === 'tizen') {
               window.tizen.application.getCurrentApplication().exit();
-            } else if (device === 'web') {
+            } else {
               window.close();
             }
           },
