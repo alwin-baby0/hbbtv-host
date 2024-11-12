@@ -12,6 +12,6 @@ export const createApiCtx = () =>
       deviceWidth: window.innerWidth,
       deviceHeight: window.innerHeight,
       platform: 'lightningjs',
-      bundleIdentifier: 'com.appwedotv',
+      bundleIdentifier: 'wedotv.samsung',
     })
   );
