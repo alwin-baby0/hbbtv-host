@@ -13,5 +13,6 @@ export const createApiCtx = () =>
       deviceHeight: window.innerHeight,
       platform: 'lightningjs',
       bundleIdentifier: 'com.appwedotv',
+      api_key: '6d4bbea06e8ee78ca99183a6ffc7e16',
     })
   );
