@@ -140,10 +140,10 @@ export const eventTrackPayload = (event, id) => {
     w4track(
       {
         event,
-        app: 'wedotv.samsung',
-        app_domain: 'samsung.wedotv.app',
+        app: 'wedotv_lg',
+        app_domain: 'lg.wedotv.app',
         app_version: '1.0.0',
-        app_bundle: 'com.wedotv.app',
+        app_bundle: 'wedotv_lg',
         id,
         device: _deviceType,
         model: _model,
@@ -152,7 +152,7 @@ export const eventTrackPayload = (event, id) => {
         version: _os_Version,
         device_id: _serialNumber,
       },
-      '6d4bbea06e8ee78ca99183a6ffc7e16'
+      'bded05c0ac827d4bbdb460af22df3e3b'
     );
   } catch (error) {
     console.error('Script not loaded?', error);
