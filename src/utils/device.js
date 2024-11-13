@@ -143,7 +143,7 @@ export const eventTrackPayload = (event, id) => {
         app: 'wedotv.samsung',
         app_domain: 'samsung.wedotv.app',
         app_version: '1.0.0',
-        app_bundle: 'com.wedotv.app',
+        app_bundle: 'wedotv.samsung',
         id,
         device: _deviceType,
         model: _model,
