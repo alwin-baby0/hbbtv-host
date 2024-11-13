@@ -26,6 +26,16 @@ const uuidToMac = (uuid) => {
   return macAddress;
 };
 
+const getMACAndSN = (UUID) => {
+  var macAdresa = UUID.substring(0, 12);
+  macAdresa = macAdresa.match(/.{2}/g).join(':');
+  var serijskiBroj = UUID.substring(12);
+  return {
+    macAdresa: macAdresa,
+    serijskiBroj: serijskiBroj,
+  };
+};
+
 const generateRandomUUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
     const randomHex = Math.floor(Math.random() * 16);
@@ -61,27 +71,26 @@ export const getTVInfo = () => {
       setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
       createAxiosInstance();
       break;
-    case 'web':
-      // Definišite neke simulirane vrednosti za web
-      // _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
-      _serialNumber = localStorage.getItem('serialNumber') || generateRandomUUID();
-      _model = 'simulated-model';
-      _brand = 'simulated-brand';
-      _os = 'Web';
-      _os_Version = '7.0';
-      var _macAddress = 'simulated-mac-address';
+    case 'hisense':
+      _os = 'VIDAA';
+      _os_Version = window.Hisense_GetFirmWareVersion();
+      const UUID = window.Hisense_GetDeviceInfo().uuid;
+      console.log('HISENSEINFO:', window.Hisense_GetDeviceInfo().brand);
+      const info = getMACAndSN(UUID);
+      _model = window.Hisense_GetDeviceInfo().model_name;
+      _macAddress = info.macAdresa;
+      _serialNumber = info.serijskiBroj;
+      _brand = window.Hisense_GetDeviceInfo().brand;
 
-      // Logovanje podataka u konzolu
-      console.log('Device is web');
+      console.log(`Device is : ${device}`);
       console.log('Serial Number:', _serialNumber);
       console.log('Model:', _model);
       console.log('Brand:', _brand);
       console.log('MAC Address:', _macAddress);
+      console.log('OS firmware version:', _os_Version);
 
-      // Postavljanje serijskog broja u localStorage
       localStorage.setItem('serialNumber', _serialNumber);
 
-      // Ako želite da postavite ove informacije, možete koristiti setTvInfo
       setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
       createAxiosInstance();
       break;
@@ -131,6 +140,30 @@ export const getTVInfo = () => {
           console.log('[' + inError.errorCode + ']: ' + inError.errorText);
         },
       });
+      break;
+    case 'web':
+      // Definišite neke simulirane vrednosti za web
+      // _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
+      _serialNumber = localStorage.getItem('serialNumber') || generateRandomUUID();
+      _model = 'simulated-model';
+      _brand = 'simulated-brand';
+      _os = 'Web';
+      _os_Version = '7.0';
+      var _macAddress = 'simulated-mac-address';
+
+      // Logovanje podataka u konzolu
+      console.log('Device is web');
+      console.log('Serial Number:', _serialNumber);
+      console.log('Model:', _model);
+      console.log('Brand:', _brand);
+      console.log('MAC Address:', _macAddress);
+
+      // Postavljanje serijskog broja u localStorage
+      localStorage.setItem('serialNumber', _serialNumber);
+
+      // Ako želite da postavite ove informacije, možete koristiti setTvInfo
+      setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
+      createAxiosInstance();
       break;
   }
 };

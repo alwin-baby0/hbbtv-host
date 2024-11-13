@@ -1181,18 +1181,21 @@ export default class Player extends lng.Component {
 
   _handleBack(e) {
     e.preventDefault();
-    if (parseFloat(VideoPlayer.duration) > 300) {
-      if (this._params.seriesID) {
-        CMPService.addRecentlyWatched(
-          this._params.videoId,
-          'series',
-          VideoPlayer.currentTime,
-          this._params.seriesID
-        );
-      } else {
-        CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+    if (localStorage.getItem('userData')) {
+      if (parseFloat(VideoPlayer.duration) > 300) {
+        if (this._params.seriesID) {
+          CMPService.addRecentlyWatched(
+            this._params.videoId,
+            'series',
+            VideoPlayer.currentTime,
+            this._params.seriesID
+          );
+        } else {
+          CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+        }
       }
     }
+
     this.closeVideoPlayer();
   }
 

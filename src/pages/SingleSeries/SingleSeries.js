@@ -136,6 +136,15 @@ export default class SingleSeries extends Lightning.Component {
                 flexItem: {
                   marginTop: 10,
                 },
+                alpha: 1,
+                props: {
+                  buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+                  buttonLabel: 'FAVORITE',
+                  width: 255,
+                  callback: () => {
+                    this.addToFavorite();
+                  },
+                },
               },
             },
           },
@@ -155,6 +164,18 @@ export default class SingleSeries extends Lightning.Component {
               },
               FavoriteButton: {
                 y: 10,
+                flexItem: {
+                  marginTop: 10,
+                },
+                alpha: 1,
+                props: {
+                  buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+                  buttonLabel: 'FAVORITE',
+                  width: 255,
+                  callback: () => {
+                    this.addToFavorite();
+                  },
+                },
               },
             },
           },
@@ -196,17 +217,17 @@ export default class SingleSeries extends Lightning.Component {
     //         true
     //       );
 
-    this._HeroSection._FavoriteButton.patch({
-      alpha: 1,
-      props: {
-        buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-        buttonLabel: 'FAVORITE',
-        width: 255,
-        callback: () => {
-          this.addToFavorite();
-        },
-      },
-    });
+    // this._HeroSection._FavoriteButton.patch({
+    //   alpha: 1,
+    //   props: {
+    //     buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+    //     buttonLabel: 'FAVORITE',
+    //     width: 255,
+    //     callback: () => {
+    //       this.addToFavorite();
+    //     },
+    //   },
+    // });
     // this.stage.update();
     // this._refocus();
 
