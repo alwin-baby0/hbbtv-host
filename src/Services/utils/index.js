@@ -1,3 +1,5 @@
+import { API_KEY, APP_BUNDLE, APP_VERSION } from '../../config';
+
 // createApiCtx
 export const V1 = 'v1';
 export const V2 = 'v2';
@@ -7,12 +9,12 @@ export const createApiCtx = () =>
   btoa(
     JSON.stringify({
       languageCode: localStorage.getItem('languageCode') || 'en',
-      version_name: '1.0.0',
+      version_name: APP_VERSION,
       osVersion: 2,
       deviceWidth: window.innerWidth,
       deviceHeight: window.innerHeight,
       platform: 'lightningjs',
-      bundleIdentifier: 'wedotv.html5.titanos',
-      api_key: '2e11f1fc7568720d4a21d47f526dafe3',
+      bundleIdentifier: APP_BUNDLE,
+      api_key: API_KEY,
     })
   );
