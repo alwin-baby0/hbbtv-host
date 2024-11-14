@@ -207,7 +207,7 @@ export const eventTrackPayload = (event, id) => {
     w4track(
       {
         event,
-        app: 'app-hisensetv.wedo.tv',
+        app: 'wedotv.html5.hisense',
         app_domain: 'app-hisensetv.wedo.tv',
         app_version: '1.0.0',
         app_bundle: 'wedotv.html5.hisense',
