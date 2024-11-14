@@ -1,4 +1,5 @@
 import { createAxiosInstance, setTvInfo } from '../api';
+import { API_KEY, APP, APP_DOMAIN, APP_BUNDLE, APP_VERSION } from '../config';
 
 var _serialNumber = '';
 var _model = '';
@@ -207,10 +208,10 @@ export const eventTrackPayload = (event, id) => {
     w4track(
       {
         event,
-        app: 'wedotv_lg',
-        app_domain: 'lg.wedotv.app',
-        app_version: '1.0.0',
-        app_bundle: 'wedotv_lg',
+        app: APP,
+        app_domain: APP_DOMAIN,
+        app_version: APP_VERSION,
+        app_bundle: APP_BUNDLE,
         id,
         device: _deviceType,
         model: _model,
@@ -219,7 +220,7 @@ export const eventTrackPayload = (event, id) => {
         version: _os_Version,
         device_id: _serialNumber,
       },
-      'bded05c0ac827d4bbdb460af22df3e3b'
+      API_KEY
     );
   } catch (error) {
     console.error('Script not loaded?', error);
