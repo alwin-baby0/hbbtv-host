@@ -9,6 +9,7 @@ import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinSc
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDevice } from './utils/device';
 import { eventTrackPayload } from './utils/device';
+import { API_KEY } from './config';
 let wasOffline = false; // Variable to track previous internet status
 
 let keys = [
@@ -151,9 +152,7 @@ export default class App extends Router.App {
       tizen.tvinputdevice.registerKeyBatch(keys);
     }
 
-    this.loadExternalScript(
-      'https://tracking.watch4.com/track.js?api_key=6d4bbea06e8ee78ca99183a6ffc7e16'
-    );
+    this.loadExternalScript(`https://tracking.watch4.com/track.js?api_key=${API_KEY}`);
     // this.loadGAScript(
     //   'https://www.googletagmanager.com/gtag/js?id=6d4bbea06e8ee78ca99183a6ffc7e16'
     // );
