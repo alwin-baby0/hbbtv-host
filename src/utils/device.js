@@ -15,8 +15,9 @@ export const getDevice = () => {
     return 'webos';
   } else if (window.Hisense) {
     return 'hisense';
-  }
-  return 'web';
+  } else if (window.DeviceInfo?.Channel?.appStore) {
+    return 'titan';
+  } else return 'web';
 };
 
 const uuidToMac = (uuid) => {
@@ -42,6 +43,20 @@ const generateRandomUUID = () => {
     const value = char === 'x' ? randomHex : (randomHex & 0x3) | 0x8;
     return value.toString(16);
   });
+};
+
+const extractPhilipsModel = () => {
+  const userAgentString = navigator.userAgent;
+  const regex = /\(Philips, ([^)]+)\)/i;
+  const match = userAgentString.match(regex);
+
+  if (match && match[1]) {
+    let model = match[1];
+    model = model.split(', ')[0];
+    return model;
+  } else {
+    return null;
+  }
 };
 
 export const getTVInfo = () => {
@@ -140,6 +155,25 @@ export const getTVInfo = () => {
           console.log('[' + inError.errorCode + ']: ' + inError.errorText);
         },
       });
+      break;
+    case 'titan':
+      _os = 'TitanOS';
+      _os_Version = '1.0';
+      _model = extractPhilipsModel();
+      _brand = 'Philips';
+      _serialNumber = localStorage.getItem('serialNumber') || generateRandomUUID();
+      _macAddress = '12:34:56:78:9A:BC';
+
+      console.log(`Device is : ${device}`);
+      console.log('Serial Number:', _serialNumber);
+      console.log('Model:', _model);
+      console.log('Brand:', _brand);
+      console.log('MAC Address:', _macAddress);
+      console.log('OS firmware version:', _os_Version);
+
+      localStorage.setItem('serialNumber', _serialNumber);
+      setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
+
       break;
     case 'web':
       // Definišite neke simulirane vrednosti za web
