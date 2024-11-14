@@ -12,7 +12,7 @@ export const createApiCtx = () =>
       deviceWidth: window.innerWidth,
       deviceHeight: window.innerHeight,
       platform: 'lightningjs',
-      bundleIdentifier: 'com.appwedotv',
-      api_key: '6d4bbea06e8ee78ca99183a6ffc7e16',
+      bundleIdentifier: 'wedotv.html5.titanos',
+      api_key: '2e11f1fc7568720d4a21d47f526dafe3',
     })
   );
