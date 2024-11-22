@@ -94,4 +94,37 @@ export default class HeroRailItem extends FocusableItem {
     this.fireAncestors('$stopVideo');
     callback();
   }
+
+  _handleClick() {
+    const { callback } = this._props;
+    this.fireAncestors('$stopVideo');
+    callback();
+  }
+
+  _handleHover() {
+    const { index, url } = this._props;
+    console.log('herorRAil hovers');
+
+    super._focus();
+    this.fireAncestors('$horizontalPosterIndexChange', index);
+
+    if (this._timeoutId) {
+      clearTimeout(this._timeoutId);
+    }
+    this._timeoutId = setTimeout(() => {
+      this.fireAncestors('$punchHoleTV', 700, 0, 1220, 685, 0);
+      this.fireAncestors('$playTrailer', { trailer: url });
+    }, 3000);
+    this.fireAncestors('$nextVideo', index);
+  }
+
+  _handleUnhover() {
+    super._unfocus();
+    this.fireAncestors('$unpunchHole');
+
+    if (this._timeoutId) {
+      clearTimeout(this._timeoutId);
+    }
+    this.fireAncestors('$stopVideo');
+  }
 }

@@ -78,6 +78,7 @@ export default class GalleryItem extends Lightning.Component {
         },
         GalleryButton: {
           type: Button,
+          collision: true,
           flexItem: {
             marginTop: 10,
           },
@@ -88,7 +89,9 @@ export default class GalleryItem extends Lightning.Component {
         },
         AuthorizedButtons: {
           flex: { direction: 'row' },
+          collision: true,
           ContinueWatching: {
+            collision: true,
             alpha: 0,
             type: Button,
             flexItem: {
@@ -97,6 +100,7 @@ export default class GalleryItem extends Lightning.Component {
             },
           },
           FavoriteButton: {
+            collision: true,
             alpha: 0,
             type: Button,
             flexItem: {

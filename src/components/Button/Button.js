@@ -153,4 +153,19 @@ export default class Button extends Lightning.Component {
     const { callback } = this._props;
     callback();
   }
+
+  _handleHover() {
+    const { index } = this._props;
+    console.log('haver singl muvi baton', index);
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    const { callback } = this._props;
+    callback();
+  }
 }

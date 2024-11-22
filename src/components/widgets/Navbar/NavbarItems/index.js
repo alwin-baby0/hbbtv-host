@@ -40,12 +40,14 @@ export default class SidebarItems extends Lightning.Component {
         },
         Column: {
           type: Row,
+          collision: true,
           x: 300,
           h: 70,
           style: { itemSpacing: 30 },
           items: menuItems.map((item) => {
             return {
               type: SidebarItem,
+              collision: true,
               w: item.id < 5 ? 150 : 50,
               h: 70,
               props: {
@@ -53,6 +55,7 @@ export default class SidebarItems extends Lightning.Component {
                 index: item.id,
                 data: item,
               },
+              extraItemSpacing: item.id === 4 ? 270 : 0,
               color: Colors(colors.unfocus).get(),
             };
           }),
@@ -123,6 +126,12 @@ export default class SidebarItems extends Lightning.Component {
     if (route) {
       Router.navigate(route);
     }
+  }
+
+  $changeHoverFocus(index) {
+    console.log(this._index, index);
+    this._Column.children[0].children[this._index]._unfocus();
+    this._index = index;
   }
 
   _updateFocus() {

@@ -40,7 +40,10 @@ const RAIL_WIDTHS = {
   [RAIL_TYPES.BANNER]: 1760,
 };
 
+let globalVerticalIndex = 0;
+
 export const constructRails = (rails) => {
+  console.log('rails from indexjs:', rails);
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
     return constructRails([rails]);
@@ -53,21 +56,34 @@ export const constructRails = (rails) => {
       const items = rail.items;
       const itemsPerRow = rail.itemsPerRow;
 
+      window.addEventListener('verticalIndexReset', verticalIndexReset);
+
       if (itemsPerRow && items.length - 1 >= itemsPerRow) {
         const chunkedItems = chunkArray(items, itemsPerRow); // chunk the items into rows
 
-        return chunkedItems.map((chunkedRailItem, index) => {
+        return chunkedItems.map((chunkedRailItem) => {
           const newRail = { ...rail };
-          newRail.railTitle = index === 0 ? rail.railTitle : '';
+          newRail.railTitle = globalVerticalIndex === 0 ? rail.railTitle : '';
           newRail.items = chunkedRailItem;
-          return cronstructSingleLineRail(newRail);
+
+          const currentIndex = globalVerticalIndex;
+          console.log('global vertical index', globalVerticalIndex);
+          globalVerticalIndex += 1;
+
+          return cronstructSingleLineRail(newRail, currentIndex);
         });
       }
-      return cronstructSingleLineRail(rail);
+      return cronstructSingleLineRail(rail, 0); //-1 is placeholder value if items are not chunked
     });
 };
 
-export const cronstructSingleLineRail = (rail) => {
+const verticalIndexReset = () => {
+  console.log('pozvanoooo');
+  globalVerticalIndex = 0;
+};
+
+export const cronstructSingleLineRail = (rail, index) => {
+  console.log('construct single line rail called');
   const { items, railType, cardType = 'POSTER', railTitle, railItemsOptions, ...rest } = rail;
   const containerDimensions =
     railType === RAIL_TYPES.LIVETV
@@ -106,6 +122,7 @@ export const cronstructSingleLineRail = (rail) => {
     type: HorizontalContainer,
     ...rest,
     ...containerDimensions,
+    collision: true,
     props: {
       h: CARD_SIZES[cardType]?.height, // todo: remove 50
       w: containerDimensions.w,
@@ -114,6 +131,7 @@ export const cronstructSingleLineRail = (rail) => {
       items: railItemConstructor(items, railType, railItemsOptions),
       paddingLeft,
       targetIndex: targetIndex,
+      index: index,
     },
   };
 };

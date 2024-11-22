@@ -33,6 +33,7 @@ export default class VodPreview extends Lightning.Component {
           y: 50,
           h: 795,
           w: 1740,
+          collision: true,
           type: VerticalContainer,
         },
       },
@@ -81,6 +82,11 @@ export default class VodPreview extends Lightning.Component {
     }
   }
 
+  $updateVerticalState(nextState) {
+    console.log('nextState', nextState);
+    this._setState(nextState);
+  }
+
   static _states() {
     return [
       class VodContentContainer extends this {
@@ -92,6 +98,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         $enter() {
+          console.log('log iz vod content containera?');
           this.fireAncestors('$setNavbarVisibility', true);
 
           if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
@@ -169,6 +176,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
+          console.log('fokus na gore');
           if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
             Router.focusWidget('Menu');
           } else {

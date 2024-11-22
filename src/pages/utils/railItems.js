@@ -43,8 +43,9 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
 };
 
 const constructSimpleRailItems = (railItems, railItemsOptions) => {
-  return railItems.map((railItem) => ({
+  return railItems.map((railItem, index) => ({
     type: PosterRailItem,
+    collision: true,
     w: 270,
     flexItem: {
       marginLeft: 10,
@@ -57,6 +58,7 @@ const constructSimpleRailItems = (railItems, railItemsOptions) => {
       itemTitle: railItem.title ? railItem.title : '',
       imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
       itemType: railItem.type,
+      index: index,
       callback: () => {
         Router.navigate(railItem.url);
       },
@@ -65,8 +67,9 @@ const constructSimpleRailItems = (railItems, railItemsOptions) => {
 };
 
 const constructLandscapeRailItems = (railItems, railItemsOptions) => {
-  return railItems.map((railItem) => ({
+  return railItems.map((railItem, index) => ({
     type: CollectionRailItem,
+    collision: true,
     w: 420,
     flexItem: {
       marginLeft: 10,
@@ -80,6 +83,7 @@ const constructLandscapeRailItems = (railItems, railItemsOptions) => {
       // imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
       imageSrc: railItem.getLandscapePoster(imageSizes.M).src,
       itemType: railItem.type,
+      index,
       callback: () => {
         Router.navigate(railItem.url);
       },
@@ -114,6 +118,7 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
   return railItems.map((railItem, index) => {
     return {
       type: HeroRailItem,
+      collision: true,
       flexItem: {
         marginLeft: 15,
         marginRight: 15,
@@ -165,8 +170,9 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
 const constructEpisodeRailItems = (railItems, railItemsOptions) => {
   console.log('Constructing episode rail items...', railItems); // Log your message here
 
-  return railItems.map((railItem) => ({
+  return railItems.map((railItem, index) => ({
     type: LandscapeRailItem,
+    collision: true,
     flexItem: {
       marginLeft: 10,
       marginRight: 10,
@@ -179,6 +185,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       itemSummary: railItem.summary,
       itemDescription: railItem.description,
       imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
+      index,
       callback: () => {
         Router.navigate('player', {
           videoUrl: railItem.url,
@@ -193,9 +200,10 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
 };
 
 const constructSportsLiveRailItems = (railItems, railItemsOptions) =>
-  railItems.map((railItem) => ({
+  railItems.map((railItem, index) => ({
     w: 350,
     type: SportsEventsRailItem,
+    collision: true,
     flexItem: {
       marginLeft: 10,
       marginRight: 10,
@@ -210,6 +218,7 @@ const constructSportsLiveRailItems = (railItems, railItemsOptions) =>
       imageSrc: railItem.getLandscapePoster().src,
       radius: 9,
       strokeWidth: 4,
+      index,
       callback: () => {
         Router.navigate(railItem.url);
       },
@@ -244,9 +253,10 @@ const constructLiveChannelRailItems = (railItems, railItemsOptions) =>
   });
 
 const constructCategoryItems = (railItems, railItemsOptions) =>
-  railItems.map((railItem) => {
+  railItems.map((railItem, index) => {
     return {
       type: CategoryPickerItem,
+      collision: true,
       ...railItemsOptions,
       props: {
         itemInfo: railItem,
@@ -256,6 +266,7 @@ const constructCategoryItems = (railItems, railItemsOptions) =>
         h: 64,
         radius: 30,
         strokeWidth: 6,
+        index: index,
       },
     };
   });

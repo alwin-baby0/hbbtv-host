@@ -30,4 +30,16 @@ export default class BackBtn extends Lightning.Component {
   _handleEnter() {
     Router.back();
   }
+
+  _handleHover() {
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    Router.back();
+  }
 }
