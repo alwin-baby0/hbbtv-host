@@ -99,6 +99,13 @@ export default class PosterRailItem extends FocusableItem {
     super._focus();
     this.fireAncestors('$horizontalPosterIndexChange', index);
     console.log(this.parent.parent.parent.parent.parent.parent.ref);
+    console.log(this.parent.parent.parent.parent.ref);
+    if (this.parent.parent.parent.parent.ref === 'RecentlyWatched') {
+      this.fireAncestors('$setStateOnHover', 'RecentlyWatched');
+    }
+    if (this.parent.parent.parent.parent.ref === 'Favorites') {
+      this.fireAncestors('$setStateOnHover', 'Favorites');
+    }
     if (this.parent.parent.parent.parent.parent.parent.ref === 'QRContainer') {
       this.fireAncestors('$setStateOnHover', 'UserRecentlyWatched');
     }

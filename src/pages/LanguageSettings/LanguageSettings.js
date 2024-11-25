@@ -22,6 +22,7 @@ export default class LanguageSettings extends Lightning.Component {
         Column: {
           h: 300,
           w: 1720,
+          collision: true,
           type: VerticalContainer,
         },
       },
@@ -38,6 +39,7 @@ export default class LanguageSettings extends Lightning.Component {
             w: 1050,
             h: 400,
             y: 100,
+            collision: true,
             type: VerticalContainer,
           },
         },
@@ -109,6 +111,7 @@ export default class LanguageSettings extends Lightning.Component {
       const buttons = Object.values(buttonsResult).map((value) => {
         return {
           type: Button,
+          collision: true,
           w: 1050,
           flexItem: {
             marginBottom: 18,
@@ -169,6 +172,7 @@ export default class LanguageSettings extends Lightning.Component {
             h: 400,
             y: 100,
             type: VerticalContainer,
+            collision: true,
             props: {
               items: buttons,
             },
@@ -195,6 +199,7 @@ export default class LanguageSettings extends Lightning.Component {
       this.tag('Content').patch({
         Languages: {
           type: VerticalContainer,
+          collision: true,
           w: 1050,
           h: 300,
           props: {
@@ -211,6 +216,10 @@ export default class LanguageSettings extends Lightning.Component {
   /* _getFocused() {
     return this.tag('Wrapper.Column');
   } */
+
+  $setStateOnHover(nextState) {
+    this._setState(nextState);
+  }
 
   _active() {
     this._setState('DefaultState');

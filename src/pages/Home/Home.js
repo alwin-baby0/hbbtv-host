@@ -34,14 +34,14 @@ export default class Home extends Lightning.Component {
           type: VerticalContainer,
         },
       },
-      ScrollingWrapper: {
+      /* ScrollingWrapper: {
         collision: true,
         zIndex: 10,
         y: 100,
         w: 1920,
         h: 600,
         type: ScrollWrapper,
-      },
+      }, */
     };
   }
 

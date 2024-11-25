@@ -157,7 +157,9 @@ export default class Button extends Lightning.Component {
   _handleHover() {
     const { index } = this._props;
     console.log('haver singl muvi baton', index);
+    console.log('haver btn iz cmp', this);
     this._focus();
+    this.fireAncestors('$updateVerticalState', 'HeroSection');
   }
 
   _handleUnhover() {

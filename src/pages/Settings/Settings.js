@@ -314,6 +314,7 @@ export default class Settings extends Lightning.Component {
 
       this.tag('Content').patch({
         RecentlyWatched: {
+          collision: true,
           type: VerticalContainer,
           w: 1310,
           h: 920,
@@ -335,6 +336,7 @@ export default class Settings extends Lightning.Component {
 
       this.tag('Content').patch({
         Favorites: {
+          collision: true,
           type: VerticalContainer,
           w: 1310,
           h: 920,

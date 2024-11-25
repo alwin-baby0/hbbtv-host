@@ -24,6 +24,7 @@ export default class HelpScreen extends lng.Component {
         w: 1800,
         Column: {
           y: 105,
+          collision: true,
           type: VerticalContainer,
           h: 225,
           w: 240,

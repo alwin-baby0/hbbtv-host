@@ -149,6 +149,8 @@ export default class VerticalContainer extends Lightning.Component {
 
   handleDown() {
     if (this._focusedIndex < this.Items.children.length - 1) {
+      console.log('log button down vert', this.Items.children[this._focusedIndex]);
+      console.log('log button svi child', this.Items.children);
       if (this.Items.children[this._focusedIndex + 1]._props?.cardType === 'BANNER') {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 2);
         this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 2);

@@ -26,6 +26,7 @@ export default class SingleSeries extends Lightning.Component {
       },
       SeriesWrapper: {
         HeroSection: {
+          collision: true,
           type: GalleryItem,
         },
       },
@@ -37,7 +38,7 @@ export default class SingleSeries extends Lightning.Component {
         w: 1770,
         clipping: true,
         Column: {
-          //collision: true,
+          collision: true,
           h: 600,
           w: 1770,
           type: VerticalContainer,
@@ -303,6 +304,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $enter() {
+          console.log('bck btn iz stejtovs', this._BackButton);
           this.$verticalContainerIndexChange();
         }
 

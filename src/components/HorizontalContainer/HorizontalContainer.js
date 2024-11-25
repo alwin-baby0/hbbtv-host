@@ -172,9 +172,19 @@ export default class HorizontalContainer extends Lightning.Component {
     let verticalState;
     const { index } = this._props;
     console.log('vertical index hov: ', index);
+    console.log('vert hover childovi svi', this.parent.children);
+    console.log('this', this);
+    console.log('parent container', this.parent.parent.ref);
+    const parentContainer = this.parent.parent.ref;
+    console.log(this.parent.children.indexOf(this));
+    const indexForVC = this.parent.children.indexOf(this);
     const constructorName = this.Items.children[this._focusedIndex].constructor.name;
     console.log(this.Items.children[this._focusedIndex].constructor.name);
-    if (constructorName === 'PosterRailItem') {
+    if (constructorName === 'PosterRailItem' && parentContainer === 'VODSection') {
+      //case for search page
+      verticalState = 'VODSection';
+    }
+    if (constructorName === 'PosterRailItem' && parentContainer !== 'VODSection') {
       verticalState = 'VodContainer';
     }
     if (constructorName === 'SportsEventsRailItem') {
@@ -185,7 +195,7 @@ export default class HorizontalContainer extends Lightning.Component {
     }
     /* const verticalState =
       constructorName === 'SportsEventsRailItem' ? 'VodContentContainer' : 'VodContainer'; */
-    this.fireAncestors('$horizontalContainerPosterIndexChange', index, verticalState);
+    this.fireAncestors('$horizontalContainerPosterIndexChange', indexForVC, verticalState);
   }
 
   _handleRight() {
