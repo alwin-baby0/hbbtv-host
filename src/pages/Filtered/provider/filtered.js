@@ -50,15 +50,17 @@ const getGenresInfo = async (page, props) => {
         rows.push({ items: row.slice(i, i + ROW_SIZE) });
       }
 
-      const items = rows.map((row) => {
+      const items = rows.map((row, index) => {
         return {
           type: HorizontalContainer,
+          collision: true,
           h: 460,
           w: 1760,
           itemSpacing: 520,
           props: {
-            items: row.items.map((item) => ({
+            items: row.items.map((item, index) => ({
               type: PosterRailItem,
+              collision: true,
               flexItem: {
                 marginLeft: 10,
                 marginRight: 10,
@@ -71,6 +73,7 @@ const getGenresInfo = async (page, props) => {
                 callback: () => {
                   Router.navigate(`${searchType}-details/${item.id}`);
                 },
+                index,
               },
             })),
           },
@@ -93,6 +96,7 @@ const getGenresInfo = async (page, props) => {
     };
 
     page._Button.patch({
+      collision: true,
       props: {
         itemInfo: { category, title: type == 'movie' ? 'MOVIES' : type },
         w: 170,

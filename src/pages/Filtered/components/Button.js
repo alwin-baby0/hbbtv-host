@@ -9,6 +9,7 @@ export default class Button extends Lightning.Component {
 
   static _template() {
     return {
+      collision: true,
       w: 170,
       h: 64,
       flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
@@ -113,6 +114,18 @@ export default class Button extends Lightning.Component {
     this._Icon.patch({
       color: Colors(colors.focus).get(),
     });
+  }
+
+  _handleHover() {
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  async _handleClick() {
+    this._handleEnter();
   }
 
   async _handleEnter() {

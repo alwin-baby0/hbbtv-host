@@ -9,6 +9,7 @@ export default class EPGRailItems extends Lightning.Component {
 
   static _template() {
     return {
+      collision: true,
       flexItem: { marginLeft: 0, marginRight: 0 },
       Wrapper: {
         h: 95,
@@ -202,5 +203,20 @@ export default class EPGRailItems extends Lightning.Component {
     // Update the lastClickedItemId with the current one
     this._props.lastClickedItemId = currentItemId;
     this._props.lastId = currentItemId; // Save the current ID as the last ID
+  }
+
+  _handleHover() {
+    const { index } = this._props;
+    console.log('hover rail item');
+    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    this._handleEnter();
   }
 }

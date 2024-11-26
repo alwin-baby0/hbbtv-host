@@ -95,17 +95,19 @@ const constructEPGS = (railItems, railItemsOptions) => {
   let items = [];
 
   items.push(
-    ...railItems.map((railItem) => {
+    ...railItems.map((railItem, index) => {
       const year = new Date(railItem.extensions.start_time).getFullYear();
       const width = year < 2023 ? 12000 : railItem.getDuration() * 8.33;
 
       return {
+        collision: true,
         type: EPGRailItems,
         w: width,
         h: 95,
         ...railItemsOptions,
         props: {
           ...railItem,
+          index,
         },
       };
     })

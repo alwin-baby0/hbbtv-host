@@ -69,9 +69,6 @@ export default class HorizontalContainer extends Lightning.Component {
 
     const { cardType, targetIndex } = rest;
 
-    const { index } = this._props;
-    console.log('indeksi horizontalni mount', index);
-
     if (railTitle && railTitle !== '') {
       const { h } = rest;
       this.Items.patch({
@@ -172,9 +169,9 @@ export default class HorizontalContainer extends Lightning.Component {
     let verticalState;
     const { index } = this._props;
     console.log('vertical index hov: ', index);
-    console.log('vert hover childovi svi', this.parent.children);
+    /* console.log('vert hover childovi svi', this.parent.children);
     console.log('this', this);
-    console.log('parent container', this.parent.parent.ref);
+    console.log('parent container', this.parent.parent.ref); */
     const parentContainer = this.parent.parent.ref;
     console.log(this.parent.children.indexOf(this));
     const indexForVC = this.parent.children.indexOf(this);
