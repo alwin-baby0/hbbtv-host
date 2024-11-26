@@ -1,6 +1,7 @@
 {
   "name": "wedotv-lightning",
-  "identifier": "wedotv-lightning",
-  "version": "1.0.0",
+  "identifier": "ag.videosolutions.app.wedotv",
+  "description": "WedoTV is a Free Video on Demand Portal. Movies, television series, crime stories, Reality TV - WedoTV has something for everyone. WedoTV viewers see a few well-placed adverts; WedoTV does the rest and entertains all its viewers for free. WedoTV - TV for free never looked so good.",
+  "version": "2.0.6",
   "icon": "./static/icon.png"
 }
