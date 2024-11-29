@@ -52,9 +52,16 @@ export default class CategoryPickerItem extends Lightning.Component {
   _handleHover() {
     const { index } = this._props;
     console.log('ho ve ro va no', index);
+    console.log('cat picker this', this);
+    const parentName = this.parent.parent.parent.parent.parent.parent.ref;
+    console.log(parentName);
     this.fireAncestors('$horizontalPosterIndexChange', index);
     this._focus();
-    this.fireAncestors('$updateVerticalState', 'VodContentContainer');
+    if (parentName === 'VodContentContainer') {
+      this.fireAncestors('$updateVerticalState', 'VodContentContainer');
+    } else {
+      this.fireAncestors('$updateVerticalState', 'Categories');
+    }
   }
 
   _handleUnhover() {

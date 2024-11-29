@@ -44,6 +44,7 @@ export default class VerticalContainer extends Lightning.Component {
     //this._focusedIndex = verticalState === 'VodContentContainer' ? 0 : val; //check later  | the idea is that if by default foc ind is -1 to set it to 0 or more
     this._focusedIndex = val;
     console.log('fokusirani indeeex', this._focusedIndex);
+    console.log('vertikalni stejt', verticalState);
     //this._focusedIndex = val;
     this.fireAncestors('$verticalContainerIndexChange', val);
     this.fireAncestors('$updateVerticalState', verticalState);
@@ -118,9 +119,9 @@ export default class VerticalContainer extends Lightning.Component {
     console.log('cliick');
   }
 
-  /* _handleHover() {
+  _handleHover() {
     console.log('hoverovano');
-  } */
+  }
 
   _handleScroll(event) {
     if (this.hasFocus()) {

@@ -4,6 +4,7 @@ import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import { CMPService } from '../../Services/CMPService';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
+import Route from '@lightningjs/sdk/src/Router/model/Route';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -25,8 +26,12 @@ export default class SingleSeries extends Lightning.Component {
         src: Utils.asset('images/background.jpg'),
       },
       SeriesWrapper: {
+        rect: true,
+        h: 620,
+        w: 1920,
         HeroSection: {
           collision: true,
+          h: 620,
           type: GalleryItem,
         },
       },
@@ -263,6 +268,12 @@ export default class SingleSeries extends Lightning.Component {
 
   _getFocused() {}
 
+  _handleBack() {
+    console.log('hndl bck');
+    Router.back();
+    this._setState('HeroSection');
+  }
+
   static _states() {
     return [
       class HeroSection extends this {
@@ -316,6 +327,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $verticalContainerIndexChange(index) {
+          console.log('pozvano', index);
           if (index > 0 && index !== undefined) {
             this._SeriesWrapper.patch({
               y: -650,

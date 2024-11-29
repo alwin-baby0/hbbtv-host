@@ -160,6 +160,7 @@ export default class Button extends Lightning.Component {
     console.log('haver btn iz cmp', this);
     this._focus();
     this.fireAncestors('$updateVerticalState', 'HeroSection');
+    this.fireAncestors('$setButtonState', this.ref); //sending ref name
   }
 
   _handleUnhover() {

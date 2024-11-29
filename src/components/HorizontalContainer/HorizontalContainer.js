@@ -43,7 +43,7 @@ export default class HorizontalContainer extends Lightning.Component {
   $horizontalPosterIndexChange(val) {
     console.log('value of hor index: ', val);
     console.log('horizontalni singl element', this.Items.children[this._focusedIndex]);
-    this.Items.children[this._focusedIndex]._unfocus();
+    this.Items.children[this._focusedIndex]?._unfocus();
     this._setFocusedIndex(val);
   }
 
@@ -175,8 +175,8 @@ export default class HorizontalContainer extends Lightning.Component {
     const parentContainer = this.parent.parent.ref;
     console.log(this.parent.children.indexOf(this));
     const indexForVC = this.parent.children.indexOf(this);
-    const constructorName = this.Items.children[this._focusedIndex].constructor.name;
-    console.log(this.Items.children[this._focusedIndex].constructor.name);
+    const constructorName = this.Items.children[this._focusedIndex]?.constructor.name;
+    // console.log(this.Items.children[this._focusedIndex].constructor.name);
     if (constructorName === 'PosterRailItem' && parentContainer === 'VODSection') {
       //case for search page
       verticalState = 'VODSection';
@@ -189,6 +189,9 @@ export default class HorizontalContainer extends Lightning.Component {
     }
     if (constructorName === 'LandscapeRailItem') {
       verticalState = 'Items';
+    }
+    if (constructorName === 'EPGRailItems') {
+      verticalState = 'EPGS';
     }
     /* const verticalState =
       constructorName === 'SportsEventsRailItem' ? 'VodContentContainer' : 'VodContainer'; */
@@ -216,7 +219,7 @@ export default class HorizontalContainer extends Lightning.Component {
   _handleLeft() {
     //this.Items.children[this._focusedIndex]._unfocus();
     if (this._focusedIndex > 0) {
-      this.Items.children[this._focusedIndex]._unfocus();
+      this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex -= 1;
       this._reCalibrateScroll();
       this.fireAncestors(

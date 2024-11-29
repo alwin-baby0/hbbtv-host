@@ -119,6 +119,7 @@ export default class HeroRailItem extends FocusableItem {
   }
 
   _handleUnhover() {
+    this.fireAncestors('$horizontalPosterIndexChange', -1);
     super._unfocus();
     this.fireAncestors('$unpunchHole');
 
