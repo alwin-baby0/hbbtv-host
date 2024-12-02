@@ -111,7 +111,7 @@ export default class PosterRailItem extends FocusableItem {
   }
 
   _handleUnhover() {
-    this.fireAncestors('$horizontalPosterIndexChange', -1);
+    //this.fireAncestors('$horizontalPosterIndexChange', -1);
     // this._refocus();
     console.log('unhover');
     super._unfocus();
