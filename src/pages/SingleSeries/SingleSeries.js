@@ -268,12 +268,6 @@ export default class SingleSeries extends Lightning.Component {
 
   _getFocused() {}
 
-  _handleBack() {
-    console.log('hndl bck');
-    Router.back();
-    this._setState('HeroSection');
-  }
-
   static _states() {
     return [
       class HeroSection extends this {
