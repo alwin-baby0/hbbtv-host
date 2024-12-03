@@ -128,14 +128,16 @@ export default class SidebarItem extends lng.Component {
     //   });
     // }
     const translatedText = Language.translate(label);
-    this._Line.patch({
-      w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni
-    });
+    setTimeout(() => {
+      this._Line.patch({
+        w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni
+      });
 
-    this._Line.visible = true;
-    this._Icon.patch({
-      color: Colors(colors.focus).get(),
-    });
+      this._Line.visible = true;
+      this._Icon.patch({
+        color: Colors(colors.focus).get(),
+      });
+    }, 0);
   }
 
   _unfocus() {
