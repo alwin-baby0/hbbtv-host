@@ -50,6 +50,7 @@ export default class CategoryPickerItem extends Lightning.Component {
   }
 
   _handleHover() {
+    Router.focusPage();
     const { index } = this._props;
     console.log('ho ve ro va no', index);
     console.log('cat picker this', this);

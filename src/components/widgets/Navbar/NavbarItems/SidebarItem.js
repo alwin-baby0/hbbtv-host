@@ -183,7 +183,7 @@ export default class SidebarItem extends lng.Component {
     console.log('hoverovan sidebar');
     this._focus();
     this.fireAncestors('$changeHoverFocus', this._props.index);
-    //Router.focusWidget('Menu');
+    Router.focusWidget('Menu');
   }
 
   _handleUnhover() {

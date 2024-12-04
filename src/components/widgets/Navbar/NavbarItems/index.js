@@ -22,6 +22,7 @@ export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
   _sidebarLength = menuItems.length;
   _index = 0;
+  _newIndex = 0;
 
   static _template() {
     return {
@@ -129,6 +130,7 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   $changeHoverFocus(index) {
+    this._newIndex = index;
     console.log(this._index, index);
     this._Column.children[0].children[this._index]._unfocus();
     this._index = index;
@@ -155,14 +157,16 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   $decrementSidebar() {
-    this._index > 0 ? --this._index : this._index;
+    this._newIndex > 0 ? --this._newIndex : this._newIndex;
   }
 
   $incrementSidebar() {
-    this._index < this._sidebarLength - 1 ? ++this._index : this._index;
+    this._newIndex < this._sidebarLength - 1 ? ++this._newIndex : this._newIndex;
   }
 
   _getFocused() {
-    return this._Column.items[this._index];
+    console.log('stari indeks', this._index);
+    console.log('novi indeks', this._newIndex);
+    return this._Column.items[this._newIndex];
   }
 }

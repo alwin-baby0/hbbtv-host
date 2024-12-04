@@ -1,4 +1,4 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Router, Utils } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
@@ -102,6 +102,7 @@ export default class HeroRailItem extends FocusableItem {
   }
 
   _handleHover() {
+    Router.focusPage();
     const { index, url } = this._props;
     console.log('herorRAil hovers');
 
@@ -119,7 +120,8 @@ export default class HeroRailItem extends FocusableItem {
   }
 
   _handleUnhover() {
-    this.fireAncestors('$horizontalPosterIndexChange', -1);
+    const { index } = this._props;
+    this.fireAncestors('$horizontalPosterIndexChange', index);
     super._unfocus();
     this.fireAncestors('$unpunchHole');
 

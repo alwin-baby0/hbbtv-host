@@ -119,9 +119,9 @@ export default class VerticalContainer extends Lightning.Component {
     console.log('cliick');
   }
 
-  _handleHover() {
+  /* _handleHover() {
     console.log('hoverovano');
-  }
+  } */
 
   _handleScroll(event) {
     if (this.hasFocus()) {
