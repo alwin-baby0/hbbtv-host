@@ -130,4 +130,10 @@ export default class HeroRailItem extends FocusableItem {
     }
     this.fireAncestors('$stopVideo');
   }
+
+  _handleScroll(event) {
+    if (event.deltaY > 0) {
+      this.fireAncestors('$setStateOnScroll', 'Items');
+    }
+  }
 }

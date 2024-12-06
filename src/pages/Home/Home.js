@@ -4,7 +4,6 @@ import VerticalContainer from '../../Components/VerticalContainer/VerticalContai
 import Gallery from '../../Components/Gallery/Gallery';
 import { HomePageService } from '../../Services/HomePageService';
 import { railItemConstructor } from '../utils/railItems';
-import { ScrollWrapper } from '@lightningjs/ui-components';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -34,14 +33,6 @@ export default class Home extends Lightning.Component {
           type: VerticalContainer,
         },
       },
-      /* ScrollingWrapper: {
-        collision: true,
-        zIndex: 10,
-        y: 100,
-        w: 1920,
-        h: 600,
-        type: ScrollWrapper,
-      }, */
     };
   }
 
@@ -106,8 +97,8 @@ export default class Home extends Lightning.Component {
     }
   }
 
-  $setStateOnScroll() {
-    this._setState('Items');
+  $setStateOnScroll(nextState) {
+    this._setState(nextState);
   }
 
   static _states() {

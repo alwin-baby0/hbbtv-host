@@ -49,8 +49,10 @@ export default class FocusableItem extends Lightning.Component {
   }
 
   _unfocus() {
-    this._FocusBorder.patch({
-      texture: null,
-    });
+    setTimeout(() => {
+      this._FocusBorder.patch({
+        texture: null,
+      });
+    }, 0);
   }
 }

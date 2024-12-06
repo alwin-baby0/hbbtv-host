@@ -41,13 +41,10 @@ export default class VerticalContainer extends Lightning.Component {
   $horizontalContainerPosterIndexChange(val, verticalState) {
     console.log('horski val', val);
     console.log('horski', this.Items.children[this._focusedIndex]);
-    //this._focusedIndex = verticalState === 'VodContentContainer' ? 0 : val; //check later  | the idea is that if by default foc ind is -1 to set it to 0 or more
-    this._focusedIndex = val;
-    console.log('fokusirani indeeex', this._focusedIndex);
-    console.log('vertikalni stejt', verticalState);
-    //this._focusedIndex = val;
+
     this.fireAncestors('$verticalContainerIndexChange', val);
     this.fireAncestors('$updateVerticalState', verticalState);
+    this._focusedIndex = val;
     this._reCalibrateScroll(this._focusedIndex, val); //this fixes the problem when hovering first row from below
     //this._handleCarryFocus(this._focusedIndex, val);
   }
@@ -133,7 +130,11 @@ export default class VerticalContainer extends Lightning.Component {
           return this.handleDown();
         }
       } else if (event.deltaY < 0) {
-        return this.handleUp();
+        if (this._focusedIndex === 0) {
+          this.fireAncestors('$setStateOnScroll', 'Hero');
+        } else {
+          return this.handleUp();
+        }
       }
       console.log('skrolovanje');
     }
