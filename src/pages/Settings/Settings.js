@@ -9,6 +9,8 @@ import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
+import { parseTranslations } from '../../Services/HomePageService';
+import defTr from '../../../static/translations/en.json';
 
 const languagesData = [
   {
@@ -25,6 +27,7 @@ const languagesData = [
   },
 ];
 export default class Settings extends Lightning.Component {
+  _translations;
   _props = {
     lastId: 0,
     lastLanguage: 0,
@@ -73,6 +76,7 @@ export default class Settings extends Lightning.Component {
   }
 
   set props(props) {
+    this._translations = parseTranslations();
     this._props = { ...this._props, ...props };
   }
 
@@ -175,7 +179,7 @@ export default class Settings extends Lightning.Component {
                   h: 120,
                   w: 500,
                   text: {
-                    text: languageObject?.title,
+                    text: this._translations.signup_title || defTr.signup_title,
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,
@@ -186,7 +190,7 @@ export default class Settings extends Lightning.Component {
                   h: 300,
                   w: 650,
                   text: {
-                    text: languageObject?.text,
+                    text: this._translations.signup_description || defTr.signup_description,
                     fontFace: 'Montserrat-Regular',
                     fontSize: 25,
                     lineHeight: 30,
@@ -217,7 +221,7 @@ export default class Settings extends Lightning.Component {
                     marginTop: 10,
                   },
                   text: {
-                    text: languageObject?.scanText,
+                    text: this._translations.signup_scan || defTr.signup_scan,
                     fontFace: 'Montserrat-Bold',
                     fontSize: 25,
                     lineHeight: 30,
@@ -236,7 +240,7 @@ export default class Settings extends Lightning.Component {
         const parsedMovies = parseVodUserContentData({
           data: {
             // railTitle: 'Continue Watching',
-            railTitle: Language.translate('continueWatching'),
+            railTitle: this._translations.continue_watching || defTr.continue_watching,
             entry: recentlyWatched.data.recently_watched,
           },
           itemsPerRow: recentlyWatched.data.recently_watched.length,
@@ -247,7 +251,7 @@ export default class Settings extends Lightning.Component {
         const parsedFavorites = parseVodUserContentData({
           data: {
             // railTitle: 'Favorites',
-            railTitle: Language.translate('favorites'),
+            railTitle: this._translations.favorites || defTr.favorites,
             entry: favorites.data.favorites,
           },
           itemsPerRow: favorites.data.favorites.length,
@@ -268,7 +272,7 @@ export default class Settings extends Lightning.Component {
                 w: 1310,
                 text: {
                   // text: languageObject?.loggedInText,
-                  text: languageObject?.loggedInText,
+                  text: this._translations.logged_in_message || defTr.logged_in_message,
                   fontFace: 'Montserrat-Bold',
                   fontSize: 30,
                   lineHeight: 35,
@@ -359,7 +363,7 @@ export default class Settings extends Lightning.Component {
         tabInfoData: {
           id: 1,
           // title: 'Continue Watching',
-          title: Language.translate('continueWatching'),
+          title: this._translations.continue_watching || defTr.continue_watching,
         },
         w: 250,
         h: 100,
@@ -370,7 +374,7 @@ export default class Settings extends Lightning.Component {
         tabInfoData: {
           id: 2,
           // title: 'Favorites',
-          title: Language.translate('favorites'),
+          title: this._translations.favorites || defTr.favorites,
         },
         w: 250,
         h: 100,
@@ -381,7 +385,7 @@ export default class Settings extends Lightning.Component {
         tabInfoData: {
           id: 3,
           // title: 'Logout',
-          title: Language.translate('logout'),
+          title: this._translations.logout || defTr.logout,
         },
         w: 250,
         h: 100,
@@ -482,7 +486,7 @@ export default class Settings extends Lightning.Component {
               w: 1310,
               text: {
                 // text: languageObject?.loggedInText,
-                text: languageObject?.loggedInText,
+                text: this._translations.logged_in_message || defTr.logged_in_message,
                 fontFace: 'Montserrat-Bold',
                 fontSize: 30,
                 lineHeight: 35,

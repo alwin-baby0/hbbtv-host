@@ -4,13 +4,17 @@ import { Colors, Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
+import { parseTranslations } from '../../../../Services/HomePageService';
+import defTR from '../../../../../static/translations/en.json';
+
+const translations = parseTranslations();
 
 const menuItems = [
-  { id: 0, label: 'home', route: 'home', icon: '' },
-  { id: 1, label: 'movies', route: 'vod/movies', icon: '' },
-  { id: 2, label: 'series', route: 'vod/series', icon: '' },
-  { id: 3, label: 'sports', route: 'vod/sports', icon: '' },
-  { id: 4, label: 'live-tv', route: 'live', icon: '' },
+  { id: 0, label: translations.home || defTR.home, route: 'home', icon: '' },
+  { id: 1, label: translations.movies || defTR.movies, route: 'vod/movies', icon: '' },
+  { id: 2, label: translations.series || defTR.series, route: 'vod/series', icon: '' },
+  { id: 3, label: translations.sport || defTR.sport, route: 'vod/sports', icon: '' },
+  { id: 4, label: translations.live_tv || defTR.live_tv, route: 'live', icon: '' },
   { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
   // { id: 6, label: 'settings', route: 'settings', icon: 'images/navbar/settings.svg' },
   { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
