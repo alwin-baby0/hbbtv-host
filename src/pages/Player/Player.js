@@ -1219,7 +1219,11 @@ export default class Player extends lng.Component {
     // eventTrackPayload('video_start', this._params.videoId);
 
     this._showWrapper();
-    VideoPlayer.play();
+
+    if (!this._props.isAdVisible) {
+      VideoPlayer.play();
+    }
+
     this._Controls.Items.children[pausedItemId]._Icon.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
     });
@@ -1231,7 +1235,10 @@ export default class Player extends lng.Component {
     eventTrackPayload('video_pause', this._params.videoId);
 
     this._showWrapper();
-    VideoPlayer.pause();
+
+    if (!this._props.isAdVisible) {
+      VideoPlayer.pause();
+    }
 
     // console.log('pausiran video', this._params.videoId, 'video', VideoPlayer.currentTime);
     // console.log('duzina videa', parseFloat(VideoPlayer.duration));
@@ -1396,17 +1403,20 @@ export default class Player extends lng.Component {
   }
   _handleMediaPlay() {
     // console.log('MediaPlay ');
-    this._showWrapper(); // Show the UI elements when video starts playing
-    if (!this._props.isAdVisible) {
-      VideoPlayer.play();
-    }
+    // this._showWrapper(); // Show the UI elements when video starts playing
+    // if (!this._props.isAdVisible) {
+    //   VideoPlayer.play();
+    // }
+
+    this.$playVideo();
   }
   _handleMediaPause() {
     // console.log('MediaPause ');
-    this._showWrapper(); // Show the UI elements when video starts playing
-    if (!this._props.isAdVisible) {
-      VideoPlayer.pause();
-    }
+    // this._showWrapper(); // Show the UI elements when video starts playing
+    // if (!this._props.isAdVisible) {
+    //   VideoPlayer.pause();
+    // }
+    this.$pauseVideo();
   }
   _handleMediaStop() {
     // console.log('MediaStop ');
