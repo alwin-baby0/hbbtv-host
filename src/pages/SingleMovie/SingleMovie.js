@@ -76,8 +76,8 @@ export default class SingleMovie extends Lightning.Component {
             h: 720,
             flex: { direction: 'column' },
             Title: {
-              w: 445,
-              h: 35,
+              w: 700,
+              h: 40,
               text: {
                 text: '',
                 fontSize: 32,

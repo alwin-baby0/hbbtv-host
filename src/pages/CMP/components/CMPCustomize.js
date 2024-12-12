@@ -15,7 +15,7 @@ export default class CMPCustomize extends Lightning.Component {
         y: 225,
         flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
         Title: {
-          w: 450,
+          w: 1000,
           h: 50,
           text: {
             text: 'We value you privacy',
