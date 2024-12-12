@@ -1217,7 +1217,7 @@ export default class Player extends lng.Component {
     const { pausedItemId } = this._props;
 
     // eventTrackPayload('video_start', this._params.videoId);
-
+    this._setState('Controls');
     this._showWrapper();
     this.patch({
       Subtitles: undefined,
@@ -1236,7 +1236,7 @@ export default class Player extends lng.Component {
     const { pausedItemId } = this._props;
 
     eventTrackPayload('video_pause', this._params.videoId);
-
+    this._setState('Controls');
     this._showWrapper();
     this.patch({
       Subtitles: undefined,
@@ -1268,6 +1268,7 @@ export default class Player extends lng.Component {
   }
 
   $startStopVideo(isStopped) {
+    this._setState('Controls');
     this._showWrapper();
     if (this.tag('Wrapper').visible) {
       VideoPlayer.pause();
@@ -1380,6 +1381,7 @@ export default class Player extends lng.Component {
     VideoPlayer.playPause();
 
     // Show the UI elements when toggling play/pause
+    this._setState('Controls');
     this._showWrapper();
     this.patch({
       Subtitles: undefined,
@@ -1401,6 +1403,7 @@ export default class Player extends lng.Component {
 
   _handleMediaRewind() {
     // console.log('MediaRewind ');
+    this._setState('Controls');
     this._showWrapper(); // Show the UI elements when video starts playing
     this.patch({
       Subtitles: undefined,
@@ -1410,6 +1413,7 @@ export default class Player extends lng.Component {
   }
   _handleMediaFastForward() {
     // console.log('MediaFastForward ');
+    this._setState('Controls');
     this._showWrapper(); // Show the UI elements when video starts playing
     this.patch({
       Subtitles: undefined,
