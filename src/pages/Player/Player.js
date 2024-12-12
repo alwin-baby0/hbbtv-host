@@ -1219,6 +1219,9 @@ export default class Player extends lng.Component {
     // eventTrackPayload('video_start', this._params.videoId);
 
     this._showWrapper();
+    this.patch({
+      Subtitles: undefined,
+    });
 
     if (!this._props.isAdVisible) {
       VideoPlayer.play();
@@ -1235,6 +1238,9 @@ export default class Player extends lng.Component {
     eventTrackPayload('video_pause', this._params.videoId);
 
     this._showWrapper();
+    this.patch({
+      Subtitles: undefined,
+    });
 
     if (!this._props.isAdVisible) {
       VideoPlayer.pause();
@@ -1375,6 +1381,9 @@ export default class Player extends lng.Component {
 
     // Show the UI elements when toggling play/pause
     this._showWrapper();
+    this.patch({
+      Subtitles: undefined,
+    });
 
     // Update the icon based on the current state
     if (isCurrentlyPlaying) {
@@ -1393,12 +1402,18 @@ export default class Player extends lng.Component {
   _handleMediaRewind() {
     // console.log('MediaRewind ');
     this._showWrapper(); // Show the UI elements when video starts playing
+    this.patch({
+      Subtitles: undefined,
+    });
     this._skipVideo(-10);
     VideoPlayer.play();
   }
   _handleMediaFastForward() {
     // console.log('MediaFastForward ');
     this._showWrapper(); // Show the UI elements when video starts playing
+    this.patch({
+      Subtitles: undefined,
+    });
     this._skipVideo(10);
   }
   _handleMediaPlay() {
@@ -1420,6 +1435,9 @@ export default class Player extends lng.Component {
   }
   _handleMediaStop() {
     // console.log('MediaStop ');
+    this.patch({
+      Subtitles: undefined,
+    });
     Router.back();
     VideoPlayer.close();
   }
