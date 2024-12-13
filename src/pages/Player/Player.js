@@ -227,6 +227,7 @@ export default class Player extends lng.Component {
           flex: { direction: 'row', alignItems: 'center' },
           Controls: {
             type: HorizontalContainer,
+            collision: true,
             h: 100,
             w: 1690,
             flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
@@ -338,6 +339,7 @@ export default class Player extends lng.Component {
 
     const formattedItems = itemComponents.map((data) => ({
       type: PlayerButtons,
+      collision: true,
       props: {
         buttonInfo: data,
       },
@@ -419,6 +421,7 @@ export default class Player extends lng.Component {
         Back: {
           x: 115,
           type: PlayerButtons,
+          collision: true,
           props: {
             buttonInfo: {
               label: 'back',
@@ -433,6 +436,7 @@ export default class Player extends lng.Component {
         SubtitlesButton: {
           x: 1715,
           type: PlayerButtons,
+          collision: true,
           props: {
             buttonInfo: {
               label: 'subtitles',
@@ -1179,8 +1183,7 @@ export default class Player extends lng.Component {
     Router.back();
   }
 
-  _handleBack(e) {
-    e.preventDefault();
+  handleBackHelper() {
     if (localStorage.getItem('userData')) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._params.seriesID) {
@@ -1194,6 +1197,21 @@ export default class Player extends lng.Component {
           CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
         }
       }
+    }
+  }
+
+  _handleBack(e) {
+    e.preventDefault();
+    this.handleBackHelper();
+
+    this.closeVideoPlayer();
+  }
+
+  $exitVideoFromBackClick() {
+    this._showWrapper();
+
+    if (this.tag('Wrapper').visible) {
+      this.handleBackHelper();
     }
 
     this.closeVideoPlayer();

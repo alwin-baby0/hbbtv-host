@@ -380,6 +380,11 @@ export default class LiveTV extends Lightning.Component {
     return this.tag('Channels');
   }
 
+  $updateVerticalState(nextState) {
+    console.log('nextState', nextState);
+    this._setState(nextState);
+  }
+
   static _states() {
     return [
       class Channels extends this {

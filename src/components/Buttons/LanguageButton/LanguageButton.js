@@ -8,6 +8,7 @@ export default class LanguageButton extends Lightning.Component {
   static _template() {
     return {
       Column: {
+        collision: true,
         flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
         w: 1045,
         h: 85,
@@ -93,6 +94,20 @@ export default class LanguageButton extends Lightning.Component {
     this.tag('Column').patch({
       color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
     });
+  }
+
+  _handleHover() {
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    localStorage.setItem('languageCode', this._props.languageInfo);
+    Router.navigate('home');
+    window.location.reload();
   }
 
   _getFocused() {}

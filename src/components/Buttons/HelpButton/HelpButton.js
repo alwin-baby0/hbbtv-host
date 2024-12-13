@@ -110,6 +110,23 @@ export default class PageItem extends Lightning.Component {
 
   _getFocused() {}
 
+  _handleHover() {
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    let newPage;
+    newPage = getSinglePage(this._pageInfoData.id);
+
+    let pageId = this._pageInfoData.id;
+    this.fireAncestors('$changeDescription', newPage, pageId);
+    this.fireAncestors('$setFocus', this._pageIndex);
+  }
+
   static _states() {
     return [];
   }

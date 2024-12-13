@@ -6,6 +6,7 @@ const fetchPages = (page) => {
   return getPages().then(({ data }) => {
     const items = data.entry.map((pageInfo, index) => ({
       type: HelpButton,
+      collision: true,
       pageInfoData: pageInfo,
       w: 250,
       h: 100,

@@ -51,8 +51,9 @@ export default class Settings extends Lightning.Component {
         h: 300,
         w: 1720,
         Column: {
-          h: 300,
-          w: 1720,
+          collision: true,
+          h: 400,
+          w: 300,
           type: VerticalContainer,
         },
       },
@@ -88,6 +89,10 @@ export default class Settings extends Lightning.Component {
   _disable() {
     CMPService.clearPollingInterval();
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
+  }
+
+  $setStateOnHover(nextState) {
+    this._setState(nextState);
   }
 
   $setFocus(id) {
@@ -309,6 +314,7 @@ export default class Settings extends Lightning.Component {
 
       this.tag('Content').patch({
         RecentlyWatched: {
+          collision: true,
           type: VerticalContainer,
           w: 1310,
           h: 920,
@@ -330,6 +336,7 @@ export default class Settings extends Lightning.Component {
 
       this.tag('Content').patch({
         Favorites: {
+          collision: true,
           type: VerticalContainer,
           w: 1310,
           h: 920,
