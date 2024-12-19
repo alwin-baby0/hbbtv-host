@@ -143,7 +143,7 @@ export default class LanguageSettings extends Lightning.Component {
           w: 1310,
           h: 920,
           Title: {
-            w: 450,
+            w: 1000,
             h: 50,
             text: {
               // text: 'We value you privacy',

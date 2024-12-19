@@ -1235,8 +1235,11 @@ export default class Player extends lng.Component {
     const { pausedItemId } = this._props;
 
     // eventTrackPayload('video_start', this._params.videoId);
-
+    this._setState('Controls');
     this._showWrapper();
+    this.patch({
+      Subtitles: undefined,
+    });
 
     if (!this._props.isAdVisible) {
       VideoPlayer.play();
@@ -1251,8 +1254,11 @@ export default class Player extends lng.Component {
     const { pausedItemId } = this._props;
 
     eventTrackPayload('video_pause', this._params.videoId);
-
+    this._setState('Controls');
     this._showWrapper();
+    this.patch({
+      Subtitles: undefined,
+    });
 
     if (!this._props.isAdVisible) {
       VideoPlayer.pause();
@@ -1280,6 +1286,7 @@ export default class Player extends lng.Component {
   }
 
   $startStopVideo(isStopped) {
+    this._setState('Controls');
     this._showWrapper();
     if (this.tag('Wrapper').visible) {
       VideoPlayer.pause();
@@ -1392,7 +1399,11 @@ export default class Player extends lng.Component {
     VideoPlayer.playPause();
 
     // Show the UI elements when toggling play/pause
+    this._setState('Controls');
     this._showWrapper();
+    this.patch({
+      Subtitles: undefined,
+    });
 
     // Update the icon based on the current state
     if (isCurrentlyPlaying) {
@@ -1410,13 +1421,21 @@ export default class Player extends lng.Component {
 
   _handleMediaRewind() {
     // console.log('MediaRewind ');
+    this._setState('Controls');
     this._showWrapper(); // Show the UI elements when video starts playing
+    this.patch({
+      Subtitles: undefined,
+    });
     this._skipVideo(-10);
     VideoPlayer.play();
   }
   _handleMediaFastForward() {
     // console.log('MediaFastForward ');
+    this._setState('Controls');
     this._showWrapper(); // Show the UI elements when video starts playing
+    this.patch({
+      Subtitles: undefined,
+    });
     this._skipVideo(10);
   }
   _handleMediaPlay() {
@@ -1438,6 +1457,9 @@ export default class Player extends lng.Component {
   }
   _handleMediaStop() {
     // console.log('MediaStop ');
+    this.patch({
+      Subtitles: undefined,
+    });
     Router.back();
     VideoPlayer.close();
   }

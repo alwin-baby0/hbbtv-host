@@ -1,30 +1,26 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import { List } from '@lightningjs/ui';
 import { Key } from './components/Key';
+import { Row } from '@lightningjs/ui-components';
+import colors from '../../../../reskin/colors.json';
 
 export default class Dialog extends Lightning.Component {
   static _template() {
     return {
-      zIndex: 9,
       w: 1920,
       h: 1080,
+      zIndex: 9,
       rect: true,
-      color: Colors('#686868').alpha(1).get(),
+      color: Colors(colors.background).get(),
       Background: {
         x: 610,
-        y: 300,
+        y: 160,
         w: 700,
         h: 480,
         rtt: true,
         shader: { type: Lightning.shaders.RoundedRectangle, radius: 22 },
         Logo: {
-          x: 125,
           y: 50,
-          // texture: Lightning.Tools.getSvgTexture(Utils.asset(`/images/logo.svg`), 438, 68),
-          // w: 438,
-          // h: 68,
-          // src: Utils.asset('images/splash-screen.png'),
-          // src: Utils.asset('/images/error-dialog-logo.png'),
         },
         FastBlur: {
           w: 700,
@@ -43,9 +39,9 @@ export default class Dialog extends Lightning.Component {
         w: 700,
         h: 480,
         Labels: {
-          w: 660,
           x: 350,
           y: 220,
+          w: 660,
           mountX: 0.5,
           mountY: 1,
           flex: { direction: 'column' },
@@ -60,7 +56,6 @@ export default class Dialog extends Lightning.Component {
             w: 750,
             color: Colors('#FAFAFA').alpha(1).get(),
             text: {
-              fontFace: 'Montserrat-Medium',
               text: this.bindProp('message'),
               wordWrap: true,
               fontSize: 38,
@@ -69,12 +64,18 @@ export default class Dialog extends Lightning.Component {
           },
         },
         Buttons: {
-          type: List,
+          flex: { justifyContent: 'center' },
+          collision: true,
+          type: Row,
           mountX: 0.5,
-          y: 320,
           x: 300,
+          y: 320,
           w: 400,
-          spacing: 120,
+          scrollIndex: 10,
+          style: {
+            itemSpacing: 220,
+          },
+          // spacing: 120,
           autoResize: true,
           direction: 'row',
           signals: { onItemsRepositioned: true },
@@ -91,25 +92,24 @@ export default class Dialog extends Lightning.Component {
     });
   }
 
-  _firstEnable() {
-    this._setState('DialogButtons');
-  }
-
   _handleKey() {
     return true;
   }
 
   _handleEnter() {
-    const index = this.tag('Buttons').index;
+    const index = this.tag('Buttons').selectedIndex;
     const current = this._actions[index];
     if (!!(current && current.action && current.action.call && current.action.apply)) {
       current.action.call();
     }
   }
 
-  _handleBack(e) {
-    e.preventDefault();
-    this.close();
+  _handleHover() {
+    return false;
+  }
+
+  $BtnClicked() {
+    this._handleEnter();
   }
 
   open({ header = '', message = '', actions = [] }) {
@@ -128,8 +128,15 @@ export default class Dialog extends Lightning.Component {
       message: message,
       Wrapper: {
         Buttons: {
-          items: actions.map((action) => {
-            return { type: Key, w: 170, h: 80, data: { label: action.label } };
+          items: actions.map((action, index) => {
+            return {
+              type: Key,
+              index: index,
+              collision: true,
+              w: 170,
+              h: 80,
+              data: { label: action.label },
+            };
           }),
         },
       },
@@ -138,19 +145,24 @@ export default class Dialog extends Lightning.Component {
     this.setSmooth('alpha', 1);
   }
 
-  close() {
-    this.tag('Buttons').clear();
+  $setFocus(index) {
+    this.tag('Buttons').selectedIndex = index;
+  }
+
+  _handleBack(e) {
+    e.preventDefault();
+    // this.tag('Buttons').clear();
     this.setSmooth('alpha', 0);
     Router.focusPage();
   }
 
-  static _states() {
-    return [
-      class DialogButtons extends this {
-        _getFocused() {
-          return this.tag('Buttons');
-        }
-      },
-    ];
+  close() {
+    // this.tag('Buttons').clear();
+    this.setSmooth('alpha', 0);
+    Router.focusPage();
+  }
+
+  _getFocused() {
+    return this.tag('Buttons');
   }
 }
