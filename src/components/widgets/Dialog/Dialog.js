@@ -1,5 +1,4 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
-import { List } from '@lightningjs/ui';
 import { Key } from './components/Key';
 import { Row } from '@lightningjs/ui-components';
 import colors from '../../../../reskin/colors.json';
@@ -7,14 +6,15 @@ import colors from '../../../../reskin/colors.json';
 export default class Dialog extends Lightning.Component {
   static _template() {
     return {
+      zIndex: 200,
       w: 1920,
       h: 1080,
-      zIndex: 9,
+      collision: true,
       rect: true,
       color: Colors(colors.background).get(),
       Background: {
         x: 610,
-        y: 160,
+        y: 300,
         w: 700,
         h: 480,
         rtt: true,
@@ -35,13 +35,14 @@ export default class Dialog extends Lightning.Component {
       },
       Wrapper: {
         x: 610,
-        y: 300,
+        // y: 300,
+        y: 260,
         w: 700,
         h: 480,
         Labels: {
+          w: 660,
           x: 350,
           y: 220,
-          w: 660,
           mountX: 0.5,
           mountY: 1,
           flex: { direction: 'column' },
@@ -52,8 +53,8 @@ export default class Dialog extends Lightning.Component {
           Message: {
             mountX: 0.5,
             x: (w) => w / 2,
-            y: 50,
-            w: 750,
+            y: 25,
+            w: 1920,
             color: Colors('#FAFAFA').alpha(1).get(),
             text: {
               text: this.bindProp('message'),
@@ -64,26 +65,21 @@ export default class Dialog extends Lightning.Component {
           },
         },
         Buttons: {
-          flex: { justifyContent: 'center' },
           collision: true,
+          zIndex: 300,
           type: Row,
           mountX: 0.5,
-          x: 300,
-          y: 320,
+          y: 300,
+          x: 265,
           w: 400,
-          scrollIndex: 10,
-          style: {
-            itemSpacing: 220,
-          },
-          // spacing: 120,
+          neverScroll: true,
+          style: { itemSpacing: 100 },
           autoResize: true,
-          direction: 'row',
           signals: { onItemsRepositioned: true },
         },
       },
     };
   }
-
   _init() {
     this.transition('alpha').on('finish', () => {
       if (this.alpha === 0) {
@@ -91,11 +87,10 @@ export default class Dialog extends Lightning.Component {
       }
     });
   }
-
   _handleKey() {
     return true;
   }
-
+  _handleClick() {}
   _handleEnter() {
     const index = this.tag('Buttons').selectedIndex;
     const current = this._actions[index];
@@ -103,15 +98,27 @@ export default class Dialog extends Lightning.Component {
       current.action.call();
     }
   }
-
+  set actions(val) {
+    this._actions = val;
+  }
+  set message(val) {
+    this._message = val;
+  }
+  // _handleHover() {
+  //   console.log('hovered');
+  // }
+  $handleEnter() {
+    this._handleEnter();
+  }
+  $setIndex(index) {
+    this.tag('Buttons').selectedIndex = index;
+  }
   _handleHover() {
     return false;
   }
-
   $BtnClicked() {
     this._handleEnter();
   }
-
   open({ header = '', message = '', actions = [] }) {
     Router.focusWidget('Dialog');
     if (actions.length === 0) {
@@ -133,9 +140,12 @@ export default class Dialog extends Lightning.Component {
               type: Key,
               index: index,
               collision: true,
-              w: 170,
+              w: 235,
               h: 80,
               data: { label: action.label },
+              index,
+              collision: true,
+              zIndex: 200,
             };
           }),
         },
@@ -143,17 +153,34 @@ export default class Dialog extends Lightning.Component {
     });
     this.visible = true;
     this.setSmooth('alpha', 1);
+    this._setState('Buttons');
   }
-
-  $setFocus(index) {
-    this.tag('Buttons').selectedIndex = index;
-  }
-
-  _handleBack(e) {
-    e.preventDefault();
-    // this.tag('Buttons').clear();
+  close() {
     this.setSmooth('alpha', 0);
     Router.focusPage();
+  }
+  focus() {
+    this.tag('Buttons').selectedIndex = 1000;
+    setTimeout(() => {
+      this.tag('Buttons').selectedIndex = 0;
+      this._setState('Buttons');
+    }, 10);
+  }
+  $handleBack() {
+    this.setSmooth('alpha', 0);
+    Router.focusPage();
+  }
+  _handleBack() {
+    this.$handleBack();
+  }
+  static _states() {
+    return [
+      class Buttons extends this {
+        _getFocused() {
+          return this.tag('Buttons');
+        }
+      },
+    ];
   }
 
   close() {
@@ -161,8 +188,10 @@ export default class Dialog extends Lightning.Component {
     this.setSmooth('alpha', 0);
     Router.focusPage();
   }
-
   _getFocused() {
     return this.tag('Buttons');
+  }
+  $setFocus(index) {
+    this.tag('Buttons').selectedIndex = index;
   }
 }
