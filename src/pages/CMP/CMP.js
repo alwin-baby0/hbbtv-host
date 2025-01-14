@@ -1,4 +1,4 @@
-import { Lightning } from '@lightningjs/sdk';
+import { Lightning, Router } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 
 export default class CMP extends Lightning.Component {
@@ -47,5 +47,14 @@ export default class CMP extends Lightning.Component {
 
   _getFocused() {
     return this._Buttons;
+  }
+
+  _disable() {
+    console.log('called disable life event from cmp');
+    // Router.setHistory([]);
+  }
+
+  _handleBack() {
+    this.fireAncestors('$appClose');
   }
 }
