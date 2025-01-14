@@ -47,6 +47,7 @@ export default class Home extends Lightning.Component {
   }
 
   _active() {
+    console.log('Router.getHistory: ', Router.getHistory());
     if (this._getState() === 'Items') {
       setTimeout(() => {
         this.fireAncestors('$setNavbarVisibility', false);
@@ -88,7 +89,7 @@ export default class Home extends Lightning.Component {
 
   _handleBack(e) {
     e.preventDefault();
-    if (Router.getHistory().length > 1) {
+    if (Router.getHistory().length > 0) {
       Router.back();
     } else {
       this.fireAncestors('$appClose');
