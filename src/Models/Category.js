@@ -11,6 +11,7 @@ export const CATEGORY_TYPES = {
   VIDEO: 'video',
   COLLECTION: 'collection',
   EVENT: 'event',
+  LIVESTREAM: 'livestream',
 };
 
 class Category {

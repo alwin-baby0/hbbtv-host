@@ -1,4 +1,4 @@
-import { Router } from '@lightningjs/sdk';
+import { Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { RAIL_TYPES } from '.';
 import { imageSizes } from '../../Models/utils';
@@ -11,6 +11,7 @@ import HeroRailItem from '../../components/RailItems/HeroRailItems';
 import { CATEGORY_TYPES } from '../../Models/Category';
 import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 import BannerRailItem from '../../components/RailItems/BannerRailItem';
+import { loader, unloader } from '../../Components/Player/HLS';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -149,6 +150,19 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
             }
             case CATEGORY_TYPES.COLLECTION: {
               Router.navigate(`collection-details/${railItem.id}`);
+              break;
+            }
+            case CATEGORY_TYPES.LIVESTREAM: {
+              console.log('railItem 123', railItem);
+
+              Router.navigate('player', {
+                videoUrl: railItem.url,
+                duration: 0,
+                videoType: 'Stream now',
+                //duration: railItem.duration,
+                // videoId: null,
+                //'https://video-solutions-ag-wedotvtruestories-1-us.ohlscdn.wurl.tv/playlist.m3u8?app_bundle=wedotv.video-solutions.ag&app_name=wedotv&app_store_url=https%3A%2F%2Fwedotv.com&url=https%3A%2F%2Fwedotv.com&channel_name=wedotv+True+Stories&content_custom_1_param=wedotv+True+Stories'
+              });
               break;
             }
             default:
