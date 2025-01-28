@@ -17,6 +17,7 @@ export default class CategoryPickerItem extends Lightning.Component {
           fontSize: 20,
           lineHeight: 25,
           fontFace: 'Montserrat-Medium',
+          // wordWrapWidth: 150,
         },
       },
     };
@@ -39,12 +40,18 @@ export default class CategoryPickerItem extends Lightning.Component {
       },
     });
     this._Title.patch({
-      h: title.length > 13 ? 48 : 24,
+      h: 24,
+      // w: 180,
       text: {
-        maxLines: title.length > 13 ? 2 : 1,
-        wordWrapWidth: 150,
+        textAlign: title.length < 15 ? 'center' : 'left',
+        maxLines: title.length > 15 ? 2 : 1,
+        wordWrapWidth: 180,
         text: title.toUpperCase(),
+        fontSize: 20,
+        lineHeight: 25,
         textColor: Colors(colors.focus).get(),
+        textOverflow: 'ellipsis',
+        wordWrap: false,
       },
     });
   }
@@ -67,14 +74,18 @@ export default class CategoryPickerItem extends Lightning.Component {
         Colors(colors.focus).get()
       ),
       Title: {
-        h: title.length > 13 ? 48 : 24,
+        h: 24,
+        w: 180,
         text: {
-          maxLines: title.length > 13 ? 2 : 1,
-          wordWrapWidth: 150,
+          textAlign: title.length < 15 ? 'center' : 'left',
+          maxLines: title.length > 15 ? 2 : 1,
+          wordWrapWidth: 180,
           text: title.toUpperCase(),
           fontSize: 20,
           lineHeight: 25,
           textColor: Colors(colors.unfocus).get(),
+          textOverflow: 'ellipsis',
+          wordWrap: false,
         },
       },
     });
@@ -90,14 +101,18 @@ export default class CategoryPickerItem extends Lightning.Component {
     this.patch({
       texture: Lightning.Tools.getRoundRect(w, h),
       Title: {
-        h: title.length > 13 ? 48 : 24,
+        h: 24,
+        w: 180,
         text: {
-          maxLines: title.length > 13 ? 2 : 1,
-          wordWrapWidth: 150,
+          textAlign: title.length < 15 ? 'center' : 'left',
+          maxLines: title.length > 15 ? 2 : 1,
+          //wordWrapWidth: 130,
           text: title.toUpperCase(),
           fontSize: 20,
           lineHeight: 25,
           textColor: Colors(colors.focus).get(),
+          textOverflow: 'ellipsis',
+          wordWrap: false,
         },
       },
     });

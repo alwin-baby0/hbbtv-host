@@ -91,18 +91,18 @@ export default class Gallery extends Lightning.Component {
     VideoPlayer.unloader(unloader);
   }
 
-  _disable() {
+  /* _disable() {
     VideoPlayer.loader(null);
     VideoPlayer.unloader(null);
     VideoPlayer.clear();
-  }
+  } */
 
-  _unfocus() {
+  /* _unfocus() {
     this._HeroSection._BackgroundImage.visible = true;
     VideoPlayer.loader(null);
     VideoPlayer.unloader(null);
     VideoPlayer.clear();
-  }
+  } */
 
   $playTrailer(trailer) {
     this._HeroSection._BackgroundImage.visible = false;

@@ -24,14 +24,16 @@ export default class Splash extends Lightning.Component {
       // console.log('Checking time:', currentTimeInMS);
 
       if (currentTimeInMS > expireTimeInMS) {
-        Router.navigate('cmp');
+        Router.navigate('cmp', false);
       } else {
-        Router.navigate('home');
+        Router.navigate('home', false);
       }
     }, 3000);
   }
 
   _disable() {
+    console.log('called disable life event from splash');
+    // Router.setHistory([]);
     if (this._intervalID) {
       clearInterval(this._intervalID);
       this._intervalID = null;
