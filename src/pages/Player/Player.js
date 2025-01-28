@@ -1194,6 +1194,10 @@ export default class Player extends lng.Component {
 
   _handleBack(e) {
     e.preventDefault();
+
+    console.log('routerHistory in player back: ', Router.getHistory());
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    Router.setHistory([...router]);
     if (localStorage.getItem('userData')) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._params.seriesID) {

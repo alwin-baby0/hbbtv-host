@@ -12,6 +12,7 @@ import { eventTrackPayload } from './utils/device';
 import { API_KEY } from './config';
 import defTr from '../static/translations/en.json';
 import { parseTranslations } from './Services/HomePageService';
+import { DetailService } from './Services/DetailService';
 let wasOffline = false; // Variable to track previous internet status
 
 let keys = [
@@ -145,6 +146,21 @@ export default class App extends Router.App {
     this.checkNetworkStatusOnline(navigator.onLine);
   }
 
+  async getMovie(id) {
+    const movie = await DetailService.getMovie(id);
+
+    console.log('Movie in app: ', movie);
+
+    if (movie) {
+      Router.navigate('player', {
+        videoUrl: movie.url,
+        duration: movie.duration,
+        videoId: id,
+        ssai: movie.ssai,
+      });
+    }
+  }
+
   _init() {
     const deviceId = localStorage.getItem('serialNumber');
     console.log('init');
@@ -165,6 +181,30 @@ export default class App extends Router.App {
     setTimeout(() => {
       eventTrackPayload('launch_app', deviceId);
     }, 2000);
+
+    // const url = new URL(window.location.href);
+    // const path = url.pathname; // e.g., /movie/123
+    // const params = new URLSearchParams(url.search);
+
+    // console.log('Deep link path:', path);
+    // console.log('Deep link params:', url.search);
+    // console.log('has type: ', params.has('type'));
+
+    // if (params.has('type') && params.has('id')) {
+    //   const type = params.get('type');
+    //   const id = params.get('id');
+    //   console.log('type: ', type);
+    //   console.log('id: ', id);
+
+    //   let routerHistory = Router.getHistory();
+    //   console.log('routerHistory: ', routerHistory);
+
+    //   Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
+
+    //   console.log('routerHistory updated: ', Router.getHistory());
+
+    //   this.getMovie(id);
+    // }
   }
 
   $punchHole() {

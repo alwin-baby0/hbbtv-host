@@ -267,6 +267,8 @@ export default class SingleSeries extends Lightning.Component {
 
   _handleBack(e) {
     e.preventDefault();
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    Router.setHistory([...router]);
     Router.back();
     this._setState('HeroSection');
   }

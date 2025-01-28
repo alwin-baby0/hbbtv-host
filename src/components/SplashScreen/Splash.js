@@ -1,5 +1,6 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { CMPService } from '../../Services/CMPService';
+import { DetailService } from '../../Services/DetailService';
 
 export default class Splash extends Lightning.Component {
   static _template() {
@@ -14,16 +15,70 @@ export default class Splash extends Lightning.Component {
     };
   }
 
+  async getMovie(id) {
+    const movie = await DetailService.getMovie(id);
+
+    console.log('Movie in app: ', movie);
+
+    if (movie) {
+      Router.navigate('player', {
+        videoUrl: movie.url,
+        duration: movie.duration,
+        videoId: id,
+        ssai: movie.ssai,
+      });
+    }
+  }
+
+  // async getSeries(id) {
+  //   // const movie = await DetailService.getSerie(id);
+
+  //   console.log('Series in app: ', movie);
+
+  //   // if (movie) {
+  //   Router.navigate(`series-details/${id}`);
+  //   // }
+  // }
+
   async _active() {
     await CMPService.initialFetch();
     const buttonsResult = CMPService.cmpData;
     const expireTimeInMS = buttonsResult.consent?.expire.timestamp;
 
+    const url = new URL(window.location.href);
+    const path = url.pathname; // e.g., /movie/123
+    const params = new URLSearchParams(url.search);
+
+    console.log('Deep link path:', path);
+    console.log('Deep link params:', url.search);
+    console.log('has type: ', params.has('type'));
+
     setTimeout(() => {
       const currentTimeInMS = Math.floor(Date.now() / 1000);
       // console.log('Checking time:', currentTimeInMS);
 
-      if (currentTimeInMS > expireTimeInMS) {
+      if (params.has('type') && params.has('id')) {
+        const type = params.get('type');
+        const id = params.get('id');
+        console.log('type: ', type);
+        console.log('id: ', id);
+
+        let routerHistory = Router.getHistory();
+        console.log('routerHistory: ', routerHistory);
+
+        if (type === 'movie') {
+          Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
+          this.getMovie(id);
+        } else if (type === 'series') {
+          Router.setHistory([{ hash: 'home' }]);
+          Router.navigate(`series-details/${id}`);
+          // this.getSeries(id);
+        }
+
+        // Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
+        // console.log('routerHistory updated: ', Router.getHistory());
+        // this.getMovie(id);
+      } else if (currentTimeInMS > expireTimeInMS) {
         Router.navigate('cmp', false);
       } else {
         Router.navigate('home', false);
