@@ -10,6 +10,8 @@ import Dialog from './components/widgets/Dialog/Dialog';
 import { getDevice } from './utils/device';
 import { eventTrackPayload } from './utils/device';
 import { API_KEY } from './config';
+import defTr from '../static/translations/en.json';
+import { parseTranslations } from './Services/HomePageService';
 let wasOffline = false; // Variable to track previous internet status
 
 let keys = [
@@ -151,6 +153,8 @@ export default class App extends Router.App {
     if (device === 'tizen') {
       tizen.tvinputdevice.registerKeyBatch(keys);
     }
+
+    this._translations = parseTranslations();
 
     this.loadExternalScript(`https://tracking.watch4.com/track.js?api_key=${API_KEY}`);
     // this.loadGAScript(
@@ -325,20 +329,17 @@ export default class App extends Router.App {
 
   $appClose() {
     const dialog = this.tag('Dialog');
-    const noResume = Language.translate('noResume');
-    const yesExit = Language.translate('yesExit');
-    console.log('NO RESUME:', noResume);
     dialog.open({
-      message: 'Are you sure you want to close the app?',
+      message: this._translations.exit_label || defTr.exit_label,
       actions: [
         {
-          label: noResume,
+          label: this._translations.no_resume || defTr.no_resume,
           action: () => {
             dialog.close();
           },
         },
         {
-          label: yesExit,
+          label: this._translations.yes_exit || defTr.yes_exit,
           action: () => {
             const device = getDevice();
             // Router navigation for "Yes, exit now"
