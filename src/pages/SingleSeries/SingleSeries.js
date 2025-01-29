@@ -75,7 +75,7 @@ export default class SingleSeries extends Lightning.Component {
       this._HeroSection._FavoriteButton.patch({
         props: {
           buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: this._translations.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+          buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
           width: 255,
         },
       });
@@ -103,7 +103,7 @@ export default class SingleSeries extends Lightning.Component {
       props: {
         width: 430,
         buttonLabel:
-          this._translations.watch_first_episode?.toUpperCase() ||
+          this._translations?.watch_first_episode?.toUpperCase() ||
           defTr.watch_first_episode.toUpperCase(),
       },
     });
@@ -125,7 +125,7 @@ export default class SingleSeries extends Lightning.Component {
                 props: {
                   buttonIcon: Utils.asset('icons/home/play.svg'),
                   buttonLabel:
-                    this._translations.continue_watching?.toUpperCase() ||
+                    this._translations?.continue_watching?.toUpperCase() ||
                     defTr.continue_watching.toUpperCase(),
                   width: 430,
                   callback: () => {
@@ -149,7 +149,7 @@ export default class SingleSeries extends Lightning.Component {
                 props: {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
                   buttonLabel:
-                    this._translations.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+                    this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
                   width: 255,
                   callback: () => {
                     this.addToFavorite();
@@ -181,7 +181,7 @@ export default class SingleSeries extends Lightning.Component {
                 props: {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
                   buttonLabel:
-                    this._translations.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+                    this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
                   width: 255,
                   callback: () => {
                     this.addToFavorite();

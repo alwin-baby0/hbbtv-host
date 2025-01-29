@@ -330,16 +330,16 @@ export default class App extends Router.App {
   $appClose() {
     const dialog = this.tag('Dialog');
     dialog.open({
-      message: this._translations.exit_label || defTr.exit_label,
+      message: this._translations?.exit_label || defTr.exit_label,
       actions: [
         {
-          label: this._translations.no_resume || defTr.no_resume,
+          label: this._translations?.no_resume || defTr.no_resume,
           action: () => {
             dialog.close();
           },
         },
         {
-          label: this._translations.yes_exit || defTr.yes_exit,
+          label: this._translations?.yes_exit || defTr.yes_exit,
           action: () => {
             const device = getDevice();
             // Router navigation for "Yes, exit now"

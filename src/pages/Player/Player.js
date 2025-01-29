@@ -334,7 +334,7 @@ export default class Player extends lng.Component {
       .tag('Message')
       .patch({
         text: {
-          text: this._translations.no_stream || defTr.no_stream,
+          text: this._translations?.no_stream || defTr.no_stream,
         },
       });
 

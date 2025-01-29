@@ -233,7 +233,7 @@ export default class SingleMovie extends Lightning.Component {
       {
         icon: 'icons/home/play.svg',
         buttonName: 'WATCH NOW',
-        buttonLabel: this._translations.watch_now?.toUpperCase() || defTr.watch_now.toUpperCase(),
+        buttonLabel: this._translations?.watch_now?.toUpperCase() || defTr.watch_now.toUpperCase(),
         // width: 285,
         width: 405,
         stream: 'url',
@@ -241,7 +241,7 @@ export default class SingleMovie extends Lightning.Component {
       {
         icon: 'icons/movies/trailer-icon.svg',
         buttonName: 'TRAILER',
-        buttonLabel: this._translations.trailer?.toUpperCase() || defTr.trailer.toUpperCase(),
+        buttonLabel: this._translations?.trailer?.toUpperCase() || defTr.trailer.toUpperCase(),
         width: 405,
         stream: 'trailerSrc',
       },
@@ -255,7 +255,7 @@ export default class SingleMovie extends Lightning.Component {
       filteredButtons.push({
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonName: 'FAVORITE',
-        buttonLabel: this._translations.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+        buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
         width: 255,
       });
 
@@ -264,7 +264,7 @@ export default class SingleMovie extends Lightning.Component {
           icon: 'icons/home/play.svg',
           buttonName: 'CONTINUE WATCHING',
           buttonLabel:
-            this._translations.continue_watching?.toUpperCase() ||
+            this._translations?.continue_watching?.toUpperCase() ||
             defTr.continue_watching.toUpperCase(),
           width: 405,
         });
