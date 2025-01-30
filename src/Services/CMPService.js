@@ -157,7 +157,7 @@ class CMPService extends FetchingService {
     });
   };
 
-  getFavorites = async () => {
+  getFavorites = async (page, limit = 8) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
     const timestamp = new Date().getTime();
@@ -171,6 +171,8 @@ class CMPService extends FetchingService {
       },
       params: {
         cachebuster: timestamp,
+        page,
+        limit,
       },
     });
   };
@@ -222,7 +224,7 @@ class CMPService extends FetchingService {
     });
   };
 
-  getRecentlyWatched = async () => {
+  getRecentlyWatched = async (page, limit = 8) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
     const timestamp = new Date().getTime();
@@ -236,6 +238,8 @@ class CMPService extends FetchingService {
       },
       params: {
         cachebuster: timestamp,
+        page,
+        limit,
       },
     });
   };
