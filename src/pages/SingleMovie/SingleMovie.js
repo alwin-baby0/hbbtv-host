@@ -256,7 +256,7 @@ export default class SingleMovie extends Lightning.Component {
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonName: 'FAVORITE',
         buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
-        width: 255,
+        width: 317,
       });
 
       last_position &&
@@ -435,7 +435,7 @@ export default class SingleMovie extends Lightning.Component {
         props: {
           buttonIcon: Utils.asset(is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
           buttonLabel: 'FAVORITE',
-          width: 255,
+          width: 317,
         },
       });
     } catch (e) {

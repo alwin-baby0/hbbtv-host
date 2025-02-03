@@ -76,7 +76,7 @@ export default class SingleSeries extends Lightning.Component {
         props: {
           buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
           buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
-          width: 255,
+          width: 317,
         },
       });
     } catch (e) {
@@ -150,7 +150,7 @@ export default class SingleSeries extends Lightning.Component {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
                   buttonLabel:
                     this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
-                  width: 255,
+                  width: 317,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -182,7 +182,7 @@ export default class SingleSeries extends Lightning.Component {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
                   buttonLabel:
                     this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
-                  width: 255,
+                  width: 317,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -233,7 +233,7 @@ export default class SingleSeries extends Lightning.Component {
     //   props: {
     //     buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
     //     buttonLabel: 'FAVORITE',
-    //     width: 255,
+    //     width: 317,
     //     callback: () => {
     //       this.addToFavorite();
     //     },
@@ -266,6 +266,9 @@ export default class SingleSeries extends Lightning.Component {
   _getFocused() {}
 
   _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
     e.preventDefault();
     Router.back();
     this._setState('HeroSection');
