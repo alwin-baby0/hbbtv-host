@@ -20,7 +20,7 @@ export default class GalleryItem extends Lightning.Component {
         zIndex: 2,
         x: 110,
         y: 110,
-        w: 700,
+        w: 740,
         // h: 460,
         // h: 600,
         flex: { direction: 'column' },

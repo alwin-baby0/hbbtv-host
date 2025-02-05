@@ -88,6 +88,9 @@ export default class Home extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
     e.preventDefault();
     if (Router.getHistory().length > 0) {
       Router.back();
