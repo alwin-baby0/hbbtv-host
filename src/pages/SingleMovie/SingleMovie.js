@@ -256,7 +256,7 @@ export default class SingleMovie extends Lightning.Component {
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonName: 'FAVORITE',
         buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
-        width: 317,
+        width: 335,
       });
 
       last_position &&
