@@ -30,16 +30,6 @@ export default class Splash extends Lightning.Component {
     }
   }
 
-  // async getSeries(id) {
-  //   // const movie = await DetailService.getSerie(id);
-
-  //   console.log('Series in app: ', movie);
-
-  //   // if (movie) {
-  //   Router.navigate(`series-details/${id}`);
-  //   // }
-  // }
-
   async _active() {
     await CMPService.initialFetch();
     const buttonsResult = CMPService.cmpData;
@@ -60,8 +50,10 @@ export default class Splash extends Lightning.Component {
       if (params.has('type') && params.has('id')) {
         const type = params.get('type');
         const id = params.get('id');
+        const seriesId = params.get('seriesId');
         console.log('type: ', type);
         console.log('id: ', id);
+        console.log('seriesId', seriesId);
 
         let routerHistory = Router.getHistory();
         console.log('routerHistory: ', routerHistory);
@@ -69,15 +61,10 @@ export default class Splash extends Lightning.Component {
         if (type === 'movie') {
           Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
           this.getMovie(id);
-        } else if (type === 'series') {
-          Router.setHistory([{ hash: 'home' }]);
-          Router.navigate(`series-details/${id}`);
-          // this.getSeries(id);
+        } else if (type === 'episode') {
+          Router.setHistory([{ hash: 'home' }, { hash: `series-details/${seriesId}` }]);
+          this.getMovie(id);
         }
-
-        // Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
-        // console.log('routerHistory updated: ', Router.getHistory());
-        // this.getMovie(id);
       } else if (currentTimeInMS > expireTimeInMS) {
         Router.navigate('cmp', false);
       } else {
