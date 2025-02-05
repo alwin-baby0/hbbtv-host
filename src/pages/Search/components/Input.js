@@ -86,7 +86,7 @@ export default class InputField extends lng.Component {
 
     this._Placeholder.patch({
       Text: {
-        text: this._translations.search || defTr.search,
+        text: this._translations?.search || defTr.search,
       },
     });
     this._setState('Input');

@@ -75,8 +75,8 @@ export default class SingleSeries extends Lightning.Component {
       this._HeroSection._FavoriteButton.patch({
         props: {
           buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: this._translations.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
-          width: 255,
+          buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+          width: 360,
         },
       });
     } catch (e) {
@@ -103,7 +103,7 @@ export default class SingleSeries extends Lightning.Component {
       props: {
         width: 430,
         buttonLabel:
-          this._translations.watch_first_episode?.toUpperCase() ||
+          this._translations?.watch_first_episode?.toUpperCase() ||
           defTr.watch_first_episode.toUpperCase(),
       },
     });
@@ -125,9 +125,9 @@ export default class SingleSeries extends Lightning.Component {
                 props: {
                   buttonIcon: Utils.asset('icons/home/play.svg'),
                   buttonLabel:
-                    this._translations.continue_watching?.toUpperCase() ||
+                    this._translations?.continue_watching?.toUpperCase() ||
                     defTr.continue_watching.toUpperCase(),
-                  width: 430,
+                  width: 440,
                   callback: () => {
                     Router.navigate('player', {
                       videoUrl: url,
@@ -149,8 +149,8 @@ export default class SingleSeries extends Lightning.Component {
                 props: {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
                   buttonLabel:
-                    this._translations.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
-                  width: 255,
+                    this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+                  width: 360,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -181,8 +181,8 @@ export default class SingleSeries extends Lightning.Component {
                 props: {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
                   buttonLabel:
-                    this._translations.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
-                  width: 255,
+                    this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+                  width: 360,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -233,7 +233,7 @@ export default class SingleSeries extends Lightning.Component {
     //   props: {
     //     buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
     //     buttonLabel: 'FAVORITE',
-    //     width: 255,
+    //     width: 360,
     //     callback: () => {
     //       this.addToFavorite();
     //     },
@@ -266,6 +266,9 @@ export default class SingleSeries extends Lightning.Component {
   _getFocused() {}
 
   _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
     e.preventDefault();
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
     Router.setHistory([...router]);

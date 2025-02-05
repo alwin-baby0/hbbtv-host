@@ -76,7 +76,7 @@ export default class SingleLiveEvent extends Lightning.Component {
           },
           props: {
             buttonLabel:
-              this._translations.watch_now?.toUpperCase() || defTr.watch_now.toUpperCase(),
+              this._translations?.watch_now?.toUpperCase() || defTr.watch_now.toUpperCase(),
             buttonIcon: Utils.asset('icons/home/play.svg'),
           },
         },
@@ -105,7 +105,7 @@ export default class SingleLiveEvent extends Lightning.Component {
           props: {
             width: 400,
             buttonLabel:
-              this._translations.coming_soon?.toUpperCase() || defTr.coming_soon.toUpperCase(),
+              this._translations?.coming_soon?.toUpperCase() || defTr.coming_soon.toUpperCase(),
             enabled: false,
           },
         },

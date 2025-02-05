@@ -139,7 +139,7 @@ export default async function (page) {
   const tabButtons = [
     {
       id: 0,
-      title: translations.my_account || defTr.my_account,
+      title: translations?.my_account || defTr.my_account,
     },
   ];
 
@@ -147,15 +147,15 @@ export default async function (page) {
     tabButtons.push(
       {
         id: 1,
-        title: translations.continue_watching || defTr.continue_watching,
+        title: translations?.continue_watching || defTr.continue_watching,
       },
       {
         id: 2,
-        title: translations.favorites || defTr.favorites,
+        title: translations?.favorites || defTr.favorites,
       },
       {
         id: 3,
-        title: translations.logout || defTr.logout,
+        title: translations?.logout || defTr.logout,
       }
     );
   }

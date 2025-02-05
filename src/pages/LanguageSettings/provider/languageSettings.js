@@ -32,7 +32,7 @@ export default async function (page) {
   const tabButtons = [
     {
       id: 0,
-      title: translations.cookie_preferences || defTr.cookie_preferences,
+      title: translations?.cookie_preferences || defTr.cookie_preferences,
     },
     {
       id: 1,
