@@ -33,6 +33,10 @@ export default class Settings extends Lightning.Component {
     lastLanguage: 0,
     deviceData: undefined,
     isLoggedIn: false,
+    favoritesPage: 1,
+    hasMoreFav: true,
+    recentlyWPage: 1,
+    hasMoreRcw: true,
   };
 
   constructor(context) {
@@ -75,6 +79,18 @@ export default class Settings extends Lightning.Component {
     return this.tag('Column');
   }
 
+  get _Content() {
+    return this.tag('Content');
+  }
+
+  get _Favorites() {
+    return this.tag('Content.Favorites');
+  }
+
+  get _RecentlyWatched() {
+    return this.tag('Content.RecentlyWatched');
+  }
+
   set props(props) {
     this._translations = parseTranslations();
     this._props = { ...this._props, ...props };
@@ -92,6 +108,10 @@ export default class Settings extends Lightning.Component {
   _disable() {
     CMPService.clearPollingInterval();
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
+    this._props.hasMoreFav = true;
+    this._props.favoritesPage = 1;
+    this._props.hasMoreRcw = true;
+    this._props.recentlyWPage = 1;
   }
 
   $setFocus(id) {
@@ -128,6 +148,52 @@ export default class Settings extends Lightning.Component {
     }
     // Update the lastId variable with the current ID
     this._props.lastLanguage = id;
+  }
+
+  async $verticalContainerIndexChange(index, refName) {
+    if (refName === 'RecentlyWatched') {
+      if (index === this._RecentlyWatched.Items.children.length - 1 && this._props.hasMoreRcw) {
+        this._props.recentlyWPage++;
+        const rcw = await CMPService.getRecentlyWatched(this._props.recentlyWPage);
+
+        if (rcw.data.recently_watched.length < 8) {
+          this._props.hasMoreRcw = false;
+        }
+
+        const parsedMovies = parseVodMoviesPageData({
+          data: {
+            entry: rcw.data.recently_watched,
+          },
+          itemsPerRow: 4,
+        });
+
+        const rails = constructRails(parsedMovies);
+
+        this._RecentlyWatched._appendItems(rails);
+      }
+    }
+
+    if (refName === 'Favorites') {
+      if (index === this._Favorites.Items.children.length - 1 && this._props.hasMoreFav) {
+        this._props.favoritesPage++;
+        const favorrrr = await CMPService.getFavorites(this._props.favoritesPage);
+
+        if (favorrrr.data.favorites.length < 8) {
+          this._props.hasMoreFav = false;
+        }
+
+        const parsedMovies = parseVodMoviesPageData({
+          data: {
+            entry: favorrrr.data.favorites,
+          },
+          itemsPerRow: 4,
+        });
+
+        const rails = constructRails(parsedMovies);
+
+        this._Favorites._appendItems(rails);
+      }
+    }
   }
 
   async $changeContent(contentId) {
@@ -300,6 +366,8 @@ export default class Settings extends Lightning.Component {
         });
       }
     } else if (contentId === 1) {
+      this._props.hasMoreRcw = true;
+      this._props.recentlyWPage = 1;
       const recentlyWatched = await CMPService.getRecentlyWatched();
       console.log(recentlyWatched.data.recently_watched);
       console.log(recentlyWatched.data.recently_watched.length);
@@ -323,6 +391,8 @@ export default class Settings extends Lightning.Component {
         },
       });
     } else if (contentId === 2) {
+      this._props.hasMoreFav = true;
+      this._props.favoritesPage = 1;
       const favorites = await CMPService.getFavorites();
       console.log(favorites.data.favorites);
       const parsedMovies = parseVodMoviesPageData({
