@@ -59,11 +59,19 @@ export default class Splash extends Lightning.Component {
         console.log('routerHistory: ', routerHistory);
 
         if (type === 'movie') {
-          Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
-          this.getMovie(id);
+          /* Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
+          this.getMovie(id); */
+          Router.setHistory([{ hash: 'home' }]);
+          Router.navigate(`movie-details/${id}`);
+        } else if (type === 'series') {
+          Router.setHistory([{ hash: 'home' }]);
+          Router.navigate(`series-details/${id}`);
         } else if (type === 'episode') {
-          Router.setHistory([{ hash: 'home' }, { hash: `series-details/${seriesId}` }]);
-          this.getMovie(id);
+          /*  Router.setHistory([{ hash: 'home' }, { hash: `series-details/${seriesId}` }]);
+          this.getMovie(id); */
+          Router.setHistory([{ hash: 'home' }]);
+          history.replaceState(null, '', window.location.pathname);
+          Router.navigate(`series-details/${seriesId}?episodeId=${id}&isDeeplinkEpisode=true`);
         }
       } else if (currentTimeInMS > expireTimeInMS) {
         Router.navigate('cmp', false);

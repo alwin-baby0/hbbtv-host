@@ -60,12 +60,12 @@ export default class SingleSeries extends Lightning.Component {
     console.log(favoriteees); */
 
     try {
-      const { favorited } = this._props;
-      const { id } = this._props.galleryItem;
+      const { favorited, seriesId } = this._props;
+      //const { id } = this._props.galleryItem;
       if (favorited) {
-        await CMPService.removeFromFavorites(id);
+        await CMPService.removeFromFavorites(seriesId);
       } else {
-        await CMPService.addToFavorites(id, 'series');
+        await CMPService.addToFavorites(seriesId, 'series');
       }
 
       this._props.favorited = !this._props.favorited;
@@ -86,8 +86,11 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   _active() {
-    const { galleryItem, favorited, duration, firstEpisodeVideoId } = this._props;
-    const { url, id, lastPlayedId, position } = galleryItem;
+    const { galleryItem, favorited, duration, firstEpisodeVideoId, isDeeplinkEpisode, position } =
+      this._props;
+    const { url, id, lastPlayedId } = galleryItem;
+
+    console.log('this prrops, ', this._props);
 
     eventTrackPayload('view_serie', id);
     this._HeroSection.patch({
@@ -96,6 +99,7 @@ export default class SingleSeries extends Lightning.Component {
         // height: 650,
         height: 620,
         firstEpisodeVideoId: firstEpisodeVideoId,
+        isDeeplinkEpisode: isDeeplinkEpisode,
       },
     });
 

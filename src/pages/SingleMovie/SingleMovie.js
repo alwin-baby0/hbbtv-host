@@ -411,6 +411,16 @@ export default class SingleMovie extends Lightning.Component {
     eventTrackPayload('view_movie', movieId);
   }
 
+  _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
+    e.preventDefault();
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    Router.setHistory([...router]);
+    Router.back();
+  }
+
   async addToFavorite() {
     try {
       const { movie, movieTrailerUrl } = this._props;

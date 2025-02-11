@@ -3,6 +3,16 @@ import { CMPService } from '../../../Services/CMPService';
 import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId }) {
+  let galleryItemSingleEp;
+
+  const hash = window.location.hash;
+  const queryString = hash.split('?')[1];
+  const pathname = Object.fromEntries(new URLSearchParams(queryString));
+
+  if (pathname.isDeeplinkEpisode) {
+    galleryItemSingleEp = await DetailService.getMovie(pathname.episodeId);
+  }
+
   const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
 
   let favorited = false;
@@ -16,11 +26,14 @@ export default async function (page, { seriesId }) {
 
   page.props = {
     sectionTitle: seasons[0]?.sectionTitle,
-    galleryItem: galleryItem,
+    galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
     favorited,
     duration: seasons.duration,
+    position: galleryItem.position,
     // firstEpisodeVideoId: +seasons[0].items[0].id,
     firstEpisodeVideoId: seasons ? firstEpisodeId : undefined,
+    seriesId: galleryItem.id,
+    isDeeplinkEpisode: pathname.isDeeplinkEpisode,
   };
 
   page._Column.props = {
