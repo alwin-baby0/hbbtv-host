@@ -110,8 +110,16 @@ export default class GalleryItem extends Lightning.Component {
   }
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem, height, enabled, firstEpisodeVideoId, fallbackImage, isDeeplinkEpisode } =
-      this._props;
+    const {
+      galleryItem,
+      height,
+      enabled,
+      firstEpisodeVideoId,
+      firstEpisodeUrl,
+      fallbackImage,
+      isDeeplinkEpisode,
+      seriesId,
+    } = this._props;
 
     const { id, title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
@@ -191,12 +199,12 @@ export default class GalleryItem extends Lightning.Component {
         if (enabled) {
           callback = () => {
             Router.navigate('player', {
-              videoUrl: url,
-              videoId: firstEpisodeVideoId ? firstEpisodeVideoId : null,
+              videoUrl: isDeeplinkEpisode ? url : firstEpisodeUrl,
+              videoId: isDeeplinkEpisode ? id : firstEpisodeVideoId,
               duration: duration,
               // videoType: videoType,
               videoType: 'series',
-              seriesID: id,
+              seriesID: seriesId,
             });
           };
 

@@ -23,6 +23,7 @@ export default async function (page, { seriesId }) {
     favorited = response.data.favorites.some((element) => element.id === seriesId);
   }
   let firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
+  let firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;
 
   page.props = {
     sectionTitle: seasons[0]?.sectionTitle,
@@ -30,8 +31,11 @@ export default async function (page, { seriesId }) {
     favorited,
     duration: seasons.duration,
     position: galleryItem.position,
+    lastPlayedId: galleryItem.lastPlayedId,
+    lastPlayedUrl: galleryItem.url,
     // firstEpisodeVideoId: +seasons[0].items[0].id,
     firstEpisodeVideoId: seasons ? firstEpisodeId : undefined,
+    firstEpisodeUrl: firstEpisodeUrl,
     seriesId: galleryItem.id,
     isDeeplinkEpisode: pathname.isDeeplinkEpisode,
   };

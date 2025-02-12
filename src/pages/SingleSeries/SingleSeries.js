@@ -86,9 +86,19 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   _active() {
-    const { galleryItem, favorited, duration, firstEpisodeVideoId, isDeeplinkEpisode, position } =
-      this._props;
-    const { url, id, lastPlayedId } = galleryItem;
+    const {
+      galleryItem,
+      favorited,
+      duration,
+      firstEpisodeVideoId,
+      firstEpisodeUrl,
+      isDeeplinkEpisode,
+      position,
+      seriesId,
+      lastPlayedId,
+      lastPlayedUrl,
+    } = this._props;
+    const { url, id } = galleryItem;
 
     console.log('this prrops, ', this._props);
 
@@ -99,7 +109,9 @@ export default class SingleSeries extends Lightning.Component {
         // height: 650,
         height: 620,
         firstEpisodeVideoId: firstEpisodeVideoId,
+        firstEpisodeUrl: firstEpisodeUrl,
         isDeeplinkEpisode: isDeeplinkEpisode,
+        seriesId: seriesId,
       },
     });
 
@@ -134,10 +146,10 @@ export default class SingleSeries extends Lightning.Component {
                   width: 440,
                   callback: () => {
                     Router.navigate('player', {
-                      videoUrl: url,
+                      videoUrl: lastPlayedUrl,
                       duration: duration,
                       videoType: 'series',
-                      seriesID: id,
+                      seriesID: seriesId,
                       videoId: lastPlayedId,
                       continueTime: position,
                     });
