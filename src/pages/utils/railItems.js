@@ -12,6 +12,7 @@ import { CATEGORY_TYPES } from '../../Models/Category';
 import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 import BannerRailItem from '../../components/RailItems/BannerRailItem';
 import { loader, unloader } from '../../Components/Player/HLS';
+import { getSingleChannel } from '../../api/live';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -123,7 +124,7 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
       props: {
         index,
         imageSrc: railItem.getLandscapePoster(imageSizes.L).src,
-        callback: () => {
+        callback: async () => {
           switch (railItem.type.value) {
             case CATEGORY_TYPES.MOVIE: {
               Router.navigate(`movie-details/${railItem.id}`);
@@ -155,8 +156,11 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
             case CATEGORY_TYPES.LIVESTREAM: {
               console.log('railItem 123', railItem);
 
+              const epgProgram = await getSingleChannel(`channel_${railItem.id}`);
+              const epgStreamSrc = epgProgram.items[0].content.src;
+
               Router.navigate('player', {
-                videoUrl: railItem.url,
+                videoUrl: epgStreamSrc,
                 duration: 0,
                 videoType: 'Stream now',
                 //duration: railItem.duration,
@@ -200,6 +204,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
           duration: railItem.duration,
           videoType: 'series',
           seriesID: railItem.seriesId,
+          ssai: railItem.ssai,
         });
       },
     },

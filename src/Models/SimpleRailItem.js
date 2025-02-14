@@ -13,6 +13,11 @@ class SimpleRailItem {
       this.episodeSeriesID = extensions?.series_id;
       this.duration = extensions?.duration;
     }
+
+    if (extensions?.ssai) {
+      this.ssai = extensions.ssai;
+    }
+
     switch (this.type) {
       case 'movie':
       case 'video':

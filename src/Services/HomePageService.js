@@ -232,7 +232,7 @@ class HomePageService extends FetchingService {
       method: 'GET',
     }); */
 
-    const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode}/app`);
+    const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode || 'en'}/app`);
     const res = prevodi.json();
     return res;
   };
