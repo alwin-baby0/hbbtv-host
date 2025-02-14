@@ -80,6 +80,9 @@ class CMPService extends FetchingService {
       headers: {
         'X-DEVICE-ID': deviceCode,
       },
+      params: {
+        device_id: deviceCode,
+      },
     });
 
     return response;
@@ -95,6 +98,7 @@ class CMPService extends FetchingService {
       },
       params: {
         choice: choicePick,
+        device_id: deviceCode,
       },
     });
   };
