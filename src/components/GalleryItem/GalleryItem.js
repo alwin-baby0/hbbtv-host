@@ -119,6 +119,7 @@ export default class GalleryItem extends Lightning.Component {
       fallbackImage,
       isDeeplinkEpisode,
       seriesId,
+      ssai,
     } = this._props;
 
     const { id, title, summary, description, buttonLabel, url, duration, videoType, venue } =
@@ -205,6 +206,7 @@ export default class GalleryItem extends Lightning.Component {
               // videoType: videoType,
               videoType: 'series',
               seriesID: seriesId,
+              ssai: ssai,
             });
           };
 

@@ -4,6 +4,8 @@ import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId }) {
   let galleryItemSingleEp;
+  let galleryItemLastPlayedEp;
+  let ssaiLastEp;
 
   const hash = window.location.hash;
   const queryString = hash.split('?')[1];
@@ -25,6 +27,19 @@ export default async function (page, { seriesId }) {
   let firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
   let firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;
 
+  if (galleryItem?.lastPlayedId) {
+    galleryItemLastPlayedEp = await DetailService.getMovie(galleryItem?.lastPlayedId);
+    ssaiLastEp = galleryItemLastPlayedEp?.ssai;
+  }
+
+  let ssai;
+
+  if (galleryItemSingleEp) {
+    ssai = galleryItemSingleEp.ssai || undefined;
+  } else {
+    ssai = seasons ? seasons[0].items[0].ssai : undefined;
+  }
+
   page.props = {
     sectionTitle: seasons[0]?.sectionTitle,
     galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
@@ -38,6 +53,8 @@ export default async function (page, { seriesId }) {
     firstEpisodeUrl: firstEpisodeUrl,
     seriesId: galleryItem.id,
     isDeeplinkEpisode: pathname.isDeeplinkEpisode,
+    ssai: ssai,
+    ssaiLastEp: ssaiLastEp,
   };
 
   page._Column.props = {

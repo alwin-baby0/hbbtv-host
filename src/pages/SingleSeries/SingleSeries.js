@@ -97,6 +97,8 @@ export default class SingleSeries extends Lightning.Component {
       seriesId,
       lastPlayedId,
       lastPlayedUrl,
+      ssai,
+      ssaiLastEp,
     } = this._props;
     const { url, id } = galleryItem;
 
@@ -112,6 +114,7 @@ export default class SingleSeries extends Lightning.Component {
         firstEpisodeUrl: firstEpisodeUrl,
         isDeeplinkEpisode: isDeeplinkEpisode,
         seriesId: seriesId,
+        ssai,
       },
     });
 
@@ -152,6 +155,7 @@ export default class SingleSeries extends Lightning.Component {
                       seriesID: seriesId,
                       videoId: lastPlayedId,
                       continueTime: position,
+                      ssai: ssaiLastEp,
                     });
                   },
                 },
