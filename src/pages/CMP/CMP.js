@@ -1,5 +1,6 @@
 import { Lightning, Router } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import { CMPService } from '../../Services/CMPService';
 
 export default class CMP extends Lightning.Component {
   static _template() {
@@ -9,7 +10,7 @@ export default class CMP extends Lightning.Component {
         y: 225,
         flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
         Title: {
-          w: 450,
+          w: 1000,
           h: 50,
           text: {
             text: 'We value you privacy',
@@ -44,6 +45,24 @@ export default class CMP extends Lightning.Component {
 
   get _Buttons() {
     return this.tag('Buttons');
+  }
+
+  _enable() {
+    const cmpTitle = CMPService.cmpData?.title;
+    const cmpDescription = CMPService.cmpData?.description;
+
+    this.tag('Wrapper').patch({
+      Title: {
+        text: {
+          text: cmpTitle,
+        },
+      },
+      Description: {
+        text: {
+          text: cmpDescription,
+        },
+      },
+    });
   }
 
   _getFocused() {
