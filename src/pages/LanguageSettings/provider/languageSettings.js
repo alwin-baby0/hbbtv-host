@@ -1,5 +1,7 @@
+import { parseTranslations } from '../../../Services/HomePageService';
 import { LanguageService } from '../../../Services/LanguagesService';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
+import defTr from '../../../../static/translations/en.json';
 
 const languageArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
@@ -20,6 +22,7 @@ const languageArea = (page, tabButtons) => {
 };
 
 export default async function (page) {
+  const translations = parseTranslations();
   const languages = await LanguageService.getLanguages();
   // console.log(languages);
 
@@ -30,7 +33,7 @@ export default async function (page) {
   const tabButtons = [
     {
       id: 0,
-      title: 'Cookie Preferences',
+      title: translations?.cookie_preferences || defTr.cookie_preferences,
     },
     {
       id: 1,

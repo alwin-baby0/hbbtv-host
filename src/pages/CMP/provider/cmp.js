@@ -28,7 +28,7 @@ export default async function (page) {
           if (value.callback_url) {
             const chosenValue = value.label === 'Yes, I Agree' ? 1 : 0;
             await CMPService.selectCMPChoice(serialNumber, chosenValue);
-            await Router.navigate('home');
+            Router.navigate('home', false);
           } else {
             Router.navigate('cmp-customize', { options: value.options });
           }

@@ -4,10 +4,12 @@ import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import { CMPService } from '../../Services/CMPService';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import Route from '@lightningjs/sdk/src/Router/model/Route';
+import { parseTranslations } from '../../Services/HomePageService';
+import defTr from '../../../static/translations/en.json';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
+  _translations;
   static _template() {
     return {
       h: 1080,
@@ -54,6 +56,8 @@ export default class SingleSeries extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
+
+    this._translations = parseTranslations();
   }
 
   async addToFavorite() {
@@ -64,12 +68,12 @@ export default class SingleSeries extends Lightning.Component {
     console.log(favoriteees); */
 
     try {
-      const { favorited } = this._props;
-      const { id } = this._props.galleryItem;
+      const { favorited, seriesId } = this._props;
+      //const { id } = this._props.galleryItem;
       if (favorited) {
-        await CMPService.removeFromFavorites(id);
+        await CMPService.removeFromFavorites(seriesId);
       } else {
-        await CMPService.addToFavorites(id, 'series');
+        await CMPService.addToFavorites(seriesId, 'series');
       }
 
       this._props.favorited = !this._props.favorited;
@@ -79,8 +83,8 @@ export default class SingleSeries extends Lightning.Component {
       this._HeroSection._FavoriteButton.patch({
         props: {
           buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: 'FAVORITE',
-          width: 255,
+          buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+          width: 360,
         },
       });
     } catch (e) {
@@ -90,8 +94,23 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   _active() {
-    const { galleryItem, favorited, duration, firstEpisodeVideoId } = this._props;
-    const { url, id, lastPlayedId, position } = galleryItem;
+    const {
+      galleryItem,
+      favorited,
+      duration,
+      firstEpisodeVideoId,
+      firstEpisodeUrl,
+      isDeeplinkEpisode,
+      position,
+      seriesId,
+      lastPlayedId,
+      lastPlayedUrl,
+      ssai,
+      ssaiLastEp,
+    } = this._props;
+    const { url, id } = galleryItem;
+
+    console.log('this prrops, ', this._props);
 
     eventTrackPayload('view_serie', id);
     this._HeroSection.patch({
@@ -100,13 +119,19 @@ export default class SingleSeries extends Lightning.Component {
         // height: 650,
         height: 620,
         firstEpisodeVideoId: firstEpisodeVideoId,
+        firstEpisodeUrl: firstEpisodeUrl,
+        isDeeplinkEpisode: isDeeplinkEpisode,
+        seriesId: seriesId,
+        ssai,
       },
     });
 
     this._HeroSection._GalleryButton.patch({
       props: {
-        width: 400,
-        buttonLabel: 'WATCH FIRST EPISODE',
+        width: 430,
+        buttonLabel:
+          this._translations?.watch_first_episode?.toUpperCase() ||
+          defTr.watch_first_episode.toUpperCase(),
       },
     });
 
@@ -126,16 +151,19 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 props: {
                   buttonIcon: Utils.asset('icons/home/play.svg'),
-                  buttonLabel: 'CONTINUE WATCHING',
-                  width: 400,
+                  buttonLabel:
+                    this._translations?.continue_watching?.toUpperCase() ||
+                    defTr.continue_watching.toUpperCase(),
+                  width: 440,
                   callback: () => {
                     Router.navigate('player', {
-                      videoUrl: url,
+                      videoUrl: lastPlayedUrl,
                       duration: duration,
                       videoType: 'series',
-                      seriesID: id,
+                      seriesID: seriesId,
                       videoId: lastPlayedId,
                       continueTime: position,
+                      ssai: ssaiLastEp,
                     });
                   },
                 },
@@ -148,8 +176,9 @@ export default class SingleSeries extends Lightning.Component {
                 alpha: 1,
                 props: {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-                  buttonLabel: 'FAVORITE',
-                  width: 255,
+                  buttonLabel:
+                    this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+                  width: 360,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -179,8 +208,9 @@ export default class SingleSeries extends Lightning.Component {
                 alpha: 1,
                 props: {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-                  buttonLabel: 'FAVORITE',
-                  width: 255,
+                  buttonLabel:
+                    this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+                  width: 360,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -231,7 +261,7 @@ export default class SingleSeries extends Lightning.Component {
     //   props: {
     //     buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
     //     buttonLabel: 'FAVORITE',
-    //     width: 255,
+    //     width: 360,
     //     callback: () => {
     //       this.addToFavorite();
     //     },
@@ -269,7 +299,12 @@ export default class SingleSeries extends Lightning.Component {
   _getFocused() {}
 
   _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
     e.preventDefault();
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    Router.setHistory([...router]);
     Router.back();
     this._setState('HeroSection');
   }

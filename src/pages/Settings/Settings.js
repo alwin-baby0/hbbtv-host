@@ -9,6 +9,8 @@ import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
+import { parseTranslations } from '../../Services/HomePageService';
+import defTr from '../../../static/translations/en.json';
 
 const languagesData = [
   {
@@ -25,11 +27,16 @@ const languagesData = [
   },
 ];
 export default class Settings extends Lightning.Component {
+  _translations;
   _props = {
     lastId: 0,
     lastLanguage: 0,
     deviceData: undefined,
     isLoggedIn: false,
+    favoritesPage: 1,
+    hasMoreFav: true,
+    recentlyWPage: 1,
+    hasMoreRcw: true,
   };
 
   constructor(context) {
@@ -73,7 +80,20 @@ export default class Settings extends Lightning.Component {
     return this.tag('Column');
   }
 
+  get _Content() {
+    return this.tag('Content');
+  }
+
+  get _Favorites() {
+    return this.tag('Content.Favorites');
+  }
+
+  get _RecentlyWatched() {
+    return this.tag('Content.RecentlyWatched');
+  }
+
   set props(props) {
+    this._translations = parseTranslations();
     this._props = { ...this._props, ...props };
   }
 
@@ -89,6 +109,10 @@ export default class Settings extends Lightning.Component {
   _disable() {
     CMPService.clearPollingInterval();
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
+    this._props.hasMoreFav = true;
+    this._props.favoritesPage = 1;
+    this._props.hasMoreRcw = true;
+    this._props.recentlyWPage = 1;
   }
 
   $setStateOnHover(nextState) {
@@ -129,6 +153,52 @@ export default class Settings extends Lightning.Component {
     }
     // Update the lastId variable with the current ID
     this._props.lastLanguage = id;
+  }
+
+  async $verticalContainerIndexChange(index, refName) {
+    if (refName === 'RecentlyWatched') {
+      if (index === this._RecentlyWatched.Items.children.length - 1 && this._props.hasMoreRcw) {
+        this._props.recentlyWPage++;
+        const rcw = await CMPService.getRecentlyWatched(this._props.recentlyWPage);
+
+        if (rcw.data.recently_watched.length < 8) {
+          this._props.hasMoreRcw = false;
+        }
+
+        const parsedMovies = parseVodMoviesPageData({
+          data: {
+            entry: rcw.data.recently_watched,
+          },
+          itemsPerRow: 4,
+        });
+
+        const rails = constructRails(parsedMovies);
+
+        this._RecentlyWatched._appendItems(rails);
+      }
+    }
+
+    if (refName === 'Favorites') {
+      if (index === this._Favorites.Items.children.length - 1 && this._props.hasMoreFav) {
+        this._props.favoritesPage++;
+        const favorrrr = await CMPService.getFavorites(this._props.favoritesPage);
+
+        if (favorrrr.data.favorites.length < 8) {
+          this._props.hasMoreFav = false;
+        }
+
+        const parsedMovies = parseVodMoviesPageData({
+          data: {
+            entry: favorrrr.data.favorites,
+          },
+          itemsPerRow: 4,
+        });
+
+        const rails = constructRails(parsedMovies);
+
+        this._Favorites._appendItems(rails);
+      }
+    }
   }
 
   async $changeContent(contentId) {
@@ -180,7 +250,7 @@ export default class Settings extends Lightning.Component {
                   h: 120,
                   w: 500,
                   text: {
-                    text: languageObject?.title,
+                    text: this._translations?.signup_title || defTr.signup_title,
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,
@@ -191,7 +261,7 @@ export default class Settings extends Lightning.Component {
                   h: 300,
                   w: 650,
                   text: {
-                    text: languageObject?.text,
+                    text: this._translations?.signup_description || defTr.signup_description,
                     fontFace: 'Montserrat-Regular',
                     fontSize: 25,
                     lineHeight: 30,
@@ -222,7 +292,7 @@ export default class Settings extends Lightning.Component {
                     marginTop: 10,
                   },
                   text: {
-                    text: languageObject?.scanText,
+                    text: this._translations?.signup_scan || defTr.signup_scan,
                     fontFace: 'Montserrat-Bold',
                     fontSize: 25,
                     lineHeight: 30,
@@ -241,7 +311,7 @@ export default class Settings extends Lightning.Component {
         const parsedMovies = parseVodUserContentData({
           data: {
             // railTitle: 'Continue Watching',
-            railTitle: Language.translate('continueWatching'),
+            railTitle: this._translations?.continue_watching || defTr.continue_watching,
             entry: recentlyWatched.data.recently_watched,
           },
           itemsPerRow: recentlyWatched.data.recently_watched.length,
@@ -252,7 +322,7 @@ export default class Settings extends Lightning.Component {
         const parsedFavorites = parseVodUserContentData({
           data: {
             // railTitle: 'Favorites',
-            railTitle: Language.translate('favorites'),
+            railTitle: this._translations?.favorites || defTr.favorites,
             entry: favorites.data.favorites,
           },
           itemsPerRow: favorites.data.favorites.length,
@@ -273,7 +343,7 @@ export default class Settings extends Lightning.Component {
                 w: 1310,
                 text: {
                   // text: languageObject?.loggedInText,
-                  text: languageObject?.loggedInText,
+                  text: this._translations?.logged_in_message || defTr.logged_in_message,
                   fontFace: 'Montserrat-Bold',
                   fontSize: 30,
                   lineHeight: 35,
@@ -301,6 +371,8 @@ export default class Settings extends Lightning.Component {
         });
       }
     } else if (contentId === 1) {
+      this._props.hasMoreRcw = true;
+      this._props.recentlyWPage = 1;
       const recentlyWatched = await CMPService.getRecentlyWatched();
       console.log(recentlyWatched.data.recently_watched);
       console.log(recentlyWatched.data.recently_watched.length);
@@ -325,6 +397,8 @@ export default class Settings extends Lightning.Component {
         },
       });
     } else if (contentId === 2) {
+      this._props.hasMoreFav = true;
+      this._props.favoritesPage = 1;
       const favorites = await CMPService.getFavorites();
       console.log(favorites.data.favorites);
       const parsedMovies = parseVodMoviesPageData({
@@ -366,7 +440,7 @@ export default class Settings extends Lightning.Component {
         tabInfoData: {
           id: 1,
           // title: 'Continue Watching',
-          title: Language.translate('continueWatching'),
+          title: this._translations?.continue_watching || defTr.continue_watching,
         },
         w: 250,
         h: 100,
@@ -377,7 +451,7 @@ export default class Settings extends Lightning.Component {
         tabInfoData: {
           id: 2,
           // title: 'Favorites',
-          title: Language.translate('favorites'),
+          title: this._translations?.favorites || defTr.favorites,
         },
         w: 250,
         h: 100,
@@ -388,7 +462,7 @@ export default class Settings extends Lightning.Component {
         tabInfoData: {
           id: 3,
           // title: 'Logout',
-          title: Language.translate('logout'),
+          title: this._translations?.logout || defTr.logout,
         },
         w: 250,
         h: 100,
@@ -489,7 +563,7 @@ export default class Settings extends Lightning.Component {
               w: 1310,
               text: {
                 // text: languageObject?.loggedInText,
-                text: languageObject?.loggedInText,
+                text: this._translations?.logged_in_message || defTr.logged_in_message,
                 fontFace: 'Montserrat-Bold',
                 fontSize: 30,
                 lineHeight: 35,

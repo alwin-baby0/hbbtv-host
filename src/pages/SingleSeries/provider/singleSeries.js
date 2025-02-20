@@ -3,6 +3,18 @@ import { CMPService } from '../../../Services/CMPService';
 import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId }) {
+  let galleryItemSingleEp;
+  let galleryItemLastPlayedEp;
+  let ssaiLastEp;
+
+  const hash = window.location.hash;
+  const queryString = hash.split('?')[1];
+  const pathname = Object.fromEntries(new URLSearchParams(queryString));
+
+  if (pathname.isDeeplinkEpisode) {
+    galleryItemSingleEp = await DetailService.getMovie(pathname.episodeId);
+  }
+
   const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
 
   let favorited = false;
@@ -13,14 +25,36 @@ export default async function (page, { seriesId }) {
     favorited = response.data.favorites.some((element) => element.id === seriesId);
   }
   let firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
+  let firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;
+
+  if (galleryItem?.lastPlayedId) {
+    galleryItemLastPlayedEp = await DetailService.getMovie(galleryItem?.lastPlayedId);
+    ssaiLastEp = galleryItemLastPlayedEp?.ssai;
+  }
+
+  let ssai;
+
+  if (galleryItemSingleEp) {
+    ssai = galleryItemSingleEp.ssai || undefined;
+  } else {
+    ssai = seasons ? seasons[0].items[0].ssai : undefined;
+  }
 
   page.props = {
     sectionTitle: seasons[0]?.sectionTitle,
-    galleryItem: galleryItem,
+    galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
     favorited,
     duration: seasons.duration,
+    position: galleryItem.position,
+    lastPlayedId: galleryItem.lastPlayedId,
+    lastPlayedUrl: galleryItem.url,
     // firstEpisodeVideoId: +seasons[0].items[0].id,
     firstEpisodeVideoId: seasons ? firstEpisodeId : undefined,
+    firstEpisodeUrl: firstEpisodeUrl,
+    seriesId: galleryItem.id,
+    isDeeplinkEpisode: pathname.isDeeplinkEpisode,
+    ssai: ssai,
+    ssaiLastEp: ssaiLastEp,
   };
 
   page._Column.props = {
