@@ -20,7 +20,7 @@ export default class GalleryItem extends Lightning.Component {
         zIndex: 2,
         x: 110,
         y: 110,
-        w: 700,
+        w: 740,
         // h: 460,
         // h: 600,
         flex: { direction: 'column' },
@@ -110,7 +110,17 @@ export default class GalleryItem extends Lightning.Component {
   }
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { galleryItem, height, enabled, firstEpisodeVideoId, fallbackImage } = this._props;
+    const {
+      galleryItem,
+      height,
+      enabled,
+      firstEpisodeVideoId,
+      firstEpisodeUrl,
+      fallbackImage,
+      isDeeplinkEpisode,
+      seriesId,
+      ssai,
+    } = this._props;
 
     const { id, title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
@@ -146,13 +156,27 @@ export default class GalleryItem extends Lightning.Component {
       });
     }
 
+    console.log(galleryItem);
+
+    const bgImageSrc = () => {
+      let src;
+      if (isDeeplinkEpisode && galleryItem.getThumbnailImage(imageSizes.XL)?.src) {
+        src = galleryItem.getThumbnailImage(imageSizes.XL)?.src;
+        return src;
+      } else if (galleryItem.getLandscapePoster(imageSizes.XL)?.src) {
+        src = galleryItem.getLandscapePoster(imageSizes.XL)?.src;
+        return src;
+      } else if (fallbackImage) {
+        return fallbackImage;
+      } else return Utils.asset('images/gradient.png');
+    };
+
     this._BackgroundImage.patch({
       w: 1220,
       h: height,
       x: 700,
-      src: galleryItem.getLandscapePoster(imageSizes.XL)?.src
-        ? galleryItem.getLandscapePoster(imageSizes.XL).src
-        : fallbackImage || Utils.asset('images/gradient.png'),
+      src: bgImageSrc(),
+      //src: 'https://cdn-images.watch4.com/480/1/1672427.jpg',
     });
     this._GradientOverlay.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
@@ -176,12 +200,13 @@ export default class GalleryItem extends Lightning.Component {
         if (enabled) {
           callback = () => {
             Router.navigate('player', {
-              videoUrl: url,
-              videoId: firstEpisodeVideoId ? firstEpisodeVideoId : null,
+              videoUrl: isDeeplinkEpisode ? url : firstEpisodeUrl,
+              videoId: isDeeplinkEpisode ? id : firstEpisodeVideoId,
               duration: duration,
               // videoType: videoType,
               videoType: 'series',
-              seriesID: id,
+              seriesID: seriesId,
+              ssai: ssai,
             });
           };
 

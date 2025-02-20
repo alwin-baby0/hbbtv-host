@@ -10,7 +10,7 @@ export default async function (page, { eventId }) {
   await VodService.initialFetch();
 
   const singleItemCoverBg = VodService.contentStripes.items.find((item) => item.id === eventId);
-  const fallbackImage = singleItemCoverBg.getLandscapePoster(imageSizes.XL)?.src;
+  const fallbackImage = singleItemCoverBg?.getLandscapePoster(imageSizes.XL)?.src;
 
   console.log(fallbackImage);
 
