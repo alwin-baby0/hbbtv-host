@@ -11,8 +11,7 @@ import HeroRailItem from '../../components/RailItems/HeroRailItems';
 import { CATEGORY_TYPES } from '../../Models/Category';
 import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 import BannerRailItem from '../../components/RailItems/BannerRailItem';
-import { loader, unloader } from '../../Components/Player/HLS';
-import { getSingleChannel } from '../../api/live';
+import { EPGService } from '../../Services';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -156,7 +155,7 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
             case CATEGORY_TYPES.LIVESTREAM: {
               console.log('railItem 123', railItem);
 
-              const epgProgram = await getSingleChannel(`channel_${railItem.id}`);
+              const epgProgram = await EPGService.getSingleEPGChannel(`channel_${railItem.id}`);
               const epgStreamSrc = epgProgram.items[0].content.src;
 
               Router.navigate('player', {

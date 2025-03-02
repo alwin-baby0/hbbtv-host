@@ -1,18 +1,15 @@
-// App.js
-import { Colors, Router, Storage, Utils, VideoPlayer } from '@lightningjs/sdk';
-import colors from '../reskin/colors.json';
+import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
-import { Language } from '@lightningjs/sdk';
 import routes from './Pages/routes';
 import Navbar from './Components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
-import { getDevice } from './utils/device';
+import { getDeviceInfo, getDeviceType } from './utils/device';
 import { eventTrackPayload } from './utils/device';
 import { API_KEY } from './config';
 import defTr from '../static/translations/en.json';
-import { parseTranslations } from './Services/HomePageService';
-import { DetailService } from './Services/DetailService';
+import { parseTranslations, DetailService } from './Services';
+
 let wasOffline = false; // Variable to track previous internet status
 
 let keys = [
@@ -162,12 +159,12 @@ export default class App extends Router.App {
   }
 
   _init() {
-    const deviceId = localStorage.getItem('serialNumber');
-    console.log('init');
+    const deviceId = getDeviceInfo().serialNumber;
+    console.log('init', deviceId);
 
-    const device = getDevice();
+    const device = getDeviceType();
     if (device === 'tizen') {
-      tizen.tvinputdevice.registerKeyBatch(keys);
+      window.tizen.tvinputdevice.registerKeyBatch(keys);
     }
 
     this._translations = parseTranslations();

@@ -1,4 +1,3 @@
-// Player.js
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { Column, ProgressBar, Shadow } from '@lightningjs/ui-components';
 import { getPlayer, loader, unloader } from '../../Components/Player/HLS';
@@ -7,99 +6,11 @@ import colors from '../../../reskin/colors.json';
 import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import { CMPService } from '../../Services/CMPService';
+import { CMPService, parseTranslations } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
-import { parseTranslations } from '../../Services/HomePageService';
 import defTr from '../../../static/translations/en.json';
 let lastIndex = 0;
 let offsetTime = 0;
-
-const test = {
-  adcues: {
-    slots: [
-      {
-        slot: 'slot1',
-        total_duration: 30,
-        pods: [
-          {
-            pod: 'pod1',
-            ads: [
-              {
-                impression: 'https://springserve.com/vast/ad1',
-                cue: { from: '00:00:00', to: '00:00:15' },
-                skipping_allowed: false,
-              },
-              // {
-              //   impression: 'https://springserve.com/vast/ad2',
-              //   cue: { from: '00:00:15', to: '00:00:30' },
-              //   skipping_allowed: true,
-              // },
-            ],
-          },
-        ],
-      },
-      {
-        slot: 'slot2',
-        total_duration: 50,
-        pods: [
-          {
-            pod: 'pod2',
-            ads: [
-              {
-                impression: 'https://springserve.com/vast/ad3',
-                cue: { from: '00:10:00', to: '00:10:30' },
-                skipping_allowed: false,
-              },
-            ],
-          },
-          {
-            pod: 'pod3',
-            ads: [
-              {
-                impression: 'https://springserve.com/vast/ad4',
-                cue: { from: '00:30:00', to: '00:30:20' },
-                skipping_allowed: true,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        slot: 'slot3',
-        total_duration: 25,
-        pods: [
-          {
-            pod: 'pod4',
-            ads: [
-              {
-                impression: 'https://springserve.com/vast/ad5',
-                cue: { from: '01:00:00', to: '01:00:25' },
-                skipping_allowed: false,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        slot: 'slot4',
-        total_duration: 30,
-        pods: [
-          {
-            pod: 'pod5',
-            ads: [
-              {
-                impression: 'https://springserve.com/vast/ad6',
-                cue: { from: '02:00:00', to: '02:00:30' },
-                skipping_allowed: true,
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-};
 
 export default class Player extends lng.Component {
   _translations;
@@ -371,23 +282,23 @@ export default class Player extends lng.Component {
     this.tag('ProgressBar').patch({
       w:
         this._params.videoType === 'Stream now' ||
-        this._params.videoType === 'application/x-mpegURL'
+          this._params.videoType === 'application/x-mpegURL'
           ? 1550
           : 1400,
       x:
         this._params.videoType === 'Stream now' ||
-        this._params.videoType === 'application/x-mpegURL'
+          this._params.videoType === 'application/x-mpegURL'
           ? 0
           : 0,
       flexItem: {
         marginLeft:
           this._params.videoType === 'Stream now' ||
-          this._params.videoType === 'application/x-mpegURL'
+            this._params.videoType === 'application/x-mpegURL'
             ? 0
             : 20,
         marginRight:
           this._params.videoType === 'Stream now' ||
-          this._params.videoType === 'application/x-mpegURL'
+            this._params.videoType === 'application/x-mpegURL'
             ? 0
             : 20,
       },
@@ -1382,7 +1293,7 @@ export default class Player extends lng.Component {
       progressColor: Colors(colors.focus).get(),
       barColor:
         this._params.videoType === 'Stream now' ||
-        this._params.videoType === 'application/x-mpegURL'
+          this._params.videoType === 'application/x-mpegURL'
           ? Colors(colors.focus).get()
           : undefined,
     };

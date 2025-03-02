@@ -1,7 +1,7 @@
 import { Lightning } from '@lightningjs/sdk';
 import { VideoPlayer } from '@lightningjs/sdk';
-import { loader, unloader } from '../../../components/Player/HLS';
-import { getSingleChannel } from '../../../api/live';
+import { loader, unloader } from '../../../Components/Player/HLS';
+import { EPGService } from '../../../Services';
 
 export default class LiveTVPlayer extends Lightning.Component {
   static _template() {
@@ -48,7 +48,7 @@ export default class LiveTVPlayer extends Lightning.Component {
 
   _changeChannel(previousChannel) {
     const channelName = previousChannel.channelId ? previousChannel.channelId : previousChannel.id;
-    getSingleChannel(channelName)
+    EPGService.getSingleEPGChannel(channelName)
       .then((singleChannel) => {
         // Get the current time
         const currentTime = new Date();

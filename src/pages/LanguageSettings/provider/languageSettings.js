@@ -1,5 +1,4 @@
-import { parseTranslations } from '../../../Services/HomePageService';
-import { LanguageService } from '../../../Services/LanguagesService';
+import { LanguageService, parseTranslations } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
 import defTr from '../../../../static/translations/en.json';
 

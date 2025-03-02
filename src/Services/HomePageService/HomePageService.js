@@ -1,12 +1,12 @@
-import FetchingService from './FetchingService';
-import { SimpleRailItem } from '../Models';
-import { V2 } from './utils';
-import { imageSizes } from '../Models/utils';
+import FetchingService from '../FetchingService';
+import { SimpleRailItem } from '../../Models';
+import { V2 } from '../utils';
+import { imageSizes } from '../../Models/utils';
 import {
   parseBannerData,
   parseHomePageHeroSection,
   parseHomePageRailData,
-} from '../Models/parsers';
+} from '../../Models/parsers';
 
 class HomePageService extends FetchingService {
   #heroSectionItems;
@@ -106,20 +106,6 @@ class HomePageService extends FetchingService {
       stripe.hasMore = false;
     }
   }
-
-  // async fetchMoreItemsForHeroSection() {
-  //   if (this.#heroSectionItems) {
-  //     const nextPage = this.#heroSectionPage + 1;
-  //     const heroSectionData = await this.#getHomePageHeroSection(nextPage);
-
-  //     if (heroSectionData?.items.length > 0) {
-  //       this.#heroSectionPage = nextPage;
-  //       this.#heroSectionItems.items.push(...heroSectionData.items);
-  //       return heroSectionData;
-  //     }
-  //   }
-  //   return [];
-  // }
 
   async fetchMoreItemsForHeroSection() {
     // Add a check for the previous fetch result

@@ -1,31 +1,15 @@
-import { Colors, Language, Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import { CMPService } from '../../Services/CMPService';
+import { CMPService, parseTranslations } from '../../Services';
 import qrcode from 'qrcode';
-import LanguageButton from '../../Components/Buttons/LanguageButton/LanguageButton';
 import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
-import { parseTranslations } from '../../Services/HomePageService';
 import defTr from '../../../static/translations/en.json';
 
-const languagesData = [
-  {
-    code: 'EN',
-    value: 'en',
-  },
-  {
-    code: 'DE',
-    value: 'de',
-  },
-  {
-    code: 'IT',
-    value: 'it',
-  },
-];
 export default class Settings extends Lightning.Component {
   _translations;
   _props = {

@@ -10,13 +10,14 @@
       "readPixelsAfterDraw": true,
       "pauseRafLoopOnIdle": true
     },
-    "debug": true
+    "debug": false,
+    "keys": {}
   },
   "platformSettings": {
     "path": "./static",
     "log": false,
     "showVersion": false,
-    "inspector": true,
+    "inspector": false,
     "esEnv": "es5"
   }
 }

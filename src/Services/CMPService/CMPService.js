@@ -1,10 +1,12 @@
-import FetchingService from './FetchingService';
-import { V2, auth } from './utils';
+import { getDeviceInfo } from "../../utils/device";
+import FetchingService from "../FetchingService";
+import { V2 } from "../utils";
+
 
 class CMPService extends FetchingService {
   #cmpData;
   async initialFetch() {
-    const deviceCode = localStorage.getItem('serialNumber');
+    const deviceCode = getDeviceInfo().serialNumber;
     try {
       // const cmpResults = await this.#getCMP('d9b02c2e-3e91-44bc-bd76-9e5f4ef91e09');
       const cmpResults = await this.#getCMP(deviceCode);

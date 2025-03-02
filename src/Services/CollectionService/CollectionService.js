@@ -1,6 +1,6 @@
-import { V2 } from './utils';
-import { parseCollectionData } from '../Models';
-import FetchingService from './FetchingService';
+import { V2 } from '../utils';
+import { parseCollectionData } from '../../Models';
+import FetchingService from '../FetchingService';
 
 class CollectionService extends FetchingService {
   #collectionItem;

@@ -28,7 +28,7 @@ import cmp from './CMP/provider/cmp';
 import CMPCustomize from './CMP/components/CMPCustomize';
 import LanguageSettings from './LanguageSettings/LanguageSettings';
 import languageSettings from './LanguageSettings/provider/languageSettings';
-
+// TODO: pomeriti ovaj fajl van ovog foldera u /src
 export default {
   root: 'splash',
   routes: [
