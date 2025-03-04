@@ -26,6 +26,7 @@ export default ({ mode }) => {
   ];
   const isProduction = mode === 'production';
   return defineConfig({
+    base: '/',
     publicDir,
     plugins,
     server: {
@@ -37,12 +38,14 @@ export default ({ mode }) => {
       outDir,
       target: 'chrome68',
       emptyOutDir: true,
-      sourcemap: !isProduction,
-      minify: isProduction,
+      // sourcemap: !isProduction,
+      // minify: isProduction,
+      minify: false,
+      sourcemap: false,
     },
     esbuild: {
-      keepNames: true,
-      drop: isProduction ? ['console'] : [],
+      // keepNames: true,
+      // drop: isProduction ? ['console'] : [],
     },
     define: {
       'process.env': JSON.stringify(appEnv),
