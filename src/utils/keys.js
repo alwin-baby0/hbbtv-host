@@ -1,6 +1,32 @@
 export const setupKeys = (deviceType) => {
   switch (deviceType) {
-    case 'tizen':
+    case 'tizen': {
+      window.tizen &&
+        window.tizen.tvinputdevice.registerKeyBatch([
+          'MediaPlay',
+          'MediaPause',
+          'MediaStop',
+          'ColorF0Red',
+          'ColorF1Green',
+          'ColorF2Yellow',
+          'ColorF3Blue',
+          'ChannelUp',
+          'ChannelDown',
+          '0',
+          '1',
+          '2',
+          '3',
+          '4',
+          '5',
+          '6',
+          '7',
+          '8',
+          '9',
+          'MediaRewind',
+          'MediaFastForward',
+          'MediaRecord',
+          'MediaPlayPause',
+        ]);
       return {
         10009: 'Back',
         10182: 'Exit',
@@ -13,6 +39,7 @@ export const setupKeys = (deviceType) => {
         19: 'MediaPause',
         413: 'MediaStop',
       };
+    }
     case 'webos':
       return {
         // TODO: proveri da li 412 treba da bude 'Exit' ili 'MediaRewind'

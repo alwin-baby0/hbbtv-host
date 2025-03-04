@@ -4,7 +4,7 @@ import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import { CMPService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../static/translations/en.json';
+import defTr from '../../../public/static/translations/en.json';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};

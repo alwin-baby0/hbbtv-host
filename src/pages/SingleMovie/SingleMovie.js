@@ -5,7 +5,7 @@ import { CMPService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { Column, Row } from '@lightningjs/ui-components';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../static/translations/en.json';
+import defTr from '../../../public/static/translations/en.json';
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};

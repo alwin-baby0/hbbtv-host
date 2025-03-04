@@ -1,7 +1,7 @@
 
 import { LanguageService, parseTranslations } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
-import defTr from '../../../../static/translations/en.json';
+import defTr from '../../../../public/static/translations/en.json';
 
 
 const userLanguageTranslations = [

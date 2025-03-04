@@ -1,4 +1,4 @@
-import { API_KEY, APP, APP_DOMAIN, APP_BUNDLE, APP_VERSION } from '../config';
+import { APP, APP_DOMAIN, APP_BUNDLE, APP_VERSION } from '../config';
 
 let deviceInfo = {}
 
@@ -194,7 +194,7 @@ export const eventTrackPayload = (event, id) => {
           version: osVersion,
           device_id: serialNumber,
         },
-        API_KEY
+        process.env.APP_WATCH4_API_KEY,
       );
     else {
       console.error('event tracking object not attched', error);

@@ -5,7 +5,7 @@ import legacy from '@vitejs/plugin-legacy';
 export default ({ mode }) => {
   console.log('🚀 Building the app in mode: ', mode)
   const outDir = 'build';
-  const publicDir = 'static';
+  const publicDir = 'public';
 
   const appEnv = loadEnv(mode, process.cwd(), ['APP_', 'NODE_', 'LNG_', 'VITE_']);
 

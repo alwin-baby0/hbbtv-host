@@ -8,7 +8,7 @@ import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import { CMPService, parseTranslations } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../static/translations/en.json';
+import defTr from '../../../public/static/translations/en.json';
 let lastIndex = 0;
 let offsetTime = 0;
 

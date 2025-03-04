@@ -8,7 +8,7 @@ import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
-import defTr from '../../../static/translations/en.json';
+import defTr from '../../../public/static/translations/en.json';
 
 export default class Settings extends Lightning.Component {
   _translations;

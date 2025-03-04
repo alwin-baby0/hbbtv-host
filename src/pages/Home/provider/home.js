@@ -22,7 +22,7 @@ export default async function (page) {
   await HomePageService.initialFetch();
 
   const isBannerImageExist = await checkImageVisibility(
-    HomePageService.banner?.items[0].ctvPosters['1080']
+    HomePageService.banner?.items[0].ctvPosters['1080'] // ovo je undefined
   );
   const modifiedRailData = [
     HomePageService.stripes[0],
