@@ -139,12 +139,16 @@ export default class HelpScreen extends lng.Component {
 
   async $changeDescription(newPagePromise) {
     try {
+      let decodedText = '';
       this.tag('LoadingIndicator').visible = true; // Show the loading indicator
       const resolvedPage = await newPagePromise;
       const text = resolvedPage.data.entry[0].extensions.content_plain;
-      const strippedText = text.replace(/<[^>]+>/g, '');
-      const decodedText = new DOMParser().parseFromString(strippedText, 'text/html').documentElement
-        .textContent;
+      console.log('Text:', text, 'Type:', typeof text);
+      if (typeof text === 'string') {
+        const strippedText = text.replace(/<[^>]+>/g, '');
+        decodedText = new DOMParser().parseFromString(strippedText, 'text/html').documentElement
+          .textContent;
+      }
 
       this._setScrollWrapperContent(decodedText);
 

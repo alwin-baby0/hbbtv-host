@@ -88,6 +88,9 @@ export default class Home extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
     e.preventDefault();
     if (Router.getHistory().length > 0) {
       Router.back();
@@ -160,7 +163,8 @@ export default class Home extends Lightning.Component {
           this._setState('Hero');
         }
 
-        async $horizontalContainerIndexChange(index) {
+        /* async $horizontalContainerIndexChange(index) {
+          console.log('pozivvv horCont');
           const currentItem = this._Column.Items.children[this._Column._focusedIndex];
           if (currentItem.Items.children.length - 1 === index) {
             const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
@@ -169,7 +173,7 @@ export default class Home extends Lightning.Component {
               currentItem._appendItems(parsedItems);
             }
           }
-        }
+        } */
 
         async $verticalContainerIndexChange(index) {
           if (index > 0) {

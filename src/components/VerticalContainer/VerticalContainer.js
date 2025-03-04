@@ -108,7 +108,7 @@ export default class VerticalContainer extends Lightning.Component {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
         this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
         this._focusedIndex += 1;
-        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex, this.ref);
       }
     } else {
       return false;

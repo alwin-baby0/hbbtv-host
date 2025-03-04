@@ -81,13 +81,13 @@ export default class SidebarItem extends lng.Component {
       });
     } else {
       this.patch({
-        w: index === 4 && translatedText.length > 10 ? 200 : 150,
+        w: index === 4 && label.length > 10 ? 200 : 150,
         Title: {
           text: {
             maxLines: 1,
-            wordWrapWidth: index === 4 && translatedText.length > 10 ? 200 : 150,
+            wordWrapWidth: index === 4 && label.length > 10 ? 200 : 150,
             family: 'Montserrat-Regular',
-            text: translatedText.toUpperCase(),
+            text: label.toUpperCase(),
           },
         },
       });
@@ -129,7 +129,7 @@ export default class SidebarItem extends lng.Component {
     // }
     const translatedText = Language.translate(label);
     this._Line.patch({
-      w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni
+      w: index === 4 && label.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni
     });
 
     this._Line.visible = true;
