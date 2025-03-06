@@ -9,24 +9,33 @@ export default ({ mode }) => {
 
   const appEnv = loadEnv(mode, process.cwd(), ['APP_', 'NODE_', 'LNG_', 'VITE_']);
 
+  // usefull thing, keep it
+  // const plugins = [
+  //   legacy({
+  //     targets: ['chrome>=38'],
+  //     modernPolyfills: [
+  //       'es/global-this',
+  //       'es/promise/all-settled',
+  //       'es/array/flat',
+  //       'es/array/flat-map',
+  //       'es/object/entries',
+  //       'es/object/from-entries',
+  //       'es/string/replace-all',
+  //     ],
+  //     additionalLegacyPolyfills: ["whatwg-fetch"],
+  //     renderLegacyChunks: false,
+  //   }),
+  // ];
+
   const plugins = [
     legacy({
-      targets: ['chrome >= 68'],
-      modernPolyfills: [
-        'es/global-this',
-        'es/promise/all-settled',
-        'es/array/flat',
-        'es/array/flat-map',
-        'es/object/entries',
-        'es/object/from-entries',
-        'es/string/replace-all',
-      ],
-      renderLegacyChunks: false,
-    }),
-  ];
-  const isProduction = mode === 'production';
+      renderModernChunks: false,
+      targets: ["Chrome >= 53", "not dead"],
+    })
+  ]
+
   return defineConfig({
-    base: '/',
+    base: '',
     publicDir,
     plugins,
     server: {
@@ -36,16 +45,10 @@ export default ({ mode }) => {
     },
     build: {
       outDir,
-      target: 'chrome68',
+      target: 'es2015',
       emptyOutDir: true,
-      // sourcemap: !isProduction,
-      // minify: isProduction,
       minify: false,
-      sourcemap: false,
-    },
-    esbuild: {
-      // keepNames: true,
-      // drop: isProduction ? ['console'] : [],
+      sourcemap: mode !== 'production',
     },
     define: {
       'process.env': JSON.stringify(appEnv),

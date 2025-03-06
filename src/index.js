@@ -57,8 +57,8 @@ sequence([
       document.body.appendChild(app.stage.getCanvas());
       console.log('App launched on device: ', Object.entries(getDeviceInfo()).map((([key, value]) => `| ${key}: ${value} |`)));
       eventTrackPayload('launch_app', getDeviceInfo().serialNumber);
-    } catch (e) {
-      console.warn("RRROROROR", e)
+    } catch (error) {
+      console.error("Failed to start the app", error)
     }
   }
 ])
