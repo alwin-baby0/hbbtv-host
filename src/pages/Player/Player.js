@@ -1,5 +1,5 @@
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import { Column, ProgressBar, Shadow } from '@lightningjs/ui-components';
+import { Column, ProgressBar } from '@lightningjs/ui-components';
 import { getPlayer, loader, unloader } from '../../Components/Player/HLS';
 import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
@@ -8,7 +8,8 @@ import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import { CMPService, parseTranslations } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../public/static/translations/en.json';
+import { formatTimeHMS, formatTimeMS, isVideoURLValid, playerButtonsLive, playerButtonsVOD } from './utils';
+
 let lastIndex = 0;
 let offsetTime = 0;
 
@@ -20,120 +21,23 @@ export default class Player extends lng.Component {
     isAdVisible: false,
     currentAd: null,
     skipTo: 0,
-    ads: [], // Inicijalizuj kao prazan niz
+    ads: [],
   };
-
+  _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
 
-  _adData = {
-    slots: [
-      {
-        slot: 'slot1',
-        total_duration: 10,
-        pods: [
-          {
-            pod: 'pod1',
-            ads: [
-              {
-                impression: 'https://springserve.com/vast/ad1',
-                cue: {
-                  from: '00:00:40',
-                  to: '00:00:50',
-                },
-                skipping_allowed: true,
-              },
-              {
-                impression: 'https://springserve.com/vast/ad2',
-                cue: {
-                  from: '00:00:50',
-                  to: '00:01:00',
-                },
-                skipping_allowed: true,
-              },
-            ],
-          },
-        ],
-      },
-      // {
-      //   slot: 'slot2',
-      //   total_duration: 50,
-      //   pods: [
-      //     {
-      //       pod: 'pod2',
-      //       ads: [
-      //         {
-      //           impression: 'https://springserve.com/vast/ad3',
-      //           cue: {
-      //             from: '00:01:00',
-      //             to: '00:01:10',
-      //           },
-      //           skipping_allowed: false,
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       pod: 'pod3',
-      //       ads: [
-      //         {
-      //           impression: 'https://springserve.com/vast/ad4',
-      //           cue: {
-      //             from: '00:30:00',
-      //             to: '00:30:20',
-      //           },
-      //           skipping_allowed: true,
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
-      // {
-      //   slot: 'slot3',
-      //   total_duration: 25,
-      //   pods: [
-      //     {
-      //       pod: 'pod4',
-      //       ads: [
-      //         {
-      //           impression: 'https://springserve.com/vast/ad5',
-      //           cue: {
-      //             from: '01:00:00',
-      //             to: '01:00:25',
-      //           },
-      //           skipping_allowed: false,
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
-      // {
-      //   slot: 'slot4',
-      //   total_duration: 30,
-      //   pods: [
-      //     {
-      //       pod: 'pod5',
-      //       ads: [
-      //         {
-      //           impression: 'https://springserve.com/vast/ad6',
-      //           cue: {
-      //             from: '02:00:00',
-      //             to: '02:00:30',
-      //           },
-      //           skipping_allowed: true,
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
-    ],
-  };
-
   static _template() {
     return {
+      w: 1920,
+      h: 1080,
+      x: 0,
+      y: 0,
       Wrapper: {
         h: 100,
         y: 750,
         w: 1690,
+        visible: false,
         ControlsWrapper: {
           w: 1690,
           h: 100,
@@ -159,7 +63,6 @@ export default class Player extends lng.Component {
             flex: { justifyContent: 'center', alignItems: 'center' },
             w: 140,
             h: 35,
-            // y: 8,
             color: Colors('#000').get(),
             Text: {
               w: 140,
@@ -184,7 +87,6 @@ export default class Player extends lng.Component {
           EndTime: {
             y: -2,
             flex: { justifyContent: 'center', alignItems: 'center' },
-            // w: 120,
             w: 140,
             h: 35,
             color: Colors('#000').get(),
@@ -226,114 +128,90 @@ export default class Player extends lng.Component {
     };
   }
 
-  get id() {
-    return 'PlayerPage';
-  }
+  set params({ videoType, videoUrl, ssai, ...rest }) {
+    this._translations = parseTranslations();
+    lastIndex = 0;
 
-  get _Wrapper() {
-    return this.tag('Wrapper');
-  }
+    VideoPlayer.position(0, 0);
+    VideoPlayer.size(1920, 1080);
+    VideoPlayer.consumer(this);
+    VideoPlayer.loader(loader);
+    VideoPlayer.unloader(unloader);
+    VideoPlayer.loop(false);
 
-  get _Controls() {
-    return this.tag('Controls');
+    isVideoURLValid(videoUrl).then((result) => {
+      if (result) {
+        this.props = {
+          ...this._props,
+          ...rest,
+          videoUrl,
+          ads: ssai,
+          pausedItemId: 1,
+          isLive: videoType === 'Stream now' || videoType === 'application/x-mpegURL'
+        };
+        return;
+      }
+
+      this.tag('ErrorMessage').patch({
+        Message: {
+          text: {
+            text: this._translations?.no_stream || "Invalid Video URL",
+          }
+        }
+      })
+      this._showErrorMessage();
+    })
   }
 
   set props(props) {
-    this._translations = parseTranslations();
+    this._props = props;
+    const { isLive, videoUrl, continueTime } = props;
 
-    this.tag('ErrorMessage')
-      .tag('Message')
-      .patch({
-        text: {
-          text: this._translations?.no_stream || defTr.no_stream,
-        },
-      });
+    this.tag('CurrentTime.Text').text = isLive ? 'Live' : '00:00:00';
 
-    const { controlsItems: items, liveItems } = props;
-    const itemComponents =
-      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
-        ? liveItems
-        : items;
-
-    this._props.pausedItemId =
-      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
-        ? 1
-        : 1;
-
-    const formattedItems = itemComponents.map((data) => ({
-      type: PlayerButtons,
-      props: {
-        buttonInfo: data,
-      },
-    }));
-
-    if (
-      this._params.videoType === 'Stream now' ||
-      this._params.videoType === 'application/x-mpegURL'
-    ) {
-      this.tag('ProgressBarWrapper').patch({
-        x: 180,
-      });
-    } else {
-      this.tag('ProgressBarWrapper').patch({
-        x: 115,
-      });
-    }
+    //progress bar
+    this.tag('ProgressBarWrapper').patch({
+      x: isLive ? 180 : 115,
+    });
+    const margin = isLive ? 0 : 20;
     this.tag('ProgressBar').patch({
-      w:
-        this._params.videoType === 'Stream now' ||
-          this._params.videoType === 'application/x-mpegURL'
-          ? 1550
-          : 1400,
-      x:
-        this._params.videoType === 'Stream now' ||
-          this._params.videoType === 'application/x-mpegURL'
-          ? 0
-          : 0,
+      w: isLive ? 1550 : 1400,
+      x: 0,
       flexItem: {
-        marginLeft:
-          this._params.videoType === 'Stream now' ||
-            this._params.videoType === 'application/x-mpegURL'
-            ? 0
-            : 20,
-        marginRight:
-          this._params.videoType === 'Stream now' ||
-            this._params.videoType === 'application/x-mpegURL'
-            ? 0
-            : 20,
+        marginLeft: margin,
+        marginRight: margin
       },
+      style: {
+        progressColor: Colors(colors.focus).get(),
+        barColor: isLive ? Colors(colors.focus).get() : undefined,
+      }
     });
 
-    this._Controls.props = {
-      items: formattedItems,
-      w: 1920,
-    };
+    //video
+    this.fireAncestors('$punchHole');
+    VideoPlayer.open(videoUrl);
+    if (continueTime)
+      setTimeout(() => {
+        VideoPlayer.seek(continueTime);
+      }, 500);
+
+
+    this._Controls.patch({
+      w: 1690,
+      flex: {
+        direction: 'row',
+        alignItems: 'center',
+        justifyContent: isLive ? 'space-between' : 'center'
+      },
+      props: {
+        w: 1920,
+        items: isLive ? playerButtonsLive : playerButtonsVOD,
+      }
+    })
 
     this._Controls._setFocusedIndex(1);
 
-    this._Controls.tag('Items').patch({
-      w: 1690,
-      flex: { direction: 'row', alignItems: 'center', justifyContent: 'space-between' },
-    });
-
-    if (
-      this._params.videoType === 'Stream now' ||
-      this._params.videoType === 'application/x-mpegURL'
-    ) {
-      this._Controls.tag('Items').patch({
-        w: 1690,
-        flex: { direction: 'row', alignItems: 'center', justifyContent: 'space-between' },
-      });
-    } else {
-      this._Controls.tag('Items').patch({
-        w: 1690,
-        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-      });
-    }
-    if (
-      this._params.videoType === 'Stream now' ||
-      this._params.videoType === 'application/x-mpegURL'
-    ) {
+    if (isLive) {
       this.tag('Wrapper').patch({
         Back: undefined,
         SubtitlesButton: undefined,
@@ -352,8 +230,6 @@ export default class Player extends lng.Component {
             },
           },
         },
-      });
-      this.tag('Wrapper').patch({
         SubtitlesButton: {
           x: 1715,
           type: PlayerButtons,
@@ -370,41 +246,28 @@ export default class Player extends lng.Component {
     }
   }
 
-  set params({ videoUrl, videoType, type, duration, videoId, continueTime, seriesID, ssai }) {
-    this._params = { videoUrl, videoType, type, duration, videoId, continueTime, seriesID, ssai };
-    // console.log('ssai', ssai);
-    console.log('video_id:', videoId);
-  }
-
-  _enable() {
-    VideoPlayer.position(0, 0);
-    VideoPlayer.size(1920, 1080);
-    VideoPlayer.consumer(this);
-    VideoPlayer.loader(loader);
-    VideoPlayer.unloader(unloader);
-    VideoPlayer.loop(false);
+  _disable() {
+    super._disable();
     clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
-  }
-
-  _firstActive() {
-    VideoPlayer.consumer(this);
-  }
-
-  async _checkVideoUrl(url) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.error(`Error fetching video URL: ${response.statusText}`);
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error(`Error fetching video URL: ${error.message}`);
-      return false;
+    clearInterval(this._progressInterval);
+    if (this._adMonitoringInterval) {
+      clearInterval(this._adMonitoringInterval);
     }
+    clearInterval(this._progressAdInterval);
+
+
+    VideoPlayer.close();
+    this.fireAncestors('$unpunchHole');
+    this.tag('ProgressBar').progress = 0;
+    this._props.isAdVisible = false;
+    this._adStarted = false;
+    this._currentAdTime = 1;
+    this.patch({
+      WrapperAd: undefined,
+    });
   }
 
-  async _showErrorMessage() {
+  _showErrorMessage() {
     this.tag('ErrorMessage').visible = true;
     this._hideWrapper();
     this.fireAncestors('$unpunchHole');
@@ -412,12 +275,7 @@ export default class Player extends lng.Component {
     VideoPlayer.close();
   }
 
-  setAdUI(value) {
-    // console.log('SAKRIJ KONTROLEEE:', value);
-    // this._props.isAdVisible = value;
-  }
 
-  //!
   _startMonitoringAds() {
     // Clear any existing interval to prevent duplicates
     if (this._adMonitoringInterval) {
@@ -432,41 +290,8 @@ export default class Player extends lng.Component {
     }, 1000); // Check every second
   }
 
-  // _checkAdCuePoints() {
-  //   const currentTime = VideoPlayer.currentTime;
-
-  //   // this._adData.forEach((slot) => {
-  //   // this._params.ssai
-  //   this._params.ssai.forEach((slot) => {
-  //     slot.pods.forEach((pod) => {
-  //       pod.ads.forEach((ad) => {
-  //         const from = this._convertCueTimeToSeconds(ad.cue.from);
-  //         const to = this._convertCueTimeToSeconds(ad.cue.to);
-  //         if (currentTime >= from && currentTime < to) {
-  //           console.log('Ad is playing:', ad.impression);
-  //           console.log('Skipping allowed:', ad.skipping_allowed);
-  //           // Perform any additional actions when ad is active
-  //           this._handleAdPlayback(ad);
-  //         }
-  //       });
-  //     });
-  //   });
-  // }
-
-  _formatAdTime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes.toString().padStart(1, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-  }
-
   _updateProgressBarAd(duration, adIndex, adsLength) {
-    console.log('currentTime: ', this._currentAdTime);
-    console.log('duration: ', duration);
     const progress = this._currentAdTime / duration;
-
-    console.log('progress: ', progress);
-
     this.tag('ProgressBarAd').progress = progress;
 
     this.tag('AdNumber.Text').text = 'Ad ' + adIndex + ' of ' + adsLength;
@@ -474,8 +299,7 @@ export default class Player extends lng.Component {
     const adTime = duration - this._currentAdTime;
 
     if (adTime > -1) {
-      const adTimeFormated = this._formatAdTime(duration - this._currentAdTime);
-      this.tag('TimerAd.Text').text = adTimeFormated;
+      this.tag('TimerAd.Text').text = formatTimeMS(duration - this._currentAdTime);
     }
 
     if (this._currentAdTime <= duration) {
@@ -490,8 +314,8 @@ export default class Player extends lng.Component {
   _checkAdCuePoints() {
     const currentTime = VideoPlayer.currentTime;
 
-    const ssai_params = this._params.ssai;
-    // const ssai_params = this._adData;
+    const ssai_params = this._props.ads;
+    //const ssai_params = fakeAdsData;
     console.log('ssai_params: ', ssai_params);
 
     // Check if `ssai` has a `slots` array
@@ -508,10 +332,7 @@ export default class Player extends lng.Component {
               if (this._props.currentAd !== ad) {
                 const lastAd = pod.ads[pod.ads.length - 1];
                 const lastAdTo = this._convertCueTimeToSeconds(lastAd.cue.to);
-                // this._props.skipTo = to;
                 this._props.skipTo = lastAdTo;
-                // console.log('Ad is playing:', ad.impression);
-                // console.log('Skipping allowed:', ad.skipping_allowed);
 
                 this.patch({
                   WrapperAd: {
@@ -688,17 +509,17 @@ export default class Player extends lng.Component {
   }
 
   _handleSlotEnd() {
-    eventTrackPayload('ad_slot_ended', this._params.videoId);
+    eventTrackPayload('ad_slot_ended', this._props.videoId);
   }
   _handlePodEnd() {
-    eventTrackPayload('ad_pod_ended', this._params.videoId);
+    eventTrackPayload('ad_pod_ended', this._props.videoId);
   }
 
   _handleAdEnd(ad) {
     // Logic to handle when the ad finishes
     console.log('Ad has finished:', ad.impression);
 
-    eventTrackPayload('ad_ended', this._params.videoId);
+    eventTrackPayload('ad_ended', this._props.videoId);
     this._props.isAdVisible = false;
     // this.patch({
     //   SkipButton: undefined,
@@ -712,7 +533,6 @@ export default class Player extends lng.Component {
     this._setState('ProgressBar');
 
     // Show player controls again or perform any other post-ad actions
-    // this._showWrapper();
   }
 
   _convertCueTimeToSeconds(cue) {
@@ -721,8 +541,8 @@ export default class Player extends lng.Component {
   }
 
   _handleAdPlayback(ad) {
-    eventTrackPayload('ad_slot_started', this._params.videoId);
-    eventTrackPayload('ad_pod_started', this._params.videoId);
+    eventTrackPayload('ad_slot_started', this._props.videoId);
+    eventTrackPayload('ad_pod_started', this._props.videoId);
 
     this._hideWrapper();
     // Logic to handle ad playback, such as displaying the ad, hiding player controls, etc.
@@ -734,65 +554,6 @@ export default class Player extends lng.Component {
     } else {
       this._setState('SkipButton');
     }
-  }
-  //!
-  async _active() {
-    this._startMonitoringAds();
-    // this._params.ssai
-    this._props.ads = this._adData; // Postavi ads iz niza
-    // this._props.ads = this._params.ssai; // Postavi ads iz niza
-
-    lastIndex = 0;
-    if (
-      this._params.videoType === 'Stream now' ||
-      this._params.videoType === 'application/x-mpegURL'
-    ) {
-      this.tag('CurrentTime').patch({ text: { text: '' } });
-    }
-
-    if (!this._params.videoUrl) {
-      this._showErrorMessage();
-      return;
-    }
-
-    const isValid = await this._checkVideoUrl(this._params.videoUrl);
-
-    if (!isValid) {
-      this._showErrorMessage();
-      return;
-    }
-
-    this.tag('ErrorMessage').visible = false;
-
-    this.fireAncestors('$punchHole');
-    VideoPlayer.open(this._params.videoUrl);
-    console.log('this._params.videoUrl', this._params.videoUrl);
-    //VideoPlayer.open('https://cdn-05.wedo.tv/04/hls/NVJE243JDKK1/video_segment000_part1.ts');
-    //VideoPlayer.open('https://www.radiantmediaplayer.com/media/hls/discontinuity/playlist.m3u8');
-
-    if (this._params.continueTime)
-      setTimeout(() => {
-        VideoPlayer.seek(this._params.continueTime);
-      }, 500);
-  }
-
-  _disable() {
-    clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
-    VideoPlayer.close();
-    this.fireAncestors('$unpunchHole');
-    clearInterval(this._progressInterval);
-    this.tag('ProgressBar').progress = 0;
-    if (this._adMonitoringInterval) {
-      clearInterval(this._adMonitoringInterval);
-    }
-
-    clearInterval(this._progressAdInterval);
-    this._props.isAdVisible = false;
-    this._adStarted = false;
-    this._currentAdTime = 1;
-    this.patch({
-      WrapperAd: undefined,
-    });
   }
 
   _skipVideo(offset) {
@@ -811,14 +572,13 @@ export default class Player extends lng.Component {
 
         this._checkAdCuePointsSeek(newTime);
       }, 500); // 500ms delay
-      this._showWrapper(); // Show wrapper on skip
     }
   }
 
   _checkAdCuePointsSeek(seekTime) {
     const currentTime = seekTime;
 
-    const ssai_params = this._params.ssai;
+    const ssai_params = this._props.ads;
     //const ssai_params = this._adData;
     // console.log('ssai_params: ', ssai_params);
 
@@ -857,12 +617,6 @@ export default class Player extends lng.Component {
   $videoPlayerCanPlay() {
     this._setState('Controls');
     this._showWrapper(true);
-    if (
-      this._params.videoType !== 'Stream now' ||
-      this._params.videoType !== 'application/x-mpegURL'
-    ) {
-      this._progressInterval = setInterval(() => this._updateProgressBar(), 1000);
-    }
   }
 
   $setFocusOnItem(value) {
@@ -870,80 +624,11 @@ export default class Player extends lng.Component {
       this._setState('Subtitles');
     } else {
       this._setState('Controls');
-      this._showWrapper();
       this.patch({
         Subtitles: undefined,
       });
     }
   }
-
-  // $showSubtitles(val) {
-  //   const player = getPlayer();
-  //   const getTracks = player.subtitleTrackController.tracks;
-
-  //   const offButton = {
-  //     name: 'OFF',
-  //     type: 'SUBTITLES',
-  //   };
-
-  //   let items;
-  //   if (false) {
-  //     // If all tracks are disabled, only use the 'OFF' track
-  //     items = [
-  //       {
-  //         type: SubtitlesButtons,
-  //         props: {
-  //           // languageInfo: offTrack,
-  //         },
-  //         w: 250,
-  //         h: 100,
-  //       },
-  //     ];
-  //   } else {
-  //     // Otherwise, include all tracks plus the 'OFF' track
-  //     let newArray = [offButton, ...getTracks];
-
-  //     items = newArray.map((language, index) => ({
-  //       type: SubtitlesButtons,
-  //       props: {
-  //         languageInfo: language,
-  //         index: index,
-  //       },
-  //       w: 250,
-  //       h: 60,
-  //     }));
-  //   }
-
-  //   // Patch the Subtitles section with the appropriate items
-  //   this.patch({
-  //     Subtitles: {
-  //       w: 600,
-  //       h: 1080,
-  //       x: 1320,
-  //       rect: true,
-  //       color: Colors('#1B1C23').get(),
-  //       zIndex: 5,
-  //       Title: {
-  //         x: 50,
-  //         y: 70,
-  //         text: {
-  //           text: 'Subtitles',
-  //           fontSize: 32,
-  //         },
-  //       },
-  //       Languages: {
-  //         // type: VerticalContainer,
-  //         type: Column,
-  //         items: items,
-  //         props: {
-  //           w: 600,
-  //           h: 1080,
-  //           items: items,
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
 
   $showSubtitles(val) {
     const player = getPlayer();
@@ -1083,12 +768,10 @@ export default class Player extends lng.Component {
   }
 
   $skippingTime(time) {
-    this._showWrapper();
     this._skipVideo(time);
   }
 
   closeVideoPlayer() {
-    this._showWrapper();
     VideoPlayer.clear();
     VideoPlayer.close();
     // VideoPlayer.unloader(unloader);
@@ -1114,15 +797,15 @@ export default class Player extends lng.Component {
     Router.setHistory([...router]);
     if (localStorage.getItem('userData')) {
       if (parseFloat(VideoPlayer.duration) > 300) {
-        if (this._params.seriesID) {
+        if (this._props.seriesID) {
           CMPService.addRecentlyWatched(
-            this._params.videoId,
+            this._props.videoId,
             'series',
             VideoPlayer.currentTime,
-            this._params.seriesID
+            this._props.seriesID
           );
         } else {
-          CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+          CMPService.addRecentlyWatched(this._props.videoId, 'video', VideoPlayer.currentTime);
         }
       }
     }
@@ -1131,25 +814,23 @@ export default class Player extends lng.Component {
   }
 
   $exitVideo(e) {
-    this._showWrapper();
     if (this.tag('Wrapper').visible) {
       this._handleBack(e);
     }
   }
 
   $videoPlayerEnded() {
-    CMPService.deleteRecentlyWatched(this._params.videoId);
+    CMPService.deleteRecentlyWatched(this._props.videoId);
     this.closeVideoPlayer();
 
-    eventTrackPayload('video_end', this._params.videoId);
+    eventTrackPayload('video_end', this._props.videoId);
   }
 
   $playVideo() {
     const { pausedItemId } = this._props;
 
-    // eventTrackPayload('video_start', this._params.videoId);
+    // eventTrackPayload('video_start', this._props.videoId);
     this._setState('Controls');
-    this._showWrapper();
     this.patch({
       Subtitles: undefined,
     });
@@ -1166,9 +847,8 @@ export default class Player extends lng.Component {
   $pauseVideo() {
     const { pausedItemId } = this._props;
 
-    eventTrackPayload('video_pause', this._params.videoId);
+    eventTrackPayload('video_pause', this._props.videoId);
     this._setState('Controls');
-    this._showWrapper();
     this.patch({
       Subtitles: undefined,
     });
@@ -1177,19 +857,16 @@ export default class Player extends lng.Component {
       VideoPlayer.pause();
     }
 
-    // console.log('pausiran video', this._params.videoId, 'video', VideoPlayer.currentTime);
-    // console.log('duzina videa', parseFloat(VideoPlayer.duration));
-
     if (parseFloat(VideoPlayer.duration) > 300) {
-      if (this._params.seriesID) {
+      if (this._props.seriesID) {
         CMPService.addRecentlyWatched(
-          this._params.videoId,
+          this._props.videoId,
           'series',
           VideoPlayer.currentTime,
-          this._params.seriesID
+          this._props.seriesID
         );
       } else {
-        CMPService.addRecentlyWatched(this._params.videoId, 'video', VideoPlayer.currentTime);
+        CMPService.addRecentlyWatched(this._props.videoId, 'video', VideoPlayer.currentTime);
       }
     }
 
@@ -1200,37 +877,22 @@ export default class Player extends lng.Component {
 
   $startStopVideo(isStopped) {
     this._setState('Controls');
-    this._showWrapper();
     if (this.tag('Wrapper').visible) {
       VideoPlayer.pause();
     }
   }
 
   _updateProgressBar() {
-    // const currentTime = VideoPlayer.currentTime;
+    const { isLive } = this._props;
     const currentTime = Math.max(
       0,
       Math.min(VideoPlayer.currentTime + offsetTime, VideoPlayer.duration)
     );
     const progress = currentTime / VideoPlayer.duration;
     this.tag('ProgressBar').progress = progress;
-    const formattedTime =
-      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
-        ? 'Live'
-        : this._formatTime(currentTime);
-    this.tag('CurrentTime.Text').text = formattedTime;
-
-    const durationInSeconds = parseFloat(VideoPlayer.duration);
-    const formattedDuration = this._formatDuration(durationInSeconds);
-
-    this.tag('EndTime.Text').text =
-      this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
-        ? ''
-        : formattedDuration;
-    this._duration = durationInSeconds;
-
-    // console.log(formattedTime);
-    // console.log(currentTime);
+    if (!isLive) {
+      this.tag('CurrentTime.Text').text = formatTimeHMS(currentTime);
+    }
   }
 
   $changeFocusOnControl(val) {
@@ -1243,62 +905,46 @@ export default class Player extends lng.Component {
 
   _showWrapper() {
     if (!this._props.isAdVisible) {
-      this._setState('Controls');
-      this.tag('Wrapper').visible = true;
-      clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
+      if (!this._progressInterval) {
+        this._setState('Controls');
+        this.tag('Wrapper').visible = true;
+        if (!this._props.isLive) {
+          this._updateProgressBar();
+          this._progressInterval = setInterval(() => this._updateProgressBar(), 1000);
+        }
+      }
+      clearTimeout(this._hideWrapperTimeout);
       this._hideWrapperTimeout = setTimeout(() => {
         if (this._getState() !== 'Subtitles') {
-          // Check if the state is not Subtitles
           this._hideWrapper();
-          this._setState('ProgressBar');
         }
-      }, 5000); // Set new timeout
+      }, 5000);
     }
-    // this._setState('Controls');
-    // this.tag('Wrapper').visible = true;
-    // clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
-    // this._hideWrapperTimeout = setTimeout(() => {
-    //   if (this._getState() !== 'Subtitles') {
-    //     // Check if the state is not Subtitles
-    //     this._hideWrapper();
-    //     this._setState('ProgressBar');
-    //   }
-    // }, 5000); // Set new timeout
   }
 
   _hideWrapper() {
-    if (this._getState() !== 'Subtitles') {
-      this._setState('ProgressBar');
-      this.tag('Wrapper').visible = false;
-      clearTimeout(this._hideWrapperTimeout);
-      this._Controls._setFocusedIndex(1);
+    this._setState('ProgressBar');
+    this.tag('Wrapper').visible = false;
+    if (!this._props.isLive) {
+      clearInterval(this._progressInterval);
+      this._progressInterval = null;
     }
-  }
-
-  _formatTime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-  }
-
-  _formatDuration(seconds) {
-    return this._formatTime(seconds);
+    clearTimeout(this._hideWrapperTimeout);
+    this._Controls._setFocusedIndex(1);
   }
 
   $videoPlayerPlaying() {
-    const progressBarStyle = {
-      progressColor: Colors(colors.focus).get(),
-      barColor:
-        this._params.videoType === 'Stream now' ||
-          this._params.videoType === 'application/x-mpegURL'
-          ? Colors(colors.focus).get()
-          : undefined,
-    };
-    this.tag('ProgressBar').patch({ style: progressBarStyle });
-    eventTrackPayload('video_start', this._params.videoId);
+    eventTrackPayload('video_start', this._props.videoId);
+  }
+
+  $videoPlayerCanPlay() {
+    const durationInSeconds = parseFloat(VideoPlayer.duration);
+    const formattedDuration = formatTimeHMS(durationInSeconds);
+
+    this.tag('EndTime.Text').text = this._props.isLive ? '' : formattedDuration;
+    this._duration = durationInSeconds;
+
+    this._startMonitoringAds();
   }
 
   // COMANDS
@@ -1313,7 +959,6 @@ export default class Player extends lng.Component {
 
     // Show the UI elements when toggling play/pause
     this._setState('Controls');
-    this._showWrapper();
     this.patch({
       Subtitles: undefined,
     });
@@ -1333,50 +978,58 @@ export default class Player extends lng.Component {
   }
 
   _handleMediaRewind() {
-    // console.log('MediaRewind ');
     this._setState('Controls');
-    this._showWrapper(); // Show the UI elements when video starts playing
     this.patch({
       Subtitles: undefined,
     });
     this._skipVideo(-10);
     VideoPlayer.play();
   }
+
   _handleMediaFastForward() {
-    // console.log('MediaFastForward ');
     this._setState('Controls');
-    this._showWrapper(); // Show the UI elements when video starts playing
     this.patch({
       Subtitles: undefined,
     });
     this._skipVideo(10);
   }
-  _handleMediaPlay() {
-    // console.log('MediaPlay ');
-    // this._showWrapper(); // Show the UI elements when video starts playing
-    // if (!this._props.isAdVisible) {
-    //   VideoPlayer.play();
-    // }
 
+  _handleMediaPlay() {
     this.$playVideo();
   }
+
   _handleMediaPause() {
-    // console.log('MediaPause ');
-    // this._showWrapper(); // Show the UI elements when video starts playing
-    // if (!this._props.isAdVisible) {
-    //   VideoPlayer.pause();
-    // }
     this.$pauseVideo();
   }
+
   _handleMediaStop() {
-    // console.log('MediaStop ');
     this.patch({
       Subtitles: undefined,
     });
     Router.back();
     VideoPlayer.close();
   }
-  //
+
+  get id() {
+    return 'PlayerPage';
+  }
+
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
+
+  get _Controls() {
+    return this.tag('Controls');
+  }
+
+  get _Back() {
+    return this.tag('Back');
+  }
+
+  _captureKey() {
+    this._showWrapper();
+    return false;
+  }
 
   static _states() {
     return [
@@ -1385,24 +1038,16 @@ export default class Player extends lng.Component {
           return this._Controls;
         }
         _handleLeft() {
-          if (
-            this._params.videoType === 'Stream now' ||
-            this._params.videoType === 'application/x-mpegURL'
-          ) {
+          if (this._props.isLive)
             return;
-          } else {
-            this._setState('Back');
-          }
+
+          this._setState('Back');
         }
         _handleRight() {
-          if (
-            this._params.videoType === 'Stream now' ||
-            this._params.videoType === 'application/x-mpegURL'
-          ) {
+          if (this._props.isLive)
             return;
-          } else {
-            this._setState('SubtitlesButton');
-          }
+
+          this._setState('SubtitlesButton');
         }
       },
       class Subtitles extends this {
@@ -1427,10 +1072,9 @@ export default class Player extends lng.Component {
         }
 
         _handleEnter() {
-          const isCurrentlyPlaying = VideoPlayer.playing;
-          if (isCurrentlyPlaying === false) {
+          if (!VideoPlayer.playing) {
             const { pausedItemId } = this._props;
-            // this._showWrapper();
+
             VideoPlayer.pause();
 
             this._Controls.Items.children[pausedItemId]._Icon.patch({
@@ -1442,9 +1086,8 @@ export default class Player extends lng.Component {
             });
           }
 
-          if (this._props.isAdVisible !== true) {
+          if (!this._props.isAdVisible) {
             this._setState('Controls');
-            this._showWrapper();
           }
         }
       },

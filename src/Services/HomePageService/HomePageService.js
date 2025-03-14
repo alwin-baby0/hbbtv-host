@@ -225,7 +225,6 @@ class HomePageService extends FetchingService {
 }
 
 export const parseTranslations = () => {
-  console.log('PREVODI', JSON.parse(localStorage.getItem('languageTr')));
   return JSON.parse(localStorage.getItem('languageTr'));
 };
 

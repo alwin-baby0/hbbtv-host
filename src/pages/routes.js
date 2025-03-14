@@ -13,7 +13,6 @@ import Search from './Search/Search';
 import SingleLiveEvent from './SingleLiveEvent/SingleLiveEvent';
 import singleLiveEvent from './SingleLiveEvent/provider/singleLiveEvent';
 import Player from './Player/Player';
-import player from './Player/provider/player';
 import Settings from './Settings/Settings';
 import settings from './Settings/provider/settings';
 import HelpScreen from './Help/HelpScreen';
@@ -116,7 +115,6 @@ export default {
     {
       path: 'player',
       component: Player,
-      on: player,
     },
     {
       path: 'collection-details/:collectionId',

@@ -3,9 +3,6 @@ import { VideoPlayer } from '@lightningjs/sdk';
 import Hls from 'hls.js';
 
 export let player = null;
-const defaults = {
-  debug: false,
-};
 
 // Regular expressions to detect ad and media fragments
 const adUrlPattern = /\/break_\d+\.ts$/i;
@@ -21,7 +18,10 @@ function handleUnrecoverableError(player, errorEvent) {
 const createPlayer = (options) => {
   if (!player) {
     player = new Hls({
-      ...defaults,
+      debug: false,
+      liveBackBufferLength: 0,
+      enableWorker: false,
+      maxBufferLength: 0,
       ...options,
     });
   }
@@ -43,9 +43,12 @@ export function getPlayer() {
   return player;
 }
 
-function exportPlayer() {}
+function exportPlayer() { }
 
 const onFragmentChanged = (fragment) => {
+  console.log('console.memory jsHeapSizeLimit', console.memory?.jsHeapSizeLimit);
+  console.log('console.memory totalJSHeapSize', console.memory?.totalJSHeapSize);
+  console.log('console.memory usedJSHeapSize', console.memory?.usedJSHeapSize);
   console.log('Fragment URL:', fragment.frag.url); // Ovo dodajemo radi debuggiranja URL-ova
   const fragmentUrl = fragment.frag.url;
   const hasAdUI =
@@ -69,11 +72,8 @@ export const loader = (url, videoEl, options = {}) => {
       player.autoLevelCapping = options.autoLevelCapping || -1;
 
       player.on(Hls.Events.MANIFEST_PARSED, () => {
-        // console.log('New manifest parsed', videoEl);
         const subtitleTracks = getSubtitleTracks();
-        // console.log('Available subtitle tracks:', subtitleTracks);
-        resolve(subtitleTracks); // Optionally resolve with tracks
-        resolve();
+        resolve(subtitleTracks);
       });
 
       // Detect fragment change event in HLS.js
@@ -131,7 +131,7 @@ export const loader = (url, videoEl, options = {}) => {
 };
 
 const onProgress = (event) => {
-  const videoEl = event.target;
+  // const videoEl = event.target;
   // console.log('Buffer length:', videoEl.buffered.end(0) - videoEl.currentTime);
 };
 
