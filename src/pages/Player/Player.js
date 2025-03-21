@@ -358,23 +358,23 @@ export default class Player extends lng.Component {
     this.tag('ProgressBar').patch({
       w:
         this._params.videoType === 'Stream now' ||
-        this._params.videoType === 'application/x-mpegURL'
+          this._params.videoType === 'application/x-mpegURL'
           ? 1550
           : 1400,
       x:
         this._params.videoType === 'Stream now' ||
-        this._params.videoType === 'application/x-mpegURL'
+          this._params.videoType === 'application/x-mpegURL'
           ? 0
           : 0,
       flexItem: {
         marginLeft:
           this._params.videoType === 'Stream now' ||
-          this._params.videoType === 'application/x-mpegURL'
+            this._params.videoType === 'application/x-mpegURL'
             ? 0
             : 20,
         marginRight:
           this._params.videoType === 'Stream now' ||
-          this._params.videoType === 'application/x-mpegURL'
+            this._params.videoType === 'application/x-mpegURL'
             ? 0
             : 20,
       },
@@ -467,17 +467,20 @@ export default class Player extends lng.Component {
   }
 
   async _checkVideoUrl(url) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.error(`Error fetching video URL: ${response.statusText}`);
+    if (url.includes('m3u8')) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          console.error(`Error fetching video URL: ${response.statusText}`);
+          return false;
+        }
+        return true;
+      } catch (error) {
+        console.error(`Error fetching video URL: ${error.message}`);
         return false;
       }
-      return true;
-    } catch (error) {
-      console.error(`Error fetching video URL: ${error.message}`);
-      return false;
     }
+    return true;
   }
 
   async _showErrorMessage() {
@@ -1348,7 +1351,7 @@ export default class Player extends lng.Component {
       progressColor: Colors(colors.focus).get(),
       barColor:
         this._params.videoType === 'Stream now' ||
-        this._params.videoType === 'application/x-mpegURL'
+          this._params.videoType === 'application/x-mpegURL'
           ? Colors(colors.focus).get()
           : undefined,
     };
