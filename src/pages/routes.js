@@ -115,6 +115,9 @@ export default {
     {
       path: 'player',
       component: Player,
+      options: {
+        reuseInstance: false,
+      }
     },
     {
       path: 'collection-details/:collectionId',

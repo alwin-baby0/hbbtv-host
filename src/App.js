@@ -105,20 +105,20 @@ export default class App extends Router.App {
   }
 
   $punchHole() {
-    this._Background.shader = {
-      type: lng.shaders.Hole,
-      x: 0,
-      y: 0,
-      w: 1920,
-      h: 1080,
-    };
+    this.patch({
+      Background: undefined
+    })
   }
 
   $unpunchHole() {
-    this._Background.shader = {
-      w: 0,
-      h: 0,
-    };
+    this.patch({
+      Background: {
+        w: 1920,
+        h: 1080,
+        zIndex: -900,
+        src: Utils.asset('images/background.jpg'),
+      }
+    })
   }
 
   $punchHoleTV(x, y, w, h, radius) {
@@ -129,21 +129,39 @@ export default class App extends Router.App {
       h = 412;
       radius = 20;
     }
-    this.tag('Background').shader = {
-      type: Lightning.shaders.Hole,
-      x: x,
-      y: y,
-      w: w,
-      h: h,
-      radius: radius,
-    };
+    if (this.tag('Background')) {
+      this.tag('Background').shader = {
+        type: Lightning.shaders.Hole,
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+        radius: radius,
+      };
+    } else {
+      this.patch({
+        Background: {
+          w: 1920,
+          h: 1080,
+          zIndex: -900,
+          src: Utils.asset('images/background.jpg'),
+          shader: {
+            type: Lightning.shaders.Hole,
+            x: x,
+            y: y,
+            w: w,
+            h: h,
+            radius: radius,
+          }
+        }
+      })
+    }
   }
 
   $unpunchHoleTV() {
-    this.tag('Background').shader = {
-      w: 0,
-      h: 0,
-    };
+    if (this.tag('Background')) {
+      this.tag('Background').shader = undefined;
+    }
   }
 
   static getFonts() {

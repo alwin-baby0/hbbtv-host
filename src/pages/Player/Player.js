@@ -8,7 +8,7 @@ import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import { CMPService, parseTranslations } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
-import { formatTimeHMS, formatTimeMS, isVideoURLValid, playerButtonsLive, playerButtonsVOD } from './utils';
+import { convertCueTimeToSeconds, fakeAdsData, formatAds, formatTimeHMS, formatTimeMS, playerButtonsLive, playerButtonsVOD } from './utils';
 
 let lastIndex = 0;
 let offsetTime = 0;
@@ -104,6 +104,44 @@ export default class Player extends lng.Component {
           },
         },
       },
+      Subtitles: {
+        w: 600,
+        h: 1080,
+        x: 1320,
+        rect: true,
+        visible: false,
+        color: Colors('#1B1C23').get(),
+        zIndex: 5,
+        Title: {
+          x: 50,
+          y: 70,
+          text: {
+            text: 'Subtitles',
+            fontSize: 32,
+          },
+        },
+        Languages: {
+          type: Column,
+          items: [
+            {
+              type: SubtitlesButtons,
+              props: {
+                languageInfo: {
+                  name: 'OFF',
+                  type: 'SUBTITLES',
+                },
+                index: 0,
+              },
+              w: 250,
+              h: 100,
+            },
+          ],
+          props: {
+            w: 600,
+            h: 1080,
+          },
+        },
+      },
       ErrorMessage: {
         visible: false,
         color: Colors('#1e1e1e').get(),
@@ -139,28 +177,14 @@ export default class Player extends lng.Component {
     VideoPlayer.unloader(unloader);
     VideoPlayer.loop(false);
 
-    isVideoURLValid(videoUrl).then((result) => {
-      if (result) {
-        this.props = {
-          ...this._props,
-          ...rest,
-          videoUrl,
-          ads: ssai,
-          pausedItemId: 1,
-          isLive: videoType === 'Stream now' || videoType === 'application/x-mpegURL'
-        };
-        return;
-      }
-
-      this.tag('ErrorMessage').patch({
-        Message: {
-          text: {
-            text: this._translations?.no_stream || "Invalid Video URL",
-          }
-        }
-      })
-      this._showErrorMessage();
-    })
+    this.props = {
+      ...this._props,
+      ...rest,
+      videoUrl,
+      ads: formatAds(ssai),
+      pausedItemId: 1,
+      isLive: videoType === 'Stream now' || videoType === 'application/x-mpegURL'
+    };
   }
 
   set props(props) {
@@ -168,11 +192,14 @@ export default class Player extends lng.Component {
     const { isLive, videoUrl, continueTime } = props;
 
     this.tag('CurrentTime.Text').text = isLive ? 'Live' : '00:00:00';
+    this.tag('EndTime.Text').text = isLive ? '' : '00:00:00';
 
     //progress bar
     this.tag('ProgressBarWrapper').patch({
       x: isLive ? 180 : 115,
     });
+
+    const focusedColor = Colors(colors.focus).get();
     const margin = isLive ? 0 : 20;
     this.tag('ProgressBar').patch({
       w: isLive ? 1550 : 1400,
@@ -182,8 +209,8 @@ export default class Player extends lng.Component {
         marginRight: margin
       },
       style: {
-        progressColor: Colors(colors.focus).get(),
-        barColor: isLive ? Colors(colors.focus).get() : undefined,
+        progressColor: focusedColor,
+        barColor: isLive ? focusedColor : undefined,
       }
     });
 
@@ -201,11 +228,12 @@ export default class Player extends lng.Component {
       flex: {
         direction: 'row',
         alignItems: 'center',
-        justifyContent: isLive ? 'space-between' : 'center'
+        justifyContent: 'center'
       },
       props: {
         w: 1920,
         items: isLive ? playerButtonsLive : playerButtonsVOD,
+        targetIndex: 1,
       }
     })
 
@@ -248,15 +276,16 @@ export default class Player extends lng.Component {
 
   _disable() {
     super._disable();
-    clearTimeout(this._hideWrapperTimeout); // Clear previous timeout
+    clearTimeout(this._hideWrapperTimeout);
     clearInterval(this._progressInterval);
     if (this._adMonitoringInterval) {
       clearInterval(this._adMonitoringInterval);
     }
     clearInterval(this._progressAdInterval);
 
-
+    VideoPlayer.clear();
     VideoPlayer.close();
+
     this.fireAncestors('$unpunchHole');
     this.tag('ProgressBar').progress = 0;
     this._props.isAdVisible = false;
@@ -275,6 +304,16 @@ export default class Player extends lng.Component {
     VideoPlayer.close();
   }
 
+  $videoPlayerError() {
+    this.tag('ErrorMessage').patch({
+      Message: {
+        text: {
+          text: this._translations?.no_stream || "Invalid Video URL",
+        }
+      }
+    })
+    this._showErrorMessage();
+  }
 
   _startMonitoringAds() {
     // Clear any existing interval to prevent duplicates
@@ -326,12 +365,12 @@ export default class Player extends lng.Component {
         slot.pods.forEach((pod) => {
           // Iterate over each ad in the current pod
           pod.ads.forEach((ad, index) => {
-            const from = this._convertCueTimeToSeconds(ad.cue.from);
-            const to = this._convertCueTimeToSeconds(ad.cue.to);
+            const from = convertCueTimeToSeconds(ad.cue.from);
+            const to = convertCueTimeToSeconds(ad.cue.to);
             if (currentTime >= from && currentTime < to) {
               if (this._props.currentAd !== ad) {
                 const lastAd = pod.ads[pod.ads.length - 1];
-                const lastAdTo = this._convertCueTimeToSeconds(lastAd.cue.to);
+                const lastAdTo = convertCueTimeToSeconds(lastAd.cue.to);
                 this._props.skipTo = lastAdTo;
 
                 this.patch({
@@ -535,11 +574,6 @@ export default class Player extends lng.Component {
     // Show player controls again or perform any other post-ad actions
   }
 
-  _convertCueTimeToSeconds(cue) {
-    const parts = cue.split(':');
-    return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
-  }
-
   _handleAdPlayback(ad) {
     eventTrackPayload('ad_slot_started', this._props.videoId);
     eventTrackPayload('ad_pod_started', this._props.videoId);
@@ -556,31 +590,28 @@ export default class Player extends lng.Component {
     }
   }
 
-  _skipVideo(offset) {
+  _skipVideo(forward) {
     if (!this._props.isAdVisible) {
-      offsetTime += offset;
-      // VideoPlayer.pause();
-      clearTimeout(this._seekTimeout);
-      const newTime = VideoPlayer.currentTime + offsetTime;
-      // VideoPlayer.seek(newTime);
-      // Set a new timeout to delay the seek operation by 500ms
-      this._seekTimeout = setTimeout(() => {
-        // VideoPlayer.seek(newTime);
-        // console.log('SEEK:', newTime);
-        // offsetTime = 0;
-        // VideoPlayer.play();
+      if (forward) {
+        offsetTime += 10;
+      } else {
+        offsetTime -= 10;
+      }
 
-        this._checkAdCuePointsSeek(newTime);
-      }, 500); // 500ms delay
+      clearTimeout(this._seekTimeout);
+
+      this._seekTimeout = setTimeout(() => {
+        this._checkAdCuePointsSeek();
+      }, 500);
     }
   }
 
-  _checkAdCuePointsSeek(seekTime) {
-    const currentTime = seekTime;
-
+  _checkAdCuePointsSeek() {
+    console.log('_checkAdCuePointsSeek')
     const ssai_params = this._props.ads;
-    //const ssai_params = this._adData;
+    // const ssai_params = this._adData;
     // console.log('ssai_params: ', ssai_params);
+    const seekTime = VideoPlayer.currentTime + offsetTime;
 
     // Check if `ssai` has a `slots` array
     if (ssai_params && Array.isArray(ssai_params.slots)) {
@@ -590,142 +621,35 @@ export default class Player extends lng.Component {
         slot.pods.forEach((pod) => {
           // Iterate over each ad in the current pod
           pod.ads.forEach((ad, index) => {
-            const from = this._convertCueTimeToSeconds(ad.cue.from);
-            const to = this._convertCueTimeToSeconds(ad.cue.to);
-            if (currentTime >= from && currentTime < to) {
+            const from = convertCueTimeToSeconds(ad.cue.from);
+            const to = convertCueTimeToSeconds(ad.cue.to);
+            if (seekTime >= from && seekTime < to) {
               VideoPlayer.seek(from);
               console.log('SEEK:', from);
               offsetTime = 0;
               VideoPlayer.play();
-            } else {
-              VideoPlayer.seek(currentTime);
-              console.log('SEEK:', currentTime);
-              offsetTime = 0;
-              VideoPlayer.play();
+              return;
             }
           });
         });
       });
-    } else {
-      VideoPlayer.seek(currentTime);
-      console.log('SEEK:', currentTime);
-      offsetTime = 0;
-      VideoPlayer.play();
     }
+    VideoPlayer.seek(seekTime);
+    console.log('SEEK:', seekTime);
+    offsetTime = 0;
+    VideoPlayer.play();
   }
 
-  $videoPlayerCanPlay() {
+  $hideSbutitles() {
     this._setState('Controls');
-    this._showWrapper(true);
+    this.getByRef('Subtitles').visible = false;
+    this._subtitleMenuOpen = false;
   }
 
-  $setFocusOnItem(value) {
-    if (value === true) {
-      this._setState('Subtitles');
-    } else {
-      this._setState('Controls');
-      this.patch({
-        Subtitles: undefined,
-      });
-    }
-  }
-
-  $showSubtitles(val) {
-    const player = getPlayer();
-
-    // Define the 'OFF' button once at the top of the function
-    const offButton = {
-      name: 'OFF',
-      type: 'SUBTITLES',
-    };
-
-    if (!(player && player.subtitleTrackController && player.subtitleTrackController.tracks)) {
-      console.error('Tracks or subtitleTrackController is not available.');
-
-      // Patch the Subtitles section with only the 'OFF' button
-      this.patch({
-        Subtitles: {
-          w: 600,
-          h: 1080,
-          x: 1320,
-          rect: true,
-          color: Colors('#1B1C23').get(),
-          zIndex: 5,
-          Title: {
-            x: 50,
-            y: 70,
-            text: {
-              text: 'Subtitles',
-              fontSize: 32,
-            },
-          },
-          Languages: {
-            type: Column,
-            items: [
-              {
-                type: SubtitlesButtons,
-                props: {
-                  languageInfo: offButton,
-                  index: 0,
-                },
-                w: 250,
-                h: 100,
-              },
-            ],
-            props: {
-              w: 600,
-              h: 1080,
-            },
-          },
-        },
-      });
-      return; // Exit function after patching with 'OFF' only
-    }
-
-    // Get the available tracks
-    const getTracks = player.subtitleTrackController.tracks;
-
-    // Create an array with 'OFF' button and other available tracks
-    let newArray = [offButton, ...getTracks];
-
-    let items = newArray.map((language, index) => ({
-      type: SubtitlesButtons,
-      props: {
-        languageInfo: language,
-        index: index,
-      },
-      w: 250,
-      h: 60,
-    }));
-
-    // Patch the Subtitles section with all available items
-    this.patch({
-      Subtitles: {
-        w: 600,
-        h: 1080,
-        x: 1320,
-        rect: true,
-        color: Colors('#1B1C23').get(),
-        zIndex: 5,
-        Title: {
-          x: 50,
-          y: 70,
-          text: {
-            text: 'Subtitles',
-            fontSize: 32,
-          },
-        },
-        Languages: {
-          type: Column,
-          items: items,
-          props: {
-            w: 600,
-            h: 1080,
-            items: items,
-          },
-        },
-      },
-    });
+  $showSubtitles() {
+    this.getByRef('Subtitles').visible = true;
+    this._setState('Subtitles');
+    this._subtitleMenuOpen = true;
   }
 
   $setInitial() {
@@ -757,24 +681,35 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerLoadedData() {
-    const player = getPlayer();
-    // Ensure player is not null or undefined
-    if (player && player.subtitleTrackController) {
-      // Set the subtitle track to -1 if the player and subtitleTrackController exist
-      player.subtitleTrackController.subtitleTrack = -1;
-    } else {
-      console.error('Player or subtitleTrackController is not initialized.');
+    // Get the available subtitle tracks
+    console.log('getPlayer()', getPlayer())
+    const subtitleTracks = getPlayer()?.subtitleTrackController?.tracks;
+    console.log('subtitleTracks', subtitleTracks)
+    if (!subtitleTracks || subtitleTracks.length === 0) {
+      return;
     }
+
+    const items = subtitleTracks.map((language, index) => ({
+      type: SubtitlesButtons,
+      props: {
+        languageInfo: language,
+        index: index,
+      },
+      w: 250,
+      h: 60,
+    }));
+
+    this.tag('Subtitles.Languages').appendItems(items);
   }
 
-  $skippingTime(time) {
-    this._skipVideo(time);
+  $skippingTime(forward) {
+    this._skipVideo(forward);
   }
 
   closeVideoPlayer() {
     VideoPlayer.clear();
     VideoPlayer.close();
-    // VideoPlayer.unloader(unloader);
+
     clearInterval(this._progressInterval);
     clearInterval(this._progressAdInterval);
     this._adStarted = false;
@@ -791,6 +726,11 @@ export default class Player extends lng.Component {
       return;
     }
     e.preventDefault();
+
+    if (this._subtitleMenuOpen) {
+      this.$hideSbutitles();
+      return;
+    }
 
     console.log('routerHistory in player back: ', Router.getHistory());
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
@@ -829,11 +769,7 @@ export default class Player extends lng.Component {
   $playVideo() {
     const { pausedItemId } = this._props;
 
-    // eventTrackPayload('video_start', this._props.videoId);
-    this._setState('Controls');
-    this.patch({
-      Subtitles: undefined,
-    });
+    this.$hideSbutitles();
 
     if (!this._props.isAdVisible) {
       VideoPlayer.play();
@@ -848,10 +784,7 @@ export default class Player extends lng.Component {
     const { pausedItemId } = this._props;
 
     eventTrackPayload('video_pause', this._props.videoId);
-    this._setState('Controls');
-    this.patch({
-      Subtitles: undefined,
-    });
+    this.$hideSbutitles();
 
     if (!this._props.isAdVisible) {
       VideoPlayer.pause();
@@ -908,8 +841,8 @@ export default class Player extends lng.Component {
       if (!this._progressInterval) {
         this._setState('Controls');
         this.tag('Wrapper').visible = true;
+        this._updateProgressBar();
         if (!this._props.isLive) {
-          this._updateProgressBar();
           this._progressInterval = setInterval(() => this._updateProgressBar(), 1000);
         }
       }
@@ -938,13 +871,15 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerCanPlay() {
-    const durationInSeconds = parseFloat(VideoPlayer.duration);
-    const formattedDuration = formatTimeHMS(durationInSeconds);
+    console.log('videoPlayerCanPlay')
+    const formattedDuration = formatTimeHMS(parseFloat(VideoPlayer.duration));
 
     this.tag('EndTime.Text').text = this._props.isLive ? '' : formattedDuration;
-    this._duration = durationInSeconds;
 
     this._startMonitoringAds();
+
+    this._setState('Controls');
+    this._showWrapper();
   }
 
   // COMANDS
@@ -958,10 +893,7 @@ export default class Player extends lng.Component {
     VideoPlayer.playPause();
 
     // Show the UI elements when toggling play/pause
-    this._setState('Controls');
-    this.patch({
-      Subtitles: undefined,
-    });
+    this.$hideSbutitles();
 
     // Update the icon based on the current state
     if (isCurrentlyPlaying) {
@@ -978,20 +910,14 @@ export default class Player extends lng.Component {
   }
 
   _handleMediaRewind() {
-    this._setState('Controls');
-    this.patch({
-      Subtitles: undefined,
-    });
-    this._skipVideo(-10);
+    this.$hideSbutitles();
+    this._skipVideo(false);
     VideoPlayer.play();
   }
 
   _handleMediaFastForward() {
-    this._setState('Controls');
-    this.patch({
-      Subtitles: undefined,
-    });
-    this._skipVideo(10);
+    this.$hideSbutitles();
+    this._skipVideo(true);
   }
 
   _handleMediaPlay() {
@@ -1003,9 +929,7 @@ export default class Player extends lng.Component {
   }
 
   _handleMediaStop() {
-    this.patch({
-      Subtitles: undefined,
-    });
+    this.$hideSbutitles();
     Router.back();
     VideoPlayer.close();
   }

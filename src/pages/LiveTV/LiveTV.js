@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router } from '@lightningjs/sdk';
+import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
 import { EPGService } from '../../Services';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
@@ -10,8 +10,6 @@ import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
-
-
 
 export default class LiveTV extends Lightning.Component {
   _props = {
@@ -250,7 +248,7 @@ export default class LiveTV extends Lightning.Component {
       );
   }
 
-  async _active() {
+  _active() {
     eventTrackPayload('browse_channels', 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 
@@ -279,6 +277,11 @@ export default class LiveTV extends Lightning.Component {
     };
 
     this.tag('EPGData').setInitialOffset();
+  }
+
+  _disable() {
+    VideoPlayer.clear();
+    this.fireAncestors('$unpunchHoleTV');
   }
 
   $updateChannel(singleChannel) {

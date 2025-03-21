@@ -19,9 +19,9 @@ const createPlayer = (options) => {
   if (!player) {
     player = new Hls({
       debug: false,
-      liveBackBufferLength: 0,
+      liveBackBufferLength: 30,
       enableWorker: false,
-      maxBufferLength: 0,
+      maxBufferLength: 30,
       ...options,
     });
   }
@@ -43,12 +43,7 @@ export function getPlayer() {
   return player;
 }
 
-function exportPlayer() { }
-
 const onFragmentChanged = (fragment) => {
-  console.log('console.memory jsHeapSizeLimit', console.memory?.jsHeapSizeLimit);
-  console.log('console.memory totalJSHeapSize', console.memory?.totalJSHeapSize);
-  console.log('console.memory usedJSHeapSize', console.memory?.usedJSHeapSize);
   console.log('Fragment URL:', fragment.frag.url); // Ovo dodajemo radi debuggiranja URL-ova
   const fragmentUrl = fragment.frag.url;
   const hasAdUI =
@@ -124,15 +119,9 @@ export const loader = (url, videoEl, options = {}) => {
       videoEl.preload = 'auto';
       videoEl.setAttribute('preload', 'auto');
       videoEl.setAttribute('buffer', '10');
-      videoEl.addEventListener('progress', onProgress);
       resolve();
     }
   });
-};
-
-const onProgress = (event) => {
-  // const videoEl = event.target;
-  // console.log('Buffer length:', videoEl.buffered.end(0) - videoEl.currentTime);
 };
 
 const unload = (videoEl) => {
@@ -140,6 +129,7 @@ const unload = (videoEl) => {
   videoEl.removeAttribute('src');
   videoEl.load();
 };
+
 export const unloader = (videoEl) => {
   return new Promise((resolve) => {
     unload(videoEl);

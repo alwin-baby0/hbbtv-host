@@ -110,12 +110,30 @@ export const formatTimeHMS = (seconds) => {
  */
 export const isVideoURLValid = async (url) => {
   if (!url) return false;
+  if (url.includes('mp4')) return true;
   try {
     const result = await fetch(url);
     return result.ok;
   } catch (e) {
     return false;
   }
+}
+
+export const convertCueTimeToSeconds = (cue) => {
+  const parts = cue.split(':');
+  return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
+};
+
+export const formatAds = (slots) => {
+  return slots.map((slot) => {
+    return slot.pods.map((pod) => {
+      return {
+        adStart: convertCueTimeToSeconds(pod.cue.from),
+        adEnd: convertCueTimeToSeconds(pod.cue.to),
+        skipAllowed: pod.skipping_allowed,
+      }
+    })
+  })
 }
 
 export const fakeAdsData = {
