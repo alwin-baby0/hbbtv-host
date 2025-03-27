@@ -104,9 +104,13 @@ export default class LanguageSettings extends Lightning.Component {
       await CMPService.initialFetch();
       const serialNumber = localStorage.getItem('serialNumber');
 
-      const buttonsResult = CMPService.cmpData.buttons;
+      const buttonsResult = CMPService.cmpData?.buttons;
+      const cmpTitle = CMPService.cmpData?.title;
+      const cmpDescription = CMPService.cmpData?.description;
 
-      const buttons = Object.values(buttonsResult).map((value) => {
+      console.log('cmpdatabtns', buttonsResult);
+
+      const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
         return {
           type: Button,
           w: 1050,
@@ -116,14 +120,14 @@ export default class LanguageSettings extends Lightning.Component {
           props: {
             width: 1050,
             height: 72,
-            // buttonLabel: value.label,
-            buttonLabel: Language.translate(value.label),
+            buttonLabel: value.label,
+            //buttonLabel: Language.translate(value.label),
             buttonIcon: '',
             strokeWidth: 1.5,
             borderColor: '#696969',
             callback: async () => {
               if (value.callback_url) {
-                const chosenValue = value.label === 'Yes, I Agree' ? 1 : 0;
+                const chosenValue = btnIndex === 0 ? 1 : 0;
                 await CMPService.selectCMPChoice(serialNumber, chosenValue);
                 await Router.navigate('home');
               } else {
@@ -140,11 +144,11 @@ export default class LanguageSettings extends Lightning.Component {
           w: 1310,
           h: 920,
           Title: {
-            w: 450,
+            w: 1000,
             h: 50,
             text: {
               // text: 'We value you privacy',
-              text: Language.translate('CMPTitle'),
+              text: cmpTitle,
               fontSize: 40,
               fontFace: 'Montserrat-Bold',
               lineHeight: 50,
@@ -157,7 +161,7 @@ export default class LanguageSettings extends Lightning.Component {
             y: 30,
             text: {
               // text: 'We use cookies to enhance browsing experience. By clicking “Yes” you consent to our use of cookies. You can customize your consent preferences by clicking “Customize”',
-              text: Language.translate('CMPDescription'),
+              text: cmpDescription,
               fontSize: 24,
               fontFace: 'Montserrat-Regular',
               lineHeight: 30,

@@ -10,6 +10,8 @@ import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import { CMPService } from '../../Services/CMPService';
 import { eventTrackPayload } from '../../utils/device';
+import { parseTranslations } from '../../Services/HomePageService';
+import defTr from '../../../static/translations/en.json';
 let lastIndex = 0;
 let offsetTime = 0;
 
@@ -100,6 +102,7 @@ const test = {
 };
 
 export default class Player extends lng.Component {
+  _translations;
   _props = {
     pausedItemId: 1,
     lastId: 0,
@@ -325,6 +328,16 @@ export default class Player extends lng.Component {
   }
 
   set props(props) {
+    this._translations = parseTranslations();
+
+    this.tag('ErrorMessage')
+      .tag('Message')
+      .patch({
+        text: {
+          text: this._translations?.no_stream || defTr.no_stream,
+        },
+      });
+
     const { controlsItems: items, liveItems } = props;
     const itemComponents =
       this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
@@ -1183,7 +1196,14 @@ export default class Player extends lng.Component {
   }
 
   _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
     e.preventDefault();
+
+    console.log('routerHistory in player back: ', Router.getHistory());
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    Router.setHistory([...router]);
     if (localStorage.getItem('userData')) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._params.seriesID) {
@@ -1220,9 +1240,16 @@ export default class Player extends lng.Component {
     const { pausedItemId } = this._props;
 
     // eventTrackPayload('video_start', this._params.videoId);
-
+    this._setState('Controls');
     this._showWrapper();
-    VideoPlayer.play();
+    this.patch({
+      Subtitles: undefined,
+    });
+
+    if (!this._props.isAdVisible) {
+      VideoPlayer.play();
+    }
+
     this._Controls.Items.children[pausedItemId]._Icon.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
     });
@@ -1232,9 +1259,15 @@ export default class Player extends lng.Component {
     const { pausedItemId } = this._props;
 
     eventTrackPayload('video_pause', this._params.videoId);
-
+    this._setState('Controls');
     this._showWrapper();
-    VideoPlayer.pause();
+    this.patch({
+      Subtitles: undefined,
+    });
+
+    if (!this._props.isAdVisible) {
+      VideoPlayer.pause();
+    }
 
     // console.log('pausiran video', this._params.videoId, 'video', VideoPlayer.currentTime);
     // console.log('duzina videa', parseFloat(VideoPlayer.duration));
@@ -1258,6 +1291,7 @@ export default class Player extends lng.Component {
   }
 
   $startStopVideo(isStopped) {
+    this._setState('Controls');
     this._showWrapper();
     if (this.tag('Wrapper').visible) {
       VideoPlayer.pause();
@@ -1370,7 +1404,11 @@ export default class Player extends lng.Component {
     VideoPlayer.playPause();
 
     // Show the UI elements when toggling play/pause
+    this._setState('Controls');
     this._showWrapper();
+    this.patch({
+      Subtitles: undefined,
+    });
 
     // Update the icon based on the current state
     if (isCurrentlyPlaying) {
@@ -1388,31 +1426,45 @@ export default class Player extends lng.Component {
 
   _handleMediaRewind() {
     // console.log('MediaRewind ');
+    this._setState('Controls');
     this._showWrapper(); // Show the UI elements when video starts playing
+    this.patch({
+      Subtitles: undefined,
+    });
     this._skipVideo(-10);
     VideoPlayer.play();
   }
   _handleMediaFastForward() {
     // console.log('MediaFastForward ');
+    this._setState('Controls');
     this._showWrapper(); // Show the UI elements when video starts playing
+    this.patch({
+      Subtitles: undefined,
+    });
     this._skipVideo(10);
   }
   _handleMediaPlay() {
     // console.log('MediaPlay ');
-    this._showWrapper(); // Show the UI elements when video starts playing
-    if (!this._props.isAdVisible) {
-      VideoPlayer.play();
-    }
+    // this._showWrapper(); // Show the UI elements when video starts playing
+    // if (!this._props.isAdVisible) {
+    //   VideoPlayer.play();
+    // }
+
+    this.$playVideo();
   }
   _handleMediaPause() {
     // console.log('MediaPause ');
-    this._showWrapper(); // Show the UI elements when video starts playing
-    if (!this._props.isAdVisible) {
-      VideoPlayer.pause();
-    }
+    // this._showWrapper(); // Show the UI elements when video starts playing
+    // if (!this._props.isAdVisible) {
+    //   VideoPlayer.pause();
+    // }
+    this.$pauseVideo();
   }
   _handleMediaStop() {
     // console.log('MediaStop ');
+    this.patch({
+      Subtitles: undefined,
+    });
     Router.back();
     VideoPlayer.close();
   }

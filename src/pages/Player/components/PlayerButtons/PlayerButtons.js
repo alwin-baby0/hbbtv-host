@@ -1,4 +1,4 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Utils, VideoPlayer } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
 import colors from '../../../../../reskin/colors.json';
 
@@ -87,7 +87,9 @@ export default class PlayerButtons extends lng.Component {
 
   _handlePause(isStopped) {
     this._props.isStopped = !isStopped;
-    if (this._props.isStopped) {
+    const isPlaying = VideoPlayer.playing;
+
+    if (isPlaying) {
       this._Icon.patch({
         texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/play.svg'), 60, 60),
       });
