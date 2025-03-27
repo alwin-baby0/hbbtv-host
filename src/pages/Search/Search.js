@@ -3,7 +3,6 @@ import KeyboardSearch from '../../Components/Keyboard/components/KeyboardSearch'
 import InputField from './components/Input';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import { getSearch } from '../../api/search';
-import { constructRails } from '../utils';
 import { HomePageService } from '../../Services/HomePageService';
 import { eventTrackPayload } from '../../utils/device';
 const search = {
