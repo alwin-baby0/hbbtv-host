@@ -10,6 +10,8 @@ import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import { CMPService } from '../../Services/CMPService';
 import { eventTrackPayload } from '../../utils/device';
+import { parseTranslations } from '../../Services/HomePageService';
+import defTr from '../../../static/translations/en.json';
 let lastIndex = 0;
 let offsetTime = 0;
 
@@ -100,6 +102,7 @@ const test = {
 };
 
 export default class Player extends lng.Component {
+  _translations;
   _props = {
     pausedItemId: 1,
     lastId: 0,
@@ -325,6 +328,16 @@ export default class Player extends lng.Component {
   }
 
   set props(props) {
+    this._translations = parseTranslations();
+
+    this.tag('ErrorMessage')
+      .tag('Message')
+      .patch({
+        text: {
+          text: this._translations?.no_stream || defTr.no_stream,
+        },
+      });
+
     const { controlsItems: items, liveItems } = props;
     const itemComponents =
       this._params.videoType === 'Stream now' || this._params.videoType === 'application/x-mpegURL'
@@ -1183,7 +1196,14 @@ export default class Player extends lng.Component {
   }
 
   _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
     e.preventDefault();
+
+    console.log('routerHistory in player back: ', Router.getHistory());
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    Router.setHistory([...router]);
     if (localStorage.getItem('userData')) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._params.seriesID) {

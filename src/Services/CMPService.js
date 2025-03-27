@@ -80,6 +80,9 @@ class CMPService extends FetchingService {
       headers: {
         'X-DEVICE-ID': deviceCode,
       },
+      params: {
+        device_id: deviceCode,
+      },
     });
 
     return response;
@@ -95,6 +98,7 @@ class CMPService extends FetchingService {
       },
       params: {
         choice: choicePick,
+        device_id: deviceCode,
       },
     });
   };
@@ -157,7 +161,7 @@ class CMPService extends FetchingService {
     });
   };
 
-  getFavorites = async () => {
+  getFavorites = async (page, limit = 8) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
     const timestamp = new Date().getTime();
@@ -171,6 +175,8 @@ class CMPService extends FetchingService {
       },
       params: {
         cachebuster: timestamp,
+        page,
+        limit,
       },
     });
   };
@@ -222,7 +228,7 @@ class CMPService extends FetchingService {
     });
   };
 
-  getRecentlyWatched = async () => {
+  getRecentlyWatched = async (page, limit = 8) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
     const timestamp = new Date().getTime();
@@ -236,6 +242,8 @@ class CMPService extends FetchingService {
       },
       params: {
         cachebuster: timestamp,
+        page,
+        limit,
       },
     });
   };

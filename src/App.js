@@ -10,6 +10,9 @@ import Dialog from './components/widgets/Dialog/Dialog';
 import { getDevice } from './utils/device';
 import { eventTrackPayload } from './utils/device';
 import { API_KEY } from './config';
+import defTr from '../static/translations/en.json';
+import { parseTranslations } from './Services/HomePageService';
+import { DetailService } from './Services/DetailService';
 let wasOffline = false; // Variable to track previous internet status
 
 let keys = [
@@ -143,6 +146,21 @@ export default class App extends Router.App {
     this.checkNetworkStatusOnline(navigator.onLine);
   }
 
+  async getMovie(id) {
+    const movie = await DetailService.getMovie(id);
+
+    console.log('Movie in app: ', movie);
+
+    if (movie) {
+      Router.navigate('player', {
+        videoUrl: movie.url,
+        duration: movie.duration,
+        videoId: id,
+        ssai: movie.ssai,
+      });
+    }
+  }
+
   _init() {
     const deviceId = localStorage.getItem('serialNumber');
     console.log('init');
@@ -151,6 +169,8 @@ export default class App extends Router.App {
     if (device === 'tizen') {
       tizen.tvinputdevice.registerKeyBatch(keys);
     }
+
+    this._translations = parseTranslations();
 
     this.loadExternalScript(`https://tracking.watch4.com/track.js?api_key=${API_KEY}`);
     // this.loadGAScript(
@@ -161,6 +181,30 @@ export default class App extends Router.App {
     setTimeout(() => {
       eventTrackPayload('launch_app', deviceId);
     }, 2000);
+
+    // const url = new URL(window.location.href);
+    // const path = url.pathname; // e.g., /movie/123
+    // const params = new URLSearchParams(url.search);
+
+    // console.log('Deep link path:', path);
+    // console.log('Deep link params:', url.search);
+    // console.log('has type: ', params.has('type'));
+
+    // if (params.has('type') && params.has('id')) {
+    //   const type = params.get('type');
+    //   const id = params.get('id');
+    //   console.log('type: ', type);
+    //   console.log('id: ', id);
+
+    //   let routerHistory = Router.getHistory();
+    //   console.log('routerHistory: ', routerHistory);
+
+    //   Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
+
+    //   console.log('routerHistory updated: ', Router.getHistory());
+
+    //   this.getMovie(id);
+    // }
   }
 
   $punchHole() {
@@ -325,20 +369,17 @@ export default class App extends Router.App {
 
   $appClose() {
     const dialog = this.tag('Dialog');
-    const noResume = Language.translate('noResume');
-    const yesExit = Language.translate('yesExit');
-    console.log('NO RESUME:', noResume);
     dialog.open({
-      message: 'Are you sure you want to close the app?',
+      message: this._translations?.exit_label || defTr.exit_label,
       actions: [
         {
-          label: noResume,
+          label: this._translations?.no_resume || defTr.no_resume,
           action: () => {
             dialog.close();
           },
         },
         {
-          label: yesExit,
+          label: this._translations?.yes_exit || defTr.yes_exit,
           action: () => {
             const device = getDevice();
             // Router navigation for "Yes, exit now"

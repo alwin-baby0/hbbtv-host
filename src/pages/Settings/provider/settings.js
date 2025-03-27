@@ -1,8 +1,10 @@
 import LanguageButton from '../../../Components/Buttons/LanguageButton/LanguageButton';
 import { CMPService } from '../../../Services/CMPService';
+import { parseTranslations } from '../../../Services/HomePageService';
 import { LanguageService } from '../../../Services/LanguagesService';
 import HelpButton from '../../../components/Buttons/HelpButton/HelpButton';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
+import defTr from '../../../../static/translations/en.json';
 const languagesData = [
   {
     code: 'EN',
@@ -124,6 +126,9 @@ const memberArea = (page, tabButtons) => {
 };
 
 export default async function (page) {
+  const translations = parseTranslations();
+  console.log('prevodi iz settingsa', translations);
+
   const languages = await LanguageService.getLanguages();
 
   page.props = {
@@ -134,7 +139,7 @@ export default async function (page) {
   const tabButtons = [
     {
       id: 0,
-      title: 'My Account',
+      title: translations?.my_account || defTr.my_account,
     },
   ];
 
@@ -142,15 +147,15 @@ export default async function (page) {
     tabButtons.push(
       {
         id: 1,
-        title: 'Continue Watching',
+        title: translations?.continue_watching || defTr.continue_watching,
       },
       {
         id: 2,
-        title: 'Favorites',
+        title: translations?.favorites || defTr.favorites,
       },
       {
         id: 3,
-        title: 'Logout',
+        title: translations?.logout || defTr.logout,
       }
     );
   }

@@ -9,7 +9,7 @@ export default async function (page) {
 
   const buttonsResult = CMPService.cmpData.buttons;
 
-  const buttons = Object.values(buttonsResult).map((value) => {
+  const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
     return {
       type: Button,
       w: 1050,
@@ -25,7 +25,7 @@ export default async function (page) {
         borderColor: '#696969',
         callback: async () => {
           if (value.callback_url) {
-            const chosenValue = value.label === 'Yes, I Agree' ? 1 : 0;
+            const chosenValue = btnIndex === 0 ? 1 : 0;
             await CMPService.selectCMPChoice(serialNumber, chosenValue);
             Router.navigate('home', false);
           } else {

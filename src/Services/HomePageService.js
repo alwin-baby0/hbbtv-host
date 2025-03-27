@@ -17,6 +17,7 @@ class HomePageService extends FetchingService {
   #heroSectionPage = 1; // Page counter for Hero Section
   #isLastFetchEmpty = false; // Initialize to false
   #banner = [];
+  languageTranslations = [];
 
   /**
    * Fetches initial stripes for Home page
@@ -24,6 +25,10 @@ class HomePageService extends FetchingService {
   async initialFetch() {
     this.#banner = await this.#getBanner();
     // this.#banner = [];
+
+    this.languageTranslations = await this.#getLanguageTranslations();
+    console.log(this.languageTranslations, JSON.stringify(this.languageTranslations));
+    localStorage.setItem('languageTr', JSON.stringify(this.languageTranslations));
 
     if (!this.#heroSectionItems) {
       //get gallery data
@@ -217,7 +222,26 @@ class HomePageService extends FetchingService {
       apiVersion: V2,
       method: 'GET',
     }).then(parseBannerData);
+
+  #getLanguageTranslations = async () => {
+    const lngCode = localStorage.getItem('languageCode');
+
+    /* return await this._request({
+      url: `/lang/${lngCode}/app`,
+      apiVersion: V2,
+      method: 'GET',
+    }); */
+
+    const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode || 'en'}/app`);
+    const res = prevodi.json();
+    return res;
+  };
 }
+
+export const parseTranslations = () => {
+  console.log('PREVODI', JSON.parse(localStorage.getItem('languageTr')));
+  return JSON.parse(localStorage.getItem('languageTr'));
+};
 
 const homePageService = new HomePageService();
 
