@@ -12,6 +12,8 @@ const search = {
 };
 
 export default class Search extends Lightning.Component {
+  searchTimeout;
+
   static _template() {
     return {
       w: 1920,
@@ -90,7 +92,13 @@ export default class Search extends Lightning.Component {
       }
     }
     this._Input._changePlaceholder();
-    this.$updatedVOD();
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+    this.searchTimeout = setTimeout(() => {
+      this.$updatedVOD();
+      this.searchTimeout = null;
+    }, 1000)
   }
 
   _inactive() {
