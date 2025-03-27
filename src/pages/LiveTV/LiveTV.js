@@ -1,10 +1,10 @@
-import { Colors, Lightning, Router } from '@lightningjs/sdk';
+import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
-import { EPGService } from '../../Services/EPGService';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import { EPGService } from '../../Services';
+import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../utils';
-import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
 import CategoryPicker from '../../Components/CategoryPicker/CategoryPicker';
 import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
@@ -190,6 +190,7 @@ export default class LiveTV extends Lightning.Component {
     // Handle the case where end time is on the next day
     let timeArray = [];
     let hour = startDate.getHours();
+    let maxDepth = 100000;
     while (true) {
       timeArray.push(`${hour}:00`);
       if (hour !== endHour || startDate.getDate() !== endDate.getDate()) {
@@ -204,6 +205,8 @@ export default class LiveTV extends Lightning.Component {
       if (hour === endHour && timeArray.includes(`${hour}:00`)) {
         break;
       }
+      if (!maxDepth) break;
+      maxDepth--;
     }
 
     // Add the next rounded hour if end time is not a rounded hour
@@ -245,7 +248,7 @@ export default class LiveTV extends Lightning.Component {
       );
   }
 
-  async _active() {
+  _active() {
     eventTrackPayload('browse_channels', 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 
@@ -274,6 +277,11 @@ export default class LiveTV extends Lightning.Component {
     };
 
     this.tag('EPGData').setInitialOffset();
+  }
+
+  _disable() {
+    VideoPlayer.clear();
+    this.fireAncestors('$unpunchHole');
   }
 
   $updateChannel(singleChannel) {

@@ -1,11 +1,10 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
-import { CMPService } from '../../Services/CMPService';
+import { CMPService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import { parseTranslations } from '../../Services/HomePageService';
-import defTr from '../../../static/translations/en.json';
+import defTr from '../../../public/static/translations/en.json';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -294,9 +293,9 @@ export default class SingleSeries extends Lightning.Component {
     this._setState(nextState);
   }
 
-  _init() {}
+  _init() { }
 
-  _getFocused() {}
+  _getFocused() { }
 
   _handleBack(e) {
     if (Router.isNavigating()) {

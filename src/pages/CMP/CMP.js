@@ -1,6 +1,6 @@
-import { Lightning, Router } from '@lightningjs/sdk';
+import { Lightning } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import { CMPService } from '../../Services/CMPService';
+import { CMPService } from '../../Services';
 
 export default class CMP extends Lightning.Component {
   static _template() {

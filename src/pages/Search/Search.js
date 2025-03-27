@@ -2,9 +2,8 @@ import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import KeyboardSearch from '../../Components/Keyboard/components/KeyboardSearch';
 import InputField from './components/Input';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import { getSearch } from '../../api/search';
 import { constructRails } from '../utils';
-import { HomePageService } from '../../Services/HomePageService';
+import { HomePageService, SearchService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 const search = {
   items: [],
@@ -101,7 +100,7 @@ export default class Search extends Lightning.Component {
     let inputValue = this._Input.tag('Input').value.toLowerCase();
 
     if (inputValue.length > 2) {
-      getSearch(inputValue, '').then((data) => {
+      SearchService.getSearch(inputValue, '').then((data) => {
         if (data?.items) {
           data.items && this.$changedVODGenre(data);
         }

@@ -4,8 +4,8 @@ import GalleryItem from '../../Components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import Button from '../../Components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
-import { parseTranslations } from '../../Services/HomePageService';
-import defTr from '../../../static/translations/en.json';
+import { parseTranslations } from '../../Services';
+import defTr from '../../../public/static/translations/en.json';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
