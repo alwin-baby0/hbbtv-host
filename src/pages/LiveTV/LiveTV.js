@@ -281,7 +281,7 @@ export default class LiveTV extends Lightning.Component {
 
   _disable() {
     VideoPlayer.clear();
-    this.fireAncestors('$unpunchHoleTV');
+    this.fireAncestors('$unpunchHole');
   }
 
   $updateChannel(singleChannel) {

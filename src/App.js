@@ -117,6 +117,7 @@ export default class App extends Router.App {
         h: 1080,
         zIndex: -900,
         src: Utils.asset('images/background.jpg'),
+        shader: undefined,
       }
     })
   }
@@ -155,12 +156,6 @@ export default class App extends Router.App {
           }
         }
       })
-    }
-  }
-
-  $unpunchHoleTV() {
-    if (this.tag('Background')) {
-      this.tag('Background').shader = undefined;
     }
   }
 

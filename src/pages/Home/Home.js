@@ -83,6 +83,10 @@ export default class Home extends Lightning.Component {
     }
   }
 
+  _disable() {
+    this.fireAncestors('$unpunchHole')
+  }
+
   _firstActive() {
     this._setState('Hero');
   }

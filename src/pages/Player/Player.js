@@ -181,7 +181,7 @@ export default class Player extends lng.Component {
       ...this._props,
       ...rest,
       videoUrl,
-      ads: formatAds(ssai),
+      ads: ssai,
       pausedItemId: 1,
       isLive: videoType === 'Stream now' || videoType === 'application/x-mpegURL'
     };
