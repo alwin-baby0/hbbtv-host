@@ -13,7 +13,6 @@ import Search from './Search/Search';
 import SingleLiveEvent from './SingleLiveEvent/SingleLiveEvent';
 import singleLiveEvent from './SingleLiveEvent/provider/singleLiveEvent';
 import Player from './Player/Player';
-import player from './Player/provider/player';
 import Settings from './Settings/Settings';
 import settings from './Settings/provider/settings';
 import HelpScreen from './Help/HelpScreen';
@@ -28,7 +27,7 @@ import cmp from './CMP/provider/cmp';
 import CMPCustomize from './CMP/components/CMPCustomize';
 import LanguageSettings from './LanguageSettings/LanguageSettings';
 import languageSettings from './LanguageSettings/provider/languageSettings';
-
+// TODO: pomeriti ovaj fajl van ovog foldera u /src
 export default {
   root: 'splash',
   routes: [
@@ -116,7 +115,9 @@ export default {
     {
       path: 'player',
       component: Player,
-      on: player,
+      options: {
+        reuseInstance: false,
+      }
     },
     {
       path: 'collection-details/:collectionId',
