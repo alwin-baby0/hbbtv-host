@@ -8,6 +8,7 @@ const API_BASE_URLS = {
 };
 
 export default class FetchingService {
+
   // we create static instance of axios to be unique throught the project
   static axiosInstance = axios.create({
     headers: {

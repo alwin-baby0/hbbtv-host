@@ -1,5 +1,5 @@
-import FetchingService from './FetchingService';
-import { V2 } from './utils';
+import FetchingService from '../FetchingService';
+import { V2 } from '../utils';
 
 export default class LanguageService extends FetchingService {
   getLanguages = async () => {

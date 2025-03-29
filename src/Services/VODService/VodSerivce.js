@@ -1,13 +1,13 @@
-import FetchingService from './FetchingService';
+import FetchingService from '../FetchingService';
 import {
   parseSeriesPageData,
   parseSportsEventsData,
   parseSportsPageData,
   parseVodCategories,
   parseVodMoviesPageData,
-} from '../Models/parsers';
-import { VOD_PREVIEW_TYPES } from '../Pages/utils';
-import { V2 } from './utils';
+} from '../../Models/parsers';
+import { VOD_PREVIEW_TYPES } from '../../Pages/utils';
+import { V2 } from '../utils';
 
 export const VODS_PER_ROW = 6;
 export const VOD_ROWS_PER_FETCH = 3;

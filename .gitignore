@@ -4,5 +4,6 @@ dist
 releases
 .tmp
 build
-src/api/key.js
 .env
+.env.*
+public/static/devtools
