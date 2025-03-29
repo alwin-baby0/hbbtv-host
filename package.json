@@ -17,9 +17,11 @@
     "cypress": "cypress open",
     "lint": "npx prettier --check \"./src/*/*.js\"",
     "lint:fix": "npx prettier --write \"./src/**/*.js\"",
-    "start": "cross-env LNG_LIVE_RELOAD=true LNG_LIVE_RELOAD_PORT=8991 lng dev",
     "test": "jest",
-    "build": "lng dist"
+    "start": "vite --mode development-web",
+    "build": "vite build --mode production-web",
+    "build-lg": "vite build --mode production-lg",
+    "build-titan": "vite build --mode production-titan"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -43,6 +45,7 @@
     "@babel/plugin-proposal-decorators": "^7.15.1",
     "@babel/plugin-proposal-optional-chaining": "^7.12.7",
     "@babel/preset-env": "^7.15.0",
+    "@vitejs/plugin-legacy": "^6.0.2",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.1.0",
     "cross-env": "^7.0.3",
@@ -55,6 +58,7 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-webgl-canvas-mock": "^0.2.3",
     "lint-staged": "^12.1.2",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "vite": "^6.2.0"
   }
 }

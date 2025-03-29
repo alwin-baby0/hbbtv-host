@@ -1,3 +1,9 @@
-export { HomePageService } from './HomePageService';
-export { VodService } from './VodSerivce';
-export { EPGService } from './EPGService';
+export * from './HomePageService';
+export * from './CMPService';
+export * from './VODService';
+export * from './EPGService';
+export * from './CollectionService';
+export * from './DetailService';
+export * from './LanguageService';
+export * from './SettingsService';
+export * from './SearchService';
