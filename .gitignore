@@ -5,4 +5,5 @@ releases
 .tmp
 build
 .env
+.env.*
 public/static/devtools
