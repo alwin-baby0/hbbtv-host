@@ -1,7 +1,7 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import { Column } from '@lightningjs/ui-components';
-import { getSinglePage } from '../../../api/help';
 import colors from '../../../../reskin/colors.json';
+import { SettingsService } from '../../../Services';
 
 export default class PageItem extends Lightning.Component {
   static _template() {
@@ -17,9 +17,6 @@ export default class PageItem extends Lightning.Component {
         Text: {
           w: 230,
           h: 25,
-          // flexItem: {
-          //   marginLeft: 20,
-          // },
           text: {
             textAlign: 'center',
             fontFace: 'Montserrat-Medium',
@@ -41,11 +38,11 @@ export default class PageItem extends Lightning.Component {
   }
 
   set pageInfoData(val) {
-    return (this._pageInfoData = val);
+    this._pageInfoData = val;
   }
 
   set pageIndex(val) {
-    return (this._pageIndex = val);
+    this._pageIndex = val;
   }
 
   _enable() {
@@ -57,7 +54,7 @@ export default class PageItem extends Lightning.Component {
       color: Colors(colors.background).get(),
     });
     let newPage;
-    newPage = getSinglePage(1);
+    newPage = SettingsService.getSinglePage(1);
     this.fireAncestors('$changeDescription', newPage, 1);
   }
 
@@ -67,7 +64,7 @@ export default class PageItem extends Lightning.Component {
 
   _handleEnter() {
     let newPage;
-    newPage = getSinglePage(this._pageInfoData.id);
+    newPage = SettingsService.getSinglePage(this._pageInfoData.id);
 
     let pageId = this._pageInfoData.id;
     this.fireAncestors('$changeDescription', newPage, pageId);
@@ -106,9 +103,9 @@ export default class PageItem extends Lightning.Component {
     }
   }
 
-  _init() {}
+  _init() { }
 
-  _getFocused() {}
+  _getFocused() { }
 
   static _states() {
     return [];

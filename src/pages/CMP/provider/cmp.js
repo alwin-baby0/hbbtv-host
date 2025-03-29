@@ -1,11 +1,12 @@
 import { Router } from '@lightningjs/sdk';
 import Button from '../../../Components/Button/Button';
-import { CMPService } from '../../../Services/CMPService';
+import { CMPService } from '../../../Services';
+import { getDeviceInfo } from '../../../utils/device';
 
 export default async function (page) {
   await CMPService.initialFetch();
 
-  const serialNumber = localStorage.getItem('serialNumber');
+  const serialNumber = getDeviceInfo().serialNumber;
 
   const buttonsResult = CMPService.cmpData.buttons;
 

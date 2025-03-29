@@ -1,6 +1,5 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import { CMPService } from '../../Services/CMPService';
-import { DetailService } from '../../Services/DetailService';
+import { CMPService, DetailService } from '../../Services';
 
 export default class Splash extends Lightning.Component {
   static _template() {
