@@ -31,8 +31,7 @@ export default class Splash extends Lightning.Component {
 
   async _active() {
     await CMPService.initialFetch();
-    const buttonsResult = CMPService.cmpData;
-    const expireTimeInMS = buttonsResult.consent?.expire.timestamp;
+    const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
 
     const url = new URL(window.location.href);
     const path = url.pathname; // e.g., /movie/123
@@ -72,7 +71,7 @@ export default class Splash extends Lightning.Component {
           history.replaceState(null, '', window.location.pathname);
           Router.navigate(`series-details/${seriesId}?episodeId=${id}&isDeeplinkEpisode=true`);
         }
-      } else if (currentTimeInMS > expireTimeInMS) {
+      } else if (expireTimeInMS && currentTimeInMS > expireTimeInMS) {
         Router.navigate('cmp', false);
       } else {
         Router.navigate('home', false);

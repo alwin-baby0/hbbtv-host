@@ -10,11 +10,7 @@ import { CMPService, parseTranslations } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import { convertCueTimeToSeconds, fakeAdsData, formatAds, formatTimeHMS, formatTimeMS, playerButtonsLive, playerButtonsVOD } from './utils';
 
-let lastIndex = 0;
-let offsetTime = 0;
-
 export default class Player extends lng.Component {
-  _translations;
   _props = {
     pausedItemId: 1,
     lastId: 0,
@@ -23,9 +19,13 @@ export default class Player extends lng.Component {
     skipTo: 0,
     ads: [],
   };
+
+  _translations;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
+  _selectedTranslationIndex = 0;
+  _videoSkipTimeSum = 0;
 
   static _template() {
     return {
@@ -33,6 +33,15 @@ export default class Player extends lng.Component {
       h: 1080,
       x: 0,
       y: 0,
+      Spinner: {
+        x: (x) => x / 2,
+        y: (y) => y / 2,
+        w: 80,
+        h: 80,
+        texture: lng.Tools.getSvgTexture(Utils.asset('images/spinner.svg'), 80, 80),
+        mount: 0.5,
+        rotation: 0,
+      },
       Wrapper: {
         h: 100,
         y: 750,
@@ -168,7 +177,7 @@ export default class Player extends lng.Component {
 
   set params({ videoType, videoUrl, ssai, ...rest }) {
     this._translations = parseTranslations();
-    lastIndex = 0;
+    this._selectedTranslationIndex = 0;
 
     VideoPlayer.position(0, 0);
     VideoPlayer.size(1920, 1080);
@@ -176,6 +185,8 @@ export default class Player extends lng.Component {
     VideoPlayer.loader(loader);
     VideoPlayer.unloader(unloader);
     VideoPlayer.loop(false);
+
+    this._initSpinner();
 
     this.props = {
       ...this._props,
@@ -302,17 +313,6 @@ export default class Player extends lng.Component {
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
     VideoPlayer.close();
-  }
-
-  $videoPlayerError() {
-    this.tag('ErrorMessage').patch({
-      Message: {
-        text: {
-          text: this._translations?.no_stream || "Invalid Video URL",
-        }
-      }
-    })
-    this._showErrorMessage();
   }
 
   _startMonitoringAds() {
@@ -593,9 +593,9 @@ export default class Player extends lng.Component {
   _skipVideo(forward) {
     if (!this._props.isAdVisible) {
       if (forward) {
-        offsetTime += 10;
+        this._videoSkipTimeSum += 10;
       } else {
-        offsetTime -= 10;
+        this._videoSkipTimeSum -= 10;
       }
 
       clearTimeout(this._seekTimeout);
@@ -607,11 +607,10 @@ export default class Player extends lng.Component {
   }
 
   _checkAdCuePointsSeek() {
-    console.log('_checkAdCuePointsSeek')
     const ssai_params = this._props.ads;
     // const ssai_params = this._adData;
     // console.log('ssai_params: ', ssai_params);
-    const seekTime = VideoPlayer.currentTime + offsetTime;
+    const seekTime = VideoPlayer.currentTime + this._videoSkipTimeSum;
 
     // Check if `ssai` has a `slots` array
     if (ssai_params && Array.isArray(ssai_params.slots)) {
@@ -626,7 +625,7 @@ export default class Player extends lng.Component {
             if (seekTime >= from && seekTime < to) {
               VideoPlayer.seek(from);
               console.log('SEEK:', from);
-              offsetTime = 0;
+              this._videoSkipTimeSum = 0;
               VideoPlayer.play();
               return;
             }
@@ -635,8 +634,7 @@ export default class Player extends lng.Component {
       });
     }
     VideoPlayer.seek(seekTime);
-    console.log('SEEK:', seekTime);
-    offsetTime = 0;
+    this._videoSkipTimeSum = 0;
     VideoPlayer.play();
   }
 
@@ -653,8 +651,8 @@ export default class Player extends lng.Component {
   }
 
   $setInitial() {
-    this.tag('Subtitles.Languages').items[lastIndex]._selectButton();
-    this.tag('Subtitles.Languages').selectedIndex = lastIndex;
+    this.tag('Subtitles.Languages').items[this._selectedTranslationIndex]._selectButton();
+    this.tag('Subtitles.Languages').selectedIndex = this._selectedTranslationIndex;
   }
 
   $setFocus(id) {
@@ -662,7 +660,7 @@ export default class Player extends lng.Component {
 
     if (typeof lastId !== 'undefined') {
       // Unselect the button of the last ID before setting a new one
-      this.tag('Subtitles.Languages').items[lastIndex]._unselectButton();
+      this.tag('Subtitles.Languages').items[this._selectedTranslationIndex]._unselectButton();
     }
     // Set the new ID
     if (!id) {
@@ -672,34 +670,12 @@ export default class Player extends lng.Component {
     }
     // Update the lastId variable with the current ID
     this._props.lastId = id;
-    lastIndex = id;
+    this._selectedTranslationIndex = id;
   }
 
   $updateSubtitle(languageIndex) {
     const player = getPlayer();
     player.subtitleTrack = languageIndex;
-  }
-
-  $videoPlayerLoadedData() {
-    // Get the available subtitle tracks
-    console.log('getPlayer()', getPlayer())
-    const subtitleTracks = getPlayer()?.subtitleTrackController?.tracks;
-    console.log('subtitleTracks', subtitleTracks)
-    if (!subtitleTracks || subtitleTracks.length === 0) {
-      return;
-    }
-
-    const items = subtitleTracks.map((language, index) => ({
-      type: SubtitlesButtons,
-      props: {
-        languageInfo: language,
-        index: index,
-      },
-      w: 250,
-      h: 60,
-    }));
-
-    this.tag('Subtitles.Languages').appendItems(items);
   }
 
   $skippingTime(forward) {
@@ -759,13 +735,6 @@ export default class Player extends lng.Component {
     }
   }
 
-  $videoPlayerEnded() {
-    CMPService.deleteRecentlyWatched(this._props.videoId);
-    this.closeVideoPlayer();
-
-    eventTrackPayload('video_end', this._props.videoId);
-  }
-
   $playVideo() {
     const { pausedItemId } = this._props;
 
@@ -819,7 +788,7 @@ export default class Player extends lng.Component {
     const { isLive } = this._props;
     const currentTime = Math.max(
       0,
-      Math.min(VideoPlayer.currentTime + offsetTime, VideoPlayer.duration)
+      Math.min(VideoPlayer.currentTime + this._videoSkipTimeSum, VideoPlayer.duration)
     );
     const progress = currentTime / VideoPlayer.duration;
     this.tag('ProgressBar').progress = progress;
@@ -866,20 +835,83 @@ export default class Player extends lng.Component {
     this._Controls._setFocusedIndex(1);
   }
 
+  _initSpinner() {
+    this.tag('Spinner')
+      .animation({
+        duration: 2,
+        repeat: -1,
+        actions: [
+          { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } },
+        ],
+      })
+      .start();
+  }
+
+  _showSpinner() {
+    this.tag('Spinner').visible = true;
+  }
+
+  _hideSpinner() {
+    this.tag('Spinner').visible = false;
+  }
+
   $videoPlayerPlaying() {
     eventTrackPayload('video_start', this._props.videoId);
   }
 
   $videoPlayerCanPlay() {
-    console.log('videoPlayerCanPlay')
+    this._hideSpinner();
+  }
+
+  $videoPlayerWaiting() {
+    this._showSpinner();
+  }
+
+  $videoPlayerEnded() {
+    CMPService.deleteRecentlyWatched(this._props.videoId);
+    this.closeVideoPlayer();
+
+    eventTrackPayload('video_end', this._props.videoId);
+  }
+
+  $videoPlayerLoadedData() {
+    this._startMonitoringAds();
+
     const formattedDuration = formatTimeHMS(parseFloat(VideoPlayer.duration));
 
     this.tag('EndTime.Text').text = this._props.isLive ? '' : formattedDuration;
 
-    this._startMonitoringAds();
-
     this._setState('Controls');
     this._showWrapper();
+
+    // Get the available subtitle tracks
+    const subtitleTracks = getPlayer()?.subtitleTrackController?.tracks;
+    if (!subtitleTracks || subtitleTracks.length === 0) {
+      return;
+    }
+
+    const items = subtitleTracks.map((language, index) => ({
+      type: SubtitlesButtons,
+      props: {
+        languageInfo: language,
+        index: index,
+      },
+      w: 250,
+      h: 60,
+    }));
+
+    this.tag('Subtitles.Languages').appendItems(items);
+  }
+
+  $videoPlayerError() {
+    this.tag('ErrorMessage').patch({
+      Message: {
+        text: {
+          text: this._translations?.no_stream || "Invalid Video URL",
+        }
+      }
+    })
+    this._showErrorMessage();
   }
 
   // COMANDS
@@ -951,8 +983,9 @@ export default class Player extends lng.Component {
   }
 
   _captureKey() {
+    const useKeyHandlers = !this.tag('Wrapper').visible;
     this._showWrapper();
-    return false;
+    return useKeyHandlers;
   }
 
   static _states() {

@@ -16,7 +16,9 @@ export default class PlayerButtons extends lng.Component {
       Button: {
         flex: { direction: 'row', alignItems: 'center' },
         h: 90,
-        Icon: {},
+        Icon: {
+          color: Colors(colors.unfocus).alpha(0.3).get(),
+        },
       },
     };
   }
@@ -31,12 +33,6 @@ export default class PlayerButtons extends lng.Component {
 
   get _Icon() {
     return this.tag('Icon');
-  }
-
-  _firstActive() {
-    this._Icon.patch({
-      color: Colors(colors.unfocus).alpha(0.3).get(),
-    });
   }
 
   _enable() {
