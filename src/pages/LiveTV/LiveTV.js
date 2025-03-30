@@ -447,12 +447,13 @@ export default class LiveTV extends Lightning.Component {
             !EPGService.loading &&
             EPGService.stripesFetched - 3 === index
           ) {
+            const startAt = EPGService.stripesFetched;
             const newStripes = await EPGService.fetchMoreEPGs();
             const rails = constructRails(newStripes.results);
 
             this.tag('EPGData')._appendItems(rails);
 
-            this.tag('EPGData').setInitialOffset();
+            this.tag('EPGData').setInitialOffset(startAt, newStripes.length);
           }
 
           this._Channels.Items.y = this.tag('EPGData').Items.y;

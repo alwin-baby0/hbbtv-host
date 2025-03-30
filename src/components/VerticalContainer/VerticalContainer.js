@@ -202,7 +202,7 @@ export default class VerticalContainer extends Lightning.Component {
    * @param {number} oldIndex
    * @param {number} newIndex
    */
-  _handleCarryFocus(oldIndex, newIndex) {
+  _handleCarryFocus(oldIndex, newIndex, closestElementFunction = getClosestElementIndex) {
     if (this._props.carryRowPosition && this.Items.children.length > 1) {
       const nextContainer = this.Items.children[newIndex];
       if (nextContainer.Items) {
@@ -211,7 +211,7 @@ export default class VerticalContainer extends Lightning.Component {
           previousContainer.Items.children[previousContainer._focusedIndex];
 
         nextContainer._setFocusedIndex(
-          getClosestElementIndex(nextContainer, previouslyFocusedItem)
+          closestElementFunction(nextContainer, previouslyFocusedItem)
         );
       }
     }

@@ -607,10 +607,8 @@ export default class Player extends lng.Component {
   }
 
   _checkAdCuePointsSeek() {
-    console.log('_checkAdCuePointsSeek')
     const ssai_params = this._props.ads;
     // const ssai_params = this._adData;
-    // console.log('ssai_params: ', ssai_params);
     const seekTime = VideoPlayer.currentTime + offsetTime;
 
     // Check if `ssai` has a `slots` array
@@ -625,7 +623,6 @@ export default class Player extends lng.Component {
             const to = convertCueTimeToSeconds(ad.cue.to);
             if (seekTime >= from && seekTime < to) {
               VideoPlayer.seek(from);
-              console.log('SEEK:', from);
               offsetTime = 0;
               VideoPlayer.play();
               return;
@@ -635,7 +632,6 @@ export default class Player extends lng.Component {
       });
     }
     VideoPlayer.seek(seekTime);
-    console.log('SEEK:', seekTime);
     offsetTime = 0;
     VideoPlayer.play();
   }
@@ -682,7 +678,6 @@ export default class Player extends lng.Component {
 
   $videoPlayerLoadedData() {
     // Get the available subtitle tracks
-    console.log('getPlayer()', getPlayer())
     const subtitleTracks = getPlayer()?.subtitleTrackController?.tracks;
     console.log('subtitleTracks', subtitleTracks)
     if (!subtitleTracks || subtitleTracks.length === 0) {
@@ -732,7 +727,6 @@ export default class Player extends lng.Component {
       return;
     }
 
-    console.log('routerHistory in player back: ', Router.getHistory());
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
     Router.setHistory([...router]);
     if (localStorage.getItem('userData')) {
@@ -871,7 +865,6 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerCanPlay() {
-    console.log('videoPlayerCanPlay')
     const formattedDuration = formatTimeHMS(parseFloat(VideoPlayer.duration));
 
     this.tag('EndTime.Text').text = this._props.isLive ? '' : formattedDuration;
