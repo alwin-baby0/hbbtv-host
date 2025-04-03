@@ -47,20 +47,17 @@ const getTizenInfo = () => ({
 
 const getHisenseInfo = () => {
   const hisenseDeviceInfo = window.Hisense_GetDeviceInfo();
-
   return {
-    serialNumber: hisenseDeviceInfo.uuid.substring(12),
+    serialNumber: hisenseDeviceInfo.uuid?.substring(12),
     model: hisenseDeviceInfo.model_name,
     brand: hisenseDeviceInfo.brand,
     os: 'VIDAA',
     osVersion: window.Hisense_GetFirmWareVersion(),
-    macAddress: hisenseDeviceInfo.uuid.substring(0, 12).match(/.{2}/g).join(':'),
+    macAddress: hisenseDeviceInfo.uuid?.substring(0, 12).match(/.{2}/g).join(':'),
   };
 };
 
 const getWebOSInfo = async () => {
-  console.log('window.webos', window.webos);
-  console.log('webOS', webOS);
   const deviceModelAndBrand = new Promise((resolve) => {
     webOS.deviceInfo(function (device) {
       resolve({ model: device.modelName, brand: device.brandName })
