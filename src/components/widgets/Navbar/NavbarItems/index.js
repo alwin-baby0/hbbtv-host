@@ -4,8 +4,8 @@ import { Colors, Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
-import { parseTranslations } from '../../../../Services/HomePageService';
-import defTR from '../../../../../static/translations/en.json';
+import { parseTranslations } from '../../../../Services';
+import defTR from '../../../../../public/static/translations/en.json';
 
 const translations = parseTranslations();
 

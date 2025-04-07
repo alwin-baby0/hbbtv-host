@@ -1,8 +1,8 @@
 import { Colors, Language, Utils } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
-import defTr from '../../../../static/translations/en.json';
-import { parseTranslations } from '../../../Services/HomePageService';
+import defTr from '../../../../public/static/translations/en.json';
+import { parseTranslations } from '../../../Services';
 
 export default class InputField extends lng.Component {
   _translations;

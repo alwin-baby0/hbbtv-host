@@ -1,4 +1,4 @@
-import { CollectionService } from '../../../Services/CollectionService';
+import { CollectionService } from '../../../Services';
 import { constructRails } from '../../utils';
 
 export default async function (page, { collectionId }) {

@@ -1,5 +1,4 @@
-import Route from '@lightningjs/sdk/src/Router/model/Route';
-import { EPGService } from '../../../Services/EPGService';
+import { EPGService } from '../../../Services';
 import LiveChannelRailItem from '../../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../../utils';
 import { Router } from '@lightningjs/sdk';

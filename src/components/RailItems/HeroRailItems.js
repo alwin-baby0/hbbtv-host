@@ -61,10 +61,6 @@ export default class HeroRailItem extends FocusableItem {
     });
   }
 
-  _inactive() {
-    this.fireAncestors('$unpunchHole');
-  }
-
   _focus() {
     super._focus();
     const { index, url } = this._props;
