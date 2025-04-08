@@ -2,7 +2,7 @@ import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import Gallery from '../../Components/Gallery/Gallery';
-import { HomePageService } from '../../Services/HomePageService';
+import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
 
 export default class Home extends Lightning.Component {
@@ -81,6 +81,10 @@ export default class Home extends Lightning.Component {
         HeroSection: undefined,
       });
     }
+  }
+
+  _disable() {
+    this.fireAncestors('$unpunchHole')
   }
 
   _firstActive() {

@@ -1,8 +1,8 @@
 import { Router } from '@lightningjs/sdk';
-import { getSearch } from '../../../api/search';
 import HorizontalContainer from '../../../Components/HorizontalContainer/HorizontalContainer';
 import PosterRailItem from '../../../Components/RailItems/PosterRailItem';
 import { imageSizes } from '../../../Models/utils';
+import { SearchService } from '../../../Services';
 
 // TODO: create service to handle the logic for filtered page
 
@@ -39,7 +39,7 @@ const getGenresInfo = async (page, props) => {
     filtered.category !== category ||
     filtered.type !== type
   ) {
-    const { items: row } = await getSearch(category, type);
+    const { items: row } = await SearchService.getSearch(category, type);
 
     filtered.type = type;
     filtered.category = category;

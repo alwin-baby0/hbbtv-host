@@ -75,13 +75,12 @@ export default class PlayerButtons extends lng.Component {
 
   _handleForward() {
     this._props.isStopped = false;
-    // this.fireAncestors('$skippingTime', 30);
-    this.fireAncestors('$skippingTime', 10);
+    this.fireAncestors('$skippingTime', true);
     this.fireAncestors('$startStopVideo', false);
   }
 
   _handleBackward() {
-    this.fireAncestors('$skippingTime', -10);
+    this.fireAncestors('$skippingTime', false);
     this.fireAncestors('$startStopVideo', false);
   }
 
@@ -104,7 +103,6 @@ export default class PlayerButtons extends lng.Component {
 
   _handleSubtitles() {
     this.fireAncestors('$showSubtitles');
-    this.fireAncestors('$setFocusOnItem', true);
   }
 
   _handleBack(e) {
