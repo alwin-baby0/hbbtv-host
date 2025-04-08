@@ -1,7 +1,7 @@
-import { GalleryItem } from '../Models';
-import { parseDetailsData, parseSeasonData } from '../Models/parsers';
-import FetchingService from './FetchingService';
-import { V2 } from './utils';
+import { GalleryItem } from '../../Models';
+import { parseDetailsData, parseSeasonData } from '../../Models/parsers';
+import FetchingService from '../FetchingService';
+import { V2 } from '../utils';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {

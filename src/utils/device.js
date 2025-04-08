@@ -1,15 +1,8 @@
-import { createAxiosInstance, setTvInfo } from '../api';
-import { API_KEY, APP, APP_DOMAIN, APP_BUNDLE, APP_VERSION } from '../config';
+import { APP, APP_DOMAIN, APP_BUNDLE, APP_VERSION } from '../config';
 
-var _serialNumber = '';
-var _model = '';
-var _brand = 'samsung';
-// var _macAddress = webapis.network.getMac();
-var _deviceType = 'SmartTV';
-var _os = '';
-var _os_Version = '';
+let deviceInfo = {}
 
-export const getDevice = () => {
+export const getDeviceType = () => {
   if (window.tizen) {
     return 'tizen';
   } else if (window.webos) {
@@ -19,23 +12,6 @@ export const getDevice = () => {
   } else if (window.DeviceInfo?.Channel?.appStore) {
     return 'titan';
   } else return 'web';
-};
-
-const uuidToMac = (uuid) => {
-  var uuidWithoutHyphens = uuid.replace(/-/g, '');
-  var macString = uuidWithoutHyphens.substring(0, 12);
-  var macAddress = macString.match(/.{1,2}/g).join(':');
-  return macAddress;
-};
-
-const getMACAndSN = (UUID) => {
-  var macAdresa = UUID.substring(0, 12);
-  macAdresa = macAdresa.match(/.{2}/g).join(':');
-  var serijskiBroj = UUID.substring(12);
-  return {
-    macAdresa: macAdresa,
-    serijskiBroj: serijskiBroj,
-  };
 };
 
 const generateRandomUUID = () => {
@@ -60,168 +36,168 @@ const extractPhilipsModel = () => {
   }
 };
 
-export const getTVInfo = () => {
-  const device = getDevice();
-  switch (device) {
+const getTizenInfo = () => ({
+  serialNumber: webapis.productinfo.getDuid(),
+  model: webapis.productinfo.getModel(),
+  brand: 'samsung',
+  os: 'Tizen',
+  osVersion: webapis.tvinfo.getVersion(),
+  macAddress: webapis.network.getMac(),
+});
+
+const getHisenseInfo = () => {
+  const hisenseDeviceInfo = window.Hisense_GetDeviceInfo();
+  return {
+    serialNumber: hisenseDeviceInfo.uuid?.substring(12),
+    model: hisenseDeviceInfo.model_name,
+    brand: hisenseDeviceInfo.brand,
+    os: 'VIDAA',
+    osVersion: window.Hisense_GetFirmWareVersion(),
+    macAddress: hisenseDeviceInfo.uuid?.substring(0, 12).match(/.{2}/g).join(':'),
+  };
+};
+
+const getWebOSInfo = async () => {
+  const deviceModelAndBrand = new Promise((resolve) => {
+    webOS.deviceInfo(function (device) {
+      resolve({ model: device.modelName, brand: device.brandName })
+    });
+  });
+
+  const deviceMacAdress = new Promise((resolve, reject) => {
+    webOS.service.request('luna://com.webos.service.sm', {
+      method: 'deviceid/getIDs',
+      parameters: {
+        idType: ['LGUDID'],
+      },
+      onSuccess: (response) => {
+        const uuid = response.idList[0].idValue;
+        resolve({ macAddress: uuid.replace(/-/g, '').substring(0, 12).match(/.{1,2}/g).join(':') });
+      },
+      onFailure: (error) => {
+        console.warn('Failed to get system ID information: [' + error.errorCode + ']: ' + error.errorText);
+        reject({ macAddress: null })
+      },
+    });
+  })
+
+  const deviceSerialNumberAndOsVersion = new Promise((resolve, reject) => {
+    webOS.service.request('luna://com.webos.service.tv.systemproperty', {
+      method: 'getSystemInfo',
+      parameters: { keys: ['serialNumber', 'firmwareVersion'] },
+      onSuccess: (response) => {
+        resolve({ serialNumber: response.serialNumber, osVersion: response.firmwareVersion });
+      },
+      onFailure: (error) => {
+        console.warn('Failed to get SerialNumberAndOsVersion: [' + error.errorCode + ']: ' + error.errorText);
+        reject({ serialNumber: null, osVersion: null })
+      },
+    });
+  })
+
+  const response = await Promise.all([deviceModelAndBrand, deviceMacAdress, deviceSerialNumberAndOsVersion]);
+
+  return response.reduce((acc, info) => ({ ...acc, ...info }), {})
+};
+
+const getTitanInfo = () => ({
+  serialNumber: generateRandomUUID(),
+  model: extractPhilipsModel(),
+  brand: 'Philips',
+  os: 'TitanOS',
+  osVersion: '1.0',
+  macAddress: '12:34:56:78:9A:BC',
+});
+
+const getWebInfo = () => ({
+  serialNumber: generateRandomUUID(),
+  model: 'simulated-model',
+  brand: 'simulated-brand',
+  os: 'Web',
+  osVersion: '7.0',
+  macAddress: 'simulated-mac-address',
+});
+
+/**
+ * 
+ * @param { "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType 
+ * @returns { Promise<{ serialNumber: string, model: string, brand: string, os: string, osVersion: string, macAddress: string }> }
+ */
+const setUpDeviceInfo = async (deviceType) => {
+  switch (deviceType) {
     case 'tizen':
-      console.log('webapis', webapis);
-      console.log('webapis.productinfo', webapis.productinfo);
-
-      _serialNumber = webapis.productinfo.getDuid();
-      _model = webapis.productinfo.getModel();
-      _brand = 'samsung';
-      _os = 'Tizen';
-      _os_Version = webapis.tvinfo.getVersion();
-      var _macAddress = webapis.network.getMac();
-
-      // Logovanje podataka u konzolu
-      console.log(`Device is TIZEN: ${device}`);
-      console.log('Serial Number:', _serialNumber);
-      console.log('Model:', _model);
-      console.log('Brand:', _brand);
-      console.log('MAC Address:', _macAddress);
-
-      // Postavljanje serijskog broja u localStorage
-      localStorage.setItem('serialNumber', _serialNumber);
-
-      setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
-      createAxiosInstance();
-      break;
+      return getTizenInfo();
     case 'hisense':
-      _os = 'VIDAA';
-      _os_Version = window.Hisense_GetFirmWareVersion();
-      const UUID = window.Hisense_GetDeviceInfo().uuid;
-      console.log('HISENSEINFO:', window.Hisense_GetDeviceInfo().brand);
-      const info = getMACAndSN(UUID);
-      _model = window.Hisense_GetDeviceInfo().model_name;
-      _macAddress = info.macAdresa;
-      _serialNumber = info.serijskiBroj;
-      _brand = window.Hisense_GetDeviceInfo().brand;
-
-      console.log(`Device is : ${device}`);
-      console.log('Serial Number:', _serialNumber);
-      console.log('Model:', _model);
-      console.log('Brand:', _brand);
-      console.log('MAC Address:', _macAddress);
-      console.log('OS firmware version:', _os_Version);
-
-      localStorage.setItem('serialNumber', _serialNumber);
-
-      setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
-      createAxiosInstance();
-      break;
+      return getHisenseInfo();
     case 'webos':
-      _os = 'webOS';
-      webOS.deviceInfo((device) => {
-        console.log('WEBOS MODEL', device.modelName);
-        console.log('WEBOS BRAND', device.brandName);
-        _model = device.modelName;
-        _brand = device.brandName;
-      });
-
-      // Get uuid
-      webOS.service.request('luna://com.webos.service.sm', {
-        method: 'deviceid/getIDs',
-        parameters: {
-          idType: ['LGUDID'],
-        },
-        onSuccess: function (inResponse) {
-          console.log('UUID: ' + inResponse.idList[0].idValue);
-          _macAddress = uuidToMac(inResponse.idList[0].idValue);
-          console.log('MAC ADDRESS', _macAddress);
-          // Call request for get SN
-          webOS.service.request('luna://com.webos.service.tv.systemproperty', {
-            method: 'getSystemInfo',
-            parameters: { keys: ['serialNumber', 'firmwareVersion'] },
-            onSuccess: function (result) {
-              _serialNumber = result.serialNumber;
-              _os_Version = result.firmwareVersion;
-              localStorage.setItem('serialNumber', _serialNumber);
-
-              console.log('Serial Number:', _serialNumber);
-              console.log('Model:', _model);
-              console.log('Brand:', _brand);
-              console.log('MAC Address:', _macAddress);
-
-              setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
-              createAxiosInstance();
-            },
-            onFailure: function (error) {
-              console.error('Failed to get serial number:', error);
-            },
-          });
-        },
-        onFailure: function (inError) {
-          console.log('Failed to get system ID information');
-          console.log('[' + inError.errorCode + ']: ' + inError.errorText);
-        },
-      });
-      break;
+      return await getWebOSInfo();
     case 'titan':
-      _os = 'TitanOS';
-      _os_Version = '1.0';
-      _model = extractPhilipsModel();
-      _brand = 'Philips';
-      _serialNumber = localStorage.getItem('serialNumber') || generateRandomUUID();
-      _macAddress = '12:34:56:78:9A:BC';
-
-      console.log(`Device is : ${device}`);
-      console.log('Serial Number:', _serialNumber);
-      console.log('Model:', _model);
-      console.log('Brand:', _brand);
-      console.log('MAC Address:', _macAddress);
-      console.log('OS firmware version:', _os_Version);
-
-      localStorage.setItem('serialNumber', _serialNumber);
-      setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
-
-      break;
+      return getTitanInfo();
     case 'web':
-      // Definišite neke simulirane vrednosti za web
-      // _serialNumber = 'd9b02c2e-3e91-44bc-bd76-9e5f4ef91e09';
-      _serialNumber = localStorage.getItem('serialNumber') || generateRandomUUID();
-      _model = 'simulated-model';
-      _brand = 'simulated-brand';
-      _os = 'Web';
-      _os_Version = '7.0';
-      var _macAddress = 'simulated-mac-address';
-
-      // Logovanje podataka u konzolu
-      console.log('Device is web');
-      console.log('Serial Number:', _serialNumber);
-      console.log('Model:', _model);
-      console.log('Brand:', _brand);
-      console.log('MAC Address:', _macAddress);
-
-      // Postavljanje serijskog broja u localStorage
-      localStorage.setItem('serialNumber', _serialNumber);
-
-      // Ako želite da postavite ove informacije, možete koristiti setTvInfo
-      setTvInfo({ mac: _macAddress, sn: _serialNumber, brand: _brand, model: _model });
-      createAxiosInstance();
-      break;
+      return getWebInfo();
+    default: {
+      console.warn('Unknown device');
+      return null;
+    }
   }
 };
 
+const calcualtePrecision = (height, width) => {
+  switch (true) {
+    case height === 720 && width === 1280: return 2 / 3;
+    case height === 2160 && width === 3840: return 2;
+    case height === 4320 && width === 7680: return 4;
+    default: return 1;
+  }
+}
+
+/**
+ * Initiate and save device info
+ * @param {string} deviceType 
+ */
+export const initDeviceInfo = async (deviceType) => {
+  deviceInfo = await setUpDeviceInfo(deviceType);
+};
+
+/**
+ * Returns device info.
+ * @returns {{ serialNumber: string, model: string, brand: string, os: string, osVersion: string, macAddress: string }}
+ */
+export const getDeviceInfo = () => deviceInfo;
+
+export const getDeviceStageProps = () => {
+  const { innerHeight, innerWidth } = window
+  return {
+    h: innerHeight,
+    w: innerWidth,
+    precision: calcualtePrecision(innerHeight, innerWidth),
+  }
+}
+
 export const eventTrackPayload = (event, id) => {
+  const { serialNumber, osVersion, os, model, brand } = getDeviceInfo();
   try {
-    w4track(
-      {
-        event,
-        app: APP,
-        app_domain: APP_DOMAIN,
-        app_version: APP_VERSION,
-        app_bundle: APP_BUNDLE,
-        id,
-        device: _deviceType,
-        model: _model,
-        brand: _brand,
-        os: _os,
-        version: _os_Version,
-        device_id: _serialNumber,
-      },
-      API_KEY
-    );
+    if (w4track)
+      w4track(
+        {
+          event,
+          app: APP,
+          app_domain: APP_DOMAIN,
+          app_version: APP_VERSION,
+          app_bundle: APP_BUNDLE,
+          id,
+          device: 'SmartTV',
+          model,
+          brand,
+          os,
+          version: osVersion,
+          device_id: serialNumber,
+        },
+        process.env.APP_WATCH4_API_KEY,
+      );
+    else {
+      console.error('event tracking object not attched', error);
+    }
   } catch (error) {
     console.error('Script not loaded?', error);
   }
