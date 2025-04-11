@@ -1,5 +1,4 @@
-import { CMPService } from '../../../Services/CMPService';
-import { DetailService } from '../../../Services/DetailService';
+import { DetailService } from '../../../Services';
 
 export default async function (page, { movieId }) {
   const movie = await DetailService.getMovie(movieId);
