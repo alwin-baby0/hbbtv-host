@@ -35,7 +35,7 @@ export default class PlayerButtons extends lng.Component {
 
   _firstActive() {
     this._Icon.patch({
-      color: Colors(colors.unfocus).alpha(0.3).get(),
+      color: Colors(colors.unfocus).alpha(0.5).get(),
     });
   }
 
@@ -118,7 +118,7 @@ export default class PlayerButtons extends lng.Component {
 
   _unfocus() {
     this._Icon.patch({
-      color: Colors(colors.unfocus).alpha(0.3).get(),
+      color: Colors(colors.unfocus).alpha(0.5).get(),
     });
   }
 }
