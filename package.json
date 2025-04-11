@@ -20,7 +20,8 @@
     "test": "jest",
     "start": "vite --mode development-web",
     "build": "vite build --mode production-web",
-    "build-lg": "vite build --mode production-lg"
+    "build-lg": "vite build --mode production-lg",
+    "build-samsung": "vite build --mode production-samsung"
   },
   "author": "",
   "license": "Apache-2.0",
