@@ -45,6 +45,7 @@ export default class Player extends lng.Component {
           flex: { direction: 'row', alignItems: 'center' },
           Controls: {
             type: HorizontalContainer,
+            collision: true,
             h: 100,
             w: 1690,
             flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
@@ -249,6 +250,7 @@ export default class Player extends lng.Component {
         Back: {
           x: 115,
           type: PlayerButtons,
+          collision: true,
           props: {
             buttonInfo: {
               label: 'back',
@@ -261,6 +263,7 @@ export default class Player extends lng.Component {
         SubtitlesButton: {
           x: 1715,
           type: PlayerButtons,
+          collision: true,
           props: {
             buttonInfo: {
               label: 'subtitles',
@@ -721,20 +724,7 @@ export default class Player extends lng.Component {
     Router.back();
   }
 
-  _handleBack(e) {
-    if (Router.isNavigating()) {
-      return;
-    }
-    e.preventDefault();
-
-    if (this._subtitleMenuOpen) {
-      this.$hideSbutitles();
-      return;
-    }
-
-    console.log('routerHistory in player back: ', Router.getHistory());
-    const router = Router.getHistory().filter((history) => history.hash != 'splash');
-    Router.setHistory([...router]);
+  handleBackHelper() {
     if (localStorage.getItem('userData')) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._props.seriesID) {
@@ -748,6 +738,29 @@ export default class Player extends lng.Component {
           CMPService.addRecentlyWatched(this._props.videoId, 'video', VideoPlayer.currentTime);
         }
       }
+    }
+  }
+
+  _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
+    e.preventDefault();
+
+    console.log('routerHistory in player back: ', Router.getHistory());
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    Router.setHistory([...router]);
+
+    this.handleBackHelper();
+
+    this.closeVideoPlayer();
+  }
+
+  $exitVideoFromBackClick() {
+    this._showWrapper();
+
+    if (this.tag('Wrapper').visible) {
+      this.handleBackHelper();
     }
 
     this.closeVideoPlayer();

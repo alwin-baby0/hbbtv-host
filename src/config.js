@@ -1,5 +1,4 @@
-//TODO: find correct parametars for this config file
-export const APP = 'wedotv.samsung';
-export const APP_DOMAIN = 'samsung.wedotv.app';
-export const APP_BUNDLE = 'wedotv.samsung';
-export const APP_VERSION = '1.0.0';
+export const APP = 'wedotv_lg';
+export const APP_DOMAIN = 'lg.wedotv.app';
+export const APP_BUNDLE = 'wedotv_lg';
+export const APP_VERSION = '1.0.1';

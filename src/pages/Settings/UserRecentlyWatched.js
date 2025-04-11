@@ -6,6 +6,7 @@ export default class UserRecentlyWatched extends Lightning.Component {
   static _template() {
     return {
       RecentlyWatched: {
+        collision: true,
         type: VerticalContainer,
         w: 1450,
         h: 500,

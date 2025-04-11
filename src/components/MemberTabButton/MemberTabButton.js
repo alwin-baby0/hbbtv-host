@@ -6,6 +6,7 @@ export default class MemberTabButton extends Lightning.Component {
   static _template() {
     return {
       Column: {
+        collision: true,
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         w: 240,
         h: 65,
@@ -101,5 +102,34 @@ export default class MemberTabButton extends Lightning.Component {
         color: Colors(colors.unfocusedHelpButton).get(),
       });
     }
+  }
+
+  _handleHover() {
+    console.log('hoverovan memb tab bat', this._tabIndex);
+
+    this.tag('Column').patch({
+      color: Colors(colors.focus).get(),
+    });
+
+    this.fireAncestors('$setStateOnHover', 'DefaultState');
+    this.fireAncestors('$memberButtonIndexChange', this._tabIndex);
+  }
+
+  _handleUnhover() {
+    if (this._selected) {
+      this.tag('Column').patch({
+        color: Colors(colors.focusedHelpButton).get(),
+      });
+    } else {
+      this.tag('Column').patch({
+        color: Colors(colors.unfocusedHelpButton).get(),
+      });
+    }
+  }
+
+  _handleClick() {
+    this.fireAncestors('$setFocus', this._tabIndex);
+
+    this.fireAncestors('$changeContent', this._tabIndex);
   }
 }
