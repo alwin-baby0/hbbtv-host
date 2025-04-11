@@ -21,6 +21,7 @@
     "start": "vite --mode development-web",
     "build": "vite build --mode production-web",
     "build-lg": "vite build --mode production-lg",
+    "build-hisense": "vite build --mode production-hisense",
     "build-titan": "vite build --mode production-titan",
     "build-metrological": "vite build --mode production-metrological",
     "build-samsung": "vite build --mode production-samsung"
