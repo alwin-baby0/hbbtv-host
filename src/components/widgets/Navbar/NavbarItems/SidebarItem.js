@@ -23,8 +23,7 @@ export default class SidebarItem extends lng.Component {
         },
       },
       Icon: {
-        // x: 380,
-        x: 330,
+        //x: 330,
         y: 10,
         zIndex: 0,
         color: Colors(colors.unfocus).get(),
@@ -116,6 +115,7 @@ export default class SidebarItem extends lng.Component {
 
   _focus() {
     const { index } = this._props;
+    console.log(index);
     const { label, icon } = this._props.data;
 
     // if (index === 4) {
@@ -128,23 +128,40 @@ export default class SidebarItem extends lng.Component {
     //   });
     // }
     const translatedText = Language.translate(label);
-    this._Line.patch({
-      w: index === 4 && label.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni
-    });
+    setTimeout(() => {
+      this._Line.patch({
+        w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni
+      });
 
-    this._Line.visible = true;
-    this._Icon.patch({
-      color: Colors(colors.focus).get(),
-    });
+      this._Line.visible = true;
+      this._Icon.patch({
+        color: Colors(colors.focus).get(),
+      });
+    }, 0);
   }
 
   _unfocus() {
-    this._Line.visible = false;
+    /* this._Line.visible = false;
     if (!this._props.selected) {
       this._Icon.patch({
         color: Colors(colors.unfocus).get(),
       });
-    }
+    } */
+
+    this._Line.visible = false;
+    this._Icon.patch({
+      color: Colors(colors.unfocus).get(),
+    });
+    this._Title.patch({
+      text: {
+        textColor: Colors(colors.unfocus).get(),
+      },
+    });
+  }
+
+  fja() {
+    const event = new CustomEvent('verticalIndexReset');
+    window.dispatchEvent(event);
   }
 
   _handleRight() {
@@ -156,8 +173,26 @@ export default class SidebarItem extends lng.Component {
   }
 
   _handleEnter() {
+    this.fja();
     this.fireAncestors('$changePage', this._props.index);
     Router.focusPage();
     // Router.restoreFocus();
+  }
+
+  _handleHover() {
+    console.log('hoverovan sidebar');
+    this._focus();
+    this.fireAncestors('$changeHoverFocus', this._props.index);
+    Router.focusWidget('Menu');
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    this.fja();
+    this.fireAncestors('$changePage', this._props.index);
+    Router.focusPage();
   }
 }

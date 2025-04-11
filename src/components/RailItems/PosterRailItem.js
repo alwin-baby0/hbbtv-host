@@ -52,7 +52,7 @@ export default class PosterRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;
+    const { imageSrc, radius, itemTitle, placeholderSrc, index } = this._props;
 
     this.setProps({
       width: CARD_SIZES.POSTER.image_width,
@@ -87,5 +87,34 @@ export default class PosterRailItem extends FocusableItem {
   _handleEnter() {
     const { callback } = this._props;
     callback();
+  }
+
+  _handleClick() {
+    const { callback } = this._props;
+    callback();
+  }
+
+  _handleHover() {
+    const { index } = this._props;
+    const ancestor = this.parent.parent.parent.parent;
+    this._focus();
+    this.fireAncestors('$horizontalPosterIndexChange', index);
+
+    if (ancestor.ref === 'RecentlyWatched') {
+      this.fireAncestors('$setStateOnHover', 'RecentlyWatched');
+    }
+    if (ancestor.ref === 'Favorites') {
+      this.fireAncestors('$setStateOnHover', 'Favorites');
+    }
+    if (ancestor.parent.parent.ref === 'QRContainer') {
+      this.fireAncestors('$setStateOnHover', 'UserRecentlyWatched');
+    }
+  }
+
+  _handleUnhover() {
+    //this.fireAncestors('$horizontalPosterIndexChange', -1);
+    // this._refocus();
+    console.log('unhover');
+    super._unfocus();
   }
 }
