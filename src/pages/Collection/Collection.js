@@ -9,6 +9,7 @@ export default class Collection extends Lightning.Component {
         w: 1920,
         h: 1080,
         Column: {
+          collision: true,
           w: 1700,
           h: 600,
           x: 100,

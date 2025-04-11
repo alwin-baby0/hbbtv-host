@@ -56,6 +56,36 @@ export default class CategoryPickerItem extends Lightning.Component {
     });
   }
 
+  _handleHover() {
+    Router.focusPage();
+    const { index } = this._props;
+    console.log('ho ve ro va no', index);
+    console.log('cat picker this', this);
+    const parentName = this.parent.parent.parent.parent.parent.parent.ref;
+    console.log(parentName);
+    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this._focus();
+    if (parentName === 'VodContentContainer') {
+      this.fireAncestors('$updateVerticalState', 'VodContentContainer');
+    } else {
+      this.fireAncestors('$updateVerticalState', 'Categories');
+    }
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    const { callback } = this._props;
+    try {
+      this.fireAncestors('$updateChannels', this._props);
+      callback();
+    } catch (error) {
+      console.error('Error fetching category type:', error);
+    }
+  }
+
   _focus() {
     const { w, h, radius, strokeWidth, itemInfo } = this._props;
     const { title } = itemInfo;

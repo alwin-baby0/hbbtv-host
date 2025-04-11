@@ -40,6 +40,13 @@ export default class HorizontalContainer extends Lightning.Component {
     this._focusedIndex = val;
   }
 
+  $horizontalPosterIndexChange(val) {
+    console.log('value of hor index: ', val);
+    console.log('horizontalni singl element', this.Items.children[this._focusedIndex]);
+    this.Items.children[this._focusedIndex]?._unfocus();
+    this._setFocusedIndex(val);
+  }
+
   _appendItems(items) {
     items?.forEach((item) => {
       this._props.items.push(item);
@@ -50,7 +57,7 @@ export default class HorizontalContainer extends Lightning.Component {
 
   _setFocusedIndex(newIndex) {
     this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
-    this._focusedIndex = newIndex;
+    //this._focusedIndex = newIndex;
     this._reCalibrateScroll();
     this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex, this._scrollPosition);
   }
@@ -59,6 +66,7 @@ export default class HorizontalContainer extends Lightning.Component {
     const { items, railTitle, ...rest } = props;
 
     this._props = { ...this._props, ...rest };
+
     const { cardType, targetIndex } = rest;
 
     if (railTitle && railTitle !== '') {
@@ -157,9 +165,39 @@ export default class HorizontalContainer extends Lightning.Component {
     return false;
   }
 
+  _handleHover() {
+    let verticalState;
+
+    const parentContainer = this.parent.parent.ref;
+    console.log(this.parent.children.indexOf(this));
+    const indexForVC = this.parent.children.indexOf(this);
+    const constructorName = this.Items.children[this._focusedIndex]?.constructor.name;
+
+    if (constructorName === 'PosterRailItem' && parentContainer === 'VODSection') {
+      //case for search page
+      verticalState = 'VODSection';
+    }
+    if (constructorName === 'PosterRailItem' && parentContainer !== 'VODSection') {
+      verticalState = 'VodContainer';
+    }
+    if (constructorName === 'SportsEventsRailItem') {
+      verticalState = 'VodContentContainer';
+    }
+    if (constructorName === 'LandscapeRailItem') {
+      verticalState = 'Items';
+    }
+    if (constructorName === 'EPGRailItems') {
+      verticalState = 'EPGS';
+    }
+
+    this.fireAncestors('$horizontalContainerPosterIndexChange', indexForVC, verticalState);
+  }
+
   _handleRight() {
+    //this.Items.children[this._focusedIndex]._unfocus();
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
+      this.Items.children[this._focusedIndex]._unfocus();
       this._focusedIndex += 1;
       this._reCalibrateScroll();
       this.fireAncestors(
@@ -174,7 +212,9 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
+    //this.Items.children[this._focusedIndex]._unfocus();
     if (this._focusedIndex > 0) {
+      this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex -= 1;
       this._reCalibrateScroll();
       this.fireAncestors(

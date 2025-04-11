@@ -36,6 +36,7 @@ export default class CMP extends Lightning.Component {
           w: 1050,
           h: 400,
           y: 100,
+          collision: true,
           type: VerticalContainer,
         },
       },

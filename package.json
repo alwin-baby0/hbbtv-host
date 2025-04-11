@@ -21,7 +21,8 @@
     "start": "vite --mode development-web",
     "build": "vite build --mode production-web",
     "build-lg": "vite build --mode production-lg",
-    "build-titan": "vite build --mode production-titan"
+    "build-titan": "vite build --mode production-titan",
+    "build-samsung": "vite build --mode production-samsung"
   },
   "author": "",
   "license": "Apache-2.0",

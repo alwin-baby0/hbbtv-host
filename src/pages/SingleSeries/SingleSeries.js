@@ -15,6 +15,7 @@ export default class SingleSeries extends Lightning.Component {
       w: 1920,
       BackButton: {
         type: BackBtn,
+        collision: true,
         texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
         x: 85,
         y: 20,
@@ -26,17 +27,24 @@ export default class SingleSeries extends Lightning.Component {
         src: Utils.asset('images/background.jpg'),
       },
       SeriesWrapper: {
+        rect: true,
+        h: 620,
+        w: 1920,
         HeroSection: {
+          collision: true,
+          h: 620,
           type: GalleryItem,
         },
       },
       Wrapper: {
+        collision: true,
         x: 110,
         y: 715,
         h: 600,
         w: 1770,
         clipping: true,
         Column: {
+          collision: true,
           h: 600,
           w: 1770,
           type: VerticalContainer,
@@ -280,6 +288,11 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('BackButton');
   }
 
+  $updateVerticalState(nextState) {
+    console.log('nextState', nextState);
+    this._setState(nextState);
+  }
+
   _init() { }
 
   _getFocused() { }
@@ -336,6 +349,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $enter() {
+          console.log('bck btn iz stejtovs', this._BackButton);
           this.$verticalContainerIndexChange();
         }
 
@@ -347,6 +361,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $verticalContainerIndexChange(index) {
+          console.log('pozvano', index);
           if (index > 0 && index !== undefined) {
             this._SeriesWrapper.patch({
               y: -650,
