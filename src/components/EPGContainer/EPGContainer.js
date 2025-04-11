@@ -4,6 +4,7 @@ import { EPGService } from '../../Services';
 export default class EPGContainer extends VerticalContainer {
   static _template() {
     return {
+      collision: true,
       ...super._template(),
     };
   }

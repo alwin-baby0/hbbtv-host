@@ -13,9 +13,11 @@ export default class SingleMovie extends Lightning.Component {
   static _template() {
     return {
       Content: {
+        collision: true,
         w: 1920,
         h: 1080,
         BackButton: {
+          collision: true,
           type: BackBtn,
           texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
           x: 45,
@@ -118,6 +120,7 @@ export default class SingleMovie extends Lightning.Component {
             },
             Buttons: {
               type: Column,
+              collision: true,
               w: 1200,
               style: {
                 itemSpacing: 100,
@@ -358,14 +361,17 @@ export default class SingleMovie extends Lightning.Component {
         console.log(row, 'fired'),
         {
           type: Row,
-          items: row.items.map((item) => ({
+          collision: true,
+          items: row.items.map((item, index) => ({
             type: Button,
+            collision: true,
             w: item.width,
             flexItem: {
               marginRight: 30,
             },
             props: {
               width: item.width,
+              index,
               // buttonLabel: translatedTitle,
               buttonLabel: item.buttonLabel,
               buttonIcon: Utils.asset(item.icon),
