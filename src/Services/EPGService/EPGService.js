@@ -1,7 +1,8 @@
-import FetchingService from './FetchingService';
-import { V2 } from './utils';
-import { EPGRailItem } from '../Models/utils/EPGRailItem';
-import { parseVodCategories } from '../Models/parsers';
+import FetchingService from '../FetchingService';
+import { V2 } from '../utils';
+import { EPGRailItem } from '../../Models/utils/EPGRailItem';
+import { parseVodCategories } from '../../Models/parsers';
+import { RAIL_TYPES } from '../../Pages/utils';
 
 export const EPG_ROWS_PER_FETCH = 5;
 class EPGService extends FetchingService {
@@ -220,6 +221,29 @@ class EPGService extends FetchingService {
       title: channel.title,
       icon: channel.media_group[0]?.media_item[0]?.src,
     }));
+  }
+
+  getSingleEPGChannel = async (channelId) =>
+    await this._request({
+      url: `/epg_program`,
+      apiVersion: V2,
+      method: 'GET',
+      params: {
+        id: `${channelId}`,
+      },
+    }).then(this.#parseSingleEPGChannel);
+
+
+  #parseSingleEPGChannel({ data }) {
+    const railItems = data.entry?.map((item) => new EPGRailItem(item));
+    if (!railItems) return;
+
+    return {
+      railType: RAIL_TYPES.LIVETV,
+      cardType: 'POSTER',
+      items: railItems,
+      itemsPerRow: 1,
+    };
   }
 
   #getEPG = async (channelId) =>
