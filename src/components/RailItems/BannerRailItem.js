@@ -16,12 +16,12 @@ export default class BannerRailItem extends FocusableItem {
     return {
       ...super._template(),
       w: CARD_SIZES.BANNER.width,
-      h: CARD_SIZES.BANNER.height - 30, // todo: find better solution
+      h: CARD_SIZES.BANNER.height,
       flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
       Wrapper: {
         // flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
         w: 1760,
-        h: 150,
+        h: 260,
         Border: {
           flex: { justifyContent: 'center', alignItems: 'center' },
           PosterImage: {
