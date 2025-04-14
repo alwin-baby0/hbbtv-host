@@ -160,8 +160,6 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
               break;
             }
             case CATEGORY_TYPES.LIVESTREAM: {
-              console.log('railItem 123', railItem);
-
               const epgProgram = await EPGService.getSingleEPGChannel(`channel_${railItem.id}`);
               const epgStreamSrc = epgProgram.items[0].content.src;
 
@@ -187,8 +185,6 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
 };
 
 const constructEpisodeRailItems = (railItems, railItemsOptions) => {
-  console.log('Constructing episode rail items...', railItems); // Log your message here
-
   return railItems.map((railItem, index) => ({
     type: LandscapeRailItem,
     collision: true,

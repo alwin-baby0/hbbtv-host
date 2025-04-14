@@ -21,7 +21,6 @@ export default class LanguageButton extends Lightning.Component {
   set props(props) {
     const { items, ...rest } = props;
     this._props = { ...this._props, ...rest };
-    console.log('LANG PROPS', props);
   }
 
   get _Column() {
@@ -73,7 +72,7 @@ export default class LanguageButton extends Lightning.Component {
     }
   }
 
-  _init() {}
+  _init() { }
 
   async _handleEnter() {
     localStorage.setItem('languageCode', this._props.languageInfo);
@@ -112,7 +111,7 @@ export default class LanguageButton extends Lightning.Component {
     window.location.reload();
   }
 
-  _getFocused() {}
+  _getFocused() { }
 
   #getLanguageTranslations = async (lngCode) => {
     const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode}/app`);

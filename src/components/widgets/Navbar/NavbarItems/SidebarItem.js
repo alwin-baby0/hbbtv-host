@@ -1,4 +1,3 @@
-// SidebarItems.js
 import lng from '@lightningjs/core';
 import { Colors, Language, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
@@ -115,7 +114,6 @@ export default class SidebarItem extends lng.Component {
 
   _focus() {
     const { index } = this._props;
-    console.log(index);
     const { label, icon } = this._props.data;
 
     // if (index === 4) {
@@ -180,7 +178,6 @@ export default class SidebarItem extends lng.Component {
   }
 
   _handleHover() {
-    console.log('hoverovan sidebar');
     this._focus();
     this.fireAncestors('$changeHoverFocus', this._props.index);
     Router.focusWidget('Menu');

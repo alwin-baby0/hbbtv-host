@@ -24,7 +24,7 @@
     "build-hisense": "vite build --mode production-hisense",
     "build-titan": "vite build --mode production-titan",
     "build-metrological": "vite build --mode production-metrological",
-    "build-samsung": "vite build --mode production-samsung"
+    "build-tizen": "vite build --mode production-tizen"
   },
   "author": "",
   "license": "Apache-2.0",

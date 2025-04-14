@@ -289,7 +289,6 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   $updateVerticalState(nextState) {
-    console.log('nextState', nextState);
     this._setState(nextState);
   }
 
@@ -349,7 +348,6 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $enter() {
-          console.log('bck btn iz stejtovs', this._BackButton);
           this.$verticalContainerIndexChange();
         }
 
@@ -361,7 +359,6 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $verticalContainerIndexChange(index) {
-          console.log('pozvano', index);
           if (index > 0 && index !== undefined) {
             this._SeriesWrapper.patch({
               y: -650,

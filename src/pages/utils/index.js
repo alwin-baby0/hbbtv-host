@@ -43,7 +43,6 @@ const RAIL_WIDTHS = {
 let globalVerticalIndex = 0;
 
 export const constructRails = (rails) => {
-  console.log('rails from indexjs:', rails);
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
     return constructRails([rails]);
@@ -67,7 +66,6 @@ export const constructRails = (rails) => {
           newRail.items = chunkedRailItem;
 
           const currentIndex = globalVerticalIndex;
-          console.log('global vertical index', globalVerticalIndex);
           globalVerticalIndex += 1;
 
           return cronstructSingleLineRail(newRail, currentIndex);
@@ -78,12 +76,11 @@ export const constructRails = (rails) => {
 };
 
 const verticalIndexReset = () => {
-  console.log('pozvanoooo');
+  console.warn('verticalIndexReset')
   globalVerticalIndex = 0;
 };
 
 export const cronstructSingleLineRail = (rail, index) => {
-  console.log('construct single line rail called');
   const { items, railType, cardType = 'POSTER', railTitle, railItemsOptions, ...rest } = rail;
   const containerDimensions =
     railType === RAIL_TYPES.LIVETV

@@ -50,6 +50,9 @@ export default ({ mode }) => {
       minify: false,
       sourcemap: buildMode !== 'production',
     },
+    esbuild: {
+      drop: buildMode === 'production' ? ['console'] : [],
+    },
     define: {
       'process.env': JSON.stringify(appEnv),
     },

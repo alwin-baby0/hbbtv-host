@@ -41,8 +41,6 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   $horizontalPosterIndexChange(val) {
-    console.log('value of hor index: ', val);
-    console.log('horizontalni singl element', this.Items.children[this._focusedIndex]);
     this.Items.children[this._focusedIndex]?._unfocus();
     this._setFocusedIndex(val);
   }
@@ -59,7 +57,6 @@ export default class HorizontalContainer extends Lightning.Component {
     this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
     //this._focusedIndex = newIndex;
     this._reCalibrateScroll();
-    this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex, this._scrollPosition);
   }
 
   set props(props) {
@@ -169,7 +166,6 @@ export default class HorizontalContainer extends Lightning.Component {
     let verticalState;
 
     const parentContainer = this.parent.parent.ref;
-    console.log(this.parent.children.indexOf(this));
     const indexForVC = this.parent.children.indexOf(this);
     const constructorName = this.Items.children[this._focusedIndex]?.constructor.name;
 
