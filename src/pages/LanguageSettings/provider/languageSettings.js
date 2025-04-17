@@ -5,6 +5,7 @@ import defTr from '../../../../public/static/translations/en.json';
 const languageArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
     type: MemberTabButton,
+    collision: true,
     tabInfoData: tabInfo,
     w: 250,
     h: 100,

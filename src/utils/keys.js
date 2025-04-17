@@ -64,15 +64,31 @@ export const setupKeys = (deviceType) => {
         412: 'MediaRewind',
         413: 'MediaStop',
       };
+    case 'titan':
+      return {
+        8: 'Back',
+        33: 'ChannelUp',
+        34: 'ChannelDown',
+        179: 'MediaPlayPause',
+        412: 'MediaRewind',
+        417: 'MediaFastForward',
+        415: 'MediaPlay',
+        19: 'MediaPause',
+        413: 'MediaStop',
+      };
     default:
       // Ocilion Key Codes
       // 461 || 17: 'Back',
       return {
+        8: 'Back',
+        461: 'Back',
         17: 'Back',
-        412: 'MediaRewind',
-        417: 'MediaFastForward',
-        413: 'MediaStop',
-        463: 'MediaPlayPause',
+        57: 'MediaPlayPause',
+        54: 'MediaRewind',
+        53: 'MediaFastForward',
+        55: 'MediaPlay',
+        56: 'MediaPause',
+        52: 'MediaStop',
       };
   }
 }

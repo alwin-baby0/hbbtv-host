@@ -33,6 +33,27 @@ export default class VerticalContainer extends Lightning.Component {
     this._focusedIndex = val;
   }
 
+  $memberButtonIndexChange(val) {
+    this.Items.children[this._focusedIndex]._unfocus();
+    this._focusedIndex = val;
+  }
+
+  $horizontalContainerPosterIndexChange(val, verticalState) {
+    this.fireAncestors('$verticalContainerIndexChange', val);
+    this.fireAncestors('$updateVerticalState', verticalState);
+    this._focusedIndex = val;
+    this._reCalibrateScroll(this._focusedIndex, val); //this fixes the problem when hovering first row from below
+    //this._handleCarryFocus(this._focusedIndex, val);
+  }
+
+  handleFocusedIndex(val) {
+    //dzoni fja
+    this._handleCarryFocus(this._focusedIndex, val);
+    this._reCalibrateScroll(this._focusedIndex, val);
+    this._focusedIndex = val;
+    this.fireAncestors('$verticalContainerIndexChange', val);
+  }
+
   /**
    * @param {{ items: any[]; carryRowPosition: boolean; }} props
    */
@@ -88,6 +109,32 @@ export default class VerticalContainer extends Lightning.Component {
     return true;
   }, 50);
 
+  _handleClick() {
+  }
+
+  /* _handleHover() {
+    console.log('hoverovano');
+  } */
+
+  _handleScroll(event) {
+    if (this.hasFocus()) {
+      if (event.deltaY > 0) {
+        const { items } = this._props;
+        if (items && items[0].channelId) {
+          return this.handleDownEPG();
+        } else {
+          return this.handleDown();
+        }
+      } else if (event.deltaY < 0) {
+        if (this._focusedIndex === 0) {
+          this.fireAncestors('$setStateOnScroll', 'Hero');
+        } else {
+          return this.handleUp();
+        }
+      }
+    }
+  }
+
   _handleDown() {
     const { items } = this._props;
     if (items && items[0].channelId) {
@@ -116,7 +163,7 @@ export default class VerticalContainer extends Lightning.Component {
     return true;
   }
 
-  _handleUp() {
+  handleUp() {
     if (this._focusedIndex > 0) {
       if (this.Items.children[this._focusedIndex - 1]._props?.cardType === 'BANNER') {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 2);
@@ -133,6 +180,10 @@ export default class VerticalContainer extends Lightning.Component {
       return false;
     }
     return true;
+  }
+
+  _handleUp() {
+    return this.handleUp();
   }
 
   _appendItems(items) {
@@ -202,7 +253,7 @@ export default class VerticalContainer extends Lightning.Component {
    * @param {number} oldIndex
    * @param {number} newIndex
    */
-  _handleCarryFocus(oldIndex, newIndex) {
+  _handleCarryFocus(oldIndex, newIndex, closestElementFunction = getClosestElementIndex) {
     if (this._props.carryRowPosition && this.Items.children.length > 1) {
       const nextContainer = this.Items.children[newIndex];
       if (nextContainer.Items) {
@@ -211,7 +262,7 @@ export default class VerticalContainer extends Lightning.Component {
           previousContainer.Items.children[previousContainer._focusedIndex];
 
         nextContainer._setFocusedIndex(
-          getClosestElementIndex(nextContainer, previouslyFocusedItem)
+          closestElementFunction(nextContainer, previouslyFocusedItem)
         );
       }
     }

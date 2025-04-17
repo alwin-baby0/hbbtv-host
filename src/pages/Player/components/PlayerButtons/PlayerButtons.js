@@ -102,8 +102,13 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _handleBack(e) {
+    console.log(e);
     e.preventDefault();
     this.fireAncestors('$exitVideo', e);
+  }
+
+  _handleBackFromPlayer() {
+    this.fireAncestors('$exitVideoFromBackClick');
   }
 
   _focus() {
@@ -114,7 +119,25 @@ export default class PlayerButtons extends lng.Component {
 
   _unfocus() {
     this._Icon.patch({
-      color: Colors(colors.unfocus).alpha(0.3).get(),
+      color: Colors(colors.unfocus).alpha(0.5).get(),
     });
+  }
+
+  _handleHover() {
+    console.log('control btns hover');
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    const { buttonInfo, isStopped } = this._props;
+    if (buttonInfo.label === 'back') {
+      this._handleBackFromPlayer();
+    } else {
+      this._handleEnter();
+    }
   }
 }

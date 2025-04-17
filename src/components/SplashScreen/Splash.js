@@ -17,8 +17,6 @@ export default class Splash extends Lightning.Component {
   async getMovie(id) {
     const movie = await DetailService.getMovie(id);
 
-    console.log('Movie in app: ', movie);
-
     if (movie) {
       Router.navigate('player', {
         videoUrl: movie.url,
@@ -34,12 +32,7 @@ export default class Splash extends Lightning.Component {
     const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
 
     const url = new URL(window.location.href);
-    const path = url.pathname; // e.g., /movie/123
     const params = new URLSearchParams(url.search);
-
-    console.log('Deep link path:', path);
-    console.log('Deep link params:', url.search);
-    console.log('has type: ', params.has('type'));
 
     setTimeout(() => {
       const currentTimeInMS = Math.floor(Date.now() / 1000);
@@ -49,12 +42,6 @@ export default class Splash extends Lightning.Component {
         const type = params.get('type');
         const id = params.get('id');
         const seriesId = params.get('seriesId');
-        console.log('type: ', type);
-        console.log('id: ', id);
-        console.log('seriesId', seriesId);
-
-        let routerHistory = Router.getHistory();
-        console.log('routerHistory: ', routerHistory);
 
         if (type === 'movie') {
           /* Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);

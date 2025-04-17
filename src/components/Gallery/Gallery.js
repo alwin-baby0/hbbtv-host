@@ -1,8 +1,5 @@
-import { Lightning, Colors, VideoPlayer } from '@lightningjs/sdk';
-import { Row } from '@lightningjs/ui-components';
-import colors from '../../../reskin/colors.json';
+import { Lightning, VideoPlayer } from '@lightningjs/sdk';
 import GalleryItem from '../GalleryItem/GalleryItem';
-import Bullet from '../Bullet/Bullet';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import { imageSizes } from '../../Models/utils';
 import { railItemConstructor } from '../../pages/utils/railItems';
@@ -25,6 +22,7 @@ export default class Gallery extends Lightning.Component {
       },
       Bullets: {
         type: HorizontalContainer,
+        collision: true,
         y: 820 - 115,
         x: 110,
         w: 1760,
@@ -58,19 +56,6 @@ export default class Gallery extends Lightning.Component {
         items: parsedItems,
       },
     });
-
-    // const bulletItem = sliderData.items.map((_item, index) => {
-    //   return {
-    //     type: Bullet,
-    //     w: 20,
-    //     h: 20,
-    //     index,
-    //   };
-    // });
-
-    // this.$nextVideo();
-
-    // this._nextVideo();
   }
 
   get _HeroSection() {
@@ -82,8 +67,6 @@ export default class Gallery extends Lightning.Component {
   }
 
   _enable() {
-    // Postavljamo VideoPlayer
-    // VideoPlayer.position(-15, 700);
     VideoPlayer.position(-3, 700);
     VideoPlayer.size(1220, 690);
     VideoPlayer.consumer(this);
@@ -91,24 +74,11 @@ export default class Gallery extends Lightning.Component {
     VideoPlayer.unloader(unloader);
   }
 
-  /* _disable() {
-    VideoPlayer.loader(null);
-    VideoPlayer.unloader(null);
-    VideoPlayer.clear();
-  } */
-
-  /* _unfocus() {
-    this._HeroSection._BackgroundImage.visible = true;
-    VideoPlayer.loader(null);
-    VideoPlayer.unloader(null);
-    VideoPlayer.clear();
-  } */
-
-  $playTrailer(trailer) {
+  $playTrailer(url) {
     this._HeroSection._BackgroundImage.visible = false;
     VideoPlayer.loop(true);
 
-    VideoPlayer.open(trailer.trailer);
+    VideoPlayer.open(url);
     VideoPlayer.play();
   }
 
@@ -116,12 +86,12 @@ export default class Gallery extends Lightning.Component {
     VideoPlayer.clear();
   }
 
-  $nextVideo() {
+  $changeGalleryItem(index) {
     const { sliderData } = this._props;
+    this._sliderIndex = index;
     this._HeroSection.patch({
       props: {
-        galleryItem: sliderData.items[this._Bullets._focusedIndex],
-        // height: 815,
+        galleryItem: sliderData.items[index],
         height: 690,
         yPos: 215,
       },
@@ -130,14 +100,29 @@ export default class Gallery extends Lightning.Component {
     this._HeroSection._BackgroundImage.patch({
       visible: true,
       w: 1220,
-      // h: 815 - 115,
       h: 690,
       x: 700,
-      src: sliderData.items[this._Bullets._focusedIndex].getLandscapePoster(imageSizes.XL)?.src,
+      src: sliderData.items[index].getLandscapePoster(imageSizes.XL)?.src,
     });
+  }
+
+  _unfocus() {
+    super._inactive();
+    this.$changeGalleryItem(this._sliderIndex)
   }
 
   _getFocused() {
     return this._Bullets;
   }
+
+  /* _handleScroll(event) {
+    console.log('scroll');
+    if (this.hasFocus()) {
+      if (event.deltaY > 0) {
+        this.fireAncestors('$setStateOnScroll');
+      } else if (event.deltaY < 0) {
+        return;
+      }
+    }
+  } */
 }

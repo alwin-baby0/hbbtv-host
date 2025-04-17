@@ -1,4 +1,4 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Router, Utils } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
@@ -70,9 +70,9 @@ export default class HeroRailItem extends FocusableItem {
     }
     this._timeoutId = setTimeout(() => {
       this.fireAncestors('$punchHoleTV', 700, 0, 1220, 685, 0);
-      this.fireAncestors('$playTrailer', { trailer: url });
+      this.fireAncestors('$playTrailer', url);
     }, 3000);
-    this.fireAncestors('$nextVideo', index);
+    this.fireAncestors('$changeGalleryItem', index);
   }
 
   _unfocus() {
@@ -89,5 +89,47 @@ export default class HeroRailItem extends FocusableItem {
     const { callback } = this._props;
     this.fireAncestors('$stopVideo');
     callback();
+  }
+
+  _handleClick() {
+    const { callback } = this._props;
+    this.fireAncestors('$stopVideo');
+    callback();
+  }
+
+  _handleHover() {
+    Router.focusPage();
+    const { index, url } = this._props;
+    console.log('herorRAil hovers');
+
+    super._focus();
+    this.fireAncestors('$horizontalPosterIndexChange', index);
+
+    if (this._timeoutId) {
+      clearTimeout(this._timeoutId);
+    }
+    this._timeoutId = setTimeout(() => {
+      this.fireAncestors('$punchHoleTV', 700, 0, 1220, 685, 0);
+      this.fireAncestors('$playTrailer', { trailer: url });
+    }, 3000);
+    this.fireAncestors('$nextVideo', index);
+  }
+
+  _handleUnhover() {
+    const { index } = this._props;
+    this.fireAncestors('$horizontalPosterIndexChange', index);
+    super._unfocus();
+    this.fireAncestors('$unpunchHole');
+
+    if (this._timeoutId) {
+      clearTimeout(this._timeoutId);
+    }
+    this.fireAncestors('$stopVideo');
+  }
+
+  _handleScroll(event) {
+    if (event.deltaY > 0) {
+      this.fireAncestors('$setStateOnScroll', 'Items');
+    }
   }
 }

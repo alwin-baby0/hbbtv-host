@@ -1,18 +1,6 @@
-import { APP, APP_DOMAIN, APP_BUNDLE, APP_VERSION } from '../config';
-
 let deviceInfo = {}
 
-export const getDeviceType = () => {
-  if (window.tizen) {
-    return 'tizen';
-  } else if (window.webos) {
-    return 'webos';
-  } else if (window.Hisense) {
-    return 'hisense';
-  } else if (window.DeviceInfo?.Channel?.appStore) {
-    return 'titan';
-  } else return 'web';
-};
+export const getDeviceType = () => process.env.APP_PLATFORM || 'web';
 
 const generateRandomUUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
@@ -47,20 +35,17 @@ const getTizenInfo = () => ({
 
 const getHisenseInfo = () => {
   const hisenseDeviceInfo = window.Hisense_GetDeviceInfo();
-
   return {
-    serialNumber: hisenseDeviceInfo.uuid.substring(12),
+    serialNumber: hisenseDeviceInfo.uuid?.substring(12),
     model: hisenseDeviceInfo.model_name,
     brand: hisenseDeviceInfo.brand,
     os: 'VIDAA',
     osVersion: window.Hisense_GetFirmWareVersion(),
-    macAddress: hisenseDeviceInfo.uuid.substring(0, 12).match(/.{2}/g).join(':'),
+    macAddress: hisenseDeviceInfo.uuid?.substring(0, 12).match(/.{2}/g).join(':'),
   };
 };
 
 const getWebOSInfo = async () => {
-  console.log('window.webos', window.webos);
-  console.log('webOS', webOS);
   const deviceModelAndBrand = new Promise((resolve) => {
     webOS.deviceInfo(function (device) {
       resolve({ model: device.modelName, brand: device.brandName })
@@ -184,10 +169,10 @@ export const eventTrackPayload = (event, id) => {
       w4track(
         {
           event,
-          app: APP,
-          app_domain: APP_DOMAIN,
-          app_version: APP_VERSION,
-          app_bundle: APP_BUNDLE,
+          app: process.env.APP_NAME,
+          app_domain: process.env.APP_DOMAIN,
+          app_version: process.env.APP_VERSION,
+          app_bundle: process.env.APP_BUNDLE,
           id,
           device: 'SmartTV',
           model,

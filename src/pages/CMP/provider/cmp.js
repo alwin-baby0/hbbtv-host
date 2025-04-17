@@ -13,6 +13,7 @@ export default async function (page) {
   const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
     return {
       type: Button,
+      collision: true,
       w: 1050,
       flexItem: {
         marginBottom: 18,

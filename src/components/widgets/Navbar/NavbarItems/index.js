@@ -26,6 +26,7 @@ export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
   _sidebarLength = menuItems.length;
   _index = 0;
+  _newIndex = 0;
 
   static _template() {
     return {
@@ -44,12 +45,14 @@ export default class SidebarItems extends Lightning.Component {
         },
         Column: {
           type: Row,
+          collision: true,
           x: 300,
           h: 70,
           style: { itemSpacing: 30 },
           items: menuItems.map((item) => {
             return {
               type: SidebarItem,
+              collision: true,
               w: item.id < 5 ? 150 : 50,
               h: 70,
               props: {
@@ -57,6 +60,7 @@ export default class SidebarItems extends Lightning.Component {
                 index: item.id,
                 data: item,
               },
+              extraItemSpacing: item.id === 4 ? 270 : 0,
               color: Colors(colors.unfocus).get(),
             };
           }),
@@ -129,6 +133,12 @@ export default class SidebarItems extends Lightning.Component {
     }
   }
 
+  $changeHoverFocus(index) {
+    this._newIndex = index;
+    this._Column.children[0].children[this._index]._unfocus();
+    this._index = index;
+  }
+
   _updateFocus() {
     const activeHash = Router.getActiveHash();
     if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
@@ -150,14 +160,14 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   $decrementSidebar() {
-    this._index > 0 ? --this._index : this._index;
+    this._newIndex > 0 ? --this._newIndex : this._newIndex;
   }
 
   $incrementSidebar() {
-    this._index < this._sidebarLength - 1 ? ++this._index : this._index;
+    this._newIndex < this._sidebarLength - 1 ? ++this._newIndex : this._newIndex;
   }
 
   _getFocused() {
-    return this._Column.items[this._index];
+    return this._Column.items[this._newIndex];
   }
 }
