@@ -37,6 +37,7 @@ export default class EPGRailItems extends Lightning.Component {
 
     if (id === lastId) {
       VideoPlayer.close();
+      this.fireAncestors('$unpunchHole');
       Router.navigate('player', {
         videoUrl: this._props.content.src,
         duration: 0,
@@ -168,27 +169,27 @@ export default class EPGRailItems extends Lightning.Component {
     this._lastClickedItemId = null;
     this._props.isActive !== true
       ? this.tag('Wrapper').patch({
-          texture: lng.Tools.getRoundRect(
-            this._epgWidth,
-            95,
-            8,
-            4,
-            Colors('#252835').get(),
-            true,
-            Colors('#252835').get()
-          ),
-        })
+        texture: lng.Tools.getRoundRect(
+          this._epgWidth,
+          95,
+          8,
+          4,
+          Colors('#252835').get(),
+          true,
+          Colors('#252835').get()
+        ),
+      })
       : this.tag('Wrapper').patch({
-          texture: lng.Tools.getRoundRect(
-            this._epgWidth,
-            95,
-            8,
-            4,
-            Colors('#353849').get(),
-            true,
-            Colors('#353849').get()
-          ),
-        });
+        texture: lng.Tools.getRoundRect(
+          this._epgWidth,
+          95,
+          8,
+          4,
+          Colors('#353849').get(),
+          true,
+          Colors('#353849').get()
+        ),
+      });
   }
 
   _handleEnter() {
@@ -207,7 +208,7 @@ export default class EPGRailItems extends Lightning.Component {
 
   _handleHover() {
     const { index } = this._props;
-    console.log('hover rail item');
+
     this.fireAncestors('$horizontalPosterIndexChange', index);
     this._focus();
   }

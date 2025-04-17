@@ -2,7 +2,7 @@ import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import Gallery from '../../Components/Gallery/Gallery';
-import { HomePageService } from '../../Services/HomePageService';
+import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
 
 export default class Home extends Lightning.Component {
@@ -49,7 +49,6 @@ export default class Home extends Lightning.Component {
   }
 
   _active() {
-    console.log('Router.getHistory: ', Router.getHistory());
     if (this._getState() === 'Items') {
       setTimeout(() => {
         this.fireAncestors('$setNavbarVisibility', false);
@@ -83,6 +82,10 @@ export default class Home extends Lightning.Component {
         HeroSection: undefined,
       });
     }
+  }
+
+  _disable() {
+    this.fireAncestors('$unpunchHole')
   }
 
   _firstActive() {
@@ -193,9 +196,10 @@ export default class Home extends Lightning.Component {
 
           let hasBanner = !!HomePageService.banner;
           let indexNumber = hasBanner ? 1 : 0;
+
           if (
             HomePageService.hasMore &&
-            !HomePageService.isLoading &&
+            !HomePageService.loading &&
             HomePageService.stripesFetched - 2 === index - indexNumber
           ) {
             const newStripes = await HomePageService.fetchMoreStripes();

@@ -1,5 +1,4 @@
-import { DetailService } from '../../../Services/DetailService';
-import { CMPService } from '../../../Services/CMPService';
+import { DetailService, CMPService } from '../../../Services';
 import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId }) {

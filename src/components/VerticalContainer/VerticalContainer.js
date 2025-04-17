@@ -39,9 +39,6 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   $horizontalContainerPosterIndexChange(val, verticalState) {
-    console.log('horski val', val);
-    console.log('horski', this.Items.children[this._focusedIndex]);
-
     this.fireAncestors('$verticalContainerIndexChange', val);
     this.fireAncestors('$updateVerticalState', verticalState);
     this._focusedIndex = val;
@@ -113,7 +110,6 @@ export default class VerticalContainer extends Lightning.Component {
   }, 50);
 
   _handleClick() {
-    console.log('cliick');
   }
 
   /* _handleHover() {
@@ -136,7 +132,6 @@ export default class VerticalContainer extends Lightning.Component {
           return this.handleUp();
         }
       }
-      console.log('skrolovanje');
     }
   }
 
@@ -151,8 +146,6 @@ export default class VerticalContainer extends Lightning.Component {
 
   handleDown() {
     if (this._focusedIndex < this.Items.children.length - 1) {
-      console.log('log button down vert', this.Items.children[this._focusedIndex]);
-      console.log('log button svi child', this.Items.children);
       if (this.Items.children[this._focusedIndex + 1]._props?.cardType === 'BANNER') {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 2);
         this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 2);
@@ -267,9 +260,6 @@ export default class VerticalContainer extends Lightning.Component {
         const previousContainer = this.Items.children[oldIndex];
         const previouslyFocusedItem =
           previousContainer.Items.children[previousContainer._focusedIndex];
-
-        console.log('prevcont', previousContainer);
-        console.log('prevcontitem', previouslyFocusedItem);
 
         nextContainer._setFocusedIndex(
           getClosestElementIndex(nextContainer, previouslyFocusedItem)

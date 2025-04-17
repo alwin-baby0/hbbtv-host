@@ -4,8 +4,8 @@ import { Colors, Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
-import { parseTranslations } from '../../../../Services/HomePageService';
-import defTR from '../../../../../static/translations/en.json';
+import { parseTranslations } from '../../../../Services';
+import defTR from '../../../../../public/static/translations/en.json';
 
 const translations = parseTranslations();
 
@@ -135,7 +135,6 @@ export default class SidebarItems extends Lightning.Component {
 
   $changeHoverFocus(index) {
     this._newIndex = index;
-    console.log(this._index, index);
     this._Column.children[0].children[this._index]._unfocus();
     this._index = index;
   }
@@ -169,8 +168,6 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _getFocused() {
-    console.log('stari indeks', this._index);
-    console.log('novi indeks', this._newIndex);
     return this._Column.items[this._newIndex];
   }
 }

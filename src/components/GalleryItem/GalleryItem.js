@@ -160,8 +160,6 @@ export default class GalleryItem extends Lightning.Component {
       });
     }
 
-    console.log(galleryItem);
-
     const bgImageSrc = () => {
       let src;
       if (isDeeplinkEpisode && galleryItem.getThumbnailImage(imageSizes.XL)?.src) {
