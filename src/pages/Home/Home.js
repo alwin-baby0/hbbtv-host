@@ -14,6 +14,7 @@ export default class Home extends Lightning.Component {
     return {
       Background: {},
       HeroSection: {
+        //collision: true,
         x: 0,
         y: 0,
         w: 1920,
@@ -28,6 +29,7 @@ export default class Home extends Lightning.Component {
         Column: {
           h: 1080,
           w: 1700,
+          collision: true,
           type: VerticalContainer,
         },
       },
@@ -47,7 +49,6 @@ export default class Home extends Lightning.Component {
   }
 
   _active() {
-    console.log('Router.getHistory: ', Router.getHistory());
     if (this._getState() === 'Items') {
       setTimeout(() => {
         this.fireAncestors('$setNavbarVisibility', false);
@@ -101,6 +102,10 @@ export default class Home extends Lightning.Component {
     } else {
       this.fireAncestors('$appClose');
     }
+  }
+
+  $setStateOnScroll(nextState) {
+    this._setState(nextState);
   }
 
   static _states() {
@@ -191,9 +196,10 @@ export default class Home extends Lightning.Component {
 
           let hasBanner = !!HomePageService.banner;
           let indexNumber = hasBanner ? 1 : 0;
+
           if (
             HomePageService.hasMore &&
-            !HomePageService.isLoading &&
+            !HomePageService.loading &&
             HomePageService.stripesFetched - 2 === index - indexNumber
           ) {
             const newStripes = await HomePageService.fetchMoreStripes();

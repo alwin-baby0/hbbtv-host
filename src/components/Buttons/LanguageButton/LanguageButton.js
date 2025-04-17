@@ -8,6 +8,7 @@ export default class LanguageButton extends Lightning.Component {
   static _template() {
     return {
       Column: {
+        collision: true,
         flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
         w: 1045,
         h: 85,
@@ -20,7 +21,6 @@ export default class LanguageButton extends Lightning.Component {
   set props(props) {
     const { items, ...rest } = props;
     this._props = { ...this._props, ...rest };
-    console.log('LANG PROPS', props);
   }
 
   get _Column() {
@@ -72,7 +72,7 @@ export default class LanguageButton extends Lightning.Component {
     }
   }
 
-  _init() {}
+  _init() { }
 
   async _handleEnter() {
     localStorage.setItem('languageCode', this._props.languageInfo);
@@ -97,7 +97,21 @@ export default class LanguageButton extends Lightning.Component {
     });
   }
 
-  _getFocused() {}
+  _handleHover() {
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    localStorage.setItem('languageCode', this._props.languageInfo);
+    Router.navigate('home');
+    window.location.reload();
+  }
+
+  _getFocused() { }
 
   #getLanguageTranslations = async (lngCode) => {
     const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode}/app`);

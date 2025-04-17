@@ -40,10 +40,10 @@ export const CARD_SIZES = {
     image_height: 230,
   },
   BANNER: {
-    width: 1760,
+    width: 1730,
     // height: 460,
     height: 300,
     image_width: 1760,
-    image_height: 150,
+    image_height: 260,
   },
 };

@@ -46,6 +46,7 @@ export default class Search extends Lightning.Component {
           w: 1760,
           h: 1080,
           type: VerticalContainer,
+          collision: true,
           plinko: true,
           // lazyUpCount: 2,
           // lazyUpCountBuffer: 2,
@@ -61,6 +62,11 @@ export default class Search extends Lightning.Component {
   get _Content() {
     return this.tag('InputWrapper');
   }
+
+  /* $updateVerticalState(nextState) {
+    console.log('nextState', nextState);
+    this._setState(nextState);
+  } */
 
   $onSoftKey({ key }) {
     this._Input.tag('Input').listening = true;

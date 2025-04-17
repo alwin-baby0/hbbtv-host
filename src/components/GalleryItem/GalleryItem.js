@@ -78,6 +78,7 @@ export default class GalleryItem extends Lightning.Component {
         },
         GalleryButton: {
           type: Button,
+          collision: true,
           flexItem: {
             marginTop: 10,
           },
@@ -88,7 +89,9 @@ export default class GalleryItem extends Lightning.Component {
         },
         AuthorizedButtons: {
           flex: { direction: 'row' },
+          //collision: true,
           ContinueWatching: {
+            collision: true,
             alpha: 0,
             type: Button,
             flexItem: {
@@ -97,6 +100,7 @@ export default class GalleryItem extends Lightning.Component {
             },
           },
           FavoriteButton: {
+            collision: true,
             alpha: 0,
             type: Button,
             flexItem: {
@@ -155,8 +159,6 @@ export default class GalleryItem extends Lightning.Component {
         },
       });
     }
-
-    console.log(galleryItem);
 
     const bgImageSrc = () => {
       let src;
@@ -256,6 +258,23 @@ export default class GalleryItem extends Lightning.Component {
 
   _disable() {
     this._props.enabled = true;
+  }
+
+  $setButtonState(buttonName) {
+    console.log('set button state call', buttonName);
+    switch (buttonName) {
+      case 'GalleryButton':
+        this._setState('GalleryButton');
+        break;
+      case 'ContinueWatching':
+        console.log('continue ulaz');
+        this._setState('ContinueWatching');
+        break;
+      case 'FavoriteButton':
+        console.log('favorite ulaz');
+        this._setState('FavoriteButton');
+        break;
+    }
   }
 
   static _states() {

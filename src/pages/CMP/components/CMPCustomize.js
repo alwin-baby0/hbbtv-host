@@ -38,6 +38,7 @@ export default class CMPCustomize extends Lightning.Component {
           w: 1050,
           h: 250,
           y: 75,
+          collision: true,
           type: VerticalContainer,
         },
       },
@@ -76,6 +77,7 @@ export default class CMPCustomize extends Lightning.Component {
     const buttons = customizeButtons.map((button) => {
       return {
         type: Button,
+        collision: true,
         w: 1050,
         flexItem: {
           marginBottom: 18,

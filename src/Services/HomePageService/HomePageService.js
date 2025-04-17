@@ -27,7 +27,6 @@ class HomePageService extends FetchingService {
     // this.#banner = [];
 
     this.languageTranslations = await this.#getLanguageTranslations();
-    console.log(this.languageTranslations, JSON.stringify(this.languageTranslations));
     localStorage.setItem('languageTr', JSON.stringify(this.languageTranslations));
 
     if (!this.#heroSectionItems) {

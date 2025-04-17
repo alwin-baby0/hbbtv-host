@@ -5,6 +5,7 @@ import { getClosestElementIndexEPG } from '../../utils/focus';
 export default class EPGContainer extends VerticalContainer {
   static _template() {
     return {
+      collision: true,
       ...super._template(),
     };
   }

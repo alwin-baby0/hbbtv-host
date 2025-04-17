@@ -1,4 +1,3 @@
-// FocusableItem.js
 import { Colors } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import colors from '../../../reskin/colors.json';
@@ -32,21 +31,26 @@ export default class FocusableItem extends Lightning.Component {
   _focus() {
     const { radius, strokeWidth, width, height } = this._props;
 
-    this._FocusBorder.patch({
-      texture: lng.Tools.getRoundRect(
-        width,
-        height,
-        radius,
-        strokeWidth,
-        Colors(colors.focus).get(),
-        false
-      ),
-    });
+    setTimeout(() => {
+      //setTimeout fix the issue of same item hover problem
+      this._FocusBorder.patch({
+        texture: lng.Tools.getRoundRect(
+          width,
+          height,
+          radius,
+          strokeWidth,
+          Colors(colors.focus).get(),
+          false
+        ),
+      });
+    }, 0);
   }
 
   _unfocus() {
-    this._FocusBorder.patch({
-      texture: null,
-    });
+    setTimeout(() => {
+      this._FocusBorder.patch({
+        texture: null,
+      });
+    }, 0);
   }
 }

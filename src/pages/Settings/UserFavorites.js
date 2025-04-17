@@ -6,6 +6,7 @@ export default class UserFavorites extends Lightning.Component {
   static _template() {
     return {
       Favorites: {
+        collision: true,
         type: VerticalContainer,
         w: 1450,
         h: 500,

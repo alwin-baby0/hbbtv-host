@@ -87,9 +87,6 @@ export default class App extends Router.App {
 
   async getMovie(id) {
     const movie = await DetailService.getMovie(id);
-
-    console.log('Movie in app: ', movie);
-
     if (movie) {
       Router.navigate('player', {
         videoUrl: movie.url,

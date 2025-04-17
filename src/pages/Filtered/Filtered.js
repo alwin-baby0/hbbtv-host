@@ -6,18 +6,21 @@ import { CONTENT_TYPE } from '../../Components/VodContentContainer/VodContentCon
 export default class Filtered extends Lightning.Component {
   static _template() {
     return {
+      //collision: true,
       Background: {
         w: 1920,
         h: 2080,
         src: Utils.asset('images/background.jpg'),
       },
       GenresInfo: {
+        collision: true,
         x: 100,
         y: 150,
         w: 380,
         h: 70,
         flex: { direction: 'row', alignItems: 'center' },
         BackButton: {
+          collision: true,
           type: Button,
         },
         ArrowImage: {
@@ -35,6 +38,7 @@ export default class Filtered extends Lightning.Component {
       },
 
       Wrapper: {
+        //collision: true,
         x: 80,
         y: 80,
         h: 1080,
@@ -51,6 +55,7 @@ export default class Filtered extends Lightning.Component {
           h: 1080,
           w: 1760,
           // y: 100,
+          collision: true,
           type: VerticalContainer,
         },
       },
@@ -106,6 +111,11 @@ export default class Filtered extends Lightning.Component {
       default:
         return 80;
     }
+  }
+
+  $updateFilteredVerticalState(nextState) {
+    console.log('nextState', nextState);
+    this._setState(nextState);
   }
 
   static _states() {
