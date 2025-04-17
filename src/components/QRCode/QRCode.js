@@ -30,9 +30,8 @@ export default class QRCode extends Lightning.Component {
     this._props = { ...this._props, ...props };
 
     const { qrCode } = this._props;
-    const { name, link, qr } = qrCode;
+    const { name, qr } = qrCode;
 
-    console.log('QR', qr);
     this.tag('QRImage').patch({
       src: qr,
     });

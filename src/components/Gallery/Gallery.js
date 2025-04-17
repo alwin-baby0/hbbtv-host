@@ -22,6 +22,7 @@ export default class Gallery extends Lightning.Component {
       },
       Bullets: {
         type: HorizontalContainer,
+        collision: true,
         y: 820 - 115,
         x: 110,
         w: 1760,
@@ -113,4 +114,15 @@ export default class Gallery extends Lightning.Component {
   _getFocused() {
     return this._Bullets;
   }
+
+  /* _handleScroll(event) {
+    console.log('scroll');
+    if (this.hasFocus()) {
+      if (event.deltaY > 0) {
+        this.fireAncestors('$setStateOnScroll');
+      } else if (event.deltaY < 0) {
+        return;
+      }
+    }
+  } */
 }

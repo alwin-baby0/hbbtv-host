@@ -33,6 +33,7 @@ export default class VodPreview extends Lightning.Component {
           y: 50,
           h: 795,
           w: 1740,
+          collision: true,
           type: VerticalContainer,
         },
       },
@@ -79,6 +80,10 @@ export default class VodPreview extends Lightning.Component {
       default:
         return 80;
     }
+  }
+
+  $updateVerticalState(nextState) {
+    this._setState(nextState);
   }
 
   static _states() {

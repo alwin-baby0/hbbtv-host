@@ -14,6 +14,7 @@ export default class CategoryPicker extends Lightning.Component {
       CaterogyItems: {
         type: HorizontalContainer,
         clipping: true,
+        collision: true,
       },
     };
   }

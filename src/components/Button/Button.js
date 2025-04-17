@@ -153,4 +153,19 @@ export default class Button extends Lightning.Component {
     const { callback } = this._props;
     callback();
   }
+
+  _handleHover() {
+    this._focus();
+    this.fireAncestors('$updateVerticalState', 'HeroSection');
+    this.fireAncestors('$setButtonState', this.ref); //sending ref name
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    const { callback } = this._props;
+    callback();
+  }
 }

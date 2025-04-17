@@ -25,12 +25,10 @@ export default class Bullet extends HeroRailItem {
   }
 
   set index(val) {
-    console.log('index', val);
     return (this._index = val);
   }
 
   set item(val) {
-    console.log('PROP', val);
     return (this._item = val);
   }
 
@@ -40,7 +38,7 @@ export default class Bullet extends HeroRailItem {
     const { item, index } = this._props;
   }
 
-  _firstActive() {}
+  _firstActive() { }
 
   _enable() {
     const { item, index } = this._props;
@@ -52,8 +50,6 @@ export default class Bullet extends HeroRailItem {
 
   _focus() {
     const { index } = this._props;
-    console.log('FOCUSED');
-    console.log('this._index', index);
     // this.fireAncestors('$nextVideo', index);
 
     this._Border.patch({
@@ -71,7 +67,6 @@ export default class Bullet extends HeroRailItem {
   _handleEnter() {
     const { item } = this._props;
 
-    console.log('TYPE:', item.type.value);
     switch (item.type.value) {
       case CATEGORY_TYPES.MOVIE: {
         Router.navigate(`movie-details/${item.id}`);
