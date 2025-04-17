@@ -208,7 +208,7 @@ export default class EPGRailItems extends Lightning.Component {
 
   _handleHover() {
     const { index } = this._props;
-    console.log('hover rail item');
+
     this.fireAncestors('$horizontalPosterIndexChange', index);
     this._focus();
   }

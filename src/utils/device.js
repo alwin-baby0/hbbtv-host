@@ -1,18 +1,6 @@
-import { APP, APP_DOMAIN, APP_BUNDLE, APP_VERSION } from '../config';
-
 let deviceInfo = {}
 
-export const getDeviceType = () => {
-  if (window.tizen) {
-    return 'tizen';
-  } else if (window.webos) {
-    return 'webos';
-  } else if (window.Hisense) {
-    return 'hisense';
-  } else if (window.DeviceInfo?.Channel?.appStore) {
-    return 'titan';
-  } else return 'web';
-};
+export const getDeviceType = () => process.env.APP_PLATFORM || 'web';
 
 const generateRandomUUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
@@ -181,10 +169,10 @@ export const eventTrackPayload = (event, id) => {
       w4track(
         {
           event,
-          app: APP,
-          app_domain: APP_DOMAIN,
-          app_version: APP_VERSION,
-          app_bundle: APP_BUNDLE,
+          app: process.env.APP_NAME,
+          app_domain: process.env.APP_DOMAIN,
+          app_version: process.env.APP_VERSION,
+          app_bundle: process.env.APP_BUNDLE,
           id,
           device: 'SmartTV',
           model,

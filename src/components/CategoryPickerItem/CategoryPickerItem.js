@@ -59,10 +59,8 @@ export default class CategoryPickerItem extends Lightning.Component {
   _handleHover() {
     Router.focusPage();
     const { index } = this._props;
-    console.log('ho ve ro va no', index);
-    console.log('cat picker this', this);
+
     const parentName = this.parent.parent.parent.parent.parent.parent.ref;
-    console.log(parentName);
     this.fireAncestors('$horizontalPosterIndexChange', index);
     this._focus();
     if (parentName === 'VodContentContainer') {

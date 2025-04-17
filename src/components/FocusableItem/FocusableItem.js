@@ -1,4 +1,3 @@
-// FocusableItem.js
 import { Colors } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import colors from '../../../reskin/colors.json';
@@ -44,7 +43,6 @@ export default class FocusableItem extends Lightning.Component {
           false
         ),
       });
-      console.log('Focus applied:', this._FocusBorder);
     }, 0);
   }
 
