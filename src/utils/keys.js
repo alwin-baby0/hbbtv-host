@@ -80,6 +80,7 @@ export const setupKeys = (deviceType) => {
       // Ocilion Key Codes
       // 461 || 17: 'Back',
       return {
+        8: 'Back',
         461: 'Back',
         17: 'Back',
         57: 'MediaPlayPause',

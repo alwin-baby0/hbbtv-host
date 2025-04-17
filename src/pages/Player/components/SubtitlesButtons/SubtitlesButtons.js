@@ -74,7 +74,7 @@ export default class SubtitlesButtons extends Lightning.Component {
       return;
     } else {
       const { index } = this._props;
-      this.fireAncestors('$updateSubtitle', index - 1);
+      this.fireAncestors('$updateSubtitle', index);
       this.fireAncestors('$setFocus', index);
     }
   }
