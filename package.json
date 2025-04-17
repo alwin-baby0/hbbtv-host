@@ -18,7 +18,7 @@
     "lint": "npx prettier --check \"./src/*/*.js\"",
     "lint:fix": "npx prettier --write \"./src/**/*.js\"",
     "test": "jest",
-    "start": "vite --mode development",
+    "start": "vite --mode development-web",
     "build": "vite build --mode production-web",
     "build-lg": "vite build --mode production-lg",
     "build-hisense": "vite build --mode production-hisense",
