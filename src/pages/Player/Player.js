@@ -13,7 +13,6 @@ import { convertCueTimeToSeconds, fakeAdsData, formatAds, formatTimeHMS, formatT
 export default class Player extends lng.Component {
   _props = {
     pausedItemId: 1,
-    lastId: 0,
     isAdVisible: false,
     currentAd: null,
     skipTo: 0,
@@ -658,26 +657,16 @@ export default class Player extends lng.Component {
   }
 
   $setFocus(id) {
-    const { lastId } = this._props;
-
-    if (typeof lastId !== 'undefined') {
-      // Unselect the button of the last ID before setting a new one
-      this.tag('Subtitles.Languages').items[this._selectedTranslationIndex]._unselectButton();
-    }
-    // Set the new ID
-    if (!id) {
-      this.tag('Subtitles.Languages').items[0]._selectButton();
-    } else {
-      this.tag('Subtitles.Languages').items[id]._selectButton();
-    }
-    // Update the lastId variable with the current ID
-    this._props.lastId = id;
+    this.tag('Subtitles.Languages').items[this._selectedTranslationIndex]._unselectButton();
+    this.tag('Subtitles.Languages').items[id]._selectButton();
+    this.tag('Subtitles.Languages').selectedIndex = id;
     this._selectedTranslationIndex = id;
   }
 
   $updateSubtitle(languageIndex) {
     const player = getPlayer();
-    player.subtitleTrack = languageIndex;
+    if (languageIndex === 0) player.subtitleTrack = undefined;
+    player.subtitleTrack = languageIndex - 1;
   }
 
   $skippingTime(forward) {
@@ -898,6 +887,7 @@ export default class Player extends lng.Component {
 
     // Get the available subtitle tracks
     const subtitleTracks = getPlayer()?.subtitleTrackController?.tracks;
+
     if (!subtitleTracks || subtitleTracks.length === 0) {
       return;
     }
@@ -906,7 +896,7 @@ export default class Player extends lng.Component {
       type: SubtitlesButtons,
       props: {
         languageInfo: language,
-        index: index,
+        index: index + 1,
       },
       w: 250,
       h: 60,
@@ -996,7 +986,8 @@ export default class Player extends lng.Component {
 
   _captureKey({ keyCode }) {
     const useKeyHandlers = !this.tag('Wrapper').visible;
-    this._showWrapper();
+    if (this._getState() !== 'Subtitles')
+      this._showWrapper();
 
     if (window.keyCodes[keyCode] === 'Back' && this._getState() !== 'Subtitles') return false;
     return useKeyHandlers;
@@ -1027,6 +1018,14 @@ export default class Player extends lng.Component {
         }
         _handleBack() {
           this.$hideSbutitles();
+        }
+
+        _handleRight() {
+          return false;
+        }
+
+        _handleLeft() {
+          return false;
         }
       },
 
