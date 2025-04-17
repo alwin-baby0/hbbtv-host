@@ -57,6 +57,7 @@ export default class HorizontalContainer extends Lightning.Component {
     this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
     //this._focusedIndex = newIndex;
     this._reCalibrateScroll();
+    this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex, this._scrollPosition);
   }
 
   set props(props) {
