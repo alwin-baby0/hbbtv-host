@@ -70,9 +70,9 @@ export default class HeroRailItem extends FocusableItem {
     }
     this._timeoutId = setTimeout(() => {
       this.fireAncestors('$punchHoleTV', 700, 0, 1220, 685, 0);
-      this.fireAncestors('$playTrailer', { trailer: url });
+      this.fireAncestors('$playTrailer', url);
     }, 3000);
-    this.fireAncestors('$nextVideo', index);
+    this.fireAncestors('$changeGalleryItem', index);
   }
 
   _unfocus() {
