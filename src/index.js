@@ -57,6 +57,7 @@ sequence([
   },
   () => {
     appSettings.keys = setupKeys(deviceType);
+    window.keyCodes = appSettings.keys;
   },
   async () => initDeviceInfo(deviceType),
   async () => {

@@ -126,7 +126,7 @@ export default class HorizontalContainer extends Lightning.Component {
 
   _setScrollPosition(x) {
     this._scrollPosition = x;
-    this.Items.patch({ x: this._scrollPosition });
+    this.Items.smooth = { x: this._scrollPosition };
   }
 
   _reCalibrateScroll() {
@@ -142,12 +142,15 @@ export default class HorizontalContainer extends Lightning.Component {
       const elementW = currentFocus.finalW;
 
       if (elementX < -this._scrollPosition) {
-        this._scrollPosition = -elementX;
+        // paddingOffset is used to offset first item in each
+        // column from the start of the container in EPG-s
+        const paddingOffset = currentFocus.flex?._paddingLeft ?? 0;
+        this._scrollPosition = -elementX - paddingOffset;
       } else if (elementX + elementW > containerFinalWidth - this._scrollPosition) {
         this._scrollPosition = -(elementX + elementW - containerFinalWidth);
       }
 
-      this.Items.patch({ x: this._scrollPosition });
+      this.Items.smooth = { x: this._scrollPosition };
     }
   }
 
