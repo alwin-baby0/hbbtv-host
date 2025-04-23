@@ -46,6 +46,7 @@ const getHisenseInfo = () => {
 };
 
 const getWebOSInfo = async () => {
+  console.log('webOS deviceInfo');
   const deviceModelAndBrand = new Promise((resolve) => {
     webOS.deviceInfo(function (device) {
       resolve({ model: device.modelName, brand: device.brandName })
@@ -107,17 +108,18 @@ const getWebInfo = () => ({
 });
 
 /**
- * 
- * @param { "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType 
+ *
+ * @param { "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType
  * @returns { Promise<{ serialNumber: string, model: string, brand: string, os: string, osVersion: string, macAddress: string }> }
  */
 const setUpDeviceInfo = async (deviceType) => {
+  console.log('Device type:', deviceType);
   switch (deviceType) {
     case 'tizen':
       return getTizenInfo();
     case 'hisense':
       return getHisenseInfo();
-    case 'webos':
+    case 'lg':
       return await getWebOSInfo();
     case 'titan':
       return getTitanInfo();
@@ -141,7 +143,7 @@ const calcualtePrecision = (height, width) => {
 
 /**
  * Initiate and save device info
- * @param {string} deviceType 
+ * @param {string} deviceType
  */
 export const initDeviceInfo = async (deviceType) => {
   deviceInfo = await setUpDeviceInfo(deviceType);
