@@ -201,6 +201,7 @@ export default class Player extends lng.Component {
   set props(props) {
     this._props = props;
     const { isLive, videoUrl, continueTime } = props;
+    console.log('asdf', isLive)
 
     this.tag('CurrentTime.Text').text = isLive ? 'Live' : '00:00:00';
     this.tag('EndTime.Text').text = isLive ? '' : '00:00:00';

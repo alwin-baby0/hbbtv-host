@@ -17,13 +17,14 @@ export default class PlayerButtons extends lng.Component {
         flex: { direction: 'row', alignItems: 'center' },
         h: 90,
         Icon: {
-          color: Colors(colors.unfocus).alpha(0.3).get(),
+          color: Colors(colors.unfocus).alpha(0.6).get(),
         },
       },
     };
   }
 
   set props(props) {
+    console.log('asdf', props);
     this._props = { ...this._props, ...props };
   }
 
@@ -43,6 +44,17 @@ export default class PlayerButtons extends lng.Component {
       // x: buttonInfo.position,
       texture: lng.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
     });
+  }
+
+  _active() {
+    const { buttonInfo } = this._props;
+    const width = buttonInfo.label === 'pause' ? 90 : 66;
+    const height = buttonInfo.label === 'pause' ? 90 : 66;
+    if (buttonInfo.label === 'pause') {
+      this._Icon.patch({
+        texture: lng.Tools.getSvgTexture(VideoPlayer.playing ? Utils.asset('/icons/player/commands/pause.svg') : Utils.asset('/icons/player/commands/play.svg'), width, height),
+      });
+    }
   }
 
   _handleEnter(e) {
@@ -119,7 +131,7 @@ export default class PlayerButtons extends lng.Component {
 
   _unfocus() {
     this._Icon.patch({
-      color: Colors(colors.unfocus).alpha(0.5).get(),
+      color: Colors(colors.unfocus).alpha(0.6).get(),
     });
   }
 
