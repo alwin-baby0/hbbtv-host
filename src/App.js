@@ -10,6 +10,7 @@ import { parseTranslations, DetailService } from './Services';
 
 let wasOffline = false; // Variable to track previous internet status
 
+
 export default class App extends Router.App {
   static _template() {
     return {
@@ -233,12 +234,7 @@ export default class App extends Router.App {
         {
           label: 'Exit App',
           action: () => {
-            const device = getDeviceType();
-            if (device === 'tizen') {
-              window.tizen.application.getCurrentApplication().exit();
-            } else if (device === 'web') {
-              window.location.href = '';
-            }
+            this.application.closeApp();
           },
         },
       ],
@@ -252,6 +248,10 @@ export default class App extends Router.App {
     } else {
       this.handleOffline();
     }
+  }
+
+  $exitApp() {
+    this.application.closeApp();
   }
 
   $appClose() {
@@ -268,13 +268,7 @@ export default class App extends Router.App {
         {
           label: this._translations?.yes_exit || defTr.yes_exit,
           action: () => {
-            const device = getDeviceType();
-            // Router navigation for "Yes, exit now"
-            if (device === 'tizen') {
-              window.tizen.application.getCurrentApplication().exit();
-            } else {
-              window.close();
-            }
+            this.application.closeApp();
           },
         },
       ],

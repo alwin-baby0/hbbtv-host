@@ -96,12 +96,8 @@ export default class Home extends Lightning.Component {
     if (Router.isNavigating()) {
       return;
     }
+    this.fireAncestors('$appClose');
     e.preventDefault();
-    if (Router.getHistory().length > 0) {
-      Router.back();
-    } else {
-      this.fireAncestors('$appClose');
-    }
   }
 
   $setStateOnScroll(nextState) {
