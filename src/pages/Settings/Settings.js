@@ -185,233 +185,244 @@ export default class Settings extends Lightning.Component {
     }
   }
 
+  changeContentTimeout = null;
+
   async $changeContent(contentId) {
-    this.tag('Content').patch({
-      QRContainer: undefined,
-      Languages: undefined,
-      Favorites: undefined,
-      RecentlyWatched: undefined,
-      y: 225,
-    });
-    CMPService.clearPollingInterval();
-    window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
-    if (contentId === 0) {
-      const response = await CMPService.getDeviceCode();
+    if (this.changeContentTimeout) {
+      clearTimeout(this.changeContentTimeout);
+      this.changeContentTimeout = null;
+      console.log('asdf null')
+    }
+    this.changeContentTimeout = setTimeout(async () => {
+      this.tag('Content').patch({
+        QRContainer: undefined,
+        Languages: undefined,
+        Favorites: undefined,
+        RecentlyWatched: undefined,
+        y: 225,
+      });
+      CMPService.clearPollingInterval();
+      window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
+      if (contentId === 0) {
+        const response = await CMPService.getDeviceCode();
 
-      const device_code = response.data.device_code;
-      const verification_uri = response.data.verification_uri;
+        const device_code = response.data.device_code;
+        const verification_uri = response.data.verification_uri;
 
-      const userLanguageTranslations = this._props.userLanguageTranslations;
-      // console.log(userLanguageTranslations);
+        const userLanguageTranslations = this._props.userLanguageTranslations;
+        // console.log(userLanguageTranslations);
 
-      const selectedLanguageCode = localStorage.getItem('languageCode');
+        const selectedLanguageCode = localStorage.getItem('languageCode');
 
-      const languageObject = userLanguageTranslations.find(
-        (item) => item.lang === selectedLanguageCode
-      );
+        const languageObject = userLanguageTranslations.find(
+          (item) => item.lang === selectedLanguageCode
+        );
 
-      window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
+        window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
 
-      if (!localStorage.getItem('userData')) {
-        await CMPService.setDeviceCodeStatusInterval(device_code);
-        const qrCode = verification_uri.url;
+        if (!localStorage.getItem('userData')) {
+          await CMPService.setDeviceCodeStatusInterval(device_code);
+          const qrCode = verification_uri.url;
 
-        qrcode.toDataURL(qrCode).then((image) => {
+          qrcode.toDataURL(qrCode).then((image) => {
+            this.tag('Content').patch({
+              QRContainer: {
+                w: 1310,
+                h: 800,
+                flex: {
+                  direction: 'row',
+                },
+                Info: {
+                  flex: {
+                    direction: 'column',
+                  },
+                  w: 750,
+                  h: 800,
+                  Title: {
+                    h: 120,
+                    w: 500,
+                    text: {
+                      text: this._translations?.signup_title || defTr.signup_title,
+                      fontFace: 'Montserrat-Bold',
+                      fontSize: 30,
+                      lineHeight: 35,
+                      letterSpacing: 2,
+                    },
+                  },
+                  Text: {
+                    h: 300,
+                    w: 650,
+                    text: {
+                      text: this._translations?.signup_description || defTr.signup_description,
+                      fontFace: 'Montserrat-Regular',
+                      fontSize: 25,
+                      lineHeight: 30,
+                      letterSpacing: 2,
+                    },
+                  },
+                },
+                Divider: {
+                  w: 1,
+                  h: 450,
+                  rect: true,
+                  color: Colors('#ffffff').alpha(0.5).get(),
+                },
+                QRCodeInfo: {
+                  x: 150,
+                  flex: {
+                    direction: 'column',
+                    alignItems: 'center',
+                  },
+                  QRCode: {
+                    w: 280,
+                    h: 280,
+                    src: image,
+                    zIndex: 100,
+                  },
+                  QRText: {
+                    flexItem: {
+                      marginTop: 10,
+                    },
+                    text: {
+                      text: this._translations?.signup_scan || defTr.signup_scan,
+                      fontFace: 'Montserrat-Bold',
+                      fontSize: 25,
+                      lineHeight: 30,
+                      letterSpacing: 2,
+                    },
+                  },
+                },
+              },
+            });
+          });
+        } else {
+          const recentlyWatched = await CMPService.getRecentlyWatched();
+          // console.log(recentlyWatched.data.recently_watched);
+          // console.log(recentlyWatched.data.recently_watched.length);
+
+          const parsedMovies = parseVodUserContentData({
+            data: {
+              // railTitle: 'Continue Watching',
+              railTitle: this._translations?.continue_watching || defTr.continue_watching,
+              entry: recentlyWatched.data.recently_watched,
+            },
+            itemsPerRow: recentlyWatched.data.recently_watched.length,
+          });
+
+          const favorites = await CMPService.getFavorites();
+
+          const parsedFavorites = parseVodUserContentData({
+            data: {
+              // railTitle: 'Favorites',
+              railTitle: this._translations?.favorites || defTr.favorites,
+              entry: favorites.data.favorites,
+            },
+            itemsPerRow: favorites.data.favorites.length,
+          });
+
           this.tag('Content').patch({
             QRContainer: {
-              w: 1310,
+              w: 1450,
               h: 800,
               flex: {
-                direction: 'row',
+                direction: 'column',
               },
               Info: {
-                flex: {
-                  direction: 'column',
-                },
-                w: 750,
-                h: 800,
+                w: 1310,
+                h: 100,
                 Title: {
                   h: 120,
-                  w: 500,
+                  w: 1310,
                   text: {
-                    text: this._translations?.signup_title || defTr.signup_title,
+                    // text: languageObject?.loggedInText,
+                    text: this._translations?.logged_in_message || defTr.logged_in_message,
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,
                     letterSpacing: 2,
                   },
                 },
-                Text: {
-                  h: 300,
-                  w: 650,
-                  text: {
-                    text: this._translations?.signup_description || defTr.signup_description,
-                    fontFace: 'Montserrat-Regular',
-                    fontSize: 25,
-                    lineHeight: 30,
-                    letterSpacing: 2,
-                  },
+              },
+              RecentlyWatched: {
+                type: UserRecentlyWatched,
+                w: 1450,
+                h: 500,
+                props: {
+                  items: parsedMovies,
                 },
               },
-              Divider: {
-                w: 1,
-                h: 450,
-                rect: true,
-                color: Colors('#ffffff').alpha(0.5).get(),
-              },
-              QRCodeInfo: {
-                x: 150,
-                flex: {
-                  direction: 'column',
-                  alignItems: 'center',
-                },
-                QRCode: {
-                  w: 280,
-                  h: 280,
-                  src: image,
-                  zIndex: 100,
-                },
-                QRText: {
-                  flexItem: {
-                    marginTop: 10,
-                  },
-                  text: {
-                    text: this._translations?.signup_scan || defTr.signup_scan,
-                    fontFace: 'Montserrat-Bold',
-                    fontSize: 25,
-                    lineHeight: 30,
-                    letterSpacing: 2,
-                  },
+              Favorites: {
+                type: UserFavorites,
+                w: 1450,
+                h: 920,
+                props: {
+                  items: parsedFavorites,
                 },
               },
             },
           });
-        });
-      } else {
+        }
+      } else if (contentId === 1) {
+        this._props.hasMoreRcw = true;
+        this._props.recentlyWPage = 1;
         const recentlyWatched = await CMPService.getRecentlyWatched();
-        // console.log(recentlyWatched.data.recently_watched);
-        // console.log(recentlyWatched.data.recently_watched.length);
+        console.log(recentlyWatched.data.recently_watched);
+        console.log(recentlyWatched.data.recently_watched.length);
 
-        const parsedMovies = parseVodUserContentData({
+        const parsedMovies = parseVodMoviesPageData({
           data: {
-            // railTitle: 'Continue Watching',
-            railTitle: this._translations?.continue_watching || defTr.continue_watching,
             entry: recentlyWatched.data.recently_watched,
           },
-          itemsPerRow: recentlyWatched.data.recently_watched.length,
-        });
-
-        const favorites = await CMPService.getFavorites();
-
-        const parsedFavorites = parseVodUserContentData({
-          data: {
-            // railTitle: 'Favorites',
-            railTitle: this._translations?.favorites || defTr.favorites,
-            entry: favorites.data.favorites,
-          },
-          itemsPerRow: favorites.data.favorites.length,
+          itemsPerRow: 4,
         });
 
         this.tag('Content').patch({
-          QRContainer: {
-            w: 1450,
-            h: 800,
-            flex: {
-              direction: 'column',
-            },
-            Info: {
-              w: 1310,
-              h: 100,
-              Title: {
-                h: 120,
-                w: 1310,
-                text: {
-                  // text: languageObject?.loggedInText,
-                  text: this._translations?.logged_in_message || defTr.logged_in_message,
-                  fontFace: 'Montserrat-Bold',
-                  fontSize: 30,
-                  lineHeight: 35,
-                  letterSpacing: 2,
-                },
-              },
-            },
-            RecentlyWatched: {
-              type: UserRecentlyWatched,
-              w: 1450,
-              h: 500,
-              props: {
-                items: parsedMovies,
-              },
-            },
-            Favorites: {
-              type: UserFavorites,
-              w: 1450,
+          RecentlyWatched: {
+            collision: true,
+            type: VerticalContainer,
+            w: 1310,
+            h: 920,
+            props: {
+              items: constructRails(parsedMovies),
               h: 920,
-              props: {
-                items: parsedFavorites,
-              },
             },
           },
         });
+      } else if (contentId === 2) {
+        this._props.hasMoreFav = true;
+        this._props.favoritesPage = 1;
+        const favorites = await CMPService.getFavorites();
+        console.log(favorites.data.favorites);
+        const parsedMovies = parseVodMoviesPageData({
+          data: {
+            entry: favorites.data.favorites,
+          },
+          itemsPerRow: 4,
+        });
+
+        this.tag('Content').patch({
+          Favorites: {
+            collision: true,
+            type: VerticalContainer,
+            w: 1310,
+            h: 920,
+            props: {
+              items: constructRails(parsedMovies),
+              h: 920,
+            },
+          },
+        });
+      } else if (contentId === 3) {
+        CMPService.revokeToken(localStorage.getItem('userData').access_token);
+        localStorage.removeItem('userData');
+        CMPService.clearPollingInterval();
+        this.$setFocus(0);
+        this._Column._removeLastItems(3);
+        this.$changeContent(0);
       }
-    } else if (contentId === 1) {
-      this._props.hasMoreRcw = true;
-      this._props.recentlyWPage = 1;
-      const recentlyWatched = await CMPService.getRecentlyWatched();
-      console.log(recentlyWatched.data.recently_watched);
-      console.log(recentlyWatched.data.recently_watched.length);
-
-      const parsedMovies = parseVodMoviesPageData({
-        data: {
-          entry: recentlyWatched.data.recently_watched,
-        },
-        itemsPerRow: 4,
-      });
-
-      this.tag('Content').patch({
-        RecentlyWatched: {
-          collision: true,
-          type: VerticalContainer,
-          w: 1310,
-          h: 920,
-          props: {
-            items: constructRails(parsedMovies),
-            h: 920,
-          },
-        },
-      });
-    } else if (contentId === 2) {
-      this._props.hasMoreFav = true;
-      this._props.favoritesPage = 1;
-      const favorites = await CMPService.getFavorites();
-      console.log(favorites.data.favorites);
-      const parsedMovies = parseVodMoviesPageData({
-        data: {
-          entry: favorites.data.favorites,
-        },
-        itemsPerRow: 4,
-      });
-
-      this.tag('Content').patch({
-        Favorites: {
-          collision: true,
-          type: VerticalContainer,
-          w: 1310,
-          h: 920,
-          props: {
-            items: constructRails(parsedMovies),
-            h: 920,
-          },
-        },
-      });
-    } else if (contentId === 3) {
-      CMPService.revokeToken(localStorage.getItem('userData').access_token);
-      localStorage.removeItem('userData');
-      CMPService.clearPollingInterval();
-      this.$setFocus(0);
-      this._Column._removeLastItems(3);
-      this.$changeContent(0);
-    }
+      console.log('asdf');
+      this.changeContentTimeout = null;
+    }, 500);
   }
 
   userLoginButtonsUpdate() {
