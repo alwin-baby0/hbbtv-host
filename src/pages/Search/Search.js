@@ -1,10 +1,11 @@
-import { Colors, Lightning, Router } from '@lightningjs/sdk';
+import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import KeyboardSearch from '../../Components/Keyboard/components/KeyboardSearch';
 import InputField from './components/Input';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
 import { HomePageService, SearchService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
+import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 const search = {
   items: [],
   timestamp: 0,
@@ -42,6 +43,7 @@ export default class Search extends Lightning.Component {
         w: 1760,
         h: 1080,
         clipping: true,
+        visible: true,
         VODSection: {
           x: 20,
           y: 20,
@@ -54,7 +56,17 @@ export default class Search extends Lightning.Component {
           // lazyUpCountBuffer: 2,
         },
       },
+      Spinner: {
+        x: 960,
+        y: 540,
+        visible: false,
+        type: LoadingScreenComponent
+      }
     };
+  }
+
+  get VodWrapper() {
+    return this.tag('VODWrapper');
   }
 
   get _VODSection() {
@@ -107,6 +119,9 @@ export default class Search extends Lightning.Component {
   async $updatedVOD(keyword, category) {
     let inputValue = this._Input.tag('Input').value.toLowerCase();
 
+    this.VodWrapper.patch({ visible: false });
+    this.tag('Spinner').patch({ visible: true });
+
     if (inputValue.length > 2) {
       SearchService.getSearch(inputValue, '').then((data) => {
         if (data?.items) {
@@ -138,6 +153,8 @@ export default class Search extends Lightning.Component {
     this.tag('VODSection').props = {
       items: search.items,
     };
+    this.VodWrapper.patch({ visible: true });
+    this.tag('Spinner').patch({ visible: false });
   }
 
   _firstEnable() {
@@ -202,7 +219,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleDown() {
-          if (this._VODSection.Items.children.length > 0) {
+          if (this._VODSection.Items.children.length > 0 && this.VodWrapper.visible) {
             this._Input.tag('Input').listening = false;
             this._setState('VODSection');
           } else {
