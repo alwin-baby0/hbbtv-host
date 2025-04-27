@@ -1,4 +1,4 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Utils, Img } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
 
 export default class Key extends Lightning.Component {
@@ -39,7 +39,8 @@ export default class Key extends Lightning.Component {
   _enable() {
     if (this._data.icon) {
       this._Title.patch({
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(`/images/${this._data.icon}`), 60, 60),
+        // texture: Lightning.Tools.getSvgTexture(Utils.asset(`/images/${this._data.icon}`), 60, 60),
+        texture: Img(Utils.asset(`/icons/${this._data.icon}`)).contain(60, 60),
       });
     } else {
       this._Title.patch({
