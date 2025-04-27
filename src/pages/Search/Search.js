@@ -82,6 +82,14 @@ export default class Search extends Lightning.Component {
     this._setState(nextState);
   } */
 
+  numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+
+  _handleKey(key) {
+    if (this.numberKeys.includes(key.key)) {
+      this.$onSoftKey(key)
+    }
+  }
+
   $onSoftKey({ key }) {
     this._Input.tag('Input').listening = true;
 
