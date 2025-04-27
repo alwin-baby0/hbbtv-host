@@ -23,22 +23,36 @@ const languageArea = (page, tabButtons) => {
 export default async function (page) {
   const translations = parseTranslations();
   const languages = await LanguageService.getLanguages();
-  // console.log(languages);
+  console.log('asdf', languages);
 
   page.props = {
     languagesData: languages.data,
   };
 
-  const tabButtons = [
-    {
-      id: 0,
-      title: translations?.cookie_preferences || defTr.cookie_preferences,
-    },
-    {
-      id: 1,
-      title: 'Languages',
-    },
-  ];
+  let tabButtons = [];
+
+
+  if (languages.data.languages.split(',').length > 1) {
+    tabButtons = [
+      {
+        id: 0,
+        title: translations?.cookie_preferences || defTr.cookie_preferences,
+      },
+      {
+        id: 1,
+        title: 'Languages',
+      },
+    ];
+  }
+  else {
+    tabButtons = [
+      {
+        id: 0,
+        title: translations?.cookie_preferences || defTr.cookie_preferences,
+      }
+    ];
+
+  }
 
   languageArea(page, tabButtons);
 }
