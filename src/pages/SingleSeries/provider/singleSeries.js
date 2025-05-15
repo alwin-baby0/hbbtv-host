@@ -52,7 +52,7 @@ export default async function (page, { seriesId }) {
     firstEpisodeUrl: firstEpisodeUrl,
     seriesId: galleryItem.id,
     isDeeplinkEpisode: pathname.isDeeplinkEpisode,
-    ssai: ssai,
+    ssai: galleryItem.ssai,
     ssaiLastEp: ssaiLastEp,
   };
 
