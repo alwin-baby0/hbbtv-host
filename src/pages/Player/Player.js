@@ -333,6 +333,7 @@ export default class Player extends lng.Component {
   }
 
   _updateProgressBarAd(duration, adIndex, adsLength) {
+    if (this.tag('Spinner').visible) return;
     const progress = this._currentAdTime / duration;
     this.tag('ProgressBarAd').progress = progress;
 
@@ -345,7 +346,7 @@ export default class Player extends lng.Component {
     }
 
     if (this._currentAdTime <= duration) {
-      this._currentAdTime++;
+      this._currentAdTime += 0.1;
     } else {
       clearInterval(this._progressAdInterval);
       this._adStarted = false;
@@ -507,7 +508,7 @@ export default class Player extends lng.Component {
 
                   this._progressAdInterval = setInterval(
                     () => this._updateProgressBarAd(duration, index + 1, pod.ads.length),
-                    1000
+                    100
                   );
                 }
 
