@@ -11,7 +11,7 @@ import HeroRailItem from '../../components/RailItems/HeroRailItems';
 import { CATEGORY_TYPES } from '../../Models/Category';
 import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 import BannerRailItem from '../../components/RailItems/BannerRailItem';
-import { EPGService } from '../../Services';
+import { DetailService, EPGService } from '../../Services';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -202,14 +202,16 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
       index,
       callback: () => {
-        Router.navigate('player', {
-          videoUrl: railItem.url,
-          videoId: railItem.id,
-          duration: railItem.duration,
-          videoType: 'series',
-          seriesID: railItem.seriesId,
-          ssai: railItem.ssai,
-        });
+        DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(({ data: result }) => {
+          Router.navigate('player', {
+            videoUrl: result[0]?.content.src ?? railItem.src,
+            videoId: railItem.id,
+            duration: railItem.duration,
+            videoType: 'series',
+            seriesID: railItem.seriesId,
+            ssai: result[0].extensions.ssai ?? railItem.ssai,
+          });
+        })
       },
     },
   }));
