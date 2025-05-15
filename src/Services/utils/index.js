@@ -1,8 +1,16 @@
-import { getDeviceInfo } from '../../utils/device';
+import { getDeviceInfo, getDeviceType } from '../../utils/device';
 
 export const V1 = 'v1';
 export const V2 = 'v2';
 export const auth = 'auth';
+
+bundleIdentifierMap = (deviceType) => {
+  switch (deviceType) {
+    case 'lg': return 'lgtv';
+    case 'tizen': return 'samsungtv';
+    default: return deviceType;
+  }
+}
 
 export function createApiCtx() {
   return btoa(
@@ -12,11 +20,10 @@ export function createApiCtx() {
       osVersion: 2,
       deviceWidth: window.innerWidth,
       deviceHeight: window.innerHeight,
-      platform: 'lightningjs',
+      platform: bundleIdentifierMap(getDeviceType()),
       bundleIdentifier: process.env.APP_BUNDLE,
       api_key: process.env.APP_WATCH4_API_KEY, // TODO: Check if here we should use google analitics or watch4 api key??
       deviceId: getDeviceInfo().serialNumber,
-      bundleIdentifier: 'com.appwedotv',
     })
   );
 }

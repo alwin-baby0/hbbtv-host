@@ -89,6 +89,18 @@ class DetailService extends FetchingService {
     }
   };
 
+  getAdCues = async (videoId, seriesId, videoUrl) =>
+    this._request({
+      url: '/getAdcues',
+      apiVersion: V2,
+      method: 'GET',
+      params: {
+        video_id: videoId,
+        series_id: seriesId,
+        video_url: videoUrl,
+      }
+    })
+
   getSport = async (sportId) => {
     return await this.getSerie(sportId);
   };
