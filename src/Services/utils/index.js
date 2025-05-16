@@ -4,7 +4,7 @@ export const V1 = 'v1';
 export const V2 = 'v2';
 export const auth = 'auth';
 
-bundleIdentifierMap = (deviceType) => {
+const bundleIndentifierMap = (deviceType) => {
   switch (deviceType) {
     case 'lg': return 'lgtv';
     case 'tizen': return 'samsungtv';
@@ -20,7 +20,7 @@ export function createApiCtx() {
       osVersion: 2,
       deviceWidth: window.innerWidth,
       deviceHeight: window.innerHeight,
-      platform: bundleIdentifierMap(getDeviceType()),
+      platform: bundleIndentifierMap(getDeviceType()),
       bundleIdentifier: process.env.APP_BUNDLE,
       api_key: process.env.APP_WATCH4_API_KEY, // TODO: Check if here we should use google analitics or watch4 api key??
       deviceId: getDeviceInfo().serialNumber,
