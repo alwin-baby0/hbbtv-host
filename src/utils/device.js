@@ -157,10 +157,12 @@ export const getDeviceInfo = () => deviceInfo;
 
 export const getDeviceStageProps = () => {
   const { innerHeight, innerWidth } = window
+  const height = innerHeight || 1080
+  const width = innerWidth || 1920
   return {
-    h: innerHeight,
-    w: innerWidth,
-    precision: calcualtePrecision(innerHeight, innerWidth),
+    h: height,
+    w: width,
+    precision: calcualtePrecision(height, width),
   }
 }
 
