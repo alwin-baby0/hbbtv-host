@@ -2,6 +2,7 @@ import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
+import { DetailService } from '../../Services';
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -201,15 +202,28 @@ export default class GalleryItem extends Lightning.Component {
 
         if (enabled) {
           callback = () => {
-            Router.navigate('player', {
-              videoUrl: isDeeplinkEpisode ? url : firstEpisodeUrl,
-              videoId: isDeeplinkEpisode ? id : firstEpisodeVideoId,
-              duration: duration,
-              // videoType: videoType,
-              videoType: 'series',
-              seriesID: seriesId,
-              ssai: ssai,
-            });
+            if (isDeeplinkEpisode) {
+              Router.navigate('player', {
+                videoUrl: url,
+                videoId: id,
+                duration: duration,
+                // videoType: videoType,
+                videoType: 'series',
+                seriesID: seriesId,
+                ssai: ssai,
+              });
+              return;
+            }
+            DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(({ data: result }) => {
+              Router.navigate('player', {
+                videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
+                videoId: id,
+                duration: duration,
+                videoType: 'series',
+                seriesID: seriesId,
+                ssai: result[0].extensions?.ssai ?? ssai,
+              });
+            })
           };
 
           btnIcon = Utils.asset('icons/home/play.svg');

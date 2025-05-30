@@ -25,6 +25,7 @@ export default class Player extends lng.Component {
   _currentAdTime = 1;
   _selectedTranslationIndex = 0;
   _videoSkipTimeSum = 0;
+  _debouncePlayVideoId;
 
   static _template() {
     return {
@@ -334,7 +335,7 @@ export default class Player extends lng.Component {
 
   _updateProgressBarAd(duration, adIndex, adsLength) {
     if (this.tag('Spinner').visible) return;
-    const progress = this._currentAdTime / duration;
+    const progress = (this._currentAdTime + 1) / duration;
     this.tag('ProgressBarAd').progress = progress;
 
     this.tag('AdNumber.Text').text = 'Ad ' + adIndex + ' of ' + adsLength;
@@ -345,7 +346,7 @@ export default class Player extends lng.Component {
       this.tag('TimerAd.Text').text = formatTimeMS(duration - this._currentAdTime);
     }
 
-    if (this._currentAdTime <= duration) {
+    if (this._currentAdTime + 1 <= duration) {
       this._currentAdTime += 0.1;
     } else {
       clearInterval(this._progressAdInterval);
@@ -507,7 +508,7 @@ export default class Player extends lng.Component {
                   this._updateProgressBarAd(duration, index + 1, pod.ads.length);
 
                   this._progressAdInterval = setInterval(
-                    () => this._updateProgressBarAd(duration, index + 1, pod.ads.length),
+                    () => this._updateProgressBarAd(duration + 1, index + 1, pod.ads.length),
                     100
                   );
                 }
@@ -614,7 +615,7 @@ export default class Player extends lng.Component {
     const ssai_params = this._props.ads;
     // const ssai_params = this._adData;
     // console.log('ssai_params: ', ssai_params);
-    const seekTime = VideoPlayer.currentTime + this._videoSkipTimeSum;
+    const seekTime = Math.max(this._props.skipTo + 1, VideoPlayer.currentTime + this._videoSkipTimeSum)
 
     // Check if `ssai` has a `slots` array
     if (ssai_params && Array.isArray(ssai_params.slots)) {
@@ -638,7 +639,15 @@ export default class Player extends lng.Component {
     }
     VideoPlayer.seek(seekTime);
     this._videoSkipTimeSum = 0;
-    VideoPlayer.play();
+    this.debouncePlayVideo();
+  }
+
+  debouncePlayVideo = () => {
+    this._debouncePlayVideoId ?? clearTimeout(this._debouncePlayVideoId);
+    this._debouncePlayVideoId = setTimeout(() => {
+      VideoPlayer.play();
+      this._debouncePlayVideoId = undefined;
+    }, 500);
   }
 
   $hideSbutitles() {
@@ -789,11 +798,12 @@ export default class Player extends lng.Component {
 
   _updateProgressBar() {
     const { isLive } = this._props;
+    console.log('this._props.skipTo', this._props.skipTo)
     const currentTime = Math.max(
       0,
-      Math.min(VideoPlayer.currentTime + this._videoSkipTimeSum, VideoPlayer.duration)
+      Math.min(VideoPlayer.currentTime + this._videoSkipTimeSum - this._props.skipTo, VideoPlayer.duration - this._props.skipTo)
     );
-    const progress = currentTime / VideoPlayer.duration;
+    const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
     this.tag('ProgressBar').progress = progress;
     if (!isLive) {
       this.tag('CurrentTime.Text').text = formatTimeHMS(currentTime);
@@ -907,7 +917,9 @@ export default class Player extends lng.Component {
     this.tag('Subtitles.Languages').appendItems(items);
   }
 
-  $videoPlayerError() {
+  $videoPlayerError(e) {
+    console.error('Error in the player: ', e)
+    if (e.event.code === 20) return;
     this.tag('ErrorMessage').patch({
       Message: {
         text: {

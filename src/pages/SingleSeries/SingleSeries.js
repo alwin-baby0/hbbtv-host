@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../Components/GalleryItem/GalleryItem';
-import { CMPService, parseTranslations } from '../../Services';
+import { CMPService, DetailService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
 import defTr from '../../../public/static/translations/en.json';
@@ -155,15 +155,17 @@ export default class SingleSeries extends Lightning.Component {
                     defTr.continue_watching.toUpperCase(),
                   width: 440,
                   callback: () => {
-                    Router.navigate('player', {
-                      videoUrl: lastPlayedUrl,
-                      duration: duration,
-                      videoType: 'series',
-                      seriesID: seriesId,
-                      videoId: lastPlayedId,
-                      continueTime: position,
-                      ssai: ssaiLastEp,
-                    });
+                    DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(({ data: result }) => {
+                      Router.navigate('player', {
+                        videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
+                        duration: duration,
+                        videoType: 'series',
+                        seriesID: seriesId,
+                        videoId: lastPlayedId,
+                        continueTime: position,
+                        ssai: result[0].extensions?.ssai ?? ssaiLastEp,
+                      });
+                    })
                   },
                 },
               },
