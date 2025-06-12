@@ -8,4 +8,4 @@ build
 .env.*
 public/static/devtools
 .DS_Store
-wedotv-lg-build
+wedotv-lg-build-*
