@@ -797,7 +797,7 @@ export default class Player extends lng.Component {
 
   _updateProgressBar() {
     const { isLive } = this._props;
-    console.log('this._props.skipTo', this._props.skipTo)
+
     const currentTime = Math.max(
       0,
       Math.min(VideoPlayer.currentTime + this._videoSkipTimeSum - this._props.skipTo, VideoPlayer.duration - this._props.skipTo)
