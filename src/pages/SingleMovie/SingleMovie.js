@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import Button from '../../Components/Button/Button';
 import { imageSizes } from '../../Models/utils';
-import { CMPService, parseTranslations } from '../../Services';
+import { CMPService, DetailService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { Column, Row } from '@lightningjs/ui-components';
 import { eventTrackPayload } from '../../utils/device';
@@ -379,11 +379,13 @@ export default class SingleMovie extends Lightning.Component {
                 if (item.buttonName === 'FAVORITE') {
                   this.addToFavorite();
                 } else if (item.buttonName === 'WATCH NOW') {
-                  Router.navigate('player', {
-                    videoUrl: movie[item.stream],
-                    duration: duration,
-                    videoId: movieId,
-                    ssai: movie.ssai,
+                  DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(({ data: result }) => {
+                    Router.navigate('player', {
+                      videoUrl: result[0]?.content?.src ?? movie[item.stream],
+                      duration: duration,
+                      videoId: movieId,
+                      ssai: result[0].extensions?.ssai ?? movie.ssai,
+                    });
                   });
                 } else if (item.buttonName === 'TRAILER') {
                   Router.navigate('player', {
