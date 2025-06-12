@@ -191,7 +191,6 @@ export default class Settings extends Lightning.Component {
     if (this.changeContentTimeout) {
       clearTimeout(this.changeContentTimeout);
       this.changeContentTimeout = null;
-      console.log('asdf null')
     }
     this.changeContentTimeout = setTimeout(async () => {
       this.tag('Content').patch({
@@ -420,7 +419,6 @@ export default class Settings extends Lightning.Component {
         this._Column._removeLastItems(3);
         this.$changeContent(0);
       }
-      console.log('asdf');
       this.changeContentTimeout = null;
     }, 500);
   }
