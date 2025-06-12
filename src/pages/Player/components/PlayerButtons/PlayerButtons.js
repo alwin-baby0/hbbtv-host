@@ -24,7 +24,6 @@ export default class PlayerButtons extends lng.Component {
   }
 
   set props(props) {
-    console.log('asdf', props);
     this._props = { ...this._props, ...props };
   }
 

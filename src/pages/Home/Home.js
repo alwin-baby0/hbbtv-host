@@ -96,8 +96,8 @@ export default class Home extends Lightning.Component {
     if (Router.isNavigating()) {
       return;
     }
-    this.fireAncestors('$appClose');
     e.preventDefault();
+    this.fireAncestors('$appClose');
   }
 
   $setStateOnScroll(nextState) {
@@ -120,6 +120,14 @@ export default class Home extends Lightning.Component {
           });
         }
 
+        _handleBack(e) {
+          if (Router.isNavigating()) {
+            return;
+          }
+          e.preventDefault();
+          this.fireAncestors('$appClose');
+        }
+
         _handleUp() {
           Router.focusWidget('Menu');
         }
@@ -127,6 +135,7 @@ export default class Home extends Lightning.Component {
         _handleDown() {
           this._setState('Items');
         }
+
 
         async $horizontalContainerIndexChange(index) {
           if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
@@ -166,6 +175,14 @@ export default class Home extends Lightning.Component {
 
         _handleUp() {
           this._setState('Hero');
+        }
+
+        _handleBack(e) {
+          if (Router.isNavigating()) {
+            return;
+          }
+          e.preventDefault();
+          this.fireAncestors('$appClose');
         }
 
         /* async $horizontalContainerIndexChange(index) {
