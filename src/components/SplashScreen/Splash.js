@@ -4,7 +4,13 @@ import { CMPService, DetailService } from '../../Services';
 export default class Splash extends Lightning.Component {
   static _template() {
     return {
-      color: Colors('#000000').get(),
+      Background: {
+        rect: true,
+        w: 1920,
+        h: 1080,
+        src: Utils.asset('images/background.jpg'),
+        zIndex: 999,
+      },
       Logo: {
         w: 1920,
         h: 1080,

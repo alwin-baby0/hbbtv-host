@@ -132,7 +132,7 @@ const setUpDeviceInfo = async (deviceType) => {
       return getWebInfo();
     default: {
       console.warn('Unknown device');
-      return null;
+      return getWebInfo();
     }
   }
 };

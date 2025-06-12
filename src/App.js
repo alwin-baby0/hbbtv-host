@@ -2,7 +2,7 @@ import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import routes from './Pages/routes';
 import Navbar from './Components/widgets/Navbar/Navbar';
-import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinScreenComponent';
+import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import defTr from '../public/static/translations/en.json';
