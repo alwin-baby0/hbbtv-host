@@ -113,12 +113,13 @@ const getWebInfo = () => ({
 
 /**
  *
- * @param { "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType
+ * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType
  * @returns { Promise<{ serialNumber: string, model: string, brand: string, os: string, osVersion: string, macAddress: string }> }
  */
 const setUpDeviceInfo = async (deviceType) => {
   console.log('Device type:', deviceType);
   switch (deviceType) {
+    case 'samsung':
     case 'tizen':
       return getTizenInfo();
     case 'hisense':
