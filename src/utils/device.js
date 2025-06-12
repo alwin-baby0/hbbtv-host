@@ -46,7 +46,11 @@ const getHisenseInfo = () => {
 };
 
 const getWebOSInfo = async () => {
-  console.log('webOS deviceInfo');
+  if (!webOS) {
+    console.error('webOS scripts not loaded');
+    return getWebInfo();
+  }
+
   const deviceModelAndBrand = new Promise((resolve) => {
     webOS.deviceInfo(function (device) {
       resolve({ model: device.modelName, brand: device.brandName })

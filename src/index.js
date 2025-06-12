@@ -21,6 +21,7 @@ import App from './App.js';
 import Settings from '../settings.json';
 import { eventTrackPayload, getDeviceInfo, getDeviceStageProps, getDeviceType, initDeviceInfo } from './utils/device.js';
 import { setupKeys } from './utils/keys.js';
+import FetchingService from './Services/FetchingService.js';
 
 /**
  * This file should serve as a place to add for example polyfills, initiate
@@ -59,7 +60,8 @@ sequence([
     appSettings.keys = setupKeys(deviceType);
     window.keyCodes = appSettings.keys;
   },
-  async () => initDeviceInfo(deviceType),
+  async () => await initDeviceInfo(deviceType),
+  () => FetchingService.init(),
   async () => {
     if (process.env.APP_USE_GA === 'true') {
       await loadJS(`${process.env.APP_BASE_GA}/js?id=${process.env.APP_GA_API_KEY}`);

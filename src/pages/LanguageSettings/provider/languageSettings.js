@@ -23,7 +23,6 @@ const languageArea = (page, tabButtons) => {
 export default async function (page) {
   const translations = parseTranslations();
   const languages = await LanguageService.getLanguages();
-  console.log('asdf', languages);
 
   page.props = {
     languagesData: languages.data,

@@ -254,6 +254,10 @@ export default class App extends Router.App {
     this.application.closeApp();
   }
 
+  // _handleAppClose() {
+  //   this.application.closeApp();
+  // }
+
   $appClose() {
     const dialog = this.tag('Dialog');
     dialog.open({
@@ -268,7 +272,19 @@ export default class App extends Router.App {
         {
           label: this._translations?.yes_exit || defTr.yes_exit,
           action: () => {
-            this.application.closeApp();
+            const device = getDeviceType();
+            // Router navigation for "Yes, exit now"
+            switch (device) {
+              case 'metrological':
+                this.application.closeApp();
+                break;
+              case 'tizen':
+                window.tizen.application.getCurrentApplication().exit();
+                break;
+              default:
+                window.close();
+                break;
+            }
           },
         },
       ],
