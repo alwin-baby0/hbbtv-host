@@ -41,17 +41,24 @@ class HomePageService extends FetchingService {
 
     // fetch untill get 3 stripes with data or try 25 times
     while (this.stripesFetched < 3 && this.#pointer < 25) {
-      const stripeData = await this.#getHomePage(this.#pointer, 1, this.#currentRailLimit);
-      this.#pointer++;
-
-      if (stripeData) {
-        this.stripesFetched++;
-        stripeData.hasMore = stripeData.items.length === this.#currentRailLimit;
-
-        stripeData.stripeId = this.#pointer - 1;
-        stripeData.page = 1;
-        this.#stripes.push(stripeData);
+      const promises = [];
+      for (let i = 0; i <= 2 - this.stripesFetched; i++) {
+        promises.push(this.#getHomePage(this.#pointer, 1, this.#currentRailLimit));
+        this.#pointer++;
       }
+
+      const newStripes = await Promise.allSettled(promises);
+
+      newStripes.forEach(({ value: stripeData }, index) => {
+        if (stripeData) {
+          this.stripesFetched++;
+          stripeData.hasMore = stripeData.items.length === this.#currentRailLimit;
+
+          stripeData.stripeId = this.#pointer - newStripes.length + index;
+          stripeData.page = 1;
+          this.#stripes.push(stripeData);
+        }
+      });
     }
   }
 
@@ -70,7 +77,7 @@ class HomePageService extends FetchingService {
         this.stripesFetched++;
         counter++;
         // each stripe has unique id
-        stripeData.stripeId = this.#pointer - 1;
+        stripeData.stripeId = this.#pointer;
         // each stripe page number so we can fetch more after
         stripeData.page = 1;
         stripeData.hasMore = stripeData.items.length === this.#currentRailLimit;

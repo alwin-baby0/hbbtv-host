@@ -4,7 +4,7 @@ import { EPGRailItem } from '../../Models/utils/EPGRailItem';
 import { parseVodCategories } from '../../Models/parsers';
 import { RAIL_TYPES } from '../../Pages/utils';
 
-export const EPG_ROWS_PER_FETCH = 5;
+export const EPG_ROWS_PER_FETCH = 10;
 class EPGService extends FetchingService {
   #channelsItems;
   #filteredChannelsItems; // New filtered channels array
@@ -166,12 +166,9 @@ class EPGService extends FetchingService {
   }
 
   async getFilteredChannels() {
-    // Extract channel IDs from all channels
-    const allChannelIds = this.#allChannels.map((channel) => channel);
-
     // Filter channels in filteredChannelsItems that have IDs present in allChannelIds
     return this.#filteredChannelsItems.filter((channel) => {
-      return allChannelIds.includes(channel.id);
+      return this.#allChannels.includes(channel.id);
     });
   }
 
