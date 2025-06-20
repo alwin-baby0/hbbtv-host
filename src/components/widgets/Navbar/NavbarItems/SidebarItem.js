@@ -22,7 +22,6 @@ export default class SidebarItem extends lng.Component {
         },
       },
       Icon: {
-        //x: 330,
         y: 10,
         zIndex: 0,
         color: Colors(colors.unfocus).get(),
@@ -84,19 +83,11 @@ export default class SidebarItem extends lng.Component {
           text: {
             maxLines: 1,
             wordWrapWidth: index === 4 && label.length > 10 ? 200 : 150,
-            family: 'Montserrat-Regular',
+            fontFace: 'Montserrat-Regular',
             text: label.toUpperCase(),
           },
         },
       });
-      // this._Title.patch({
-      //   text: {
-      //     maxLines: 1,
-      //     wordWrapWidth: 200,
-      //     family: 'Montserrat-Regular',
-      //     text: homeText.toUpperCase(),
-      //   },
-      // });
     }
   }
 
@@ -116,15 +107,6 @@ export default class SidebarItem extends lng.Component {
     const { index } = this._props;
     const { label, icon } = this._props.data;
 
-    // if (index === 4) {
-    //   this._Line.patch({
-    //     w: 200,
-    //   });
-    // } else if (icon === '') {
-    //   this._Line.patch({
-    //     w: 150,
-    //   });
-    // }
     const translatedText = Language.translate(label);
     setTimeout(() => {
       this._Line.patch({
@@ -139,13 +121,6 @@ export default class SidebarItem extends lng.Component {
   }
 
   _unfocus() {
-    /* this._Line.visible = false;
-    if (!this._props.selected) {
-      this._Icon.patch({
-        color: Colors(colors.unfocus).get(),
-      });
-    } */
-
     this._Line.visible = false;
     this._Icon.patch({
       color: Colors(colors.unfocus).get(),
@@ -174,7 +149,6 @@ export default class SidebarItem extends lng.Component {
     this.fja();
     this.fireAncestors('$changePage', this._props.index);
     Router.focusPage();
-    // Router.restoreFocus();
   }
 
   _handleHover() {
