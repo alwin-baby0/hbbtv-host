@@ -26,9 +26,8 @@ export default class SportsEventsRailItem extends FocusableItem {
       },
       EventTime: {
         x: 3,
-        y: 137,
+        y: 180,
         rect: true,
-        w: 180,
         h: 30,
         color: Colors(colors.focus).get(),
         shader: {
@@ -37,7 +36,7 @@ export default class SportsEventsRailItem extends FocusableItem {
         },
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         DateTime: {
-          w: 170,
+          flexItem: { marginLeft: 10, marginRight: 10 },
           h: 16,
           text: {
             text: '',
@@ -47,10 +46,9 @@ export default class SportsEventsRailItem extends FocusableItem {
           },
         },
       },
-      Description: {
+      DescriptionWrapper: {
         x: 3,
-        y: 170,
-        // w: 255,
+        y: 213,
         w: 350,
         h: 165,
         flex: { direction: 'column' },
@@ -62,19 +60,19 @@ export default class SportsEventsRailItem extends FocusableItem {
           text: {
             text: '',
             fontFace: 'Montserrat-Bold',
-            fontSize: 13,
+            fontSize: 20,
             lineHeight: 16,
-            wordWrapWidth: 220,
+            wordWrapWidth: 270,
           },
         },
-        Descriptionn: {
+        Description: {
           flexItem: {
             marginTop: 4,
             marginLeft: 21,
           },
           text: {
             fontFace: 'Montserrat-Regular',
-            fontSize: 11,
+            fontSize: 16,
             lineHeight: 16,
             wordWrapWidth: 300,
             maxLines: 8,
@@ -92,8 +90,8 @@ export default class SportsEventsRailItem extends FocusableItem {
     return this.tag('Title');
   }
 
-  get _Description() {
-    return this.tag('Descriptionn');
+  get _DescriptionWrapper() {
+    return this.tag('DescriptionWrapper');
   }
 
   get _DateTime() {
@@ -123,33 +121,28 @@ export default class SportsEventsRailItem extends FocusableItem {
       strokeWidth: strokeWidth,
     });
 
-    this._Title.patch({
-      text: {
-        text: itemTitle,
+    this.patch({
+      EventImage: {
+        props: {
+          width: 342,
+          height: 192,
+          imageSrc: imageSrc,
+          placeholderSrc: placeholderSrc,
+          radius: [6, 6, 0, 0],
+        },
       },
-    });
-
-    this._Description.patch({
-      text: {
-        text: itemDescription,
-        fontSize: 11,
+      EventTime: {
+        DateTime: {
+          text: { text: itemDateWithTime },
+        },
       },
-    });
-
-    this._DateTime.patch({
-      text: {
-        text: itemDateWithTime,
-      },
-    });
-
-    this._EventImage.patch({
-      props: {
-        // width: 255,
-        width: 350,
-        height: 150,
-        imageSrc: imageSrc,
-        placeholderSrc: placeholderSrc,
-        radius: [6, 6, 0, 0],
+      DescriptionWrapper: {
+        Title: {
+          text: { text: itemTitle },
+        },
+        Description: {
+          text: { text: itemDescription },
+        },
       },
     });
   }
