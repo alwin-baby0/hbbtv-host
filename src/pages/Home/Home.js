@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Gallery from '../../Components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
@@ -14,7 +14,6 @@ export default class Home extends Lightning.Component {
     return {
       Background: {},
       HeroSection: {
-        //collision: true,
         x: 0,
         y: 0,
         w: 1920,
@@ -128,6 +127,10 @@ export default class Home extends Lightning.Component {
           this._setState('Items');
         }
 
+        _handleHover() {
+          Router.focusPage();
+        }
+
         async $horizontalContainerIndexChange(index) {
           if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
             const newRails = await HomePageService.fetchMoreItemsForHeroSection();
@@ -150,6 +153,10 @@ export default class Home extends Lightning.Component {
           });
         }
 
+        _handleHover() {
+          Router.focusPage();
+        }
+
         $exit() {
           this.fireAncestors('$setNavbarVisibility', true);
           this._HeroSection?.patch({
@@ -167,18 +174,6 @@ export default class Home extends Lightning.Component {
         _handleUp() {
           this._setState('Hero');
         }
-
-        /* async $horizontalContainerIndexChange(index) {
-          console.log('pozivvv horCont');
-          const currentItem = this._Column.Items.children[this._Column._focusedIndex];
-          if (currentItem.Items.children.length - 1 === index) {
-            const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
-            if (newRails && newRails?.items?.length > 0) {
-              const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
-              currentItem._appendItems(parsedItems);
-            }
-          }
-        } */
 
         async $verticalContainerIndexChange(index) {
           if (index > 0) {

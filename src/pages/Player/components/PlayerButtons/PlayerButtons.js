@@ -10,6 +10,7 @@ export default class PlayerButtons extends lng.Component {
 
   static _template() {
     return {
+      zIndex: 5,
       h: 100,
       w: 120,
       flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
@@ -41,7 +42,6 @@ export default class PlayerButtons extends lng.Component {
     const width = buttonInfo.label === 'pause' ? 90 : 66;
     const height = buttonInfo.label === 'pause' ? 90 : 66;
     this._Icon.patch({
-      // x: buttonInfo.position,
       texture: lng.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
     });
   }
@@ -136,11 +136,16 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _handleHover() {
+    const { buttonInfo } = this._props;
+    const state = buttonInfo.label === 'subtitles' ? 'SubtitlesButton' : buttonInfo.label === 'back' ? 'Back' : 'Controls';
     console.log('control btns hover');
+    this.fireAncestors('$horizontalPosterIndexChange', this.parent.children.indexOf(this));
+    this.fireAncestors('$setState', state);
     this._focus();
   }
 
   _handleUnhover() {
+    this.fireAncestors('$horizontalPosterIndexChange', this.parent.children.indexOf(this));
     this._unfocus();
   }
 

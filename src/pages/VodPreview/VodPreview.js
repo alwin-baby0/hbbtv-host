@@ -1,5 +1,5 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import VodContentContainer, {
   CONTENT_TYPE,
 } from '../../Components/VodContentContainer/VodContentContainer';
@@ -96,6 +96,10 @@ export default class VodPreview extends Lightning.Component {
           });
         }
 
+        _handleHover() {
+          Router.focusPage();
+        }
+
         $enter() {
           this.fireAncestors('$setNavbarVisibility', true);
 
@@ -137,6 +141,10 @@ export default class VodPreview extends Lightning.Component {
             y: this.calculateContentOffset(this._VodContentContainer.contentType),
             h: 1080,
           });
+        }
+
+        _handleHover() {
+          Router.focusPage();
         }
 
         correctContainerSize() {
