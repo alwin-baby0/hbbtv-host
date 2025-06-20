@@ -91,4 +91,4 @@ export const setupKeys = (deviceType) => {
         52: 'MediaStop',
       };
   }
-}
+};

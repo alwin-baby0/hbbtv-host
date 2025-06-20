@@ -1,6 +1,6 @@
-import { CARD_SIZES } from '../../Components/RailItems/constants';
+import { CARD_SIZES } from '../../components/RailItems/constants';
 import { railItemConstructor } from './railItems';
-import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { EPGService } from '../../Services';
 
 export const VOD_PREVIEW_TYPES = {
@@ -76,7 +76,7 @@ export const constructRails = (rails) => {
 };
 
 const verticalIndexReset = () => {
-  console.warn('verticalIndexReset')
+  console.warn('verticalIndexReset');
   globalVerticalIndex = 0;
 };
 

@@ -1,4 +1,4 @@
-import HelpButton from '../../../Components/Buttons/HelpButton/HelpButton';
+import HelpButton from '../../../components/Buttons/HelpButton/HelpButton';
 import { SettingsService } from '../../../Services';
 
 export default async function (page) {

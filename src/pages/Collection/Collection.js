@@ -1,5 +1,5 @@
 import { Lightning } from '@lightningjs/sdk';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 
 export default class Collection extends Lightning.Component {
   _props = {};

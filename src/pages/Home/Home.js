@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import Gallery from '../../Components/Gallery/Gallery';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
 
@@ -85,7 +85,7 @@ export default class Home extends Lightning.Component {
   }
 
   _disable() {
-    this.fireAncestors('$unpunchHole')
+    this.fireAncestors('$unpunchHole');
   }
 
   _firstActive() {
@@ -135,7 +135,6 @@ export default class Home extends Lightning.Component {
         _handleDown() {
           this._setState('Items');
         }
-
 
         async $horizontalContainerIndexChange(index) {
           if (this._HeroSection._Bullets.Items.children.length - 1 === index) {

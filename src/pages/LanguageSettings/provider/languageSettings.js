@@ -30,7 +30,6 @@ export default async function (page) {
 
   let tabButtons = [];
 
-
   if (languages.data.languages.split(',').length > 1) {
     tabButtons = [
       {
@@ -42,15 +41,13 @@ export default async function (page) {
         title: 'Languages',
       },
     ];
-  }
-  else {
+  } else {
     tabButtons = [
       {
         id: 0,
         title: translations?.cookie_preferences || defTr.cookie_preferences,
-      }
+      },
     ];
-
   }
 
   languageArea(page, tabButtons);

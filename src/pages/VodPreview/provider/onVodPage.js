@@ -1,5 +1,5 @@
 import { VOD_PREVIEW_TYPES, constructRails } from '../../utils';
-import { CONTENT_TYPE } from '../../../Components/VodContentContainer/VodContentContainer';
+import { CONTENT_TYPE } from '../../../components/VodContentContainer/VodContentContainer';
 import { VodService } from '../../../Services';
 
 export default async function (page, { vodType }) {

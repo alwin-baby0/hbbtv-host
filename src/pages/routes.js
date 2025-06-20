@@ -1,4 +1,4 @@
-import Splash from '../Components/SplashScreen/Splash';
+import Splash from '../components/SplashScreen/Splash';
 import Home from './Home/Home';
 import home from './Home/provider/home';
 import VodPreview from './VodPreview/VodPreview';
@@ -117,7 +117,7 @@ export default {
       component: Player,
       options: {
         reuseInstance: false,
-      }
+      },
     },
     {
       path: 'collection-details/:collectionId',

@@ -1,6 +1,6 @@
-import VerticalContainer from '../verticalContainer/VerticalContainer';
 import { EPGService } from '../../Services';
 import { getClosestElementIndexEPG } from '../../utils/focus';
+import VerticalContainer from '../VerticalContainer/VerticalContainer';
 
 export default class EPGContainer extends VerticalContainer {
   static _template() {
@@ -15,7 +15,7 @@ export default class EPGContainer extends VerticalContainer {
       ((EPGService.startTime - new Date().getTime()) / (1000 * 60)) * 8.33 + 750;
 
     for (let i = start; i < end; i++) {
-      this.Items.children[i]._setScrollPosition(initialOffset)
+      this.Items.children[i]._setScrollPosition(initialOffset);
     }
 
     if (!start) this.fireAncestors('$slideTimeSlot', initialOffset);

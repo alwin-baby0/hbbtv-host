@@ -2,7 +2,7 @@ import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { EPGRailItem } from '../../Models/utils/EPGRailItem';
 import { parseVodCategories } from '../../Models/parsers';
-import { RAIL_TYPES } from '../../Pages/utils';
+import { RAIL_TYPES } from '../../pages/utils';
 
 export const EPG_ROWS_PER_FETCH = 10;
 class EPGService extends FetchingService {
@@ -229,7 +229,6 @@ class EPGService extends FetchingService {
         id: `${channelId}`,
       },
     }).then(this.#parseSingleEPGChannel);
-
 
   #parseSingleEPGChannel({ data }) {
     const railItems = data.entry?.map((item) => new EPGRailItem(item));
