@@ -94,7 +94,7 @@ export default class SingleMovie extends Lightning.Component {
                 lineHeight: 31,
                 maxLines: 8,
                 wordWrapWidth: 700,
-                fontFace: 'Montserrat-SemiBold',
+                fontFace: 'Montserrat-Regular',
               },
             },
             Director: {
