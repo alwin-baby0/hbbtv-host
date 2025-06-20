@@ -589,9 +589,9 @@ export default class Player extends lng.Component {
   _skipVideo(forward) {
     if (!this._props.isAdVisible) {
       if (forward) {
-        this._videoSkipTimeSum += 10;
+        this._videoSkipTimeSum += 20;
       } else {
-        this._videoSkipTimeSum -= 10;
+        this._videoSkipTimeSum -= 20;
       }
 
       clearTimeout(this._seekTimeout);
