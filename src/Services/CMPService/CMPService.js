@@ -82,6 +82,7 @@ class CMPService extends FetchingService {
         'X-DEVICE-ID': deviceCode,
       },
       params: {
+        language: localStorage.getItem('languageCode') || 'en',
         device_id: deviceCode,
       },
     });
@@ -98,6 +99,7 @@ class CMPService extends FetchingService {
         'X-Device-ID': deviceCode,
       },
       params: {
+        language: localStorage.getItem('languageCode') || 'en',
         choice: choicePick,
         device_id: deviceCode,
       },

@@ -1,8 +1,8 @@
 import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 
-import GalleryItem from '../../Components/GalleryItem/GalleryItem';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import Button from '../../Components/Button/Button';
+import GalleryItem from '../../components/GalleryItem/GalleryItem';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { parseTranslations } from '../../Services';
 import defTr from '../../../public/static/translations/en.json';

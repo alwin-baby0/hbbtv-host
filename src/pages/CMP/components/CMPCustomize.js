@@ -1,7 +1,7 @@
 import { Language, Lightning, Router } from '@lightningjs/sdk';
 import QRCode from '../../../components/QRCode/QRCode';
-import HorizontalContainer from '../../../Components/HorizontalContainer/HorizontalContainer';
-import VerticalContainer from '../../../Components/VerticalContainer/VerticalContainer';
+import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
+import VerticalContainer from '../../../components/VerticalContainer/VerticalContainer';
 import Button from '../../../components/Button/Button';
 const customizeButtons = [
   { id: 0, label: 'Refresh' },

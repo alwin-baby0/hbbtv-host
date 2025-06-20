@@ -54,6 +54,7 @@ export default class Button extends Lightning.Component {
       borderColor,
       enabled,
     } = this._props;
+
     const colorBorder = borderColor ? borderColor : colors.unfocus;
 
     if (buttonIcon === '') {

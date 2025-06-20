@@ -2,7 +2,7 @@ import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import VodContentContainer, {
   CONTENT_TYPE,
-} from '../../Components/VodContentContainer/VodContentContainer';
+} from '../../components/VodContentContainer/VodContentContainer';
 import { constructRails } from '../utils';
 import { eventTrackPayload } from '../../utils/device';
 

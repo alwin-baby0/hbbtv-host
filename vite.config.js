@@ -48,10 +48,10 @@ export default ({ mode }) => {
       target: 'es2015',
       emptyOutDir: true,
       minify: false,
-      sourcemap: buildMode !== 'production',
+      sourcemap: platform !== 'web',
     },
     esbuild: {
-      drop: buildMode === 'production' ? ['console'] : [],
+      drop: platform === 'web' ? ['console'] : [],
     },
     define: {
       'process.env': JSON.stringify(appEnv),

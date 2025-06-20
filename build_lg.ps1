@@ -1,7 +1,7 @@
 # RUN ME WITH
-# .\build_lg.ps1 test
+# ./build_lg.ps1 test
 # OR
-# .\build_lg.ps1 prod
+# ./build_lg.ps1 prod
 
 # provide .env.webos
 # git checkout development-base
@@ -13,7 +13,7 @@ param(
 )
 
 $envFile = ".env.webos"
-$buildfolder = "wedotv-lg-build"
+$buildfolder = "wedotv-lg-build-$Environment"
 $version = "2.1.2"
 
 if ($Environment -eq "test") {
@@ -49,10 +49,10 @@ npm install
 npm run build-lg
 
 # Generate ares package
-ares-generate -p "id=wedotv" -p "version=$version" -p "title=WeDoTV" $buildfolder
+ares-generate -p "id=wedotv-$Environment" -p "version=$version" -p "title=WeDoTV" $buildfolder
 
 # Move build contents
-Move-Item "build/*" $buildfolder
+Move-Item -Force "build/*" $buildfolder
 
 # Replace content in index.html (PowerShell string replacement)
 $indexPath = Join-Path $buildfolder "index.html"
@@ -71,7 +71,7 @@ if (Test-Path $indexPath) {
 ares-package --no-minify "./$buildfolder"
 
 # Move the generated IPK file
-$ipkFile = "wedotv_${version}_all.ipk"
+$ipkFile = "wedotv-${Environment}_${version}_all.ipk"
 if (Test-Path $ipkFile) {
     Move-Item $ipkFile "./$buildfolder"
 }

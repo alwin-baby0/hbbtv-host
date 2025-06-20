@@ -1,15 +1,14 @@
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
-import routes from './Pages/routes';
-import Navbar from './Components/widgets/Navbar/Navbar';
-import LoadingScreenComponent from './Components/LoadingScreenComponent/LoadinScreenComponent';
+import routes from './pages/routes';
+import Navbar from './components/widgets/Navbar/Navbar';
+import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import defTr from '../public/static/translations/en.json';
 import { parseTranslations, DetailService } from './Services';
 
 let wasOffline = false; // Variable to track previous internet status
-
 
 export default class App extends Router.App {
   static _template() {
@@ -104,8 +103,8 @@ export default class App extends Router.App {
 
   $punchHole() {
     this.patch({
-      Background: undefined
-    })
+      Background: undefined,
+    });
   }
 
   $unpunchHole() {
@@ -116,8 +115,8 @@ export default class App extends Router.App {
         zIndex: -900,
         src: Utils.asset('images/background.jpg'),
         shader: undefined,
-      }
-    })
+      },
+    });
   }
 
   $punchHoleTV(x, y, w, h, radius) {
@@ -151,9 +150,9 @@ export default class App extends Router.App {
             w: w,
             h: h,
             radius: radius,
-          }
-        }
-      })
+          },
+        },
+      });
     }
   }
 
@@ -254,6 +253,10 @@ export default class App extends Router.App {
     this.application.closeApp();
   }
 
+  // _handleAppClose() {
+  //   this.application.closeApp();
+  // }
+
   $appClose() {
     const dialog = this.tag('Dialog');
     dialog.open({
@@ -268,7 +271,19 @@ export default class App extends Router.App {
         {
           label: this._translations?.yes_exit || defTr.yes_exit,
           action: () => {
-            this.application.closeApp();
+            const device = getDeviceType();
+            // Router navigation for "Yes, exit now"
+            switch (device) {
+              case 'metrological':
+                this.application.closeApp();
+                break;
+              case 'tizen':
+                window.tizen.application.getCurrentApplication().exit();
+                break;
+              default:
+                window.close();
+                break;
+            }
           },
         },
       ],

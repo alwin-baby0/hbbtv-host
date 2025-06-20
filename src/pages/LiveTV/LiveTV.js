@@ -1,11 +1,11 @@
 import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
 import { EPGService } from '../../Services';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../utils';
-import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
-import CategoryPicker from '../../Components/CategoryPicker/CategoryPicker';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
@@ -15,6 +15,7 @@ export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
   };
+  pixelPerHour = 500; // Pixels per hour for EPG time slots
   static _template() {
     return {
       Wrapper: {
@@ -155,7 +156,7 @@ export default class LiveTV extends Lightning.Component {
     });
   }
 
-  createTimeArray(startTime, endTime) {
+  createTimeArray = async (startTime, endTime) => {
     // Parse startTime and endTime
     let startDate = new Date(startTime);
     let endDate = new Date(endTime);
@@ -167,8 +168,7 @@ export default class LiveTV extends Lightning.Component {
     let endMinutes = endDate.getMinutes();
 
     // Calculate the pixels for the initial remaining minutes
-    const pixelPerHour = 500;
-    const initialMinutesInPixels = (startMinutes / 60) * pixelPerHour;
+    const initialMinutesInPixels = (startMinutes / 60) * this.pixelPerHour;
 
     // Adjust startHour and endHour based on the given conditions
     if (startMinutes > 0 && startMinutes < 30) {
@@ -190,7 +190,7 @@ export default class LiveTV extends Lightning.Component {
     // Handle the case where end time is on the next day
     let timeArray = [];
     let hour = startDate.getHours();
-    let maxDepth = 100000;
+
     while (true) {
       timeArray.push(`${hour}:00`);
       if (hour !== endHour || startDate.getDate() !== endDate.getDate()) {
@@ -198,15 +198,14 @@ export default class LiveTV extends Lightning.Component {
       }
 
       hour++;
+      startDate.setTime(startDate.getTime() + 60 * 60 * 1000);
       if (hour === 24) {
         hour = 0;
       }
 
-      if (hour === endHour && timeArray.includes(`${hour}:00`)) {
+      if (startDate.getTime() > endDate.getTime()) {
         break;
       }
-      if (!maxDepth) break;
-      maxDepth--;
     }
 
     // Add the next rounded hour if end time is not a rounded hour
@@ -214,19 +213,13 @@ export default class LiveTV extends Lightning.Component {
       timeArray.push(`${endHour + 1}:00`);
     }
 
-    // Calculate the pixel values dynamically
-    function calculatePixels(minutes) {
-      return (minutes / 60) * pixelPerHour;
-    }
-
     return {
       timeArray: timeArray,
       initialMinutesInPixels: initialMinutesInPixels,
-      calculatePixels: calculatePixels,
       startHour: startDate.getHours(), // Correcting this line to use startDate again
       startMinutes: startDate.getMinutes(), // Correcting this line to use startDate again
     };
-  }
+  };
 
   _firstEnable() {
     this.fireAncestors('$punchHoleTV');
@@ -252,31 +245,31 @@ export default class LiveTV extends Lightning.Component {
     eventTrackPayload('browse_channels', 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 
-    const result = this.createTimeArray(EPGService.startTime, EPGService.endTime);
+    this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
+      const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
+      const hourss = result.timeArray.map((hour, index) => {
+        let marginLeft = 0;
+        if (index === 0) {
+          marginLeft = -calculatedPixels;
+        }
+        return {
+          type: EPGTimeSlot,
+          w: 250,
+          h: 50,
+          flexItem: { marginLeft: marginLeft },
+          props: {
+            startTime: hour,
+            xPos: 483,
+          },
+        };
+      });
 
-    const calculatedPixels = result.calculatePixels(result.startMinutes);
-    const hourss = result.timeArray.map((hour, index) => {
-      let marginLeft = 0;
-      if (index === 0) {
-        marginLeft = -calculatedPixels;
-      }
-      return {
-        type: EPGTimeSlot,
-        w: 250,
-        h: 50,
-        flexItem: { marginLeft: marginLeft },
-        props: {
-          startTime: hour,
-          xPos: 483,
-        },
+      this.tag('TimeSlot').props = {
+        items: hourss,
       };
+
+      this.tag('EPGData').setInitialOffset();
     });
-
-    this.tag('TimeSlot').props = {
-      items: hourss,
-    };
-
-    this.tag('EPGData').setInitialOffset();
   }
 
   _disable() {
@@ -294,8 +287,8 @@ export default class LiveTV extends Lightning.Component {
 
   async $updateChannels(val) {
     await EPGService.fetchCategoryType(val.itemInfo.id);
-    const result = this.createTimeArray(EPGService.startTime, EPGService.endTime);
-    const calculatedPixels = result.calculatePixels(result.startMinutes);
+    const result = await this.createTimeArray(EPGService.startTime, EPGService.endTime);
+    const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
     this.tag('TimeSlot').props = {
       items: [],
     };
@@ -320,26 +313,8 @@ export default class LiveTV extends Lightning.Component {
       items: hourss,
     };
 
-    let totalMinutes;
     const filteredChannels = await EPGService.getFilteredChannels();
-    // Calculate the difference in milliseconds
-    const timeDifference = EPGService.endTime - EPGService.startTime;
-    const mainContainerWidth = Math.floor(timeDifference / (1000 * 60)) * 8.33;
-
-    EPGService.epgs.forEach((epg) => {
-      if (epg.items && epg.items.length > 0) {
-        const startTime = epg.items[0].extensions.start_time;
-        const date = new Date(startTime);
-        const hours = date.getHours(); // Local time hours
-        const minutes = date.getMinutes(); // Local time minutes
-        totalMinutes = hours * 60 + minutes;
-      } else {
-        console.log('No items in epg');
-      }
-    });
-
     this.tag('EPGData')._clear();
-
     const channels = filteredChannels
       .map((channelInfo, index) => {
         if (!channelInfo) {
@@ -451,13 +426,10 @@ export default class LiveTV extends Lightning.Component {
         }
 
         async $verticalContainerIndexChange(index) {
-          if (
-            EPGService.hasMore &&
-            !EPGService.loading &&
-            EPGService.stripesFetched - 3 === index
-          ) {
+          if (EPGService.hasMore && !EPGService.loading && EPGService.stripesFetched - 3 <= index) {
             const startAt = EPGService.stripesFetched;
             const newStripes = await EPGService.fetchMoreEPGs();
+            console.log('newStripes', newStripes);
             const rails = constructRails(newStripes.results);
 
             this.tag('EPGData')._appendItems(rails);

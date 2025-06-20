@@ -8,17 +8,22 @@ const API_BASE_URLS = {
 };
 
 export default class FetchingService {
-
   // we create static instance of axios to be unique throught the project
-  static axiosInstance = axios.create({
-    headers: {
-      'Cache-Control': 'no-cache, must-revalidate',
-      Pragma: 'no-cache',
-    },
-    params: {
-      ctx: createApiCtx(),
-    },
-  });
+  static axiosInstance = null;
+  static init() {
+    if (FetchingService.axiosInstance) return;
+    FetchingService.axiosInstance =
+      axios.create({
+        headers: {
+          'Cache-Control': 'no-cache, must-revalidate',
+          Pragma: 'no-cache',
+        },
+        params: {
+          ctx: createApiCtx(),
+        },
+      })
+  }
+
   // propery to check if we are fetching currently
   #loading = false;
 

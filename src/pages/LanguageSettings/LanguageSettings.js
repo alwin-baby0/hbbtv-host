@@ -1,9 +1,9 @@
 import { Colors, Language, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import LanguageButton from '../../Components/Buttons/LanguageButton/LanguageButton';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
 import { CMPService } from '../../Services';
-import Button from '../../Components/Button/Button';
+import Button from '../../components/Button/Button';
 import { getDeviceInfo } from '../../utils/device';
 
 export default class LanguageSettings extends Lightning.Component {

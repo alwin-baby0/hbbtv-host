@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import Gallery from '../../Components/Gallery/Gallery';
+import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
 
@@ -84,7 +84,7 @@ export default class Home extends Lightning.Component {
   }
 
   _disable() {
-    this.fireAncestors('$unpunchHole')
+    this.fireAncestors('$unpunchHole');
   }
 
   _firstActive() {
@@ -95,8 +95,8 @@ export default class Home extends Lightning.Component {
     if (Router.isNavigating()) {
       return;
     }
-    this.fireAncestors('$appClose');
     e.preventDefault();
+    this.fireAncestors('$appClose');
   }
 
   $setStateOnScroll(nextState) {
@@ -117,6 +117,14 @@ export default class Home extends Lightning.Component {
           this._Wrapper.patch({
             y: 980,
           });
+        }
+
+        _handleBack(e) {
+          if (Router.isNavigating()) {
+            return;
+          }
+          e.preventDefault();
+          this.fireAncestors('$appClose');
         }
 
         _handleUp() {
@@ -173,6 +181,25 @@ export default class Home extends Lightning.Component {
 
         _handleUp() {
           this._setState('Hero');
+        }
+
+        _handleBack(e) {
+          if (Router.isNavigating()) {
+            return;
+          }
+          e.preventDefault();
+          this.fireAncestors('$appClose');
+        }
+
+        async $horizontalContainerIndexChange(index) {
+          const currentItem = this._Column.Items.children[this._Column._focusedIndex];
+          if (currentItem.Items.children.length - 1 === index) {
+            const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
+            if (newRails && newRails?.items?.length > 0) {
+              const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
+              currentItem._appendItems(parsedItems);
+            }
+          }
         }
 
         async $verticalContainerIndexChange(index) {

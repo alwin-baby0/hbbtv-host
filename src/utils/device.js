@@ -46,7 +46,11 @@ const getHisenseInfo = () => {
 };
 
 const getWebOSInfo = async () => {
-  console.log('webOS deviceInfo');
+  if (!webOS) {
+    console.error('webOS scripts not loaded');
+    return getWebInfo();
+  }
+
   const deviceModelAndBrand = new Promise((resolve) => {
     webOS.deviceInfo(function (device) {
       resolve({ model: device.modelName, brand: device.brandName })
@@ -109,12 +113,13 @@ const getWebInfo = () => ({
 
 /**
  *
- * @param { "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType
+ * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType
  * @returns { Promise<{ serialNumber: string, model: string, brand: string, os: string, osVersion: string, macAddress: string }> }
  */
 const setUpDeviceInfo = async (deviceType) => {
   console.log('Device type:', deviceType);
   switch (deviceType) {
+    case 'samsung':
     case 'tizen':
       return getTizenInfo();
     case 'hisense':
@@ -127,7 +132,7 @@ const setUpDeviceInfo = async (deviceType) => {
       return getWebInfo();
     default: {
       console.warn('Unknown device');
-      return null;
+      return getWebInfo();
     }
   }
 };

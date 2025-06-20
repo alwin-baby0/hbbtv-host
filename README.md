@@ -3,39 +3,40 @@
 WEDOTV is lightning.js based TV application developed by Shindiri Studio.
 
 ### Folder structure
+
 - reskin - data about different skins for the app
 - src
-    - Components - contains components we use throughout the app
-    - Models - all the models to parse data coming from the server
-        - **...all the models...**
-        - parsers.js - contains functions for parsing different data to models
-        - index.js - exports all the models from the folder
-    - Pages - different pages we use throughout the app
-        - **Filtered** - VODs filtered by category
-        - **Help** - terms & conditions, privacy policy and imprint
-        - **Home** - initial screen when entering the app
-        - **Player** - player page
-        - **Search** - search for different content
-        - **Settings** - change the language
-        - **SingleLiveEvent** - information about specific live events
-        - **SingleMovie** - information about specific movies
-        - **SingleSeries** - information about specific series
-        - **VodPreview** - page with content and VOD section for Movies/Series/Sports
-        - routes.js - holds info about the routes for the router
-    - Widgets - different widgets we use throughout the app
-        - **NavBar** - navigation through the app (TopBar)
-    - Services - services to contain logic for fetching, storing, and caching data for pages - every service extends FetchingService
-        - **FetchingService** - generic service class that encapsulates requesting logic, Axios instance, and error handling
-        - **HomePageService** - logic behind the Home page
-        - **VodService** - logic behind VodPreview page, provides different logic depending on the type of VOD you want to show
-        - **SearchService** - handles searching and storing search data
-        - **SingleMovieService** - fetch and hold data for single movie
-        - **SingleSeriesService** - single series/sports and seasons/episodes
-        - **SingleEventService** - single event and other events
+  - Components - contains components we use throughout the app
+  - Models - all the models to parse data coming from the server
+    - **...all the models...**
+    - parsers.js - contains functions for parsing different data to models
+    - index.js - exports all the models from the folder
+  - Pages - different pages we use throughout the app
+    - **Filtered** - VODs filtered by category
+    - **Help** - terms & conditions, privacy policy and imprint
+    - **Home** - initial screen when entering the app
+    - **Player** - player page
+    - **Search** - search for different content
+    - **Settings** - change the language
+    - **SingleLiveEvent** - information about specific live events
+    - **SingleMovie** - information about specific movies
+    - **SingleSeries** - information about specific series
+    - **VodPreview** - page with content and VOD section for Movies/Series/Sports
+    - routes.js - holds info about the routes for the router
+  - Widgets - different widgets we use throughout the app
+    - **NavBar** - navigation through the app (TopBar)
+  - Services - services to contain logic for fetching, storing, and caching data for pages - every service extends FetchingService
+    - **FetchingService** - generic service class that encapsulates requesting logic, Axios instance, and error handling
+    - **HomePageService** - logic behind the Home page
+    - **VodService** - logic behind VodPreview page, provides different logic depending on the type of VOD you want to show
+    - **SearchService** - handles searching and storing search data
+    - **SingleMovieService** - fetch and hold data for single movie
+    - **SingleSeriesService** - single series/sports and seasons/episodes
+    - **SingleEventService** - single event and other events
 - static - static content
-    - fonts
-    - icons
-    - images
+  - fonts
+  - icons
+  - images
 
 ### Packages
 
@@ -47,7 +48,7 @@ WEDOTV is lightning.js based TV application developed by Shindiri Studio.
 2. we use **Services** to fetch and store data
 3. **Services** parse the data, to keep only the things we need, for this we use different **Models**
 4. **Services** also caches the data
-5. We then use the data we have in **Services** and present it in different **Views** (Pages/Components/Widgets)
+5. We then use the data we have in **Services** and present it in different **Views** (Pages/components/Widgets)
 
 ### Rails
 
@@ -69,19 +70,18 @@ They handle adding/focusing/removing items from the collection.
 
 ### Players
 
-*...*
+_..._
 
 ### Gitflow
 
 We have 3 main branches:
 
+- master - production code only
+- staging - finished features that are ready to be tested or are already tested
+- development - containes finished untested features
+  - feature - created from develop and used to develop a feature
 
-  - master - production code only
-  - staging - finished features that are ready to be tested or are already tested
-  - development - containes finished untested features
-      - feature - created from develop and used to develop a feature
-
-We **ONLY** create new branches from **development** and only merge in **development**. 
+We **ONLY** create new branches from **development** and only merge in **development**.
 Once PR is Accepted, it can be merged into **development**.
 
 New updates should be merged to **staging** once a full feature is finished.
