@@ -1,6 +1,6 @@
 import { Lightning } from '@lightningjs/sdk';
 import { VideoPlayer } from '@lightningjs/sdk';
-import { loader, unloader } from '../../../Components/Player/HLS';
+import { loader, unloader } from '../../../components/Player/HLS';
 import { EPGService } from '../../../Services';
 
 export default class LiveTVPlayer extends Lightning.Component {

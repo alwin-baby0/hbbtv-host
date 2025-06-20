@@ -1,7 +1,7 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
-import KeyboardSearch from '../../Components/Keyboard/components/KeyboardSearch';
+import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch';
 import InputField from './components/Input';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
 import { HomePageService, SearchService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
@@ -60,8 +60,8 @@ export default class Search extends Lightning.Component {
         x: 960,
         y: 540,
         visible: false,
-        type: LoadingScreenComponent
-      }
+        type: LoadingScreenComponent,
+      },
     };
   }
 
@@ -86,7 +86,7 @@ export default class Search extends Lightning.Component {
 
   _handleKey(key) {
     if (this.numberKeys.includes(key.key)) {
-      this.$onSoftKey(key)
+      this.$onSoftKey(key);
     }
   }
 
@@ -117,7 +117,7 @@ export default class Search extends Lightning.Component {
     this.searchTimeout = setTimeout(() => {
       this.$updatedVOD();
       this.searchTimeout = null;
-    }, 1000)
+    }, 1000);
   }
 
   _inactive() {

@@ -1,6 +1,6 @@
 import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
 import { VODS_PER_ROW } from '../Services';
-import { RAIL_TYPES } from '../Pages/utils';
+import { RAIL_TYPES } from '../pages/utils';
 import { Banner } from './Banner';
 
 // Home page

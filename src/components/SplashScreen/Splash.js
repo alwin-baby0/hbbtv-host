@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { CMPService, DetailService } from '../../Services';
 
 export default class Splash extends Lightning.Component {

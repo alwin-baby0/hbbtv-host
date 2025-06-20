@@ -1,11 +1,11 @@
 import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
 import { EPGService } from '../../Services';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../utils';
-import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
-import CategoryPicker from '../../Components/CategoryPicker/CategoryPicker';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
@@ -219,7 +219,7 @@ export default class LiveTV extends Lightning.Component {
       startHour: startDate.getHours(), // Correcting this line to use startDate again
       startMinutes: startDate.getMinutes(), // Correcting this line to use startDate again
     };
-  }
+  };
 
   _firstEnable() {
     this.fireAncestors('$punchHoleTV');
@@ -426,11 +426,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         async $verticalContainerIndexChange(index) {
-          if (
-            EPGService.hasMore &&
-            !EPGService.loading &&
-            EPGService.stripesFetched - 3 <= index
-          ) {
+          if (EPGService.hasMore && !EPGService.loading && EPGService.stripesFetched - 3 <= index) {
             const startAt = EPGService.stripesFetched;
             const newStripes = await EPGService.fetchMoreEPGs();
             console.log('newStripes', newStripes);

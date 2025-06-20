@@ -1,5 +1,5 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import Button from '../../Components/Button/Button';
+import Button from '../../components/Button/Button';
 import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
@@ -269,92 +269,12 @@ export default class SingleMovie extends Lightning.Component {
             defTr.continue_watching.toUpperCase(),
           width: 405,
         });
-
-      // console.log('MOVIEEE', movie);
-      /* this.tag('CardInfo.AboutMovie').patch({
-        ContinueButton: {
-          y: 170,
-          type: Button,
-          w: 405,
-          flexItem: {
-            marginRight: 30,
-          },
-          props: {
-            width: 405,
-            buttonLabel: 'CONTINUE WATCHING',
-            buttonIcon: Utils.asset('icons/home/play.svg'),
-            callback: () => {
-              console.log('continue:', last_position);
-              Router.navigate('player', {
-                videoUrl: movie.url,
-                duration: duration,
-                videoId: movieId,
-                continueTime: last_position,
-                ssai: movie.ssai,
-              });
-            },
-          },
-        },
-      }); */
     }
-
-    /* const mappedButtons = buttons
-      .map((button) => {
-        const { movie } = this._props;
-        const { buttonLabel, icon, width, stream } = button;
-        const translatedTitle = Language.translate(buttonLabel);
-
-        if (buttonLabel === 'TRAILER' && !movieTrailerUrl) {
-          return null; // Skip this button by returning null if there is no trailer url
-        }
-        return {
-          type: Button,
-          w: width,
-          flexItem: {
-            marginRight: 30,
-          },
-          props: {
-            width: width,
-            buttonLabel: translatedTitle,
-            buttonIcon: Utils.asset(icon),
-            callback: () => {
-              if (buttonLabel === 'FAVORITE') {
-                this.addToFavorite();
-              } else if (buttonLabel === 'WATCH NOW') {
-                Router.navigate('player', {
-                  videoUrl: movie[stream],
-                  duration: duration,
-                  videoId: movieId,
-                  ssai: movie.ssai,
-                });
-              } else if (buttonLabel === 'TRAILER') {
-                Router.navigate('player', {
-                  videoUrl: movieTrailerUrl,
-                  videoId: movieTrailerId,
-                });
-              } else if (buttonLabel === 'CONTINUE WATCHING') {
-                Router.navigate('player', {
-                  videoUrl: movie.url,
-                  duration: duration,
-                  videoId: movieId,
-                  continueTime: last_position,
-                  ssai: movie.ssai,
-                });
-              }
-            },
-          },
-        };
-      })
-      .filter((button) => button !== null);
-
-    console.log(mappedButtons, 'Buttons'); */
 
     const rows = [];
     for (let i = 0, j = filteredButtons.length; i < j; i += 3) {
       rows.push({ items: filteredButtons.slice(i, i + 3) });
     }
-
-    console.log('ROWWW', rows);
 
     this._Buttons.items = rows.map(
       (row) => (
@@ -372,21 +292,22 @@ export default class SingleMovie extends Lightning.Component {
             props: {
               width: item.width,
               index,
-              // buttonLabel: translatedTitle,
               buttonLabel: item.buttonLabel,
               buttonIcon: Utils.asset(item.icon),
               callback: () => {
                 if (item.buttonName === 'FAVORITE') {
                   this.addToFavorite();
                 } else if (item.buttonName === 'WATCH NOW') {
-                  DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(({ data: result }) => {
-                    Router.navigate('player', {
-                      videoUrl: result[0]?.content?.src ?? movie[item.stream],
-                      duration: duration,
-                      videoId: movieId,
-                      ssai: result[0].extensions?.ssai ?? movie.ssai,
-                    });
-                  });
+                  DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
+                    ({ data: result }) => {
+                      Router.navigate('player', {
+                        videoUrl: result[0]?.content?.src ?? movie[item.stream],
+                        duration: duration,
+                        videoId: movieId,
+                        ssai: result[0].extensions?.ssai ?? movie.ssai,
+                      });
+                    }
+                  );
                 } else if (item.buttonName === 'TRAILER') {
                   Router.navigate('player', {
                     videoUrl: movieTrailerUrl,
@@ -442,11 +363,6 @@ export default class SingleMovie extends Lightning.Component {
 
       const id = movieTrailerUrl ? 2 : 1; //depending on movieTrailerUrl, we will know on which position is add to fav btn
 
-      console.log(this._Buttons.Items);
-      console.log(this._Buttons);
-
-      //this._Buttons.Items.childList._items[id]
-
       this._Buttons.items[0].items[id].patch({
         props: {
           buttonIcon: Utils.asset(is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
@@ -466,10 +382,6 @@ export default class SingleMovie extends Lightning.Component {
         _getFocused() {
           return this._Buttons;
         }
-
-        // _handleDown() {
-        //   this._setState('ContinueBtn');
-        // }
 
         _handleLeft() {
           this._setState('BackButton');

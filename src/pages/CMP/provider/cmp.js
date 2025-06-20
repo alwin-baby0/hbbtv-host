@@ -1,5 +1,5 @@
 import { Router } from '@lightningjs/sdk';
-import Button from '../../../Components/Button/Button';
+import Button from '../../../components/Button/Button';
 import { CMPService } from '../../../Services';
 import { getDeviceInfo } from '../../../utils/device';
 

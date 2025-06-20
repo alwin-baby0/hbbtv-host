@@ -1,14 +1,22 @@
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { Column, ProgressBar } from '@lightningjs/ui-components';
-import { getPlayer, loader, unloader } from '../../Components/Player/HLS';
+import { getPlayer, loader, unloader } from '../../components/Player/HLS';
 import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
-import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import { CMPService, parseTranslations } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
-import { convertCueTimeToSeconds, fakeAdsData, formatAds, formatTimeHMS, formatTimeMS, playerButtonsLive, playerButtonsVOD } from './utils';
+import {
+  convertCueTimeToSeconds,
+  fakeAdsData,
+  formatAds,
+  formatTimeHMS,
+  formatTimeMS,
+  playerButtonsLive,
+  playerButtonsVOD,
+} from './utils';
 
 export default class Player extends lng.Component {
   _props = {
@@ -195,7 +203,7 @@ export default class Player extends lng.Component {
       videoUrl,
       ads: ssai,
       pausedItemId: 1,
-      isLive: videoType === 'Stream now' || videoType === 'application/x-mpegURL'
+      isLive: videoType === 'Stream now' || videoType === 'application/x-mpegURL',
     };
   }
 
@@ -218,12 +226,12 @@ export default class Player extends lng.Component {
       x: 0,
       flexItem: {
         marginLeft: margin,
-        marginRight: margin
+        marginRight: margin,
       },
       style: {
         progressColor: focusedColor,
         barColor: isLive ? focusedColor : undefined,
-      }
+      },
     });
 
     //video
@@ -234,20 +242,19 @@ export default class Player extends lng.Component {
         VideoPlayer.seek(continueTime);
       }, 500);
 
-
     this._Controls.patch({
       w: 1690,
       flex: {
         direction: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       },
       props: {
         w: 1920,
         items: isLive ? playerButtonsLive : playerButtonsVOD,
         targetIndex: 1,
-      }
-    })
+      },
+    });
 
     this._Controls._setFocusedIndex(1);
 
@@ -614,7 +621,10 @@ export default class Player extends lng.Component {
     const ssai_params = this._props.ads;
     // const ssai_params = this._adData;
     // console.log('ssai_params: ', ssai_params);
-    const seekTime = Math.max(this._props.skipTo + 1, VideoPlayer.currentTime + this._videoSkipTimeSum)
+    const seekTime = Math.max(
+      this._props.skipTo + 1,
+      VideoPlayer.currentTime + this._videoSkipTimeSum
+    );
 
     // Check if `ssai` has a `slots` array
     if (ssai_params && Array.isArray(ssai_params.slots)) {
@@ -647,7 +657,7 @@ export default class Player extends lng.Component {
       VideoPlayer.play();
       this._debouncePlayVideoId = undefined;
     }, 500);
-  }
+  };
 
   $hideSbutitles() {
     this._setState('Controls');
@@ -800,7 +810,10 @@ export default class Player extends lng.Component {
 
     const currentTime = Math.max(
       0,
-      Math.min(VideoPlayer.currentTime + this._videoSkipTimeSum - this._props.skipTo, VideoPlayer.duration - this._props.skipTo)
+      Math.min(
+        VideoPlayer.currentTime + this._videoSkipTimeSum - this._props.skipTo,
+        VideoPlayer.duration - this._props.skipTo
+      )
     );
     const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
     this.tag('ProgressBar').progress = progress;
@@ -852,9 +865,7 @@ export default class Player extends lng.Component {
       .animation({
         duration: 2,
         repeat: -1,
-        actions: [
-          { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } },
-        ],
+        actions: [{ p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } }],
       })
       .start();
   }
@@ -917,15 +928,15 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerError(e) {
-    console.error('Error in the player: ', e)
+    console.error('Error in the player: ', e);
     if (e.event.code === 20) return;
     this.tag('ErrorMessage').patch({
       Message: {
         text: {
-          text: this._translations?.no_stream || "Invalid Video URL",
-        }
-      }
-    })
+          text: this._translations?.no_stream || 'Invalid Video URL',
+        },
+      },
+    });
     this._showErrorMessage();
   }
 
@@ -999,8 +1010,7 @@ export default class Player extends lng.Component {
 
   _captureKey({ keyCode }) {
     const useKeyHandlers = !this.tag('Wrapper').visible;
-    if (this._getState() !== 'Subtitles')
-      this._showWrapper();
+    if (this._getState() !== 'Subtitles') this._showWrapper();
 
     if (window.keyCodes[keyCode] === 'Back' && this._getState() !== 'Subtitles') return false;
     return useKeyHandlers;
@@ -1013,14 +1023,12 @@ export default class Player extends lng.Component {
           return this._Controls;
         }
         _handleLeft() {
-          if (this._props.isLive)
-            return;
+          if (this._props.isLive) return;
 
           this._setState('Back');
         }
         _handleRight() {
-          if (this._props.isLive)
-            return;
+          if (this._props.isLive) return;
 
           this._setState('SubtitlesButton');
         }
