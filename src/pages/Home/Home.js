@@ -99,6 +99,10 @@ export default class Home extends Lightning.Component {
     this.fireAncestors('$appClose');
   }
 
+  _handleHover() {
+    Router.focusPage();
+  }
+
   $setStateOnScroll(nextState) {
     this._setState(nextState);
   }
@@ -135,10 +139,6 @@ export default class Home extends Lightning.Component {
           this._setState('Items');
         }
 
-        _handleHover() {
-          Router.focusPage();
-        }
-
         async $horizontalContainerIndexChange(index) {
           if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
             const newRails = await HomePageService.fetchMoreItemsForHeroSection();
@@ -159,10 +159,6 @@ export default class Home extends Lightning.Component {
           this._Wrapper.patch({
             y: 0,
           });
-        }
-
-        _handleHover() {
-          Router.focusPage();
         }
 
         $exit() {

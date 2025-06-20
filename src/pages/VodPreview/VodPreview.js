@@ -86,6 +86,10 @@ export default class VodPreview extends Lightning.Component {
     this._setState(nextState);
   }
 
+  _handleHover() {
+    Router.focusPage();
+  }
+
   static _states() {
     return [
       class VodContentContainer extends this {
@@ -94,10 +98,6 @@ export default class VodPreview extends Lightning.Component {
             y: this.calculateContentOffset(this._VodContentContainer.contentType),
             h: 1920,
           });
-        }
-
-        _handleHover() {
-          Router.focusPage();
         }
 
         $enter() {
@@ -141,10 +141,6 @@ export default class VodPreview extends Lightning.Component {
             y: this.calculateContentOffset(this._VodContentContainer.contentType),
             h: 1080,
           });
-        }
-
-        _handleHover() {
-          Router.focusPage();
         }
 
         correctContainerSize() {
