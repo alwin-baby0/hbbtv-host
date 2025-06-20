@@ -1,5 +1,5 @@
 import { CARD_SIZES } from './constants';
-import { Utils } from '@lightningjs/sdk';
+import { Utils, Router } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
 
@@ -95,10 +95,11 @@ export default class PosterRailItem extends FocusableItem {
   }
 
   _handleHover() {
+    Router.focusPage();
     const { index } = this._props;
     const ancestor = this.parent.parent.parent.parent;
-    this._focus();
     this.fireAncestors('$horizontalPosterIndexChange', index);
+    this._focus();
 
     if (ancestor.ref === 'RecentlyWatched') {
       this.fireAncestors('$setStateOnHover', 'RecentlyWatched');
@@ -112,8 +113,6 @@ export default class PosterRailItem extends FocusableItem {
   }
 
   _handleUnhover() {
-    //this.fireAncestors('$horizontalPosterIndexChange', -1);
-    // this._refocus();
     super._unfocus();
   }
 }

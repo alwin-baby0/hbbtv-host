@@ -55,7 +55,6 @@ export default class HorizontalContainer extends Lightning.Component {
 
   _setFocusedIndex(newIndex) {
     this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
-    //this._focusedIndex = newIndex;
     this._reCalibrateScroll();
     this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex, this._scrollPosition);
   }
@@ -195,11 +194,11 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleRight() {
-    //this.Items.children[this._focusedIndex]._unfocus();
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
       this.Items.children[this._focusedIndex]._unfocus();
       this._focusedIndex += 1;
+      this.Items.children[this._focusedIndex]?._focus();
       this._reCalibrateScroll();
       this.fireAncestors(
         '$horizontalContainerIndexChange',
@@ -213,10 +212,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
-    //this.Items.children[this._focusedIndex]._unfocus();
     if (this._focusedIndex > 0) {
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex -= 1;
+      this.Items.children[this._focusedIndex]?._focus();
       this._reCalibrateScroll();
       this.fireAncestors(
         '$horizontalContainerIndexChange',
@@ -227,5 +226,19 @@ export default class HorizontalContainer extends Lightning.Component {
       return false;
     }
     return true;
+  }
+
+  _focus() {
+    const { items } = this._props;
+    if (this._focusedIndex >= 0 && this._focusedIndex < items.length) {
+      this.Items.children[this._focusedIndex]?._focus();
+    }
+  }
+
+  _unfocus() {
+    const { items } = this._props;
+    if (this._focusedIndex >= 0 && this._focusedIndex < items.length) {
+      this.Items.children[this._focusedIndex]?._unfocus();
+    }
   }
 }
