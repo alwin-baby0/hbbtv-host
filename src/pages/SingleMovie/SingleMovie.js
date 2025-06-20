@@ -66,13 +66,10 @@ export default class SingleMovie extends Lightning.Component {
         },
         CardInfo: {
           x: 670,
-          // y: 350,
           y: 250,
           flex: { direction: 'column' },
           AboutMovie: {
             w: 700,
-            // h: 275,
-            // h: 460,
             h: 720,
             flex: { direction: 'column' },
             Title: {
@@ -87,7 +84,6 @@ export default class SingleMovie extends Lightning.Component {
             },
             Description: {
               w: 700,
-              // h: 62,
               y: 24,
               text: {
                 fontSize: 25,
@@ -99,7 +95,6 @@ export default class SingleMovie extends Lightning.Component {
             },
             Director: {
               w: 700,
-              // h: 31,
               y: 48,
               text: {
                 fontSize: 22,
@@ -109,7 +104,6 @@ export default class SingleMovie extends Lightning.Component {
             },
             Cast: {
               w: 700,
-              // h: 31,
               y: 50,
               text: {
                 text: 'cast',
@@ -128,8 +122,6 @@ export default class SingleMovie extends Lightning.Component {
               props: {
                 disableScroll: true,
               },
-              // h: 78,
-              // y: 196,
               y: 72,
             },
           },
@@ -188,54 +180,62 @@ export default class SingleMovie extends Lightning.Component {
 
     this._translations = parseTranslations();
 
-    this._Category.patch({
-      text: {
-        text: genre,
-      },
+    this.patch({
+      Content: {
+        Card: {
+          Info: {
+            Category: {
+              text: {
+                text: genre,
+              },
+            },
+            Summary: {
+              text: {
+                text: summary,
+              },
+            },
+            Subtitle: {
+              text: {
+                text: subtitle,
+              },
+            }
+          },
+          Image: {
+            src: movie.getPortraitPoster(imageSizes.XL)?.src,
+          }
+        },
+        CardInfo: {
+          AboutMovie: {
+            Title: {
+              text: {
+                text: title,
+              },
+            },
+            Description: {
+              text: {
+                text: description,
+              },
+            },
+            Director: {
+              text: {
+                text: director,
+              },
+            },
+            Cast: {
+              text: {
+                text: cast,
+              },
+            }
+          }
+        }
+      }
     });
-    this._Summary.patch({
-      text: {
-        text: summary,
-      },
-    });
-    this._Subtitle.patch({
-      text: {
-        text: subtitle,
-      },
-    });
-    this._Image.patch({
-      src: movie.getPortraitPoster(imageSizes.XL)?.src,
-    });
-    this._Title.patch({
-      text: {
-        text: title,
-      },
-    });
-    this._Description.patch({
-      text: {
-        text: description,
-      },
-    });
-    this._Director.patch({
-      text: {
-        text: director,
-      },
-    });
-    this._Cast.patch({
-      text: {
-        text: cast,
-      },
-    });
-    /* this._BackButton.patch({
-      texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 24, 24),
-    }); */
 
     const buttons = [
       {
         icon: 'icons/home/play.svg',
         buttonName: 'WATCH NOW',
         buttonLabel: this._translations?.watch_now?.toUpperCase() || defTr.watch_now.toUpperCase(),
-        // width: 285,
         width: 405,
         stream: 'url',
       },
