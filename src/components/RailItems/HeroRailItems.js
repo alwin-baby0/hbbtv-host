@@ -102,8 +102,8 @@ export default class HeroRailItem extends FocusableItem {
     const { index, url } = this._props;
     console.log('herorRAil hovers');
 
-    super._focus();
     this.fireAncestors('$horizontalPosterIndexChange', index);
+    super._focus();
 
     if (this._timeoutId) {
       clearTimeout(this._timeoutId);
