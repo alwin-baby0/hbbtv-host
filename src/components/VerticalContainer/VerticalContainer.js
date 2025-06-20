@@ -41,9 +41,10 @@ export default class VerticalContainer extends Lightning.Component {
   $horizontalContainerPosterIndexChange(val, verticalState) {
     this.fireAncestors('$verticalContainerIndexChange', val);
     this.fireAncestors('$updateVerticalState', verticalState);
+    this.Items.children[this._focusedIndex]?._unfocus();
     this._focusedIndex = val;
+    this.Items.children[this._focusedIndex]?._focus();
     this._reCalibrateScroll(this._focusedIndex, val); //this fixes the problem when hovering first row from below
-    //this._handleCarryFocus(this._focusedIndex, val);
   }
 
   handleFocusedIndex(val) {
@@ -111,10 +112,6 @@ export default class VerticalContainer extends Lightning.Component {
 
   _handleClick() {
   }
-
-  /* _handleHover() {
-    console.log('hoverovano');
-  } */
 
   _handleScroll(event) {
     if (this.hasFocus()) {

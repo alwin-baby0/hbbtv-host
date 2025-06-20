@@ -1,19 +1,9 @@
 import PlayerButtons from "./components/PlayerButtons/PlayerButtons";
 
 export const playerButtonsVOD = [
-  // {
-  //   type: PlayerButtons,
-  //   props: {
-  //     buttonInfo: {
-  //       label: 'back',
-  //       icon: `/icons/player/commands/back.svg`,
-  //       onLiveContent: true,
-  //       position: 60,
-  //     },
-  //   },
-  // },
   {
     type: PlayerButtons,
+    collision: true,
     props: {
       buttonInfo: {
         label: 'backward',
@@ -25,6 +15,7 @@ export const playerButtonsVOD = [
   },
   {
     type: PlayerButtons,
+    collision: true,
     props: {
       buttonInfo: {
         label: 'pause',
@@ -36,6 +27,7 @@ export const playerButtonsVOD = [
   },
   {
     type: PlayerButtons,
+    collision: true,
     props: {
       buttonInfo: {
         label: 'forward',
@@ -85,7 +77,7 @@ export const playerButtonsLive = [
 
 /**
  * Floors the number => Converts number to string => Pads to 2 digits
- * @param {number} number 
+ * @param {number} number
  * @returns {string}
  */
 const floorStringPad = (number) => Math.floor(number).toString().padStart(2, '0');
@@ -105,7 +97,7 @@ export const formatTimeHMS = (seconds) => {
 
 /**
  * Check if video URL is valid
- * @param {string | undefined} url 
+ * @param {string | undefined} url
  * @returns {boolean}
  */
 export const isVideoURLValid = async (url) => {
@@ -165,75 +157,5 @@ export const fakeAdsData = {
         },
       ],
     },
-    // {
-    //   slot: 'slot2',
-    //   total_duration: 50,
-    //   pods: [
-    //     {
-    //       pod: 'pod2',
-    //       ads: [
-    //         {
-    //           impression: 'https://springserve.com/vast/ad3',
-    //           cue: {
-    //             from: '00:01:00',
-    //             to: '00:01:10',
-    //           },
-    //           skipping_allowed: false,
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       pod: 'pod3',
-    //       ads: [
-    //         {
-    //           impression: 'https://springserve.com/vast/ad4',
-    //           cue: {
-    //             from: '00:30:00',
-    //             to: '00:30:20',
-    //           },
-    //           skipping_allowed: true,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
-    // {
-    //   slot: 'slot3',
-    //   total_duration: 25,
-    //   pods: [
-    //     {
-    //       pod: 'pod4',
-    //       ads: [
-    //         {
-    //           impression: 'https://springserve.com/vast/ad5',
-    //           cue: {
-    //             from: '01:00:00',
-    //             to: '01:00:25',
-    //           },
-    //           skipping_allowed: false,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
-    // {
-    //   slot: 'slot4',
-    //   total_duration: 30,
-    //   pods: [
-    //     {
-    //       pod: 'pod5',
-    //       ads: [
-    //         {
-    //           impression: 'https://springserve.com/vast/ad6',
-    //           cue: {
-    //             from: '02:00:00',
-    //             to: '02:00:30',
-    //           },
-    //           skipping_allowed: true,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
   ],
 };
