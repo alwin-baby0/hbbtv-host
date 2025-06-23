@@ -50,7 +50,6 @@ export default class SportsEventsRailItem extends FocusableItem {
       Description: {
         x: 3,
         y: 170,
-        // w: 255,
         w: 350,
         h: 165,
         flex: { direction: 'column' },
@@ -144,7 +143,6 @@ export default class SportsEventsRailItem extends FocusableItem {
 
     this._EventImage.patch({
       props: {
-        // width: 255,
         width: 350,
         height: 150,
         imageSrc: imageSrc,
@@ -169,8 +167,8 @@ export default class SportsEventsRailItem extends FocusableItem {
 
   _handleHover() {
     const { index } = this._props;
-    super._focus();
     this.fireAncestors('$horizontalPosterIndexChange', index);
+    super._focus();
   }
 
   _handleUnhover() {
