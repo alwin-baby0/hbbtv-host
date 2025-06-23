@@ -1,5 +1,4 @@
-import { Lightning, Colors, Utils } from '@lightningjs/sdk';
-import { Key as BaseKey } from '@lightningjs/ui';
+import { Lightning, Colors } from '@lightningjs/sdk';
 export class Key extends Lightning.Component {
   static _template() {
     return {
@@ -16,7 +15,7 @@ export class Key extends Lightning.Component {
             h: 75,
             alpha: 0.8,
             color: Colors('white').get(),
-            text: { fontFace: 'Regular', fontSize: 32 },
+            text: { fontFace: 'Montserrat-Regular', fontSize: 32 },
           },
         },
         ButtonBorder: {},
@@ -54,8 +53,6 @@ export class Key extends Lightning.Component {
             fontSize: 32,
             textAlign: 'center',
             wordWrapWidth: 220,
-            //wordWrap: false,
-            //textOverflow: 'ellipsis',
           },
         },
       },

@@ -22,8 +22,6 @@ export default class GalleryItem extends Lightning.Component {
         x: 110,
         y: 110,
         w: 740,
-        // h: 460,
-        // h: 600,
         flex: { direction: 'column' },
         Date: {
           w: 698,
@@ -61,7 +59,7 @@ export default class GalleryItem extends Lightning.Component {
           text: {
             textColor: Colors(colors.sliderDescription).get(),
             wordWrapWidth: 650,
-            family: 'Montserrat-Regular',
+            fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
             maxLines: 6,
@@ -72,7 +70,7 @@ export default class GalleryItem extends Lightning.Component {
           h: 31,
           text: {
             wordWrapWidth: 650,
-            family: 'Montserrat-Regular',
+            fontFace: 'Montserrat-Regular',
             color: Colors('#BDBDBD').get(),
             fontSize: 22,
           },
@@ -90,14 +88,12 @@ export default class GalleryItem extends Lightning.Component {
         },
         AuthorizedButtons: {
           flex: { direction: 'row' },
-          //collision: true,
           ContinueWatching: {
             collision: true,
             alpha: 0,
             type: Button,
             flexItem: {
               marginTop: 10,
-              // marginRight: 10,
             },
           },
           FavoriteButton: {
@@ -106,7 +102,6 @@ export default class GalleryItem extends Lightning.Component {
             type: Button,
             flexItem: {
               marginTop: 10,
-              // marginLeft: 10,
             },
           },
         },
@@ -179,7 +174,6 @@ export default class GalleryItem extends Lightning.Component {
       h: height,
       x: 700,
       src: bgImageSrc(),
-      //src: 'https://cdn-images.watch4.com/480/1/1672427.jpg',
     });
     this._GradientOverlay.patch({
       texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
@@ -207,7 +201,6 @@ export default class GalleryItem extends Lightning.Component {
                 videoUrl: url,
                 videoId: id,
                 duration: duration,
-                // videoType: videoType,
                 videoType: 'series',
                 seriesID: seriesId,
                 ssai: ssai,
@@ -319,10 +312,6 @@ export default class GalleryItem extends Lightning.Component {
           else return false;
         }
 
-        // _handleDown() {
-        //   if (this._ContinueWatching.alpha > 0) this._setState('FavoriteButton');
-        //   else return false;
-        // }
         _handleDown() {
           return false;
         }

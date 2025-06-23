@@ -96,7 +96,7 @@ export default class SidebarItem extends lng.Component {
           text: {
             maxLines: 1,
             wordWrapWidth: index === 4 && label.length > 10 ? 200 : 150,
-            family: 'Montserrat-Regular',
+            fontFace: 'Montserrat-Regular',
             text: label.toUpperCase(),
           },
         },
