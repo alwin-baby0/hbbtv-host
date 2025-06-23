@@ -33,8 +33,8 @@ export default class SidebarItems extends Lightning.Component {
         w: 1840,
         h: 70,
         Logo: {
-          w: 235,
-          h: 70,
+          w: 800 / 3.4,
+          h: 215 / 3.4,
           src: Utils.asset('/images/navbar/logo.png'),
         },
         Column: {
