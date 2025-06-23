@@ -365,7 +365,6 @@ export default class Player extends lng.Component {
     const currentTime = VideoPlayer.currentTime;
 
     const ssai_params = this._props.ads;
-    //const ssai_params = fakeAdsData;
     console.log('ssai_params: ', ssai_params);
 
     // Check if `ssai` has a `slots` array
@@ -403,7 +402,6 @@ export default class Player extends lng.Component {
                       y: 1000,
                       w: 1880,
                       h: 10,
-                      // progress: 0.3,
                     },
                     AdIcon: {
                       x: 1835,
@@ -484,8 +482,6 @@ export default class Player extends lng.Component {
                           text: 'Skip',
                           fontFace: 'Montserrat-SemiBold',
                           fontSize: 28,
-                          // lineHeight: 25,
-                          // letterSpacing: 2,
                         },
                       },
                     },
@@ -494,7 +490,6 @@ export default class Player extends lng.Component {
 
                 const progressBarStyle = {
                   progressColor: Colors(colors.adProgress).get(),
-                  // barColor: Colors('#000000').get(),
                   barColor: undefined,
                 };
 
@@ -504,12 +499,6 @@ export default class Player extends lng.Component {
                   this._adStarted = true;
 
                   const duration = to - from;
-
-                  // const progress = this._currentAdTime / duration;
-
-                  // this.tag('ProgressBarAd').progress = progress;
-
-                  // this._currentAdTime++;
 
                   this._updateProgressBarAd(duration, index + 1, pod.ads.length);
 
@@ -527,7 +516,6 @@ export default class Player extends lng.Component {
 
             // Provera da li je trenutna reklama završena
             if (currentTime >= to && this._props.currentAd === ad) {
-              // console.log('Ad finished:', ad.impression);
               this._handleAdEnd(ad);
 
               //check if the current ad is the last ad in the pod
@@ -571,9 +559,6 @@ export default class Player extends lng.Component {
 
     eventTrackPayload('ad_ended', this._props.videoId);
     this._props.isAdVisible = false;
-    // this.patch({
-    //   SkipButton: undefined,
-    // });
     clearInterval(this._progressAdInterval);
     this._adStarted = false;
     this._currentAdTime = 1;
@@ -619,8 +604,6 @@ export default class Player extends lng.Component {
 
   _checkAdCuePointsSeek() {
     const ssai_params = this._props.ads;
-    // const ssai_params = this._adData;
-    // console.log('ssai_params: ', ssai_params);
     const seekTime = Math.max(
       this._props.skipTo + 1,
       VideoPlayer.currentTime + this._videoSkipTimeSum
@@ -938,6 +921,10 @@ export default class Player extends lng.Component {
       },
     });
     this._showErrorMessage();
+  }
+
+  $setState(newState) {
+    this._setState(newState);
   }
 
   // COMANDS

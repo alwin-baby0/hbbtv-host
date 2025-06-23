@@ -162,8 +162,8 @@ export default class SportsEventsRailItem extends FocusableItem {
 
   _handleHover() {
     const { index } = this._props;
-    super._focus();
     this.fireAncestors('$horizontalPosterIndexChange', index);
+    super._focus();
   }
 
   _handleUnhover() {

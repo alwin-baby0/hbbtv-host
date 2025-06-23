@@ -92,6 +92,10 @@ export default class VodPreview extends Lightning.Component {
     this._setState(nextState);
   }
 
+  _handleHover() {
+    Router.focusPage();
+  }
+
   static _states() {
     return [
       class VodContentContainer extends this {

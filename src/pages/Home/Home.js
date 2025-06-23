@@ -14,7 +14,6 @@ export default class Home extends Lightning.Component {
     return {
       Background: {},
       HeroSection: {
-        //collision: true,
         x: 0,
         y: 0,
         w: 1920,
@@ -98,6 +97,10 @@ export default class Home extends Lightning.Component {
     }
     e.preventDefault();
     this.fireAncestors('$appClose');
+  }
+
+  _handleHover() {
+    Router.focusPage();
   }
 
   $setStateOnScroll(nextState) {
