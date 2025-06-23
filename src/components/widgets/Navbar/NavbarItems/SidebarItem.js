@@ -55,26 +55,26 @@ export default class SidebarItem extends lng.Component {
     if (selected) {
       this.patch({
         Title: {
-          color: Colors(colors.focus).get()
+          color: Colors(colors.focus).get(),
         },
         Line: {
-          color: Colors(colors.focus).get()
+          color: Colors(colors.focus).get(),
         },
         Icon: {
-          color: Colors(colors.focus).get()
-        }
+          color: Colors(colors.focus).get(),
+        },
       });
     } else {
       this.patch({
         Title: {
-          color: Colors(colors.unfocus).get()
+          color: Colors(colors.unfocus).get(),
         },
         Line: {
-          color: Colors(colors.unfocus).get()
+          color: Colors(colors.unfocus).get(),
         },
         Icon: {
-          color: Colors(colors.unfocus).get()
-        }
+          color: Colors(colors.unfocus).get(),
+        },
       });
     }
 
@@ -87,7 +87,7 @@ export default class SidebarItem extends lng.Component {
         },
         Icon: {
           texture: lng.Tools.getSvgTexture(Utils.asset(icon), 48, 48),
-        }
+        },
       });
     } else {
       this.patch({
@@ -125,11 +125,11 @@ export default class SidebarItem extends lng.Component {
       this.patch({
         Line: {
           w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni,
-          visible: true
+          visible: true,
         },
         Icon: {
           color: Colors(colors.focus).get(),
-        }
+        },
       });
     }, 0);
   }
@@ -145,8 +145,8 @@ export default class SidebarItem extends lng.Component {
         },
       },
       Line: {
-        visible: false
-      }
+        visible: false,
+      },
     });
   }
 

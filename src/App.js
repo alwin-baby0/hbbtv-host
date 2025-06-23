@@ -99,6 +99,10 @@ export default class App extends Router.App {
 
   _init() {
     this._translations = parseTranslations();
+    if (!localStorage.getItem('languageCode')) {
+      const language = navigator.language || navigator.userLanguage;
+      localStorage.setItem('languageCode', language.split('-')[0]);
+    }
   }
 
   $punchHole() {
