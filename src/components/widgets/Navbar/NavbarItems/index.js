@@ -16,7 +16,6 @@ const menuItems = [
   { id: 3, label: translations?.sport || defTR.sport, route: 'vod/sports', icon: '' },
   { id: 4, label: translations?.live_tv || defTR.live_tv, route: 'live', icon: '' },
   { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-  // { id: 6, label: 'settings', route: 'settings', icon: 'images/navbar/settings.svg' },
   { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
   { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
   { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
@@ -34,13 +33,8 @@ export default class SidebarItems extends Lightning.Component {
         w: 1840,
         h: 70,
         Logo: {
-          // texture: Lightning.Tools.getSvgTexture(
-          //   Utils.asset(`/images/navbar/nav-logo.svg`),
-          //   235,
-          //   70
-          // ),
-          w: 235,
-          h: 70,
+          w: 800 / 3.4,
+          h: 215 / 3.4,
           src: Utils.asset('/images/navbar/logo.png'),
         },
         Column: {
@@ -86,8 +80,6 @@ export default class SidebarItems extends Lightning.Component {
         this._index = getRouteNavbarIndex('filterPage/series');
         this._setSelected(this._index);
         return;
-      } else {
-        // console.log('activeHash does not contain both "filtered" and "movies"');
       }
       this._index = getRouteNavbarIndex(Router.getActiveHash());
       this._setSelected(this._index);
@@ -98,7 +90,6 @@ export default class SidebarItems extends Lightning.Component {
     const activeHash = Router.getActiveHash();
     // Check if activeHash contains both 'filtered' and 'movies'
     if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
-      // console.log('activeHash contains both "filtered" and "movies"');
       this._index = getRouteNavbarIndex('filterPage/movie');
       this._setSelected(this._index);
       return;
@@ -106,8 +97,6 @@ export default class SidebarItems extends Lightning.Component {
       this._index = getRouteNavbarIndex('filterPage/series');
       this._setSelected(this._index);
       return;
-    } else {
-      // console.log('activeHash does not contain both "filtered" and "movies"');
     }
     let focusedId = getRouteNavbarIndex(activeHash);
     this.$changePage(focusedId);
@@ -149,8 +138,6 @@ export default class SidebarItems extends Lightning.Component {
       this._index = getRouteNavbarIndex('filterPage/series');
       this._setSelected(this._index);
       return;
-    } else {
-      // console.log('activeHash does not contain both "filtered" and "movies"');
     }
     const newIndex = getRouteNavbarIndex(Router.getActiveHash());
     if (newIndex !== this._index) {

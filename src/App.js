@@ -253,10 +253,6 @@ export default class App extends Router.App {
     this.application.closeApp();
   }
 
-  // _handleAppClose() {
-  //   this.application.closeApp();
-  // }
-
   $appClose() {
     const dialog = this.tag('Dialog');
     dialog.open({
