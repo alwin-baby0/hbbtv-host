@@ -6,8 +6,6 @@ export default class LiveChannelRailItem extends Lightning.Component {
       zIndex: 100,
       w: 180,
       h: 95,
-      // rect: true,
-      // color: Colors('#17191A').get(),
       Backg: {
         src: Utils.asset('images/Rectangle.png'),
         w: 180,

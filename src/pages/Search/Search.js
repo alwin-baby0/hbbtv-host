@@ -186,6 +186,10 @@ export default class Search extends Lightning.Component {
     return this.tag('Keyboard');
   }
 
+  _active() {
+    this.fireAncestors('$unpunchHole');
+  }
+
   static _states() {
     return [
       class Input extends this {
