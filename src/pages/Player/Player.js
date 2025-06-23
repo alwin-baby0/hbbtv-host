@@ -841,8 +841,8 @@ export default class Player extends lng.Component {
     if (!this._props.isAdVisible) {
       if (!this._progressInterval) {
         this._setState('Controls');
-        this._Wrapper.visible = true;
         this._Backdrop.visible = true;
+        this._Wrapper.visible = true;
         this._updateProgressBar();
         if (!this._props.isLive) {
           this._progressInterval = setInterval(() => this._updateProgressBar(), 1000);
@@ -859,8 +859,8 @@ export default class Player extends lng.Component {
 
   _hideWrapper() {
     this._setState('ProgressBar');
-    this._Wrapper.visible = false;
     this._Backdrop.visible = false;
+    this._Wrapper.visible = false;
     if (!this._props.isLive) {
       clearInterval(this._progressInterval);
       this._progressInterval = null;
