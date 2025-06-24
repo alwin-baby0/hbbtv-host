@@ -235,8 +235,7 @@ export default class LiveTV extends Lightning.Component {
     this._props.lastId = id; // Save the lastId
 
     // Example of using lastId
-    this._EPGChannels
-      ._EPGData
+    this._EPGData
       .Items.children[this._EPGData._focusedIndex].Items.children[0]._selectButton(
         id,
         lastId
