@@ -1,4 +1,4 @@
-import PlayerButtons from "./components/PlayerButtons/PlayerButtons";
+import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 
 export const playerButtonsVOD = [
   {
@@ -86,14 +86,14 @@ export const formatTimeMS = (seconds) => {
   const minutes = floorStringPad((seconds % 3600) / 60);
   const remainingSeconds = floorStringPad(seconds % 60);
   return `${minutes}:${remainingSeconds}`;
-}
+};
 
 export const formatTimeHMS = (seconds) => {
   const hours = floorStringPad(seconds / 3600);
   const minutes = floorStringPad((seconds % 3600) / 60);
   const remainingSeconds = floorStringPad(seconds % 60);
   return `${hours}:${minutes}:${remainingSeconds}`;
-}
+};
 
 /**
  * Check if video URL is valid
@@ -109,7 +109,7 @@ export const isVideoURLValid = async (url) => {
   } catch (e) {
     return false;
   }
-}
+};
 
 export const convertCueTimeToSeconds = (cue) => {
   const parts = cue.split(':');
@@ -123,10 +123,10 @@ export const formatAds = (slots) => {
         adStart: convertCueTimeToSeconds(pod.cue.from),
         adEnd: convertCueTimeToSeconds(pod.cue.to),
         skipAllowed: pod.skipping_allowed,
-      }
-    })
-  })
-}
+      };
+    });
+  });
+};
 
 export const fakeAdsData = {
   slots: [

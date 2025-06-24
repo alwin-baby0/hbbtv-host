@@ -44,12 +44,6 @@ export default class LanguageSettings extends Lightning.Component {
             type: VerticalContainer,
           },
         },
-        // Buttons: {
-        //   w: 1050,
-        //   h: 400,
-        //   y: 100,
-        //   type: VerticalContainer,
-        // },
       },
     };
   }

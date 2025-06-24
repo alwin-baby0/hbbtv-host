@@ -198,7 +198,13 @@ export default class App extends Router.App {
   }
 
   static language() {
-    const selectedLanguage = localStorage.getItem('languageCode') || 'en';
+    let selectedLanguage = localStorage.getItem('languageCode');
+
+    if (!selectedLanguage) {
+      selectedLanguage = navigator.language || navigator.userLanguage || 'en-';
+      localStorage.setItem('languageCode', selectedLanguage.split('-')[0]);
+    }
+
     return {
       file: Utils.asset('translations/translations.json'),
       language: selectedLanguage,

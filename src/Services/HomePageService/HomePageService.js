@@ -27,6 +27,7 @@ class HomePageService extends FetchingService {
     // this.#banner = [];
 
     this.languageTranslations = await this.#getLanguageTranslations();
+
     localStorage.setItem('languageTr', JSON.stringify(this.languageTranslations));
 
     if (!this.#heroSectionItems) {
@@ -217,12 +218,6 @@ class HomePageService extends FetchingService {
 
   #getLanguageTranslations = async () => {
     const lngCode = localStorage.getItem('languageCode');
-
-    /* return await this._request({
-      url: `/lang/${lngCode}/app`,
-      apiVersion: V2,
-      method: 'GET',
-    }); */
 
     const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode || 'en'}/app`);
     const res = prevodi.json();

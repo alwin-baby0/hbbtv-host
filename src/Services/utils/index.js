@@ -6,16 +6,22 @@ export const auth = 'auth';
 
 const bundleIndentifierMap = (deviceType) => {
   switch (deviceType) {
-    case 'lg': return 'lgtv';
-    case 'tizen': return 'samsungtv';
-    default: return deviceType;
+    case 'lg':
+      return 'lgtv';
+    case 'tizen':
+      return 'samsungtv';
+    default:
+      return deviceType;
   }
-}
+};
 
 export function createApiCtx() {
+  const selectedLanguage =
+    navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
+
   return btoa(
     JSON.stringify({
-      languageCode: localStorage.getItem('languageCode') || 'en',
+      languageCode: localStorage.getItem('languageCode') || selectedLanguage,
       version_name: process.env.APP_VERSION,
       osVersion: 2,
       deviceWidth: window.innerWidth || 1920,
