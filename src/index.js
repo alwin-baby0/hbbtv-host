@@ -19,7 +19,13 @@
 import { Launch } from '@lightningjs/sdk';
 import App from './App.js';
 import Settings from '../settings.json';
-import { eventTrackPayload, getDeviceInfo, getDeviceStageProps, getDeviceType, initDeviceInfo } from './utils/device.js';
+import {
+  eventTrackPayload,
+  getDeviceInfo,
+  getDeviceStageProps,
+  getDeviceType,
+  initDeviceInfo,
+} from './utils/device.js';
 import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
 
@@ -68,18 +74,22 @@ sequence([
       window.dataLayer ?? (window.dataLayer = []);
       window.gtag = function () {
         dataLayer.push(arguments);
-      }
+      };
     }
   },
-  async () => loadJS(`${process.env.APP_BASE_WATCH4}/track.js?api_key=${process.env.APP_WATCH4_API_KEY}`),
+  async () =>
+    loadJS(`${process.env.APP_BASE_WATCH4}/track.js?api_key=${process.env.APP_WATCH4_API_KEY}`),
   () => {
     try {
       const app = Launch(App, appSettings, platformSettings);
       document.body.appendChild(app.stage.getCanvas());
-      console.log('App launched on device: ', Object.entries(getDeviceInfo()).map((([key, value]) => `| ${key}: ${value} |`)));
+      console.log(
+        'App launched on device: ',
+        Object.entries(getDeviceInfo()).map(([key, value]) => `| ${key}: ${value} |`)
+      );
       eventTrackPayload('launch_app', getDeviceInfo().serialNumber);
     } catch (error) {
-      console.error("Failed to start the app", error)
+      console.error('Failed to start the app', error);
     }
-  }
-])
+  },
+]);

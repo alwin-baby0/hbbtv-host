@@ -7,25 +7,12 @@ import SidebarItem from './SidebarItem';
 import { parseTranslations } from '../../../../Services';
 import defTR from '../../../../../public/static/translations/en.json';
 
-const translations = parseTranslations();
-
-const menuItems = [
-  { id: 0, label: translations?.home || defTR.home, route: 'home', icon: '' },
-  { id: 1, label: translations?.movies || defTR.movies, route: 'vod/movies', icon: '' },
-  { id: 2, label: translations?.series || defTR.series, route: 'vod/series', icon: '' },
-  { id: 3, label: translations?.sport || defTR.sport, route: 'vod/sports', icon: '' },
-  { id: 4, label: translations?.live_tv || defTR.live_tv, route: 'live', icon: '' },
-  { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-  { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
-  { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
-  { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
-];
-
 export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
-  _sidebarLength = menuItems.length;
+  _sidebarLength = 0;
   _index = 0;
   _newIndex = 0;
+  _menuItemRoutes = [];
 
   static _template() {
     return {
@@ -43,21 +30,6 @@ export default class SidebarItems extends Lightning.Component {
           x: 300,
           h: 70,
           style: { itemSpacing: 30 },
-          items: menuItems.map((item) => {
-            return {
-              type: SidebarItem,
-              collision: true,
-              w: item.id < 5 ? 150 : 50,
-              h: 70,
-              props: {
-                selected: false,
-                index: item.id,
-                data: item,
-              },
-              extraItemSpacing: item.id === 4 ? 270 : 0,
-              color: Colors(colors.unfocus).get(),
-            };
-          }),
         },
       },
     };
@@ -85,7 +57,43 @@ export default class SidebarItems extends Lightning.Component {
       this._setSelected(this._index);
     });
   }
+  _firstActive() {
+    const translations = parseTranslations();
 
+    const menuItems = [
+      { id: 0, label: translations?.home || defTR.home, route: 'home', icon: '' },
+      { id: 1, label: translations?.movies || defTR.movies, route: 'vod/movies', icon: '' },
+      { id: 2, label: translations?.series || defTR.series, route: 'vod/series', icon: '' },
+      { id: 3, label: translations?.sport || defTR.sport, route: 'vod/sports', icon: '' },
+      { id: 4, label: translations?.live_tv || defTR.live_tv, route: 'live', icon: '' },
+      { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
+      { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
+      { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
+      { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
+    ];
+
+    this._menuItemRoutes = menuItems.map((item) => item.route);
+
+    this._sidebarLength = menuItems.length;
+
+    this._Column.patch({
+      items: menuItems.map((item) => {
+        return {
+          type: SidebarItem,
+          collision: true,
+          w: item.id < 5 ? 150 : 50,
+          h: 70,
+          props: {
+            selected: false,
+            index: item.id,
+            data: item,
+          },
+          extraItemSpacing: item.id === 4 ? 270 : 0,
+          color: Colors(colors.unfocus).get(),
+        };
+      }),
+    });
+  }
   _focus() {
     const activeHash = Router.getActiveHash();
     // Check if activeHash contains both 'filtered' and 'movies'
@@ -113,7 +121,7 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   $changePage(index) {
-    const route = menuItems[index].route;
+    const route = this._menuItemRoutes[index];
     this._setSelected(index);
     this._index = index;
 
