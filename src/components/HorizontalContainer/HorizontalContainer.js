@@ -68,9 +68,6 @@ export default class HorizontalContainer extends Lightning.Component {
 
     if (railTitle && railTitle !== '') {
       const { h } = rest;
-      this.Items.patch({
-        y: 0,
-      });
       this.patch({
         h: h + 95,
         Title: {
@@ -84,10 +81,12 @@ export default class HorizontalContainer extends Lightning.Component {
             lineHeight: 39,
           },
         },
+        Items: {
+          y: 0,
+        }
       });
     } else {
-      this.patch({ ...rest });
-      this.Items.patch({ h: rest.h });
+      this.patch({ ...rest, Items: { h: rest.h } });
     }
 
     this.patch({

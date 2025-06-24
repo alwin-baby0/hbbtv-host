@@ -32,6 +32,10 @@ export default class EPGRailItems extends Lightning.Component {
     };
   }
 
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
+
   _selectButton(id, lastId) {
     this._props.lastClickedItemId = id;
 
@@ -70,44 +74,42 @@ export default class EPGRailItems extends Lightning.Component {
 
     this._epgWidth = width - 5;
 
-    this.tag('Wrapper').patch({
-      w: this._epgWidth,
-    });
-
     const fixedWidth = this._epgWidth > 200 ? this._epgWidth : this._epgWidth;
     const fixedWidth1 = this._epgWidth > 200 ? this._epgWidth - 20 : this._epgWidth - 50;
 
-    this.tag('Wrapper.TitleText').patch({
-      w: fixedWidth,
-    });
-    this.tag('Wrapper.TitleText.Text').patch({
-      flexItem: {
-        marginTop: 20,
-        marginLeft: this._epgWidth > 150 ? 25 : 0,
-      },
-      text: {
-        text: this._props.title,
-        wordWrapWidth: fixedWidth1,
-        maxLines: 1,
-        fontSize: 20,
-        fontFace: 'Montserrat-SemiBold',
-      },
-    });
-
-    this.tag('Wrapper.Time').patch({
-      flexItem: {
-        marginTop: 5,
-        marginLeft: this._epgWidth > 150 ? 25 : 0,
-      },
-      text: {
-        text: `${formattedStartTime} - ${formattedEndTime}`,
-        fontFace: 'Montserrat-Light',
-      },
+    this._Wrapper.patch({
+      w: this._epgWidth,
+      TitleText: {
+        w: fixedWidth,
+        Text: {
+          flexItem: {
+            marginTop: 20,
+            marginLeft: this._epgWidth > 150 ? 25 : 0,
+          },
+          text: {
+            text: this._props.title,
+            wordWrapWidth: fixedWidth1,
+            maxLines: 1,
+            fontSize: 20,
+            fontFace: 'Montserrat-SemiBold',
+          },
+        },
+        Time: {
+          flexItem: {
+            marginTop: 5,
+            marginLeft: this._epgWidth > 150 ? 25 : 0,
+          },
+          text: {
+            text: `${formattedStartTime} - ${formattedEndTime}`,
+            fontFace: 'Montserrat-Light',
+          },
+        }
+      }
     });
 
     if (currentTime >= startTime && currentTime <= endTime) {
       this._props.isActive = true;
-      this.tag('Wrapper').patch({
+      this._Wrapper.patch({
         Icon: {
           x: 140,
           y: 49,
@@ -119,8 +121,6 @@ export default class EPGRailItems extends Lightning.Component {
             20
           ),
         },
-      });
-      this.tag('Wrapper').patch({
         texture: lng.Tools.getRoundRect(
           this._epgWidth,
           95,
@@ -133,11 +133,8 @@ export default class EPGRailItems extends Lightning.Component {
       });
     } else {
       this._props.isActive = false;
-      this.tag('Wrapper').patch({
+      this._Wrapper.patch({
         Icon: undefined,
-      });
-
-      this.tag('Wrapper').patch({
         texture: lng.Tools.getRoundRect(
           this._epgWidth,
           95,
@@ -152,7 +149,7 @@ export default class EPGRailItems extends Lightning.Component {
   }
 
   _focus() {
-    this.tag('Wrapper').patch({
+    this._Wrapper.patch({
       texture: lng.Tools.getRoundRect(
         this._epgWidth,
         95,
@@ -168,7 +165,7 @@ export default class EPGRailItems extends Lightning.Component {
   _unfocus() {
     this._lastClickedItemId = null;
     this._props.isActive !== true
-      ? this.tag('Wrapper').patch({
+      ? this._Wrapper.patch({
         texture: lng.Tools.getRoundRect(
           this._epgWidth,
           95,
@@ -179,7 +176,7 @@ export default class EPGRailItems extends Lightning.Component {
           Colors('#252835').get()
         ),
       })
-      : this.tag('Wrapper').patch({
+      : this._Wrapper.patch({
         texture: lng.Tools.getRoundRect(
           this._epgWidth,
           95,
