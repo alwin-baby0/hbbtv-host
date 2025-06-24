@@ -137,11 +137,24 @@ export default class HorizontalContainer extends Lightning.Component {
 
       if (!currentFocus) return;
 
+      let isChildLive = false;
+      let scrollOffsetLive = 0;
+      if (this.Items.children[this._focusedIndex]._props.extensions && this.Items.children[this._focusedIndex]._props.extensions.end_time) {
+        const currentTime = new Date();
+        const startTime = new Date(this.Items.children[this._focusedIndex]._props.extensions.start_time);
+        const endTime = new Date(this.Items.children[this._focusedIndex]._props.extensions.end_time);
+        isChildLive = startTime < currentTime && currentTime < endTime;
+
+        scrollOffsetLive = ((currentTime - startTime) / (1000 * 60)) * 8.33 + 10;
+      }
+
       const containerFinalWidth = this.finalW;
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
 
-      if (elementX < -this._scrollPosition) {
+      if (isChildLive && elementW > containerFinalWidth) {
+        this._scrollPosition = -scrollOffsetLive;
+      } else if (elementX < -this._scrollPosition) {
         // paddingOffset is used to offset first item in each
         // column from the start of the container in EPG-s
         const paddingOffset = currentFocus.flex?._paddingLeft ?? -10;
