@@ -10,8 +10,6 @@ import { CMPService, parseTranslations } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import {
   convertCueTimeToSeconds,
-  fakeAdsData,
-  formatAds,
   formatTimeHMS,
   formatTimeMS,
   playerButtonsLive,
@@ -49,6 +47,16 @@ export default class Player extends lng.Component {
         texture: lng.Tools.getSvgTexture(Utils.asset('images/spinner.svg'), 80, 80),
         mount: 0.5,
         rotation: 0,
+      },
+      Backdrop: {
+        rect: true,
+        w: 1920,
+        h: 500,
+        y: 1080,
+        mountY: 1,
+        colorTop: Colors('#000000').alpha(0).get(),
+        colorBottom: Colors('#000000').get(),
+        visible: false,
       },
       Wrapper: {
         h: 100,
@@ -184,6 +192,22 @@ export default class Player extends lng.Component {
     };
   }
 
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
+
+  get _Controls() {
+    return this.tag('Controls');
+  }
+
+  get _Back() {
+    return this.tag('Back');
+  }
+
+  get _Backdrop() {
+    return this.tag('Backdrop');
+  }
+
   set params({ videoType, videoUrl, ssai, ...rest }) {
     this._translations = parseTranslations();
     this._selectedTranslationIndex = 0;
@@ -259,12 +283,12 @@ export default class Player extends lng.Component {
     this._Controls._setFocusedIndex(1);
 
     if (isLive) {
-      this.tag('Wrapper').patch({
+      this._Wrapper.patch({
         Back: undefined,
         SubtitlesButton: undefined,
       });
     } else {
-      this.tag('Wrapper').patch({
+      this._Wrapper.patch({
         Back: {
           x: 115,
           type: PlayerButtons,
@@ -726,7 +750,7 @@ export default class Player extends lng.Component {
   $exitVideoFromBackClick() {
     this._showWrapper();
 
-    if (this.tag('Wrapper').visible) {
+    if (this._Wrapper.visible) {
       this.handleBackHelper();
     }
 
@@ -734,7 +758,7 @@ export default class Player extends lng.Component {
   }
 
   $exitVideo(e) {
-    if (this.tag('Wrapper').visible) {
+    if (this._Wrapper.visible) {
       this._handleBack(e);
     }
   }
@@ -783,7 +807,7 @@ export default class Player extends lng.Component {
 
   $startStopVideo(isStopped) {
     this._setState('Controls');
-    if (this.tag('Wrapper').visible) {
+    if (this._Wrapper.visible) {
       VideoPlayer.pause();
     }
   }
@@ -817,7 +841,8 @@ export default class Player extends lng.Component {
     if (!this._props.isAdVisible) {
       if (!this._progressInterval) {
         this._setState('Controls');
-        this.tag('Wrapper').visible = true;
+        this._Backdrop.visible = true;
+        this._Wrapper.visible = true;
         this._updateProgressBar();
         if (!this._props.isLive) {
           this._progressInterval = setInterval(() => this._updateProgressBar(), 1000);
@@ -834,7 +859,8 @@ export default class Player extends lng.Component {
 
   _hideWrapper() {
     this._setState('ProgressBar');
-    this.tag('Wrapper').visible = false;
+    this._Backdrop.visible = false;
+    this._Wrapper.visible = false;
     if (!this._props.isLive) {
       clearInterval(this._progressInterval);
       this._progressInterval = null;
@@ -983,20 +1009,8 @@ export default class Player extends lng.Component {
     return 'PlayerPage';
   }
 
-  get _Wrapper() {
-    return this.tag('Wrapper');
-  }
-
-  get _Controls() {
-    return this.tag('Controls');
-  }
-
-  get _Back() {
-    return this.tag('Back');
-  }
-
   _captureKey({ keyCode }) {
-    const useKeyHandlers = !this.tag('Wrapper').visible;
+    const useKeyHandlers = !this._Wrapper.visible;
     if (this._getState() !== 'Subtitles') this._showWrapper();
 
     if (window.keyCodes[keyCode] === 'Back' && this._getState() !== 'Subtitles') return false;
