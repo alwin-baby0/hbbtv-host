@@ -2,6 +2,7 @@ import { CARD_SIZES } from '../../components/RailItems/constants';
 import { railItemConstructor } from './railItems';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { EPGService } from '../../Services';
+import Empty from '../LiveTV/components/Empty';
 
 export const VOD_PREVIEW_TYPES = {
   MOVIES: 'movies',
@@ -51,7 +52,6 @@ export const constructRails = (rails) => {
   return rails
     .filter((rail) => !!rail)
     .map((rail) => {
-      // const { items, itemsPerRow } = rail;
       const items = rail.items;
       const itemsPerRow = rail.itemsPerRow;
 
@@ -82,6 +82,7 @@ const verticalIndexReset = () => {
 
 export const cronstructSingleLineRail = (rail, index) => {
   const { items, railType, cardType = 'POSTER', railTitle, railItemsOptions, ...rest } = rail;
+
   const containerDimensions =
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
@@ -125,7 +126,11 @@ export const cronstructSingleLineRail = (rail, index) => {
       w: containerDimensions.w,
       railTitle: railTitle,
       cardType: cardType,
-      items: railItemConstructor(items, railType, railItemsOptions),
+      items: railItemConstructor(
+        items.length === 0 ? [{ type: Empty }] : items,
+        railType,
+        railItemsOptions
+      ),
       paddingLeft,
       targetIndex: targetIndex,
       index: index,
