@@ -136,6 +136,7 @@ export default class PlayerButtons extends lng.Component {
 
   _handleHover() {
     const { buttonInfo } = this._props;
+    (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') && this.parent.children[1]._unfocus();
     const state = buttonInfo.label === 'subtitles' ? 'SubtitlesButton' : buttonInfo.label === 'back' ? 'Back' : 'Controls';
     console.log('control btns hover');
     this.fireAncestors('$horizontalPosterIndexChange', this.parent.children.indexOf(this));
@@ -144,8 +145,11 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _handleUnhover() {
-    this.fireAncestors('$horizontalPosterIndexChange', this.parent.children.indexOf(this));
-    this._unfocus();
+    const { buttonInfo } = this._props;
+    this.fireAncestors('$setState', 'Controls');
+    (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') && this.fireAncestors('$horizontalPosterIndexChange', 1);
+    (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') && this.parent.children[1]._focus();
+    (buttonInfo.label !== 'pause') && this._unfocus();
   }
 
   _handleClick() {
