@@ -60,8 +60,6 @@ export default class LiveTVPlayer extends Lightning.Component {
           // Update the channel using the matching entry's src
           this._updateChannel(src);
           this.fireAncestors('$updateChannelInfo', matchingEntry, singleChannel);
-        } else {
-          // console.log('No entry found with current time within start and end time range.');
         }
       })
       .catch((error) => {
