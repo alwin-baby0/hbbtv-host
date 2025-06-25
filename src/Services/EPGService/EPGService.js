@@ -82,25 +82,17 @@ class EPGService extends FetchingService {
 
   async fetchMoreEPGs() {
     this.loading = true;
-    console.log('Fetch More Loading', this.pointer);
-    console.log('Fetch More Loading', this.filteredChannelsItems);
+
     const channelsEPGs = this.filteredChannelsItems.slice(
       (this.pointer - 1) * EPG_ROWS_PER_FETCH,
       this.pointer * EPG_ROWS_PER_FETCH
     );
 
-    console.log('Fetch More Channels: ', channelsEPGs);
-
     const channelEPG = channelsEPGs.map(async (channel) => {
       return this.#getEPG(channel.id);
     });
 
-
-    console.log('Fetch More Promises: ', channelEPG);
-
     const epgResults = await Promise.all(channelEPG);
-
-    console.log('Fetch More EPGs: ', epgResults)
 
     this.epgs.push(...epgResults);
     this.pointer++;
