@@ -18,9 +18,13 @@ export default class EPGTimeSlot extends Lightning.Component {
     };
   }
 
+  get _Text() {
+    return this.tag('Text');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    this.tag('Text').patch({
+    this._Text.patch({
       text: props.startTime,
     });
   }
@@ -37,9 +41,9 @@ export default class EPGTimeSlot extends Lightning.Component {
     });
   }
 
-  _init() {}
+  _init() { }
 
-  _getFocused() {}
+  _getFocused() { }
 
   static _states() {
     return [];

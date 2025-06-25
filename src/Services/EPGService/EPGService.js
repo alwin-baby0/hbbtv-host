@@ -6,95 +6,104 @@ import { RAIL_TYPES } from '../../pages/utils';
 
 export const EPG_ROWS_PER_FETCH = 10;
 class EPGService extends FetchingService {
-  #channelsItems;
-  #filteredChannelsItems; // New filtered channels array
-  #allChannels; // New filtered channels array
+  channelsItems;
+  filteredChannelsItems; // New filtered channels array
+  allChannels; // New filtered channels array
 
-  #epgs = [];
-  #epgsAll = [];
-  #pointer = 1;
+  epgs = [];
+  epgsAll = [];
+  pointer = 1;
   stripesFetched = 0;
-  #genreItems = [];
+  genreItems = [];
   startTime = Infinity;
   endTime = -Infinity;
   loading = false;
 
   async initialFetch() {
     // Reset state variables to ensure a fresh start
-    this.#channelsItems = null;
-    this.#filteredChannelsItems = null; // Reset filtered channels
-    this.#epgs = [];
-    this.#pointer = 1;
+    this.channelsItems = null;
+    this.filteredChannelsItems = null; // Reset filtered channels
+    this.epgs = [];
+    this.pointer = 1;
     this.stripesFetched = 0;
-    this.#genreItems = [];
+    this.genreItems = [];
 
     const getGenres = await this.#getContent();
-    this.#genreItems = getGenres;
+    this.genreItems = getGenres;
 
     // const channels = await this.#getLiveChannels();
     const channels = await this.#getGenresCategory('all');
 
     if (channels?.length > 0) {
-      this.#channelsItems = channels;
+      this.channelsItems = channels;
 
-      const channelsEPGs = this.#channelsItems.slice(0, EPG_ROWS_PER_FETCH).map((channel) => {
+      const channelsEPGs = this.channelsItems.slice(0, EPG_ROWS_PER_FETCH).map((channel) => {
         return this.#getEPG(channel.id);
       });
 
       const epgResults = await Promise.all(channelsEPGs);
 
-      this.#epgs.push(
+      this.epgs.push(
         ...epgResults.map((result, index) => {
           return {
             ...result,
-            channelIcon: this.#channelsItems[index].icon,
-            channelTitle: this.#channelsItems[index].title,
+            channelIcon: this.channelsItems[index].icon,
+            channelTitle: this.channelsItems[index].title,
           };
         })
       );
 
-      const channelsEPGsAll = this.#channelsItems.slice(0, EPG_ROWS_PER_FETCH).map((channel) => {
+      const channelsEPGsAll = this.channelsItems.slice(0, EPG_ROWS_PER_FETCH).map((channel) => {
         return this.#getEPG(channel.id);
       });
 
       const epgResultsAll = await Promise.all(channelsEPGsAll);
 
-      this.#epgsAll.push(
+      this.epgsAll.push(
         ...epgResultsAll.map((result, index) => {
           return {
             ...result,
-            channelIcon: this.#channelsItems[index].icon,
-            channelTitle: this.#channelsItems[index].title,
+            channelIcon: this.channelsItems[index].icon,
+            channelTitle: this.channelsItems[index].title,
           };
         })
       );
 
-      this.#allChannels = this.#channelsItems.map((channel) => channel.id);
+      this.allChannels = this.channelsItems.map((channel) => channel.id);
 
-      this.#filteredChannelsItems = this.#channelsItems;
+      this.filteredChannelsItems = this.channelsItems;
 
       this.reCalculateEpgContainer();
 
-      this.#pointer++;
-      this.stripesFetched = this.#epgs.length;
+      this.pointer++;
+      this.stripesFetched = this.epgs.length;
     }
   }
 
   async fetchMoreEPGs() {
     this.loading = true;
-    const channelsEPGs = this.#filteredChannelsItems.slice(
-      (this.#pointer - 1) * EPG_ROWS_PER_FETCH,
-      this.#pointer * EPG_ROWS_PER_FETCH
+    console.log('Fetch More Loading', this.pointer);
+    console.log('Fetch More Loading', this.filteredChannelsItems);
+    const channelsEPGs = this.filteredChannelsItems.slice(
+      (this.pointer - 1) * EPG_ROWS_PER_FETCH,
+      this.pointer * EPG_ROWS_PER_FETCH
     );
+
+    console.log('Fetch More Channels: ', channelsEPGs);
 
     const channelEPG = channelsEPGs.map(async (channel) => {
       return this.#getEPG(channel.id);
     });
 
+
+    console.log('Fetch More Promises: ', channelEPG);
+
     const epgResults = await Promise.all(channelEPG);
 
-    this.#epgs.push(...epgResults);
-    this.#pointer++;
+    console.log('Fetch More EPGs: ', epgResults)
+
+    this.epgs.push(...epgResults);
+    this.pointer++;
     this.stripesFetched += epgResults.length;
 
     this.reCalculateEpgContainer();
@@ -105,12 +114,12 @@ class EPGService extends FetchingService {
   }
 
   async fetchCategoryType(type) {
-    this.#pointer = 2;
+    this.pointer = 2;
     this.stripesFetched = 5;
     const fetchedResult = await this.#getGenresCategory(type);
 
     const channels = fetchedResult.map((channel) => channel.id);
-    this.#allChannels = channels;
+    this.allChannels = channels;
 
     const firstFiveChannels = channels.slice(0, EPG_ROWS_PER_FETCH);
 
@@ -127,9 +136,9 @@ class EPGService extends FetchingService {
 
     const epgResults = await Promise.all(channelEPG);
 
-    this.#epgs = [...epgResults];
+    this.epgs = [...epgResults];
 
-    this.#filteredChannelsItems = this.#channelsItems.filter((channel) =>
+    this.filteredChannelsItems = this.channelsItems.filter((channel) =>
       channels.includes(channel.id)
     );
 
@@ -137,7 +146,7 @@ class EPGService extends FetchingService {
   }
 
   reCalculateEpgContainer = () => {
-    const { start, end } = this.#epgsAll.reduce(
+    const { start, end } = this.epgsAll.reduce(
       (acc, epg) => {
         const endTimeMS = new Date(epg.items[epg.items.length - 1].extensions.end_time).getTime();
         const startTimeMS = new Date(epg.items[0].extensions.start_time).getTime();
@@ -160,15 +169,15 @@ class EPGService extends FetchingService {
   async getAllChannels() {
     const channelIdsInEPG = this.allChannels;
 
-    return this.#filteredChannelsItems.filter((channel) => {
+    return this.filteredChannelsItems.filter((channel) => {
       return channelIdsInEPG.includes(channel.id);
     });
   }
 
   async getFilteredChannels() {
     // Filter channels in filteredChannelsItems that have IDs present in allChannelIds
-    return this.#filteredChannelsItems.filter((channel) => {
-      return this.#allChannels.includes(channel.id);
+    return this.filteredChannelsItems.filter((channel) => {
+      return this.allChannels.includes(channel.id);
     });
   }
 
@@ -176,7 +185,7 @@ class EPGService extends FetchingService {
    * @returns {boolean} - 'true' if we can fetch more stripes
    */
   get hasMore() {
-    return this.stripesFetched < this.#channelsItems.length;
+    return this.stripesFetched < this.channelsItems.length;
   }
 
   #getContent = async () => {
@@ -204,13 +213,6 @@ class EPGService extends FetchingService {
         exclude: 'channel',
       },
     }).then(this.#parseLiveChannelsData);
-
-  // #getLiveChannels = async () =>
-  //   this._request({
-  //     url: '/epg_channels',
-  //     apiVersion: V2,
-  //     method: 'GET',
-  //   }).then(this.#parseLiveChannelsData);
 
   #parseLiveChannelsData({ data }) {
     return data.entry.map((channel) => ({
@@ -270,23 +272,27 @@ class EPGService extends FetchingService {
   }
 
   get epgs() {
-    return this.#epgs;
+    return this.epgs;
   }
 
   get genreItems() {
-    return this.#genreItems;
+    return this.genreItems;
   }
 
   get channelsItems() {
-    return this.#channelsItems;
+    return this.channelsItems;
+  }
+
+  get pointer() {
+    return this.pointer;
   }
 
   get filteredChannelsItems() {
-    return this.#filteredChannelsItems;
+    return this.filteredChannelsItems;
   }
 
   get allChannels() {
-    return this.#allChannels;
+    return this.allChannels;
   }
 }
 const epgService = new EPGService();

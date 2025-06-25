@@ -128,30 +128,33 @@ export default class LiveTV extends Lightning.Component {
   }
 
   $updateChannelInfo(matchingEntry, channelInfo, channelImage) {
-    channelImage = EPGService.filteredChannelsItems[this.tag('EPGData')._focusedIndex];
+    channelImage = EPGService.filteredChannelsItems[this._EPGData._focusedIndex];
 
     if (channelImage === undefined) {
-      this.tag('EPGData')._focusedIndex = 0;
+      this._EPGData._focusedIndex = 0;
     }
 
-    channelImage = EPGService.filteredChannelsItems[this.tag('EPGData')._focusedIndex];
+    channelImage = EPGService.filteredChannelsItems[this._EPGData._focusedIndex];
 
-    this.tag('Column').props = {
+    this._Column.props = {
       ...matchingEntry,
       channelInfo: channelInfo,
-      channelImage: EPGService.filteredChannelsItems[this.tag('EPGData')._focusedIndex],
+      channelImage: EPGService.filteredChannelsItems[this._EPGData._focusedIndex],
     };
   }
 
   $slideTimeSlot(x) {
-    this.tag('TimeSlot')._setScrollPosition(x);
-    this.tag('EPGChannels.Flag').patch({
-      x: x + ((new Date().getTime() - EPGService.startTime) / (1000 * 60)) * 8.33 + 10,
-    });
-
+    this._TimeSlot._setScrollPosition(x);
     const percent = -x / (((EPGService.endTime - EPGService.startTime) / (1000 * 60)) * 8.33);
-    this.tag('EPGChannels.ProgressScroll.Progress').patch({
-      x: clamp(percent * 1615, 0, 1435),
+    this._EPGChannels.patch({
+      Flag: {
+        x: x + ((new Date().getTime() - EPGService.startTime) / (1000 * 60)) * 8.33 + 10,
+      },
+      ProgressScroll: {
+        Progress: {
+          x: clamp(percent * 1615, 0, 1435),
+        }
+      }
     });
   }
 
@@ -232,9 +235,8 @@ export default class LiveTV extends Lightning.Component {
     this._props.lastId = id; // Save the lastId
 
     // Example of using lastId
-    this._EPGChannels
-      .tag('EPGData')
-      .Items.children[this.tag('EPGData')._focusedIndex].Items.children[0]._selectButton(
+    this._EPGData
+      .Items.children[this._EPGData._focusedIndex].Items.children[0]._selectButton(
         id,
         lastId
       );
@@ -263,11 +265,11 @@ export default class LiveTV extends Lightning.Component {
         };
       });
 
-      this.tag('TimeSlot').props = {
+      this._TimeSlot.props = {
         items: hourss,
       };
 
-      this.tag('EPGData').setInitialOffset();
+      this._EPGData.setInitialOffset();
     });
   }
 
@@ -281,14 +283,14 @@ export default class LiveTV extends Lightning.Component {
   }
 
   $updateChannel(singleChannel) {
-    this.tag('Column.LiveSection.Player')._changeChannel(singleChannel);
+    this._LiveSectionPlayer._changeChannel(singleChannel);
   }
 
   async $updateChannels(val) {
     await EPGService.fetchCategoryType(val.itemInfo.id);
     const result = await this.createTimeArray(EPGService.startTime, EPGService.endTime);
     const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
-    this.tag('TimeSlot').props = {
+    this._TimeSlot.props = {
       items: [],
     };
     const hourss = result.timeArray.map((hour, index) => {
@@ -308,12 +310,12 @@ export default class LiveTV extends Lightning.Component {
       };
     });
 
-    this.tag('TimeSlot').props = {
+    this._TimeSlot.props = {
       items: hourss,
     };
 
     const filteredChannels = await EPGService.getFilteredChannels();
-    this.tag('EPGData')._clear();
+    this._EPGData._clear();
     const channels = filteredChannels
       .map((channelInfo, index) => {
         if (!channelInfo) {
@@ -324,7 +326,7 @@ export default class LiveTV extends Lightning.Component {
         const matchingEpg = EPGService.epgs.find((epgInfo) => epgInfo.channelId === channelInfo.id);
 
         const rails = constructRails(matchingEpg);
-        this.tag('EPGData')._appendItems(rails);
+        this._EPGData._appendItems(rails);
         return {
           type: LiveChannelRailItem,
           channelInfo: channelInfo,
@@ -343,11 +345,21 @@ export default class LiveTV extends Lightning.Component {
       items: channels,
     };
 
-    this.tag('EPGData').setInitialOffset();
+    this._EPGData.setInitialOffset();
   }
 
   get id() {
     return 'LiveTV';
+  }
+
+  get _Column() {
+    return this.tag('Column');
+  }
+  get _Flag() {
+    return this.tag('EPGChannels.Flag')
+  }
+  get ProgressBar() {
+    return this.tag('EPGChannels.ProgressScroll.Progress');
   }
 
   get _Wrapper() {
@@ -362,8 +374,20 @@ export default class LiveTV extends Lightning.Component {
     return this.tag('EPGChannels');
   }
 
+  get _EPGData() {
+    return this.tag('EPGData');
+  }
+
   get _Channels() {
     return this.tag('Channels');
+  }
+
+  get _TimeSlot() {
+    return this.tag('TimeSlot');
+  }
+
+  get _LiveSectionPlayer() {
+    return this.tag('Column.LiveSection.Player');
   }
 
   $updateVerticalState(nextState) {
@@ -394,7 +418,7 @@ export default class LiveTV extends Lightning.Component {
           ) {
             const newStripes = await EPGService.fetchMoreEPGs();
             const rails = constructRails(newStripes);
-            this.tag('EPGData')._appendItems(rails);
+            this._EPGData._appendItems(rails);
           }
         }
       },
@@ -417,7 +441,7 @@ export default class LiveTV extends Lightning.Component {
 
       class EPGS extends this {
         _getFocused() {
-          return this.tag('EPGData');
+          return this._EPGData;
         }
 
         _handleUp() {
@@ -431,12 +455,12 @@ export default class LiveTV extends Lightning.Component {
             console.log('newStripes', newStripes);
             const rails = constructRails(newStripes.results);
 
-            this.tag('EPGData')._appendItems(rails);
+            this._EPGData._appendItems(rails);
 
-            this.tag('EPGData').setInitialOffset(startAt, newStripes.length);
+            this._EPGData.setInitialOffset(startAt, newStripes.length);
           }
 
-          this._Channels.Items.y = this.tag('EPGData').Items.y;
+          this._Channels.Items.y = this._EPGData.Items.y;
           this._Channels._focusedIndex = index;
         }
       },
