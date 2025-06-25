@@ -69,7 +69,6 @@ export default class LiveTV extends Lightning.Component {
               w: 1615,
             },
           },
-
           Flag: {
             flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
             Now: {
@@ -107,7 +106,6 @@ export default class LiveTV extends Lightning.Component {
               zIndex: 100,
             },
           },
-
           ProgressScroll: {
             rect: true,
             color: Colors('#D9D9D9').alpha(0.2).get(),
