@@ -14,7 +14,7 @@ const fetchChannels = async (page) => {
     await EPGService.initialFetch();
     const categoryRails = constructRails(EPGService.genreItems);
 
-    page.tag('EPGData')._clear();
+    page._EPGData._clear();
 
     const channelsAll = EPGService.channelsItems
       .map((channelInfo, index) => {
@@ -28,7 +28,7 @@ const fetchChannels = async (page) => {
         });
         const rails = constructRails(matchingEpg);
 
-        page.tag('EPGData')._appendItems(rails);
+        page._EPGData._appendItems(rails);
         return {
           type: LiveChannelRailItem,
           channelInfo: channelInfo,
@@ -43,7 +43,7 @@ const fetchChannels = async (page) => {
       })
       .filter((channel) => channel !== null);
 
-    page.tag('Categories').props = {
+    page._Categories.props = {
       items: categoryRails,
     };
 
@@ -54,5 +54,5 @@ const fetchChannels = async (page) => {
 };
 export default async function (page) {
   await fetchChannels(page);
-  page.tag('EPGData').setInitialOffset();
+  page._EPGData.setInitialOffset();
 }
