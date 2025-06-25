@@ -147,8 +147,10 @@ export default class PlayerButtons extends lng.Component {
   _handleUnhover() {
     const { buttonInfo } = this._props;
     this.fireAncestors('$setState', 'Controls');
-    (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') && this.fireAncestors('$horizontalPosterIndexChange', 1);
-    (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') && this.parent.children[1]._focus();
+    if (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') {
+      this.fireAncestors('$horizontalPosterIndexChange', 1);
+      this.parent.children[1]._focus();
+    }
     (buttonInfo.label !== 'pause') && this._unfocus();
   }
 
