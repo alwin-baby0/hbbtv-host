@@ -10,7 +10,7 @@ import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
-
+import colors from '../../../reskin/colors.json';
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -77,7 +77,7 @@ export default class LiveTV extends Lightning.Component {
               w: 80,
               h: 35,
               rect: true,
-              color: Colors('#E01D21').get(),
+              color: Colors(colors.focusEpg).get(),
               shader: {
                 type: lng.shaders.RoundedRectangle,
                 radius: 18,
@@ -101,7 +101,7 @@ export default class LiveTV extends Lightning.Component {
             NowLine: {
               x: -40,
               rect: true,
-              color: Colors('#E01D21').get(),
+              color: Colors(colors.focusEpg).get(),
               h: 400,
               w: 5,
               zIndex: 100,
@@ -153,8 +153,8 @@ export default class LiveTV extends Lightning.Component {
       ProgressScroll: {
         Progress: {
           x: clamp(percent * 1615, 0, 1435),
-        }
-      }
+        },
+      },
     });
   }
 
@@ -235,11 +235,10 @@ export default class LiveTV extends Lightning.Component {
     this._props.lastId = id; // Save the lastId
 
     // Example of using lastId
-    this._EPGData
-      .Items.children[this._EPGData._focusedIndex].Items.children[0]._selectButton(
-        id,
-        lastId
-      );
+    this._EPGData.Items.children[this._EPGData._focusedIndex].Items.children[0]._selectButton(
+      id,
+      lastId
+    );
   }
 
   _active() {
@@ -356,7 +355,7 @@ export default class LiveTV extends Lightning.Component {
     return this.tag('Column');
   }
   get _Flag() {
-    return this.tag('EPGChannels.Flag')
+    return this.tag('EPGChannels.Flag');
   }
   get ProgressBar() {
     return this.tag('EPGChannels.ProgressScroll.Progress');
@@ -391,7 +390,6 @@ export default class LiveTV extends Lightning.Component {
   }
 
   $updateVerticalState(nextState) {
-    console.log('nextState', nextState);
     this._setState(nextState);
   }
 
@@ -452,7 +450,6 @@ export default class LiveTV extends Lightning.Component {
           if (EPGService.hasMore && !EPGService.loading && EPGService.stripesFetched - 3 <= index) {
             const startAt = EPGService.stripesFetched;
             const newStripes = await EPGService.fetchMoreEPGs();
-            console.log('newStripes', newStripes);
             const rails = constructRails(newStripes.results);
 
             this._EPGData._appendItems(rails);

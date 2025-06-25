@@ -99,6 +99,7 @@ export default class VerticalContainer extends Lightning.Component {
 
   handleDownEPG = this.throttle(() => {
     const { items } = this._props;
+
     if (this._focusedIndex < items.length - 1) {
       this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
       this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
@@ -109,9 +110,6 @@ export default class VerticalContainer extends Lightning.Component {
     }
     return true;
   }, 50);
-
-  _handleClick() {
-  }
 
   _handleScroll(event) {
     if (this.hasFocus()) {
