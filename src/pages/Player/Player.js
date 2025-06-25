@@ -32,6 +32,7 @@ export default class Player extends lng.Component {
   _selectedTranslationIndex = 0;
   _videoSkipTimeSum = 0;
   _debouncePlayVideoId;
+  _hoverInterval;
 
   static _template() {
     return {
@@ -62,6 +63,7 @@ export default class Player extends lng.Component {
         h: 100,
         y: 750,
         w: 1690,
+        collision: true,
         visible: false,
         ControlsWrapper: {
           w: 1690,
@@ -323,6 +325,7 @@ export default class Player extends lng.Component {
     super._disable();
     clearTimeout(this._hideWrapperTimeout);
     clearInterval(this._progressInterval);
+    clearInterval(this._hoverInterval);
     if (this._adMonitoringInterval) {
       clearInterval(this._adMonitoringInterval);
     }
@@ -346,6 +349,7 @@ export default class Player extends lng.Component {
     this._hideWrapper();
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
+    clearInterval(this._hoverInterval);
     VideoPlayer.close();
   }
 
@@ -610,6 +614,25 @@ export default class Player extends lng.Component {
     }
   }
 
+  _handleHover(target) {
+    if (target.ref && target.ref !== 'Wrapper') {
+      return true;
+    } else if (target.ref === 'Wrapper') {
+      console.warn('asds', target.ref)
+      clearTimeout(this._hideWrapperTimeout);
+      return true
+    }
+  }
+
+  _handleUnhover(target) {
+    console.log('asdf out', target)
+    if (target.ref === 'Wrapper') {
+      this._hideWrapperDebounce()
+    }
+    return true
+
+  }
+
   _skipVideo(forward) {
     if (!this._props.isAdVisible) {
       if (forward) {
@@ -706,6 +729,7 @@ export default class Player extends lng.Component {
 
     clearInterval(this._progressInterval);
     clearInterval(this._progressAdInterval);
+    clearInterval(this._hoverInterval);
     this._adStarted = false;
     this._currentAdTime = 1;
     this.patch({
@@ -849,12 +873,16 @@ export default class Player extends lng.Component {
         }
       }
       clearTimeout(this._hideWrapperTimeout);
-      this._hideWrapperTimeout = setTimeout(() => {
-        if (this._getState() !== 'Subtitles') {
-          this._hideWrapper();
-        }
-      }, 5000);
+      this._hideWrapperDebounce()
     }
+  }
+
+  _hideWrapperDebounce() {
+    this._hideWrapperTimeout = setTimeout(() => {
+      if (this._getState() !== 'Subtitles') {
+        this._hideWrapper();
+      }
+    }, 5000);
   }
 
   _hideWrapper() {
@@ -1019,6 +1047,11 @@ export default class Player extends lng.Component {
 
   static _states() {
     return [
+      class Wrapper extends this {
+        _handleHover() {
+          console.warn('asdf')
+        }
+      },
       class Controls extends this {
         _getFocused() {
           return this._Controls;
