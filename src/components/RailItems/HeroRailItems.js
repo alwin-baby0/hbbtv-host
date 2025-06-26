@@ -100,7 +100,6 @@ export default class HeroRailItem extends FocusableItem {
   _handleHover() {
     Router.focusPage();
     const { index, url } = this._props;
-    console.log('herorRAil hovers');
 
     this.fireAncestors('$horizontalPosterIndexChange', index);
     super._focus();

@@ -1,4 +1,4 @@
-import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Gallery from '../../components/Gallery/Gallery';
@@ -203,7 +203,6 @@ export default class Home extends Lightning.Component {
             this._HeroSection?.patch({ visible: false });
             this._Wrapper.patch({ y: 0 });
           } else {
-            // this._HeroSection?.patch({ visible: true, y: 980 });
             this._HeroSection?.patch({ visible: true, y: 1080 });
             this._Wrapper.patch({ y: 0 });
           }
