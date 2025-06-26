@@ -618,14 +618,12 @@ export default class Player extends lng.Component {
     if (target.ref && target.ref !== 'Wrapper') {
       return true;
     } else if (target.ref === 'Wrapper') {
-      console.warn('asds', target.ref)
       clearTimeout(this._hideWrapperTimeout);
       return true
     }
   }
 
   _handleUnhover(target) {
-    console.log('asdf out', target)
     if (target.ref === 'Wrapper') {
       this._hideWrapperDebounce()
     }
