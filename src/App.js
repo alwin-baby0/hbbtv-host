@@ -1,5 +1,4 @@
-import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import Lightning from '@lightningjs/sdk/src/Lightning';
+import { Colors, Router, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import routes from './pages/routes';
 import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';

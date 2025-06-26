@@ -105,8 +105,6 @@ export default class MemberTabButton extends Lightning.Component {
   }
 
   _handleHover() {
-    console.log('hoverovan memb tab bat', this._tabIndex);
-
     this.tag('Column').patch({
       color: Colors(colors.focus).get(),
     });

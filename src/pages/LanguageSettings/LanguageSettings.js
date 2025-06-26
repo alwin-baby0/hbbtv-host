@@ -32,7 +32,6 @@ export default class LanguageSettings extends Lightning.Component {
         h: 920,
         x: 480,
         y: 225,
-        // clipping: true,
         CMPContainer: {
           w: 1310,
           h: 920,
@@ -105,8 +104,6 @@ export default class LanguageSettings extends Lightning.Component {
       const cmpTitle = CMPService.cmpData?.title;
       const cmpDescription = CMPService.cmpData?.description;
 
-      console.log('cmpdatabtns', buttonsResult);
-
       const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
         return {
           type: Button,
@@ -119,7 +116,6 @@ export default class LanguageSettings extends Lightning.Component {
             width: 1050,
             height: 72,
             buttonLabel: value.label,
-            //buttonLabel: Language.translate(value.label),
             buttonIcon: '',
             strokeWidth: 1.5,
             borderColor: '#696969',
@@ -145,7 +141,6 @@ export default class LanguageSettings extends Lightning.Component {
             w: 1000,
             h: 50,
             text: {
-              // text: 'We value you privacy',
               text: cmpTitle,
               fontSize: 40,
               fontFace: 'Montserrat-Bold',
@@ -158,7 +153,6 @@ export default class LanguageSettings extends Lightning.Component {
             h: 100,
             y: 30,
             text: {
-              // text: 'We use cookies to enhance browsing experience. By clicking “Yes” you consent to our use of cookies. You can customize your consent preferences by clicking “Customize”',
               text: cmpDescription,
               fontSize: 24,
               fontFace: 'Montserrat-Regular',
@@ -178,10 +172,7 @@ export default class LanguageSettings extends Lightning.Component {
           },
         },
       });
-
-      // console.log('b8tt', buttonsResult);
     } else if (contentId === 1) {
-      console.log(this._props);
       const { languages } = this._props.languagesData;
       const languagesArr = languages.split(',');
 
@@ -211,10 +202,6 @@ export default class LanguageSettings extends Lightning.Component {
       });
     }
   }
-
-  /* _getFocused() {
-    return this.tag('Wrapper.Column');
-  } */
 
   $setStateOnHover(nextState) {
     this._setState(nextState);
