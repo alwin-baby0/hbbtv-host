@@ -139,7 +139,7 @@ export default class Player extends lng.Component {
         rect: true,
         visible: false,
         color: Colors('#1B1C23').get(),
-        zIndex: 5,
+        zIndex: 6,
         Title: {
           x: 50,
           y: 70,
