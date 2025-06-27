@@ -32,7 +32,10 @@ export default class Player extends lng.Component {
   _selectedTranslationIndex = 0;
   _videoSkipTimeSum = 0;
   _debouncePlayVideoId;
-  _hoverInterval;
+  _debounceVideoStart;
+  _debounceVideoPause;
+  _isSkipping = false;
+  _isPaused = false;
 
   static _template() {
     return {
@@ -325,7 +328,6 @@ export default class Player extends lng.Component {
     super._disable();
     clearTimeout(this._hideWrapperTimeout);
     clearInterval(this._progressInterval);
-    clearInterval(this._hoverInterval);
     if (this._adMonitoringInterval) {
       clearInterval(this._adMonitoringInterval);
     }
@@ -349,7 +351,6 @@ export default class Player extends lng.Component {
     this._hideWrapper();
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
-    clearInterval(this._hoverInterval);
     VideoPlayer.close();
   }
 
@@ -633,6 +634,7 @@ export default class Player extends lng.Component {
 
   _skipVideo(forward) {
     if (!this._props.isAdVisible) {
+      this._isSkipping = true;
       if (forward) {
         this._videoSkipTimeSum += 20;
       } else {
@@ -681,9 +683,9 @@ export default class Player extends lng.Component {
 
   debouncePlayVideo = () => {
     this._debouncePlayVideoId ?? clearTimeout(this._debouncePlayVideoId);
+    this._debouncePlayVideoId = undefined;
     this._debouncePlayVideoId = setTimeout(() => {
       VideoPlayer.play();
-      this._debouncePlayVideoId = undefined;
     }, 500);
   };
 
@@ -727,7 +729,6 @@ export default class Player extends lng.Component {
 
     clearInterval(this._progressInterval);
     clearInterval(this._progressAdInterval);
-    clearInterval(this._hoverInterval);
     this._adStarted = false;
     this._currentAdTime = 1;
     this.patch({
@@ -786,51 +787,51 @@ export default class Player extends lng.Component {
   }
 
   $playVideo() {
-    const { pausedItemId } = this._props;
+    if (!this._isSkipping && this._isPaused) {
+      const { pausedItemId } = this._props;
 
-    this.$hideSbutitles();
+      this.$hideSbutitles();
 
-    if (!this._props.isAdVisible) {
-      VideoPlayer.play();
+      clearTimeout(this._debounceVideoPause);
+      if (!this._props.isAdVisible) {
+        VideoPlayer.play();
+      }
+
+      this._Controls.Items.children[pausedItemId]._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
+      });
+
+      this._isPaused = false;
     }
-
-    this._Controls.Items.children[pausedItemId]._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
-    });
   }
 
   $pauseVideo() {
-    const { pausedItemId } = this._props;
+    if (!this._isSkipping && !this._isPaused) {
+      const { pausedItemId } = this._props;
 
-    eventTrackPayload('video_pause', this._props.videoId);
-    this.$hideSbutitles();
+      clearTimeout(this._debounceVideoPause);
+      this._debounceVideoPause = setTimeout(() => {
+        eventTrackPayload('video_pause', this._props.videoId);
+      }, 500);
 
-    if (!this._props.isAdVisible) {
-      VideoPlayer.pause();
-    }
+      this.$hideSbutitles();
 
-    if (parseFloat(VideoPlayer.duration) > 300) {
-      if (this._props.seriesID) {
-        CMPService.addRecentlyWatched(
-          this._props.videoId,
-          'series',
-          VideoPlayer.currentTime,
-          this._props.seriesID
-        );
-      } else {
-        CMPService.addRecentlyWatched(this._props.videoId, 'video', VideoPlayer.currentTime);
+      if (!this._props.isAdVisible) {
+        VideoPlayer.pause();
       }
-    }
 
-    this._Controls.Items.children[pausedItemId]._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
-    });
+      this._Controls.Items.children[pausedItemId]._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
+      });
+
+      this._isPaused = true;
+    }
   }
 
   $startStopVideo(isStopped) {
     this._setState('Controls');
     if (this._Wrapper.visible) {
-      VideoPlayer.pause();
+      VideoPlayer.playing ?? VideoPlayer.pause();
     }
   }
 
@@ -914,7 +915,10 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerPlaying() {
-    eventTrackPayload('video_start', this._props.videoId);
+    clearTimeout(this._debounceVideoStart);
+    this._debounceVideoStart = setTimeout(() => {
+      eventTrackPayload('video_start', this._props.videoId);
+    }, 1000);
   }
 
   $videoPlayerCanPlay() {
@@ -930,6 +934,10 @@ export default class Player extends lng.Component {
     this.closeVideoPlayer();
 
     eventTrackPayload('video_end', this._props.videoId);
+  }
+
+  $videoPlayerSeeked() {
+    this._isSkipping = false;
   }
 
   $videoPlayerLoadedData() {
@@ -1045,11 +1053,6 @@ export default class Player extends lng.Component {
 
   static _states() {
     return [
-      class Wrapper extends this {
-        _handleHover() {
-          console.warn('asdf')
-        }
-      },
       class Controls extends this {
         _getFocused() {
           return this._Controls;
