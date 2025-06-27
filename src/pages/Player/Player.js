@@ -327,6 +327,8 @@ export default class Player extends lng.Component {
   _disable() {
     super._disable();
     clearTimeout(this._hideWrapperTimeout);
+    clearTimeout(this._debounceVideoStart);
+    clearTimeout(this._debounceVideoPause);
     clearInterval(this._progressInterval);
     if (this._adMonitoringInterval) {
       clearInterval(this._adMonitoringInterval);
@@ -351,6 +353,8 @@ export default class Player extends lng.Component {
     this._hideWrapper();
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
+    clearTimeout(this._debounceVideoStart);
+    clearTimeout(this._debounceVideoPause);
     VideoPlayer.close();
   }
 
@@ -642,6 +646,8 @@ export default class Player extends lng.Component {
       }
 
       clearTimeout(this._seekTimeout);
+      clearTimeout(this._debounceVideoStart);
+      clearTimeout(this._debounceVideoPause);
 
       this._seekTimeout = setTimeout(() => {
         this._checkAdCuePointsSeek();
@@ -724,6 +730,8 @@ export default class Player extends lng.Component {
   }
 
   closeVideoPlayer() {
+    clearTimeout(this._debounceVideoStart);
+    clearTimeout(this._debounceVideoPause);
     VideoPlayer.clear();
     VideoPlayer.close();
 
