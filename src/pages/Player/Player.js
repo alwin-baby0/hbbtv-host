@@ -838,9 +838,9 @@ export default class Player extends lng.Component {
 
   $startStopVideo(isStopped) {
     this._setState('Controls');
-    if (this._Wrapper.visible) {
-      VideoPlayer.playing ?? VideoPlayer.pause();
-    }
+    // if (this._Wrapper.visible) {
+    //   VideoPlayer.playing ?? VideoPlayer.pause();
+    // }
   }
 
   _updateProgressBar() {
