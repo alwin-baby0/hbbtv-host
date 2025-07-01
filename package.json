@@ -36,7 +36,7 @@
     "@lightningjs/ui": "^1.3.11",
     "@lightningjs/ui-components": "^2.19.6",
     "axios": "^1.4.0",
-    "hls.js": "^1.5.8",
+    "hls.js": "^1.6.5",
     "qrcode": "^1.5.3",
     "shaka-player": "^4.10.3",
     "srt-parser-2": "^1.2.3",

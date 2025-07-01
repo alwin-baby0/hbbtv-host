@@ -22,6 +22,7 @@ const createPlayer = (options) => {
       liveBackBufferLength: 30,
       enableWorker: false,
       maxBufferLength: 30,
+      backBufferLength: 30,
       ...options,
     });
   }

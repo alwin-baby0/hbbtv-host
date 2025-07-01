@@ -1,11 +1,12 @@
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import { Column, ProgressBar } from '@lightningjs/ui-components';
+import { Column } from '@lightningjs/ui-components';
 import { getPlayer, loader, unloader } from '../../components/Player/HLS';
 import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
+import ProgressBar from './components/ProgressBar/ProgressBar';
 import { CMPService, parseTranslations } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import {
@@ -31,8 +32,12 @@ export default class Player extends lng.Component {
   _currentAdTime = 1;
   _selectedTranslationIndex = 0;
   _videoSkipTimeSum = 0;
+  _progressInterval = null;
   _debouncePlayVideoId;
-  _hoverInterval;
+  _debounceVideoStart;
+  _debounceVideoPause;
+  _isSkipping = false;
+  _isPaused = false;
 
   static _template() {
     return {
@@ -106,10 +111,13 @@ export default class Player extends lng.Component {
           },
           ProgressBar: {
             type: ProgressBar,
-            w: 1400,
-            flexItem: {
-              marginLeft: 20,
-              marginRight: 20,
+            props: {
+              width: 1400,
+              height: 10,
+              flexItem: {
+                marginLeft: 20,
+                marginRight: 20,
+              },
             },
           },
           EndTime: {
@@ -248,15 +256,15 @@ export default class Player extends lng.Component {
     const focusedColor = Colors(colors.focus).get();
     const margin = isLive ? 0 : 20;
     this.tag('ProgressBar').patch({
-      w: isLive ? 1550 : 1400,
       x: 0,
       flexItem: {
         marginLeft: margin,
         marginRight: margin,
       },
-      style: {
+      props: {
+        width: isLive ? 1550 : 1400,
         progressColor: focusedColor,
-        barColor: isLive ? focusedColor : undefined,
+        backgroundBarColor: isLive ? focusedColor : colors.unfocus,
       },
     });
 
@@ -324,8 +332,9 @@ export default class Player extends lng.Component {
   _disable() {
     super._disable();
     clearTimeout(this._hideWrapperTimeout);
+    clearTimeout(this._debounceVideoStart);
+    clearTimeout(this._debounceVideoPause);
     clearInterval(this._progressInterval);
-    clearInterval(this._hoverInterval);
     if (this._adMonitoringInterval) {
       clearInterval(this._adMonitoringInterval);
     }
@@ -335,7 +344,7 @@ export default class Player extends lng.Component {
     VideoPlayer.close();
 
     this.fireAncestors('$unpunchHole');
-    this.tag('ProgressBar').progress = 0;
+    this.tag('ProgressBar')._progress(0);
     this._props.isAdVisible = false;
     this._adStarted = false;
     this._currentAdTime = 1;
@@ -349,7 +358,8 @@ export default class Player extends lng.Component {
     this._hideWrapper();
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
-    clearInterval(this._hoverInterval);
+    clearTimeout(this._debounceVideoStart);
+    clearTimeout(this._debounceVideoPause);
     VideoPlayer.close();
   }
 
@@ -370,7 +380,7 @@ export default class Player extends lng.Component {
   _updateProgressBarAd(duration, adIndex, adsLength) {
     if (this.tag('Spinner').visible) return;
     const progress = (this._currentAdTime + 1) / duration;
-    this.tag('ProgressBarAd').progress = progress;
+    this.tag('ProgressBarAd')._progress(progress);
 
     this.tag('AdNumber.Text').text = 'Ad ' + adIndex + ' of ' + adsLength;
 
@@ -428,8 +438,10 @@ export default class Player extends lng.Component {
                       type: ProgressBar,
                       x: 20,
                       y: 1000,
-                      w: 1880,
-                      h: 10,
+                      props: {
+                        width: 1880,
+                        height: 10,
+                      }
                     },
                     AdIcon: {
                       x: 1835,
@@ -517,11 +529,11 @@ export default class Player extends lng.Component {
                 }
 
                 const progressBarStyle = {
-                  progressColor: Colors(colors.adProgress).get(),
-                  barColor: undefined,
+                  backgroundBarColor: Colors(colors.adProgress).get(),
+                  progressColor: undefined,
                 };
 
-                this.tag('ProgressBarAd').patch({ style: progressBarStyle });
+                this.tag('ProgressBarAd').patch({ props: progressBarStyle });
 
                 if (!this._adStarted) {
                   this._adStarted = true;
@@ -593,7 +605,7 @@ export default class Player extends lng.Component {
     this.patch({
       WrapperAd: undefined,
     });
-    this._setState('ProgressBar');
+    this._setState('Controls');
 
     // Show player controls again or perform any other post-ad actions
   }
@@ -633,6 +645,7 @@ export default class Player extends lng.Component {
 
   _skipVideo(forward) {
     if (!this._props.isAdVisible) {
+      this._isSkipping = true;
       if (forward) {
         this._videoSkipTimeSum += 20;
       } else {
@@ -640,6 +653,8 @@ export default class Player extends lng.Component {
       }
 
       clearTimeout(this._seekTimeout);
+      clearTimeout(this._debounceVideoStart);
+      clearTimeout(this._debounceVideoPause);
 
       this._seekTimeout = setTimeout(() => {
         this._checkAdCuePointsSeek();
@@ -681,9 +696,9 @@ export default class Player extends lng.Component {
 
   debouncePlayVideo = () => {
     this._debouncePlayVideoId ?? clearTimeout(this._debouncePlayVideoId);
+    this._debouncePlayVideoId = undefined;
     this._debouncePlayVideoId = setTimeout(() => {
       VideoPlayer.play();
-      this._debouncePlayVideoId = undefined;
     }, 500);
   };
 
@@ -722,12 +737,13 @@ export default class Player extends lng.Component {
   }
 
   closeVideoPlayer() {
+    clearTimeout(this._debounceVideoStart);
+    clearTimeout(this._debounceVideoPause);
     VideoPlayer.clear();
     VideoPlayer.close();
 
     clearInterval(this._progressInterval);
     clearInterval(this._progressAdInterval);
-    clearInterval(this._hoverInterval);
     this._adStarted = false;
     this._currentAdTime = 1;
     this.patch({
@@ -786,52 +802,49 @@ export default class Player extends lng.Component {
   }
 
   $playVideo() {
-    const { pausedItemId } = this._props;
+    if (!this._isSkipping && this._isPaused) {
+      const { pausedItemId } = this._props;
 
-    this.$hideSbutitles();
+      this.$hideSbutitles();
 
-    if (!this._props.isAdVisible) {
-      VideoPlayer.play();
+      clearTimeout(this._debounceVideoPause);
+      if (!this._props.isAdVisible) {
+        VideoPlayer.play();
+      }
+
+      this._Controls.Items.children[pausedItemId]._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
+      });
+
+      this._isPaused = false;
     }
-
-    this._Controls.Items.children[pausedItemId]._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
-    });
   }
 
   $pauseVideo() {
-    const { pausedItemId } = this._props;
+    if (!this._isSkipping && !this._isPaused) {
+      const { pausedItemId } = this._props;
 
-    eventTrackPayload('video_pause', this._props.videoId);
-    this.$hideSbutitles();
+      clearTimeout(this._debounceVideoPause);
+      this._debounceVideoPause = setTimeout(() => {
+        eventTrackPayload('video_pause', this._props.videoId);
+      }, 500);
 
-    if (!this._props.isAdVisible) {
-      VideoPlayer.pause();
-    }
+      this.$hideSbutitles();
 
-    if (parseFloat(VideoPlayer.duration) > 300) {
-      if (this._props.seriesID) {
-        CMPService.addRecentlyWatched(
-          this._props.videoId,
-          'series',
-          VideoPlayer.currentTime,
-          this._props.seriesID
-        );
-      } else {
-        CMPService.addRecentlyWatched(this._props.videoId, 'video', VideoPlayer.currentTime);
+      if (!this._props.isAdVisible) {
+        VideoPlayer.pause();
       }
-    }
 
-    this._Controls.Items.children[pausedItemId]._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
-    });
+      this._Controls.Items.children[pausedItemId]._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
+      });
+
+      this._isPaused = true;
+    }
   }
 
   $startStopVideo(isStopped) {
     this._setState('Controls');
-    if (this._Wrapper.visible) {
-      VideoPlayer.pause();
-    }
   }
 
   _updateProgressBar() {
@@ -845,10 +858,14 @@ export default class Player extends lng.Component {
       )
     );
     const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
-    this.tag('ProgressBar').progress = progress;
+    this.tag('ProgressBar')._progress(progress);
     if (!isLive) {
       this.tag('CurrentTime.Text').text = formatTimeHMS(currentTime);
     }
+
+    console.log("Is Live: ", isLive);
+    console.log("Current Time: ", currentTime);
+    console.log("Progress: ", progress)
   }
 
   $changeFocusOnControl(val) {
@@ -867,7 +884,9 @@ export default class Player extends lng.Component {
         this._Wrapper.visible = true;
         this._updateProgressBar();
         if (!this._props.isLive) {
-          this._progressInterval = setInterval(() => this._updateProgressBar(), 1000);
+          this._progressInterval = setInterval(() => {
+            this._updateProgressBar();
+          }, 1000);
         }
       }
       clearTimeout(this._hideWrapperTimeout);
@@ -884,7 +903,6 @@ export default class Player extends lng.Component {
   }
 
   _hideWrapper() {
-    this._setState('ProgressBar');
     this._Backdrop.visible = false;
     this._Wrapper.visible = false;
     if (!this._props.isLive) {
@@ -914,7 +932,10 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerPlaying() {
-    eventTrackPayload('video_start', this._props.videoId);
+    clearTimeout(this._debounceVideoStart);
+    this._debounceVideoStart = setTimeout(() => {
+      eventTrackPayload('video_start', this._props.videoId);
+    }, 1000);
   }
 
   $videoPlayerCanPlay() {
@@ -930,6 +951,10 @@ export default class Player extends lng.Component {
     this.closeVideoPlayer();
 
     eventTrackPayload('video_end', this._props.videoId);
+  }
+
+  $videoPlayerSeeked() {
+    this._isSkipping = false;
   }
 
   $videoPlayerLoadedData() {
@@ -1045,11 +1070,6 @@ export default class Player extends lng.Component {
 
   static _states() {
     return [
-      class Wrapper extends this {
-        _handleHover() {
-          console.warn('asdf')
-        }
-      },
       class Controls extends this {
         _getFocused() {
           return this._Controls;
