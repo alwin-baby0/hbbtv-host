@@ -344,7 +344,7 @@ export default class Player extends lng.Component {
     VideoPlayer.close();
 
     this.fireAncestors('$unpunchHole');
-    this.tag('ProgressBar')._progress(0);
+    this.tag('ProgressBar').progress(0);
     this._props.isAdVisible = false;
     this._adStarted = false;
     this._currentAdTime = 1;
@@ -380,7 +380,7 @@ export default class Player extends lng.Component {
   _updateProgressBarAd(duration, adIndex, adsLength) {
     if (this.tag('Spinner').visible) return;
     const progress = (this._currentAdTime + 1) / duration;
-    this.tag('ProgressBarAd')._progress(progress);
+    this.tag('ProgressBarAd').progress(progress);
 
     this.tag('AdNumber.Text').text = 'Ad ' + adIndex + ' of ' + adsLength;
 
@@ -858,7 +858,7 @@ export default class Player extends lng.Component {
       )
     );
     const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
-    this.tag('ProgressBar')._progress(progress);
+    this.tag('ProgressBar').progress(progress);
     if (!isLive) {
       this.tag('CurrentTime.Text').text = formatTimeHMS(currentTime);
     }
