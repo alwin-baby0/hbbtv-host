@@ -336,6 +336,8 @@ export default class SingleMovie extends Lightning.Component {
     this._setState('Buttons');
 
     eventTrackPayload('view_movie', movieId);
+
+    this.fireAncestors('$unpunchHole');
   }
 
   _handleBack(e) {
