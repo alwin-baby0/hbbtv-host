@@ -37,7 +37,6 @@ export default class Player extends lng.Component {
   _debounceVideoStart;
   _debounceVideoPause;
   _isSkipping = false;
-  _isPaused = false;
 
   static _template() {
     return {
@@ -441,7 +440,7 @@ export default class Player extends lng.Component {
                       props: {
                         width: 1880,
                         height: 10,
-                      }
+                      },
                     },
                     AdIcon: {
                       x: 1835,
@@ -631,16 +630,15 @@ export default class Player extends lng.Component {
       return true;
     } else if (target.ref === 'Wrapper') {
       clearTimeout(this._hideWrapperTimeout);
-      return true
+      return true;
     }
   }
 
   _handleUnhover(target) {
     if (target.ref === 'Wrapper') {
-      this._hideWrapperDebounce()
+      this._hideWrapperDebounce();
     }
-    return true
-
+    return true;
   }
 
   _skipVideo(forward) {
@@ -802,7 +800,7 @@ export default class Player extends lng.Component {
   }
 
   $playVideo() {
-    if (!this._isSkipping && this._isPaused) {
+    if (!this._isSkipping && !VideoPlayer.playing) {
       const { pausedItemId } = this._props;
 
       this.$hideSbutitles();
@@ -815,13 +813,11 @@ export default class Player extends lng.Component {
       this._Controls.Items.children[pausedItemId]._Icon.patch({
         texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
       });
-
-      this._isPaused = false;
     }
   }
 
   $pauseVideo() {
-    if (!this._isSkipping && !this._isPaused) {
+    if (!this._isSkipping && VideoPlayer.playing) {
       const { pausedItemId } = this._props;
 
       clearTimeout(this._debounceVideoPause);
@@ -838,8 +834,6 @@ export default class Player extends lng.Component {
       this._Controls.Items.children[pausedItemId]._Icon.patch({
         texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
       });
-
-      this._isPaused = true;
     }
   }
 
@@ -862,10 +856,6 @@ export default class Player extends lng.Component {
     if (!isLive) {
       this.tag('CurrentTime.Text').text = formatTimeHMS(currentTime);
     }
-
-    console.log("Is Live: ", isLive);
-    console.log("Current Time: ", currentTime);
-    console.log("Progress: ", progress)
   }
 
   $changeFocusOnControl(val) {
@@ -890,7 +880,7 @@ export default class Player extends lng.Component {
         }
       }
       clearTimeout(this._hideWrapperTimeout);
-      this._hideWrapperDebounce()
+      this._hideWrapperDebounce();
     }
   }
 
@@ -955,6 +945,12 @@ export default class Player extends lng.Component {
 
   $videoPlayerSeeked() {
     this._isSkipping = false;
+
+    const { pausedItemId } = this._props;
+
+    this._Controls.Items.children[pausedItemId]._Icon.patch({
+      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
+    });
   }
 
   $videoPlayerLoadedData() {
