@@ -198,11 +198,11 @@ export default class SingleMovie extends Lightning.Component {
               text: {
                 text: subtitle,
               },
-            }
+            },
           },
           Image: {
             src: movie.getPortraitPoster(imageSizes.XL)?.src,
-          }
+          },
         },
         CardInfo: {
           AboutMovie: {
@@ -225,10 +225,10 @@ export default class SingleMovie extends Lightning.Component {
               text: {
                 text: cast,
               },
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     });
 
     const buttons = [
@@ -366,7 +366,7 @@ export default class SingleMovie extends Lightning.Component {
       this._Buttons.items[0].items[id].patch({
         props: {
           buttonIcon: Utils.asset(is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: 'FAVORITE',
+          buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite?.toUpperCase(),
           width: 317,
         },
       });
