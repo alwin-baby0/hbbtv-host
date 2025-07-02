@@ -862,10 +862,6 @@ export default class Player extends lng.Component {
     if (!isLive) {
       this.tag('CurrentTime.Text').text = formatTimeHMS(currentTime);
     }
-
-    console.log("Is Live: ", isLive);
-    console.log("Current Time: ", currentTime);
-    console.log("Progress: ", progress)
   }
 
   $changeFocusOnControl(val) {
