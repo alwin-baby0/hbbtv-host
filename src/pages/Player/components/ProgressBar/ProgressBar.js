@@ -42,7 +42,7 @@ export default class ProgressBar extends Lightning.Component {
     });
   }
 
-  _progress(progress) {
+  progress(progress) {
     this._Progress.setSmooth('w', progress * this._props.width);
   }
 
