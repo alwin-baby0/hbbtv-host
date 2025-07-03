@@ -51,7 +51,13 @@ export default class PlayerButtons extends lng.Component {
     const height = buttonInfo.label === 'pause' ? 90 : 66;
     if (buttonInfo.label === 'pause') {
       this._Icon.patch({
-        texture: lng.Tools.getSvgTexture(VideoPlayer.playing ? Utils.asset('/icons/player/commands/pause.svg') : Utils.asset('/icons/player/commands/play.svg'), width, height),
+        texture: lng.Tools.getSvgTexture(
+          VideoPlayer.playing
+            ? Utils.asset('/icons/player/commands/pause.svg')
+            : Utils.asset('/icons/player/commands/play.svg'),
+          width,
+          height
+        ),
       });
     }
   }
@@ -96,14 +102,8 @@ export default class PlayerButtons extends lng.Component {
     const isPlaying = VideoPlayer.playing;
 
     if (isPlaying) {
-      this._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/play.svg'), 60, 60),
-      });
       this.fireAncestors('$pauseVideo');
     } else {
-      this._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/pause.svg'), 60, 60),
-      });
       this.fireAncestors('$playVideo');
     }
   }
@@ -136,8 +136,14 @@ export default class PlayerButtons extends lng.Component {
 
   _handleHover() {
     const { buttonInfo } = this._props;
-    (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') && this.parent.children[1]._unfocus();
-    const state = buttonInfo.label === 'subtitles' ? 'SubtitlesButton' : buttonInfo.label === 'back' ? 'Back' : 'Controls';
+    (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') &&
+      this.parent.children[1]._unfocus();
+    const state =
+      buttonInfo.label === 'subtitles'
+        ? 'SubtitlesButton'
+        : buttonInfo.label === 'back'
+        ? 'Back'
+        : 'Controls';
     console.log('control btns hover');
     this.fireAncestors('$horizontalPosterIndexChange', this.parent.children.indexOf(this));
     this.fireAncestors('$setState', state);
@@ -151,7 +157,7 @@ export default class PlayerButtons extends lng.Component {
       this.fireAncestors('$horizontalPosterIndexChange', 1);
       this.parent.children[1]._focus();
     }
-    (buttonInfo.label !== 'pause') && this._unfocus();
+    buttonInfo.label !== 'pause' && this._unfocus();
   }
 
   _handleClick() {
