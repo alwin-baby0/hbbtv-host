@@ -402,7 +402,6 @@ export default class Player extends lng.Component {
     const currentTime = VideoPlayer.currentTime;
 
     const ssai_params = this._props.ads;
-    console.log('ssai_params: ', ssai_params);
 
     // Check if `ssai` has a `slots` array
     if (ssai_params && Array.isArray(ssai_params.slots)) {
@@ -801,12 +800,19 @@ export default class Player extends lng.Component {
 
   $playVideo() {
     if (!this._isSkipping && !VideoPlayer.playing) {
-      const { pausedItemId } = this._props;
+      const { pausedItemId, isLive } = this._props;
 
       this.$hideSbutitles();
 
       clearTimeout(this._debounceVideoPause);
+
       if (!this._props.isAdVisible) {
+        if (isLive) {
+          VideoPlayer.seek(VideoPlayer.duration);
+          VideoPlayer.play();
+
+          return;
+        }
         VideoPlayer.play();
       }
 
