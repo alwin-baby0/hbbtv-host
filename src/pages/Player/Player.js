@@ -858,7 +858,6 @@ export default class Player extends lng.Component {
       )
     );
     const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
-    console.log(progress);
 
     if (isLive) {
       this.tag('ProgressBar').progress(1);
