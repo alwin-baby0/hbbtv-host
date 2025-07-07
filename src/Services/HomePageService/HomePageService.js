@@ -24,7 +24,6 @@ class HomePageService extends FetchingService {
    */
   async initialFetch() {
     this.#banner = await this.#getBanner();
-    // this.#banner = [];
 
     this.languageTranslations = await this.#getLanguageTranslations();
 
