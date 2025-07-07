@@ -126,6 +126,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   $updateChannelInfo(matchingEntry, channelInfo, channelImage) {
+    this._props.lastId = matchingEntry.id;
     channelImage = EPGService.filteredChannelsItems[this._EPGData._focusedIndex];
 
     if (channelImage === undefined) {
@@ -227,7 +228,7 @@ export default class LiveTV extends Lightning.Component {
     this._setState('Categories');
   }
 
-  $selectedEPG(id, initialLastId) {
+  $selectedEPG(id) {
     const { lastId } = this._props;
     // You can use the lastId as needed here
     this._props.lastId = id; // Save the lastId
@@ -235,7 +236,7 @@ export default class LiveTV extends Lightning.Component {
     // Example of using lastId
     this._EPGData.Items.children[this._EPGData._focusedIndex].Items.children[0]._selectButton(
       id,
-      lastId || initialLastId
+      lastId
     );
   }
 
