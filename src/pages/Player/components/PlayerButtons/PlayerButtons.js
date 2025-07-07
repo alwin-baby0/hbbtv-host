@@ -134,7 +134,6 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _handleHover() {
-    console.log('control btns hover');
     const { buttonInfo } = this._props;
     (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') &&
       this.parent.children[1]._unfocus();
