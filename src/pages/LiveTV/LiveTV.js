@@ -227,7 +227,7 @@ export default class LiveTV extends Lightning.Component {
     this._setState('Categories');
   }
 
-  $selectedEPG(id) {
+  $selectedEPG(id, initialLastId) {
     const { lastId } = this._props;
     // You can use the lastId as needed here
     this._props.lastId = id; // Save the lastId
@@ -235,7 +235,7 @@ export default class LiveTV extends Lightning.Component {
     // Example of using lastId
     this._EPGData.Items.children[this._EPGData._focusedIndex].Items.children[0]._selectButton(
       id,
-      lastId
+      lastId || initialLastId
     );
   }
 

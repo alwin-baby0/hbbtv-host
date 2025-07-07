@@ -843,7 +843,7 @@ export default class Player extends lng.Component {
     }
   }
 
-  $startStopVideo(isStopped) {
+  $startStopVideo() {
     this._setState('Controls');
   }
 
@@ -858,7 +858,14 @@ export default class Player extends lng.Component {
       )
     );
     const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
-    this.tag('ProgressBar').progress(progress);
+    console.log(progress);
+
+    if (isLive) {
+      this.tag('ProgressBar').progress(1);
+    } else {
+      this.tag('ProgressBar').progress(progress);
+    }
+
     if (!isLive) {
       this.tag('CurrentTime.Text').text = formatTimeHMS(currentTime);
     }
