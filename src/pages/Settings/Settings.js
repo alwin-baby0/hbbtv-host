@@ -78,8 +78,6 @@ export default class Settings extends Lightning.Component {
 
   set props(props) {
     this._translations = parseTranslations();
-
-    console.log(props);
     this._props = { ...this._props, ...props };
   }
 

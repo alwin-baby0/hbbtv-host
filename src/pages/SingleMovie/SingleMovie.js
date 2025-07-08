@@ -106,7 +106,6 @@ export default class SingleMovie extends Lightning.Component {
               w: 700,
               y: 50,
               text: {
-                text: 'cast',
                 fontSize: 22,
                 lineHeight: 31,
                 fontFace: 'Montserrat-SemiBold',
@@ -129,6 +128,7 @@ export default class SingleMovie extends Lightning.Component {
       },
     };
   }
+
   get _Category() {
     return this.tag('Category');
   }
@@ -180,6 +180,12 @@ export default class SingleMovie extends Lightning.Component {
 
     this._translations = parseTranslations();
 
+    const splitDirector = director.split(':');
+    const splitCast = cast.split(':');
+
+    const tdirector = t(this._translations, 'director') + ':' + splitDirector[1];
+    const tcast = t(this._translations, 'cast') + ':' + splitCast[1];
+
     this.patch({
       Content: {
         Card: {
@@ -218,12 +224,12 @@ export default class SingleMovie extends Lightning.Component {
             },
             Director: {
               text: {
-                text: director,
+                text: tdirector,
               },
             },
             Cast: {
               text: {
-                text: cast,
+                text: tcast,
               },
             },
           },
