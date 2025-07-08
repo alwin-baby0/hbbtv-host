@@ -1,4 +1,4 @@
-import { Colors, Language, Lightning } from '@lightningjs/sdk';
+import { Colors, Lightning } from '@lightningjs/sdk';
 import { Column } from '@lightningjs/ui-components';
 import colors from '../../../reskin/colors.json';
 
@@ -17,9 +17,6 @@ export default class MemberTabButton extends Lightning.Component {
         Text: {
           w: 230,
           h: 25,
-          // flexItem: {
-          //   marginLeft: 20,
-          // },
           text: {
             textAlign: 'center',
             fontFace: 'Montserrat-Medium',
@@ -53,8 +50,7 @@ export default class MemberTabButton extends Lightning.Component {
 
   _enable() {
     this._Column.patch({
-      // text: { text: this._tabInfoData.title },
-      text: { text: Language.translate(`${this._tabInfoData.title}`) },
+      text: { text: this._tabInfoData.title },
       color: Colors(colors.white).get(),
     });
     this.tag('Column').patch({

@@ -8,7 +8,7 @@ import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
-import defTr from '../../../public/static/translations/en.json';
+import { t } from '../../utils/translation';
 
 export default class Settings extends Lightning.Component {
   _translations;
@@ -78,6 +78,8 @@ export default class Settings extends Lightning.Component {
 
   set props(props) {
     this._translations = parseTranslations();
+
+    console.log(props);
     this._props = { ...this._props, ...props };
   }
 
@@ -208,15 +210,6 @@ export default class Settings extends Lightning.Component {
         const device_code = response.data.device_code;
         const verification_uri = response.data.verification_uri;
 
-        const userLanguageTranslations = this._props.userLanguageTranslations;
-        // console.log(userLanguageTranslations);
-
-        const selectedLanguageCode = localStorage.getItem('languageCode');
-
-        const languageObject = userLanguageTranslations.find(
-          (item) => item.lang === selectedLanguageCode
-        );
-
         window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
 
         if (!localStorage.getItem('userData')) {
@@ -241,7 +234,7 @@ export default class Settings extends Lightning.Component {
                     h: 120,
                     w: 500,
                     text: {
-                      text: this._translations?.signup_title || defTr.signup_title,
+                      text: t(this._translations, 'signup_title'),
                       fontFace: 'Montserrat-Bold',
                       fontSize: 30,
                       lineHeight: 35,
@@ -252,7 +245,7 @@ export default class Settings extends Lightning.Component {
                     h: 300,
                     w: 650,
                     text: {
-                      text: this._translations?.signup_description || defTr.signup_description,
+                      text: t(this._translations, 'signup_description'),
                       fontFace: 'Montserrat-Regular',
                       fontSize: 25,
                       lineHeight: 30,
@@ -283,7 +276,7 @@ export default class Settings extends Lightning.Component {
                       marginTop: 10,
                     },
                     text: {
-                      text: this._translations?.signup_scan || defTr.signup_scan,
+                      text: t(this._translations, 'signup_scan'),
                       fontFace: 'Montserrat-Bold',
                       fontSize: 25,
                       lineHeight: 30,
@@ -296,13 +289,10 @@ export default class Settings extends Lightning.Component {
           });
         } else {
           const recentlyWatched = await CMPService.getRecentlyWatched();
-          // console.log(recentlyWatched.data.recently_watched);
-          // console.log(recentlyWatched.data.recently_watched.length);
 
           const parsedMovies = parseVodUserContentData({
             data: {
-              // railTitle: 'Continue Watching',
-              railTitle: this._translations?.continue_watching || defTr.continue_watching,
+              railTitle: t(this._translations, 'continue_watching'),
               entry: recentlyWatched.data.recently_watched,
             },
             itemsPerRow: recentlyWatched.data.recently_watched.length,
@@ -312,8 +302,7 @@ export default class Settings extends Lightning.Component {
 
           const parsedFavorites = parseVodUserContentData({
             data: {
-              // railTitle: 'Favorites',
-              railTitle: this._translations?.favorites || defTr.favorites,
+              railTitle: t(this._translations, 'favorites'),
               entry: favorites.data.favorites,
             },
             itemsPerRow: favorites.data.favorites.length,
@@ -333,8 +322,7 @@ export default class Settings extends Lightning.Component {
                   h: 120,
                   w: 1310,
                   text: {
-                    // text: languageObject?.loggedInText,
-                    text: this._translations?.logged_in_message || defTr.logged_in_message,
+                    text: t(this._translations, 'logged_in_message'),
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,
@@ -365,8 +353,6 @@ export default class Settings extends Lightning.Component {
         this._props.hasMoreRcw = true;
         this._props.recentlyWPage = 1;
         const recentlyWatched = await CMPService.getRecentlyWatched();
-        console.log(recentlyWatched.data.recently_watched);
-        console.log(recentlyWatched.data.recently_watched.length);
 
         const parsedMovies = parseVodMoviesPageData({
           data: {
@@ -391,7 +377,7 @@ export default class Settings extends Lightning.Component {
         this._props.hasMoreFav = true;
         this._props.favoritesPage = 1;
         const favorites = await CMPService.getFavorites();
-        console.log(favorites.data.favorites);
+
         const parsedMovies = parseVodMoviesPageData({
           data: {
             entry: favorites.data.favorites,
@@ -424,7 +410,6 @@ export default class Settings extends Lightning.Component {
   }
 
   userLoginButtonsUpdate() {
-    //this._props.isLoggedIn = true;
     this.$changeContent(0);
 
     this._Column._appendItems([
@@ -432,8 +417,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 1,
-          // title: 'Continue Watching',
-          title: this._translations?.continue_watching || defTr.continue_watching,
+          title: t(this._translations, 'continue_watching'),
         },
         w: 250,
         h: 100,
@@ -443,8 +427,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 2,
-          // title: 'Favorites',
-          title: this._translations?.favorites || defTr.favorites,
+          title: t(this._translations, 'favorites'),
         },
         w: 250,
         h: 100,
@@ -454,8 +437,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 3,
-          // title: 'Logout',
-          title: this._translations?.logout || defTr.logout,
+          title: t(this._translations, 'logout'),
         },
         w: 250,
         h: 100,
@@ -539,24 +521,12 @@ export default class Settings extends Lightning.Component {
         }
 
         $enter() {
-          const userLanguageTranslations = this._props.userLanguageTranslations;
-          console.log(userLanguageTranslations);
-
-          const selectedLanguageCode = localStorage.getItem('languageCode');
-
-          const languageObject = userLanguageTranslations.find(
-            (item) => item.lang === selectedLanguageCode
-          );
-          // this.tag('Content.QRContainer.Info.Title').patch({
-          //   visible: true,
-          // });
           this.tag('Content.QRContainer.Info').patch({
             Title: {
               h: 120,
               w: 1310,
               text: {
-                // text: languageObject?.loggedInText,
-                text: this._translations?.logged_in_message || defTr.logged_in_message,
+                text: t(this._translations, 'logged_in_message'),
                 fontFace: 'Montserrat-Bold',
                 fontSize: 30,
                 lineHeight: 35,
@@ -589,10 +559,6 @@ export default class Settings extends Lightning.Component {
         }
 
         $enter() {
-          console.log('entered');
-          // this.tag('Content.QRContainer.Info.Title').patch({
-          //   visible: false,
-          // });
           this.tag('Content.QRContainer.Info').patch({
             Title: undefined,
             h: 0,
