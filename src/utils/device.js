@@ -111,6 +111,7 @@ const getWebInfo = () => ({
   macAddress: 'simulated-mac-address',
 });
 
+// TODO: find out how to get os version for each of the platforms
 /**
  *
  * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType

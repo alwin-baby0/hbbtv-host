@@ -17,13 +17,15 @@ export function createApiCtx() {
     JSON.stringify({
       languageCode: localStorage.getItem('languageCode') || 'en',
       version_name: process.env.APP_VERSION,
-      osVersion: 2,
+      osVersion: getDeviceInfo().osVersion || 'no-os-version-defined',
       deviceWidth: window.innerWidth || 1920,
       deviceHeight: window.innerHeight || 1080,
       platform: bundleIndentifierMap(getDeviceType()),
       bundleIdentifier: process.env.APP_BUNDLE,
-      api_key: process.env.APP_WATCH4_API_KEY, // TODO: Check if here we should use google analitics or watch4 api key??
+      api_key: process.env.APP_WATCH4_API_KEY,
       deviceId: getDeviceInfo().serialNumber || 'no-id-defined',
+      deviceModel: getDeviceInfo().model || 'no-model-defined',
+      deviceMake: getDeviceInfo().brand || 'no-make-defined',
     })
   );
 }

@@ -190,8 +190,8 @@ export default class LiveTV extends Lightning.Component {
     // Handle the case where end time is on the next day
     let timeArray = [];
     let hour = startDate.getHours();
-
-    while (true) {
+    let maxDepth = 1000;
+    while (maxDepth) {
       timeArray.push(`${hour}:00`);
       if (hour !== endHour || startDate.getDate() !== endDate.getDate()) {
         timeArray.push(`${hour}:30`);
@@ -206,6 +206,8 @@ export default class LiveTV extends Lightning.Component {
       if (startDate.getTime() > endDate.getTime()) {
         break;
       }
+
+      maxDepth--;
     }
 
     // Add the next rounded hour if end time is not a rounded hour
