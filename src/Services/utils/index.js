@@ -30,6 +30,7 @@ export function createApiCtx() {
       bundleIdentifier: process.env.APP_BUNDLE,
       api_key: process.env.APP_WATCH4_API_KEY, // TODO: Check if here we should use google analitics or watch4 api key??
       deviceId: getDeviceInfo().serialNumber || 'no-id-defined',
+      language: localStorage.getItem('languageCode') || selectedLanguage,
     })
   );
 }
