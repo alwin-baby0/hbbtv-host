@@ -24,7 +24,7 @@ export default class Gallery extends Lightning.Component {
         type: HorizontalContainer,
         collision: true,
         y: 820 - 115,
-        x: 110,
+        x: 75,
         w: 1760,
         h: 215,
         props: {
@@ -108,7 +108,7 @@ export default class Gallery extends Lightning.Component {
 
   _unfocus() {
     super._inactive();
-    this.$changeGalleryItem(this._sliderIndex)
+    this.$changeGalleryItem(this._sliderIndex);
   }
 
   _getFocused() {

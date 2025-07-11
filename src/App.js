@@ -1,5 +1,4 @@
-import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import Lightning from '@lightningjs/sdk/src/Lightning';
+import { Colors, Router, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import routes from './pages/routes';
 import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
@@ -9,7 +8,6 @@ import defTr from '../public/static/translations/en.json';
 import { parseTranslations, DetailService } from './Services';
 
 let wasOffline = false; // Variable to track previous internet status
-
 
 export default class App extends Router.App {
   static _template() {
@@ -104,8 +102,8 @@ export default class App extends Router.App {
 
   $punchHole() {
     this.patch({
-      Background: undefined
-    })
+      Background: undefined,
+    });
   }
 
   $unpunchHole() {
@@ -116,8 +114,8 @@ export default class App extends Router.App {
         zIndex: -900,
         src: Utils.asset('images/background.jpg'),
         shader: undefined,
-      }
-    })
+      },
+    });
   }
 
   $punchHoleTV(x, y, w, h, radius) {
@@ -151,9 +149,9 @@ export default class App extends Router.App {
             w: w,
             h: h,
             radius: radius,
-          }
-        }
-      })
+          },
+        },
+      });
     }
   }
 
@@ -199,7 +197,13 @@ export default class App extends Router.App {
   }
 
   static language() {
-    const selectedLanguage = localStorage.getItem('languageCode') || 'en';
+    let selectedLanguage = localStorage.getItem('languageCode');
+
+    if (!selectedLanguage) {
+      selectedLanguage = navigator.language || navigator.userLanguage || 'en-';
+      localStorage.setItem('languageCode', selectedLanguage.split('-')[0]);
+    }
+
     return {
       file: Utils.asset('translations/translations.json'),
       language: selectedLanguage,
@@ -253,10 +257,6 @@ export default class App extends Router.App {
   $exitApp() {
     this.application.closeApp();
   }
-
-  // _handleAppClose() {
-  //   this.application.closeApp();
-  // }
 
   $appClose() {
     const dialog = this.tag('Dialog');

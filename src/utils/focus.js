@@ -8,11 +8,15 @@ export const getClosestElementIndexEPG = (container, target) => {
   const elements = container.Items;
   // We can use target point to do the calculations
   // Math.min stops selection of offscreen items
-  const targetMiddlePoint = clamp(target.finalX + target.finalW / 2, 0, container.finalW - container._scrollPosition)
+  const targetMiddlePoint = clamp(
+    target.finalX + target.finalW / 2,
+    0,
+    container.finalW - container._scrollPosition
+  );
 
   let i = 0;
   let closestIndex = -1;
-  const isCurrentProgramLive = isProgramLive(target._props.startTime, target._props.endTime)
+  const isCurrentProgramLive = isProgramLive(target._props.startTime, target._props.endTime);
   for (; i <= elements.children.length - 1; i++) {
     const item = elements.children[i];
 
@@ -33,7 +37,6 @@ export const getClosestElementIndexEPG = (container, target) => {
 
   return Math.max(closestIndex, 0);
 };
-
 
 /**
  * Finds closest element to target in a container

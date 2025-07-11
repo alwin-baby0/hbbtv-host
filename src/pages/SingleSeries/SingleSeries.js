@@ -155,17 +155,19 @@ export default class SingleSeries extends Lightning.Component {
                     defTr.continue_watching.toUpperCase(),
                   width: 440,
                   callback: () => {
-                    DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(({ data: result }) => {
-                      Router.navigate('player', {
-                        videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
-                        duration: duration,
-                        videoType: 'series',
-                        seriesID: seriesId,
-                        videoId: lastPlayedId,
-                        continueTime: position,
-                        ssai: result[0].extensions?.ssai ?? ssaiLastEp,
-                      });
-                    })
+                    DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
+                      ({ data: result }) => {
+                        Router.navigate('player', {
+                          videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
+                          duration: duration,
+                          videoType: 'series',
+                          seriesID: seriesId,
+                          videoId: lastPlayedId,
+                          continueTime: position,
+                          ssai: result[0].extensions?.ssai ?? ssaiLastEp,
+                        });
+                      }
+                    );
                   },
                 },
               },
@@ -294,9 +296,9 @@ export default class SingleSeries extends Lightning.Component {
     this._setState(nextState);
   }
 
-  _init() { }
+  _init() {}
 
-  _getFocused() { }
+  _getFocused() {}
 
   _handleBack(e) {
     if (Router.isNavigating()) {

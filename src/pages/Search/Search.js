@@ -60,8 +60,8 @@ export default class Search extends Lightning.Component {
         x: 960,
         y: 540,
         visible: false,
-        type: LoadingScreenComponent
-      }
+        type: LoadingScreenComponent,
+      },
     };
   }
 
@@ -86,7 +86,7 @@ export default class Search extends Lightning.Component {
 
   _handleKey(key) {
     if (this.numberKeys.includes(key.key)) {
-      this.$onSoftKey(key)
+      this.$onSoftKey(key);
     }
   }
 
@@ -117,7 +117,7 @@ export default class Search extends Lightning.Component {
     this.searchTimeout = setTimeout(() => {
       this.$updatedVOD();
       this.searchTimeout = null;
-    }, 1000)
+    }, 1000);
   }
 
   _inactive() {
@@ -184,6 +184,10 @@ export default class Search extends Lightning.Component {
 
   get _Keyboard() {
     return this.tag('Keyboard');
+  }
+
+  _active() {
+    this.fireAncestors('$unpunchHole');
   }
 
   static _states() {

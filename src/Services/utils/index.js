@@ -6,11 +6,14 @@ export const auth = 'auth';
 
 const bundleIndentifierMap = (deviceType) => {
   switch (deviceType) {
-    case 'lg': return 'lgtv';
-    case 'tizen': return 'samsungtv';
-    default: return deviceType;
+    case 'lg':
+      return 'lgtv';
+    case 'tizen':
+      return 'samsungtv';
+    default:
+      return deviceType;
   }
-}
+};
 
 export function createApiCtx() {
   return btoa(

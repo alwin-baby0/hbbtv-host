@@ -22,7 +22,6 @@ export default class SidebarItem extends lng.Component {
         },
       },
       Icon: {
-        //x: 330,
         y: 10,
         zIndex: 0,
         color: Colors(colors.unfocus).get(),
@@ -53,29 +52,42 @@ export default class SidebarItem extends lng.Component {
 
     const { selected, index } = this._props;
     const { label, icon } = this._props.data;
-    const translatedText = Language.translate(label);
     if (selected) {
-      this._Title.patch({ color: Colors(colors.focus).get() });
-      this._Line.patch({ color: Colors(colors.focus).get() });
-      this._Icon.patch({
-        color: Colors(colors.focus).get(),
+      this.patch({
+        Title: {
+          color: Colors(colors.focus).get(),
+        },
+        Line: {
+          color: Colors(colors.focus).get(),
+        },
+        Icon: {
+          color: Colors(colors.focus).get(),
+        },
       });
     } else {
-      this._Title.patch({ color: Colors(colors.unfocus).get() });
-      this._Line.patch({ color: Colors(colors.unfocus).get() });
-      this._Icon.patch({
-        color: Colors(colors.unfocus).get(),
+      this.patch({
+        Title: {
+          color: Colors(colors.unfocus).get(),
+        },
+        Line: {
+          color: Colors(colors.unfocus).get(),
+        },
+        Icon: {
+          color: Colors(colors.unfocus).get(),
+        },
       });
     }
 
     if (icon !== '') {
-      this._Line.patch({
-        x: 200,
-        y: 21,
-        w: 0,
-      });
-      this._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset(icon), 48, 48),
+      this.patch({
+        Line: {
+          x: 200,
+          y: 21,
+          w: 0,
+        },
+        Icon: {
+          texture: lng.Tools.getSvgTexture(Utils.asset(icon), 48, 48),
+        },
       });
     } else {
       this.patch({
@@ -84,19 +96,11 @@ export default class SidebarItem extends lng.Component {
           text: {
             maxLines: 1,
             wordWrapWidth: index === 4 && label.length > 10 ? 200 : 150,
-            family: 'Montserrat-Regular',
+            fontFace: 'Montserrat-Regular',
             text: label.toUpperCase(),
           },
         },
       });
-      // this._Title.patch({
-      //   text: {
-      //     maxLines: 1,
-      //     wordWrapWidth: 200,
-      //     family: 'Montserrat-Regular',
-      //     text: homeText.toUpperCase(),
-      //   },
-      // });
     }
   }
 
@@ -116,43 +120,32 @@ export default class SidebarItem extends lng.Component {
     const { index } = this._props;
     const { label, icon } = this._props.data;
 
-    // if (index === 4) {
-    //   this._Line.patch({
-    //     w: 200,
-    //   });
-    // } else if (icon === '') {
-    //   this._Line.patch({
-    //     w: 150,
-    //   });
-    // }
     const translatedText = Language.translate(label);
     setTimeout(() => {
-      this._Line.patch({
-        w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni
-      });
-
-      this._Line.visible = true;
-      this._Icon.patch({
-        color: Colors(colors.focus).get(),
+      this.patch({
+        Line: {
+          w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni,
+          visible: true,
+        },
+        Icon: {
+          color: Colors(colors.focus).get(),
+        },
       });
     }, 0);
   }
 
   _unfocus() {
-    /* this._Line.visible = false;
-    if (!this._props.selected) {
-      this._Icon.patch({
+    this.patch({
+      Icon: {
         color: Colors(colors.unfocus).get(),
-      });
-    } */
-
-    this._Line.visible = false;
-    this._Icon.patch({
-      color: Colors(colors.unfocus).get(),
-    });
-    this._Title.patch({
-      text: {
-        textColor: Colors(colors.unfocus).get(),
+      },
+      Title: {
+        text: {
+          textColor: Colors(colors.unfocus).get(),
+        },
+      },
+      Line: {
+        visible: false,
       },
     });
   }
@@ -174,7 +167,6 @@ export default class SidebarItem extends lng.Component {
     this.fja();
     this.fireAncestors('$changePage', this._props.index);
     Router.focusPage();
-    // Router.restoreFocus();
   }
 
   _handleHover() {

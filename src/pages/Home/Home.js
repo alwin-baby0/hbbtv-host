@@ -1,4 +1,4 @@
-import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Gallery from '../../components/Gallery/Gallery';
@@ -14,7 +14,6 @@ export default class Home extends Lightning.Component {
     return {
       Background: {},
       HeroSection: {
-        //collision: true,
         x: 0,
         y: 0,
         w: 1920,
@@ -85,7 +84,7 @@ export default class Home extends Lightning.Component {
   }
 
   _disable() {
-    this.fireAncestors('$unpunchHole')
+    this.fireAncestors('$unpunchHole');
   }
 
   _firstActive() {
@@ -98,6 +97,10 @@ export default class Home extends Lightning.Component {
     }
     e.preventDefault();
     this.fireAncestors('$appClose');
+  }
+
+  _handleHover() {
+    Router.focusPage();
   }
 
   $setStateOnScroll(nextState) {
@@ -135,7 +138,6 @@ export default class Home extends Lightning.Component {
         _handleDown() {
           this._setState('Items');
         }
-
 
         async $horizontalContainerIndexChange(index) {
           if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
@@ -201,7 +203,6 @@ export default class Home extends Lightning.Component {
             this._HeroSection?.patch({ visible: false });
             this._Wrapper.patch({ y: 0 });
           } else {
-            // this._HeroSection?.patch({ visible: true, y: 980 });
             this._HeroSection?.patch({ visible: true, y: 1080 });
             this._Wrapper.patch({ y: 0 });
           }

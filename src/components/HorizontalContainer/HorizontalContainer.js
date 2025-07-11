@@ -55,7 +55,6 @@ export default class HorizontalContainer extends Lightning.Component {
 
   _setFocusedIndex(newIndex) {
     this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
-    //this._focusedIndex = newIndex;
     this._reCalibrateScroll();
     this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex, this._scrollPosition);
   }
@@ -69,12 +68,10 @@ export default class HorizontalContainer extends Lightning.Component {
 
     if (railTitle && railTitle !== '') {
       const { h } = rest;
-      this.Items.patch({
-        y: 0,
-      });
       this.patch({
         h: h + 95,
         Title: {
+          x: 9,
           y: 10,
           h: 55,
           text: {
@@ -84,10 +81,12 @@ export default class HorizontalContainer extends Lightning.Component {
             lineHeight: 39,
           },
         },
+        Items: {
+          y: 0,
+        }
       });
     } else {
-      this.patch({ ...rest });
-      this.Items.patch({ h: rest.h });
+      this.patch({ ...rest, Items: { h: rest.h } });
     }
 
     this.patch({
@@ -137,14 +136,27 @@ export default class HorizontalContainer extends Lightning.Component {
 
       if (!currentFocus) return;
 
+      let isChildLive = false;
+      let scrollOffsetLive = 0;
+      if (this.Items.children[this._focusedIndex]._props.extensions && this.Items.children[this._focusedIndex]._props.extensions.end_time) {
+        const currentTime = new Date();
+        const startTime = new Date(this.Items.children[this._focusedIndex]._props.extensions.start_time);
+        const endTime = new Date(this.Items.children[this._focusedIndex]._props.extensions.end_time);
+        isChildLive = startTime < currentTime && currentTime < endTime;
+
+        scrollOffsetLive = ((currentTime - startTime) / (1000 * 60)) * 8.33 + 10;
+      }
+
       const containerFinalWidth = this.finalW;
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
 
-      if (elementX < -this._scrollPosition) {
+      if (isChildLive && elementW > containerFinalWidth) {
+        return;
+      } else if (elementX < -this._scrollPosition) {
         // paddingOffset is used to offset first item in each
         // column from the start of the container in EPG-s
-        const paddingOffset = currentFocus.flex?._paddingLeft ?? 0;
+        const paddingOffset = currentFocus.flex?._paddingLeft ?? -10;
         this._scrollPosition = -elementX - paddingOffset;
       } else if (elementX + elementW > containerFinalWidth - this._scrollPosition) {
         this._scrollPosition = -(elementX + elementW - containerFinalWidth);
@@ -194,11 +206,11 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleRight() {
-    //this.Items.children[this._focusedIndex]._unfocus();
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
       this.Items.children[this._focusedIndex]._unfocus();
       this._focusedIndex += 1;
+      this.Items.children[this._focusedIndex]?._focus();
       this._reCalibrateScroll();
       this.fireAncestors(
         '$horizontalContainerIndexChange',
@@ -212,10 +224,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
-    //this.Items.children[this._focusedIndex]._unfocus();
     if (this._focusedIndex > 0) {
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex -= 1;
+      this.Items.children[this._focusedIndex]?._focus();
       this._reCalibrateScroll();
       this.fireAncestors(
         '$horizontalContainerIndexChange',
@@ -226,5 +238,19 @@ export default class HorizontalContainer extends Lightning.Component {
       return false;
     }
     return true;
+  }
+
+  _focus() {
+    const { items } = this._props;
+    if (this._focusedIndex >= 0 && this._focusedIndex < items.length) {
+      this.Items.children[this._focusedIndex]?._focus();
+    }
+  }
+
+  _unfocus() {
+    const { items } = this._props;
+    if (this._focusedIndex >= 0 && this._focusedIndex < items.length) {
+      this.Items.children[this._focusedIndex]?._unfocus();
+    }
   }
 }

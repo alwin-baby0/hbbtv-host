@@ -81,7 +81,6 @@ const constructLandscapeRailItems = (railItems, railItemsOptions) => {
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title ? railItem.title : '',
-      // imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
       imageSrc: railItem.getLandscapePoster(imageSizes.M).src,
       itemType: railItem.type,
       index,
@@ -167,9 +166,6 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
                 videoUrl: epgStreamSrc,
                 duration: 0,
                 videoType: 'Stream now',
-                //duration: railItem.duration,
-                // videoId: null,
-                //'https://video-solutions-ag-wedotvtruestories-1-us.ohlscdn.wurl.tv/playlist.m3u8?app_bundle=wedotv.video-solutions.ag&app_name=wedotv&app_store_url=https%3A%2F%2Fwedotv.com&url=https%3A%2F%2Fwedotv.com&channel_name=wedotv+True+Stories&content_custom_1_param=wedotv+True+Stories'
               });
               break;
             }
@@ -177,7 +173,6 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
               console.warn('unknown category type:', railItem.type);
           }
         },
-        // url: railItem.preview_playback,
         url: railItem.trailerUrl,
       },
     };
@@ -202,16 +197,18 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
       index,
       callback: () => {
-        DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(({ data: result }) => {
-          Router.navigate('player', {
-            videoUrl: result[0]?.content.src ?? railItem.src,
-            videoId: railItem.id,
-            duration: railItem.duration,
-            videoType: 'series',
-            seriesID: railItem.seriesId,
-            ssai: result[0].extensions.ssai ?? railItem.ssai,
-          });
-        })
+        DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(
+          ({ data: result }) => {
+            Router.navigate('player', {
+              videoUrl: result[0]?.content.src ?? railItem.src,
+              videoId: railItem.id,
+              duration: railItem.duration,
+              videoType: 'series',
+              seriesID: railItem.seriesId,
+              ssai: result[0].extensions.ssai ?? railItem.ssai,
+            });
+          }
+        );
       },
     },
   }));
@@ -279,7 +276,6 @@ const constructCategoryItems = (railItems, railItemsOptions) =>
       props: {
         itemInfo: railItem,
         callback: railItem.navigateToLink,
-        // w: 170,
         w: 195,
         h: 64,
         radius: 30,
@@ -305,9 +301,7 @@ const constructBannerRailItems = (railItems, railItemsOptions) => {
       itemTitle: railItem.title ? railItem.title : '',
       imageSrc: railItem.getCtvPoster(1080),
       itemType: railItem.type,
-      callback: () => {
-        // Router.navigate(railItem.url);
-      },
+      callback: () => {},
     },
   }));
 };

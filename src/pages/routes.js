@@ -117,7 +117,7 @@ export default {
       component: Player,
       options: {
         reuseInstance: false,
-      }
+      },
     },
     {
       path: 'collection-details/:collectionId',

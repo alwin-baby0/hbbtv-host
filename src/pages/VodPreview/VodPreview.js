@@ -59,6 +59,12 @@ export default class VodPreview extends Lightning.Component {
     if (vodType === 'series') eventTrackPayload('browse_series', 2);
     if (vodType === 'sports') eventTrackPayload('browse_sports', 3);
 
+    if (vodType === 'sports') {
+      this._Column.patch({ y: 100 });
+    } else {
+      this._Column.patch({ y: 50 });
+    }
+
     if (this._props.vodType !== vodType) {
       this._props = { ...this._props, ...props };
       const { content, items } = this._props;
@@ -84,6 +90,10 @@ export default class VodPreview extends Lightning.Component {
 
   $updateVerticalState(nextState) {
     this._setState(nextState);
+  }
+
+  _handleHover() {
+    Router.focusPage();
   }
 
   static _states() {
