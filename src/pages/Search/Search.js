@@ -1,7 +1,7 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
-import KeyboardSearch from '../../Components/Keyboard/components/KeyboardSearch';
+import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch';
 import InputField from './components/Input';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
 import { HomePageService, SearchService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';

@@ -85,7 +85,7 @@ export const playerButtonsLive = [
 
 /**
  * Floors the number => Converts number to string => Pads to 2 digits
- * @param {number} number 
+ * @param {number} number
  * @returns {string}
  */
 const floorStringPad = (number) => Math.floor(number).toString().padStart(2, '0');
@@ -105,7 +105,7 @@ export const formatTimeHMS = (seconds) => {
 
 /**
  * Check if video URL is valid
- * @param {string | undefined} url 
+ * @param {string | undefined} url
  * @returns {boolean}
  */
 export const isVideoURLValid = async (url) => {

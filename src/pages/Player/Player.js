@@ -1,9 +1,9 @@
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { Column, ProgressBar } from '@lightningjs/ui-components';
-import { getPlayer, loader, unloader } from '../../Components/Player/HLS';
+import { getPlayer, loader, unloader } from '../../components/Player/HLS';
 import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
-import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import { CMPService, parseTranslations } from '../../Services';

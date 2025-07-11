@@ -1,4 +1,4 @@
-import VerticalContainer from '../verticalContainer/VerticalContainer';
+import VerticalContainer from '../VerticalContainer/VerticalContainer';
 import { EPGService } from '../../Services';
 import { getClosestElementIndexEPG } from '../../utils/focus';
 

@@ -1,6 +1,6 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
-import HorizontalContainer from '../Components/HorizontalContainer/HorizontalContainer';
-import VerticalContainer from '../Components/VerticalContainer/VerticalContainer';
+import HorizontalContainer from '../components/HorizontalContainer/HorizontalContainer';
+import VerticalContainer from '../components/VerticalContainer/VerticalContainer';
 import { clamp } from '.';
 
 export const getClosestElementIndexEPG = (container, target) => {
@@ -129,7 +129,7 @@ const calculateDistance = (A, B, C, D) => {
 /**
  * Checks if now is between start and end times.
  * @param {number} start - start time in MS
- * @param {number} end - end time in MS 
- * @returns 
+ * @param {number} end - end time in MS
+ * @returns
  */
 const isProgramLive = (start, end) => Date.now() >= start && Date.now() <= end;

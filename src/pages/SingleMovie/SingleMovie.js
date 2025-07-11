@@ -1,5 +1,5 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import Button from '../../Components/Button/Button';
+import Button from '../../components/Button/Button';
 import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';

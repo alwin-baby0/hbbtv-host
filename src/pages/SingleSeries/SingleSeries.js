@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import GalleryItem from '../../Components/GalleryItem/GalleryItem';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import { CMPService, DetailService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';

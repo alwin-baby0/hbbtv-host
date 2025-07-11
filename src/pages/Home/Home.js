@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
-import Gallery from '../../Components/Gallery/Gallery';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
 

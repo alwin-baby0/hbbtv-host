@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { CMPService, parseTranslations } from '../../Services';
 import qrcode from 'qrcode';
 import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';

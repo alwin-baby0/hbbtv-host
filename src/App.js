@@ -1,7 +1,7 @@
 import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
-import routes from './Pages/routes';
-import Navbar from './Components/widgets/Navbar/Navbar';
+import routes from './pages/routes';
+import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';

@@ -1,11 +1,11 @@
 import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
 import { EPGService } from '../../Services';
-import VerticalContainer from '../../Components/VerticalContainer/VerticalContainer';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../utils';
-import HorizontalContainer from '../../Components/HorizontalContainer/HorizontalContainer';
-import CategoryPicker from '../../Components/CategoryPicker/CategoryPicker';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
