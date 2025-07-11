@@ -112,7 +112,7 @@ const getTitanInfo = () => {
     Capability: { os },
     Channel: { brand },
     Product: { firmwareVersion },
-  } = DeviceInfo;
+  } = DeviceInfo; // Requires titanos device-info-sdk script, can be found at https://docs.titanos.tv/deviceinfoapi
   return {
     serialNumber: generateRandomUUID(),
     model: extractPhilipsModel(),
