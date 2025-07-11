@@ -16,9 +16,11 @@ const bundleIndentifierMap = (deviceType) => {
 };
 
 export function createApiCtx() {
+  const selectedLanguage =
+    navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
   return btoa(
     JSON.stringify({
-      languageCode: localStorage.getItem('languageCode') || 'en',
+      languageCode: localStorage.getItem('languageCode') || selectedLanguage,
       version_name: process.env.APP_VERSION,
       osVersion: getDeviceInfo().osVersion || 'no-os-version-defined',
       deviceWidth: window.innerWidth || 1920,
