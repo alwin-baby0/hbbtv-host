@@ -12,6 +12,7 @@ import { t } from '../../utils/translation';
 
 export default class Settings extends Lightning.Component {
   _translations;
+  _contentId = 0;
   _props = {
     lastId: 0,
     lastLanguage: 0,
@@ -49,9 +50,7 @@ export default class Settings extends Lightning.Component {
         },
       },
       Content: {
-        // w: 1310,
         w: 1450,
-        // h: 920,
         h: 1020,
         x: 480,
         y: 225,
@@ -72,8 +71,20 @@ export default class Settings extends Lightning.Component {
     return this.tag('Content.Favorites');
   }
 
+  get _UserFavorites() {
+    return this.tag('Content.QRContainer.Favorites');
+  }
+
   get _RecentlyWatched() {
     return this.tag('Content.RecentlyWatched');
+  }
+
+  get _UserRecentlyWatched() {
+    return this.tag('Content.QRContainer.RecentlyWatched');
+  }
+
+  get _Languages() {
+    return this.tag('Content.Languages');
   }
 
   set props(props) {
@@ -87,7 +98,9 @@ export default class Settings extends Lightning.Component {
 
   _active() {
     this._setState('DefaultState');
-    this.$changeContent(0);
+    this._Column.Items.children[this._contentId]._focus();
+    this.$setFocus(this._contentId);
+    this.$changeContent(this._contentId);
   }
 
   _disable() {
@@ -127,13 +140,13 @@ export default class Settings extends Lightning.Component {
 
     if (typeof lastLanguage !== 'undefined') {
       // Unselect the button of the last ID before setting a new one
-      this.tag('Content.Languages').Items.children[lastLanguage]._unselectButton();
+      this._Languages.Items.children[lastLanguage]._unselectButton();
     }
     // Set the new ID
     if (!id) {
-      this.tag('Content.Languages').Items.children[0]._selectButton();
+      this._Languages.Items.children[0]._selectButton();
     } else {
-      this.tag('Content.Languages').Items.children[id]._selectButton();
+      this._Languages.Items.children[id]._selectButton();
     }
     // Update the lastId variable with the current ID
     this._props.lastLanguage = id;
@@ -188,12 +201,13 @@ export default class Settings extends Lightning.Component {
   changeContentTimeout = null;
 
   async $changeContent(contentId) {
+    this._contentId = contentId;
     if (this.changeContentTimeout) {
       clearTimeout(this.changeContentTimeout);
       this.changeContentTimeout = null;
     }
     this.changeContentTimeout = setTimeout(async () => {
-      this.tag('Content').patch({
+      this._Content.patch({
         QRContainer: undefined,
         Languages: undefined,
         Favorites: undefined,
@@ -215,7 +229,7 @@ export default class Settings extends Lightning.Component {
           const qrCode = verification_uri.url;
 
           qrcode.toDataURL(qrCode).then((image) => {
-            this.tag('Content').patch({
+            this._Content.patch({
               QRContainer: {
                 w: 1310,
                 h: 800,
@@ -293,7 +307,10 @@ export default class Settings extends Lightning.Component {
               railTitle: t(this._translations, 'continue_watching'),
               entry: recentlyWatched.data.recently_watched,
             },
-            itemsPerRow: recentlyWatched.data.recently_watched.length,
+            itemsPerRow:
+              recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length
+                ? recentlyWatched.data.recently_watched.length
+                : 0,
           });
 
           const favorites = await CMPService.getFavorites();
@@ -303,10 +320,13 @@ export default class Settings extends Lightning.Component {
               railTitle: t(this._translations, 'favorites'),
               entry: favorites.data.favorites,
             },
-            itemsPerRow: favorites.data.favorites.length,
+            itemsPerRow:
+              favorites.data.favorites && favorites.data.favorites.length
+                ? favorites.data.favorites.length
+                : 0,
           });
 
-          this.tag('Content').patch({
+          this._Content.patch({
             QRContainer: {
               w: 1450,
               h: 800,
@@ -359,7 +379,7 @@ export default class Settings extends Lightning.Component {
           itemsPerRow: 4,
         });
 
-        this.tag('Content').patch({
+        this._Content.patch({
           RecentlyWatched: {
             collision: true,
             type: VerticalContainer,
@@ -375,7 +395,6 @@ export default class Settings extends Lightning.Component {
         this._props.hasMoreFav = true;
         this._props.favoritesPage = 1;
         const favorites = await CMPService.getFavorites();
-
         const parsedMovies = parseVodMoviesPageData({
           data: {
             entry: favorites.data.favorites,
@@ -383,7 +402,7 @@ export default class Settings extends Lightning.Component {
           itemsPerRow: 4,
         });
 
-        this.tag('Content').patch({
+        this._Content.patch({
           Favorites: {
             collision: true,
             type: VerticalContainer,
@@ -448,7 +467,7 @@ export default class Settings extends Lightning.Component {
     return [
       class DefaultState extends this {
         _getFocused() {
-          return this.tag('Wrapper.Column');
+          return this._Column;
         }
 
         _handleUp() {
@@ -456,16 +475,16 @@ export default class Settings extends Lightning.Component {
         }
 
         _handleRight() {
-          if (this.tag('Content.Languages')) {
+          if (this._Languages) {
             this._setState('Languages');
           }
-          if (this.tag('Content.Favorites')) {
+          if (this._Favorites) {
             this._setState('Favorites');
           }
-          if (this.tag('Content.RecentlyWatched')) {
+          if (this._RecentlyWatched) {
             this._setState('RecentlyWatched');
           }
-          if (this.tag('Content.QRContainer.RecentlyWatched')) {
+          if (this._UserRecentlyWatched) {
             this._setState('UserRecentlyWatched');
           }
         }
@@ -473,7 +492,7 @@ export default class Settings extends Lightning.Component {
 
       class Languages extends this {
         _getFocused() {
-          return this.tag('Content.Languages');
+          return this._Languages;
         }
 
         _handleUp() {
@@ -487,7 +506,7 @@ export default class Settings extends Lightning.Component {
 
       class Favorites extends this {
         _getFocused() {
-          return this.tag('Content.Favorites');
+          return this._Favorites;
         }
 
         _handleUp() {
@@ -501,7 +520,7 @@ export default class Settings extends Lightning.Component {
 
       class RecentlyWatched extends this {
         _getFocused() {
-          return this.tag('Content.RecentlyWatched');
+          return this._RecentlyWatched;
         }
 
         _handleUp() {
@@ -515,26 +534,28 @@ export default class Settings extends Lightning.Component {
 
       class UserRecentlyWatched extends this {
         _getFocused() {
-          return this.tag('Content.QRContainer.RecentlyWatched');
+          return this._UserRecentlyWatched;
         }
 
         $enter() {
-          this.tag('Content.QRContainer.Info').patch({
-            Title: {
-              h: 120,
-              w: 1310,
-              text: {
-                text: t(this._translations, 'logged_in_message'),
-                fontFace: 'Montserrat-Bold',
-                fontSize: 30,
-                lineHeight: 35,
-                letterSpacing: 2,
+          this._Content.patch({
+            y: 225,
+            QRContainer: {
+              Info: {
+                Title: {
+                  h: 120,
+                  w: 1310,
+                  text: {
+                    text: t(this._translations, 'logged_in_message'),
+                    fontFace: 'Montserrat-Bold',
+                    fontSize: 30,
+                    lineHeight: 35,
+                    letterSpacing: 2,
+                  },
+                },
+                h: 100,
               },
             },
-            h: 100,
-          });
-          this.tag('Content').patch({
-            y: 225,
           });
         }
 
@@ -553,17 +574,18 @@ export default class Settings extends Lightning.Component {
 
       class UserFavorites extends this {
         _getFocused() {
-          return this.tag('Content.QRContainer.Favorites');
+          return this._UserFavorites;
         }
 
         $enter() {
-          this.tag('Content.QRContainer.Info').patch({
-            Title: undefined,
-            h: 0,
-          });
-
-          this.tag('Content').patch({
+          this._Content.patch({
             y: 80,
+            QRContainer: {
+              Info: {
+                Title: undefined,
+                h: 0,
+              },
+            },
           });
         }
 

@@ -49,17 +49,15 @@ export default class MemberTabButton extends Lightning.Component {
   }
 
   _enable() {
-    this._Column.patch({
-      text: { text: this._tabInfoData.title },
-      color: Colors(colors.white).get(),
+    this.patch({
+      Column: {
+        color: Colors(colors.background).get(),
+        Text: {
+          text: { text: this._tabInfoData.title },
+          color: Colors(colors.white).get(),
+        },
+      },
     });
-    this.tag('Column').patch({
-      color: Colors(colors.background).get(),
-    });
-  }
-
-  _active() {
-    this.fireAncestors('$setFocus', 0);
   }
 
   _handleEnter() {
@@ -70,38 +68,38 @@ export default class MemberTabButton extends Lightning.Component {
 
   _selectButton() {
     this._selected = true;
-    this.tag('Column').patch({
+    this._ColumnWrapper.patch({
       color: Colors(colors.focus).get(),
     });
   }
 
   _unselectButton() {
     this._selected = false;
-    this.tag('Column').patch({
+    this._ColumnWrapper.patch({
       color: Colors(colors.background).get(),
     });
   }
 
   _focus() {
-    this.tag('Column').patch({
+    this._ColumnWrapper.patch({
       color: Colors(colors.focus).get(),
     });
   }
 
   _unfocus() {
     if (this._selected) {
-      this.tag('Column').patch({
+      this._ColumnWrapper.patch({
         color: Colors(colors.focusedHelpButton).get(),
       });
     } else {
-      this.tag('Column').patch({
+      this._ColumnWrapper.patch({
         color: Colors(colors.unfocusedHelpButton).get(),
       });
     }
   }
 
   _handleHover() {
-    this.tag('Column').patch({
+    this._ColumnWrapper.patch({
       color: Colors(colors.focus).get(),
     });
 
@@ -111,11 +109,11 @@ export default class MemberTabButton extends Lightning.Component {
 
   _handleUnhover() {
     if (this._selected) {
-      this.tag('Column').patch({
+      this._ColumnWrapper.patch({
         color: Colors(colors.focusedHelpButton).get(),
       });
     } else {
-      this.tag('Column').patch({
+      this._ColumnWrapper.patch({
         color: Colors(colors.unfocusedHelpButton).get(),
       });
     }

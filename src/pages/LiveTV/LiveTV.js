@@ -126,6 +126,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   $updateChannelInfo(matchingEntry, channelInfo, channelImage) {
+    this._props.lastId = matchingEntry.id;
     channelImage = EPGService.filteredChannelsItems[this._EPGData._focusedIndex];
 
     if (channelImage === undefined) {

@@ -20,7 +20,6 @@ export const parseHomePageRailData = ({ data }) => {
 export const parseHomePageHeroSection = ({ data }) => {
   const galleryItems = data.entry?.map((item) => new GalleryItem(item));
   if (!galleryItems || galleryItems?.length === 0) return;
-  //if (!(galleryItems && galleryItems.length > 0)) return;
   return {
     railType: galleryItems[0].type,
     railTitle: data.title,
@@ -138,7 +137,6 @@ export const parseCollectionData = ({ data }) => {
   if (!railItems || railItems.length === 0) return;
 
   return {
-    // railType: railItems[0].type,
     railType: RAIL_TYPES.COLLECTION,
     railTitle: data.title,
     cardType: 'COLLECTION',
@@ -166,9 +164,7 @@ export const parseBannerData = ({ data }) => {
   if (!railItems || railItems.length === 0) return;
 
   return {
-    // railType: railItems[0].type,
     railType: RAIL_TYPES.BANNER,
-    // railTitle: 'Advertisement',
     cardType: 'BANNER',
     items: railItems,
     itemsPerRow: 4,
