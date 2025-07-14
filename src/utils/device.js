@@ -119,7 +119,7 @@ const getTitanInfo = () => {
     brand: brand,
     os: os,
     osVersion: firmwareVersion,
-    macAddress: '12:34:56:78:9A:BC',
+    macAddress: null,
   };
 };
 
