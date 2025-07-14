@@ -42,6 +42,7 @@ export const playerButtonsVOD = [
 export const playerButtonsLive = [
   {
     type: PlayerButtons,
+    collision: true,
     props: {
       buttonInfo: {
         label: 'back',
@@ -53,6 +54,7 @@ export const playerButtonsLive = [
   },
   {
     type: PlayerButtons,
+    collision: true,
     props: {
       buttonInfo: {
         label: 'pause',
@@ -64,6 +66,7 @@ export const playerButtonsLive = [
   },
   {
     type: PlayerButtons,
+    collision: true,
     props: {
       buttonInfo: {
         label: 'subtitles',

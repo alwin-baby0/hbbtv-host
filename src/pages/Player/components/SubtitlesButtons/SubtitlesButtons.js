@@ -13,6 +13,7 @@ export default class SubtitlesButtons extends Lightning.Component {
   static _template() {
     return {
       Column: {
+        collision: true,
         flex: { direction: 'row', alignItems: 'center' },
         w: 505,
         h: 60,
@@ -32,8 +33,7 @@ export default class SubtitlesButtons extends Lightning.Component {
   }
 
   set props(props) {
-    const { items, ...rest } = props;
-    this._props = { ...this._props, ...rest };
+    this._props = { ...this._props, ...props };
   }
 
   get _Column() {
@@ -95,6 +95,18 @@ export default class SubtitlesButtons extends Lightning.Component {
         texture: null,
       });
     }
+  }
+
+  _handleHover() {
+    this._focus();
+  }
+
+  _handleUnhover() {
+    this._unfocus();
+  }
+
+  _handleClick() {
+    this._handleEnter();
   }
 
   // New method to get the index based on channelId

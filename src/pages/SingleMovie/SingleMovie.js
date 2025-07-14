@@ -276,58 +276,53 @@ export default class SingleMovie extends Lightning.Component {
       rows.push({ items: filteredButtons.slice(i, i + 3) });
     }
 
-    this._Buttons.items = rows.map(
-      (row) => (
-        console.log(row, 'fired'),
-        {
-          type: Row,
-          collision: true,
-          items: row.items.map((item, index) => ({
-            type: Button,
-            collision: true,
-            w: item.width,
-            flexItem: {
-              marginRight: 30,
-            },
-            props: {
-              width: item.width,
-              index,
-              buttonLabel: item.buttonLabel,
-              buttonIcon: Utils.asset(item.icon),
-              callback: () => {
-                if (item.buttonName === 'FAVORITE') {
-                  this.addToFavorite();
-                } else if (item.buttonName === 'WATCH NOW') {
-                  DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
-                    ({ data: result }) => {
-                      Router.navigate('player', {
-                        videoUrl: result[0]?.content?.src ?? movie[item.stream],
-                        duration: duration,
-                        videoId: movieId,
-                        ssai: result[0].extensions?.ssai ?? movie.ssai,
-                      });
-                    }
-                  );
-                } else if (item.buttonName === 'TRAILER') {
+    this._Buttons.items = rows.map((row) => ({
+      type: Row,
+      collision: true,
+      items: row.items.map((item, index) => ({
+        type: Button,
+        collision: true,
+        w: item.width,
+        flexItem: {
+          marginRight: 30,
+        },
+        props: {
+          width: item.width,
+          index,
+          buttonLabel: item.buttonLabel,
+          buttonIcon: Utils.asset(item.icon),
+          callback: () => {
+            if (item.buttonName === 'FAVORITE') {
+              this.addToFavorite();
+            } else if (item.buttonName === 'WATCH NOW') {
+              DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
+                ({ data: result }) => {
                   Router.navigate('player', {
-                    videoUrl: movieTrailerUrl,
-                    videoId: movieTrailerId,
-                  });
-                } else if (item.buttonName === 'CONTINUE WATCHING') {
-                  Router.navigate('player', {
-                    videoUrl: movie.url,
+                    videoUrl: result[0]?.content?.src ?? movie[item.stream],
                     duration: duration,
                     videoId: movieId,
-                    continueTime: last_position,
-                    ssai: movie.ssai,
+                    ssai: result[0].extensions?.ssai ?? movie.ssai,
                   });
                 }
-              },
-            },
-          })),
-        }
-      )
-    );
+              );
+            } else if (item.buttonName === 'TRAILER') {
+              Router.navigate('player', {
+                videoUrl: movieTrailerUrl,
+                videoId: movieTrailerId,
+              });
+            } else if (item.buttonName === 'CONTINUE WATCHING') {
+              Router.navigate('player', {
+                videoUrl: movie.url,
+                duration: duration,
+                videoId: movieId,
+                continueTime: last_position,
+                ssai: movie.ssai,
+              });
+            }
+          },
+        },
+      })),
+    }));
   }
 
   _active() {
