@@ -8,7 +8,7 @@ import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
-import defTr from '../../../public/static/translations/en.json';
+import { t } from '../../utils/translation';
 
 export default class Settings extends Lightning.Component {
   _translations;
@@ -246,7 +246,7 @@ export default class Settings extends Lightning.Component {
                     h: 120,
                     w: 500,
                     text: {
-                      text: this._translations?.signup_title || defTr.signup_title,
+                      text: t(this._translations, 'signup_title'),
                       fontFace: 'Montserrat-Bold',
                       fontSize: 30,
                       lineHeight: 35,
@@ -257,7 +257,7 @@ export default class Settings extends Lightning.Component {
                     h: 300,
                     w: 650,
                     text: {
-                      text: this._translations?.signup_description || defTr.signup_description,
+                      text: t(this._translations, 'signup_description'),
                       fontFace: 'Montserrat-Regular',
                       fontSize: 25,
                       lineHeight: 30,
@@ -288,7 +288,7 @@ export default class Settings extends Lightning.Component {
                       marginTop: 10,
                     },
                     text: {
-                      text: this._translations?.signup_scan || defTr.signup_scan,
+                      text: t(this._translations, 'signup_scan'),
                       fontFace: 'Montserrat-Bold',
                       fontSize: 25,
                       lineHeight: 30,
@@ -304,20 +304,26 @@ export default class Settings extends Lightning.Component {
 
           const parsedMovies = parseVodUserContentData({
             data: {
-              railTitle: this._translations?.continue_watching || defTr.continue_watching,
+              railTitle: t(this._translations, 'continue_watching'),
               entry: recentlyWatched.data.recently_watched,
             },
-            itemsPerRow: recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length ? recentlyWatched.data.recently_watched.length : 0,
+            itemsPerRow:
+              recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length
+                ? recentlyWatched.data.recently_watched.length
+                : 0,
           });
 
           const favorites = await CMPService.getFavorites();
 
           const parsedFavorites = parseVodUserContentData({
             data: {
-              railTitle: this._translations?.favorites || defTr.favorites,
+              railTitle: t(this._translations, 'favorites'),
               entry: favorites.data.favorites,
             },
-            itemsPerRow: favorites.data.favorites && favorites.data.favorites.length ? favorites.data.favorites.length : 0,
+            itemsPerRow:
+              favorites.data.favorites && favorites.data.favorites.length
+                ? favorites.data.favorites.length
+                : 0,
           });
 
           this._Content.patch({
@@ -334,7 +340,7 @@ export default class Settings extends Lightning.Component {
                   h: 120,
                   w: 1310,
                   text: {
-                    text: this._translations?.logged_in_message || defTr.logged_in_message,
+                    text: t(this._translations, 'logged_in_message'),
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,
@@ -428,7 +434,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 1,
-          title: this._translations?.continue_watching || defTr.continue_watching,
+          title: t(this._translations, 'continue_watching'),
         },
         w: 250,
         h: 100,
@@ -438,7 +444,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 2,
-          title: this._translations?.favorites || defTr.favorites,
+          title: t(this._translations, 'favorites'),
         },
         w: 250,
         h: 100,
@@ -448,7 +454,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 3,
-          title: this._translations?.logout || defTr.logout,
+          title: t(this._translations, 'logout'),
         },
         w: 250,
         h: 100,
@@ -540,7 +546,7 @@ export default class Settings extends Lightning.Component {
                   h: 120,
                   w: 1310,
                   text: {
-                    text: this._translations?.logged_in_message || defTr.logged_in_message,
+                    text: t(this._translations, 'logged_in_message'),
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,
@@ -548,8 +554,8 @@ export default class Settings extends Lightning.Component {
                   },
                 },
                 h: 100,
-              }
-            }
+              },
+            },
           });
         }
 
@@ -578,8 +584,8 @@ export default class Settings extends Lightning.Component {
               Info: {
                 Title: undefined,
                 h: 0,
-              }
-            }
+              },
+            },
           });
         }
 

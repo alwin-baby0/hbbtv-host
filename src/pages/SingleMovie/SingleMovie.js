@@ -5,7 +5,7 @@ import { CMPService, DetailService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { Column, Row } from '@lightningjs/ui-components';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../public/static/translations/en.json';
+import { t } from '../../utils/translation';
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};
@@ -106,7 +106,6 @@ export default class SingleMovie extends Lightning.Component {
               w: 700,
               y: 50,
               text: {
-                text: 'cast',
                 fontSize: 22,
                 lineHeight: 31,
                 fontFace: 'Montserrat-SemiBold',
@@ -129,6 +128,7 @@ export default class SingleMovie extends Lightning.Component {
       },
     };
   }
+
   get _Category() {
     return this.tag('Category');
   }
@@ -180,6 +180,12 @@ export default class SingleMovie extends Lightning.Component {
 
     this._translations = parseTranslations();
 
+    const splitDirector = director.split(':');
+    const splitCast = cast.split(':');
+
+    const tdirector = t(this._translations, 'director') + ':' + splitDirector[1];
+    const tcast = t(this._translations, 'cast') + ':' + splitCast[1];
+
     this.patch({
       Content: {
         Card: {
@@ -218,12 +224,12 @@ export default class SingleMovie extends Lightning.Component {
             },
             Director: {
               text: {
-                text: director,
+                text: tdirector,
               },
             },
             Cast: {
               text: {
-                text: cast,
+                text: tcast,
               },
             },
           },
@@ -235,14 +241,14 @@ export default class SingleMovie extends Lightning.Component {
       {
         icon: 'icons/home/play.svg',
         buttonName: 'WATCH NOW',
-        buttonLabel: this._translations?.watch_now?.toUpperCase() || defTr.watch_now.toUpperCase(),
+        buttonLabel: t(this._translations, 'watch_now')?.toUpperCase(),
         width: 405,
         stream: 'url',
       },
       {
         icon: 'icons/movies/trailer-icon.svg',
         buttonName: 'TRAILER',
-        buttonLabel: this._translations?.trailer?.toUpperCase() || defTr.trailer.toUpperCase(),
+        buttonLabel: t(this._translations, 'trailer')?.toUpperCase(),
         width: 405,
         stream: 'trailerSrc',
       },
@@ -256,7 +262,7 @@ export default class SingleMovie extends Lightning.Component {
       filteredButtons.push({
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonName: 'FAVORITE',
-        buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+        buttonLabel: t(this._translations, 'favorite')?.toUpperCase(),
         width: 335,
       });
 
@@ -264,9 +270,7 @@ export default class SingleMovie extends Lightning.Component {
         filteredButtons.push({
           icon: 'icons/home/play.svg',
           buttonName: 'CONTINUE WATCHING',
-          buttonLabel:
-            this._translations?.continue_watching?.toUpperCase() ||
-            defTr.continue_watching.toUpperCase(),
+          buttonLabel: t(this._translations, 'continue_watching')?.toUpperCase(),
           width: 405,
         });
     }
@@ -363,7 +367,7 @@ export default class SingleMovie extends Lightning.Component {
       this._Buttons.items[0].items[id].patch({
         props: {
           buttonIcon: Utils.asset(is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite?.toUpperCase(),
+          buttonLabel: t(this._translations, 'favorite')?.toUpperCase(),
           width: 317,
         },
       });

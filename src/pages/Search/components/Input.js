@@ -1,8 +1,8 @@
-import { Colors, Language, Utils } from '@lightningjs/sdk';
+import { Colors, Utils } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
-import defTr from '../../../../public/static/translations/en.json';
 import { parseTranslations } from '../../../Services';
+import { t } from '../../../utils/translation';
 
 export default class InputField extends lng.Component {
   _translations;
@@ -77,16 +77,12 @@ export default class InputField extends lng.Component {
     }
   }
 
-  /* set props(props) {
-    this._translations = parseTranslations();
-  } */
-
   _active() {
     this._translations = parseTranslations();
 
     this._Placeholder.patch({
       Text: {
-        text: this._translations?.search || defTr.search,
+        text: t(this._translations, 'search'),
       },
     });
     this._setState('Input');

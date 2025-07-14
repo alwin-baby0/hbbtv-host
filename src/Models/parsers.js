@@ -1,7 +1,8 @@
 import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
-import { VODS_PER_ROW } from '../Services';
+import { parseTranslations, VODS_PER_ROW } from '../Services';
 import { RAIL_TYPES } from '../pages/utils';
 import { Banner } from './Banner';
+import { t } from '../utils/translation';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
@@ -76,9 +77,12 @@ export const parseSportsPageData = ({ data }) => {
   );
   if (!railItems || railItems?.length === 0) return;
 
+  const translations = parseTranslations();
+  const title = t(translations, 'sports');
+
   return {
     railType: RAIL_TYPES.SPORT,
-    railTitle: data.title,
+    railTitle: title,
     cardType: 'POSTER',
     items: railItems,
     itemsPerRow: VODS_PER_ROW,
@@ -90,9 +94,12 @@ export const parseSportsEventsData = ({ data }) => {
   const railItems = data.entry?.map((item) => new LiveEventsRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
+  const translations = parseTranslations();
+  const title = t(translations, 'sports_events');
+
   return {
     railType: RAIL_TYPES.SPORT_LIVE,
-    railTitle: data.title,
+    railTitle: title,
     cardType: 'POSTER',
     items: railItems,
     h: 400,
