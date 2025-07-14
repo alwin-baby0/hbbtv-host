@@ -19,7 +19,6 @@ export default class BannerRailItem extends FocusableItem {
       h: CARD_SIZES.BANNER.height,
       flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
       Wrapper: {
-        // flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
         w: 1760,
         h: 260,
         Border: {
@@ -49,13 +48,11 @@ export default class BannerRailItem extends FocusableItem {
     });
 
     const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;
-    // console.log('imageSrc', imageSrc);
     this._PosterImage.patch({
       props: {
         width: CARD_SIZES.BANNER.image_width,
         height: CARD_SIZES.BANNER.image_height,
         imageSrc: imageSrc,
-        // imageSrc: 'https://cdn-images.watch4.com/360/3/1765501.jpg?1728370221',
         placeholderSrc: placeholderSrc,
         radius: radius,
       },

@@ -1,4 +1,4 @@
-import { Colors, Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Utils } from '@lightningjs/sdk';
 
 export default class LiveChannelRailItem extends Lightning.Component {
   static _template() {

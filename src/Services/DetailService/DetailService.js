@@ -19,7 +19,6 @@ class DetailService extends FetchingService {
       params: {
         _: timestamp,
         id: movieId,
-        // ssai_test: '',
       },
     }).then(parseDetailsData);
   };
