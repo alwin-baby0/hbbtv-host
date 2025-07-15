@@ -1,9 +1,9 @@
+const lng = localStorage.getItem('languageCode');
+const defTr = await import(`../../../src/static/${lng}.json`);
+
+console.log(defTr);
+
 let translationsVar = undefined;
-
-const defTr = import(
-  '../../../public/static/translations/' + localStorage.getItem('languageCode') || 'en' + '.json'
-);
-
 export default class TranslationService {
   getLanguageTranslations = async () => {
     const lngCode = localStorage.getItem('languageCode');
@@ -21,7 +21,6 @@ export default class TranslationService {
       })
       .catch((error) => {
         const trExist = localStorage.getItem('languageTr');
-
         console.log('Translation error:', error);
         if (trExist) {
           localStorage.setItem('languageTr', JSON.stringify(trExist));
@@ -37,6 +36,7 @@ export default class TranslationService {
 const translationService = new TranslationService();
 
 export { translationService as TranslationService };
+
 /**
  * @param { keyof typeof defTr } key
  */
