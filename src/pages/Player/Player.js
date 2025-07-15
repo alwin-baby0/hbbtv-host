@@ -7,7 +7,7 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { CMPService, parseTranslations } from '../../Services';
+import { CMPService, parseTranslations, t } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import defTr from '../../../public/static/translations/en.json';
 import {
@@ -152,7 +152,6 @@ export default class Player extends lng.Component {
           x: 50,
           y: 70,
           text: {
-            // text: this._translations?.subtitles || defTr.subtitles,
             fontSize: 32,
           },
         },
@@ -215,7 +214,7 @@ export default class Player extends lng.Component {
 
     this._Subtitles.patch({
       Title: {
-        text: this._translations.subtitles || defTr.subtitles,
+        text: t(this._translations, 'subtitles'),
       },
       Languages: {
         items: [
@@ -224,7 +223,7 @@ export default class Player extends lng.Component {
             collision: true,
             props: {
               languageInfo: {
-                name: this?._translations?.off?.toUpperCase() || defTr.off.toUpperCase(),
+                name: t(this._translations, 'off').toUpperCase(),
                 type: 'SUBTITLES',
               },
               index: 0,
@@ -1018,7 +1017,7 @@ export default class Player extends lng.Component {
     this.tag('ErrorMessage').patch({
       Message: {
         text: {
-          text: this._translations?.no_stream || 'Invalid Video URL',
+          text: t(this._translations, 'no_stream'),
         },
       },
     });

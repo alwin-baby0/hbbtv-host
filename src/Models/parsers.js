@@ -1,8 +1,7 @@
 import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
-import { parseTranslations, VODS_PER_ROW } from '../Services';
+import { parseTranslations, t, VODS_PER_ROW } from '../Services';
 import { RAIL_TYPES } from '../pages/utils';
 import { Banner } from './Banner';
-import { t } from '../utils/translation';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {

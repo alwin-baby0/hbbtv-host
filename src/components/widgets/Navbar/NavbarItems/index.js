@@ -4,8 +4,7 @@ import { Colors, Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
-import { parseTranslations } from '../../../../Services';
-import { t } from '../../../../utils/translation';
+import { parseTranslations, t } from '../../../../Services';
 
 export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;

@@ -1,14 +1,13 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import { CMPService, parseTranslations } from '../../Services';
+import { CMPService, parseTranslations, t } from '../../Services';
 import qrcode from 'qrcode';
 import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
-import { t } from '../../utils/translation';
 
 export default class Settings extends Lightning.Component {
   _translations;

@@ -4,8 +4,7 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { parseTranslations, DetailService } from './Services';
-import { t } from './utils/translation';
+import { parseTranslations, DetailService, t } from './Services';
 
 let wasOffline = false; // Variable to track previous internet status
 

@@ -1,11 +1,10 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
 import { imageSizes } from '../../Models/utils';
-import { CMPService, DetailService, parseTranslations } from '../../Services';
+import { CMPService, DetailService, parseTranslations, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { Column, Row } from '@lightningjs/ui-components';
 import { eventTrackPayload } from '../../utils/device';
-import { t } from '../../utils/translation';
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};

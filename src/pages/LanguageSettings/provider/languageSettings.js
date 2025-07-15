@@ -1,6 +1,5 @@
-import { LanguageService, parseTranslations } from '../../../Services';
+import { LanguageService, parseTranslations, t } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
-import { t } from '../../../utils/translation';
 
 const languageArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({

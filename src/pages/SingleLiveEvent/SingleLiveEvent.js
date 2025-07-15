@@ -1,11 +1,10 @@
-import { Colors, Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Utils } from '@lightningjs/sdk';
 
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
-import { parseTranslations } from '../../Services';
-import { t } from '../../utils/translation';
+import { parseTranslations, t } from '../../Services';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};

@@ -1,10 +1,9 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import { CMPService, DetailService, parseTranslations } from '../../Services';
+import { CMPService, DetailService, parseTranslations, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import { t } from '../../utils/translation';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
