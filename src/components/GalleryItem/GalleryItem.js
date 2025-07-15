@@ -207,16 +207,18 @@ export default class GalleryItem extends Lightning.Component {
               });
               return;
             }
-            DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(({ data: result }) => {
-              Router.navigate('player', {
-                videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
-                videoId: id,
-                duration: duration,
-                videoType: 'series',
-                seriesID: seriesId,
-                ssai: result[0].extensions?.ssai ?? ssai,
-              });
-            })
+            DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
+              ({ data: result }) => {
+                Router.navigate('player', {
+                  videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
+                  videoId: id,
+                  duration: duration,
+                  videoType: 'series',
+                  seriesID: seriesId,
+                  ssai: result[0].extensions?.ssai ?? ssai,
+                });
+              }
+            );
           };
 
           btnIcon = Utils.asset('icons/home/play.svg');

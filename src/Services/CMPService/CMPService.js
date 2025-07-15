@@ -34,10 +34,8 @@ class CMPService extends FetchingService {
           try {
             const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
             console.log('statusResponse', statusResponse.data);
-            console.log(authCode);
 
             if (statusResponse.data.status === 'approved') {
-              // clearInterval(intervalId);
               this.clearPollingInterval(this._intervalId); // Use the clear function
               console.log('Device code status condition met, stopping the interval.');
               console.log('status:', statusResponse.data.status);
@@ -49,7 +47,6 @@ class CMPService extends FetchingService {
                 statusResponse.data.authorization_code,
                 timestamp
               );
-              console.log(tokenData);
               localStorage.setItem('userData', JSON.stringify(tokenData.data));
               const event = new CustomEvent('userLogIn');
               window.dispatchEvent(event);

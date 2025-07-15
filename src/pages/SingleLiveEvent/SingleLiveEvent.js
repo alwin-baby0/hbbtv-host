@@ -5,7 +5,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { parseTranslations } from '../../Services';
-import defTr from '../../../public/static/translations/en.json';
+import { t } from '../../utils/translation';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
@@ -28,7 +28,6 @@ export default class SingleLiveEvent extends Lightning.Component {
         x: 110,
         y: 715,
         h: 600,
-        // w: 1700,
         w: 1765,
         clipping: true,
         Column: {
@@ -75,8 +74,7 @@ export default class SingleLiveEvent extends Lightning.Component {
             marginTop: 10,
           },
           props: {
-            buttonLabel:
-              this._translations?.watch_now?.toUpperCase() || defTr.watch_now.toUpperCase(),
+            buttonLabel: t(this._translations, 'watch_now')?.toUpperCase(),
             buttonIcon: Utils.asset('icons/home/play.svg'),
           },
         },
@@ -86,11 +84,7 @@ export default class SingleLiveEvent extends Lightning.Component {
           width: 400,
         },
       });
-    } /* else {
-      this._HeroSection.tag('Info').patch({
-        GalleryButton: undefined,
-      });
-    } */ else {
+    } else {
       this._HeroSection.patch({
         props: {
           enabled: false,
@@ -104,8 +98,7 @@ export default class SingleLiveEvent extends Lightning.Component {
           },
           props: {
             width: 400,
-            buttonLabel:
-              this._translations?.coming_soon?.toUpperCase() || defTr.coming_soon.toUpperCase(),
+            buttonLabel: t(this._translations, 'coming_soon')?.toUpperCase(),
             enabled: false,
           },
         },
@@ -117,16 +110,6 @@ export default class SingleLiveEvent extends Lightning.Component {
     const { galleryItem } = this._props;
 
     eventTrackPayload('view_stream', galleryItem.id);
-    const startDate = new Date(this._props.galleryItem.dateRange[0]);
-    const endDate = new Date(this._props.galleryItem.dateRange[1]);
-    const currentDate = new Date();
-
-    // Hide Button
-    // if (currentDate >= startDate && currentDate <= endDate) {
-    //   this._setState('HeroSection');
-    // } else {
-    //   this._setState('Items');
-    // }
   }
 
   _getFocused() {
@@ -211,18 +194,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleUp() {
-          const startDate = new Date(this._props.galleryItem.dateRange[0]);
-          const endDate = new Date(this._props.galleryItem.dateRange[1]);
-          const currentDate = new Date();
-
           this._setState('HeroSection');
-
-          // Hide Button
-          // if (currentDate >= startDate && currentDate <= endDate) {
-          //   this._setState('HeroSection');
-          // } else {
-          //   this._setState('Items');
-          // }
         }
       },
     ];

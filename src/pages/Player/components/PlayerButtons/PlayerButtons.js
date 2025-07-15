@@ -89,12 +89,12 @@ export default class PlayerButtons extends lng.Component {
   _handleForward() {
     this._props.isStopped = false;
     this.fireAncestors('$skippingTime', true);
-    this.fireAncestors('$startStopVideo', false);
+    this.fireAncestors('$startStopVideo');
   }
 
   _handleBackward() {
     this.fireAncestors('$skippingTime', false);
-    this.fireAncestors('$startStopVideo', false);
+    this.fireAncestors('$startStopVideo');
   }
 
   _handlePause(isStopped) {
@@ -113,7 +113,6 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _handleBack(e) {
-    console.log(e);
     e.preventDefault();
     this.fireAncestors('$exitVideo', e);
   }
@@ -144,7 +143,6 @@ export default class PlayerButtons extends lng.Component {
         : buttonInfo.label === 'back'
         ? 'Back'
         : 'Controls';
-    console.log('control btns hover');
     this.fireAncestors('$horizontalPosterIndexChange', this.parent.children.indexOf(this));
     this.fireAncestors('$setState', state);
     this._focus();

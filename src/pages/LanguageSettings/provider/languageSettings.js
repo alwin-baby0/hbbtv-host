@@ -1,6 +1,6 @@
 import { LanguageService, parseTranslations } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
-import defTr from '../../../../public/static/translations/en.json';
+import { t } from '../../../utils/translation';
 
 const languageArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
@@ -16,8 +16,6 @@ const languageArea = (page, tabButtons) => {
     items: items,
     enableScroll: false,
   };
-
-  //  page.helpPages = data.entry;
 };
 
 export default async function (page) {
@@ -34,18 +32,18 @@ export default async function (page) {
     tabButtons = [
       {
         id: 0,
-        title: translations?.cookie_preferences || defTr.cookie_preferences,
+        title: t(translations, 'cookie_preferences'),
       },
       {
         id: 1,
-        title: 'Languages',
+        title: t(translations, 'languages'),
       },
     ];
   } else {
     tabButtons = [
       {
         id: 0,
-        title: translations?.cookie_preferences || defTr.cookie_preferences,
+        title: t(translations, 'cookie_preferences'),
       },
     ];
   }

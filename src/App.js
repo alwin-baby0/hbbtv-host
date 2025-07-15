@@ -4,8 +4,8 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import defTr from '../public/static/translations/en.json';
 import { parseTranslations, DetailService } from './Services';
+import { t } from './utils/translation';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -261,16 +261,16 @@ export default class App extends Router.App {
   $appClose() {
     const dialog = this.tag('Dialog');
     dialog.open({
-      message: this._translations?.exit_label || defTr.exit_label,
+      message: t(this._translations, 'exit_label'),
       actions: [
         {
-          label: this._translations?.no_resume || defTr.no_resume,
+          label: t(this._translations, 'no_resume'),
           action: () => {
             dialog.close();
           },
         },
         {
-          label: this._translations?.yes_exit || defTr.yes_exit,
+          label: t(this._translations, 'yes_exit'),
           action: () => {
             const device = getDeviceType();
             // Router navigation for "Yes, exit now"
