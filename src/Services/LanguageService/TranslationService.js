@@ -1,5 +1,3 @@
-import FetchingService from '../FetchingService';
-
 export default class TranslationService {
   getLanguageTranslations = async () => {
     const lngCode = localStorage.getItem('languageCode');

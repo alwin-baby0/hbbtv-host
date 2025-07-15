@@ -119,10 +119,8 @@ export default class SidebarItem extends lng.Component {
   _focus() {
     const { index } = this._props;
     const { label, icon } = this._props.data;
-    console.log('🚀 ~ SidebarItem ~ _focus ~ label:', label);
 
     const translatedText = Language.translate(label);
-    console.log('🚀 ~ SidebarItem ~ _focus ~ translatedText:', translatedText);
     setTimeout(() => {
       this.patch({
         Line: {
