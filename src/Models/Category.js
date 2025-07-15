@@ -38,7 +38,6 @@ class Category {
         break;
       }
       case CATEGORY_TYPES.CHANNELS: {
-        // console.log('Router CHANNEL:', this.data);
         this.changeGenre = this.data;
         Router.navigate(`live/:${this.id}?`);
         break;

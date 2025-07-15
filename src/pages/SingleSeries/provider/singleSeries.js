@@ -21,7 +21,7 @@ export default async function (page, { seriesId }) {
   if (localStorage.getItem('userData')) {
     const response = await CMPService.getFavorites();
 
-    favorited = response.data.favorites.some((element) => element.id === seriesId);
+    favorited = response.data.favorites?.some((element) => element.id === seriesId);
   }
   let firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
   let firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;

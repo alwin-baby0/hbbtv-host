@@ -1,4 +1,4 @@
-import { Router, VideoPlayer } from '@lightningjs/sdk';
+import { Router } from '@lightningjs/sdk';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { RAIL_TYPES } from '.';
 import { imageSizes } from '../../Models/utils';

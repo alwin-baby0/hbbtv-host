@@ -54,6 +54,7 @@ export default class EPGRailItems extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
+    this._props.lastId = props.id;
 
     const currentTime = new Date();
     const startTime = new Date(props.extensions.start_time);
@@ -103,8 +104,8 @@ export default class EPGRailItems extends Lightning.Component {
             text: `${formattedStartTime} - ${formattedEndTime}`,
             fontFace: 'Montserrat-Light',
           },
-        }
-      }
+        },
+      },
     });
 
     if (currentTime >= startTime && currentTime <= endTime) {
@@ -166,27 +167,27 @@ export default class EPGRailItems extends Lightning.Component {
     this._lastClickedItemId = null;
     this._props.isActive !== true
       ? this._Wrapper.patch({
-        texture: lng.Tools.getRoundRect(
-          this._epgWidth,
-          95,
-          8,
-          4,
-          Colors('#252835').get(),
-          true,
-          Colors('#252835').get()
-        ),
-      })
+          texture: lng.Tools.getRoundRect(
+            this._epgWidth,
+            95,
+            8,
+            4,
+            Colors('#252835').get(),
+            true,
+            Colors('#252835').get()
+          ),
+        })
       : this._Wrapper.patch({
-        texture: lng.Tools.getRoundRect(
-          this._epgWidth,
-          95,
-          8,
-          4,
-          Colors('#353849').get(),
-          true,
-          Colors('#353849').get()
-        ),
-      });
+          texture: lng.Tools.getRoundRect(
+            this._epgWidth,
+            95,
+            8,
+            4,
+            Colors('#353849').get(),
+            true,
+            Colors('#353849').get()
+          ),
+        });
   }
 
   _handleEnter() {
@@ -194,6 +195,7 @@ export default class EPGRailItems extends Lightning.Component {
 
     // Save the current ID as lastId before calling $selectedEPG
     const lastId = this._props.lastId || null; // Retrieve lastId if it exists, otherwise null
+
     if (this._props.isActive) {
       this.fireAncestors('$selectedEPG', currentItemId, lastId);
     }

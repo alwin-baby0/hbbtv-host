@@ -18,15 +18,20 @@ export default class UserRecentlyWatched extends Lightning.Component {
     };
   }
 
+  get _RecentlyWatched() {
+    return this.tag('RecentlyWatched');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    this.tag('RecentlyWatched').patch({
+    this._RecentlyWatched.patch({
       props: {
         items: constructRails(this._props.items),
       },
     });
   }
+
   _getFocused() {
-    return this.tag('RecentlyWatched');
+    return this._RecentlyWatched;
   }
 }
