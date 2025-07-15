@@ -1,7 +1,8 @@
 import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
-import { VODS_PER_ROW } from '../Services';
+import { parseTranslations, VODS_PER_ROW } from '../Services';
 import { RAIL_TYPES } from '../pages/utils';
 import { Banner } from './Banner';
+import { t } from '../utils/translation';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
@@ -19,7 +20,6 @@ export const parseHomePageRailData = ({ data }) => {
 export const parseHomePageHeroSection = ({ data }) => {
   const galleryItems = data.entry?.map((item) => new GalleryItem(item));
   if (!galleryItems || galleryItems?.length === 0) return;
-  //if (!(galleryItems && galleryItems.length > 0)) return;
   return {
     railType: galleryItems[0].type,
     railTitle: data.title,
@@ -77,9 +77,12 @@ export const parseSportsPageData = ({ data }) => {
   );
   if (!railItems || railItems?.length === 0) return;
 
+  const translations = parseTranslations();
+  const title = t(translations, 'sports');
+
   return {
     railType: RAIL_TYPES.SPORT,
-    railTitle: data.title,
+    railTitle: title,
     cardType: 'POSTER',
     items: railItems,
     itemsPerRow: VODS_PER_ROW,
@@ -91,9 +94,12 @@ export const parseSportsEventsData = ({ data }) => {
   const railItems = data.entry?.map((item) => new LiveEventsRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
+  const translations = parseTranslations();
+  const title = t(translations, 'sports_events');
+
   return {
     railType: RAIL_TYPES.SPORT_LIVE,
-    railTitle: data.title,
+    railTitle: title,
     cardType: 'POSTER',
     items: railItems,
     h: 400,
@@ -131,7 +137,6 @@ export const parseCollectionData = ({ data }) => {
   if (!railItems || railItems.length === 0) return;
 
   return {
-    // railType: railItems[0].type,
     railType: RAIL_TYPES.COLLECTION,
     railTitle: data.title,
     cardType: 'COLLECTION',
@@ -159,9 +164,7 @@ export const parseBannerData = ({ data }) => {
   if (!railItems || railItems.length === 0) return;
 
   return {
-    // railType: railItems[0].type,
     railType: RAIL_TYPES.BANNER,
-    // railTitle: 'Advertisement',
     cardType: 'BANNER',
     items: railItems,
     itemsPerRow: 4,

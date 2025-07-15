@@ -4,7 +4,7 @@ import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import { CMPService, DetailService, parseTranslations } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../public/static/translations/en.json';
+import { t } from '../../utils/translation';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -60,15 +60,8 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   async addToFavorite() {
-    /* console.log(this);
-    const { id } = this._props.galleryItem;
-    await CMPService.addToFavorites(id, 'video');
-    const favoriteees = await CMPService.getFavorites();
-    console.log(favoriteees); */
-
     try {
       const { favorited, seriesId } = this._props;
-      //const { id } = this._props.galleryItem;
       if (favorited) {
         await CMPService.removeFromFavorites(seriesId);
       } else {
@@ -82,7 +75,7 @@ export default class SingleSeries extends Lightning.Component {
       this._HeroSection._FavoriteButton.patch({
         props: {
           buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+          buttonLabel: t(this._translations, 'favorite')?.toUpperCase(),
           width: 360,
         },
       });
@@ -107,15 +100,13 @@ export default class SingleSeries extends Lightning.Component {
       ssai,
       ssaiLastEp,
     } = this._props;
-    const { url, id } = galleryItem;
-
-    console.log('this prrops, ', this._props);
+    const { id } = galleryItem;
 
     eventTrackPayload('view_serie', id);
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
-        // height: 650,
+
         height: 620,
         firstEpisodeVideoId: firstEpisodeVideoId,
         firstEpisodeUrl: firstEpisodeUrl,
@@ -128,9 +119,7 @@ export default class SingleSeries extends Lightning.Component {
     this._HeroSection._GalleryButton.patch({
       props: {
         width: 430,
-        buttonLabel:
-          this._translations?.watch_first_episode?.toUpperCase() ||
-          defTr.watch_first_episode.toUpperCase(),
+        buttonLabel: t(this._translations, 'watch_first_episode')?.toUpperCase(),
       },
     });
 
@@ -150,9 +139,7 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 props: {
                   buttonIcon: Utils.asset('icons/home/play.svg'),
-                  buttonLabel:
-                    this._translations?.continue_watching?.toUpperCase() ||
-                    defTr.continue_watching.toUpperCase(),
+                  buttonLabel: t(this._translations, 'continue_watching')?.toUpperCase(),
                   width: 440,
                   callback: () => {
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
@@ -179,8 +166,7 @@ export default class SingleSeries extends Lightning.Component {
                 alpha: 1,
                 props: {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-                  buttonLabel:
-                    this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+                  buttonLabel: t(this._translations, 'favorite').toUpperCase(),
                   width: 360,
                   callback: () => {
                     this.addToFavorite();
@@ -211,8 +197,7 @@ export default class SingleSeries extends Lightning.Component {
                 alpha: 1,
                 props: {
                   buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-                  buttonLabel:
-                    this._translations?.favorite?.toUpperCase() || defTr.favorite.toUpperCase(),
+                  buttonLabel: t(this._translations, 'favorite').toUpperCase(),
                   width: 360,
                   callback: () => {
                     this.addToFavorite();
@@ -225,54 +210,6 @@ export default class SingleSeries extends Lightning.Component {
         );
       }
     }
-
-    // if (localStorage.getItem('userData')) {
-    //   console.log('lastPlayed');
-    //   position !== undefined
-    //     ? this._HeroSection.tag('Info.AuthorizedButtons').patch(
-    //         {
-    //           ContinueWatching: {
-    //             alpha: 1,
-    //             props: {
-    //               buttonIcon: Utils.asset('icons/home/play.svg'),
-    //               buttonLabel: 'CONTINUE WATCHING',
-    //               width: 400,
-    //               callback: () => {
-    //                 Router.navigate('player', {
-    //                   videoUrl: url,
-    //                   duration: duration,
-    //                   videoType: 'series',
-    //                   seriesID: id,
-    //                   videoId: lastPlayedId,
-    //                   continueTime: position,
-    //                 });
-    //               },
-    //             },
-    //           },
-    //         },
-    //         true
-    //       )
-    //     : this._HeroSection.tag('Info.AuthorizedButtons').patch(
-    //         {
-    //           ContinueWatching: undefined,
-    //         },
-    //         true
-    //       );
-
-    // this._HeroSection._FavoriteButton.patch({
-    //   alpha: 1,
-    //   props: {
-    //     buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-    //     buttonLabel: 'FAVORITE',
-    //     width: 360,
-    //     callback: () => {
-    //       this.addToFavorite();
-    //     },
-    //   },
-    // });
-    // this.stage.update();
-    // this._refocus();
-
     this._setState('HeroSection');
   }
 

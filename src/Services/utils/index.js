@@ -31,6 +31,7 @@ export function createApiCtx() {
       deviceId: getDeviceInfo().serialNumber || 'no-id-defined',
       deviceModel: getDeviceInfo().model || 'no-model-defined',
       deviceMake: getDeviceInfo().brand || 'no-make-defined',
+      language: localStorage.getItem('languageCode') || selectedLanguage,
     })
   );
 }

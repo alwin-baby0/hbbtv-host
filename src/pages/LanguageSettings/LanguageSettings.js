@@ -1,4 +1,4 @@
-import { Colors, Language, Lightning, Router } from '@lightningjs/sdk';
+import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
@@ -52,6 +52,8 @@ export default class LanguageSettings extends Lightning.Component {
   }
 
   set props(props) {
+    console.log({ props });
+
     this._props = { ...this._props, ...props };
   }
 

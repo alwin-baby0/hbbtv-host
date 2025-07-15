@@ -18,9 +18,13 @@ export default class UserFavorites extends Lightning.Component {
     };
   }
 
+  get _Favorites() {
+    return this.tag('Favorites')
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    this.tag('Favorites').patch({
+    this._Favorites.patch({
       props: {
         items: constructRails(this._props.items),
       },
@@ -28,6 +32,6 @@ export default class UserFavorites extends Lightning.Component {
   }
 
   _getFocused() {
-    return this.tag('Favorites');
+    return this._Favorites;
   }
 }
