@@ -50,7 +50,7 @@ export default class CategoryPickerItem extends Lightning.Component {
           textOverflow: 'ellipsis',
           wordWrap: false,
         },
-      }
+      },
     });
   }
 
@@ -86,6 +86,9 @@ export default class CategoryPickerItem extends Lightning.Component {
     const { w, h, radius, strokeWidth, itemInfo } = this._props;
     const { title } = itemInfo;
 
+    this.patch({
+      Title: undefined,
+    });
     this.patch({
       texture: Lightning.Tools.getRoundRect(
         w,
