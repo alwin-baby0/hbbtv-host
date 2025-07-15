@@ -1,4 +1,4 @@
-const lng = localStorage.getItem('languageCode');
+const lng = localStorage.getItem('languageCode') || 'en';
 const defTr = await import(`../../../src/static/${lng}.json`);
 
 console.log(defTr);
