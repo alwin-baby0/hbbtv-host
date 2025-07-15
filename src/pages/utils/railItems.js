@@ -301,7 +301,7 @@ const constructBannerRailItems = (railItems, railItemsOptions) => {
       itemTitle: railItem.title ? railItem.title : '',
       imageSrc: railItem.getCtvPoster(1080),
       itemType: railItem.type,
-      callback: () => { },
+      callback: () => {},
     },
   }));
 };
