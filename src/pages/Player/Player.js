@@ -7,9 +7,8 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { CMPService, parseTranslations, t } from '../../Services';
+import { CMPService, t } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../public/static/translations/en.json';
 import {
   convertCueTimeToSeconds,
   formatTimeHMS,
@@ -27,7 +26,6 @@ export default class Player extends lng.Component {
     ads: [],
   };
 
-  _translations;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
@@ -210,11 +208,9 @@ export default class Player extends lng.Component {
   }
 
   set params({ videoType, videoUrl, ssai, ...rest }) {
-    this._translations = parseTranslations();
-
     this._Subtitles.patch({
       Title: {
-        text: t(this._translations, 'subtitles'),
+        text: t('subtitles'),
       },
       Languages: {
         items: [
@@ -223,7 +219,7 @@ export default class Player extends lng.Component {
             collision: true,
             props: {
               languageInfo: {
-                name: t(this._translations, 'off').toUpperCase(),
+                name: t('off').toUpperCase(),
                 type: 'SUBTITLES',
               },
               index: 0,
@@ -1017,7 +1013,7 @@ export default class Player extends lng.Component {
     this.tag('ErrorMessage').patch({
       Message: {
         text: {
-          text: t(this._translations, 'no_stream'),
+          text: t('no_stream'),
         },
       },
     });

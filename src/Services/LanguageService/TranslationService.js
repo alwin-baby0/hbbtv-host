@@ -1,23 +1,34 @@
+let translationsVar = undefined;
+
+const defTr = import(
+  '../../../public/static/translations/' + localStorage.getItem('languageCode') || 'en' + '.json'
+);
+
 export default class TranslationService {
   getLanguageTranslations = async () => {
     const lngCode = localStorage.getItem('languageCode');
 
-    const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode || 'en'}/app`);
-    const res = prevodi.json();
+    const translations = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode || 'en'}/app`);
+    const res = translations.json();
     return res;
   };
 
   setTranslations = async () => {
     this.getLanguageTranslations()
       .then((data) => {
+        translationsVar = data;
         localStorage.setItem('languageTr', JSON.stringify(data));
       })
       .catch((error) => {
         const trExist = localStorage.getItem('languageTr');
+
+        console.log('Translation error:', error);
         if (trExist) {
-          console.log('Translation error:', error);
+          localStorage.setItem('languageTr', JSON.stringify(trExist));
+          translationsVar = trExist;
         } else {
           localStorage.setItem('languageTr', JSON.stringify(defTr));
+          translationsVar = defTr;
         }
       });
   };
@@ -26,15 +37,9 @@ export default class TranslationService {
 const translationService = new TranslationService();
 
 export { translationService as TranslationService };
-
 /**
- * @param { {[key: string]: string} } translations
- * @param { string } key
+ * @param { keyof typeof defTr } key
  */
-export function t(translations, key) {
-  return translations[key] || defTr[key];
+export function t(key) {
+  return translationsVar[key] || defTr[key];
 }
-
-export const parseTranslations = () => {
-  return JSON.parse(localStorage.getItem('languageTr'));
-};

@@ -1,7 +1,7 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import { CMPService, parseTranslations, t } from '../../Services';
+import { CMPService, t } from '../../Services';
 import qrcode from 'qrcode';
 import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
@@ -10,7 +10,6 @@ import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
 
 export default class Settings extends Lightning.Component {
-  _translations;
   _contentId = 0;
   _props = {
     lastId: 0,
@@ -87,7 +86,6 @@ export default class Settings extends Lightning.Component {
   }
 
   set props(props) {
-    this._translations = parseTranslations();
     this._props = { ...this._props, ...props };
   }
 
@@ -245,7 +243,7 @@ export default class Settings extends Lightning.Component {
                     h: 120,
                     w: 500,
                     text: {
-                      text: t(this._translations, 'signup_title'),
+                      text: t('signup_title'),
                       fontFace: 'Montserrat-Bold',
                       fontSize: 30,
                       lineHeight: 35,
@@ -256,7 +254,7 @@ export default class Settings extends Lightning.Component {
                     h: 300,
                     w: 650,
                     text: {
-                      text: t(this._translations, 'signup_description'),
+                      text: t('signup_description'),
                       fontFace: 'Montserrat-Regular',
                       fontSize: 25,
                       lineHeight: 30,
@@ -287,7 +285,7 @@ export default class Settings extends Lightning.Component {
                       marginTop: 10,
                     },
                     text: {
-                      text: t(this._translations, 'signup_scan'),
+                      text: t('signup_scan'),
                       fontFace: 'Montserrat-Bold',
                       fontSize: 25,
                       lineHeight: 30,
@@ -303,7 +301,7 @@ export default class Settings extends Lightning.Component {
 
           const parsedMovies = parseVodUserContentData({
             data: {
-              railTitle: t(this._translations, 'continue_watching'),
+              railTitle: t('continue_watching'),
               entry: recentlyWatched.data.recently_watched,
             },
             itemsPerRow:
@@ -316,7 +314,7 @@ export default class Settings extends Lightning.Component {
 
           const parsedFavorites = parseVodUserContentData({
             data: {
-              railTitle: t(this._translations, 'favorites'),
+              railTitle: t('favorites'),
               entry: favorites.data.favorites,
             },
             itemsPerRow:
@@ -339,7 +337,7 @@ export default class Settings extends Lightning.Component {
                   h: 120,
                   w: 1310,
                   text: {
-                    text: t(this._translations, 'logged_in_message'),
+                    text: t('logged_in_message'),
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,
@@ -433,7 +431,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 1,
-          title: t(this._translations, 'continue_watching'),
+          title: t('continue_watching'),
         },
         w: 250,
         h: 100,
@@ -443,7 +441,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 2,
-          title: t(this._translations, 'favorites'),
+          title: t('favorites'),
         },
         w: 250,
         h: 100,
@@ -453,7 +451,7 @@ export default class Settings extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 3,
-          title: t(this._translations, 'logout'),
+          title: t('logout'),
         },
         w: 250,
         h: 100,
@@ -545,7 +543,7 @@ export default class Settings extends Lightning.Component {
                   h: 120,
                   w: 1310,
                   text: {
-                    text: t(this._translations, 'logged_in_message'),
+                    text: t('logged_in_message'),
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,

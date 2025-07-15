@@ -19,7 +19,6 @@ export default async function (page) {
   if (page._props.sliderData !== null && page._props.railData) {
     return;
   }
-  await TranslationService.setTranslations();
 
   await HomePageService.initialFetch();
 

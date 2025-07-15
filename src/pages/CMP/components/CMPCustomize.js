@@ -1,12 +1,15 @@
-import { Language, Lightning, Router } from '@lightningjs/sdk';
+import { Lightning, Router } from '@lightningjs/sdk';
 import QRCode from '../../../components/QRCode/QRCode';
 import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
 import VerticalContainer from '../../../components/VerticalContainer/VerticalContainer';
 import Button from '../../../components/Button/Button';
+import { t } from '../../../Services';
+
 const customizeButtons = [
-  { id: 0, label: 'Refresh' },
-  { id: 1, label: 'Close' },
+  { id: 0, label: 'refresh' },
+  { id: 1, label: 'close' },
 ];
+
 export default class CMPCustomize extends Lightning.Component {
   static _template() {
     return {
@@ -62,7 +65,6 @@ export default class CMPCustomize extends Lightning.Component {
     const qrCodes = options.map((qrCode) => {
       return {
         type: QRCode,
-        // w: 910,
         w: 770,
         props: {
           qrCode,
@@ -71,7 +73,7 @@ export default class CMPCustomize extends Lightning.Component {
     });
 
     this._Titles.patch({
-      text: Language.translate('CMPTitle'),
+      text: t('cmp_title'),
     });
 
     const buttons = customizeButtons.map((button) => {
@@ -85,13 +87,12 @@ export default class CMPCustomize extends Lightning.Component {
         props: {
           width: 1050,
           height: 72,
-          // buttonLabel: button.label,
-          buttonLabel: Language.translate(button.label),
+          buttonLabel: t(button.label),
           buttonIcon: '',
           strokeWidth: 1.5,
           borderColor: '#696969',
           callback: async () => {
-            if (button.label === 'Close') {
+            if (button.label === 'close') {
               Router.back();
             } else {
               console.log('Refresh logic');
@@ -100,8 +101,6 @@ export default class CMPCustomize extends Lightning.Component {
         },
       };
     });
-
-    console.log('buttons', buttons);
 
     this._QRCodes.props = {
       items: qrCodes,

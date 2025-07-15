@@ -4,7 +4,7 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { parseTranslations, DetailService, t } from './Services';
+import { DetailService, t } from './Services';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -93,10 +93,6 @@ export default class App extends Router.App {
         ssai: movie.ssai,
       });
     }
-  }
-
-  _init() {
-    this._translations = parseTranslations();
   }
 
   $punchHole() {
@@ -195,18 +191,13 @@ export default class App extends Router.App {
     ];
   }
 
-  static language() {
+  static langCode() {
     let selectedLanguage = localStorage.getItem('languageCode');
 
     if (!selectedLanguage) {
       selectedLanguage = navigator.language || navigator.userLanguage || 'en-';
       localStorage.setItem('languageCode', selectedLanguage.split('-')[0]);
     }
-
-    return {
-      file: Utils.asset('translations/translations.json'),
-      language: selectedLanguage,
-    };
   }
 
   handleOnline() {
@@ -260,16 +251,16 @@ export default class App extends Router.App {
   $appClose() {
     const dialog = this.tag('Dialog');
     dialog.open({
-      message: t(this._translations, 'exit_label'),
+      message: t('exit_label'),
       actions: [
         {
-          label: t(this._translations, 'no_resume'),
+          label: t('no_resume'),
           action: () => {
             dialog.close();
           },
         },
         {
-          label: t(this._translations, 'yes_exit'),
+          label: t('yes_exit'),
           action: () => {
             const device = getDeviceType();
             // Router navigation for "Yes, exit now"

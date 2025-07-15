@@ -4,7 +4,7 @@ import { Colors, Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
-import { parseTranslations, t } from '../../../../Services';
+import { t } from '../../../../Services';
 
 export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
@@ -57,14 +57,12 @@ export default class SidebarItems extends Lightning.Component {
     });
   }
   _firstActive() {
-    const translations = parseTranslations();
-
     const menuItems = [
-      { id: 0, label: t(translations, 'home'), route: 'home', icon: '' },
-      { id: 1, label: t(translations, 'movies'), route: 'vod/movies', icon: '' },
-      { id: 2, label: t(translations, 'series'), route: 'vod/series', icon: '' },
-      { id: 3, label: t(translations, 'sport'), route: 'vod/sports', icon: '' },
-      { id: 4, label: t(translations, 'live_tv'), route: 'live', icon: '' },
+      { id: 0, label: t('home'), route: 'home', icon: '' },
+      { id: 1, label: t('movies'), route: 'vod/movies', icon: '' },
+      { id: 2, label: t('series'), route: 'vod/series', icon: '' },
+      { id: 3, label: t('sport'), route: 'vod/sports', icon: '' },
+      { id: 4, label: t('live_tv'), route: 'live', icon: '' },
       { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
       { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
       { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },

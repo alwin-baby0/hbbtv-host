@@ -4,11 +4,10 @@ import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
-import { parseTranslations, t } from '../../Services';
+import { t } from '../../Services';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
-  _translations;
   static _template() {
     return {
       SeriesWrapper: {
@@ -39,10 +38,6 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   set props(props) {
-    console.log('events props: ', props.galleryItem.dateRange[0]);
-
-    this._translations = parseTranslations();
-
     // Assuming dateRange[0] is the start date and dateRange[1] is the end date
     const startDate = new Date(props.galleryItem.dateRange[0]);
     const endDate = new Date(props.galleryItem.dateRange[1]);
@@ -73,7 +68,7 @@ export default class SingleLiveEvent extends Lightning.Component {
             marginTop: 10,
           },
           props: {
-            buttonLabel: t(this._translations, 'watch_now')?.toUpperCase(),
+            buttonLabel: t('watch_now')?.toUpperCase(),
             buttonIcon: Utils.asset('icons/home/play.svg'),
           },
         },
@@ -97,7 +92,7 @@ export default class SingleLiveEvent extends Lightning.Component {
           },
           props: {
             width: 400,
-            buttonLabel: t(this._translations, 'coming_soon')?.toUpperCase(),
+            buttonLabel: t('coming_soon')?.toUpperCase(),
             enabled: false,
           },
         },

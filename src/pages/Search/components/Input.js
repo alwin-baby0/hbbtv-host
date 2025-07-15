@@ -1,9 +1,8 @@
 import { Colors, Utils } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
-import { parseTranslations, t } from '../../../Services';
+import { t } from '../../../Services';
 export default class InputField extends lng.Component {
-  _translations;
   static _template() {
     return {
       InputWrapper: {
@@ -76,11 +75,9 @@ export default class InputField extends lng.Component {
   }
 
   _active() {
-    this._translations = parseTranslations();
-
     this._Placeholder.patch({
       Text: {
-        text: t(this._translations, 'search'),
+        text: t('search'),
       },
     });
     this._setState('Input');
