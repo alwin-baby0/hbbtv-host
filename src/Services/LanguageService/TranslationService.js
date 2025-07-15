@@ -34,3 +34,7 @@ export { translationService as TranslationService };
 export function t(translations, key) {
   return translations[key] || defTr[key];
 }
+
+export const parseTranslations = () => {
+  return JSON.parse(localStorage.getItem('languageTr'));
+};

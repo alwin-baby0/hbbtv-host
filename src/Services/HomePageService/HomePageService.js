@@ -208,19 +208,7 @@ class HomePageService extends FetchingService {
       apiVersion: V2,
       method: 'GET',
     }).then(parseBannerData);
-
-  #getLanguageTranslations = async () => {
-    const lngCode = localStorage.getItem('languageCode');
-
-    const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode || 'en'}/app`);
-    const res = prevodi.json();
-    return res;
-  };
 }
-
-export const parseTranslations = () => {
-  return JSON.parse(localStorage.getItem('languageTr'));
-};
 
 const homePageService = new HomePageService();
 
