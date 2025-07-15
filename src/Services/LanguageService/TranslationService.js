@@ -26,3 +26,11 @@ export default class TranslationService {
 const translationService = new TranslationService();
 
 export { translationService as TranslationService };
+
+/**
+ * @param { {[key: string]: string} } translations
+ * @param { string } key
+ */
+export function t(translations, key) {
+  return translations[key] || defTr[key];
+}
