@@ -7,7 +7,6 @@ import {
   parseHomePageHeroSection,
   parseHomePageRailData,
 } from '../../Models/parsers';
-
 class HomePageService extends FetchingService {
   #heroSectionItems;
   #stripes = [];
@@ -17,17 +16,12 @@ class HomePageService extends FetchingService {
   #heroSectionPage = 1; // Page counter for Hero Section
   #isLastFetchEmpty = false; // Initialize to false
   #banner = [];
-  languageTranslations = [];
 
   /**
    * Fetches initial stripes for Home page
    */
   async initialFetch() {
     this.#banner = await this.#getBanner();
-
-    this.languageTranslations = await this.#getLanguageTranslations();
-
-    localStorage.setItem('languageTr', JSON.stringify(this.languageTranslations));
 
     if (!this.#heroSectionItems) {
       //get gallery data
