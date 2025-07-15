@@ -3,6 +3,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 
 export default class Collection extends Lightning.Component {
   _props = {};
+
   static _template() {
     return {
       Wrapper: {

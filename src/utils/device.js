@@ -1,4 +1,4 @@
-let deviceInfo = {}
+let deviceInfo = {};
 
 export const getDeviceType = () => process.env.APP_PLATFORM || 'web';
 
@@ -53,7 +53,7 @@ const getWebOSInfo = async () => {
 
   const deviceModelAndBrand = new Promise((resolve) => {
     webOS.deviceInfo(function (device) {
-      resolve({ model: device.modelName, brand: device.brandName })
+      resolve({ model: device.modelName, brand: device.brandName });
     });
   });
 
@@ -65,14 +65,22 @@ const getWebOSInfo = async () => {
       },
       onSuccess: (response) => {
         const uuid = response.idList[0].idValue;
-        resolve({ macAddress: uuid.replace(/-/g, '').substring(0, 12).match(/.{1,2}/g).join(':') });
+        resolve({
+          macAddress: uuid
+            .replace(/-/g, '')
+            .substring(0, 12)
+            .match(/.{1,2}/g)
+            .join(':'),
+        });
       },
       onFailure: (error) => {
-        console.warn('Failed to get system ID information: [' + error.errorCode + ']: ' + error.errorText);
-        reject({ macAddress: null })
+        console.warn(
+          'Failed to get system ID information: [' + error.errorCode + ']: ' + error.errorText
+        );
+        reject({ macAddress: null });
       },
     });
-  })
+  });
 
   const deviceSerialNumberAndOsVersion = new Promise((resolve, reject) => {
     webOS.service.request('luna://com.webos.service.tv.systemproperty', {
@@ -82,25 +90,38 @@ const getWebOSInfo = async () => {
         resolve({ serialNumber: response.serialNumber, osVersion: response.firmwareVersion });
       },
       onFailure: (error) => {
-        console.warn('Failed to get SerialNumberAndOsVersion: [' + error.errorCode + ']: ' + error.errorText);
-        reject({ serialNumber: null, osVersion: null })
+        console.warn(
+          'Failed to get SerialNumberAndOsVersion: [' + error.errorCode + ']: ' + error.errorText
+        );
+        reject({ serialNumber: null, osVersion: null });
       },
     });
-  })
+  });
 
-  const response = await Promise.all([deviceModelAndBrand, deviceMacAdress, deviceSerialNumberAndOsVersion]);
+  const response = await Promise.all([
+    deviceModelAndBrand,
+    deviceMacAdress,
+    deviceSerialNumberAndOsVersion,
+  ]);
 
-  return response.reduce((acc, info) => ({ ...acc, ...info }), {})
+  return response.reduce((acc, info) => ({ ...acc, ...info }), {});
 };
 
-const getTitanInfo = () => ({
-  serialNumber: generateRandomUUID(),
-  model: extractPhilipsModel(),
-  brand: 'Philips',
-  os: 'TitanOS',
-  osVersion: '1.0',
-  macAddress: '12:34:56:78:9A:BC',
-});
+const getTitanInfo = () => {
+  const {
+    Capability: { os },
+    Channel: { brand },
+    Product: { firmwareVersion },
+  } = DeviceInfo; // Requires titanos device-info-sdk script, can be found at https://docs.titanos.tv/deviceinfoapi
+  return {
+    serialNumber: generateRandomUUID(),
+    model: extractPhilipsModel(),
+    brand: brand,
+    os: os,
+    osVersion: firmwareVersion,
+    macAddress: null,
+  };
+};
 
 const getWebInfo = () => ({
   serialNumber: generateRandomUUID(),
@@ -111,6 +132,7 @@ const getWebInfo = () => ({
   macAddress: 'simulated-mac-address',
 });
 
+// TODO: find out how to get os version for each of the platforms
 /**
  *
  * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType
@@ -118,6 +140,7 @@ const getWebInfo = () => ({
  */
 const setUpDeviceInfo = async (deviceType) => {
   console.log('Device type:', deviceType);
+
   switch (deviceType) {
     case 'samsung':
     case 'tizen':
@@ -139,12 +162,16 @@ const setUpDeviceInfo = async (deviceType) => {
 
 const calcualtePrecision = (height, width) => {
   switch (true) {
-    case height === 720 && width === 1280: return 2 / 3;
-    case height === 2160 && width === 3840: return 2;
-    case height === 4320 && width === 7680: return 4;
-    default: return 1;
+    case height === 720 && width === 1280:
+      return 2 / 3;
+    case height === 2160 && width === 3840:
+      return 2;
+    case height === 4320 && width === 7680:
+      return 4;
+    default:
+      return 1;
   }
-}
+};
 
 /**
  * Initiate and save device info
@@ -161,15 +188,15 @@ export const initDeviceInfo = async (deviceType) => {
 export const getDeviceInfo = () => deviceInfo;
 
 export const getDeviceStageProps = () => {
-  const { innerHeight, innerWidth } = window
-  const height = innerHeight || 1080
-  const width = innerWidth || 1920
+  const { innerHeight, innerWidth } = window;
+  const height = innerHeight || 1080;
+  const width = innerWidth || 1920;
   return {
     h: height,
     w: width,
     precision: calcualtePrecision(height, width),
-  }
-}
+  };
+};
 
 export const eventTrackPayload = (event, id) => {
   const { serialNumber, osVersion, os, model, brand } = getDeviceInfo();
@@ -190,7 +217,7 @@ export const eventTrackPayload = (event, id) => {
           version: osVersion,
           device_id: serialNumber,
         },
-        process.env.APP_WATCH4_API_KEY,
+        process.env.APP_WATCH4_API_KEY
       );
     else {
       console.error('event tracking object not attched', error);
