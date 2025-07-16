@@ -1,12 +1,13 @@
-const lng = localStorage.getItem('languageCode') || 'en';
-const defTr = await import(`../../../src/static/${lng}.json`);
-
-console.log(defTr);
+const lngCode =
+  localStorage.getItem('languageCode') || navigator.language || navigator.userLanguage || 'en-';
+const defTr = await import(
+  `../../../public/static/translations/${lngCode.split('-')[0] || 'en'}.json`
+);
 
 let translationsVar = undefined;
 export default class TranslationService {
   getLanguageTranslations = async () => {
-    const lngCode = localStorage.getItem('languageCode');
+    localStorage.setItem('languageCode', lngCode.split('-')[0]);
 
     const translations = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode || 'en'}/app`);
     const res = translations.json();

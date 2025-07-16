@@ -191,15 +191,6 @@ export default class App extends Router.App {
     ];
   }
 
-  static langCode() {
-    let selectedLanguage = localStorage.getItem('languageCode');
-
-    if (!selectedLanguage) {
-      selectedLanguage = navigator.language || navigator.userLanguage || 'en-';
-      localStorage.setItem('languageCode', selectedLanguage.split('-')[0]);
-    }
-  }
-
   handleOnline() {
     if (wasOffline) {
       VideoPlayer.play();
