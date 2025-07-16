@@ -95,7 +95,7 @@ export default class CMPCustomize extends Lightning.Component {
             if (button.label === 'close') {
               Router.back();
             } else {
-              console.log('Refresh logic');
+              console.log('refresh logic');
             }
           },
         },

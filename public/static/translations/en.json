@@ -64,6 +64,6 @@
   "hide": "Hide",
   "search_for": "Search For",
   "cmp_title": "We value your privacy",
-  "refresh":"Refresh",
-  "close":"Close"
+  "refresh":"refresh",
+  "close":"close"
 }

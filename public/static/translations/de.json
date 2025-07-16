@@ -46,8 +46,8 @@
   "Yes, I Agree": "Ja, ich stimme zu",
   "No, I Do Not Agree": "Nein, ich stimme nicht zu",
   "Customize Preferences": "Anpassen Sie die Einstellungen",
-  "CMPTitle": "Wir schätzen Ihre Privatsphäre",
+  "cmp_title": "Wir schätzen Ihre Privatsphäre",
   "CMPDescription": "Wir verwenden Cookies, um das Surferlebnis zu verbessern. Indem Sie auf \"Ja\" klicken, stimmen Sie der Verwendung von Cookies zu. Sie können Ihre Zustimmungseinstellungen anpassen, indem Sie auf \"Anpassen\" klicken.",
-  "Refresh": "Aktualisieren",
-  "Close": "Schließen"
+  "refresh": "Aktualisieren",
+  "close": "Schließen"
 }

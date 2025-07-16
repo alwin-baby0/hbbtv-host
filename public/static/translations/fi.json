@@ -46,8 +46,8 @@
   "Yes, I Agree": "Kyllä, olen samaa mieltä",
   "No, I Do Not Agree": "Ei, en ole samaa mieltä",
   "Customize Preferences": "Mukauttaa asetuksia",
-  "CMPTitle": "Arvostamme yksityisyyttäsi",
+  "cmp_title": "Arvostamme yksityisyyttäsi",
   "CMPDescription": "Käytämme evästeitä parantaaksemme selauskokemustasi. Klikkaamalla \"Kyllä\" hyväksyt evästeiden käytön. Voit mukauttaa suostumusasetuksiasi napsauttamalla \"Mukauta\".",
-  "Refresh": "Päivitä",
-  "Close": "Sulje"
+  "refresh": "Päivitä",
+  "close": "Sulje"
 }
