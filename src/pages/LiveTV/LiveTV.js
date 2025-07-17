@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
-import { EPGService } from '../../Services';
+import { EPGService, t } from '../../Services';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../utils';
@@ -90,7 +90,7 @@ export default class LiveTV extends Lightning.Component {
                 w: 50,
                 h: 22,
                 text: {
-                  text: 'NOW',
+                  text: t('now'),
                   fontSize: 18,
                   fontFace: 'Montserrat-SemiBold',
                   lineHeight: 21,
