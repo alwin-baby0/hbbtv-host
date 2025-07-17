@@ -16,6 +16,7 @@ export default class LiveTV extends Lightning.Component {
     lastId: 0,
   };
   pixelPerHour = 500; // Pixels per hour for EPG time slots
+
   static _template() {
     return {
       Wrapper: {
@@ -73,7 +74,7 @@ export default class LiveTV extends Lightning.Component {
             flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
             Now: {
               x: -40,
-              w: 80,
+              w: t('now')?.length * 20,
               h: 35,
               rect: true,
               color: Colors(colors.focusEpg).get(),
@@ -87,10 +88,9 @@ export default class LiveTV extends Lightning.Component {
                   type: lng.shaders.RoundedRectangle,
                   radius: 0,
                 },
-                w: 50,
                 h: 22,
                 text: {
-                  text: t('now'),
+                  text: t('now')?.toUpperCase(),
                   fontSize: 18,
                   fontFace: 'Montserrat-SemiBold',
                   lineHeight: 21,
