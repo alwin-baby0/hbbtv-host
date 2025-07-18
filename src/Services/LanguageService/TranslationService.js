@@ -9,7 +9,6 @@ export default class TranslationService {
   getLanguageTranslations = async () => {
     const lng = lngCode.split('-')[0];
     localStorage.setItem('languageCode', lng.split('-')[0]);
-    console.log('LNG Code: ', lng);
 
     const translations = await fetch(`https://api-applicaster.wedo.tv/lang/${lng || 'en'}/app`);
     const res = translations.json();
@@ -19,7 +18,6 @@ export default class TranslationService {
   setTranslations = async () => {
     this.getLanguageTranslations()
       .then((data) => {
-        console.log({ data });
         translationsVar = data;
         localStorage.setItem('languageTr', JSON.stringify(data));
       })
