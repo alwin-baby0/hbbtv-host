@@ -74,7 +74,6 @@ export default class LiveTV extends Lightning.Component {
             flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
             Now: {
               x: -40,
-              w: t('now')?.length * 20,
               h: 35,
               rect: true,
               color: Colors(colors.focusEpg).get(),
@@ -90,7 +89,7 @@ export default class LiveTV extends Lightning.Component {
                 },
                 h: 22,
                 text: {
-                  text: t('now')?.toUpperCase(),
+                  text: '',
                   fontSize: 18,
                   fontFace: 'Montserrat-SemiBold',
                   lineHeight: 21,
@@ -123,6 +122,17 @@ export default class LiveTV extends Lightning.Component {
         },
       },
     };
+  }
+
+  _init() {
+    // this.Now.patch({
+    //   w: t('now')?.length * 20 + 10,
+    //   Text: {
+    //     text: {
+    //       text: t('now')?.toUpperCase(),
+    //     },
+    //   },
+    // });
   }
 
   $updateChannelInfo(matchingEntry, channelInfo, channelImage) {
@@ -228,6 +238,15 @@ export default class LiveTV extends Lightning.Component {
     this.fireAncestors('$punchHoleTV');
     this.$updateChannel(EPGService.channelsItems[0]);
     this._setState('Categories');
+
+    this.Now.patch({
+      w: t('now')?.length * 20 + 10,
+      Text: {
+        text: {
+          text: t('nows')?.toUpperCase(),
+        },
+      },
+    });
   }
 
   $selectedEPG(id) {
@@ -350,6 +369,10 @@ export default class LiveTV extends Lightning.Component {
 
   get id() {
     return 'LiveTV';
+  }
+
+  get Now() {
+    return this.tag('Now');
   }
 
   get _Column() {
