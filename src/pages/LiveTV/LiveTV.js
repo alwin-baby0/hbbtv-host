@@ -124,17 +124,6 @@ export default class LiveTV extends Lightning.Component {
     };
   }
 
-  _init() {
-    // this.Now.patch({
-    //   w: t('now')?.length * 20 + 10,
-    //   Text: {
-    //     text: {
-    //       text: t('now')?.toUpperCase(),
-    //     },
-    //   },
-    // });
-  }
-
   $updateChannelInfo(matchingEntry, channelInfo, channelImage) {
     this._props.lastId = matchingEntry.id;
     channelImage = EPGService.filteredChannelsItems[this._EPGData._focusedIndex];
@@ -243,7 +232,7 @@ export default class LiveTV extends Lightning.Component {
       w: t('now')?.length * 20 + 10,
       Text: {
         text: {
-          text: t('nows')?.toUpperCase(),
+          text: t('now')?.toUpperCase(),
         },
       },
     });
