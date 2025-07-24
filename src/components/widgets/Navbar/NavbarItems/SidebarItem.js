@@ -1,5 +1,5 @@
 import lng from '@lightningjs/core';
-import { Colors, Language, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
 
 export default class SidebarItem extends lng.Component {
@@ -120,11 +120,10 @@ export default class SidebarItem extends lng.Component {
     const { index } = this._props;
     const { label, icon } = this._props.data;
 
-    const translatedText = Language.translate(label);
     setTimeout(() => {
       this.patch({
         Line: {
-          w: index === 4 && translatedText.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni,
+          w: index === 4 && label.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni,
           visible: true,
         },
         Icon: {

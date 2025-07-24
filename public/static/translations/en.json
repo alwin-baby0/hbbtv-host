@@ -41,8 +41,6 @@
   "coming_soon": "Coming Soon",
   "favorites": "Favorites",
   "test": "new translation",
-  "Test2": "Test",
-  "new_string_123": "",
   "edit_consent": "Manage Preferences",
   "my_account": "My Space",
   "favorite": "My Favorites",
@@ -64,5 +62,8 @@
   "error_action": "Back to Home",
   "read_more": "Learn More",
   "hide": "Hide",
-  "search_for": "Search For"
+  "search_for": "Search For",
+  "cmp_title": "We value your privacy",
+  "refresh":"refresh",
+  "close":"close"
 }
