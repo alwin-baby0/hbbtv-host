@@ -60,6 +60,10 @@ export default class InputField extends lng.Component {
     return this.tag('Input');
   }
 
+  get _InputWrapper() {
+    return this.tag('InputWrapper');
+  }
+
   $setClearButtonState() {
     this._setState('ClearIcon');
   }
