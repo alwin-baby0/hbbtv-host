@@ -653,6 +653,7 @@ export default class Player extends lng.Component {
   }
 
   _skipVideo(forward) {
+    this.$hideSbutitles();
     if (!this._props.isAdVisible) {
       this._isSkipping = true;
       if (forward) {
