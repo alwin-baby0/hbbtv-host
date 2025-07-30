@@ -23,6 +23,7 @@ export default class Collection extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
+    console.log(props);
   }
 
   get _Column() {

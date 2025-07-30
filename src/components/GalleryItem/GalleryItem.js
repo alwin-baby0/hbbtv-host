@@ -163,6 +163,7 @@ export default class GalleryItem extends Lightning.Component {
         return src;
       } else if (galleryItem.getLandscapePoster(imageSizes.XL)?.src) {
         src = galleryItem.getLandscapePoster(imageSizes.XL)?.src;
+        console.log(src)
         return src;
       } else if (fallbackImage) {
         return fallbackImage;

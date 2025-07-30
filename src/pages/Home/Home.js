@@ -64,6 +64,7 @@ export default class Home extends Lightning.Component {
 
     const rails = constructRails(railData);
     this._Column.props = { items: rails };
+    console.log(sliderData)
 
     if (sliderData) {
       this._HeroSection.patch({
