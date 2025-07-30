@@ -51,8 +51,6 @@ export default class Gallery extends Lightning.Component {
 
     const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
 
-    console.log(parsedItems)
-
     this._Bullets.patch({
       props: {
         items: parsedItems,
@@ -116,15 +114,4 @@ export default class Gallery extends Lightning.Component {
   _getFocused() {
     return this._Bullets;
   }
-
-  /* _handleScroll(event) {
-    console.log('scroll');
-    if (this.hasFocus()) {
-      if (event.deltaY > 0) {
-        this.fireAncestors('$setStateOnScroll');
-      } else if (event.deltaY < 0) {
-        return;
-      }
-    }
-  } */
 }
