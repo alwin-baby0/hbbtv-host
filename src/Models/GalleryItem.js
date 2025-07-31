@@ -127,17 +127,41 @@ class GalleryItem {
 
   getThumbnailImage(size) {
     const thumbnail = this.thumbnails.find((thumbnail) => thumbnail.key.includes(size));
-    return thumbnail ?? this.thumbnails[0];
+
+    if (thumbnail) return thumbnail;
+
+    for (let i = this.thumbnails.length - 1; i >= 0; i--) {
+      if (this.thumbnails[i] != null) {
+        return this.thumbnails[i];
+      }
+    }
+    // return thumbnail ?? this.thumbnails[this.thumbnails.length - 1];
   }
 
   getLandscapePoster(size) {
     const poster = this.landscapePosters.find((poster) => poster.key.includes(size));
-    return poster ?? this.landscapePosters[0];
+
+    if (poster) return poster;
+
+    for (let i = this.landscapePosters.length - 1; i >= 0; i--) {
+      if (this.landscapePosters[i] != null) {
+        return this.landscapePosters[i];
+      }
+    }
+    // return poster ?? this.landscapePosters[this.landscapePosters.length - 1];
   }
 
   getPortraitPoster(size) {
     const poster = this.portraitPosters.find((poster) => poster.key.includes(size));
-    return poster ?? this.portraitPosters[0];
+
+    if (poster) return poster;
+
+    for (let i = this.portraitPosters.length - 1; i >= 0; i--) {
+      if (this.portraitPosters[i] != null) {
+        return this.portraitPosters[i];
+      }
+    }
+    // return poster ?? this.portraitPosters[this.portraitPosters.length - 1];
   }
 }
 
