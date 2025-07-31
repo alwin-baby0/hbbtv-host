@@ -77,11 +77,6 @@ export default class Search extends Lightning.Component {
     return this.tag('InputWrapper');
   }
 
-  /* $updateVerticalState(nextState) {
-    console.log('nextState', nextState);
-    this._setState(nextState);
-  } */
-
   numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
   _handleKey(key) {
@@ -188,6 +183,10 @@ export default class Search extends Lightning.Component {
 
   _active() {
     this.fireAncestors('$unpunchHole');
+  }
+
+  _handleHover() {
+    Router.focusPage();
   }
 
   static _states() {
