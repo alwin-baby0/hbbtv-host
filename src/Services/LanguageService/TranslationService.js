@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { createApiCtx } from '../utils';
+
 const lngCode =
   localStorage.getItem('languageCode') || navigator.language || navigator.userLanguage || 'en-';
 const defTr = await import(
@@ -10,9 +13,11 @@ export default class TranslationService {
     const lng = lngCode.split('-')[0];
     localStorage.setItem('languageCode', lng.split('-')[0]);
 
-    const translations = await fetch(`https://api-applicaster.wedo.tv/lang/${lng || 'en'}/app`);
-    const res = translations.json();
-    return res;
+    const translations = await axios(`https://api-applicaster.wedo.tv/lang/${lng || 'en'}/app`, {
+      params: { ctx: createApiCtx() },
+    });
+
+    return translations.data;
   };
 
   setTranslations = async () => {
