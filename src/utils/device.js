@@ -123,6 +123,15 @@ const getTitanInfo = () => {
   };
 };
 
+const getNetgemInfo = () => ({
+  serialNumber: generateRandomUUID(),
+  model: 'model-unknown',
+  brand: 'Netgem',
+  os: 'Netgem',
+  osVersion: 'unknown',
+  macAddress: 'unknown',
+});
+
 const getWebInfo = () => ({
   serialNumber: generateRandomUUID(),
   model: 'simulated-model',
@@ -153,6 +162,8 @@ const setUpDeviceInfo = async (deviceType) => {
       return getTitanInfo();
     case 'web':
       return getWebInfo();
+    case 'netgem':
+      return getNetgemInfo();
     default: {
       console.warn('Unknown device');
       return getWebInfo();

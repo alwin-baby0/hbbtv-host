@@ -28,6 +28,7 @@ import {
 } from './utils/device.js';
 import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
+import { TranslationService } from './Services/index.js';
 
 /**
  * This file should serve as a place to add for example polyfills, initiate
@@ -87,6 +88,8 @@ sequence([
         'App launched on device: ',
         Object.entries(getDeviceInfo()).map(([key, value]) => `| ${key}: ${value} |`)
       );
+
+      TranslationService.setTranslations();
       eventTrackPayload('launch_app', getDeviceInfo().serialNumber);
     } catch (error) {
       console.error('Failed to start the app', error);

@@ -1,6 +1,5 @@
-import { LanguageService, parseTranslations } from '../../../Services';
+import { LanguageService, t } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
-import { t } from '../../../utils/translation';
 
 const languageArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
@@ -19,7 +18,6 @@ const languageArea = (page, tabButtons) => {
 };
 
 export default async function (page) {
-  const translations = parseTranslations();
   const languages = await LanguageService.getLanguages();
 
   page.props = {
@@ -32,18 +30,18 @@ export default async function (page) {
     tabButtons = [
       {
         id: 0,
-        title: t(translations, 'cookie_preferences'),
+        title: t('cookie_preferences'),
       },
       {
         id: 1,
-        title: t(translations, 'languages'),
+        title: t('languages'),
       },
     ];
   } else {
     tabButtons = [
       {
         id: 0,
-        title: t(translations, 'cookie_preferences'),
+        title: t('cookie_preferences'),
       },
     ];
   }

@@ -1,5 +1,7 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
+import { createApiCtx } from '../../../Services/utils';
+import axios from 'axios';
 
 export default class LanguageButton extends Lightning.Component {
   _props = {
@@ -110,8 +112,14 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   #getLanguageTranslations = async (lngCode) => {
-    const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode}/app`);
-    const res = prevodi.json();
+    const translations = await axios(`https://api-applicaster.wedo.tv/lang/${lngCode}/app`, {
+      params: {
+        ctx: createApiCtx(),
+      },
+    });
+
+    const res = translations.data;
+
     return res;
   };
 

@@ -7,9 +7,8 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { CMPService, parseTranslations } from '../../Services';
+import { CMPService, t } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../public/static/translations/en.json';
 import {
   convertCueTimeToSeconds,
   formatTimeHMS,
@@ -27,7 +26,6 @@ export default class Player extends lng.Component {
     ads: [],
   };
 
-  _translations;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
@@ -152,7 +150,6 @@ export default class Player extends lng.Component {
           x: 50,
           y: 70,
           text: {
-            // text: this._translations?.subtitles || defTr.subtitles,
             fontSize: 32,
           },
         },
@@ -211,11 +208,9 @@ export default class Player extends lng.Component {
   }
 
   set params({ videoType, videoUrl, ssai, ...rest }) {
-    this._translations = parseTranslations();
-
     this._Subtitles.patch({
       Title: {
-        text: this._translations.subtitles || defTr.subtitles,
+        text: t('subtitles'),
       },
       Languages: {
         items: [
@@ -224,7 +219,7 @@ export default class Player extends lng.Component {
             collision: true,
             props: {
               languageInfo: {
-                name: this?._translations?.off?.toUpperCase() || defTr.off.toUpperCase(),
+                name: t('off').toUpperCase(),
                 type: 'SUBTITLES',
               },
               index: 0,
@@ -260,89 +255,90 @@ export default class Player extends lng.Component {
   set props(props) {
     this._props = props;
     const { isLive, videoUrl, continueTime } = props;
+    setTimeout(() => {
+      this.tag('CurrentTime.Text').text = isLive ? 'Live' : '00:00:00';
+      this.tag('EndTime.Text').text = isLive ? '' : '00:00:00';
 
-    this.tag('CurrentTime.Text').text = isLive ? 'Live' : '00:00:00';
-    this.tag('EndTime.Text').text = isLive ? '' : '00:00:00';
-
-    //progress bar
-    this.tag('ProgressBarWrapper').patch({
-      x: isLive ? 180 : 115,
-    });
-
-    const focusedColor = Colors(colors.focus).get();
-    const margin = isLive ? 0 : 20;
-    this.tag('ProgressBar').patch({
-      x: 0,
-      flexItem: {
-        marginLeft: margin,
-        marginRight: margin,
-      },
-      props: {
-        width: isLive ? 1550 : 1400,
-        progressColor: focusedColor,
-        backgroundBarColor: isLive ? focusedColor : colors.unfocus,
-      },
-    });
-
-    //video
-    this.fireAncestors('$punchHole');
-    VideoPlayer.open(videoUrl);
-    if (continueTime)
-      setTimeout(() => {
-        VideoPlayer.seek(continueTime);
-      }, 500);
-
-    this._Controls.patch({
-      w: 1690,
-      flex: {
-        direction: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      props: {
-        w: 1920,
-        items: isLive ? playerButtonsLive : playerButtonsVOD,
-        targetIndex: 1,
-      },
-    });
-
-    this._Controls._setFocusedIndex(1);
-
-    if (isLive) {
-      this._Wrapper.patch({
-        Back: undefined,
-        SubtitlesButton: undefined,
+      //progress bar
+      this.tag('ProgressBarWrapper').patch({
+        x: isLive ? 180 : 115,
       });
-    } else {
-      this._Wrapper.patch({
-        Back: {
-          x: 115,
-          type: PlayerButtons,
-          collision: true,
-          props: {
-            buttonInfo: {
-              label: 'back',
-              icon: `/icons/player/commands/back.svg`,
-              onLiveContent: true,
-              position: 60,
-            },
-          },
+
+      const focusedColor = Colors(colors.focus).get();
+      const margin = isLive ? 0 : 20;
+      this.tag('ProgressBar').patch({
+        x: 0,
+        flexItem: {
+          marginLeft: margin,
+          marginRight: margin,
         },
-        SubtitlesButton: {
-          x: 1715,
-          type: PlayerButtons,
-          collision: true,
-          props: {
-            buttonInfo: {
-              label: 'subtitles',
-              icon: `/icons/player/commands/subtitles.svg`,
-              onLiveContent: true,
-              position: 60,
-            },
-          },
+        props: {
+          width: isLive ? 1550 : 1400,
+          progressColor: focusedColor,
+          backgroundBarColor: isLive ? focusedColor : colors.unfocus,
         },
       });
-    }
+
+      //video
+      this.fireAncestors('$punchHole');
+      VideoPlayer.open(videoUrl);
+      if (continueTime)
+        setTimeout(() => {
+          VideoPlayer.seek(continueTime);
+        }, 500);
+
+      this._Controls.patch({
+        w: 1690,
+        flex: {
+          direction: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        props: {
+          w: 1920,
+          items: isLive ? playerButtonsLive : playerButtonsVOD,
+          targetIndex: 1,
+        },
+      });
+
+      this._Controls._setFocusedIndex(1);
+
+      if (isLive) {
+        this._Wrapper.patch({
+          Back: undefined,
+          SubtitlesButton: undefined,
+        });
+      } else {
+        this._Wrapper.patch({
+          Back: {
+            x: 115,
+            type: PlayerButtons,
+            collision: true,
+            props: {
+              buttonInfo: {
+                label: 'back',
+                icon: `/icons/player/commands/back.svg`,
+                onLiveContent: true,
+                position: 60,
+              },
+            },
+          },
+          SubtitlesButton: {
+            x: 1715,
+            type: PlayerButtons,
+            collision: true,
+            props: {
+              buttonInfo: {
+                label: 'subtitles',
+                icon: `/icons/player/commands/subtitles.svg`,
+                onLiveContent: true,
+                position: 60,
+              },
+            },
+          },
+        });
+      }
+    }, 0);
   }
 
   _disable() {
@@ -658,6 +654,7 @@ export default class Player extends lng.Component {
   }
 
   _skipVideo(forward) {
+    this.$hideSbutitles();
     if (!this._props.isAdVisible) {
       this._isSkipping = true;
       if (forward) {
@@ -1018,7 +1015,7 @@ export default class Player extends lng.Component {
     this.tag('ErrorMessage').patch({
       Message: {
         text: {
-          text: this._translations?.no_stream || 'Invalid Video URL',
+          text: t('no_stream'),
         },
       },
     });

@@ -46,8 +46,8 @@
   "Yes, I Agree": "Ja, jeg er enig",
   "No, I Do Not Agree": "Nej, jeg er ikke enig",
   "Customize Preferences": "Tilpas præferencer",
-  "CMPTitle": "Vi værdsætter dit privatliv",
+  "cmp_title": "Vi værdsætter dit privatliv",
   "CMPDescription": "Vi bruger cookies for at forbedre din browseroplevelse. Ved at klikke på \"Ja\" giver du dit samtykke til vores brug af cookies. Du kan tilpasse dine samtykkepræferencer ved at klikke på \"Tilpas\".",
   "Refresh": "Opdater",
-  "Close": "Luk"
+  "close": "Luk"
 }
