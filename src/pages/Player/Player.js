@@ -255,89 +255,90 @@ export default class Player extends lng.Component {
   set props(props) {
     this._props = props;
     const { isLive, videoUrl, continueTime } = props;
+    setTimeout(() => {
+      this.tag('CurrentTime.Text').text = isLive ? 'Live' : '00:00:00';
+      this.tag('EndTime.Text').text = isLive ? '' : '00:00:00';
 
-    this.tag('CurrentTime.Text').text = isLive ? 'Live' : '00:00:00';
-    this.tag('EndTime.Text').text = isLive ? '' : '00:00:00';
-
-    //progress bar
-    this.tag('ProgressBarWrapper').patch({
-      x: isLive ? 180 : 115,
-    });
-
-    const focusedColor = Colors(colors.focus).get();
-    const margin = isLive ? 0 : 20;
-    this.tag('ProgressBar').patch({
-      x: 0,
-      flexItem: {
-        marginLeft: margin,
-        marginRight: margin,
-      },
-      props: {
-        width: isLive ? 1550 : 1400,
-        progressColor: focusedColor,
-        backgroundBarColor: isLive ? focusedColor : colors.unfocus,
-      },
-    });
-
-    //video
-    this.fireAncestors('$punchHole');
-    VideoPlayer.open(videoUrl);
-    if (continueTime)
-      setTimeout(() => {
-        VideoPlayer.seek(continueTime);
-      }, 500);
-
-    this._Controls.patch({
-      w: 1690,
-      flex: {
-        direction: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      props: {
-        w: 1920,
-        items: isLive ? playerButtonsLive : playerButtonsVOD,
-        targetIndex: 1,
-      },
-    });
-
-    this._Controls._setFocusedIndex(1);
-
-    if (isLive) {
-      this._Wrapper.patch({
-        Back: undefined,
-        SubtitlesButton: undefined,
+      //progress bar
+      this.tag('ProgressBarWrapper').patch({
+        x: isLive ? 180 : 115,
       });
-    } else {
-      this._Wrapper.patch({
-        Back: {
-          x: 115,
-          type: PlayerButtons,
-          collision: true,
-          props: {
-            buttonInfo: {
-              label: 'back',
-              icon: `/icons/player/commands/back.svg`,
-              onLiveContent: true,
-              position: 60,
-            },
-          },
+
+      const focusedColor = Colors(colors.focus).get();
+      const margin = isLive ? 0 : 20;
+      this.tag('ProgressBar').patch({
+        x: 0,
+        flexItem: {
+          marginLeft: margin,
+          marginRight: margin,
         },
-        SubtitlesButton: {
-          x: 1715,
-          type: PlayerButtons,
-          collision: true,
-          props: {
-            buttonInfo: {
-              label: 'subtitles',
-              icon: `/icons/player/commands/subtitles.svg`,
-              onLiveContent: true,
-              position: 60,
-            },
-          },
+        props: {
+          width: isLive ? 1550 : 1400,
+          progressColor: focusedColor,
+          backgroundBarColor: isLive ? focusedColor : colors.unfocus,
         },
       });
-    }
+
+      //video
+      this.fireAncestors('$punchHole');
+      VideoPlayer.open(videoUrl);
+      if (continueTime)
+        setTimeout(() => {
+          VideoPlayer.seek(continueTime);
+        }, 500);
+
+      this._Controls.patch({
+        w: 1690,
+        flex: {
+          direction: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        props: {
+          w: 1920,
+          items: isLive ? playerButtonsLive : playerButtonsVOD,
+          targetIndex: 1,
+        },
+      });
+
+      this._Controls._setFocusedIndex(1);
+
+      if (isLive) {
+        this._Wrapper.patch({
+          Back: undefined,
+          SubtitlesButton: undefined,
+        });
+      } else {
+        this._Wrapper.patch({
+          Back: {
+            x: 115,
+            type: PlayerButtons,
+            collision: true,
+            props: {
+              buttonInfo: {
+                label: 'back',
+                icon: `/icons/player/commands/back.svg`,
+                onLiveContent: true,
+                position: 60,
+              },
+            },
+          },
+          SubtitlesButton: {
+            x: 1715,
+            type: PlayerButtons,
+            collision: true,
+            props: {
+              buttonInfo: {
+                label: 'subtitles',
+                icon: `/icons/player/commands/subtitles.svg`,
+                onLiveContent: true,
+                position: 60,
+              },
+            },
+          },
+        });
+      }
+    }, 0);
   }
 
   _disable() {
