@@ -270,17 +270,14 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   $setButtonState(buttonName) {
-    console.log('set button state call', buttonName);
     switch (buttonName) {
       case 'GalleryButton':
         this._setState('GalleryButton');
         break;
       case 'ContinueWatching':
-        console.log('continue ulaz');
         this._setState('ContinueWatching');
         break;
       case 'FavoriteButton':
-        console.log('favorite ulaz');
         this._setState('FavoriteButton');
         break;
     }

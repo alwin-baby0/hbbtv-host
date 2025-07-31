@@ -110,8 +110,8 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   #getLanguageTranslations = async (lngCode) => {
-    const prevodi = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode}/app`);
-    const res = prevodi.json();
+    const translations = await fetch(`https://api-applicaster.wedo.tv/lang/${lngCode}/app`);
+    const res = translations.json();
     return res;
   };
 

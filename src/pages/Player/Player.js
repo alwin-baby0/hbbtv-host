@@ -7,9 +7,8 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { CMPService, parseTranslations } from '../../Services';
+import { CMPService, t } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
-import defTr from '../../../public/static/translations/en.json';
 import {
   convertCueTimeToSeconds,
   formatTimeHMS,
@@ -27,7 +26,6 @@ export default class Player extends lng.Component {
     ads: [],
   };
 
-  _translations;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
@@ -152,7 +150,6 @@ export default class Player extends lng.Component {
           x: 50,
           y: 70,
           text: {
-            // text: this._translations?.subtitles || defTr.subtitles,
             fontSize: 32,
           },
         },
@@ -211,11 +208,9 @@ export default class Player extends lng.Component {
   }
 
   set params({ videoType, videoUrl, ssai, ...rest }) {
-    this._translations = parseTranslations();
-
     this._Subtitles.patch({
       Title: {
-        text: this._translations.subtitles || defTr.subtitles,
+        text: t('subtitles'),
       },
       Languages: {
         items: [
@@ -224,7 +219,7 @@ export default class Player extends lng.Component {
             collision: true,
             props: {
               languageInfo: {
-                name: this?._translations?.off?.toUpperCase() || defTr.off.toUpperCase(),
+                name: t('off').toUpperCase(),
                 type: 'SUBTITLES',
               },
               index: 0,
@@ -658,6 +653,7 @@ export default class Player extends lng.Component {
   }
 
   _skipVideo(forward) {
+    this.$hideSbutitles();
     if (!this._props.isAdVisible) {
       this._isSkipping = true;
       if (forward) {
@@ -1018,7 +1014,7 @@ export default class Player extends lng.Component {
     this.tag('ErrorMessage').patch({
       Message: {
         text: {
-          text: this._translations?.no_stream || 'Invalid Video URL',
+          text: t('no_stream'),
         },
       },
     });

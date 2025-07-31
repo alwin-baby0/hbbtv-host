@@ -46,8 +46,8 @@
   "Yes, I Agree": "Ja, ik stem in",
   "No, I Do Not Agree": "Nee, ik stem niet in",
   "Customize Preferences": "Voorkeuren aanpassen",
-  "CMPTitle": "We waarderen uw privacy",
+  "cmp_title": "We waarderen uw privacy",
   "CMPDescription": "We gebruiken cookies om de browse-ervaring te verbeteren. Door op \"Ja\" te klikken, stem je in met ons gebruik van cookies. Je kunt je toestemmingvoorkeuren aanpassen door op \"Aanpassen\" te klikken.",
-  "Refresh": "Vernieuw",
-  "Close": "Sluiten"
+  "refresh": "Vernieuw",
+  "close": "Sluiten"
 }

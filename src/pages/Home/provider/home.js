@@ -1,4 +1,4 @@
-import { HomePageService } from '../../../Services';
+import { HomePageService, TranslationService } from '../../../Services';
 
 async function checkImageVisibility(imageUrl) {
   return new Promise((resolve) => {
@@ -19,6 +19,7 @@ export default async function (page) {
   if (page._props.sliderData !== null && page._props.railData) {
     return;
   }
+
   await HomePageService.initialFetch();
 
   const isBannerImageExist = await checkImageVisibility(

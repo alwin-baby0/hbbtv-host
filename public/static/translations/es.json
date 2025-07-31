@@ -46,8 +46,8 @@
   "Yes, I Agree": "Sí, estoy de acuerdo",
   "No, I Do Not Agree": "No, no estoy de acuerdo",
   "Customize Preferences": "Personalizar preferencias",
-  "CMPTitle": "Valoramos tu privacidad",
+  "cmp_title": "Valoramos tu privacidad",
   "CMPDescription": "Usamos cookies para mejorar la experiencia de navegación. Al hacer clic en \"Sí\", consientes el uso de cookies. Puedes personalizar tus preferencias de consentimiento haciendo clic en \"Personalizar\".",
-  "Refresh": "Actualizar",
-  "Close": "Cerrar"
+  "refresh": "Actualizar",
+  "close": "Cerrar"
 }

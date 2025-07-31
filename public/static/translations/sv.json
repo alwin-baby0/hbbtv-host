@@ -46,8 +46,8 @@
   "Yes, I Agree": "Ja, jag håller med",
   "No, I Do Not Agree": "Nej, jag håller inte med",
   "Customize Preferences": "Anpassa inställningar",
-  "CMPTitle": "Vi värdesätter din integritet",
+  "cmp_title": "Vi värdesätter din integritet",
   "CMPDescription": "Vi använder cookies för att förbättra din surfupplevelse. Genom att klicka på \"Ja\" samtycker du till vår användning av cookies. Du kan anpassa dina samtyckespreferenser genom att klicka på \"Anpassa\".",
-  "Refresh": "Uppdatera",
-  "Close": "Stäng"
+  "refresh": "Uppdatera",
+  "close": "Stäng"
 }

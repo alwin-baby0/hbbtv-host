@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
-import { EPGService } from '../../Services';
+import { EPGService, t } from '../../Services';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../utils';
@@ -16,6 +16,7 @@ export default class LiveTV extends Lightning.Component {
     lastId: 0,
   };
   pixelPerHour = 500; // Pixels per hour for EPG time slots
+
   static _template() {
     return {
       Wrapper: {
@@ -73,7 +74,6 @@ export default class LiveTV extends Lightning.Component {
             flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
             Now: {
               x: -40,
-              w: 80,
               h: 35,
               rect: true,
               color: Colors(colors.focusEpg).get(),
@@ -87,10 +87,9 @@ export default class LiveTV extends Lightning.Component {
                   type: lng.shaders.RoundedRectangle,
                   radius: 0,
                 },
-                w: 50,
                 h: 22,
                 text: {
-                  text: 'NOW',
+                  text: '',
                   fontSize: 18,
                   fontFace: 'Montserrat-SemiBold',
                   lineHeight: 21,
@@ -228,6 +227,15 @@ export default class LiveTV extends Lightning.Component {
     this.fireAncestors('$punchHoleTV');
     this.$updateChannel(EPGService.channelsItems[0]);
     this._setState('Categories');
+
+    this.Now.patch({
+      w: t('now')?.length * 20 + 10,
+      Text: {
+        text: {
+          text: t('now')?.toUpperCase(),
+        },
+      },
+    });
   }
 
   $selectedEPG(id) {
@@ -350,6 +358,10 @@ export default class LiveTV extends Lightning.Component {
 
   get id() {
     return 'LiveTV';
+  }
+
+  get Now() {
+    return this.tag('Now');
   }
 
   get _Column() {
