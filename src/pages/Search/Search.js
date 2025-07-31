@@ -217,6 +217,10 @@ export default class Search extends Lightning.Component {
     this.fireAncestors('$unpunchHole');
   }
 
+  _handleHover() {
+    Router.focusPage();
+  }
+
   static _states() {
     return [
       class Input extends this {

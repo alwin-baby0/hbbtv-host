@@ -193,6 +193,7 @@ export default class Home extends Lightning.Component {
             const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
             if (newRails && newRails?.items?.length > 0) {
               const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
+              parsedItems.map((item) => item.props.index = item.props.index + this._Column.Items.children[this._Column._focusedIndex].Items.children.length);
               currentItem._appendItems(parsedItems);
             }
           }
