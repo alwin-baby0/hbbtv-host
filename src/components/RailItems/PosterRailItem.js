@@ -108,7 +108,7 @@ export default class PosterRailItem extends FocusableItem {
       this.fireAncestors('$setStateOnHover', 'Favorites');
     }
     if (ancestor.parent.parent.ref === 'QRContainer') {
-      this.fireAncestors('$setStateOnHover', 'UserRecentlyWatched');
+      this.fireAncestors('$setStateOnHover', ancestor.parent.ref === 'RecentlyWatched' ? 'UserRecentlyWatched' : 'UserFavorites');
     }
   }
 
