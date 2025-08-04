@@ -156,8 +156,6 @@ export default class HorizontalContainer extends Lightning.Component {
       } else if (elementX < -this._scrollPosition) {
         // paddingOffset is used to offset first item in each
         // column from the start of the container in EPG-s
-        console.log(this._focusedIndex)
-        console.log(currentFocus.flex?._paddingLeft)
         const paddingOffset = currentFocus.flex?._paddingLeft ? currentFocus.flex?._paddingLeft : this._focusedIndex !== 0 ? -50 : -10;
         this._scrollPosition = -elementX - paddingOffset;
       } else if (elementX + elementW > containerFinalWidth - this._scrollPosition) {
