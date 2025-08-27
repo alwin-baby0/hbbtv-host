@@ -26,6 +26,7 @@ export default class Player extends lng.Component {
     ads: [],
   };
 
+  _cumulativeTime = 0;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
@@ -36,6 +37,7 @@ export default class Player extends lng.Component {
   _debounceVideoStart;
   _debounceVideoPause;
   _isSkipping = false;
+  _watchedAds = [];
 
   static _template() {
     return {
@@ -412,6 +414,7 @@ export default class Player extends lng.Component {
   }
 
   _checkAdCuePoints() {
+    this._cumulativeTime = 0;
     const currentTime = VideoPlayer.currentTime;
 
     const ssai_params = this._props.ads;
@@ -426,11 +429,15 @@ export default class Player extends lng.Component {
           pod.ads.forEach((ad, index) => {
             const from = convertCueTimeToSeconds(ad.cue.from);
             const to = convertCueTimeToSeconds(ad.cue.to);
-            if (currentTime >= from && currentTime < to) {
+            if (
+              currentTime - this._cumulativeTime >= from &&
+              currentTime - this._cumulativeTime < to
+            ) {
               if (this._props.currentAd !== ad) {
                 const lastAd = pod.ads[pod.ads.length - 1];
                 const lastAdTo = convertCueTimeToSeconds(lastAd.cue.to);
-                this._props.skipTo = lastAdTo;
+                const lastAdFrom = convertCueTimeToSeconds(lastAd.cue.from);
+                this._props.skipTo = lastAdTo - lastAdFrom;
 
                 this.patch({
                   WrapperAd: {
@@ -566,7 +573,7 @@ export default class Player extends lng.Component {
             }
 
             // Provera da li je trenutna reklama završena
-            if (currentTime >= to && this._props.currentAd === ad) {
+            if (currentTime - this._cumulativeTime >= to && this._props.currentAd === ad) {
               this._handleAdEnd(ad);
 
               //check if the current ad is the last ad in the pod
@@ -580,6 +587,8 @@ export default class Player extends lng.Component {
               }
               this._props.currentAd = null; // Oslobodi trenutnu reklamu
             }
+
+            this._cumulativeTime += to - from;
           });
         });
       });
