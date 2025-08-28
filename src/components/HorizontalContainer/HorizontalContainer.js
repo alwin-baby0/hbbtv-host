@@ -83,7 +83,7 @@ export default class HorizontalContainer extends Lightning.Component {
         },
         Items: {
           y: 0,
-        }
+        },
       });
     } else {
       this.patch({ ...rest, Items: { h: rest.h } });
@@ -138,10 +138,17 @@ export default class HorizontalContainer extends Lightning.Component {
 
       let isChildLive = false;
       let scrollOffsetLive = 0;
-      if (this.Items.children[this._focusedIndex]._props.extensions && this.Items.children[this._focusedIndex]._props.extensions.end_time) {
+      if (
+        this.Items.children[this._focusedIndex]._props.extensions &&
+        this.Items.children[this._focusedIndex]._props.extensions.end_time
+      ) {
         const currentTime = new Date();
-        const startTime = new Date(this.Items.children[this._focusedIndex]._props.extensions.start_time);
-        const endTime = new Date(this.Items.children[this._focusedIndex]._props.extensions.end_time);
+        const startTime = new Date(
+          this.Items.children[this._focusedIndex]._props.extensions.start_time
+        );
+        const endTime = new Date(
+          this.Items.children[this._focusedIndex]._props.extensions.end_time
+        );
         isChildLive = startTime < currentTime && currentTime < endTime;
 
         scrollOffsetLive = ((currentTime - startTime) / (1000 * 60)) * 8.33 + 10;
@@ -156,10 +163,14 @@ export default class HorizontalContainer extends Lightning.Component {
       } else if (elementX < -this._scrollPosition) {
         // paddingOffset is used to offset first item in each
         // column from the start of the container in EPG-s
-        const paddingOffset = currentFocus.flex?._paddingLeft ? currentFocus.flex?._paddingLeft : this._focusedIndex !== 0 ? -50 : -10;
+        const paddingOffset = currentFocus.flex?._paddingLeft
+          ? currentFocus.flex?._paddingLeft
+          : this._focusedIndex !== 0
+          ? -50
+          : -10;
         this._scrollPosition = -elementX - paddingOffset;
       } else if (elementX + elementW > containerFinalWidth - this._scrollPosition) {
-        this._scrollPosition = -(elementX + elementW - containerFinalWidth);
+        this._scrollPosition = -(elementX + elementW - containerFinalWidth + 20);
       }
 
       this.Items.smooth = { x: this._scrollPosition };
