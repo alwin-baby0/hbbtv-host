@@ -749,6 +749,7 @@ export default class Player extends lng.Component {
   $updateSubtitle(languageIndex) {
     const player = getPlayer();
     if (languageIndex === 0) player.subtitleTrack = undefined;
+
     player.subtitleTrack = languageIndex - 1;
   }
 

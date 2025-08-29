@@ -70,11 +70,13 @@ export default class SubtitlesButtons extends Lightning.Component {
   }
 
   _handleEnter() {
+    const { index } = this._props;
+    this.fireAncestors('$updateSubtitle', index);
     if (this._selected) {
       return;
     } else {
-      const { index } = this._props;
-      this.fireAncestors('$updateSubtitle', index);
+      // const { index } = this._props;
+      // this.fireAncestors('$updateSubtitle', index);
       this.fireAncestors('$setFocus', index);
     }
   }
