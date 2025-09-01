@@ -56,7 +56,18 @@ export default async function (page, { seriesId }) {
     ssaiLastEp: ssaiLastEp,
   };
 
+  const updatedSeasons = seasons.map((season) => {
+    season.items = season.items.map((episode) => {
+      const index = episode.title.indexOf(' - S');
+      episode.title = episode.title.substring(index + 3, episode.title.length);
+
+      return episode;
+    });
+
+    return season;
+  });
+
   page._Column.props = {
-    items: constructRails(seasons),
+    items: constructRails(updatedSeasons),
   };
 }
