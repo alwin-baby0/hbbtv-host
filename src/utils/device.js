@@ -34,14 +34,23 @@ const getTizenInfo = () => ({
 });
 
 const getHisenseInfo = () => {
-  const hisenseDeviceInfo = window.Hisense_GetDeviceInfo();
+  const hisenseDeviceInfo = window.Hisense_GetDeviceInfo
+    ? window.Hisense_GetDeviceInfo()
+    : getWebInfo();
+
   return {
-    serialNumber: hisenseDeviceInfo.uuid?.substring(12),
-    model: hisenseDeviceInfo.model_name,
+    serialNumber: hisenseDeviceInfo.uuid
+      ? hisenseDeviceInfo.uuid.substring(12)
+      : hisenseDeviceInfo.serialNumber,
+    model: hisenseDeviceInfo.model_name ? hisenseDeviceInfo.model_name : hisenseDeviceInfo.model,
     brand: hisenseDeviceInfo.brand,
     os: 'VIDAA',
-    osVersion: window.Hisense_GetFirmWareVersion(),
-    macAddress: hisenseDeviceInfo.uuid?.substring(0, 12).match(/.{2}/g).join(':'),
+    osVersion: window.Hisense_GetFirmWareVersion
+      ? window.Hisense_GetFirmWareVersion()
+      : hisenseDeviceInfo.osVersion,
+    macAddress: hisenseDeviceInfo.uuid
+      ? hisenseDeviceInfo.uuid.substring(0, 12).match(/.{2}/g).join(':')
+      : hisenseDeviceInfo.macAddress,
   };
 };
 
