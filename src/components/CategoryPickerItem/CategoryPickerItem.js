@@ -88,8 +88,6 @@ export default class CategoryPickerItem extends Lightning.Component {
 
     this.patch({
       Title: undefined,
-    });
-    this.patch({
       texture: Lightning.Tools.getRoundRect(
         w,
         h,

@@ -209,6 +209,58 @@ export default class Player extends lng.Component {
     return this.tag('Subtitles');
   }
 
+  get _ProgressBarWrapper() {
+    return this.tag('ProgressBarWrapper');
+  }
+
+  get _ProgressBar() {
+    return this.tag('ProgressBar');
+  }
+
+  get _ErrorMessage() {
+    return this.tag('ErrorMessage');
+  }
+
+  get _Spinner() {
+    return this.tag('Spinner');
+  }
+
+  get _ProgressBarAd() {
+    return this.tag('ProgressBarAd');
+  }
+
+  get _AdNumber() {
+    return this.tag('AdNumber.Text');
+  }
+
+  get _TimerAd() {
+    return this.tag('TimerAd.Text');
+  }
+
+  get _WrapperAd() {
+    return this.tag('WrapperAd');
+  }
+
+  get _SubtitlesLanguages() {
+    return this.tag('Subtitles.Languages');
+  }
+
+  get _CurrentTime() {
+    return this.tag('CurrentTime.Text');
+  }
+
+  get _EndTime() {
+    return this.tag('EndTime.Text');
+  }
+
+  get _SkipButton() {
+    return this.tag('SkipButton');
+  }
+
+  get SubtitlesButton() {
+    return this.tag('SubtitlesButton');
+  }
+
   set params({ videoType, videoUrl, ssai, ...rest }) {
     this._Subtitles.patch({
       Title: {
@@ -258,26 +310,32 @@ export default class Player extends lng.Component {
     this._props = props;
     const { isLive, videoUrl, continueTime } = props;
     setTimeout(() => {
-      this.tag('CurrentTime.Text').text = isLive ? 'Live' : '00:00:00';
-      this.tag('EndTime.Text').text = isLive ? '' : '00:00:00';
-
-      //progress bar
-      this.tag('ProgressBarWrapper').patch({
-        x: isLive ? 180 : 115,
-      });
-
       const focusedColor = Colors(colors.focus).get();
       const margin = isLive ? 0 : 20;
-      this.tag('ProgressBar').patch({
-        x: 0,
-        flexItem: {
-          marginLeft: margin,
-          marginRight: margin,
+
+      this._ProgressBarWrapper.patch({
+        x: isLive ? 180 : 115,
+        CurrentTime: {
+          Text: {
+            text: isLive ? 'Live' : '00:00:00',
+          },
         },
-        props: {
-          width: isLive ? 1550 : 1400,
-          progressColor: focusedColor,
-          backgroundBarColor: isLive ? focusedColor : colors.unfocus,
+        EndTime: {
+          Text: {
+            text: isLive ? '' : '00:00:00',
+          },
+        },
+        ProgressBar: {
+          x: 0,
+          flexItem: {
+            marginLeft: margin,
+            marginRight: margin,
+          },
+          props: {
+            width: isLive ? 1550 : 1400,
+            progressColor: focusedColor,
+            backgroundBarColor: isLive ? focusedColor : colors.unfocus,
+          },
         },
       });
 
@@ -358,7 +416,7 @@ export default class Player extends lng.Component {
     VideoPlayer.close();
 
     this.fireAncestors('$unpunchHole');
-    this.tag('ProgressBar').progress(0);
+    this._ProgressBar.progress(0);
     this._props.isAdVisible = false;
     this._adStarted = false;
     this._currentAdTime = 1;
@@ -368,7 +426,7 @@ export default class Player extends lng.Component {
   }
 
   _showErrorMessage() {
-    this.tag('ErrorMessage').visible = true;
+    this._ErrorMessage.visible = true;
     this._hideWrapper();
     this.fireAncestors('$unpunchHole');
     clearInterval(this._progressInterval);
@@ -392,16 +450,16 @@ export default class Player extends lng.Component {
   }
 
   _updateProgressBarAd(duration, adIndex, adsLength) {
-    if (this.tag('Spinner').visible) return;
+    if (this._Spinner.visible) return;
     const progress = (this._currentAdTime + 1) / duration;
-    this.tag('ProgressBarAd').progress(progress);
+    this._ProgressBarAd.progress(progress);
 
-    this.tag('AdNumber.Text').text = 'Ad ' + adIndex + ' of ' + adsLength;
+    this._AdNumber.text = 'Ad ' + adIndex + ' of ' + adsLength;
 
     const adTime = duration - this._currentAdTime;
 
     if (adTime > -1) {
-      this.tag('TimerAd.Text').text = formatTimeMS(duration - this._currentAdTime);
+      this._TimerAd.text = formatTimeMS(duration - this._currentAdTime);
     }
 
     if (this._currentAdTime + 1 <= duration) {
@@ -459,6 +517,8 @@ export default class Player extends lng.Component {
                       props: {
                         width: 1880,
                         height: 10,
+                        backgroundBarColor: Colors(colors.adProgress).get(),
+                        progressColor: undefined,
                       },
                     },
                     AdIcon: {
@@ -512,7 +572,7 @@ export default class Player extends lng.Component {
                 });
 
                 if (ad.skipping_allowed) {
-                  this.tag('WrapperAd').patch({
+                  this._WrapperAd.patch({
                     SkipButton: {
                       type: HorizontalContainer,
                       props: {
@@ -545,13 +605,6 @@ export default class Player extends lng.Component {
                     },
                   });
                 }
-
-                const progressBarStyle = {
-                  backgroundBarColor: Colors(colors.adProgress).get(),
-                  progressColor: undefined,
-                };
-
-                this.tag('ProgressBarAd').patch({ props: progressBarStyle });
 
                 if (!this._adStarted) {
                   this._adStarted = true;
@@ -735,14 +788,14 @@ export default class Player extends lng.Component {
   }
 
   $setInitial() {
-    this.tag('Subtitles.Languages').items[this._selectedTranslationIndex]._selectButton();
-    this.tag('Subtitles.Languages').selectedIndex = this._selectedTranslationIndex;
+    this._SubtitlesLanguages.items[this._selectedTranslationIndex]._selectButton();
+    this._SubtitlesLanguages.selectedIndex = this._selectedTranslationIndex;
   }
 
   $setFocus(id) {
-    this.tag('Subtitles.Languages').items[this._selectedTranslationIndex]._unselectButton();
-    this.tag('Subtitles.Languages').items[id]._selectButton();
-    this.tag('Subtitles.Languages').selectedIndex = id;
+    this._SubtitlesLanguages.items[this._selectedTranslationIndex]._unselectButton();
+    this._SubtitlesLanguages.items[id]._selectButton();
+    this._SubtitlesLanguages.selectedIndex = id;
     this._selectedTranslationIndex = id;
   }
 
@@ -884,13 +937,13 @@ export default class Player extends lng.Component {
     const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
 
     if (isLive) {
-      this.tag('ProgressBar').progress(1);
+      this._ProgressBar.progress(1);
     } else {
-      this.tag('ProgressBar').progress(progress);
+      this._ProgressBar.progress(progress);
     }
 
     if (!isLive) {
-      this.tag('CurrentTime.Text').text = formatTimeHMS(currentTime);
+      this._CurrentTime.text = formatTimeHMS(currentTime);
     }
   }
 
@@ -940,7 +993,7 @@ export default class Player extends lng.Component {
   }
 
   _initSpinner() {
-    this.tag('Spinner')
+    this._Spinner
       .animation({
         duration: 2,
         repeat: -1,
@@ -950,11 +1003,11 @@ export default class Player extends lng.Component {
   }
 
   _showSpinner() {
-    this.tag('Spinner').visible = true;
+    this._Spinner.visible = true;
   }
 
   _hideSpinner() {
-    this.tag('Spinner').visible = false;
+    this._Spinner.visible = false;
   }
 
   $videoPlayerPlaying() {
@@ -994,7 +1047,7 @@ export default class Player extends lng.Component {
 
     const formattedDuration = formatTimeHMS(parseFloat(VideoPlayer.duration));
 
-    this.tag('EndTime.Text').text = this._props.isLive ? '' : formattedDuration;
+    this._EndTime.text = this._props.isLive ? '' : formattedDuration;
 
     this._setState('Controls');
     this._showWrapper();
@@ -1016,13 +1069,13 @@ export default class Player extends lng.Component {
       h: 60,
     }));
 
-    this.tag('Subtitles.Languages').appendItems(items);
+    this._SubtitlesLanguages.appendItems(items);
   }
 
   $videoPlayerError(e) {
     console.error('Error in the player: ', e);
     if (e.event.code === 20) return;
-    this.tag('ErrorMessage').patch({
+    this._ErrorMessage.patch({
       Message: {
         text: {
           text: t('no_stream'),
@@ -1122,7 +1175,7 @@ export default class Player extends lng.Component {
       },
       class Subtitles extends this {
         _getFocused() {
-          return this.tag('Subtitles.Languages');
+          return this._SubtitlesLanguages;
         }
         _handleBack() {
           this.$hideSbutitles();
@@ -1139,7 +1192,7 @@ export default class Player extends lng.Component {
 
       class SkipButton extends this {
         _getFocused() {
-          return this.tag('SkipButton');
+          return this._SkipButton;
         }
 
         _handleEnter() {
@@ -1149,7 +1202,7 @@ export default class Player extends lng.Component {
 
       class ProgressBar extends this {
         _getFocused() {
-          return this.tag('ProgressBar');
+          return this._ProgressBar;
         }
 
         _handleEnter() {
@@ -1175,7 +1228,7 @@ export default class Player extends lng.Component {
 
       class Back extends this {
         _getFocused() {
-          return this.tag('Back');
+          return this._Back;
         }
 
         _handleRight() {
@@ -1185,7 +1238,7 @@ export default class Player extends lng.Component {
 
       class SubtitlesButton extends this {
         _getFocused() {
-          return this.tag('SubtitlesButton');
+          return this.SubtitlesButton;
         }
 
         _handleLeft() {

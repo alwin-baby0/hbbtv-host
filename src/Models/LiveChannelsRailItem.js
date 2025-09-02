@@ -24,8 +24,6 @@ class LiveChannelsRailItem {
         this.duration = data.extensions.duration;
         break;
       case 'livechannel':
-        /* this.url = data.content.src;
-        this.duration = data.extensions.duration; */
         break;
       case 'epg-channel':
         break;

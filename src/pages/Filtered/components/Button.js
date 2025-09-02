@@ -13,7 +13,6 @@ export default class Button extends Lightning.Component {
       w: 170,
       h: 64,
       flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-
       Icon: {
         x: -10,
         zIndex: 10,
@@ -50,14 +49,6 @@ export default class Button extends Lightning.Component {
       flexItem: {
         shrink: false,
       },
-    });
-    this._Title.patch({
-      text: {
-        text: title.toUpperCase(),
-        textColor: Colors(colors.focus).get(),
-      },
-    });
-    this.patch({
       texture: Lightning.Tools.getRoundRect(
         w,
         h,
@@ -67,15 +58,21 @@ export default class Button extends Lightning.Component {
         true,
         Colors(colors.focusedHelpButton).get()
       ),
+      Title: {
+        text: {
+          text: title.toUpperCase(),
+          textColor: Colors(colors.focus).get(),
+        },
+      },
     });
   }
 
   _focus() {
     const { w, h, radius, strokeWidth } = this._props;
-    this._Icon.patch({
-      color: Colors(colors.white).get(),
-    });
     this.patch({
+      Icon: {
+        color: Colors(colors.white).get(),
+      },
       texture: Lightning.Tools.getRoundRect(
         w,
         h,
@@ -85,10 +82,10 @@ export default class Button extends Lightning.Component {
         true,
         Colors(colors.focus).get()
       ),
-    });
-    this._Title.patch({
-      text: {
-        textColor: Colors(colors.unfocus).get(),
+      Title: {
+        text: {
+          textColor: Colors(colors.unfocus).get(),
+        },
       },
     });
   }
@@ -105,14 +102,14 @@ export default class Button extends Lightning.Component {
         true,
         Colors(colors.focusedHelpButton).get()
       ),
-    });
-    this._Title.patch({
-      text: {
-        textColor: Colors(colors.focus).get(),
+      Title: {
+        text: {
+          textColor: Colors(colors.focus).get(),
+        },
       },
-    });
-    this._Icon.patch({
-      color: Colors(colors.focus).get(),
+      Icon: {
+        color: Colors(colors.focus).get(),
+      },
     });
   }
 

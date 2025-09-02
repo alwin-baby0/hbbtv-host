@@ -153,21 +153,25 @@ export default class Home extends Lightning.Component {
       class Items extends this {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
-          this._HeroSection?.patch({
-            y: -980,
-          });
-          this._Wrapper.patch({
-            y: 0,
+          this.patch({
+            HeroSection: {
+              y: -980,
+            },
+            Wrapper: {
+              y: 0,
+            },
           });
         }
 
         $exit() {
           this.fireAncestors('$setNavbarVisibility', true);
-          this._HeroSection?.patch({
-            y: 0,
-          });
-          this._Wrapper.patch({
-            y: 900,
+          this.patch({
+            HeroSection: {
+              y: 0,
+            },
+            Wrapper: {
+              y: 900,
+            },
           });
         }
 
@@ -193,7 +197,12 @@ export default class Home extends Lightning.Component {
             const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
             if (newRails && newRails?.items?.length > 0) {
               const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
-              parsedItems.map((item) => item.props.index = item.props.index + this._Column.Items.children[this._Column._focusedIndex].Items.children.length);
+              parsedItems.map(
+                (item) =>
+                  (item.props.index =
+                    item.props.index +
+                    this._Column.Items.children[this._Column._focusedIndex].Items.children.length)
+              );
               currentItem._appendItems(parsedItems);
             }
           }
@@ -201,11 +210,24 @@ export default class Home extends Lightning.Component {
 
         async $verticalContainerIndexChange(index) {
           if (index > 0) {
-            this._HeroSection?.patch({ visible: false });
-            this._Wrapper.patch({ y: 0 });
+            this.patch({
+              HeroSection: {
+                visible: false,
+              },
+              Wrapper: {
+                y: 0,
+              },
+            });
           } else {
-            this._HeroSection?.patch({ visible: true, y: 1080 });
-            this._Wrapper.patch({ y: 0 });
+            this.patch({
+              HeroSection: {
+                visible: true,
+                y: 1080,
+              },
+              Wrapper: {
+                y: 0,
+              },
+            });
           }
 
           let hasBanner = !!HomePageService.banner;

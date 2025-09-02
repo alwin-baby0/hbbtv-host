@@ -42,6 +42,10 @@ export default class PosterRailItem extends FocusableItem {
     };
   }
 
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
+
   get _Title() {
     return this.tag('Title');
   }
@@ -59,19 +63,22 @@ export default class PosterRailItem extends FocusableItem {
       height: CARD_SIZES.POSTER.image_height,
     });
 
-    this._Title.patch({
-      text: {
-        text: itemTitle,
+    this._Wrapper.patch({
+      Border: {
+        PosterImage: {
+          props: {
+            width: CARD_SIZES.POSTER.image_width,
+            height: CARD_SIZES.POSTER.image_height,
+            imageSrc: imageSrc,
+            placeholderSrc: placeholderSrc,
+            radius: radius,
+          },
+        },
       },
-    });
-
-    this._PosterImage.patch({
-      props: {
-        width: CARD_SIZES.POSTER.image_width,
-        height: CARD_SIZES.POSTER.image_height,
-        imageSrc: imageSrc,
-        placeholderSrc: placeholderSrc,
-        radius: radius,
+      Title: {
+        text: {
+          text: itemTitle,
+        },
       },
     });
   }
@@ -108,7 +115,10 @@ export default class PosterRailItem extends FocusableItem {
       this.fireAncestors('$setStateOnHover', 'Favorites');
     }
     if (ancestor.parent.parent.ref === 'QRContainer') {
-      this.fireAncestors('$setStateOnHover', ancestor.parent.ref === 'RecentlyWatched' ? 'UserRecentlyWatched' : 'UserFavorites');
+      this.fireAncestors(
+        '$setStateOnHover',
+        ancestor.parent.ref === 'RecentlyWatched' ? 'UserRecentlyWatched' : 'UserFavorites'
+      );
     }
   }
 

@@ -29,12 +29,8 @@ export default class PageItem extends Lightning.Component {
     };
   }
 
-  get _ColumnWrapper() {
-    return this.tag('Column');
-  }
-
   get _Column() {
-    return this.tag('Column.Text');
+    return this.tag('Column');
   }
 
   set pageInfoData(val) {
@@ -47,11 +43,11 @@ export default class PageItem extends Lightning.Component {
 
   _enable() {
     this._Column.patch({
-      text: { text: this._pageInfoData.title },
-      color: Colors(colors.white).get(),
-    });
-    this.tag('Column').patch({
       color: Colors(colors.background).get(),
+      Text: {
+        text: { text: this._pageInfoData.title },
+        color: Colors(colors.white).get(),
+      },
     });
     let newPage;
     newPage = SettingsService.getSinglePage(1);
@@ -73,39 +69,35 @@ export default class PageItem extends Lightning.Component {
 
   _selectButton() {
     this._selected = true;
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.focus).get(),
     });
   }
 
   _unselectButton() {
     this._selected = false;
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.background).get(),
     });
   }
 
   _focus() {
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.focus).get(),
     });
   }
 
   _unfocus() {
     if (this._selected) {
-      this.tag('Column').patch({
+      this._Column.patch({
         color: Colors(colors.focusedHelpButton).get(),
       });
     } else {
-      this.tag('Column').patch({
+      this._Column.patch({
         color: Colors(colors.unfocusedHelpButton).get(),
       });
     }
   }
-
-  _init() { }
-
-  _getFocused() { }
 
   _handleHover() {
     this._focus();
@@ -122,9 +114,5 @@ export default class PageItem extends Lightning.Component {
     let pageId = this._pageInfoData.id;
     this.fireAncestors('$changeDescription', newPage, pageId);
     this.fireAncestors('$setFocus', this._pageIndex);
-  }
-
-  static _states() {
-    return [];
   }
 }

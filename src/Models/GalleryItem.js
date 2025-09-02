@@ -135,7 +135,6 @@ class GalleryItem {
         return this.thumbnails[i];
       }
     }
-    // return thumbnail ?? this.thumbnails[this.thumbnails.length - 1];
   }
 
   getLandscapePoster(size) {
@@ -148,7 +147,6 @@ class GalleryItem {
         return this.landscapePosters[i];
       }
     }
-    // return poster ?? this.landscapePosters[this.landscapePosters.length - 1];
   }
 
   getPortraitPoster(size) {
@@ -161,7 +159,6 @@ class GalleryItem {
         return this.portraitPosters[i];
       }
     }
-    // return poster ?? this.portraitPosters[this.portraitPosters.length - 1];
   }
 }
 

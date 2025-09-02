@@ -61,6 +61,10 @@ export default class App extends Router.App {
     return this.tag('Background');
   }
 
+  get _Dialog() {
+    return this.tag('Dialog');
+  }
+
   $setNavbarVisibility(isVisible) {
     this._Menu.setVisibility = isVisible;
   }
@@ -121,8 +125,8 @@ export default class App extends Router.App {
       h = 412;
       radius = 20;
     }
-    if (this.tag('Background')) {
-      this.tag('Background').shader = {
+    if (this._Background) {
+      this._Background.shader = {
         type: Lightning.shaders.Hole,
         x: x,
         y: y,
@@ -194,7 +198,7 @@ export default class App extends Router.App {
   handleOnline() {
     if (wasOffline) {
       VideoPlayer.play();
-      const networkDialog = this.tag('Dialog');
+      const networkDialog = this._Dialog;
       networkDialog.close();
       wasOffline = false;
     }
@@ -202,7 +206,7 @@ export default class App extends Router.App {
 
   handleOffline() {
     VideoPlayer.pause();
-    const networkDialog = this.tag('Dialog');
+    const networkDialog = this._Dialog;
     networkDialog.open({
       message: 'Problem with Network?',
       actions: [
@@ -240,7 +244,7 @@ export default class App extends Router.App {
   }
 
   $appClose() {
-    const dialog = this.tag('Dialog');
+    const dialog = this._Dialog;
     dialog.open({
       message: t('exit_label'),
       actions: [

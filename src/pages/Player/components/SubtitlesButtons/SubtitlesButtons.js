@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router } from '@lightningjs/sdk';
+import { Colors, Lightning } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
 
 export default class SubtitlesButtons extends Lightning.Component {
@@ -49,19 +49,18 @@ export default class SubtitlesButtons extends Lightning.Component {
 
   _unselectButton() {
     this._selected = false;
-    this.tag('Column').patch({
+    this._Column.patch({
       texture: null,
     });
   }
 
   _enable() {
     const { languageInfo } = this._props;
-    this.tag('Column').patch({
+    this._Column.patch({
       texture: null,
-    });
-
-    this.tag('Column.Text').patch({
-      text: languageInfo.name,
+      Text: {
+        text: languageInfo.name,
+      },
     });
   }
 
@@ -80,18 +79,18 @@ export default class SubtitlesButtons extends Lightning.Component {
   }
 
   _focus() {
-    this.tag('Column').patch({
+    this._Column.patch({
       texture: lng.Tools.getRoundRect(505, 60, 0, 2, Colors('#C40000').get(), false),
     });
   }
 
   _unfocus() {
     if (this._selected) {
-      this.tag('Column').patch({
+      this._Column.patch({
         texture: Lightning.Tools.getRoundRect(505, 60, 0, 2, Colors('#ffffff').get(), false),
       });
     } else {
-      this.tag('Column').patch({
+      this._Column.patch({
         texture: null,
       });
     }

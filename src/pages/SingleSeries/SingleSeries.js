@@ -103,7 +103,6 @@ export default class SingleSeries extends Lightning.Component {
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
-
         height: 620,
         firstEpisodeVideoId: firstEpisodeVideoId,
         firstEpisodeUrl: firstEpisodeUrl,
@@ -111,12 +110,13 @@ export default class SingleSeries extends Lightning.Component {
         seriesId: seriesId,
         ssai,
       },
-    });
-
-    this._HeroSection._GalleryButton.patch({
-      props: {
-        width: 430,
-        buttonLabel: t('watch_first_episode')?.toUpperCase(),
+      Info: {
+        GalleryButton: {
+          props: {
+            width: 430,
+            buttonLabel: t('watch_first_episode')?.toUpperCase(),
+          },
+        },
       },
     });
 
@@ -125,7 +125,7 @@ export default class SingleSeries extends Lightning.Component {
 
     if (localStorage.getItem('userData')) {
       if (isValidPosition) {
-        this._HeroSection.tag('Info').patch(
+        this._HeroSection._Info.patch(
           {
             AuthorizedButtons: {
               flex: { direction: 'row' },
@@ -175,7 +175,7 @@ export default class SingleSeries extends Lightning.Component {
           true
         );
       } else {
-        this._HeroSection.tag('Info').patch(
+        this._HeroSection._Info.patch(
           {
             AuthorizedButtons: {
               flex: undefined,
@@ -226,6 +226,10 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('BackButton');
   }
 
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
+
   $updateVerticalState(nextState) {
     this._setState(nextState);
   }
@@ -249,17 +253,19 @@ export default class SingleSeries extends Lightning.Component {
     return [
       class HeroSection extends this {
         _getFocused() {
-          this._SeriesWrapper.patch({
-            y: 0,
-          });
-          this._BackButton.patch({
-            y: 20,
+          this.patch({
+            SeriesWrapper: {
+              y: 0,
+            },
+            BackButton: {
+              y: 20,
+            },
           });
           return this._HeroSection;
         }
 
         _handleDown() {
-          if (this.tag('Column').Items.children.length > 0) {
+          if (this._Column.Items.children.length > 0) {
             this._setState('Items');
           } else {
             return false;
@@ -290,7 +296,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $exit() {
-          this.tag('Wrapper').patch({
+          this._Wrapper.patch({
             y: 715,
             h: 600,
           });
@@ -298,29 +304,33 @@ export default class SingleSeries extends Lightning.Component {
 
         $verticalContainerIndexChange(index) {
           if (index > 0 && index !== undefined) {
-            this._SeriesWrapper.patch({
-              y: -650,
-            });
-            this.tag('Wrapper').patch({
-              y: 0,
-              h: 1080,
-            });
-            this.tag('Column').patch({
-              h: 1080,
+            this.patch({
+              SeriesWrapper: {
+                y: -650,
+              },
+              Wrapper: {
+                y: 0,
+                h: 1080,
+                Column: {
+                  h: 1080,
+                },
+              },
             });
           } else {
-            this._BackButton.patch({
-              y: -180,
-            });
-            this._SeriesWrapper.patch({
-              y: -140,
-            });
-            this.tag('Wrapper').patch({
-              y: 500,
-              h: 1080,
-            });
-            this.tag('Column').patch({
-              h: 1080,
+            this.patch({
+              BackButton: {
+                y: -180,
+              },
+              SeriesWrapper: {
+                y: -140,
+              },
+              Wrapper: {
+                y: 500,
+                h: 1080,
+                Column: {
+                  h: 1080,
+                },
+              },
             });
           }
         }

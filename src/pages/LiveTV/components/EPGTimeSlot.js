@@ -40,12 +40,4 @@ export default class EPGTimeSlot extends Lightning.Component {
       color: 0xffff0000,
     });
   }
-
-  _init() { }
-
-  _getFocused() { }
-
-  static _states() {
-    return [];
-  }
 }

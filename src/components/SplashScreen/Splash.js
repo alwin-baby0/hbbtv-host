@@ -43,7 +43,6 @@ export default class Splash extends Lightning.Component {
 
     setTimeout(() => {
       const currentTimeInMS = Math.floor(Date.now() / 1000);
-      // console.log('Checking time:', currentTimeInMS);
 
       if (params.has('type') && params.has('id')) {
         const type = params.get('type');
@@ -51,16 +50,12 @@ export default class Splash extends Lightning.Component {
         const seriesId = params.get('seriesId');
 
         if (type === 'movie') {
-          /* Router.setHistory([{ hash: 'home' }, { hash: `movie-details/${id}` }]);
-          this.getMovie(id); */
           Router.setHistory([{ hash: 'home' }]);
           Router.navigate(`movie-details/${id}`);
         } else if (type === 'series') {
           Router.setHistory([{ hash: 'home' }]);
           Router.navigate(`series-details/${id}`);
         } else if (type === 'episode') {
-          /*  Router.setHistory([{ hash: 'home' }, { hash: `series-details/${seriesId}` }]);
-          this.getMovie(id); */
           Router.setHistory([{ hash: 'home' }]);
           history.replaceState(null, '', window.location.pathname);
           Router.navigate(`series-details/${seriesId}?episodeId=${id}&isDeeplinkEpisode=true`);
@@ -75,7 +70,6 @@ export default class Splash extends Lightning.Component {
 
   _disable() {
     console.log('called disable life event from splash');
-    // Router.setHistory([]);
     if (this._intervalID) {
       clearInterval(this._intervalID);
       this._intervalID = null;

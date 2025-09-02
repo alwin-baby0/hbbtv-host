@@ -1,8 +1,9 @@
 import lng from '@lightningjs/core';
 import { Colors } from '@lightningjs/sdk';
-lng;
+
 let selectedLanguageIndex = 0;
 let selectedCategorieIndex = 0;
+
 export default class Button extends lng.Component {
   constructor(props) {
     super(props);
@@ -111,9 +112,9 @@ export default class Button extends lng.Component {
       w: this.w,
       h: this.h,
       texture: lng.Tools.getRoundRect(this.w, this.h, 5, 3, false),
-    });
-    this._Text.patch({
-      text: this._data.languageTitle || this._data.genre,
+      Text: {
+        text: this._data.languageTitle || this._data.genre,
+      },
     });
   }
 

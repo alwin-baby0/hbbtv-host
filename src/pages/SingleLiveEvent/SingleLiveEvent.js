@@ -61,21 +61,19 @@ export default class SingleLiveEvent extends Lightning.Component {
 
     //Hide Button
     if (currentDate >= startDate && currentDate <= endDate) {
-      this._HeroSection.tag('Info').patch({
-        GalleryButton: {
-          type: Button,
-          flexItem: {
-            marginTop: 10,
+      this._HeroSection.patch({
+        Info: {
+          GalleryButton: {
+            type: Button,
+            flexItem: {
+              marginTop: 10,
+            },
+            props: {
+              buttonLabel: t('watch_now')?.toUpperCase(),
+              buttonIcon: Utils.asset('icons/home/play.svg'),
+              width: 400,
+            },
           },
-          props: {
-            buttonLabel: t('watch_now')?.toUpperCase(),
-            buttonIcon: Utils.asset('icons/home/play.svg'),
-          },
-        },
-      });
-      this._HeroSection._GalleryButton.patch({
-        props: {
-          width: 400,
         },
       });
     } else {
@@ -83,17 +81,17 @@ export default class SingleLiveEvent extends Lightning.Component {
         props: {
           enabled: false,
         },
-      });
-      this._HeroSection.tag('Info').patch({
-        GalleryButton: {
-          type: Button,
-          flexItem: {
-            marginTop: 10,
-          },
-          props: {
-            width: 400,
-            buttonLabel: t('coming_soon')?.toUpperCase(),
-            enabled: false,
+        Info: {
+          GalleryButton: {
+            type: Button,
+            flexItem: {
+              marginTop: 10,
+            },
+            props: {
+              width: 400,
+              buttonLabel: t('coming_soon')?.toUpperCase(),
+              enabled: false,
+            },
           },
         },
       });
@@ -112,6 +110,10 @@ export default class SingleLiveEvent extends Lightning.Component {
 
   get _HeroSection() {
     return this.tag('HeroSection');
+  }
+
+  get _HeroSectionInfo() {
+    return this.tag('HeroSection.Info');
   }
 
   get _SeriesWrapper() {
@@ -163,26 +165,30 @@ export default class SingleLiveEvent extends Lightning.Component {
 
         $verticalContainerIndexChange(index) {
           if (index > 0 && index !== undefined) {
-            this._SeriesWrapper.patch({
-              y: -650,
-            });
-            this._Wrapper.patch({
-              y: 0,
-              h: 1080,
-            });
-            this._Column.patch({
-              h: 1080,
+            this.patch({
+              SeriesWrapper: {
+                y: -650,
+              },
+              Wrapper: {
+                y: 0,
+                h: 1080,
+                Column: {
+                  h: 1080,
+                },
+              },
             });
           } else {
-            this._SeriesWrapper.patch({
-              y: -140,
-            });
-            this._Wrapper.patch({
-              y: 500,
-              h: 1080,
-            });
-            this._Column.patch({
-              h: 1080,
+            this.patch({
+              SeriesWrapper: {
+                y: -140,
+              },
+              Wrapper: {
+                y: 500,
+                h: 1080,
+                Column: {
+                  h: 1080,
+                },
+              },
             });
           }
         }

@@ -113,13 +113,14 @@ export default class VodPreview extends Lightning.Component {
             this._setState('VodContainer');
           }
 
-          this._VodContentContainer.patch({
-            y: 0,
-          });
-
-          this._VodContainer.patch({
-            y: this.calculateContentOffset(this._VodContentContainer.contentType),
-            h: 1920,
+          this.patch({
+            VodContentContainer: {
+              y: 0,
+            },
+            VodContainer: {
+              y: this.calculateContentOffset(this._VodContentContainer.contentType),
+              h: 1920,
+            },
           });
         }
 
@@ -151,24 +152,27 @@ export default class VodPreview extends Lightning.Component {
 
         correctContainerSize() {
           if (this._Column._focusedIndex === 0) {
-            this._VodContentContainer.patch({
-              y: 0,
-            });
-
-            this._VodContainer.patch({
-              y: this.calculateContentOffset(this._VodContentContainer.contentType),
-              h: 1920,
+            this.patch({
+              VodContentContainer: {
+                y: 0,
+              },
+              VodContainer: {
+                y: this.calculateContentOffset(this._VodContentContainer.contentType),
+                h: 1920,
+              },
             });
 
             this.fireAncestors('$setNavbarVisibility', true);
           }
           if (this._Column._focusedIndex >= 1) {
-            this._VodContainer.patch({
-              y: 0,
-              h: 1080,
-            });
-            this._VodContentContainer.patch({
-              y: -700,
+            this.patch({
+              VodContentContainer: {
+                y: -700,
+              },
+              VodContainer: {
+                y: 0,
+                h: 1080,
+              },
             });
 
             this.fireAncestors('$setNavbarVisibility', false);
