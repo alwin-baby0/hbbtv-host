@@ -95,7 +95,7 @@ const getGenresInfo = async (page, props) => {
       items: filtered.items,
     };
 
-    page._Button.patch({
+    page._Button?.patch({
       collision: true,
       props: {
         itemInfo: { category, title: type == 'movie' ? 'MOVIES' : type },
