@@ -43,11 +43,10 @@ export default class CategoryPicker extends Lightning.Component {
         true,
         Colors(colors.categoryPicker).get()
       ),
-    });
-
-    this._CaterogyItems.patch({
-      w: CARD_SIZES.CATEGORY.width,
-      h: CARD_SIZES.CATEGORY.height,
+      CaterogyItems: {
+        w: CARD_SIZES.CATEGORY.width,
+        h: CARD_SIZES.CATEGORY.height,
+      },
     });
   }
 

@@ -171,6 +171,18 @@ export default class LiveTVPreview extends Lightning.Component {
     return percentage / 100;
   }
 
+  get _ChannelInfo() {
+    return this.tag('LiveSection.ChannelInfo');
+  }
+
+  get _Progress() {
+    return this.tag('LiveSection.ChannelInfo.ProgressBar.Progress');
+  }
+
+  get _Player() {
+    return this.tag('Player');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
     const { title, summary, extensions, channelImage } = this._props;
@@ -182,51 +194,45 @@ export default class LiveTVPreview extends Lightning.Component {
     const elapsedPercentage = this.calculateElapsedPercentage(startTime, endTime, currentTime);
     const progressPercentage = this.convertPercentageToFraction(elapsedPercentage);
 
-    this.tag('LiveSection.ChannelInfo.ChannelName.Icon').patch({
-      src: channelImage.icon,
-    });
-
-    this.tag('LiveSection.ChannelInfo.ChannelName.Name').patch({
-      text: {
-        text: channelImage?.title,
+    this._ChannelInfo.patch({
+      ChannelName: {
+        Icon: {
+          src: channelImage.icon,
+        },
+        Name: {
+          text: {
+            text: channelImage?.title,
+          },
+        },
+      },
+      Title: {
+        text: {
+          text: title,
+        },
+      },
+      ProgressBar: {
+        StartTime: {
+          text: {
+            text: startTime,
+          },
+        },
+        EndTime: {
+          text: {
+            text: endTime,
+          },
+        },
+      },
+      ChannelDescription: {
+        text: {
+          text: summary,
+        },
       },
     });
 
-    this.tag('LiveSection.ChannelInfo.Title').patch({
-      text: {
-        text: title,
-      },
-    });
-
-    this.tag('LiveSection.ChannelInfo.ProgressBar.StartTime').patch({
-      text: {
-        text: startTime,
-      },
-    });
-
-    // this.tag('LiveSection.ChannelInfo.ProgressBar.Progress').patch({
-    //   progress: progressPercentage,
-    // });
-    this.tag('LiveSection.ChannelInfo.ProgressBar.Progress').progress(progressPercentage);
-
-    this.tag('LiveSection.ChannelInfo.ProgressBar.EndTime').patch({
-      text: {
-        text: endTime,
-      },
-    });
-
-    this.tag('LiveSection.ChannelInfo.ChannelDescription').patch({
-      text: {
-        text: summary,
-      },
-    });
+    this._Progress.progress(progressPercentage);
   }
 
   _getFocused() {
-    return this.tag('Player');
-  }
-
-  static _states() {
-    return [];
+    return this._Player;
   }
 }

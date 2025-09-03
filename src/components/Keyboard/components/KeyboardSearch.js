@@ -29,8 +29,6 @@ export default class KeyboardSearch extends Lightning.Component {
           itemSpacing: 0,
         },
         neverScroll: true,
-        // w: this.w,
-        // h: this.h,
       },
     };
   }
@@ -53,13 +51,10 @@ export default class KeyboardSearch extends Lightning.Component {
         collision: true,
         index,
         rowIndex: rowIndex,
-        // w: 100,
-        // h: 70,
-        // title:
       })),
     }));
 
-    this.tag('Keyboard').patch({
+    this._Keyboard.patch({
       w: 1000,
       h: 500,
       items: items,

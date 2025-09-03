@@ -79,6 +79,14 @@ export default class HelpScreen extends lng.Component {
     return this.tag('Column');
   }
 
+  get _LoadingIndicator() {
+    return this.tag('LoadingIndicator');
+  }
+
+  get _ScrollWrapper() {
+    return this.tag('ScrollWrapper');
+  }
+
   _active() {
     this._setState('HelpItems');
   }
@@ -115,7 +123,7 @@ export default class HelpScreen extends lng.Component {
   async $changeDescription(newPagePromise) {
     try {
       let decodedText = '';
-      this.tag('LoadingIndicator').visible = true; // Show the loading indicator
+      this._LoadingIndicator.visible = true; // Show the loading indicator
       const resolvedPage = await newPagePromise;
       const text = resolvedPage.data.entry[0].extensions.content_plain;
       if (typeof text === 'string') {
@@ -127,7 +135,7 @@ export default class HelpScreen extends lng.Component {
     } catch (error) {
       console.error('Error:', error);
     } finally {
-      this.tag('LoadingIndicator').visible = false; // Hide the loading indicator
+      this._LoadingIndicator.visible = false; // Hide the loading indicator
     }
   }
 
@@ -141,7 +149,7 @@ export default class HelpScreen extends lng.Component {
       },
     }));
 
-    this.tag('ScrollWrapper').patch({
+    this._ScrollWrapper.patch({
       content: content,
     });
   }
@@ -158,7 +166,7 @@ export default class HelpScreen extends lng.Component {
     return [
       class HelpItems extends this {
         _getFocused() {
-          return this.tag('Wrapper.Column');
+          return this._Column;
         }
 
         _handleUp() {
@@ -171,7 +179,7 @@ export default class HelpScreen extends lng.Component {
       },
       class ScrollWrapper extends this {
         _getFocused() {
-          return this.tag('ScrollWrapper');
+          return this._ScrollWrapper;
         }
 
         _handleLeft() {

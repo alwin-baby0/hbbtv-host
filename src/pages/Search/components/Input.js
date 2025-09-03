@@ -100,11 +100,11 @@ export default class InputField extends lng.Component {
 
         _focus() {
           this.fireAncestors('$setInputState');
-          this.tag('Input').listening = true;
+          this._Input.listening = true;
         }
 
         _unfocus() {
-          this.tag('Input').listening = false;
+          this._Input.listening = false;
         }
 
         _handleHover() {

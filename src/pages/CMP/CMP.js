@@ -47,11 +47,15 @@ export default class CMP extends Lightning.Component {
     return this.tag('Buttons');
   }
 
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
+
   _enable() {
     const cmpTitle = CMPService.cmpData?.title;
     const cmpDescription = CMPService.cmpData?.description;
 
-    this.tag('Wrapper').patch({
+    this._Wrapper.patch({
       Title: {
         text: {
           text: cmpTitle,
@@ -71,7 +75,6 @@ export default class CMP extends Lightning.Component {
 
   _disable() {
     console.log('called disable life event from cmp');
-    // Router.setHistory([]);
   }
 
   _handleBack() {

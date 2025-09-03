@@ -65,6 +65,10 @@ export default class LandscapeRailItem extends FocusableItem {
     };
   }
 
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
+
   get _Title() {
     return this.tag('Title');
   }
@@ -86,25 +90,27 @@ export default class LandscapeRailItem extends FocusableItem {
       height: 455,
     });
 
-    this._Title.patch({
-      text: {
-        text: itemTitle,
+    this._Wrapper.patch({
+      Border: {
+        LandscapeImage: {
+          props: {
+            width: CARD_SIZES.LANDSCAPE.image_width,
+            height: CARD_SIZES.LANDSCAPE.image_height,
+            imageSrc: imageSrc,
+            placeholderSrc: placeholderSrc,
+            radius: radius,
+          },
+        },
       },
-    });
-
-    this._Description.patch({
-      text: {
-        text: itemDescription || '',
+      Title: {
+        text: {
+          text: itemTitle,
+        },
       },
-    });
-
-    this._LandscapeImage.patch({
-      props: {
-        width: CARD_SIZES.LANDSCAPE.image_width,
-        height: CARD_SIZES.LANDSCAPE.image_height,
-        imageSrc: imageSrc,
-        placeholderSrc: placeholderSrc,
-        radius: radius,
+      Description: {
+        text: {
+          text: itemDescription || '',
+        },
       },
     });
   }

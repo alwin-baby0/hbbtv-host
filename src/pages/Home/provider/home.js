@@ -1,4 +1,4 @@
-import { HomePageService, TranslationService } from '../../../Services';
+import { HomePageService } from '../../../Services';
 
 async function checkImageVisibility(imageUrl) {
   return new Promise((resolve) => {

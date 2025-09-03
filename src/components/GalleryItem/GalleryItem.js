@@ -108,6 +108,7 @@ export default class GalleryItem extends Lightning.Component {
       },
     };
   }
+
   set props(props) {
     this._props = { ...this._props, ...props };
     const {
@@ -143,15 +144,15 @@ export default class GalleryItem extends Lightning.Component {
     } else {
       this._Info.patch({
         Summary: undefined,
-      });
-      this.tag('Info.Date').patch({
-        text: {
-          text: summary,
+        Date: {
+          text: {
+            text: summary,
+          },
         },
-      });
-      this.tag('Info.Venue').patch({
-        text: {
-          text: venue,
+        Venue: {
+          text: {
+            text: venue,
+          },
         },
       });
     }
@@ -169,25 +170,30 @@ export default class GalleryItem extends Lightning.Component {
       } else return Utils.asset('images/gradient.png');
     };
 
-    this._BackgroundImage.patch({
-      w: 1220,
-      h: height,
-      x: 700,
-      src: bgImageSrc(),
-    });
-    this._GradientOverlay.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
-    });
-    this._Title.patch({
-      text: {
-        text: title,
+    this.patch({
+      BackgroundImage: {
+        w: 1220,
+        h: height,
+        x: 700,
+        src: bgImageSrc(),
+      },
+      GradientOverlay: {
+        texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
+      },
+      Info: {
+        Title: {
+          text: {
+            text: title,
+          },
+        },
+        Description: {
+          text: {
+            text: description,
+          },
+        },
       },
     });
-    this._Description.patch({
-      text: {
-        text: description,
-      },
-    });
+
     this._GalleryButton &&
       (() => {
         // Define the callback based on the enabled prop

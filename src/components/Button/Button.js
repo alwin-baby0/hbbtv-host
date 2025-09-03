@@ -92,15 +92,15 @@ export default class Button extends Lightning.Component {
         this._isFocused,
         this._isFocused ? fillColor : undefined
       ),
-    });
-
-    this._Icon.patch({
-      texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
-    });
-
-    this._Label.tag('Text').patch({
-      text: {
-        text: buttonLabel,
+      Icon: {
+        texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
+      },
+      Label: {
+        Text: {
+          text: {
+            text: buttonLabel,
+          },
+        },
       },
     });
   }
@@ -124,7 +124,6 @@ export default class Button extends Lightning.Component {
         strokeWidth,
         Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get(),
         true,
-        // Colors(colors.focus).get()
         Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get()
       ),
     });

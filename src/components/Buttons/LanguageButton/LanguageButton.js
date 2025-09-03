@@ -221,28 +221,27 @@ export default class LanguageButton extends Lightning.Component {
     const languageCode = localStorage.getItem('languageCode');
     const isSelected = this._props.languageInfo === languageCode;
 
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
     });
   }
 
   _unselectButton() {
     this._selected = false;
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.unfocusedLanguage).get(),
     });
   }
 
   _enable() {
     const { languageInfo } = this._props;
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.background).get(),
-    });
-
-    this.tag('Column.Text').patch({
-      text: languageMapper[languageInfo].name,
-      color: Colors(colors.white).get(),
-      fontFace: 'Montserrat-SemiBold',
+      Text: {
+        text: languageMapper[languageInfo].name,
+        color: Colors(colors.white).get(),
+        fontFace: 'Montserrat-SemiBold',
+      },
     });
   }
 
@@ -270,7 +269,7 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   _focus() {
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.focus).get(),
     });
   }
@@ -279,7 +278,7 @@ export default class LanguageButton extends Lightning.Component {
     const languageCode = localStorage.getItem('languageCode');
     const isSelected = this._props.languageInfo === languageCode;
 
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
     });
   }
@@ -309,8 +308,4 @@ export default class LanguageButton extends Lightning.Component {
 
     return res;
   };
-
-  static _states() {
-    return [];
-  }
 }

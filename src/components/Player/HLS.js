@@ -1,4 +1,3 @@
-// HLS.js
 import { VideoPlayer } from '@lightningjs/sdk';
 import Hls from 'hls.js';
 

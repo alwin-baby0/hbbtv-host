@@ -51,6 +51,26 @@ export default class LanguageSettings extends Lightning.Component {
     return this.tag('Column');
   }
 
+  get _Languages() {
+    return this.tag('Content.Languages');
+  }
+
+  get _Content() {
+    return this.tag('Content');
+  }
+
+  get _Column() {
+    return this.tag('Wrapper.Column');
+  }
+
+  get _CMPContainer() {
+    return this.tag('Content.CMPContainer');
+  }
+
+  get CMPButtons() {
+    return this.tag('Content.CMPContainer.Buttons');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
   }
@@ -79,20 +99,20 @@ export default class LanguageSettings extends Lightning.Component {
 
     if (typeof lastLanguage !== 'undefined') {
       // Unselect the button of the last ID before setting a new one
-      this.tag('Content.Languages').Items.children[lastLanguage]._unselectButton();
+      this._Languages.Items.children[lastLanguage]._unselectButton();
     }
     // Set the new ID
     if (!id) {
-      this.tag('Content.Languages').Items.children[0]._selectButton();
+      this._Languages.Items.children[0]._selectButton();
     } else {
-      this.tag('Content.Languages').Items.children[id]._selectButton();
+      this._Languages.Items.children[id]._selectButton();
     }
     // Update the lastId variable with the current ID
     this._props.lastLanguage = id;
   }
 
   async $changeContent(contentId) {
-    this.tag('Content').patch({
+    this._Content.patch({
       CMPContainer: undefined,
       Languages: undefined,
     });
@@ -132,7 +152,7 @@ export default class LanguageSettings extends Lightning.Component {
         };
       });
 
-      this.tag('Content').patch({
+      this._Content.patch({
         CMPContainer: {
           flex: { direction: 'column', alignItems: 'center' },
           w: 1310,
@@ -186,7 +206,7 @@ export default class LanguageSettings extends Lightning.Component {
         h: 100,
       }));
 
-      this.tag('Content').patch({
+      this._Content.patch({
         Languages: {
           type: VerticalContainer,
           collision: true,
@@ -216,7 +236,7 @@ export default class LanguageSettings extends Lightning.Component {
     return [
       class DefaultState extends this {
         _getFocused() {
-          return this.tag('Wrapper.Column');
+          return this._Column;
         }
 
         _handleUp() {
@@ -224,10 +244,10 @@ export default class LanguageSettings extends Lightning.Component {
         }
 
         _handleRight() {
-          if (this.tag('Content.CMPContainer')) {
+          if (_CMPContainer) {
             this._setState('CMPContainer');
           }
-          if (this.tag('Content.Languages')) {
+          if (this._Languages) {
             this._setState('Languages');
           }
         }
@@ -235,7 +255,7 @@ export default class LanguageSettings extends Lightning.Component {
 
       class CMPContainer extends this {
         _getFocused() {
-          return this.tag('Content.CMPContainer.Buttons');
+          return this.CMPButtons;
         }
 
         _handleLeft() {
@@ -249,7 +269,7 @@ export default class LanguageSettings extends Lightning.Component {
 
       class Languages extends this {
         _getFocused() {
-          return this.tag('Content.Languages');
+          return this._Languages;
         }
 
         _handleUp() {

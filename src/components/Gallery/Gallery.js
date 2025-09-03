@@ -41,11 +41,8 @@ export default class Gallery extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const { sliderData } = this._props;
 
-    this._HeroSection.tag('Info').patch({
+    this._Info.patch({
       GalleryButton: undefined,
-    });
-
-    this._HeroSection.tag('Info').patch({
       Summary: undefined,
     });
 
@@ -60,6 +57,10 @@ export default class Gallery extends Lightning.Component {
 
   get _HeroSection() {
     return this.tag('HeroSection');
+  }
+
+  get _Info() {
+    return this.tag('HeroSection.Info');
   }
 
   get _Bullets() {

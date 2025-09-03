@@ -35,7 +35,6 @@ export default class Dialog extends Lightning.Component {
       },
       Wrapper: {
         x: 610,
-        // y: 300,
         y: 260,
         w: 700,
         h: 480,
@@ -80,6 +79,7 @@ export default class Dialog extends Lightning.Component {
       },
     };
   }
+
   _init() {
     this.transition('alpha').on('finish', () => {
       if (this.alpha === 0) {
@@ -87,38 +87,47 @@ export default class Dialog extends Lightning.Component {
       }
     });
   }
+
+  get _Buttons() {
+    return this.tag('Buttons');
+  }
+
   _handleKey() {
     return true;
   }
-  _handleClick() {}
+
   _handleEnter() {
-    const index = this.tag('Buttons').selectedIndex;
+    const index = this._Buttons.selectedIndex;
     const current = this._actions[index];
     if (!!(current && current.action && current.action.call && current.action.apply)) {
       current.action.call();
     }
   }
+
   set actions(val) {
     this._actions = val;
   }
+
   set message(val) {
     this._message = val;
   }
-  // _handleHover() {
-  //   console.log('hovered');
-  // }
+
   $handleEnter() {
     this._handleEnter();
   }
+
   $setIndex(index) {
-    this.tag('Buttons').selectedIndex = index;
+    this._Buttons.selectedIndex = index;
   }
+
   _handleHover() {
     return false;
   }
+
   $BtnClicked() {
     this._handleEnter();
   }
+
   open({ header = '', message = '', actions = [] }) {
     Router.focusWidget('Dialog');
     if (actions.length === 0) {
@@ -155,43 +164,49 @@ export default class Dialog extends Lightning.Component {
     this.setSmooth('alpha', 1);
     this._setState('Buttons');
   }
+
   close() {
     this.setSmooth('alpha', 0);
     Router.focusPage();
   }
+
   focus() {
-    this.tag('Buttons').selectedIndex = 1000;
+    this._Buttons.selectedIndex = 1000;
     setTimeout(() => {
-      this.tag('Buttons').selectedIndex = 0;
+      this._Buttons.selectedIndex = 0;
       this._setState('Buttons');
     }, 10);
   }
+
   $handleBack() {
     this.setSmooth('alpha', 0);
     Router.focusPage();
   }
+
   _handleBack() {
     this.$handleBack();
   }
+
   static _states() {
     return [
       class Buttons extends this {
         _getFocused() {
-          return this.tag('Buttons');
+          return this._Buttons;
         }
       },
     ];
   }
 
   close() {
-    // this.tag('Buttons').clear();
     this.setSmooth('alpha', 0);
     Router.focusPage();
   }
+
   _getFocused() {
-    return this.tag('Buttons');
+    return this._Buttons;
   }
+
   $setFocus(index) {
-    this.tag('Buttons').selectedIndex = index;
+    this._Buttons.selectedIndex = index;
   }
 }

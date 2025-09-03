@@ -6,6 +6,7 @@ export default class LoadingScreenComponent extends lng.Component {
     xPos: 960,
     yPos: 540,
   };
+
   static _template() {
     return {
       Spinner: {
@@ -18,10 +19,14 @@ export default class LoadingScreenComponent extends lng.Component {
     };
   }
 
+  get _Spinner() {
+    return this.tag('Spinner');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
     const { xPos, yPos } = this._props;
-    this.tag('Spinner').patch({
+    this._Spinner.patch({
       x: xPos,
       y: yPos,
     });
@@ -32,7 +37,7 @@ export default class LoadingScreenComponent extends lng.Component {
   }
 
   _spin() {
-    this.tag('Spinner')
+    this._Spinner
       .animation({
         duration: 2, // animation duration in seconds
         repeat: -1, // repeat indefinitely

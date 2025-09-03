@@ -42,6 +42,10 @@ export default class CollectionRailItem extends FocusableItem {
     };
   }
 
+  get _Wrapper() {
+    return this.tag('Wrapper');
+  }
+
   get _Title() {
     return this.tag('Title');
   }
@@ -59,19 +63,22 @@ export default class CollectionRailItem extends FocusableItem {
       height: CARD_SIZES.COLLECTION.image_height,
     });
 
-    this._Title.patch({
-      text: {
-        text: itemTitle,
+    this._Wrapper.patch({
+      Border: {
+        PosterImage: {
+          props: {
+            width: CARD_SIZES.COLLECTION.image_width,
+            height: CARD_SIZES.COLLECTION.image_height,
+            imageSrc: imageSrc,
+            placeholderSrc: placeholderSrc,
+            radius: radius,
+          },
+        },
       },
-    });
-
-    this._PosterImage.patch({
-      props: {
-        width: CARD_SIZES.COLLECTION.image_width,
-        height: CARD_SIZES.COLLECTION.image_height,
-        imageSrc: imageSrc,
-        placeholderSrc: placeholderSrc,
-        radius: radius,
+      Title: {
+        text: {
+          text: itemTitle,
+        },
       },
     });
   }

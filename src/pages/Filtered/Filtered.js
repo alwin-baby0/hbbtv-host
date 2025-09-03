@@ -6,7 +6,6 @@ import { CONTENT_TYPE } from '../../components/VodContentContainer/VodContentCon
 export default class Filtered extends Lightning.Component {
   static _template() {
     return {
-      //collision: true,
       Background: {
         w: 1920,
         h: 2080,
@@ -36,9 +35,7 @@ export default class Filtered extends Lightning.Component {
           },
         },
       },
-
       Wrapper: {
-        //collision: true,
         x: 80,
         y: 80,
         h: 1080,
@@ -51,10 +48,8 @@ export default class Filtered extends Lightning.Component {
         },
         Column: {
           y: 170,
-          // h: 795,
           h: 1080,
           w: 1760,
-          // y: 100,
           collision: true,
           type: VerticalContainer,
         },
@@ -78,12 +73,12 @@ export default class Filtered extends Lightning.Component {
     return this.tag('Title');
   }
 
-  get _Button() {
-    return this.tag('GenresInfo.BackButton');
-  }
-
   get _Genre() {
     return this.tag('GenresInfo.Genre');
+  }
+
+  get _GenresInfo() {
+    return this.tag('GenresInfo');
   }
 
   _enable() {
@@ -129,23 +124,25 @@ export default class Filtered extends Lightning.Component {
         }
 
         $enter() {
-          this._Column.patch({
-            y: 170,
+          this.patch({
+            GenresInfo: {
+              BackButton: {
+                y: 0,
+              },
+            },
+            Wrapper: {
+              y: this.calculateContentOffset(this._VodContentContainer.contentType),
+              h: 1920,
+              Column: {
+                y: 170,
+              },
+            },
           });
           this.fireAncestors('$setNavbarVisibility', true);
 
           if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
             this._setState('VodContainer');
           }
-
-          this._VodContentContainer.patch({
-            y: 0,
-          });
-
-          this._VodContainer.patch({
-            y: this.calculateContentOffset(this._VodContentContainer.contentType),
-            h: 1920,
-          });
         }
 
         _enable() {
@@ -180,7 +177,7 @@ export default class Filtered extends Lightning.Component {
           return;
         }
         _getFocused() {
-          return this._Button;
+          return this._VodContentContainer;
         }
         _handleDown() {
           if (this._Column.Items.children.length == 0) {
@@ -202,40 +199,49 @@ export default class Filtered extends Lightning.Component {
 
         correctContainerSize() {
           if (this._Column._focusedIndex === 0) {
-            this._VodContentContainer.patch({
-              y: 0,
+            this.patch({
+              GenresInfo: {
+                BackButton: {
+                  y: 0,
+                },
+              },
+              Wrapper: {
+                y: this.calculateContentOffset(this._VodContentContainer.contentType),
+                h: 1920,
+                Column: {
+                  y: 170,
+                },
+              },
             });
-            this._Column.patch({
-              y: 170,
-            });
-
-            this._VodContainer.patch({
-              y: this.calculateContentOffset(this._VodContentContainer.contentType),
-              h: 1920,
-            });
-            this.tag('GenresInfo').visible = true;
+            this._GenresInfo.visible = true;
             this.fireAncestors('$setNavbarVisibility', true);
           }
           if (this._Column._focusedIndex === 1) {
-            this._Column.patch({
-              y: 0,
+            this.patch({
+              Wrapper: {
+                y: 0,
+                h: 1080,
+                Column: {
+                  y: 0,
+                },
+              },
             });
             this.fireAncestors('$setNavbarVisibility', false);
-            this._VodContainer.patch({
-              y: 0,
-              h: 1080,
-            });
-            this.tag('GenresInfo').visible = false;
+            this._GenresInfo.visible = false;
           }
           if (this._Column._focusedIndex > 1) {
-            this.tag('GenresInfo').visible = false;
+            this._GenresInfo.visible = false;
 
-            this._VodContainer.patch({
-              y: 0,
-              h: 1080,
-            });
-            this._VodContentContainer.patch({
-              y: -700,
+            this.patch({
+              GenresInfo: {
+                BackButton: {
+                  y: -700,
+                },
+              },
+              Wrapper: {
+                y: 0,
+                h: 1080,
+              },
             });
 
             this.fireAncestors('$setNavbarVisibility', false);
