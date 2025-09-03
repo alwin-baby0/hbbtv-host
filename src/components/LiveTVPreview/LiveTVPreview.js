@@ -1,7 +1,8 @@
 import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import LiveTVPlayer from '../../pages/LiveTV/components/LiveTVPlayer';
-import { ProgressBar } from '@lightningjs/ui-components';
+import ProgressBar from '../../pages/Player/components/ProgressBar/ProgressBar';
+import colors from '../../../reskin/colors.json';
 
 export default class LiveTVPreview extends Lightning.Component {
   _props = {};
@@ -68,6 +69,11 @@ export default class LiveTVPreview extends Lightning.Component {
               },
               type: ProgressBar,
               w: 545,
+              props: {
+                width: 545,
+                height: 10,
+                progressColor: Colors(colors.white).get(),
+              },
             },
             EndTime: {
               w: 85,
@@ -198,9 +204,10 @@ export default class LiveTVPreview extends Lightning.Component {
       },
     });
 
-    this.tag('LiveSection.ChannelInfo.ProgressBar.Progress').patch({
-      progress: progressPercentage,
-    });
+    // this.tag('LiveSection.ChannelInfo.ProgressBar.Progress').patch({
+    //   progress: progressPercentage,
+    // });
+    this.tag('LiveSection.ChannelInfo.ProgressBar.Progress').progress(progressPercentage);
 
     this.tag('LiveSection.ChannelInfo.ProgressBar.EndTime').patch({
       text: {
