@@ -22,7 +22,7 @@ export default class LandscapeRailItem extends FocusableItem {
         radius: 6,
       },
       w: CARD_SIZES.LANDSCAPE.width,
-      h: CARD_SIZES.LANDSCAPE.height,
+      h: CARD_SIZES.LANDSCAPE.height + 45,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -32,7 +32,7 @@ export default class LandscapeRailItem extends FocusableItem {
           },
         },
         Title: {
-          h: 25,
+          h: 50,
           flexItem: {
             marginTop: 15,
             marginLeft: 20,
@@ -40,9 +40,9 @@ export default class LandscapeRailItem extends FocusableItem {
           },
           text: {
             fontFace: 'Montserrat-Bold',
-            fontSize: 21,
+            fontSize: 18,
             lineHeight: 25,
-            maxLines: 1,
+            maxLines: 2,
             wordWrapWidth: 275,
           },
         },
@@ -50,7 +50,7 @@ export default class LandscapeRailItem extends FocusableItem {
           h: 160,
           w: 275,
           flexItem: {
-            marginTop: 5,
+            marginTop: 15,
             marginLeft: 20,
             marginRight: 20,
           },
@@ -83,7 +83,7 @@ export default class LandscapeRailItem extends FocusableItem {
 
     this.setProps({
       width: 315,
-      height: 410,
+      height: 455,
     });
 
     this._Title.patch({
