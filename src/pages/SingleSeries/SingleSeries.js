@@ -144,7 +144,6 @@ export default class SingleSeries extends Lightning.Component {
                   callback: () => {
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
-                        console.log(result);
                         Router.navigate('player', {
                           videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
                           duration: duration,

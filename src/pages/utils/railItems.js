@@ -180,7 +180,6 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
 };
 
 const constructEpisodeRailItems = (railItems, railItemsOptions) => {
-  console.log(railItems);
   return railItems.map((railItem, index) => ({
     type: LandscapeRailItem,
     collision: true,

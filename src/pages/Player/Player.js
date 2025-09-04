@@ -368,7 +368,6 @@ export default class Player extends lng.Component {
           },
         },
       });
-      console.log(episodeTitle);
 
       episodeTitle &&
         episodeTitle !== '' &&
