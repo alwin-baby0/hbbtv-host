@@ -15,6 +15,18 @@ export default async function (page, { seriesId }) {
   }
 
   const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
+  console.log(galleryItem);
+
+  const updatedSeasons = seasons.map((season) => {
+    season.items = season.items.map((episode) => {
+      const index = episode.title.indexOf(' - S');
+      episode.title = episode.title.substring(index + 3, episode.title.length);
+
+      return episode;
+    });
+
+    return season;
+  });
 
   let favorited = false;
 
@@ -25,6 +37,8 @@ export default async function (page, { seriesId }) {
   }
   let firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
   let firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;
+  let firstEpisodeTitle = seasons ? updatedSeasons[0].items[0].title : undefined;
+  console.log(firstEpisodeTitle);
 
   if (galleryItem?.lastPlayedId) {
     galleryItemLastPlayedEp = await DetailService.getMovie(galleryItem?.lastPlayedId);
@@ -47,25 +61,15 @@ export default async function (page, { seriesId }) {
     position: galleryItem.position,
     lastPlayedId: galleryItem.lastPlayedId,
     lastPlayedUrl: galleryItem.url,
-    // firstEpisodeVideoId: +seasons[0].items[0].id,
+    lastPlayedTitle: galleryItem.lastPlayedTitle,
     firstEpisodeVideoId: seasons ? firstEpisodeId : undefined,
     firstEpisodeUrl: firstEpisodeUrl,
+    firstEpisodeTitle: firstEpisodeTitle,
     seriesId: galleryItem.id,
     isDeeplinkEpisode: pathname.isDeeplinkEpisode,
     ssai: galleryItem.ssai,
     ssaiLastEp: ssaiLastEp,
   };
-
-  const updatedSeasons = seasons.map((season) => {
-    season.items = season.items.map((episode) => {
-      const index = episode.title.indexOf(' - S');
-      episode.title = episode.title.substring(index + 3, episode.title.length);
-
-      return episode;
-    });
-
-    return season;
-  });
 
   page._Column.props = {
     items: constructRails(updatedSeasons),

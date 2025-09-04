@@ -180,6 +180,7 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
 };
 
 const constructEpisodeRailItems = (railItems, railItemsOptions) => {
+  console.log(railItems);
   return railItems.map((railItem, index) => ({
     type: LandscapeRailItem,
     collision: true,
@@ -206,6 +207,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
               videoType: 'series',
               seriesID: railItem.seriesId,
               ssai: result[0].extensions.ssai ?? railItem.ssai,
+              episodeTitle: railItem.title,
             });
           }
         );

@@ -70,6 +70,32 @@ export default class Player extends lng.Component {
         w: 1690,
         collision: true,
         visible: false,
+        EpisodeTitleWrapper: {
+          visible: false,
+          w: 700,
+          h: 100,
+          y: -750,
+          EpisodeBackdrop: {
+            rect: true,
+            w: 800,
+            h: 150,
+            colorBottom: Colors('#000000').alpha(0).get(),
+            colorTop: Colors('#000000').alpha(0.5).get(),
+            colorRight: Colors('#000000').alpha(0).get(),
+          },
+          Text: {
+            w: 700,
+            h: 100,
+            x: 20,
+            y: 20,
+            text: {
+              text: '',
+              fontSize: 40,
+              fontFace: 'Montserrat-Bold',
+              color: Colors(colors.unfocus).get(),
+            },
+          },
+        },
         ControlsWrapper: {
           w: 1690,
           h: 100,
@@ -197,6 +223,10 @@ export default class Player extends lng.Component {
     return this.tag('Controls');
   }
 
+  get _Episode() {
+    return this.tag('EpisodeTitleWrapper');
+  }
+
   get _Back() {
     return this.tag('Back');
   }
@@ -308,7 +338,7 @@ export default class Player extends lng.Component {
 
   set props(props) {
     this._props = props;
-    const { isLive, videoUrl, continueTime } = props;
+    const { isLive, videoUrl, continueTime, episodeTitle } = props;
     setTimeout(() => {
       const focusedColor = Colors(colors.focus).get();
       const margin = isLive ? 0 : 20;
@@ -338,6 +368,19 @@ export default class Player extends lng.Component {
           },
         },
       });
+      console.log(episodeTitle);
+
+      episodeTitle &&
+        episodeTitle !== '' &&
+        this._Episode.patch({
+          visible: true,
+          EpisodeBackdrop: {
+            visible: true,
+          },
+          Text: {
+            text: episodeTitle,
+          },
+        });
 
       //video
       this.fireAncestors('$punchHole');
