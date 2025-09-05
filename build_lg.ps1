@@ -14,7 +14,7 @@ param(
 
 $envFile = ".env.webos"
 $buildfolder = "wedotv-lg-build-$Environment"
-$version = "2.1.2"
+$version = "2.1.3"
 
 if ($Environment -eq "test") {
     # Test environment URLs
@@ -44,9 +44,14 @@ if (Test-Path "$envFile") {
     }
 }
 
+Write-Host "BUILD VERSION $version"
+
 # Run npm commands
 npm install
 npm run build-lg
+
+New-Item -ItemType Directory -Force -Path "$buildfolder/static"
+Copy-Item -Force "public/static/icon.png" "$buildfolder/static"
 
 # Generate ares package
 ares-generate -p "id=wedotv-$Environment" -p "version=$version" -p "title=WeDoTV" $buildfolder
