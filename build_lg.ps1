@@ -48,6 +48,7 @@ if (Test-Path "$envFile") {
 npm install
 npm run build-lg
 
+New-Item -ItemType Directory -Force -Path "$buildfolder/static"
 Copy-Item -Force "public/static/icon.png" "$buildfolder/static"
 
 # Generate ares package

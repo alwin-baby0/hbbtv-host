@@ -29,6 +29,7 @@ rm -rf "$buildfolder"
 source .env.webos
 npm install
 npm run build-lg
+mkdir -p "$buildfolder"/static
 cp public/static/icon.png "$buildfolder"/static
 ares-generate -p "id=wedotv-$environment" -p "version=${version}" -p "title=WeDoTV" "$buildfolder"
 mv build/* "$buildfolder"
