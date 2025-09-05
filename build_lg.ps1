@@ -14,7 +14,7 @@ param(
 
 $envFile = ".env.webos"
 $buildfolder = "wedotv-lg-build-$Environment"
-$version = "2.0.0"
+$version = "2.1.3"
 
 if ($Environment -eq "test") {
     # Test environment URLs
