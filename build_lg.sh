@@ -9,6 +9,8 @@ if [[ "$1" == "test" ]]; then
 	environment=test
 fi
 
+echo "BUILD VERSION $APP_VERSION"
+
 buildfolder=wedotv-lg-build-$environment
 
 if [[ "$environment" == "test" ]]; then

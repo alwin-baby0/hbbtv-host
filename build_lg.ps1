@@ -43,6 +43,8 @@ if (Test-Path "$envFile") {
     }
 }
 
+Write-Host "BUILD VERSION $APP_VERSION"
+
 # Run npm commands
 npm install
 npm run build-lg
@@ -51,7 +53,8 @@ New-Item -ItemType Directory -Force -Path "$buildfolder/static"
 Copy-Item -Force "public/static/icon.png" "$buildfolder/static"
 
 # Generate ares package
-ares-generate -p "id=wedotv-$Environment" -p "version=$APP_VERSION" -p "title=WeDoTV" $buildfolder
+$env:APP_VERSION = $APP_VERSION
+ares-generate -p "id=wedotv-$Environment" -p "version=$env:APP_VERSION" -p "title=WeDoTV" $buildfolder
 
 # Move build contents
 Move-Item -Force "build/*" $buildfolder
