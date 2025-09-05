@@ -37,7 +37,7 @@ if (Test-Path $buildfolder) {
 # Source environment file (PowerShell equivalent)
 if (Test-Path "$envFile") {
     Get-Content "$envFile" | ForEach-Object {
-        if ($_ -match "^(?:export\s+)?([^=]+)=(?:'|\")?(.*?)(?:'|\")?$") {
+        if ($_ -match "^([^=]+)=(.*)$") {
             Set-Variable -Name $matches[1] -Value $matches[2] -Scope Global
         }
     }
