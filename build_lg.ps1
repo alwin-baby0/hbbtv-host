@@ -48,6 +48,8 @@ if (Test-Path "$envFile") {
 npm install
 npm run build-lg
 
+Copy-Item -Force "public/static/icon.png" "$buildfolder/static"
+
 # Generate ares package
 ares-generate -p "id=wedotv-$Environment" -p "version=$version" -p "title=WeDoTV" $buildfolder
 
