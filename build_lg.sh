@@ -4,8 +4,6 @@
 # git checkout development-base
 # git pull
 
-version=2.1.2
-
 environment=prod
 if [[ "$1" == "test" ]]; then
 	environment=test
@@ -31,11 +29,11 @@ npm install
 npm run build-lg
 mkdir -p "$buildfolder"/static
 cp public/static/icon.png "$buildfolder"/static
-ares-generate -p "id=wedotv-$environment" -p "version=${version}" -p "title=WeDoTV" "$buildfolder"
+ares-generate -p "id=wedotv-$environment" -p "version=${APP_VERSION}" -p "title=WeDoTV" "$buildfolder"
 mv build/* "$buildfolder"
 
 sed -i '' 's#<body>#<body>\n<script src="./webOSTVjs-1.2.10/webOSTV-dev.js" charset="UTF-8"></script>\n<script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>\n#' "$buildfolder"/index.html
 
 ares-package --no-minify ./"$buildfolder"
 
-mv wedotv-${environment}_${version}_all.ipk ./"$buildfolder"
+mv wedotv-${environment}_${APP_VERSION}_all.ipk ./"$buildfolder"

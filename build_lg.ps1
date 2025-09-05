@@ -14,7 +14,6 @@ param(
 
 $envFile = ".env.webos"
 $buildfolder = "wedotv-lg-build-$Environment"
-$version = "2.1.2"
 
 if ($Environment -eq "test") {
     # Test environment URLs
@@ -52,7 +51,7 @@ New-Item -ItemType Directory -Force -Path "$buildfolder/static"
 Copy-Item -Force "public/static/icon.png" "$buildfolder/static"
 
 # Generate ares package
-ares-generate -p "id=wedotv-$Environment" -p "version=$version" -p "title=WeDoTV" $buildfolder
+ares-generate -p "id=wedotv-$Environment" -p "version=$APP_VERSION" -p "title=WeDoTV" $buildfolder
 
 # Move build contents
 Move-Item -Force "build/*" $buildfolder
@@ -74,7 +73,7 @@ if (Test-Path $indexPath) {
 ares-package --no-minify "./$buildfolder"
 
 # Move the generated IPK file
-$ipkFile = "wedotv-${Environment}_${version}_all.ipk"
+$ipkFile = "wedotv-${Environment}_${APP_VERSION}_all.ipk"
 if (Test-Path $ipkFile) {
     Move-Item $ipkFile "./$buildfolder"
 }
