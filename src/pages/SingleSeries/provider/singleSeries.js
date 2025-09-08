@@ -38,14 +38,14 @@ export default async function (page, { seriesId }) {
   const firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;
   const firstEpisodeTitle = seasons ? updatedSeasons[0].items[0].title : undefined;
 
-  const lastPlayedTitle = seasons
+  const lastPlayedEpisode = seasons
     ? updatedSeasons.map((season) => {
         const newSeason = season.items.filter(
           (episode) => episode.id === galleryItem.lastPlayedId
         )[0];
 
         return newSeason;
-      })[0]?.title
+      })[0]
     : undefined;
 
   if (galleryItem?.lastPlayedId) {
@@ -68,8 +68,8 @@ export default async function (page, { seriesId }) {
     duration: seasons.duration,
     position: galleryItem.position,
     lastPlayedId: galleryItem.lastPlayedId,
-    lastPlayedUrl: galleryItem.url,
-    lastPlayedTitle: lastPlayedTitle,
+    lastPlayedUrl: lastPlayedEpisode ? lastPlayedEpisode.url : galleryItem.url,
+    lastPlayedTitle: lastPlayedEpisode ? lastPlayedEpisode.title : undefined,
     firstEpisodeVideoId: seasons ? firstEpisodeId : undefined,
     firstEpisodeUrl: firstEpisodeUrl,
     firstEpisodeTitle: firstEpisodeTitle,
