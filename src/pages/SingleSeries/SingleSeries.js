@@ -82,7 +82,13 @@ export default class SingleSeries extends Lightning.Component {
     }
   }
 
-  _active() {
+  async _active() {
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    if (!router.length) {
+      await CMPService.initialFetch();
+      Router.navigate('cmp', false);
+    }
+
     const {
       galleryItem,
       favorited,
@@ -232,14 +238,6 @@ export default class SingleSeries extends Lightning.Component {
 
   $updateVerticalState(nextState) {
     this._setState(nextState);
-  }
-
-  async _active() {
-    const router = Router.getHistory().filter((history) => history.hash != 'splash');
-    if (!router.length) {
-      await CMPService.initialFetch();
-      Router.navigate('cmp', false);
-    }
   }
 
   _getFocused() {}
