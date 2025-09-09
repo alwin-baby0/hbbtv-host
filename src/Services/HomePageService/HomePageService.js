@@ -28,7 +28,7 @@ class HomePageService extends FetchingService {
       const galleryItems = await this.#getHomePageHeroSection();
       // preload gallry items
       if (galleryItems?.items) {
-        galleryItems.items.forEach((item) => item.preloadImages(imageSizes.XL));
+        galleryItems.items.forEach((item) => item.preloadImages(imageSizes.S));
         this.#heroSectionItems = galleryItems;
       }
     }

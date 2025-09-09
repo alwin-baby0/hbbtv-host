@@ -162,8 +162,8 @@ export default class GalleryItem extends Lightning.Component {
       if (isDeeplinkEpisode && galleryItem.getThumbnailImage(imageSizes.XL)?.src) {
         src = galleryItem.getThumbnailImage(imageSizes.XL)?.src;
         return src;
-      } else if (galleryItem.getLandscapePoster(imageSizes.XL)?.src) {
-        src = galleryItem.getLandscapePoster(imageSizes.XL)?.src;
+      } else if (galleryItem.getLandscapePoster(imageSizes.S)?.src) {
+        src = galleryItem.getLandscapePoster(imageSizes.S)?.src;
         return src;
       } else if (fallbackImage) {
         return fallbackImage;
