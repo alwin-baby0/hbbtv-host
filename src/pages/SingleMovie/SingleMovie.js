@@ -326,7 +326,13 @@ export default class SingleMovie extends Lightning.Component {
     }));
   }
 
-  _active() {
+  async _active() {
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    if (!router.length) {
+      await CMPService.initialFetch();
+      Router.navigate('cmp', false);
+    }
+
     const { movieId } = this._props;
 
     this._setState('Buttons');
@@ -342,8 +348,12 @@ export default class SingleMovie extends Lightning.Component {
     }
     e.preventDefault();
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
-    Router.setHistory([...router]);
-    Router.back();
+    if (router.length) {
+      Router.setHistory([...router]);
+      Router.back();
+    } else {
+      Router.navigate('home');
+    }
   }
 
   async addToFavorite() {

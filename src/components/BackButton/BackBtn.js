@@ -28,7 +28,13 @@ export default class BackBtn extends Lightning.Component {
   }
 
   _handleEnter() {
-    Router.back();
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    if (router.length) {
+      Router.setHistory([...router]);
+      Router.back();
+    } else {
+      Router.navigate('home');
+    }
   }
 
   _handleHover() {

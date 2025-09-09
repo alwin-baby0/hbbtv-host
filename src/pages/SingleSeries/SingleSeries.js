@@ -234,7 +234,13 @@ export default class SingleSeries extends Lightning.Component {
     this._setState(nextState);
   }
 
-  _init() {}
+  async _active() {
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    if (!router.length) {
+      await CMPService.initialFetch();
+      Router.navigate('cmp', false);
+    }
+  }
 
   _getFocused() {}
 
@@ -244,8 +250,12 @@ export default class SingleSeries extends Lightning.Component {
     }
     e.preventDefault();
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
-    Router.setHistory([...router]);
-    Router.back();
+    if (router.length) {
+      Router.setHistory([...router]);
+      Router.back();
+    } else {
+      Router.navigate('home');
+    }
     this._setState('HeroSection');
   }
 

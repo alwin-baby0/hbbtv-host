@@ -15,6 +15,7 @@ export default async function (page, { seriesId }) {
   }
 
   const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
+  console.log(galleryItem);
 
   let favorited = false;
 
