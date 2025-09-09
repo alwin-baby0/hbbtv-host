@@ -1,3 +1,7 @@
+param(
+    [string]$Environment
+)
+
 # RUN ME WITH
 # ./build_lg.ps1 test
 # OR
@@ -8,10 +12,6 @@
 # git pull
 
 $ConfirmPreference = 'None'
-
-param(
-    [string]$Environment
-)
 
 $envFile = ".env.webos"
 $buildfolder = "wedotv-lg-build-$Environment"
@@ -41,7 +41,9 @@ if (Test-Path "$envFile") {
         $_ = $_ -replace '^\s*export\s+', ''
 
         if ($_ -match "^([^=]+)=(.*)$") {
-            Set-Variable -Name $matches[1] -Value ($matches[2].Trim("'`"")) -Scope Global
+            $name  = $matches[1].Trim()
+            $value = $matches[2].Trim("'\`" ")
+            Set-Variable -Name $name -Value $value -Scope Global
         }
     }
 }
