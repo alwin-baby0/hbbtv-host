@@ -1,7 +1,6 @@
-import { getDeviceInfo } from "../../utils/device";
-import FetchingService from "../FetchingService";
-import { V2, auth } from "../utils";
-
+import { getDeviceInfo } from '../../utils/device';
+import FetchingService from '../FetchingService';
+import { V2, auth } from '../utils';
 
 class CMPService extends FetchingService {
   #cmpData;
