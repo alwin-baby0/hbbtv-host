@@ -100,11 +100,13 @@ export default class SingleSeries extends Lightning.Component {
       duration,
       firstEpisodeVideoId,
       firstEpisodeUrl,
+      firstEpisodeTitle,
       isDeeplinkEpisode,
       position,
       seriesId,
       lastPlayedId,
       lastPlayedUrl,
+      lastPlayedTitle,
       ssai,
       ssaiLastEp,
     } = this._props;
@@ -117,6 +119,7 @@ export default class SingleSeries extends Lightning.Component {
         height: 620,
         firstEpisodeVideoId: firstEpisodeVideoId,
         firstEpisodeUrl: firstEpisodeUrl,
+        firstEpisodeTitle: firstEpisodeTitle,
         isDeeplinkEpisode: isDeeplinkEpisode,
         seriesId: seriesId,
         ssai,
@@ -159,6 +162,7 @@ export default class SingleSeries extends Lightning.Component {
                           seriesID: seriesId,
                           videoId: lastPlayedId,
                           continueTime: position,
+                          episodeTitle: lastPlayedTitle,
                           ssai: result[0].extensions?.ssai ?? ssaiLastEp,
                         });
                       }

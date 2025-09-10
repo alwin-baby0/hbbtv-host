@@ -117,6 +117,7 @@ export default class GalleryItem extends Lightning.Component {
       enabled,
       firstEpisodeVideoId,
       firstEpisodeUrl,
+      firstEpisodeTitle,
       fallbackImage,
       isDeeplinkEpisode,
       seriesId,
@@ -207,6 +208,7 @@ export default class GalleryItem extends Lightning.Component {
                 videoUrl: url,
                 videoId: id,
                 duration: duration,
+                episodeTitle: firstEpisodeTitle,
                 videoType: 'series',
                 seriesID: seriesId,
                 ssai: ssai,
@@ -217,6 +219,7 @@ export default class GalleryItem extends Lightning.Component {
               ({ data: result }) => {
                 Router.navigate('player', {
                   videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
+                  episodeTitle: firstEpisodeTitle,
                   videoId: id,
                   duration: duration,
                   videoType: 'series',

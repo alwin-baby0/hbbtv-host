@@ -89,7 +89,6 @@ export const cronstructSingleLineRail = (rail, index) => {
       : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
 
   let paddingLeft = 0;
-  let targetItem = null;
   let targetIndex = null;
   if (railType === RAIL_TYPES.EPGS) {
     const epgStartTime = EPGService.startTime;

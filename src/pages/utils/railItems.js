@@ -206,6 +206,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
               videoType: 'series',
               seriesID: railItem.seriesId,
               ssai: result[0].extensions.ssai ?? railItem.ssai,
+              episodeTitle: railItem.title,
             });
           }
         );

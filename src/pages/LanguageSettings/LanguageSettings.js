@@ -44,7 +44,31 @@ export default class LanguageSettings extends Lightning.Component {
           },
         },
       },
+      Version: {
+        x: 100,
+        y: 980,
+        w: 230,
+        h: 100,
+        Text: {
+          w: 230,
+          h: 35,
+          text: {
+            text: 'VERSION: ' + process.env.APP_VERSION,
+            textAlign: 'center',
+            fontFace: 'Montserrat-Medium',
+            fontSize: 30,
+            lineHeight: 35,
+            letterSpacing: 1.2,
+            wordWrap: false,
+            textOverflow: 'ellipsis',
+          },
+        },
+      },
     };
+  }
+
+  get _Version() {
+    return this.tag('Version');
   }
 
   get _Column() {
@@ -57,10 +81,6 @@ export default class LanguageSettings extends Lightning.Component {
 
   get _Content() {
     return this.tag('Content');
-  }
-
-  get _Column() {
-    return this.tag('Wrapper.Column');
   }
 
   get _CMPContainer() {
