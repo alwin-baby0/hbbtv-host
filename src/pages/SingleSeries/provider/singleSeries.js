@@ -17,14 +17,15 @@ export default async function (page, { seriesId }) {
   const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
 
   const updatedSeasons = seasons.map((season) => {
-    season.items = season.items.map((episode) => {
-      const index = episode.title.indexOf(' - S');
-      episode.title = episode.title.substring(index + 3, episode.title.length);
+    return {
+      ...season,
+      items: season.items.map((episode) => {
+        const index = episode.title.indexOf(' - S');
+        episode.title = episode.title.substring(index + 3, episode.title.length);
 
-      return episode;
-    });
-
-    return season;
+        return episode;
+      }),
+    };
   });
 
   let favorited = false;
