@@ -81,7 +81,7 @@ const constructLandscapeRailItems = (railItems, railItemsOptions) => {
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getLandscapePoster(imageSizes.M).src,
+      imageSrc: railItem.getLandscapePoster(imageSizes.S).src,
       itemType: railItem.type,
       index,
       callback: () => {
@@ -128,7 +128,7 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
       ...railItemsOptions,
       props: {
         index,
-        imageSrc: railItem.getLandscapePoster(imageSizes.L).src,
+        imageSrc: railItem.getLandscapePoster(imageSizes.S).src,
         callback: async () => {
           switch (railItem.type.value) {
             case CATEGORY_TYPES.MOVIE: {

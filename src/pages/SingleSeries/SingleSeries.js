@@ -82,7 +82,18 @@ export default class SingleSeries extends Lightning.Component {
     }
   }
 
-  _active() {
+  async _active() {
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    if (!router.length) {
+      await CMPService.initialFetch();
+      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
+      const currentTimeInMS = Math.floor(Date.now() / 1000);
+
+      if (expireTimeInMS && currentTimeInMS > expireTimeInMS) {
+        Router.navigate('cmp', false);
+      }
+    }
+
     const {
       galleryItem,
       favorited,
@@ -238,8 +249,6 @@ export default class SingleSeries extends Lightning.Component {
     this._setState(nextState);
   }
 
-  _init() {}
-
   _getFocused() {}
 
   _handleBack(e) {
@@ -248,8 +257,12 @@ export default class SingleSeries extends Lightning.Component {
     }
     e.preventDefault();
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
-    Router.setHistory([...router]);
-    Router.back();
+    if (router.length) {
+      Router.setHistory([...router]);
+      Router.back();
+    } else {
+      Router.navigate('home');
+    }
     this._setState('HeroSection');
   }
 

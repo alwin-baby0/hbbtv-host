@@ -103,7 +103,7 @@ export default class Gallery extends Lightning.Component {
       w: 1220,
       h: 690,
       x: 700,
-      src: sliderData.items[index].getLandscapePoster(imageSizes.XL)?.src,
+      src: sliderData.items[index].getLandscapePoster(imageSizes.S)?.src,
     });
   }
 
