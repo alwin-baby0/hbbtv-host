@@ -65,7 +65,6 @@ export default {
       component: Filtered,
       on: filtered,
       widgets: ['Menu'],
-      // cache: 30,
     },
     {
       path: 'sports-details/:seriesId',
@@ -91,14 +90,12 @@ export default {
       component: Search,
       widgets: ['Menu'],
       on: onSearchPage,
-      // on: singleSeries,
     },
     {
       path: 'settings',
       component: Settings,
       widgets: ['Menu'],
       on: settings,
-      //cache: 24 * 60 * 60, //24h ex
     },
     {
       path: 'langsettings',
@@ -132,14 +129,6 @@ export default {
     {
       path: 'cmp-customize',
       component: CMPCustomize,
-      // on: cmp,
     },
-    /* {
-      path: '*',
-      component: NotFound,
-      beforeNavigate() {
-        Router.navigate('home', false);
-      },
-    }, */
   ],
 };
