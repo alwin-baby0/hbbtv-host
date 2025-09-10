@@ -1,3 +1,7 @@
+param(
+    [string]$Environment
+)
+
 # RUN ME WITH
 # ./build_lg.ps1 test
 # OR
@@ -7,14 +11,10 @@
 # git checkout development-base
 # git pull
 
-
-param(
-    [string]$Environment
-)
+$ConfirmPreference = 'None'
 
 $envFile = ".env.webos"
 $buildfolder = "wedotv-lg-build-$Environment"
-$version = "2.1.3"
 
 if ($Environment -eq "test") {
     # Test environment URLs
@@ -38,13 +38,17 @@ if (Test-Path $buildfolder) {
 # Source environment file (PowerShell equivalent)
 if (Test-Path "$envFile") {
     Get-Content "$envFile" | ForEach-Object {
+        $_ = $_ -replace '^\s*export\s+', ''
+
         if ($_ -match "^([^=]+)=(.*)$") {
-            Set-Variable -Name $matches[1] -Value $matches[2] -Scope Global
+            $name  = $matches[1].Trim()
+            $value = $matches[2].Trim("'\`" ")
+            Set-Variable -Name $name -Value $value -Scope Global
         }
     }
 }
 
-Write-Host "BUILD VERSION $version"
+Write-Host "BUILD VERSION $APP_VERSION"
 
 # Run npm commands
 npm install
@@ -54,7 +58,7 @@ New-Item -ItemType Directory -Force -Path "$buildfolder/static"
 Copy-Item -Force "public/static/icon.png" "$buildfolder/static"
 
 # Generate ares package
-ares-generate -p "id=wedotv-$Environment" -p "version=$version" -p "title=WeDoTV" $buildfolder
+ares-generate -p "id=wedotv-$Environment" -p "version=$APP_VERSION" -p "title=WeDoTV" $buildfolder
 
 # Move build contents
 Move-Item -Force "build/*" $buildfolder
@@ -76,7 +80,7 @@ if (Test-Path $indexPath) {
 ares-package --no-minify "./$buildfolder"
 
 # Move the generated IPK file
-$ipkFile = "wedotv-${Environment}_${version}_all.ipk"
+$ipkFile = "wedotv-${Environment}_${APP_VERSION}_all.ipk"
 if (Test-Path $ipkFile) {
     Move-Item $ipkFile "./$buildfolder"
 }
