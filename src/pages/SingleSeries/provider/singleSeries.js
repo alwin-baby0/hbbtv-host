@@ -1,7 +1,7 @@
 import { DetailService, CMPService } from '../../../Services';
 import { constructRails } from '../../utils';
 
-export default async function (page, { seriesId }) {
+export default async function (page, { seriesId, cmpShown }) {
   let galleryItemSingleEp;
   let galleryItemLastPlayedEp;
   let ssaiLastEp;
@@ -79,6 +79,7 @@ export default async function (page, { seriesId }) {
     isDeeplinkEpisode: pathname.isDeeplinkEpisode,
     ssai: galleryItem.ssai,
     ssaiLastEp: ssaiLastEp,
+    cmpShown,
   };
 
   page._Column.props = {

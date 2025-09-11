@@ -3,7 +3,7 @@ import Button from '../../../components/Button/Button';
 import { CMPService } from '../../../Services';
 import { getDeviceInfo } from '../../../utils/device';
 
-export default async function (page) {
+export default async function (page, { movieId, url }) {
   await CMPService.initialFetch();
 
   const serialNumber = getDeviceInfo().serialNumber;
@@ -29,7 +29,13 @@ export default async function (page) {
           if (value.callback_url) {
             const chosenValue = btnIndex === 0 ? 1 : 0;
             await CMPService.selectCMPChoice(serialNumber, chosenValue);
-            Router.navigate('home', false);
+            console.log(url);
+            console.log(movieId);
+            if (url && movieId) {
+              Router.navigate(`${url}/${movieId}`, { cmpShown: true });
+            } else {
+              Router.navigate('home', false);
+            }
           } else {
             Router.navigate('cmp-customize', { options: value.options });
           }

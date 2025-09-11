@@ -1,6 +1,6 @@
 import { DetailService } from '../../../Services';
 
-export default async function (page, { movieId }) {
+export default async function (page, { movieId, cmpShown }) {
   const movie = await DetailService.getMovie(movieId);
 
   let movieTrailerId = '';
@@ -17,5 +17,5 @@ export default async function (page, { movieId }) {
     movieTrailerUrl = res.entry[0].content.src;
   }
 
-  page.props = { movie, movieId, movieTrailerId, movieTrailerUrl };
+  page.props = { movie, movieId, movieTrailerId, movieTrailerUrl, cmpShown };
 }

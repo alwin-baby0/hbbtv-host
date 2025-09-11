@@ -84,14 +84,9 @@ export default class SingleSeries extends Lightning.Component {
 
   async _active() {
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
-    if (!router.length) {
-      await CMPService.initialFetch();
-      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
-      const currentTimeInMS = Math.floor(Date.now() / 1000);
 
-      if (expireTimeInMS && currentTimeInMS > expireTimeInMS) {
-        Router.navigate('cmp', false);
-      }
+    if (!router.length && !this._props.cmpShown) {
+      Router.navigate('cmp', { moviesId: this._props.seriesId, url: 'series-details' }, false);
     }
 
     const {
@@ -256,7 +251,9 @@ export default class SingleSeries extends Lightning.Component {
       return;
     }
     e.preventDefault();
-    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    const router = Router.getHistory().filter(
+      (history) => history.hash != 'splash' && history.hash != 'cmp'
+    );
     if (router.length) {
       Router.setHistory([...router]);
       Router.back();
