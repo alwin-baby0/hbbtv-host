@@ -6,7 +6,6 @@ export default class LoadingScreenComponent extends lng.Component {
     xPos: 960,
     yPos: 540,
   };
-
   static _template() {
     return {
       Spinner: {

@@ -12,10 +12,6 @@ const ROUTES_INDEX = {
   help: 8,
 };
 
-/* export function getRouteNavbarIndex(route) {
-  if (!route) return 0;
-  return ROUTES_INDEX[route.split('/')[0]] ?? 0;
-} */
 export function getRouteNavbarIndex(route) {
   if (route) {
     return ROUTES_INDEX[route] ?? 0;
