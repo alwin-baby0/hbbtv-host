@@ -102,7 +102,6 @@ export const cronstructSingleLineRail = (rail, index) => {
       const itemEndTime = item.endTime;
 
       if (itemStartTime <= now && now <= itemEndTime) {
-        targetItem = item;
         targetIndex = i;
         break;
       }
