@@ -123,6 +123,7 @@ export default class GalleryItem extends Lightning.Component {
       seriesId,
       ssai,
     } = this._props;
+    console.log(galleryItem);
 
     const { id, title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
@@ -206,7 +207,7 @@ export default class GalleryItem extends Lightning.Component {
             if (isDeeplinkEpisode) {
               Router.navigate('player', {
                 videoUrl: url,
-                videoId: id,
+                videoId: firstEpisodeVideoId,
                 duration: duration,
                 episodeTitle: firstEpisodeTitle,
                 videoType: 'series',

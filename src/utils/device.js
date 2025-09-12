@@ -218,7 +218,7 @@ export const getDeviceStageProps = () => {
   };
 };
 
-export const eventTrackPayload = (event, id) => {
+export const eventTrackPayload = (event, id, seriesID) => {
   const { serialNumber, osVersion, os, model, brand } = getDeviceInfo();
   try {
     if (w4track)
@@ -229,13 +229,14 @@ export const eventTrackPayload = (event, id) => {
           app_domain: process.env.APP_DOMAIN,
           app_version: process.env.APP_VERSION,
           app_bundle: process.env.APP_BUNDLE,
-          id,
+          video_id: id,
           device: 'SmartTV',
           model,
           brand,
           os,
           version: osVersion,
           device_id: serialNumber,
+          ...(seriesID && { series_id: seriesID }),
         },
         process.env.APP_WATCH4_API_KEY
       );

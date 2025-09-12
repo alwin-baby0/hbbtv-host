@@ -330,8 +330,12 @@ export default class SingleMovie extends Lightning.Component {
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
     if (!router.length && !this._props.cmpShown) {
       await CMPService.initialFetch();
+      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
+      const currentTimeInMS = Math.floor(Date.now() / 1000);
 
-      Router.navigate('cmp', { movieId: this._props.movieId, url: 'movie-details' }, false);
+      if (expireTimeInMS && currentTimeInMS > expireTimeInMS) {
+        Router.navigate('cmp', { movieId: this._props.movieId, url: 'movie-details' }, false);
+      }
     }
 
     const { movieId } = this._props;

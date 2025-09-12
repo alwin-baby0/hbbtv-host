@@ -8,7 +8,7 @@ param(
 # ./build_lg.ps1 prod
 
 # provide .env.webos
-# git checkout development-base
+# git checkout development
 # git pull
 
 $ConfirmPreference = 'None'
@@ -69,8 +69,8 @@ if (Test-Path $indexPath) {
     $content = Get-Content $indexPath -Raw
     $newScripts = @"
 <body>
-<script src="./webOSTVjs-1.2.10/webOSTV-dev.js" charset="UTF-8"></script>
-<script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>
+  <script src="./webOSTVjs-1.2.10/webOSTV-dev.js" charset="UTF-8"></script>
+  <script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>
 "@
     $content = $content -replace '<body>', $newScripts
     Set-Content -Path $indexPath -Value $content

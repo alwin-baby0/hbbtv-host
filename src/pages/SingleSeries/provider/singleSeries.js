@@ -15,7 +15,6 @@ export default async function (page, { seriesId, cmpShown }) {
   }
 
   const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
-  console.log(galleryItem);
 
   const updatedSeasons = seasons.map((season) => {
     return {

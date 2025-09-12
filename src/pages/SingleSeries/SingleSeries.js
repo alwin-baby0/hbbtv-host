@@ -86,7 +86,13 @@ export default class SingleSeries extends Lightning.Component {
     const router = Router.getHistory().filter((history) => history.hash != 'splash');
 
     if (!router.length && !this._props.cmpShown) {
-      Router.navigate('cmp', { moviesId: this._props.seriesId, url: 'series-details' }, false);
+      await CMPService.initialFetch();
+      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
+      const currentTimeInMS = Math.floor(Date.now() / 1000);
+
+      if (expireTimeInMS && currentTimeInMS > expireTimeInMS) {
+        Router.navigate('cmp', { movieId: this._props.seriesId, url: 'series-details' }, false);
+      }
     }
 
     const {

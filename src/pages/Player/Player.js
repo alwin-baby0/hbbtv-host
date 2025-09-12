@@ -1055,7 +1055,7 @@ export default class Player extends lng.Component {
   $videoPlayerPlaying() {
     clearTimeout(this._debounceVideoStart);
     this._debounceVideoStart = setTimeout(() => {
-      eventTrackPayload('video_start', this._props.videoId);
+      eventTrackPayload('video_start', this._props.videoId, this._props.seriesID);
     }, 1000);
   }
 
