@@ -890,6 +890,11 @@ export default class Player extends lng.Component {
     if (Router.isNavigating()) {
       return;
     }
+
+    if (this._subtitleMenuOpen) {
+      this.$hideSbutitles();
+      return;
+    }
     e.preventDefault();
 
     console.log('routerHistory in player back: ', Router.getHistory());
