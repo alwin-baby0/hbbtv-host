@@ -264,7 +264,7 @@ export default class LanguageSettings extends Lightning.Component {
         }
 
         _handleRight() {
-          if (_CMPContainer) {
+          if (this._CMPContainer) {
             this._setState('CMPContainer');
           }
           if (this._Languages) {
