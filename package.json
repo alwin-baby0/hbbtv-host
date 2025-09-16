@@ -25,7 +25,9 @@
     "build-titan": "vite build --mode production-titan",
     "build-metrological": "vite build --mode production-metrological",
     "build-netgem": "vite build --mode production-netgem",
-    "build-tizen": "vite build --mode production-tizen"
+    "build-tizen": "vite build --mode production-tizen",
+    "build-xperi": "vite build --mode production-xperi",
+    "build-foxxum": "vite build --mode production-foxxum"
   },
   "author": "",
   "license": "Apache-2.0",
