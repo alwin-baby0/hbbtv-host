@@ -60,7 +60,7 @@ export default class Splash extends Lightning.Component {
           history.replaceState(null, '', window.location.pathname);
           Router.navigate(`series-details/${seriesId}?episodeId=${id}&isDeeplinkEpisode=true`);
         }
-      } else if (expireTimeInMS && currentTimeInMS > expireTimeInMS) {
+      } else if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
         Router.navigate('cmp', false);
       } else {
         Router.navigate('home', false);

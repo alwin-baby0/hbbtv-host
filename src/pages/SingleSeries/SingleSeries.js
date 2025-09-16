@@ -90,7 +90,7 @@ export default class SingleSeries extends Lightning.Component {
       const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
       const currentTimeInMS = Math.floor(Date.now() / 1000);
 
-      if (expireTimeInMS && currentTimeInMS > expireTimeInMS) {
+      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
         Router.navigate('cmp', { movieId: this._props.seriesId, url: 'series-details' }, false);
       }
     }
