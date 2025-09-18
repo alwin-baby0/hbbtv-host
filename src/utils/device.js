@@ -117,27 +117,31 @@ const getWebOSInfo = async () => {
 };
 
 const getTitanInfo = () => {
-  const {
-    Capability: { os },
-    Channel: { brand },
-    Product: { firmwareVersion },
-  } = DeviceInfo; // Requires titanos device-info-sdk script, can be found at https://docs.titanos.tv/deviceinfoapi
+  if (DeviceInfo) {
+    const {
+      Capability: { os },
+      Channel: { brand },
+      Product: { firmwareVersion },
+    } = DeviceInfo; // Requires titanos device-info-sdk script, can be found at https://docs.titanos.tv/deviceinfoapi
 
-  let serialNumber = localStorage.getItem('titanDeviceID');
+    let serialNumber = localStorage.getItem('titanDeviceID');
 
-  if (!serialNumber) {
-    serialNumber = generateRandomUUID();
-    localStorage.setItem('titanDeviceID', serialNumber);
+    if (!serialNumber) {
+      serialNumber = generateRandomUUID();
+      localStorage.setItem('titanDeviceID', serialNumber);
+    }
+
+    return {
+      serialNumber: serialNumber,
+      model: extractPhilipsModel(),
+      brand: brand,
+      os: os,
+      osVersion: firmwareVersion,
+      macAddress: null,
+    };
+  } else {
+    return getWebInfo();
   }
-
-  return {
-    serialNumber: serialNumber,
-    model: extractPhilipsModel(),
-    brand: brand,
-    os: os,
-    osVersion: firmwareVersion,
-    macAddress: null,
-  };
 };
 
 const getNetgemInfo = () => {
