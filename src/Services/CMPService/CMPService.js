@@ -252,6 +252,10 @@ class CMPService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
+    if (vodPosition === 0) {
+      vodPosition++;
+    }
+
     return await this._request({
       url: `/user/recently_watched`,
       apiVersion: V2,

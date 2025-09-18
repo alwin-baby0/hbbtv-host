@@ -221,7 +221,7 @@ export default class GalleryItem extends Lightning.Component {
                 Router.navigate('player', {
                   videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
                   episodeTitle: firstEpisodeTitle,
-                  videoId: id,
+                  videoId: firstEpisodeVideoId,
                   duration: duration,
                   videoType: 'series',
                   seriesID: seriesId,

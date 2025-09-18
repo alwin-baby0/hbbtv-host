@@ -122,8 +122,16 @@ const getTitanInfo = () => {
     Channel: { brand },
     Product: { firmwareVersion },
   } = DeviceInfo; // Requires titanos device-info-sdk script, can be found at https://docs.titanos.tv/deviceinfoapi
+
+  let serialNumber = localStorage.getItem('titanDeviceID');
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('titanDeviceID', serialNumber);
+  }
+
   return {
-    serialNumber: generateRandomUUID(),
+    serialNumber: serialNumber,
     model: extractPhilipsModel(),
     brand: brand,
     os: os,
@@ -132,23 +140,41 @@ const getTitanInfo = () => {
   };
 };
 
-const getNetgemInfo = () => ({
-  serialNumber: generateRandomUUID(),
-  model: 'model-unknown',
-  brand: 'Netgem',
-  os: 'Netgem',
-  osVersion: 'unknown',
-  macAddress: 'unknown',
-});
+const getNetgemInfo = () => {
+  let serialNumber = localStorage.getItem('netgemDeviceID');
 
-const getWebInfo = () => ({
-  serialNumber: generateRandomUUID(),
-  model: 'simulated-model',
-  brand: 'simulated-brand',
-  os: 'Web',
-  osVersion: '7.0',
-  macAddress: 'simulated-mac-address',
-});
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('netgemDeviceID', serialNumber);
+  }
+
+  return {
+    serialNumber: serialNumber,
+    model: 'model-unknown',
+    brand: 'Netgem',
+    os: 'Netgem',
+    osVersion: 'unknown',
+    macAddress: 'unknown',
+  };
+};
+
+const getWebInfo = () => {
+  let serialNumber = localStorage.getItem('webDeviceID');
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('webDeviceID', serialNumber);
+  }
+
+  return {
+    serialNumber: generateRandomUUID(),
+    model: 'simulated-model',
+    brand: 'simulated-brand',
+    os: 'Web',
+    osVersion: '7.0',
+    macAddress: 'simulated-mac-address',
+  };
+};
 
 // TODO: find out how to get os version for each of the platforms
 /**
