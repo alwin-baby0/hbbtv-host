@@ -2,6 +2,7 @@ import { Colors, Utils } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
 import { t } from '../../../Services';
+
 export default class InputField extends lng.Component {
   static _template() {
     return {

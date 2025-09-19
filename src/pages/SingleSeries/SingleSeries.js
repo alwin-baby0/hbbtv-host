@@ -144,6 +144,7 @@ export default class SingleSeries extends Lightning.Component {
           {
             AuthorizedButtons: {
               flex: { direction: 'row' },
+              w: 1000,
               ContinueWatching: {
                 alpha: 1,
                 flexItem: {

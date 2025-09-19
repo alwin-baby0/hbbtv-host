@@ -273,8 +273,13 @@ export default class SingleMovie extends Lightning.Component {
     }
 
     const rows = [];
-    for (let i = 0, j = filteredButtons.length; i < j; i += 3) {
-      rows.push({ items: filteredButtons.slice(i, i + 3) });
+
+    const languageCode = localStorage.getItem('languageCode');
+
+    const itemsInRow = languageCode === 'fr' ? 2 : 3;
+
+    for (let i = 0, j = filteredButtons.length; i < j; i += itemsInRow) {
+      rows.push({ items: filteredButtons.slice(i, i + itemsInRow) });
     }
 
     this._Buttons.items = rows.map((row) => ({

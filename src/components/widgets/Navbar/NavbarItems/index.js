@@ -55,8 +55,7 @@ export default class SidebarItems extends Lightning.Component {
       this._index = getRouteNavbarIndex(Router.getActiveHash());
       this._setSelected(this._index);
     });
-  }
-  _firstActive() {
+
     const menuItems = [
       { id: 0, label: t('home'), route: 'home', icon: '' },
       { id: 1, label: t('movies'), route: 'vod/movies', icon: '' },
@@ -91,14 +90,15 @@ export default class SidebarItems extends Lightning.Component {
       }),
     });
   }
+
   _focus() {
     const activeHash = Router.getActiveHash();
     // Check if activeHash contains both 'filtered' and 'movies'
-    if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
+    if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
       this._index = getRouteNavbarIndex('filterPage/movie');
       this._setSelected(this._index);
       return;
-    } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
+    } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
       this._index = getRouteNavbarIndex('filterPage/series');
       this._setSelected(this._index);
       return;
@@ -135,11 +135,11 @@ export default class SidebarItems extends Lightning.Component {
 
   _updateFocus() {
     const activeHash = Router.getActiveHash();
-    if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
+    if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
       this._index = getRouteNavbarIndex('filterPage/movie');
       this._setSelected(this._index);
       return;
-    } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
+    } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
       this._index = getRouteNavbarIndex('filterPage/series');
       this._setSelected(this._index);
       return;

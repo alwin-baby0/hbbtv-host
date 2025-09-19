@@ -1,5 +1,6 @@
 import { LanguageService, t } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
+
 const memberArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
     type: MemberTabButton,

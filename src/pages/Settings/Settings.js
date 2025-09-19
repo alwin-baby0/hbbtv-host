@@ -377,6 +377,7 @@ export default class Settings extends Lightning.Component {
         });
 
         this._Content.patch({
+          QRContainer: undefined,
           RecentlyWatched: {
             collision: true,
             type: VerticalContainer,
@@ -400,6 +401,7 @@ export default class Settings extends Lightning.Component {
         });
 
         this._Content.patch({
+          QRContainer: undefined,
           Favorites: {
             collision: true,
             type: VerticalContainer,
@@ -419,8 +421,7 @@ export default class Settings extends Lightning.Component {
         this._Column._removeLastItems(3);
         this.$changeContent(0);
       }
-      this.changeContentTimeout = null;
-    }, 500);
+    }, 1000);
   }
 
   userLoginButtonsUpdate() {
