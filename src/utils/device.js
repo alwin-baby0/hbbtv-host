@@ -183,7 +183,7 @@ const getWebInfo = () => {
 // TODO: find out how to get os version for each of the platforms
 /**
  *
- * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" } deviceType
+ * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" | "foxxum" | "metrological" | "netgem" | "ocillion" | "sunrise" | "xperi" } deviceType
  * @returns { Promise<{ serialNumber: string, model: string, brand: string, os: string, osVersion: string, macAddress: string }> }
  */
 const setUpDeviceInfo = async (deviceType) => {
