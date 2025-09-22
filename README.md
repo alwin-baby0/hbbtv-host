@@ -101,3 +101,10 @@ After all the testing, and 100% sure its okay to merge, merge from **staging** t
 8. create PR if it doesnt exis (**feature** > **development**)
 9. add meaningfull description to PR, add reviewer :handshake:
 10. :pray:
+
+
+### Run the application on your machine
+- `npm start`
+- Run a CORS-enabled browser, e.g. like this on Mac `open -na Google\ Chrome --args --user-data-dir=/tmp/temporary-chrome-profile-dir --disable-web-security --disable-site-isolation-trials`
+- Navigate to http://localhost:3000
+- Run dev tools, go to phone mode and then adjust the dimensions to 1920x1080
