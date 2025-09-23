@@ -68,6 +68,7 @@ export const loader = (url, videoEl, options = {}) => {
 
       player.on(Hls.Events.MANIFEST_PARSED, () => {
         const subtitleTracks = getSubtitleTracks();
+        player.subtitleTrack = 0;
         resolve(subtitleTracks);
       });
 

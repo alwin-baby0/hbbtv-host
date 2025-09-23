@@ -1,15 +1,25 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
-
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import BackBtn from '../../components/BackButton/BackBtn';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
-import { t } from '../../Services';
+import { CMPService, t } from '../../Services';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
   static _template() {
     return {
+      w: 1920,
+      h: 1080,
+      BackButton: {
+        collision: true,
+        type: BackBtn,
+        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        x: 45,
+        y: 30,
+        zIndex: 100,
+      },
       SeriesWrapper: {
         Content: {
           Background: {
@@ -35,6 +45,10 @@ export default class SingleLiveEvent extends Lightning.Component {
         },
       },
     };
+  }
+
+  get _BackButton() {
+    return this.tag('BackButton');
   }
 
   set props(props) {
@@ -98,7 +112,23 @@ export default class SingleLiveEvent extends Lightning.Component {
     }
   }
 
-  _active() {
+  async _active() {
+    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+
+    if (!router.length && !this._props.cmpShown) {
+      await CMPService.initialFetch();
+      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
+      const currentTimeInMS = Math.floor(Date.now() / 1000);
+
+      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
+        Router.navigate(
+          'cmp',
+          { movieId: this._props.galleryItem.id, url: 'event-details' },
+          false
+        );
+      }
+    }
+
     const { galleryItem } = this._props;
 
     eventTrackPayload('view_stream', galleryItem.id);
@@ -128,14 +158,48 @@ export default class SingleLiveEvent extends Lightning.Component {
     return this.tag('Wrapper');
   }
 
+  _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
+    e.preventDefault();
+    const router = Router.getHistory().filter(
+      (history) => history.hash != 'splash' && history.hash != 'cmp'
+    );
+    if (router.length) {
+      Router.setHistory([...router]);
+      Router.back();
+    } else {
+      Router.navigate('home');
+    }
+    this._setState('HeroSection');
+  }
+
   static _states() {
     return [
+      class BackButton extends this {
+        _getFocused() {
+          return this._BackButton;
+        }
+
+        _handleDown() {
+          this._setState('Items');
+        }
+
+        _handleRight() {
+          this._setState('HeroSection');
+        }
+      },
       class HeroSection extends this {
         _getFocused() {
           this._SeriesWrapper.patch({
             y: 0,
           });
           return this._HeroSection;
+        }
+
+        _handleUp() {
+          this._setState('BackButton');
         }
 
         _handleDown() {

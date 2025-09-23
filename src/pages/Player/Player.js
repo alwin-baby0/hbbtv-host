@@ -425,19 +425,20 @@ export default class Player extends lng.Component {
               },
             },
           },
-          SubtitlesButton: {
-            x: 1715,
-            type: PlayerButtons,
-            collision: true,
-            props: {
-              buttonInfo: {
-                label: 'subtitles',
-                icon: `/icons/player/commands/subtitles.svg`,
-                onLiveContent: true,
-                position: 60,
-              },
-            },
-          },
+          // SubtitlesButton: {
+          //   x: 1715,
+          //   type: PlayerButtons,
+          //   collision: true,
+          //   props: {
+          //     buttonInfo: {
+          //       label: 'subtitles',
+          //       icon: `/icons/player/commands/subtitles.svg`,
+          //       onLiveContent: true,
+          //       position: 60,
+          //     },
+          //   },
+          // },
+          SubtitlesButton: undefined,
         });
       }
     }, 0);
@@ -1217,7 +1218,7 @@ export default class Player extends lng.Component {
         _handleRight() {
           if (this._props.isLive) return;
 
-          this._setState('SubtitlesButton');
+          // this._setState('SubtitlesButton');
         }
       },
       class Subtitles extends this {
