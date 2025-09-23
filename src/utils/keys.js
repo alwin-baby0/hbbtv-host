@@ -81,6 +81,7 @@ export const setupKeys = (deviceType) => {
       // 461 || 17: 'Back',
       return {
         8: 'Back',
+        27: 'Back',
         461: 'Back',
         17: 'Back',
         57: 'MediaPlayPause',
