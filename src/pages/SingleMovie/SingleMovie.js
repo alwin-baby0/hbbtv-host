@@ -182,6 +182,8 @@ export default class SingleMovie extends Lightning.Component {
 
     const tdirector = t('director') + ':' + splitDirector[1];
     const tcast = t('cast') + ':' + splitCast[1];
+    console.log(splitDirector[1]);
+    console.log(splitCast[1]);
 
     this.patch({
       Content: {
@@ -223,11 +225,13 @@ export default class SingleMovie extends Lightning.Component {
               text: {
                 text: tdirector,
               },
+              visible: splitDirector[1] ? true : false,
             },
             Cast: {
               text: {
                 text: tcast,
               },
+              visible: splitCast[1] ? true : false,
             },
           },
         },
