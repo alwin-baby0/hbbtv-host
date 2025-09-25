@@ -36,6 +36,7 @@ export default class PosterRailItem extends FocusableItem {
             lineHeight: 22,
             maxLines: 2,
             wordWrapWidth: 273,
+            maxLinesSuffix: '...',
           },
         },
       },

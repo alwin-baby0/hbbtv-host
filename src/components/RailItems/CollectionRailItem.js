@@ -35,6 +35,7 @@ export default class CollectionRailItem extends FocusableItem {
             fontSize: 18,
             lineHeight: 22,
             maxLines: 2,
+            maxLinesSuffix: '...',
             wordWrapWidth: 410,
           },
         },

@@ -53,10 +53,9 @@ export default class SingleLiveEvent extends Lightning.Component {
 
   set props(props) {
     // Assuming dateRange[0] is the start date and dateRange[1] is the end date
-    const startDate = new Date(props.galleryItem.dateRange[0]);
-    const endDate = new Date(props.galleryItem.dateRange[1]);
-    const currentDate = new Date();
-    console.log(startDate);
+    const startDate = props.galleryItem.dateRange[0];
+    const endDate = props.galleryItem.dateRange[1];
+    const currentDate = new Date().getTime();
 
     this._Column.props = {
       items: [],
