@@ -12,7 +12,7 @@ class GalleryItem {
     this.type = type;
     this.trailerUrl = extensions.preview_playback;
 
-    this.dateRange = extensions.date_range?.timestamp;
+    this.dateRange = extensions.date_range?.timestamp[0];
 
     if (content) {
       this.url = content.src;
