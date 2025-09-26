@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "default": "en"
+  },
+  "da": "translations/da.json",
+  "de": "translations/de.json",
+  "en": "translations/en.json",
+  "es": "translations/es.json",
+  "fi": "translations/fi.json",
+  "fr": "translations/fr.json",
+  "it": "translations/it.json",
+  "nl": "translations/nl.json",
+  "no": "translations/no.json",
+  "sv": "translations/sv.json"
+}

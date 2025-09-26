@@ -1,0 +1,36 @@
+import { SimpleRailItem } from '../../Models';
+import { RAIL_TYPES } from '../../pages/utils';
+import FetchingService from '../FetchingService';
+import { V2 } from '../utils';
+
+export default class SearchService extends FetchingService {
+  getSearch = async (keyword, category) =>
+    this._request({
+      url: '/search',
+      apiVersion: V2,
+      method: 'GET',
+      params: {
+        keyword,
+        limit: 500,
+        page: 1,
+        orderBy: 'name:desc',
+        category,
+      },
+    }).then(this.#parseSearchPageData);
+
+  #parseSearchPageData({ data }) {
+    const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+    if (!railItems) return;
+
+    return {
+      railType: RAIL_TYPES.MOVIE,
+      railTitle: data.title,
+      cardType: 'POSTER',
+      items: railItems,
+    };
+  }
+}
+
+const searchService = new SearchService();
+
+export { searchService as SearchService };

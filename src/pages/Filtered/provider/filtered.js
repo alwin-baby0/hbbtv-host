@@ -1,0 +1,116 @@
+import { Router } from '@lightningjs/sdk';
+import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
+import PosterRailItem from '../../../components/RailItems/PosterRailItem';
+import { imageSizes } from '../../../Models/utils';
+import { SearchService } from '../../../Services';
+
+// TODO: create service to handle the logic for filtered page
+
+const FILTER_TYPES = {
+  MOVIE: 'movie',
+  SERIES: 'series',
+};
+
+const filtered = {
+  items: [],
+  title: '',
+  type: '',
+  category: '',
+  timestamp: 0,
+};
+
+const getGenresInfo = async (page, props) => {
+  const ROW_SIZE = 6;
+
+  const category = props.action;
+  const type = props.genre_movies;
+  const title = props?.title?.toUpperCase();
+  let searchType;
+  if (type === FILTER_TYPES.MOVIE) {
+    searchType = 'movie';
+  } else if (type === FILTER_TYPES.SERIES) {
+    searchType = 'series';
+  } else {
+    searchType = 'unknown';
+  }
+
+  if (
+    filtered.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
+    filtered.category !== category ||
+    filtered.type !== type
+  ) {
+    const { items: row } = await SearchService.getSearch(category, type);
+
+    filtered.type = type;
+    filtered.category = category;
+    filtered.timestamp = new Date().getTime();
+    const rows = [];
+    if (row.length > 0) {
+      for (let i = 0; i < row.length; i += ROW_SIZE) {
+        rows.push({ items: row.slice(i, i + ROW_SIZE) });
+      }
+
+      const items = rows.map((row, index) => {
+        return {
+          type: HorizontalContainer,
+          collision: true,
+          h: 460,
+          w: 1760,
+          itemSpacing: 520,
+          props: {
+            items: row.items.map((item, index) => ({
+              type: PosterRailItem,
+              collision: true,
+              flexItem: {
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 10,
+                marginBottom: 10,
+              },
+              props: {
+                itemTitle: item.title,
+                imageSrc: item.getPortraitPoster(imageSizes.S).src,
+                callback: () => {
+                  Router.navigate(`${searchType}-details/${item.id}`);
+                },
+                index,
+              },
+            })),
+          },
+        };
+      });
+
+      filtered.title = '';
+      filtered.items = items;
+    } else {
+      filtered.items = [];
+      filtered.title = 'NOTHING';
+    }
+
+    page._Title.text = filtered.title;
+    page._Title.patch({
+      y: 200,
+    });
+    page._Column.props = {
+      items: filtered.items,
+    };
+
+    page._Button?.patch({
+      collision: true,
+      props: {
+        itemInfo: { category, title: type == 'movie' ? 'MOVIES' : type },
+        w: 170,
+        h: 64,
+        radius: 30,
+        strokeWidth: 3,
+      },
+    });
+
+    page._Genre.patch({
+      text: { text: title },
+    });
+  }
+};
+export default async function (page, props) {
+  await getGenresInfo(page, props);
+}

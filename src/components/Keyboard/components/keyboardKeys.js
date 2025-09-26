@@ -1,0 +1,73 @@
+export const keyboardSearch = [
+  [
+    { key: '1', w: 70, h: 90, icon: false },
+    { key: '2', w: 70, h: 90, icon: false },
+    { key: '3', w: 70, h: 90, icon: false },
+    { key: '4', w: 70, h: 90, icon: false },
+    { key: '5', w: 70, h: 90, icon: false },
+  ],
+  [
+    { key: '6', w: 70, h: 90, icon: false },
+    { key: '7', w: 70, h: 90, icon: false },
+    { key: '8', w: 70, h: 90, icon: false },
+    { key: '9', w: 70, h: 90, icon: false },
+    { key: '0', w: 70, h: 90, icon: false },
+  ],
+  [
+    { key: 'backspace', w: 190, h: 90, icon: 'backspace.png' },
+    { key: 'Done', w: 190, h: 90, icon: false },
+  ],
+];
+
+export const keyboardKeys = [
+  [
+    { key: '1', w: 70, h: 90, icon: false },
+    { key: '2', w: 70, h: 90, icon: false },
+    { key: '3', w: 70, h: 90, icon: false },
+    { key: '4', w: 70, h: 90, icon: false },
+    { key: '5', w: 70, h: 90, icon: false },
+    { key: '6', w: 70, h: 90, icon: false },
+    { key: '7', w: 70, h: 90, icon: false },
+    { key: '8', w: 70, h: 90, icon: false },
+    { key: '9', w: 70, h: 90, icon: false },
+    { key: '0', w: 70, h: 90, icon: false },
+    { key: 'backspace', w: 190, h: 90, icon: 'backspace.png' },
+  ],
+  [
+    { key: 'q', w: 70, h: 90, icon: false },
+    { key: 'w', w: 70, h: 90, icon: false },
+    { key: 'e', w: 70, h: 90, icon: false },
+    { key: 'r', w: 70, h: 90, icon: false },
+    { key: 't', w: 70, h: 90, icon: false },
+    { key: 'y', w: 70, h: 90, icon: false },
+    { key: 'u', w: 70, h: 90, icon: false },
+    { key: 'i', w: 70, h: 90, icon: false },
+    { key: 'o', w: 70, h: 90, icon: false },
+    { key: 'p', w: 70, h: 90, icon: false },
+  ],
+  [
+    { key: 'a', w: 70, h: 90, icon: false },
+    { key: 's', w: 70, h: 90, icon: false },
+    { key: 'd', w: 70, h: 90, icon: false },
+    { key: 'f', w: 70, h: 90, icon: false },
+    { key: 'g', w: 70, h: 90, icon: false },
+    { key: 'h', w: 70, h: 90, icon: false },
+    { key: 'j', w: 70, h: 90, icon: false },
+    { key: 'k', w: 70, h: 90, icon: false },
+    { key: 'l', w: 70, h: 90, icon: false },
+  ],
+  [
+    { key: 'z', w: 70, h: 90, icon: false },
+    { key: 'x', w: 70, h: 90, icon: false },
+    { key: 'c', w: 70, h: 90, icon: false },
+    { key: 'v', w: 70, h: 90, icon: false },
+    { key: 'b', w: 70, h: 90, icon: false },
+    { key: 'n', w: 70, h: 90, icon: false },
+    { key: 'm', w: 70, h: 90, icon: false },
+  ],
+  [
+    { key: 'Clear', w: 260, h: 90, icon: false },
+    { key: 'Space', w: 260, h: 90, icon: false },
+    { key: 'Done', w: 260, h: 90, icon: false },
+  ],
+];
