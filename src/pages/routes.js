@@ -13,12 +13,21 @@ import Search from './Search/Search';
 import SingleLiveEvent from './SingleLiveEvent/SingleLiveEvent';
 import singleLiveEvent from './SingleLiveEvent/provider/singleLiveEvent';
 import Player from './Player/Player';
-import player from './Player/provider/player';
 import Settings from './Settings/Settings';
 import settings from './Settings/provider/settings';
 import HelpScreen from './Help/HelpScreen';
 import help from './Help/provider/help';
-
+import LiveTV from './LiveTV/LiveTV';
+import livetv from './LiveTV/providers/livetv';
+import onSearchPage from './Search/provider/onSearchPage';
+import Collection from './Collection/Collection';
+import collection from './Collection/provider/collection';
+import CMP from './CMP/CMP';
+import cmp from './CMP/provider/cmp';
+import CMPCustomize from './CMP/components/CMPCustomize';
+import LanguageSettings from './LanguageSettings/LanguageSettings';
+import languageSettings from './LanguageSettings/provider/languageSettings';
+// TODO: pomeriti ovaj fajl van ovog foldera u /src
 export default {
   root: 'splash',
   routes: [
@@ -47,17 +56,23 @@ export default {
       path: 'series-details/:seriesId',
       component: SingleSeries,
       on: singleSeries,
+      options: {
+        reuseInstance: false,
+      },
     },
     {
       path: 'filterPage/:action/:genre_movies',
       component: Filtered,
       on: filtered,
-      // cache: 30,
+      widgets: ['Menu'],
     },
     {
       path: 'sports-details/:seriesId',
       component: SingleSeries,
       on: singleSeries,
+      options: {
+        reuseInstance: false,
+      },
     },
     {
       path: 'event-details/:eventId',
@@ -65,16 +80,28 @@ export default {
       on: singleLiveEvent,
     },
     {
+      path: 'live',
+      component: LiveTV,
+      widgets: ['Menu'],
+      on: livetv,
+    },
+    {
       path: 'search',
       component: Search,
       widgets: ['Menu'],
-      // on: singleSeries,
+      on: onSearchPage,
     },
     {
       path: 'settings',
       component: Settings,
       widgets: ['Menu'],
       on: settings,
+    },
+    {
+      path: 'langsettings',
+      component: LanguageSettings,
+      widgets: ['Menu'],
+      on: languageSettings,
     },
     {
       path: 'help',
@@ -85,14 +112,23 @@ export default {
     {
       path: 'player',
       component: Player,
-      on: player,
-    },
-    /* {
-      path: '*',
-      component: NotFound,
-      beforeNavigate() {
-        Router.navigate('home', false);
+      options: {
+        reuseInstance: false,
       },
-    }, */
+    },
+    {
+      path: 'collection-details/:collectionId',
+      component: Collection,
+      on: collection,
+    },
+    {
+      path: 'cmp',
+      component: CMP,
+      on: cmp,
+    },
+    {
+      path: 'cmp-customize',
+      component: CMPCustomize,
+    },
   ],
 };

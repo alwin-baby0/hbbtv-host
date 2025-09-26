@@ -7,6 +7,7 @@ export default class Navbar extends Lightning.Component {
     return {
       Items: {
         type: SidebarItems,
+        collision: true,
         x: 40,
         y: 15,
         h: 70,

@@ -7,7 +7,7 @@ import Image from '../Image/Image';
 export default class LandscapeRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
+    placeholderSrc: Utils.asset('images/landscape-rail-placeholder-empty.png'),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,
@@ -22,7 +22,7 @@ export default class LandscapeRailItem extends FocusableItem {
         radius: 6,
       },
       w: CARD_SIZES.LANDSCAPE.width,
-      h: CARD_SIZES.LANDSCAPE.height,
+      h: CARD_SIZES.LANDSCAPE.height + 45,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -32,17 +32,18 @@ export default class LandscapeRailItem extends FocusableItem {
           },
         },
         Title: {
-          h: 25,
+          h: 50,
           flexItem: {
             marginTop: 15,
             marginLeft: 20,
             marginRight: 20,
           },
           text: {
-            fontFamily: 'Inter',
-            fontSize: 21,
+            fontFace: 'Montserrat-Bold',
+            fontSize: 18,
             lineHeight: 25,
-            maxLines: 1,
+            maxLines: 2,
+            maxLinesSuffix: '...',
             wordWrapWidth: 275,
           },
         },
@@ -50,19 +51,25 @@ export default class LandscapeRailItem extends FocusableItem {
           h: 160,
           w: 275,
           flexItem: {
-            marginTop: 5,
+            marginTop: 15,
             marginLeft: 20,
             marginRight: 20,
           },
           text: {
-            fontFamily: 'Inter',
+            fontFace: 'Montserrat-Regular',
             fontSize: 16,
             lineHeight: 20,
             wordWrapWidth: 275,
+            maxLines: 8,
+            maxLinesSuffix: '...',
           },
         },
       },
     };
+  }
+
+  get _Wrapper() {
+    return this.tag('Wrapper');
   }
 
   get _Title() {
@@ -83,28 +90,30 @@ export default class LandscapeRailItem extends FocusableItem {
 
     this.setProps({
       width: 315,
-      height: 410,
+      height: 455,
     });
 
-    this._Title.patch({
-      text: {
-        text: itemTitle,
+    this._Wrapper.patch({
+      Border: {
+        LandscapeImage: {
+          props: {
+            width: CARD_SIZES.LANDSCAPE.image_width,
+            height: CARD_SIZES.LANDSCAPE.image_height,
+            imageSrc: imageSrc,
+            placeholderSrc: placeholderSrc,
+            radius: radius,
+          },
+        },
       },
-    });
-
-    this._Description.patch({
-      text: {
-        text: itemDescription || '',
+      Title: {
+        text: {
+          text: itemTitle,
+        },
       },
-    });
-
-    this._LandscapeImage.patch({
-      props: {
-        width: CARD_SIZES.LANDSCAPE.image_width,
-        height: CARD_SIZES.LANDSCAPE.image_height,
-        imageSrc: imageSrc,
-        placeholderSrc: placeholderSrc,
-        radius: radius,
+      Description: {
+        text: {
+          text: itemDescription || '',
+        },
       },
     });
   }
@@ -120,5 +129,20 @@ export default class LandscapeRailItem extends FocusableItem {
   _handleEnter() {
     const { callback } = this._props;
     callback();
+  }
+
+  _handleClick() {
+    const { callback } = this._props;
+    callback();
+  }
+
+  _handleHover() {
+    const { index } = this._props;
+    this.fireAncestors('$horizontalPosterIndexChange', index);
+    super._focus();
+  }
+
+  _handleUnhover() {
+    super._unfocus();
   }
 }

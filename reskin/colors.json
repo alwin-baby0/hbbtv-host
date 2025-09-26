@@ -12,5 +12,9 @@
   "unfocusedLanguage": "#17191A",
   "focusedHelpButton": "#1D1F2E",
   "unfocusedHelpButton": "#17191A",
-  "eventCardBackground": "#23273A"
+  "eventCardBackground": "#23273A",
+  "focusDisabled": "#4d4c4c",
+  "unfocusDisabled": "#4d4c4c",
+  "adProgress": "#ffcc00",
+  "focusEpg": "#E01D21"
 }

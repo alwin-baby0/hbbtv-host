@@ -1,10 +1,15 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import VodContentContainer, { CONTENT_TYPE } from '../../components/VodContentContainer/VodContentContainer';
+import VodContentContainer, {
+  CONTENT_TYPE,
+} from '../../components/VodContentContainer/VodContentContainer';
+import { constructRails } from '../utils';
+import { eventTrackPayload } from '../../utils/device';
 
 export default class VodPreview extends Lightning.Component {
   _props = {
     vodType: undefined,
+    fetchMoreStripes: async () => null,
   };
 
   static _template() {
@@ -19,15 +24,16 @@ export default class VodPreview extends Lightning.Component {
         type: VodContentContainer,
       },
       VodContainer: {
-        x: 110,
+        x: 90,
         y: 670,
-        w: 1760,
+        w: 1740,
         h: 670,
         clipping: true,
         Column: {
           y: 50,
           h: 795,
-          w: 1760,
+          w: 1740,
+          collision: true,
           type: VerticalContainer,
         },
       },
@@ -49,6 +55,16 @@ export default class VodPreview extends Lightning.Component {
   set props(props) {
     const { vodType } = props;
 
+    if (vodType === 'movies') eventTrackPayload('browse_movies', 1);
+    if (vodType === 'series') eventTrackPayload('browse_series', 2);
+    if (vodType === 'sports') eventTrackPayload('browse_sports', 3);
+
+    if (vodType === 'sports') {
+      this._Column.patch({ y: 100 });
+    } else {
+      this._Column.patch({ y: 50 });
+    }
+
     if (this._props.vodType !== vodType) {
       this._props = { ...this._props, ...props };
       const { content, items } = this._props;
@@ -62,16 +78,34 @@ export default class VodPreview extends Lightning.Component {
 
   calculateContentOffset(contentType) {
     switch (contentType) {
-      case CONTENT_TYPE.EVENTS: return 530;
-      case CONTENT_TYPE.CATEGORIES: return 200;
+      case CONTENT_TYPE.EVENTS:
+        return 530;
+      case CONTENT_TYPE.CATEGORIES:
+        return 200;
       case CONTENT_TYPE.EMPTY:
-      default: return 80;
+      default:
+        return 80;
     }
+  }
+
+  $updateVerticalState(nextState) {
+    this._setState(nextState);
+  }
+
+  _handleHover() {
+    Router.focusPage();
   }
 
   static _states() {
     return [
       class VodContentContainer extends this {
+        _active() {
+          this._VodContainer.patch({
+            y: this.calculateContentOffset(this._VodContentContainer.contentType),
+            h: 1920,
+          });
+        }
+
         $enter() {
           this.fireAncestors('$setNavbarVisibility', true);
 
@@ -79,14 +113,15 @@ export default class VodPreview extends Lightning.Component {
             this._setState('VodContainer');
           }
 
-          this._VodContentContainer.patch({
-            y: 0,
+          this.patch({
+            VodContentContainer: {
+              y: 0,
+            },
+            VodContainer: {
+              y: this.calculateContentOffset(this._VodContentContainer.contentType),
+              h: 1920,
+            },
           });
-
-          this._VodContainer.patch({
-            y: this.calculateContentOffset(this._VodContentContainer.contentType),
-            h: 1920,
-          })
         }
 
         _enable() {
@@ -117,24 +152,27 @@ export default class VodPreview extends Lightning.Component {
 
         correctContainerSize() {
           if (this._Column._focusedIndex === 0) {
-            this._VodContentContainer.patch({
-              y: 0,
-            });
-
-            this._VodContainer.patch({
-              y: this.calculateContentOffset(this._VodContentContainer.contentType),
-              h: 1920,
+            this.patch({
+              VodContentContainer: {
+                y: 0,
+              },
+              VodContainer: {
+                y: this.calculateContentOffset(this._VodContentContainer.contentType),
+                h: 1920,
+              },
             });
 
             this.fireAncestors('$setNavbarVisibility', true);
           }
           if (this._Column._focusedIndex >= 1) {
-            this._VodContainer.patch({
-              y: 0,
-              h: 1080,
-            });
-            this._VodContentContainer.patch({
-              y: -700,
+            this.patch({
+              VodContentContainer: {
+                y: -700,
+              },
+              VodContainer: {
+                y: 0,
+                h: 1080,
+              },
             });
 
             this.fireAncestors('$setNavbarVisibility', false);
@@ -157,8 +195,20 @@ export default class VodPreview extends Lightning.Component {
           }
         }
 
-        $verticalContainerIndexChange() {
+        async $verticalContainerIndexChange(index) {
+          const { fetchMoreStripes } = this._props;
+
           this.correctContainerSize();
+          if (fetchMoreStripes) {
+            const newStripes = await fetchMoreStripes(index);
+            if (newStripes) {
+              const rails = constructRails(newStripes).reduce((acc, rail) => {
+                acc.push(...rail);
+                return acc;
+              }, []);
+              rails && this._Column._appendItems(rails);
+            }
+          }
         }
       },
     ];

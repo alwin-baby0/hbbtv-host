@@ -1,9 +1,9 @@
-import { Lightning, Colors } from '@lightningjs/sdk';
-import { Row } from '@lightningjs/ui-components';
-import colors from '../../../reskin/colors.json';
+import { Lightning, VideoPlayer } from '@lightningjs/sdk';
 import GalleryItem from '../GalleryItem/GalleryItem';
-import Bullet from '../Bullet/Bullet';
-import { imageSizes } from '../../api/models/utils';
+import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
+import { imageSizes } from '../../Models/utils';
+import { railItemConstructor } from '../../pages/utils/railItems';
+import { loader, unloader } from '../Player/HLS';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
@@ -21,87 +21,98 @@ export default class Gallery extends Lightning.Component {
         type: GalleryItem,
       },
       Bullets: {
-        type: Row,
-        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-        y: 820,
-        w: 1920,
-        h: 20,
+        type: HorizontalContainer,
+        collision: true,
+        y: 820 - 115,
+        x: 75,
+        w: 1760,
+        h: 215,
+        props: {
+          w: 1760,
+          h: 215,
+        },
       },
     };
   }
 
   set props(props) {
     this._sliderIndex = 0;
+    this._Bullets._focusedIndex = 0;
     this._props = { ...this._props, ...props };
     const { sliderData } = this._props;
 
-    const bulletItem = sliderData.items.map((_item, index) => {
-      return {
-        type: Bullet,
-        w: 20,
-        h: 20,
-        index,
-      };
+    this._Info.patch({
+      GalleryButton: undefined,
+      Summary: undefined,
     });
+
+    const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
 
     this._Bullets.patch({
-      items: bulletItem,
+      props: {
+        items: parsedItems,
+      },
     });
-
-    this._nextVideo();
   }
 
   get _HeroSection() {
     return this.tag('HeroSection');
   }
 
+  get _Info() {
+    return this.tag('HeroSection.Info');
+  }
+
   get _Bullets() {
     return this.tag('Bullets');
   }
 
-  _nextVideo() {
+  _enable() {
+    VideoPlayer.position(-3, 700);
+    VideoPlayer.size(1220, 690);
+    VideoPlayer.consumer(this);
+    VideoPlayer.loader(loader);
+    VideoPlayer.unloader(unloader);
+  }
+
+  $playTrailer(url) {
+    this._HeroSection._BackgroundImage.visible = false;
+    VideoPlayer.loop(true);
+
+    VideoPlayer.open(url);
+    VideoPlayer.play();
+  }
+
+  $stopVideo() {
+    VideoPlayer.clear();
+  }
+
+  $changeGalleryItem(index) {
     const { sliderData } = this._props;
-
-    this._Bullets.items.forEach((item, index) => {
-      const color =
-        index === this._sliderIndex
-          ? Colors(colors.focusedBullet).get()
-          : Colors(colors.unfocusedBullet).get();
-      item._Icon.patch({
-        color: color,
-      });
-    });
-
+    this._sliderIndex = index;
     this._HeroSection.patch({
       props: {
-        galleryItem: sliderData.items[this._sliderIndex],
-        height: 800,
+        galleryItem: sliderData.items[index],
+        height: 690,
         yPos: 215,
       },
     });
+
+    this._HeroSection._BackgroundImage.patch({
+      visible: true,
+      w: 1220,
+      h: 690,
+      x: 700,
+      src: sliderData.items[index].getLandscapePoster(imageSizes.S)?.src,
+    });
   }
 
-  _handleLeft() {
-    const { sliderData } = this._props;
-
-    if (sliderData.items.length > 1) {
-      this._sliderIndex =
-        this._sliderIndex > 0 ? this._sliderIndex - 1 : sliderData.items.length - 1;
-      this._nextVideo();
-    }
-  }
-
-  _handleRight() {
-    const { sliderData } = this._props;
-
-    if (sliderData.items.length > 1) {
-      this._sliderIndex =
-        this._sliderIndex < sliderData.items.length - 1 ? this._sliderIndex + 1 : 0;
-      this._nextVideo();
-    }
+  _unfocus() {
+    super._inactive();
+    this.$changeGalleryItem(this._sliderIndex);
   }
 
   _getFocused() {
-    return this._HeroSection;
+    return this._Bullets;
   }
 }

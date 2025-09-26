@@ -1,4 +1,4 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Utils, Img } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
 
 export default class Key extends Lightning.Component {
@@ -39,7 +39,7 @@ export default class Key extends Lightning.Component {
   _enable() {
     if (this._data.icon) {
       this._Title.patch({
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(`/images/${this._data.icon}`), 60, 60),
+        texture: Img(Utils.asset(`/icons/${this._data.icon}`)).contain(60, 60),
       });
     } else {
       this._Title.patch({
@@ -50,10 +50,10 @@ export default class Key extends Lightning.Component {
     this.patch({
       w: this._data.w,
       h: this._data.h,
-    });
-    this._Key.patch({
-      w: this._data.w,
-      h: this._data.h,
+      Key: {
+        w: this._data.w,
+        h: this._data.h,
+      },
     });
   }
 
@@ -63,11 +63,11 @@ export default class Key extends Lightning.Component {
       w: this._data.w,
       h: this._data.h,
       color: Colors('#ffffff').get(),
+      Title: {
+        color: Colors('#000000').get(),
+      },
     });
     this._Key.smooth = { scale: 1.2 };
-    this._Title.patch({
-      color: Colors('#000000').get(),
-    });
   }
 
   _unfocus() {
@@ -76,11 +76,11 @@ export default class Key extends Lightning.Component {
       w: this._data.w,
       h: this._data.h,
       color: Colors('#1b1b1b').get(),
+      Title: {
+        color: Colors('#ffffff').get(),
+      },
     });
     this._Key.smooth = { scale: 1.0 };
-    this._Title.patch({
-      color: Colors('#ffffff').get(),
-    });
   }
 
   _handleHover() {

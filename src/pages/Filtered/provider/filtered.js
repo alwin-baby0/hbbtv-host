@@ -1,8 +1,10 @@
 import { Router } from '@lightningjs/sdk';
-import { getSearch } from '../../../api/search';
 import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
 import PosterRailItem from '../../../components/RailItems/PosterRailItem';
-import { imageSizes } from '../../../api/models/utils';
+import { imageSizes } from '../../../Models/utils';
+import { SearchService } from '../../../Services';
+
+// TODO: create service to handle the logic for filtered page
 
 const FILTER_TYPES = {
   MOVIE: 'movie',
@@ -22,7 +24,7 @@ const getGenresInfo = async (page, props) => {
 
   const category = props.action;
   const type = props.genre_movies;
-
+  const title = props?.title?.toUpperCase();
   let searchType;
   if (type === FILTER_TYPES.MOVIE) {
     searchType = 'movie';
@@ -37,27 +39,28 @@ const getGenresInfo = async (page, props) => {
     filtered.category !== category ||
     filtered.type !== type
   ) {
-    const { items: row } = await getSearch(category, type);
+    const { items: row } = await SearchService.getSearch(category, type);
 
     filtered.type = type;
     filtered.category = category;
     filtered.timestamp = new Date().getTime();
-
     const rows = [];
     if (row.length > 0) {
       for (let i = 0; i < row.length; i += ROW_SIZE) {
         rows.push({ items: row.slice(i, i + ROW_SIZE) });
       }
 
-      const items = rows.map((row) => {
+      const items = rows.map((row, index) => {
         return {
           type: HorizontalContainer,
-          h: 500,
+          collision: true,
+          h: 460,
           w: 1760,
           itemSpacing: 520,
           props: {
-            items: row.items.map((item) => ({
+            items: row.items.map((item, index) => ({
               type: PosterRailItem,
+              collision: true,
               flexItem: {
                 marginLeft: 10,
                 marginRight: 10,
@@ -70,6 +73,7 @@ const getGenresInfo = async (page, props) => {
                 callback: () => {
                   Router.navigate(`${searchType}-details/${item.id}`);
                 },
+                index,
               },
             })),
           },
@@ -84,9 +88,27 @@ const getGenresInfo = async (page, props) => {
     }
 
     page._Title.text = filtered.title;
+    page._Title.patch({
+      y: 200,
+    });
     page._Column.props = {
       items: filtered.items,
     };
+
+    page._Button?.patch({
+      collision: true,
+      props: {
+        itemInfo: { category, title: type == 'movie' ? 'MOVIES' : type },
+        w: 170,
+        h: 64,
+        radius: 30,
+        strokeWidth: 3,
+      },
+    });
+
+    page._Genre.patch({
+      text: { text: title },
+    });
   }
 };
 export default async function (page, props) {

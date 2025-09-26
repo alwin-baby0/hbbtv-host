@@ -1,29 +1,87 @@
-import { getSeason, getSingleSeries } from '../../../api/series';
+import { DetailService, CMPService } from '../../../Services';
 import { constructRails } from '../../utils';
 
-export default async function (page, { seriesId }) {
-  const [series, season] = await Promise.all([getSingleSeries(seriesId), getSeason(seriesId)]);
+export default async function (page, { seriesId, cmpShown }) {
+  let galleryItemSingleEp;
+  let galleryItemLastPlayedEp;
+  let ssaiLastEp;
 
-  if (!series) {
-    throw new Error('Series data not found');
+  const hash = window.location.hash;
+  const queryString = hash.split('?')[1];
+  const pathname = Object.fromEntries(new URLSearchParams(queryString));
+
+  if (pathname.isDeeplinkEpisode) {
+    galleryItemSingleEp = await DetailService.getMovie(pathname.episodeId);
   }
 
-  let episodes = [];
-  let sectionTitle = 'No Season Available';
+  const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
 
-  if (season && season.items) {
-    episodes = constructRails([season]);
-    sectionTitle = season.sectionTitle;
+  const updatedSeasons = seasons.map((season) => {
+    return {
+      ...season,
+      items: season.items.map((episode) => {
+        const index = episode.title.indexOf(' - S');
+        episode.title = episode.title.substring(index + 3, episode.title.length);
+
+        return episode;
+      }),
+    };
+  });
+
+  let favorited = false;
+
+  if (localStorage.getItem('userData')) {
+    const response = await CMPService.getFavorites();
+
+    favorited = response.data.favorites?.some((element) => element.id === seriesId);
+  }
+  const firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
+  const firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;
+  const firstEpisodeTitle = seasons ? updatedSeasons[0].items[0].title : undefined;
+
+  const lastPlayedEpisode = seasons
+    ? updatedSeasons.map((season) => {
+        const newSeason = season.items.filter(
+          (episode) => episode.id === galleryItem.lastPlayedId
+        )[0];
+
+        return newSeason;
+      })[0]
+    : undefined;
+
+  if (galleryItem?.lastPlayedId) {
+    galleryItemLastPlayedEp = await DetailService.getMovie(galleryItem?.lastPlayedId);
+    ssaiLastEp = galleryItemLastPlayedEp?.ssai;
+  }
+
+  let ssai;
+
+  if (galleryItemSingleEp) {
+    ssai = galleryItemSingleEp.ssai || undefined;
   } else {
-    console.warn('Season data not found or empty');
+    ssai = seasons ? seasons[0].items[0].ssai : undefined;
   }
 
   page.props = {
-    sectionTitle: sectionTitle,
-    galleryItem: series.items[0],
+    sectionTitle: seasons[0]?.sectionTitle,
+    galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
+    favorited,
+    duration: seasons.duration,
+    position: galleryItem.position,
+    lastPlayedId: galleryItem.lastPlayedId,
+    lastPlayedUrl: lastPlayedEpisode ? lastPlayedEpisode.url : galleryItem.url,
+    lastPlayedTitle: lastPlayedEpisode ? lastPlayedEpisode.title : undefined,
+    firstEpisodeVideoId: seasons ? firstEpisodeId : undefined,
+    firstEpisodeUrl: firstEpisodeUrl,
+    firstEpisodeTitle: firstEpisodeTitle,
+    seriesId: galleryItem.id,
+    isDeeplinkEpisode: pathname.isDeeplinkEpisode,
+    ssai: galleryItem.ssai,
+    ssaiLastEp: ssaiLastEp,
+    cmpShown,
   };
 
   page._Column.props = {
-    items: episodes,
+    items: constructRails(updatedSeasons),
   };
 }

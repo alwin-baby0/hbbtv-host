@@ -24,6 +24,7 @@ export default class HelpScreen extends lng.Component {
         w: 1800,
         Column: {
           y: 105,
+          collision: true,
           type: VerticalContainer,
           h: 225,
           w: 240,
@@ -31,16 +32,10 @@ export default class HelpScreen extends lng.Component {
         Description: {
           w: 1390,
           h: 760,
-          y: 105,
+          y: 85,
           x: 290,
           color: Colors(colors.white).get(),
-          QRCode: {
-            x: 30,
-            w: 160,
-            h: 160,
-          },
           QRDesc: {
-            y: 220,
             w: 250,
             h: 250,
             Wrapper: {
@@ -84,6 +79,14 @@ export default class HelpScreen extends lng.Component {
     return this.tag('Column');
   }
 
+  get _LoadingIndicator() {
+    return this.tag('LoadingIndicator');
+  }
+
+  get _ScrollWrapper() {
+    return this.tag('ScrollWrapper');
+  }
+
   _active() {
     this._setState('HelpItems');
   }
@@ -108,24 +111,6 @@ export default class HelpScreen extends lng.Component {
             .documentElement.textContent;
 
           this._setScrollWrapperContent(decodedText);
-
-          let isQrCodeExist = resolvedPage.data.entry[0].extensions.qr;
-          if (isQrCodeExist !== null) {
-            this.tag('QRCode').patch({
-              src: isQrCodeExist,
-              visible: true,
-            });
-            this.tag('QRDesc').patch({
-              y: 220,
-            });
-          } else {
-            this.tag('QRCode').patch({
-              visible: false,
-            });
-            this.tag('QRDesc').patch({
-              y: 0,
-            });
-          }
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -137,36 +122,20 @@ export default class HelpScreen extends lng.Component {
 
   async $changeDescription(newPagePromise) {
     try {
-      this.tag('LoadingIndicator').visible = true; // Show the loading indicator
+      let decodedText = '';
+      this._LoadingIndicator.visible = true; // Show the loading indicator
       const resolvedPage = await newPagePromise;
       const text = resolvedPage.data.entry[0].extensions.content_plain;
-      const strippedText = text.replace(/<[^>]+>/g, '');
-      const decodedText = new DOMParser().parseFromString(strippedText, 'text/html').documentElement
-        .textContent;
-
-      this._setScrollWrapperContent(decodedText);
-
-      const isQrCodeExist = resolvedPage.data.entry[0].extensions.qr;
-      if (isQrCodeExist !== null) {
-        this.tag('QRCode').patch({
-          src: isQrCodeExist,
-          visible: true,
-        });
-        this.tag('QRDesc').patch({
-          y: 220,
-        });
-      } else {
-        this.tag('QRCode').patch({
-          visible: false,
-        });
-        this.tag('QRDesc').patch({
-          y: 0,
-        });
+      if (typeof text === 'string') {
+        const strippedText = text.replace(/<[^>]+>/g, '');
+        decodedText = new DOMParser().parseFromString(strippedText, 'text/html').documentElement
+          .textContent;
       }
+      this._setScrollWrapperContent(decodedText);
     } catch (error) {
       console.error('Error:', error);
     } finally {
-      this.tag('LoadingIndicator').visible = false; // Hide the loading indicator
+      this._LoadingIndicator.visible = false; // Hide the loading indicator
     }
   }
 
@@ -180,7 +149,7 @@ export default class HelpScreen extends lng.Component {
       },
     }));
 
-    this.tag('ScrollWrapper').patch({
+    this._ScrollWrapper.patch({
       content: content,
     });
   }
@@ -197,7 +166,7 @@ export default class HelpScreen extends lng.Component {
     return [
       class HelpItems extends this {
         _getFocused() {
-          return this.tag('Wrapper.Column');
+          return this._Column;
         }
 
         _handleUp() {
@@ -210,7 +179,7 @@ export default class HelpScreen extends lng.Component {
       },
       class ScrollWrapper extends this {
         _getFocused() {
-          return this.tag('ScrollWrapper');
+          return this._ScrollWrapper;
         }
 
         _handleLeft() {

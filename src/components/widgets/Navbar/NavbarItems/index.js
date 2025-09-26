@@ -4,54 +4,31 @@ import { Colors, Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
-
-const menuItems = [
-  { id: 0, label: 'Home', route: 'home', icon: '' },
-  { id: 1, label: 'Movies', route: 'vod/movies', icon: '' },
-  { id: 2, label: 'Series', route: 'vod/series', icon: '' },
-  { id: 3, label: 'Sports', route: 'vod/sports', icon: '' },
-  { id: 4, label: 'Live TV', route: 'live', icon: '' },
-  { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-  { id: 6, label: 'settings', route: 'settings', icon: 'images/navbar/settings.svg' },
-  { id: 7, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
-];
+import { t } from '../../../../Services';
 
 export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
-  _sidebarLength = menuItems.length;
+  _sidebarLength = 0;
   _index = 0;
+  _newIndex = 0;
+  _menuItemRoutes = [];
 
   static _template() {
     return {
-      flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
       NavWrapper: {
         w: 1840,
         h: 70,
         Logo: {
-          texture: Lightning.Tools.getSvgTexture(
-            Utils.asset(`/images/navbar/nav-logo.svg`),
-            235,
-            70
-          ),
+          w: 800 / 3.4,
+          h: 215 / 3.4,
+          src: Utils.asset('/images/navbar/logo.png'),
         },
         Column: {
           type: Row,
-          x: 550,
+          collision: true,
+          x: 300,
           h: 70,
           style: { itemSpacing: 30 },
-          items: menuItems.map((item) => {
-            return {
-              type: SidebarItem,
-              w: item.id < 5 ? 150 : 50,
-              h: 70,
-              props: {
-                selected: false,
-                index: item.id,
-                data: item,
-              },
-              color: Colors(colors.unfocus).get(),
-            };
-          }),
         },
       },
     };
@@ -64,13 +41,69 @@ export default class SidebarItems extends Lightning.Component {
   _active() {
     // setTimeout is used to give time for url hash to change before asign the right one
     setTimeout(() => {
+      const activeHash = Router.getActiveHash();
+      // Check if activeHash contains both 'filtered' and 'movies'
+      if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
+        this._index = getRouteNavbarIndex('filterPage/movie');
+        this._setSelected(this._index);
+        return;
+      } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
+        this._index = getRouteNavbarIndex('filterPage/series');
+        this._setSelected(this._index);
+        return;
+      }
       this._index = getRouteNavbarIndex(Router.getActiveHash());
       this._setSelected(this._index);
-    })
+    });
+
+    const menuItems = [
+      { id: 0, label: t('home'), route: 'home', icon: '' },
+      { id: 1, label: t('movies'), route: 'vod/movies', icon: '' },
+      { id: 2, label: t('series'), route: 'vod/series', icon: '' },
+      { id: 3, label: t('sport'), route: 'vod/sports', icon: '' },
+      { id: 4, label: t('live_tv'), route: 'live', icon: '' },
+      { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
+      { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
+      { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
+      { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
+    ];
+
+    this._menuItemRoutes = menuItems.map((item) => item.route);
+
+    this._sidebarLength = menuItems.length;
+
+    this._Column.patch({
+      items: menuItems.map((item) => {
+        return {
+          type: SidebarItem,
+          collision: true,
+          w: item.id < 5 ? 150 : 50,
+          h: 70,
+          props: {
+            selected: false,
+            index: item.id,
+            data: item,
+          },
+          extraItemSpacing: item.id === 4 ? 270 : 0,
+          color: Colors(colors.unfocus).get(),
+        };
+      }),
+    });
   }
 
   _focus() {
-    let focusedId = getRouteNavbarIndex(Router.getActiveHash());
+    const activeHash = Router.getActiveHash();
+    // Check if activeHash contains both 'filtered' and 'movies'
+    if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
+      this._index = getRouteNavbarIndex('filterPage/movie');
+      this._setSelected(this._index);
+      return;
+    } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
+      this._index = getRouteNavbarIndex('filterPage/series');
+      this._setSelected(this._index);
+      return;
+    }
+    let focusedId = getRouteNavbarIndex(activeHash);
     this.$changePage(focusedId);
   }
 
@@ -85,7 +118,7 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   $changePage(index) {
-    const route = menuItems[index].route;
+    const route = this._menuItemRoutes[index];
     this._setSelected(index);
     this._index = index;
 
@@ -94,7 +127,23 @@ export default class SidebarItems extends Lightning.Component {
     }
   }
 
+  $changeHoverFocus(index) {
+    this._newIndex = index;
+    this._Column.children[0].children[this._index]._unfocus();
+    this._index = index;
+  }
+
   _updateFocus() {
+    const activeHash = Router.getActiveHash();
+    if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
+      this._index = getRouteNavbarIndex('filterPage/movie');
+      this._setSelected(this._index);
+      return;
+    } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
+      this._index = getRouteNavbarIndex('filterPage/series');
+      this._setSelected(this._index);
+      return;
+    }
     const newIndex = getRouteNavbarIndex(Router.getActiveHash());
     if (newIndex !== this._index) {
       this._setSelected(newIndex);
@@ -103,14 +152,14 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   $decrementSidebar() {
-    this._index > 0 ? --this._index : this._index;
+    this._newIndex > 0 ? --this._newIndex : this._newIndex;
   }
 
   $incrementSidebar() {
-    this._index < this._sidebarLength - 1 ? ++this._index : this._index;
+    this._newIndex < this._sidebarLength - 1 ? ++this._newIndex : this._newIndex;
   }
 
   _getFocused() {
-    return this._Column.items[this._index];
+    return this._Column.items[this._newIndex];
   }
 }

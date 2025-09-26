@@ -1,0 +1,50 @@
+import { LanguageService, t } from '../../../Services';
+import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
+
+const languageArea = (page, tabButtons) => {
+  const items = tabButtons.map((tabInfo, index) => ({
+    type: MemberTabButton,
+    collision: true,
+    tabInfoData: tabInfo,
+    w: 250,
+    h: 100,
+    tabIndex: index,
+  }));
+
+  page._Column.props = {
+    items: items,
+    enableScroll: false,
+  };
+};
+
+export default async function (page) {
+  const languages = await LanguageService.getLanguages();
+
+  page.props = {
+    languagesData: languages.data,
+  };
+
+  let tabButtons = [];
+
+  if (languages.data.languages.split(',').length > 1) {
+    tabButtons = [
+      {
+        id: 0,
+        title: t('cookie_preferences'),
+      },
+      {
+        id: 1,
+        title: t('languages'),
+      },
+    ];
+  } else {
+    tabButtons = [
+      {
+        id: 0,
+        title: t('cookie_preferences'),
+      },
+    ];
+  }
+
+  languageArea(page, tabButtons);
+}

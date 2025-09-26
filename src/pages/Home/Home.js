@@ -1,8 +1,9 @@
-import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
-import { HomePageService } from '../../api/services';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Gallery from '../../components/Gallery/Gallery';
+import { HomePageService } from '../../Services';
+import { railItemConstructor } from '../utils/railItems';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -11,11 +12,7 @@ export default class Home extends Lightning.Component {
   };
   static _template() {
     return {
-      Background: {
-        w: 1920,
-        h: 2080,
-        src: Utils.asset('images/background.jpg'),
-      },
+      Background: {},
       HeroSection: {
         x: 0,
         y: 0,
@@ -25,12 +22,13 @@ export default class Home extends Lightning.Component {
       },
       Wrapper: {
         x: 80,
-        y: 900,
+        y: 980,
         h: 1080,
-        w: 1760,
+        w: 1700,
         Column: {
           h: 1080,
-          w: 1760,
+          w: 1700,
+          collision: true,
           type: VerticalContainer,
         },
       },
@@ -74,28 +72,63 @@ export default class Home extends Lightning.Component {
           sliderData,
         },
       });
+      this._HeroSection._HeroSection._Info.patch({
+        y: 150,
+      });
+    } else {
+      this._setState('Items');
+      this.patch({
+        HeroSection: undefined,
+      });
     }
+  }
 
-    this._HeroSection._HeroSection._GalleryButton.patch({
-      props: {
-        buttonLabel: 'WATCH NOW',
-      },
-    });
+  _disable() {
+    this.fireAncestors('$unpunchHole');
   }
 
   _firstActive() {
     this._setState('Hero');
   }
 
+  _handleBack(e) {
+    if (Router.isNavigating()) {
+      return;
+    }
+    e.preventDefault();
+    this.fireAncestors('$appClose');
+  }
+
+  _handleHover() {
+    Router.focusPage();
+  }
+
+  $setStateOnScroll(nextState) {
+    this._setState(nextState);
+  }
+
   static _states() {
     return [
       class Hero extends this {
         _getFocused() {
+          this.fireAncestors('$setNavbarVisibility', true);
           return this._HeroSection;
         }
 
         $enter() {
           this.fireAncestors('$setNavbarVisibility', true);
+
+          this._Wrapper.patch({
+            y: 980,
+          });
+        }
+
+        _handleBack(e) {
+          if (Router.isNavigating()) {
+            return;
+          }
+          e.preventDefault();
+          this.fireAncestors('$appClose');
         }
 
         _handleUp() {
@@ -105,26 +138,40 @@ export default class Home extends Lightning.Component {
         _handleDown() {
           this._setState('Items');
         }
+
+        async $horizontalContainerIndexChange(index) {
+          if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
+            const newRails = await HomePageService.fetchMoreItemsForHeroSection();
+            if (newRails && newRails?.items?.length > 0) {
+              const parsedItems = railItemConstructor(newRails.items, 'HeroRails', {});
+              this._HeroSection._Bullets._appendItems(parsedItems);
+            }
+          }
+        }
       },
 
       class Items extends this {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
-          this._HeroSection.patch({
-            y: -305,
-          });
-          this._Wrapper.patch({
-            y: 500,
+          this.patch({
+            HeroSection: {
+              y: -980,
+            },
+            Wrapper: {
+              y: 0,
+            },
           });
         }
 
         $exit() {
           this.fireAncestors('$setNavbarVisibility', true);
-          this._HeroSection.patch({
-            y: 0,
-          });
-          this._Wrapper.patch({
-            y: 900,
+          this.patch({
+            HeroSection: {
+              y: 0,
+            },
+            Wrapper: {
+              y: 900,
+            },
           });
         }
 
@@ -136,28 +183,60 @@ export default class Home extends Lightning.Component {
           this._setState('Hero');
         }
 
+        _handleBack(e) {
+          if (Router.isNavigating()) {
+            return;
+          }
+          e.preventDefault();
+          this.fireAncestors('$appClose');
+        }
+
+        async $horizontalContainerIndexChange(index) {
+          const currentItem = this._Column.Items.children[this._Column._focusedIndex];
+          if (currentItem.Items.children.length - 1 === index) {
+            const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
+            if (newRails && newRails?.items?.length > 0) {
+              const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
+              parsedItems.map(
+                (item) =>
+                  (item.props.index =
+                    item.props.index +
+                    this._Column.Items.children[this._Column._focusedIndex].Items.children.length)
+              );
+              currentItem._appendItems(parsedItems);
+            }
+          }
+        }
+
         async $verticalContainerIndexChange(index) {
           if (index > 0) {
-            this._HeroSection.patch({
-              visible: false,
-            });
-            this._Wrapper.patch({
-              y: 0,
+            this.patch({
+              HeroSection: {
+                visible: false,
+              },
+              Wrapper: {
+                y: 0,
+              },
             });
           } else {
-            this._HeroSection.patch({
-              visible: true,
-              y: -305,
-            });
-            this._Wrapper.patch({
-              y: 500,
+            this.patch({
+              HeroSection: {
+                visible: true,
+                y: 1080,
+              },
+              Wrapper: {
+                y: 0,
+              },
             });
           }
 
+          let hasBanner = !!HomePageService.banner;
+          let indexNumber = hasBanner ? 1 : 0;
+
           if (
             HomePageService.hasMore &&
-            !HomePageService.isLoading &&
-            HomePageService.stripesFetched - 2 === index
+            !HomePageService.loading &&
+            HomePageService.stripesFetched - 2 === index - indexNumber
           ) {
             const newStripes = await HomePageService.fetchMoreStripes();
             const rails = constructRails(newStripes);

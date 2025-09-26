@@ -1,13 +1,13 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import { Column } from '@lightningjs/ui-components';
-import { getSinglePage } from '../../../api/help';
 import colors from '../../../../reskin/colors.json';
+import { SettingsService } from '../../../Services';
 
 export default class PageItem extends Lightning.Component {
   static _template() {
     return {
       Column: {
-        flex: { direction: 'row', alignItems: 'center' },
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         w: 240,
         h: 65,
         type: Column,
@@ -15,12 +15,11 @@ export default class PageItem extends Lightning.Component {
         rect: true,
         shader: { type: Lightning.shaders.RoundedRectangle, radius: 6 },
         Text: {
-          w: 200,
+          w: 230,
           h: 25,
-          flexItem: {
-            marginLeft: 20,
-          },
           text: {
+            textAlign: 'center',
+            fontFace: 'Montserrat-Medium',
             fontSize: 20,
             lineHeight: 25,
             letterSpacing: 1.2,
@@ -30,32 +29,28 @@ export default class PageItem extends Lightning.Component {
     };
   }
 
-  get _ColumnWrapper() {
+  get _Column() {
     return this.tag('Column');
   }
 
-  get _Column() {
-    return this.tag('Column.Text');
-  }
-
   set pageInfoData(val) {
-    return (this._pageInfoData = val);
+    this._pageInfoData = val;
   }
 
   set pageIndex(val) {
-    return (this._pageIndex = val);
+    this._pageIndex = val;
   }
 
   _enable() {
     this._Column.patch({
-      text: { text: this._pageInfoData.title },
-      color: Colors(colors.white).get(),
-    });
-    this.tag('Column').patch({
       color: Colors(colors.background).get(),
+      Text: {
+        text: { text: this._pageInfoData.title },
+        color: Colors(colors.white).get(),
+      },
     });
     let newPage;
-    newPage = getSinglePage(1);
+    newPage = SettingsService.getSinglePage(1);
     this.fireAncestors('$changeDescription', newPage, 1);
   }
 
@@ -65,7 +60,7 @@ export default class PageItem extends Lightning.Component {
 
   _handleEnter() {
     let newPage;
-    newPage = getSinglePage(this._pageInfoData.id);
+    newPage = SettingsService.getSinglePage(this._pageInfoData.id);
 
     let pageId = this._pageInfoData.id;
     this.fireAncestors('$changeDescription', newPage, pageId);
@@ -74,41 +69,50 @@ export default class PageItem extends Lightning.Component {
 
   _selectButton() {
     this._selected = true;
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.focus).get(),
     });
   }
 
   _unselectButton() {
     this._selected = false;
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.background).get(),
     });
   }
 
   _focus() {
-    this.tag('Column').patch({
+    this._Column.patch({
       color: Colors(colors.focus).get(),
     });
   }
 
   _unfocus() {
     if (this._selected) {
-      this.tag('Column').patch({
+      this._Column.patch({
         color: Colors(colors.focusedHelpButton).get(),
       });
     } else {
-      this.tag('Column').patch({
+      this._Column.patch({
         color: Colors(colors.unfocusedHelpButton).get(),
       });
     }
   }
 
-  _init() {}
+  _handleHover() {
+    this._focus();
+  }
 
-  _getFocused() {}
+  _handleUnhover() {
+    this._unfocus();
+  }
 
-  static _states() {
-    return [];
+  _handleClick() {
+    let newPage;
+    newPage = getSinglePage(this._pageInfoData.id);
+
+    let pageId = this._pageInfoData.id;
+    this.fireAncestors('$changeDescription', newPage, pageId);
+    this.fireAncestors('$setFocus', this._pageIndex);
   }
 }

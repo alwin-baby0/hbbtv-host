@@ -7,7 +7,7 @@ import Image from '../Image/Image';
 export default class SportsEventsRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
+    placeholderSrc: Utils.asset('images/landscape-rail-placeholder-empty.png'),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,
@@ -26,9 +26,8 @@ export default class SportsEventsRailItem extends FocusableItem {
       },
       EventTime: {
         x: 3,
-        y: 137,
+        y: 180,
         rect: true,
-        w: 180,
         h: 30,
         color: Colors(colors.focus).get(),
         shader: {
@@ -37,21 +36,20 @@ export default class SportsEventsRailItem extends FocusableItem {
         },
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         DateTime: {
-          w: 170,
+          flexItem: { marginLeft: 10, marginRight: 10 },
           h: 16,
           text: {
             text: '',
-            fontFamily: 'Inter',
-            fontStyle: 'normal bold',
+            fontFace: 'Montserrat-SemiBold',
             fontSize: 13,
             lineHeight: 16,
           },
         },
       },
-      Description: {
+      DescriptionWrapper: {
         x: 3,
-        y: 170,
-        w: 255,
+        y: 213,
+        w: 350,
         h: 165,
         flex: { direction: 'column' },
         Title: {
@@ -61,25 +59,26 @@ export default class SportsEventsRailItem extends FocusableItem {
           },
           text: {
             text: '',
-            fontFamily: 'Inter',
-            fontStyle: 'normal bold',
-            fontSize: 13,
+            fontFace: 'Montserrat-Bold',
+            fontSize: 20,
             lineHeight: 16,
-            wordWrapWidth: 220,
+            wordWrapWidth: 270,
+            maxLines: 2,
+            maxLinesSuffix: '...',
           },
         },
-        Descriptionn: {
+        Description: {
           flexItem: {
             marginTop: 4,
             marginLeft: 21,
           },
           text: {
-            fontFamily: 'Inter',
-            fontStyle: 'normal [100]',
-            fontSize: 11,
+            fontFace: 'Montserrat-Regular',
+            fontSize: 16,
             lineHeight: 16,
-            wordWrapWidth: 220,
-            maxLines: 8,
+            wordWrapWidth: 300,
+            maxLines: 4,
+            maxLinesSuffix: '...',
           },
         },
       },
@@ -94,8 +93,8 @@ export default class SportsEventsRailItem extends FocusableItem {
     return this.tag('Title');
   }
 
-  get _Description() {
-    return this.tag('Descriptionn');
+  get _DescriptionWrapper() {
+    return this.tag('DescriptionWrapper');
   }
 
   get _DateTime() {
@@ -125,32 +124,28 @@ export default class SportsEventsRailItem extends FocusableItem {
       strokeWidth: strokeWidth,
     });
 
-    this._Title.patch({
-      text: {
-        text: itemTitle,
+    this.patch({
+      EventImage: {
+        props: {
+          width: 342,
+          height: 192,
+          imageSrc: imageSrc,
+          placeholderSrc: placeholderSrc,
+          radius: [6, 6, 0, 0],
+        },
       },
-    });
-
-    this._Description.patch({
-      text: {
-        text: itemDescription,
-        fontSize: 11,
+      EventTime: {
+        DateTime: {
+          text: { text: itemDateWithTime },
+        },
       },
-    });
-
-    this._DateTime.patch({
-      text: {
-        text: itemDateWithTime,
-      },
-    });
-
-    this._EventImage.patch({
-      props: {
-        width: 255,
-        height: 150,
-        imageSrc: imageSrc,
-        placeholderSrc: placeholderSrc,
-        radius: [6, 6, 0, 0],
+      DescriptionWrapper: {
+        Title: {
+          text: { text: itemTitle },
+        },
+        Description: {
+          text: { text: itemDescription },
+        },
       },
     });
   }
@@ -164,6 +159,21 @@ export default class SportsEventsRailItem extends FocusableItem {
   }
 
   _handleEnter() {
+    const { callback } = this._props;
+    callback();
+  }
+
+  _handleHover() {
+    const { index } = this._props;
+    this.fireAncestors('$horizontalPosterIndexChange', index);
+    super._focus();
+  }
+
+  _handleUnhover() {
+    super._unfocus();
+  }
+
+  _handleClick() {
     const { callback } = this._props;
     callback();
   }

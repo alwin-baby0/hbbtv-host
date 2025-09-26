@@ -3,19 +3,22 @@
     "enablePointer": true,
     "stage": {
       "clearColor": "0x00000000",
-      "useImageWorker": true,
+      "useImageWorker": false,
       "w": 1920,
       "h": 1080,
       "precision": 1,
       "readPixelsAfterDraw": true,
-      "pauseRafLoopOnIdle": true
+      "pauseRafLoopOnIdle": true,
+      "defaultFontFace": "Montserrat-Regular"
     },
-    "debug": true
+    "debug": false,
+    "keys": {}
   },
   "platformSettings": {
     "path": "./static",
     "log": false,
     "showVersion": false,
-    "inspector": true
+    "inspector": false,
+    "esEnv": "es5"
   }
 }

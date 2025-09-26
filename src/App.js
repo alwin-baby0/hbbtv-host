@@ -1,9 +1,12 @@
-// App.js
-import { Colors, Router, Utils } from '@lightningjs/sdk';
-import colors from '../reskin/colors.json';
+import { Colors, Router, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import routes from './pages/routes';
 import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
+import Dialog from './components/widgets/Dialog/Dialog';
+import { getDeviceType } from './utils/device';
+import { DetailService, t } from './Services';
+
+let wasOffline = false; // Variable to track previous internet status
 
 export default class App extends Router.App {
   static _template() {
@@ -29,15 +32,18 @@ export default class App extends Router.App {
       Background: {
         w: 1920,
         h: 1080,
-        rect: true,
-        color: Colors(colors.background).get(),
         zIndex: -900,
-        // src: Utils.asset('images/background.jpg'),
+        src: Utils.asset('images/background.jpg'),
       },
       Widgets: {
         Menu: {
           zIndex: 2,
           type: Navbar,
+        },
+        Dialog: {
+          visible: false,
+          type: Dialog,
+          zIndex: 101,
         },
       },
     };
@@ -55,6 +61,10 @@ export default class App extends Router.App {
     return this.tag('Background');
   }
 
+  get _Dialog() {
+    return this.tag('Dialog');
+  }
+
   $setNavbarVisibility(isVisible) {
     this._Menu.setVisibility = isVisible;
   }
@@ -70,42 +80,199 @@ export default class App extends Router.App {
       },
       this
     );
+
+    window.addEventListener('online', () => this.handleOnline());
+    window.addEventListener('offline', () => this.handleOffline());
+
+    this.checkNetworkStatusOnline(navigator.onLine);
+  }
+
+  async getMovie(id) {
+    const movie = await DetailService.getMovie(id);
+    if (movie) {
+      Router.navigate('player', {
+        videoUrl: movie.url,
+        duration: movie.duration,
+        videoId: id,
+        ssai: movie.ssai,
+      });
+    }
   }
 
   $punchHole() {
-    this._Background.shader = {
-      type: lng.shaders.Hole,
-      x: 0,
-      y: 0,
-      w: 1920,
-      h: 1080,
-    };
+    this.patch({
+      Background: undefined,
+    });
   }
 
   $unpunchHole() {
-    this._Background.shader = {
-      w: 0,
-      h: 0,
-    };
+    this.patch({
+      Background: {
+        w: 1920,
+        h: 1080,
+        zIndex: -900,
+        src: Utils.asset('images/background.jpg'),
+        shader: undefined,
+      },
+    });
+  }
+
+  $punchHoleTV(x, y, w, h, radius) {
+    if (!x) {
+      y = 106;
+      x = 1071;
+      w = 736;
+      h = 412;
+      radius = 20;
+    }
+    if (this._Background) {
+      this._Background.shader = {
+        type: Lightning.shaders.Hole,
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+        radius: radius,
+      };
+    } else {
+      this.patch({
+        Background: {
+          w: 1920,
+          h: 1080,
+          zIndex: -900,
+          src: Utils.asset('images/background.jpg'),
+          shader: {
+            type: Lightning.shaders.Hole,
+            x: x,
+            y: y,
+            w: w,
+            h: h,
+            radius: radius,
+          },
+        },
+      });
+    }
   }
 
   static getFonts() {
     return [
+      // 300
       {
-        family: 'Inter',
-        url: Utils.asset('fonts/Inter.ttf'),
+        family: 'Montserrat-Light',
+        url: Utils.asset('fonts/Montserrat/Montserrat-Light.ttf'),
+        descriptors: {},
+      },
+      // 400
+      {
+        family: 'Montserrat-Regular',
+        url: Utils.asset('fonts/Montserrat/Montserrat-Regular.ttf'),
+        descriptors: {},
+      },
+      // 500
+      {
+        family: 'Montserrat-Medium',
+        url: Utils.asset('fonts/Montserrat/Montserrat-Medium.ttf'),
+        descriptors: {},
+      },
+      // 600
+      {
+        family: 'Montserrat-SemiBold',
+        url: Utils.asset('fonts/Montserrat/Montserrat-SemiBold.ttf'),
+        descriptors: {},
+      },
+      // 700
+      {
+        family: 'Montserrat-Bold',
+        url: Utils.asset('fonts/Montserrat/Montserrat-Bold.ttf'),
+        descriptors: {},
+      },
+      // 800
+      {
+        family: 'Montserrat-ExtraBold',
+        url: Utils.asset('fonts/Montserrat/Montserrat-ExtraBold.ttf'),
         descriptors: {},
       },
     ];
   }
 
-  _handleAppClose() {}
+  handleOnline() {
+    if (wasOffline) {
+      VideoPlayer.play();
+      const networkDialog = this._Dialog;
+      networkDialog.close();
+      wasOffline = false;
+    }
+  }
 
-  /**
-   * Show app close dialogue
-   * @private
-   */
-  // _handleAppClose() {
-  //   console.log('Close app');
-  // }
+  handleOffline() {
+    VideoPlayer.pause();
+    const networkDialog = this._Dialog;
+    networkDialog.open({
+      message: 'Problem with Network?',
+      actions: [
+        {
+          label: 'Retry',
+          action: () => {
+            if (navigator.onLine) {
+              networkDialog.close();
+              wasOffline = true;
+              this.handleOnline();
+            }
+          },
+        },
+        {
+          label: 'Exit App',
+          action: () => {
+            this.application.closeApp();
+          },
+        },
+      ],
+    });
+    wasOffline = true;
+  }
+
+  checkNetworkStatusOnline(isOnline) {
+    if (isOnline) {
+      this.handleOnline();
+    } else {
+      this.handleOffline();
+    }
+  }
+
+  $exitApp() {
+    this.application.closeApp();
+  }
+
+  $appClose() {
+    const dialog = this._Dialog;
+    dialog.open({
+      message: t('exit_label'),
+      actions: [
+        {
+          label: t('no_resume'),
+          action: () => {
+            dialog.close();
+          },
+        },
+        {
+          label: t('yes_exit'),
+          action: () => {
+            const device = getDeviceType();
+            // Router navigation for "Yes, exit now"
+            switch (device) {
+              case 'metrological':
+                this.application.closeApp();
+                break;
+              case 'tizen':
+                window.tizen.application.getCurrentApplication().exit();
+                break;
+              default:
+                window.close();
+                break;
+            }
+          },
+        },
+      ],
+    });
+  }
 }

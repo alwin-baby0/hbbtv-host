@@ -14,7 +14,7 @@ export const keyboardSearch = [
     { key: '0', w: 70, h: 90, icon: false },
   ],
   [
-    { key: 'backspace', w: 190, h: 90, icon: 'backspace.svg' },
+    { key: 'backspace', w: 190, h: 90, icon: 'backspace.png' },
     { key: 'Done', w: 190, h: 90, icon: false },
   ],
 ];
@@ -31,7 +31,7 @@ export const keyboardKeys = [
     { key: '8', w: 70, h: 90, icon: false },
     { key: '9', w: 70, h: 90, icon: false },
     { key: '0', w: 70, h: 90, icon: false },
-    { key: 'backspace', w: 190, h: 90, icon: 'backspace.svg' },
+    { key: 'backspace', w: 190, h: 90, icon: 'backspace.png' },
   ],
   [
     { key: 'q', w: 70, h: 90, icon: false },

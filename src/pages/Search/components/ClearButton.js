@@ -44,16 +44,20 @@ export default class ClearButton extends lng.Component {
   }
 
   _enable() {
-    this.Icon.patch({
-      texture: lng.Tools.getSvgTexture(
-        Utils.asset(this._buttonProps?.icon),
-        this._buttonProps.width ? this._buttonProps.width : 70,
-        this._buttonProps.height ? this._buttonProps.height : 70
-      ),
-      color: Colors('#ffffff').get(),
-    });
-    this.Text.patch({
-      text: { text: this._buttonProps?.name || '', fontSize: 20, clipping: true },
+    this.patch({
+      Button: {
+        Icon: {
+          texture: lng.Tools.getSvgTexture(
+            Utils.asset(this._buttonProps?.icon),
+            this._buttonProps.width ? this._buttonProps.width : 70,
+            this._buttonProps.height ? this._buttonProps.height : 70
+          ),
+          color: Colors('#ffffff').get(),
+        },
+      },
+      Text: {
+        text: { text: this._buttonProps?.name || '', fontSize: 20, clipping: true },
+      },
     });
   }
 
@@ -62,10 +66,9 @@ export default class ClearButton extends lng.Component {
       color: Colors('#606060').get(),
       flex: { alignItems: 'center' },
       texture: lng.Tools.getRoundRect(75, 75, 37, 3, false),
-    });
-    // Patch the color of the Icon component in the focused state
-    this.Icon.patch({
-      color: Colors('#ffffff').get(),
+      Icon: {
+        color: Colors('#ffffff').get(),
+      },
     });
   }
 
@@ -73,10 +76,9 @@ export default class ClearButton extends lng.Component {
     this.Button.patch({
       color: Colors('#42424200').get(),
       texture: lng.Tools.getRoundRect(75, 75, 37, 3, false),
-    });
-    // Patch the color of the Icon component in the unfocused state
-    this.Icon.patch({
-      color: Colors('#ffffff').get(),
+      Icon: {
+        color: Colors('#ffffff').get(),
+      },
     });
   }
 

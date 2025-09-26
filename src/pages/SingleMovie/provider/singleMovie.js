@@ -1,12 +1,21 @@
-import { getSingleMovie } from '../../../api/movies';
+import { DetailService } from '../../../Services';
 
-const fetchSingleMovie = async (page, { movieId }) => {
-  const movie = await getSingleMovie(movieId);
-  page.props = {
-    ...movie,
-  };
-};
+export default async function (page, { movieId, cmpShown }) {
+  const movie = await DetailService.getMovie(movieId);
 
-export default async function (page, { movieId }) {
-  await fetchSingleMovie(page, { movieId });
+  let movieTrailerId = '';
+  let movieTrailerUrl = '';
+
+  if (movie.trailer) {
+    const movieTrailer = await fetch(
+      `https://api-applicaster.wedo.tv/getMovie?id=${movie.trailer.trim()}`
+    );
+    const res = await movieTrailer.json();
+
+    movieTrailerId = res.entry[0].id;
+
+    movieTrailerUrl = res.entry[0].content.src;
+  }
+
+  page.props = { movie, movieId, movieTrailerId, movieTrailerUrl, cmpShown };
 }

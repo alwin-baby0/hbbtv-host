@@ -1,21 +1,41 @@
 import { Router } from '@lightningjs/sdk';
-import { VOD_TYPES } from '.';
-import { imageSizes } from '../../api/models/utils';
+import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
+import { RAIL_TYPES } from '.';
+import { imageSizes } from '../../Models/utils';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
 import SportsEventsRailItem from '../../components/RailItems/SportsEventsRailItem';
+import CategoryPickerItem from '../../components/CategoryPickerItem/CategoryPickerItem';
+import EPGRailItems from '../../components/RailItems/EPGRailItems';
+import HeroRailItem from '../../components/RailItems/HeroRailItems';
+import { CATEGORY_TYPES } from '../../Models/Category';
+import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
+import BannerRailItem from '../../components/RailItems/BannerRailItem';
+import { DetailService, EPGService } from '../../Services';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
-    case VOD_TYPES.MOVIE:
-    case VOD_TYPES.SERIE:
-    case VOD_TYPES.SPORT:
-    case VOD_TYPES.SEARCH:
+    case RAIL_TYPES.MOVIE:
+    case RAIL_TYPES.SERIE:
+    case RAIL_TYPES.SPORT:
+    case RAIL_TYPES.SEARCH:
       return constructSimpleRailItems(railItems, railItemsOptions);
-    case VOD_TYPES.EPISODE:
+    case RAIL_TYPES.EPISODE:
       return constructEpisodeRailItems(railItems, railItemsOptions);
-    case VOD_TYPES.SPORT_LIVE:
+    case RAIL_TYPES.SPORT_LIVE:
       return constructSportsLiveRailItems(railItems, railItemsOptions);
+    case RAIL_TYPES.LIVETV:
+      return constructLiveChannelRailItems(railItems, railItemsOptions);
+    case RAIL_TYPES.CATEGORY:
+      return constructCategoryItems(railItems, railItemsOptions);
+    case RAIL_TYPES.EPGS:
+      return constructEPGS(railItems, railItemsOptions);
+    case RAIL_TYPES.HERO:
+      return constructHeroRailItems(railItems, railItemsOptions);
+    case RAIL_TYPES.COLLECTION:
+      return constructLandscapeRailItems(railItems, railItemsOptions);
+    case RAIL_TYPES.BANNER:
+      return constructBannerRailItems(railItems, railItemsOptions);
     default: {
       console.warn('unknown rail type:', railType, ', defaulting to simple rail items');
       return constructSimpleRailItems(railItems, railItemsOptions);
@@ -24,8 +44,9 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
 };
 
 const constructSimpleRailItems = (railItems, railItemsOptions) => {
-  return railItems.map((railItem) => ({
+  return railItems.map((railItem, index) => ({
     type: PosterRailItem,
+    collision: true,
     w: 270,
     flexItem: {
       marginLeft: 10,
@@ -38,48 +59,203 @@ const constructSimpleRailItems = (railItems, railItemsOptions) => {
       itemTitle: railItem.title ? railItem.title : '',
       imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
       itemType: railItem.type,
+      index: index,
       callback: () => {
         Router.navigate(railItem.url);
       },
     },
   }));
 };
-const constructEpisodeRailItems = (railItems, railItemsOptions) =>
-  railItems.map((railItem) => {
+
+const constructLandscapeRailItems = (railItems, railItemsOptions) => {
+  return railItems.map((railItem, index) => ({
+    type: CollectionRailItem,
+    collision: true,
+    w: 420,
+    flexItem: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    ...railItemsOptions,
+    props: {
+      itemTitle: railItem.title ? railItem.title : '',
+      imageSrc: railItem.getLandscapePoster(imageSizes.S).src,
+      itemType: railItem.type,
+      index,
+      callback: () => {
+        Router.navigate(railItem.url);
+      },
+    },
+  }));
+};
+
+const constructEPGS = (railItems, railItemsOptions) => {
+  let items = [];
+
+  items.push(
+    ...railItems.map((railItem, index) => {
+      const year = new Date(railItem.extensions.start_time).getFullYear();
+      const width = year < 2023 ? 12000 : railItem.getDuration() * 8.33;
+
+      return {
+        collision: true,
+        type: EPGRailItems,
+        w: width,
+        h: 95,
+        ...railItemsOptions,
+        props: {
+          ...railItem,
+          index,
+        },
+      };
+    })
+  );
+
+  return items;
+};
+
+const constructHeroRailItems = (railItems, railItemsOptions) => {
+  return railItems.map((railItem, index) => {
     return {
-      type: LandscapeRailItem,
+      type: HeroRailItem,
+      collision: true,
       flexItem: {
-        marginLeft: 10,
-        marginRight: 10,
-        marginTop: 10,
-        marginBottom: 10,
+        marginLeft: 15,
+        marginRight: 15,
       },
       ...railItemsOptions,
       props: {
-        itemTitle: railItem.title,
-        itemDescription: railItem.summary,
-        imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
-        callback: () => {
-          Router.navigate('player', {
-            videoUrl: railItem.url,
-            duration: railItem.duration,
-          });
+        index,
+        imageSrc: railItem.getLandscapePoster(imageSizes.S).src,
+        callback: async () => {
+          switch (railItem.type.value) {
+            case CATEGORY_TYPES.MOVIE: {
+              Router.navigate(`movie-details/${railItem.id}`);
+              break;
+            }
+            case 'serie': {
+              Router.navigate(`series-details/${railItem.id}`);
+              break;
+            }
+            case CATEGORY_TYPES.EVENTS: {
+              Router.navigate(`event-details/${railItem.id}`);
+              break;
+            }
+            case CATEGORY_TYPES.EVENT: {
+              Router.navigate(`event-details/${railItem.id}`);
+              break;
+            }
+            case CATEGORY_TYPES.VIDEO: {
+              Router.navigate('player', {
+                videoUrl: railItem.url,
+                duration: railItem.duration,
+              });
+              break;
+            }
+            case CATEGORY_TYPES.COLLECTION: {
+              Router.navigate(`collection-details/${railItem.id}`);
+              break;
+            }
+            case CATEGORY_TYPES.LIVESTREAM: {
+              const epgProgram = await EPGService.getSingleEPGChannel(`channel_${railItem.id}`);
+              const epgStreamSrc = epgProgram.items[0].content.src;
+
+              Router.navigate('player', {
+                videoUrl: epgStreamSrc,
+                duration: 0,
+                videoType: 'Stream now',
+              });
+              break;
+            }
+            default:
+              console.warn('unknown category type:', railItem.type);
+          }
         },
+        url: railItem.trailerUrl,
       },
     };
   });
+};
+
+const constructEpisodeRailItems = (railItems, railItemsOptions) => {
+  return railItems.map((railItem, index) => ({
+    type: LandscapeRailItem,
+    collision: true,
+    flexItem: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    ...railItemsOptions,
+    props: {
+      itemTitle: railItem.title,
+      itemSummary: railItem.summary,
+      itemDescription: railItem.description,
+      imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
+      index,
+      callback: () => {
+        DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(
+          ({ data: result }) => {
+            Router.navigate('player', {
+              videoUrl: result[0]?.content.src ?? railItem.src,
+              videoId: railItem.id,
+              duration: railItem.duration,
+              videoType: 'series',
+              seriesID: railItem.seriesId,
+              ssai: result[0].extensions.ssai ?? railItem.ssai,
+              episodeTitle: railItem.title,
+            });
+          }
+        );
+      },
+    },
+  }));
+};
 
 const constructSportsLiveRailItems = (railItems, railItemsOptions) =>
+  railItems.map((railItem, index) => ({
+    w: 350,
+    type: SportsEventsRailItem,
+    collision: true,
+    flexItem: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    ...railItemsOptions,
+    props: {
+      itemTitle: railItem.title,
+      itemDescription: railItem.description,
+      itemDateWithTime: railItem.dateWithTime,
+      imageSrc: railItem.getLandscapePoster().src,
+      radius: 9,
+      strokeWidth: 4,
+      index,
+      callback: () => {
+        Router.navigate(railItem.url);
+      },
+      ...railItemsOptions.props,
+    },
+  }));
+
+// LIVETV
+const constructLiveChannelRailItems = (railItems, railItemsOptions) =>
   railItems.map((railItem) => {
     return {
       w: 260,
-      type: SportsEventsRailItem,
+      h: 100,
+      type: LiveChannelRailItem,
       flexItem: {
         marginLeft: 10,
         marginRight: 10,
         marginTop: 10,
         marginBottom: 10,
       },
+      channelInfo: railItem,
       ...railItemsOptions,
       props: {
         itemTitle: railItem.title,
@@ -88,9 +264,45 @@ const constructSportsLiveRailItems = (railItems, railItemsOptions) =>
         imageSrc: railItem.getLandscapePoster().src,
         radius: 9,
         strokeWidth: 4,
-        callback: () => {
-          Router.navigate(railItem.url);
-        },
       },
     };
   });
+
+const constructCategoryItems = (railItems, railItemsOptions) =>
+  railItems.map((railItem, index) => {
+    return {
+      type: CategoryPickerItem,
+      collision: true,
+      ...railItemsOptions,
+      props: {
+        itemInfo: railItem,
+        callback: railItem.navigateToLink,
+        w: 195,
+        h: 64,
+        radius: 30,
+        strokeWidth: 6,
+        index: index,
+      },
+    };
+  });
+
+// Banner
+const constructBannerRailItems = (railItems, railItemsOptions) => {
+  return railItems.map((railItem) => ({
+    type: BannerRailItem,
+    w: 1760,
+    flexItem: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    ...railItemsOptions,
+    props: {
+      itemTitle: railItem.title ? railItem.title : '',
+      imageSrc: railItem.getCtvPoster(1080),
+      itemType: railItem.type,
+      callback: () => {},
+    },
+  }));
+};

@@ -1,6 +1,7 @@
 import { Colors, Utils } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
+import { t } from '../../../Services';
 
 export default class InputField extends lng.Component {
   static _template() {
@@ -42,7 +43,7 @@ export default class InputField extends lng.Component {
         color: Colors('#ffffff').alpha(0.3).get(),
         Text: {
           text: {
-            text: 'Search',
+            // text: 'Search',
             fontSize: 32,
             lineHeight: 40,
             textColor: Colors('#ffffff').alpha(0.3).get(),
@@ -60,6 +61,10 @@ export default class InputField extends lng.Component {
     return this.tag('Input');
   }
 
+  get _InputWrapper() {
+    return this.tag('InputWrapper');
+  }
+
   $setClearButtonState() {
     this._setState('ClearIcon');
   }
@@ -75,6 +80,11 @@ export default class InputField extends lng.Component {
   }
 
   _active() {
+    this._Placeholder.patch({
+      Text: {
+        text: t('search'),
+      },
+    });
     this._setState('Input');
   }
 
@@ -91,11 +101,11 @@ export default class InputField extends lng.Component {
 
         _focus() {
           this.fireAncestors('$setInputState');
-          this.tag('Input').listening = true;
+          this._Input.listening = true;
         }
 
         _unfocus() {
-          this.tag('Input').listening = false;
+          this._Input.listening = false;
         }
 
         _handleHover() {

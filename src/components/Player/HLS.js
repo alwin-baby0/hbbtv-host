@@ -1,9 +1,11 @@
 import { VideoPlayer } from '@lightningjs/sdk';
 import Hls from 'hls.js';
-let player = null;
-const defaults = {
-  debug: false,
-};
+
+export let player = null;
+
+// Regular expressions to detect ad and media fragments
+const adUrlPattern = /\/break_\d+\.ts$/i;
+
 function handleUnrecoverableError(player, errorEvent) {
   if (VideoPlayer._consumer) {
     VideoPlayer._consumer.fire('$videoPlayerError', errorEvent, VideoPlayer.currentTime);
@@ -11,53 +13,73 @@ function handleUnrecoverableError(player, errorEvent) {
   }
   destroyPlayer();
 }
+
 const createPlayer = (options) => {
   if (!player) {
     player = new Hls({
-      ...defaults,
+      debug: false,
+      liveBackBufferLength: 30,
+      enableWorker: false,
+      maxBufferLength: 30,
+      backBufferLength: 30,
       ...options,
-      // autoStartLoad: true,
-      // startPosition: -1,
-      // debug: false,
-      // maxBufferLength: 60,
-      // maxMaxBufferLength: 600,
-      // maxBufferHole: 0.5,
-      // enableWorker: true,
-      // enableSoftwareAES: true,
-      // startLevel: 2,
-      // lowLatencyMode: true,
-      // abrEwmaFastLive: 5.0,
-      // abrEwmaSlowLive: 10.0,
     });
-    // Additional configuration if needed
   }
   return player;
 };
+
 const destroyPlayer = () => {
-  if (player && player.destroy && player.destroy instanceof Function) {
+  if (player && player.destroy instanceof Function) {
     player.destroy();
     player = null;
   }
 };
-const unload = (videoEl) => {
-  destroyPlayer();
-  videoEl.removeAttribute('src');
-  videoEl.load();
-  //My code
-  videoEl.removeAttribute('preload');
-  videoEl.removeAttribute('buffer');
-  videoEl.removeEventListener('progress', onProgress);
+
+export function getSubtitleTracks() {
+  return player.subtitleTrackController.tracks || []; // Accessing the subtitle tracks
+}
+
+export function getPlayer() {
+  return player;
+}
+
+const onFragmentChanged = (fragment) => {
+  console.log('Fragment URL:', fragment.frag.url); // Ovo dodajemo radi debuggiranja URL-ova
+  const fragmentUrl = fragment.frag.url;
+  const hasAdUI =
+    VideoPlayer._consumer && VideoPlayer._consumer.getAdUI && VideoPlayer._consumer.getAdUI();
+
+  if (adUrlPattern.test(fragmentUrl) && !hasAdUI) {
+    console.log('Ad fragment detected, showing ad UI');
+    VideoPlayer._consumer && VideoPlayer._consumer.setAdUI && VideoPlayer._consumer.setAdUI(true);
+  } else {
+    console.log('Content fragment detected, hiding ad UI');
+    VideoPlayer._consumer && VideoPlayer._consumer.setAdUI && VideoPlayer._consumer.setAdUI(false);
+  }
 };
+
 export const loader = (url, videoEl, options = {}) => {
   return new Promise((resolve) => {
     unload(videoEl);
+
     if (url.includes('m3u8')) {
-      // HLS stream
       player = createPlayer(options);
       player.autoLevelCapping = options.autoLevelCapping || -1;
-      player.on(Hls.Events.MANIFEST_PARSED, () => resolve());
+
+      player.on(Hls.Events.MANIFEST_PARSED, () => {
+        const subtitleTracks = getSubtitleTracks();
+        player.subtitleTrack = 0;
+        resolve(subtitleTracks);
+      });
+
+      // Detect fragment change event in HLS.js
+      player.on(Hls.Events.FRAG_CHANGED, (event, data) => {
+        onFragmentChanged(data);
+      });
+
       player.on(Hls.Events.ERROR, (event, data) => {
         if (data.fatal) {
+          handleUnrecoverableError(player, event);
           switch (data.type) {
             case Hls.ErrorTypes.MEDIA_ERROR:
               switch (data.details) {
@@ -88,25 +110,27 @@ export const loader = (url, videoEl, options = {}) => {
           }
         }
       });
+
       player.loadSource(url);
       player.attachMedia(videoEl);
     } else if (url.includes('.mp4')) {
-      // MP4 video
       videoEl.src = url;
       videoEl.load();
       //Buffer change
       videoEl.preload = 'auto';
       videoEl.setAttribute('preload', 'auto');
       videoEl.setAttribute('buffer', '10');
-      videoEl.addEventListener('progress', onProgress);
       resolve();
     }
   });
 };
-const onProgress = (event) => {
-  const videoEl = event.target;
-  // console.log('Buffer length:', videoEl.buffered.end(0) - videoEl.currentTime);
+
+const unload = (videoEl) => {
+  destroyPlayer();
+  videoEl.removeAttribute('src');
+  videoEl.load();
 };
+
 export const unloader = (videoEl) => {
   return new Promise((resolve) => {
     unload(videoEl);

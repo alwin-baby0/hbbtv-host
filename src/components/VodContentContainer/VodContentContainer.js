@@ -1,45 +1,43 @@
-import Lightning from "@lightningjs/sdk/src/Lightning";
-import CategoryPicker from "../CategoryPicker/CategoryPicker";
-import VerticalContainer from "../VerticalContainer/VerticalContainer";
+import Lightning from '@lightningjs/sdk/src/Lightning';
+import CategoryPicker from '../CategoryPicker/CategoryPicker';
+import VerticalContainer from '../VerticalContainer/VerticalContainer';
 
 export const CONTENT_TYPE = {
   CATEGORIES: '_Categories',
   EVENTS: '_LiveEvents',
   EMPTY: 'empty',
-}
+};
 
 export default class VodContentContainer extends Lightning.Component {
   _props = {
     contentType: CONTENT_TYPE.EMPTY,
-  }
+  };
   static _template() {
     return {
       h: 200,
       Categories: {
         type: CategoryPicker,
         props: {
-          x: 110,
+          x: 90,
           y: 150,
-          width: 1760,
-          height: 64,
         },
       },
       LiveEvents: {
         type: VerticalContainer,
         collision: true,
-        x: 110,
+        x: 90,
         y: 150,
         h: 500,
         w: 1920,
       },
-    }
+    };
   }
 
   set props(props) {
     const { contentType, items } = props;
     this._props.contentType = contentType;
 
-    this.#changeContentVisibility(contentType)
+    this.#changeContentVisibility(contentType);
     this.#renderContent(items, contentType);
 
     if (contentType === CONTENT_TYPE.CATEGORIES) {
@@ -52,11 +50,11 @@ export default class VodContentContainer extends Lightning.Component {
    * @param {string} visibleContentType - type of container to show.
    */
   #changeContentVisibility(visibleContentType) {
-    Object.values(CONTENT_TYPE).forEach(contentType => {
+    Object.values(CONTENT_TYPE).forEach((contentType) => {
       // escape empty state
       if (contentType === CONTENT_TYPE.EMPTY) return;
       this[contentType].visible = visibleContentType === contentType;
-    })
+    });
   }
 
   /**
@@ -80,10 +78,13 @@ export default class VodContentContainer extends Lightning.Component {
 
   _getFocused() {
     switch (this._props.contentType) {
-      case CONTENT_TYPE.CATEGORIES: return this._Categories;
-      case CONTENT_TYPE.EVENTS: return this._LiveEvents;
+      case CONTENT_TYPE.CATEGORIES:
+        return this._Categories;
+      case CONTENT_TYPE.EVENTS:
+        return this._LiveEvents;
       case CONTENT_TYPE.EMPTY:
-      default: return null;
+      default:
+        return null;
     }
   }
 

@@ -46,7 +46,7 @@ export default class Keyboard extends Lightning.Component {
       })),
     }));
 
-    this.tag('Keyboard').patch({
+    this._Keyboard.patch({
       w: 400,
       h: 300,
       items: items,

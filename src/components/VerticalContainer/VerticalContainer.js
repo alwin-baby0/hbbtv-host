@@ -13,6 +13,7 @@ export default class VerticalContainer extends Lightning.Component {
   static _template() {
     return {
       Items: {
+        w: (w) => w,
         flex: {
           direction: 'column',
         },
@@ -29,7 +30,29 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   set _focusedIndex(val) {
-    return (this._focusedIndex = val);
+    this._focusedIndex = val;
+  }
+
+  $memberButtonIndexChange(val) {
+    this.Items.children[this._focusedIndex]._unfocus();
+    this._focusedIndex = val;
+  }
+
+  $horizontalContainerPosterIndexChange(val, verticalState) {
+    this.fireAncestors('$verticalContainerIndexChange', val);
+    this.fireAncestors('$updateVerticalState', verticalState);
+    this.Items.children[this._focusedIndex]?._unfocus();
+    this._focusedIndex = val;
+    this.Items.children[this._focusedIndex]?._focus();
+    this._reCalibrateScroll(this._focusedIndex, val); //this fixes the problem when hovering first row from below
+  }
+
+  handleFocusedIndex(val) {
+    //dzoni fja
+    this._handleCarryFocus(this._focusedIndex, val);
+    this._reCalibrateScroll(this._focusedIndex, val);
+    this._focusedIndex = val;
+    this.fireAncestors('$verticalContainerIndexChange', val);
   }
 
   /**
@@ -43,7 +66,6 @@ export default class VerticalContainer extends Lightning.Component {
       this._props = { ...this._props, items };
 
       this._focusedIndex = -1;
-      this._scrollPosition = 0;
       this.Items.y = 0;
 
       this.Items.childList.clear();
@@ -58,34 +80,97 @@ export default class VerticalContainer extends Lightning.Component {
     }
   }
 
-  _reCalibrateScroll() {
-    const { enableScroll } = this._props;
-    if (!enableScroll) return;
-    this.stage.update();
-
-    const currentFocus = this.Items.children[this._focusedIndex];
-
-    if (!currentFocus) return;
-
-    if (this._focusedIndex === 0) {
-      this.Items.patch({ y: 0 });
-    } else {
-      this.Items.patch({
-        y: -this._focusedIndex * currentFocus.finalH + this.finalH / 2 - currentFocus.finalH / 2,
-      });
-    }
-  }
-
   _getFocused() {
     return this.Items?.children?.[this._focusedIndex];
   }
 
+  throttle(func, limit) {
+    let inThrottle;
+    return function () {
+      const args = arguments;
+      const context = this;
+      if (!inThrottle) {
+        func.apply(context, args);
+        inThrottle = true;
+        setTimeout(() => (inThrottle = false), limit);
+      }
+    };
+  }
+
+  handleDownEPG = this.throttle(() => {
+    const { items } = this._props;
+
+    if (this._focusedIndex < items.length - 1) {
+      this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
+      this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
+      this._focusedIndex += 1;
+      this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+    } else {
+      return false;
+    }
+    return true;
+  }, 50);
+
+  _handleScroll(event) {
+    if (this.hasFocus()) {
+      if (event.deltaY > 0) {
+        const { items } = this._props;
+        if (items && items[0].channelId) {
+          return this.handleDownEPG();
+        } else {
+          return this.handleDown();
+        }
+      } else if (event.deltaY < 0) {
+        if (this._focusedIndex === 0) {
+          this.fireAncestors('$setStateOnScroll', 'Hero');
+        } else {
+          return this.handleUp();
+        }
+      }
+    }
+  }
+
   _handleDown() {
     const { items } = this._props;
-    if (this._focusedIndex < items.length - 1) {
-      this._focusedIndex += 1;
-      this._reCalibrateScroll();
-      this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+    if (items && items[0].channelId) {
+      return this.handleDownEPG();
+    } else {
+      return this.handleDown();
+    }
+  }
+
+  handleDown() {
+    if (this._focusedIndex < this.Items.children.length - 1) {
+      if (this.Items.children[this._focusedIndex + 1]._props?.cardType === 'BANNER') {
+        this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 2);
+        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 2);
+        this._focusedIndex += 2;
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+      } else {
+        this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 1);
+        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 1);
+        this._focusedIndex += 1;
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex, this.ref);
+      }
+    } else {
+      return false;
+    }
+    return true;
+  }
+
+  handleUp() {
+    if (this._focusedIndex > 0) {
+      if (this.Items.children[this._focusedIndex - 1]._props?.cardType === 'BANNER') {
+        this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 2);
+        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 2);
+        this._focusedIndex -= 2;
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+      } else {
+        this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 1);
+        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 1);
+        this._focusedIndex -= 1;
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+      }
     } else {
       return false;
     }
@@ -93,14 +178,7 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleUp() {
-    if (this._focusedIndex > 0) {
-      this._focusedIndex -= 1;
-      this._reCalibrateScroll();
-      this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
-    } else {
-      return false;
-    }
-    return true;
+    return this.handleUp();
   }
 
   _appendItems(items) {
@@ -112,18 +190,76 @@ export default class VerticalContainer extends Lightning.Component {
     this.stage.update();
   }
 
-  $horizontalContainerIndexChange(newIndex) {
-    if (this._props.carryRowPosition && this.Items.children.length > 1) {
-      this.Items.children.forEach((child) => {
-        const focusedContainer = this.Items.children[this._focusedIndex];
-        const focusedItem = focusedContainer.Items.children[focusedContainer._focusedIndex];
-        if (focusedItem) {
-          child._setFocusedIndex(getClosestElementIndex(child, focusedItem));
-        } else {
-          child._setFocusedIndex(newIndex);
-        }
+  _removeLastItems(count) {
+    const { items } = this._props;
+
+    if (items.length >= count) {
+      // Remove last `count` items from _props.items
+      this._props.items.splice(-count, count);
+
+      // Remove last `count` items from the visual container
+      for (let i = 0; i < count; i++) {
+        this.Items.childList.removeAt(this.Items.children.length - 1);
+      }
+
+      this.stage.update();
+    }
+  }
+
+  _clear() {
+    this._props.items = [];
+    this.Items.childList.clear();
+    this._focusedIndex = 0;
+    this._scrollPosition = 0;
+    this.Items.y = 0;
+    this.stage.update();
+  }
+
+  /**
+   * move items container to the side if there are more items off the screen
+   * @param {number} oldIndex
+   * @param {number} newIndex
+   */
+  _reCalibrateScroll(oldIndex, newIndex) {
+    const { enableScroll } = this._props;
+    if (!enableScroll) return;
+
+    this.stage.update();
+
+    const currentFocus = this.Items.children[newIndex];
+    const prevFocus = this.Items.children[oldIndex];
+
+    if (!currentFocus) return;
+
+    if (newIndex === 0) {
+      this._scrollPosition = 0;
+      this.Items.patch({ y: 0 });
+    } else {
+      const multiplier = oldIndex - newIndex;
+      this._scrollPosition += multiplier * prevFocus.finalH;
+      this.Items.patch({
+        y: Math.min(this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition, 0),
       });
     }
-    this.fireAncestors('$horizontalContainerIndexChange', newIndex);
+  }
+
+  /**
+   * carry the focus to next container
+   * @param {number} oldIndex
+   * @param {number} newIndex
+   */
+  _handleCarryFocus(oldIndex, newIndex, closestElementFunction = getClosestElementIndex) {
+    if (this._props.carryRowPosition && this.Items.children.length > 1) {
+      const nextContainer = this.Items.children[newIndex];
+      if (nextContainer.Items) {
+        const previousContainer = this.Items.children[oldIndex];
+        const previouslyFocusedItem =
+          previousContainer.Items.children[previousContainer._focusedIndex];
+
+        nextContainer._setFocusedIndex(
+          closestElementFunction(nextContainer, previouslyFocusedItem)
+        );
+      }
+    }
   }
 }
