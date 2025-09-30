@@ -162,6 +162,147 @@ const getNetgemInfo = () => {
   };
 };
 
+const getFoxxumInfo = () => {
+  let serialNumber = localStorage.getItem('foxxumDeviceID');
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('foxxumDeviceID', serialNumber);
+  }
+
+  const userAgent = navigator.userAgent;
+  const regex = /Model\/([^()]+)/;
+  const match = userAgent.match(regex);
+
+  let brand, model, os, osVersion;
+
+  if (match) {
+    const matchParts = match[1].split(' ');
+
+    const brandDetails = matchParts[0].split('-');
+    brand = brandDetails[0];
+    model = brandDetails[1];
+
+    const osDetails = matchParts[1].split('/');
+    os = osDetails[0];
+    osVersion = osDetails[1];
+  } else {
+    brand = 'Foxxum';
+    model = 'unknown-model';
+    os = 'unknown';
+    osVersion = 'unknown';
+  }
+
+  return {
+    serialNumber: serialNumber,
+    model: model,
+    brand: brand,
+    os: os,
+    osVersion: osVersion,
+    macAddress: 'unknown',
+  };
+};
+
+const getSunriseInfo = () => {
+  let serialNumber = localStorage.getItem('sunriseDeviceID');
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('sunriseDeviceID', serialNumber);
+  }
+
+  const userAgent = navigator.userAgent;
+  // Regex to capture MN and FV
+  const regex = /MN=([^;]+);.*FV=([^;]+);/;
+  const match = userAgent.match(regex);
+
+  return {
+    serialNumber: serialNumber,
+    model: match ? match[1].trim() : 'Sunrise',
+    brand: 'Sunrise',
+    os: 'Linux',
+    osVersion: match ? match[2].trim() : '',
+    macAddress: 'unknown',
+  };
+};
+
+const getMetrologicalInfo = () => {
+  let serialNumber = localStorage.getItem('metrologicalDeviceID');
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('metrologicalDeviceID', serialNumber);
+  }
+
+  const userAgent = navigator.userAgent;
+  const userAgentSplit = userAgent.split(' ');
+
+  const model = userAgentSplit[userAgentSplit.length - 2];
+
+  return {
+    serialNumber: serialNumber,
+    model: model,
+    brand: 'ComCast',
+    os: 'Entertainment OS',
+    osVersion: 'unknown',
+    macAddress: 'unknown',
+  };
+};
+
+const getXperiInfo = () => {
+  let serialNumber = localStorage.getItem('xperiDeviceID');
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('xperiDeviceID', serialNumber);
+  }
+
+  return {
+    serialNumber: serialNumber,
+    model: 'model-unknown',
+    brand: 'Xperi',
+    os: 'TiVo',
+    osVersion: 'unknown',
+    macAddress: 'unknown',
+  };
+};
+
+const getNetrangeInfo = () => {
+  let serialNumber = localStorage.getItem('netrangeDeviceID');
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('netrangeDeviceID', serialNumber);
+  }
+
+  return {
+    serialNumber: serialNumber,
+    model: 'model-unknown',
+    brand: 'Netrange',
+    os: 'Netrange',
+    osVersion: 'unknown',
+    macAddress: 'unknown',
+  };
+};
+
+const getOcilionInfo = () => {
+  let serialNumber = localStorage.getItem('ocilionDeviceID');
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem('ocilionDeviceID', serialNumber);
+  }
+
+  return {
+    serialNumber: serialNumber,
+    model: 'model-unknown',
+    brand: 'Ocilion',
+    os: 'Ocilion',
+    osVersion: 'unknown',
+    macAddress: 'unknown',
+  };
+};
+
 const getWebInfo = () => {
   let serialNumber = localStorage.getItem('webDeviceID');
 
@@ -171,7 +312,7 @@ const getWebInfo = () => {
   }
 
   return {
-    serialNumber: generateRandomUUID(),
+    serialNumber: serialNumber,
     model: 'simulated-model',
     brand: 'simulated-brand',
     os: 'Web',
@@ -199,10 +340,22 @@ const setUpDeviceInfo = async (deviceType) => {
       return await getWebOSInfo();
     case 'titan':
       return getTitanInfo();
-    case 'web':
-      return getWebInfo();
     case 'netgem':
       return getNetgemInfo();
+    case 'netrange':
+      return getNetrangeInfo();
+    case 'xperi':
+      return getXperiInfo();
+    case 'ocillion':
+      return getOcilionInfo();
+    case 'foxxum':
+      return getFoxxumInfo();
+    case 'sunrise':
+      return getSunriseInfo();
+    case 'metrological':
+      return getMetrologicalInfo();
+    case 'web':
+      return getWebInfo();
     default: {
       console.warn('Unknown device');
       return getWebInfo();
