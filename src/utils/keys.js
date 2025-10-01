@@ -79,7 +79,6 @@ export const setupKeys = (deviceType) => {
     case 'xperi':
       return {
         8: 'Back',
-        27: 'Back',
         461: 'Back',
         17: 'Back',
         463: 'MediaPlayPause',
@@ -89,12 +88,24 @@ export const setupKeys = (deviceType) => {
         463: 'MediaPause',
         413: 'MediaStop',
       };
+    case 'sunrise':
+      return {
+        8: 'Back',
+        27: 'Back',
+        461: 'Back',
+        17: 'Back',
+        57: 'MediaPlayPause',
+        54: 'MediaRewind',
+        53: 'MediaFastForward',
+        55: 'MediaPlay',
+        56: 'MediaPause',
+        52: 'MediaStop',
+      };
     default:
       // Ocilion Key Codes
       // 461 || 17: 'Back',
       return {
         8: 'Back',
-        27: 'Back',
         461: 'Back',
         17: 'Back',
         57: 'MediaPlayPause',
