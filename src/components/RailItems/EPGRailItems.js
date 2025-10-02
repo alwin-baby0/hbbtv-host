@@ -7,6 +7,8 @@ export default class EPGRailItems extends Lightning.Component {
     lastClickedItemId: 0,
   };
 
+  selectEPGTimeout = null;
+
   static _template() {
     return {
       collision: true,
@@ -39,15 +41,7 @@ export default class EPGRailItems extends Lightning.Component {
   _selectButton(id, lastId) {
     this._props.lastClickedItemId = id;
 
-    if (id === lastId) {
-      VideoPlayer.close();
-      this.fireAncestors('$unpunchHole');
-      Router.navigate('player', {
-        videoUrl: this._props.content.src,
-        duration: 0,
-        videoType: 'Stream now',
-      });
-    } else {
+    if (id !== lastId) {
       this.fireAncestors('$updateChannel', this._props);
     }
   }
@@ -161,9 +155,18 @@ export default class EPGRailItems extends Lightning.Component {
         Colors('#A61619').get()
       ),
     });
+
+    this.selectEPGTimeout = setTimeout(() => {
+      this.selectEPG();
+    }, 2000);
   }
 
   _unfocus() {
+    if (this.selectEPGTimeout) {
+      clearTimeout(this.selectEPGTimeout);
+      this.selectEPGTimeout = null;
+    }
+
     this._lastClickedItemId = null;
     this._props.isActive !== true
       ? this._Wrapper.patch({
@@ -190,7 +193,7 @@ export default class EPGRailItems extends Lightning.Component {
         });
   }
 
-  _handleEnter() {
+  selectEPG() {
     const currentItemId = this._props.id; // Assume each item has a unique ID in props
 
     // Save the current ID as lastId before calling $selectedEPG
@@ -203,6 +206,16 @@ export default class EPGRailItems extends Lightning.Component {
     // Update the lastClickedItemId with the current one
     this._props.lastClickedItemId = currentItemId;
     this._props.lastId = currentItemId; // Save the current ID as the last ID
+  }
+
+  _handleEnter() {
+    VideoPlayer.close();
+    this.fireAncestors('$unpunchHole');
+    Router.navigate('player', {
+      videoUrl: this._props.content.src,
+      duration: 0,
+      videoType: 'Stream now',
+    });
   }
 
   _handleHover() {
