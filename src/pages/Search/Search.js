@@ -221,6 +221,10 @@ export default class Search extends Lightning.Component {
     Router.focusPage();
   }
 
+  _handleBack() {
+    Router.navigate('home');
+  }
+
   static _states() {
     return [
       class Input extends this {

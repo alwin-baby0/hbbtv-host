@@ -91,6 +91,10 @@ export default class HelpScreen extends lng.Component {
     this._setState('HelpItems');
   }
 
+  _handleBack() {
+    Router.navigate('home');
+  }
+
   $setFocus(id) {
     const { lastId } = this._props;
 

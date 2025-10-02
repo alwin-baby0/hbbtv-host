@@ -286,8 +286,10 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _handleBack() {
+    console.log('back');
     this.fireAncestors('$unpunchHole');
-    return false;
+
+    Router.navigate('home');
   }
 
   $updateChannel(singleChannel) {

@@ -899,7 +899,9 @@ export default class Player extends lng.Component {
     e.preventDefault();
 
     console.log('routerHistory in player back: ', Router.getHistory());
-    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    const router = Router.getHistory().filter(
+      (history) => history.hash != 'splash' && history.hash != 'cmp'
+    );
     Router.setHistory([...router]);
 
     this.handleBackHelper();

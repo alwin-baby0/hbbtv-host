@@ -26,6 +26,7 @@ const fetchChannels = async (page) => {
         const matchingEpg = EPGService.epgs.find((epgInfo) => {
           return epgInfo.channelId === channelInfo.id;
         });
+        console.log(matchingEpg);
         const rails = constructRails(matchingEpg);
 
         page._EPGData._appendItems(rails);

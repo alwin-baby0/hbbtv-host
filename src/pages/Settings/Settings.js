@@ -461,6 +461,10 @@ export default class Settings extends Lightning.Component {
     ]);
   }
 
+  _handleBack() {
+    Router.navigate('home');
+  }
+
   static _states() {
     return [
       class DefaultState extends this {
