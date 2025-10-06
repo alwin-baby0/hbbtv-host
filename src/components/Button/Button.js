@@ -20,10 +20,10 @@ export default class Button extends Lightning.Component {
     return {
       flex: { direction: 'row', alignItems: 'center' },
       Icon: {
-        x: 50,
+        x: 20,
       },
       Label: {
-        x: 60,
+        x: 30,
         h: 25,
         color: Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
         Text: {
