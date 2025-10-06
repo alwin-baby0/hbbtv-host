@@ -258,12 +258,24 @@ const getXperiInfo = () => {
     localStorage.setItem('xperiDeviceID', serialNumber);
   }
 
+  const uaString = navigator.userAgent;
+
+  let osVersion = 'unknown';
+  let brand = 'Xperi';
+
+  const re = /TiVoOS\/([^\s\)]+)\s*\([^)]*;([^;\)]+)/i;
+  const match = uaString.match(re);
+  if (match) {
+    osVersion = match[1];
+    brand = match[2].trim();
+  }
+
   return {
     serialNumber: serialNumber,
     model: 'model-unknown',
-    brand: 'Xperi',
-    os: 'TiVo',
-    osVersion: 'unknown',
+    brand: brand,
+    os: 'TiVoOS',
+    osVersion: osVersion,
     macAddress: 'unknown',
   };
 };
