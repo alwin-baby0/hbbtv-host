@@ -1,10 +1,11 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { Row } from '@lightningjs/ui-components';
 import { Colors, Router, Utils } from '@lightningjs/sdk';
-import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
+import { getRouteNavbarIndex, VISIBLE_SPORT_COUNTRIES } from '../../../../utils/routesIndex';
 import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
 import { t } from '../../../../Services';
+import { CountryService } from '../../../../Services';
 
 export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
@@ -12,6 +13,7 @@ export default class SidebarItems extends Lightning.Component {
   _index = 0;
   _newIndex = 0;
   _menuItemRoutes = [];
+  _visibleSport = false;
 
   static _template() {
     return {
@@ -38,21 +40,25 @@ export default class SidebarItems extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _active() {
+  async _active() {
+    const location = await CountryService.getCountry();
+    console.log(location);
+    this._visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());
+
     // setTimeout is used to give time for url hash to change before asign the right one
     setTimeout(() => {
       const activeHash = Router.getActiveHash();
       // Check if activeHash contains both 'filtered' and 'movies'
       if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
-        this._index = getRouteNavbarIndex('filterPage/movie');
+        this._index = getRouteNavbarIndex('filterPage/movie', this._visibleSport);
         this._setSelected(this._index);
         return;
       } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
-        this._index = getRouteNavbarIndex('filterPage/series');
+        this._index = getRouteNavbarIndex('filterPage/series', this._visibleSport);
         this._setSelected(this._index);
         return;
       }
-      this._index = getRouteNavbarIndex(Router.getActiveHash());
+      this._index = getRouteNavbarIndex(Router.getActiveHash(), this._visibleSport);
       this._setSelected(this._index);
     });
 
@@ -60,13 +66,28 @@ export default class SidebarItems extends Lightning.Component {
       { id: 0, label: t('home'), route: 'home', icon: '' },
       { id: 1, label: t('movies'), route: 'vod/movies', icon: '' },
       { id: 2, label: t('series'), route: 'vod/series', icon: '' },
-      { id: 3, label: t('sport'), route: 'vod/sports', icon: '' },
-      { id: 4, label: t('live_tv'), route: 'live', icon: '' },
-      { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-      { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
-      { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
-      { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
     ];
+    this._visibleSport
+      ? menuItems.push(
+          ...[
+            { id: 3, label: t('sport'), route: 'vod/sports', icon: '' },
+            { id: 4, label: t('live_tv'), route: 'live', icon: '' },
+            { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
+            { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
+            { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
+            { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
+          ]
+        )
+      : menuItems.push(
+          ...[
+            { id: 3, label: t('live_tv'), route: 'live', icon: '' },
+            { id: 4, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
+            { id: 5, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
+            { id: 6, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
+            { id: 7, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
+          ]
+        );
+    console.log(menuItems);
 
     this._menuItemRoutes = menuItems.map((item) => item.route);
 
@@ -77,14 +98,14 @@ export default class SidebarItems extends Lightning.Component {
         return {
           type: SidebarItem,
           collision: true,
-          w: item.id < 5 ? 150 : 50,
+          w: this._visibleSport ? (item.id < 5 ? 150 : 50) : item.id < 4 ? 150 : 50,
           h: 70,
           props: {
             selected: false,
             index: item.id,
             data: item,
           },
-          extraItemSpacing: item.id === 4 ? 270 : 0,
+          extraItemSpacing: item.route === 'live' ? 270 : 0,
           color: Colors(colors.unfocus).get(),
         };
       }),
@@ -95,15 +116,15 @@ export default class SidebarItems extends Lightning.Component {
     const activeHash = Router.getActiveHash();
     // Check if activeHash contains both 'filtered' and 'movies'
     if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
-      this._index = getRouteNavbarIndex('filterPage/movie');
+      this._index = getRouteNavbarIndex('filterPage/movie', this._visibleSport);
       this._setSelected(this._index);
       return;
     } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
-      this._index = getRouteNavbarIndex('filterPage/series');
+      this._index = getRouteNavbarIndex('filterPage/series', this._visibleSport);
       this._setSelected(this._index);
       return;
     }
-    let focusedId = getRouteNavbarIndex(activeHash);
+    let focusedId = getRouteNavbarIndex(activeHash, this._visibleSport);
     this.$changePage(focusedId);
   }
 
@@ -136,15 +157,15 @@ export default class SidebarItems extends Lightning.Component {
   _updateFocus() {
     const activeHash = Router.getActiveHash();
     if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
-      this._index = getRouteNavbarIndex('filterPage/movie');
+      this._index = getRouteNavbarIndex('filterPage/movie', this._visibleSport);
       this._setSelected(this._index);
       return;
     } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
-      this._index = getRouteNavbarIndex('filterPage/series');
+      this._index = getRouteNavbarIndex('filterPage/series', this._visibleSport);
       this._setSelected(this._index);
       return;
     }
-    const newIndex = getRouteNavbarIndex(Router.getActiveHash());
+    const newIndex = getRouteNavbarIndex(Router.getActiveHash(), this._visibleSport);
     if (newIndex !== this._index) {
       this._setSelected(newIndex);
       this._index = newIndex;
