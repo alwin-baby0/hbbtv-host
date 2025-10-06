@@ -92,7 +92,8 @@ export default class HelpScreen extends lng.Component {
   }
 
   _handleBack() {
-    Router.navigate('home');
+    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.back();
   }
 
   $setFocus(id) {

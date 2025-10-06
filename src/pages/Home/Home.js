@@ -53,6 +53,8 @@ export default class Home extends Lightning.Component {
         this.fireAncestors('$setNavbarVisibility', false);
       });
     }
+
+    Router.setHistory([]);
   }
 
   /**
@@ -96,6 +98,7 @@ export default class Home extends Lightning.Component {
       return;
     }
     e.preventDefault();
+
     this.fireAncestors('$appClose');
   }
 

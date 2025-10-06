@@ -162,7 +162,15 @@ export default class SingleLiveEvent extends Lightning.Component {
     }
     e.preventDefault();
 
-    Router.navigate('vod/sports');
+    const routerHistory = Router.getHistory().filter(
+      (history) => history.hash != 'splash' && history.hash != 'cmp'
+    );
+
+    if (routerHistory.length) {
+      Router.back();
+    } else {
+      Router.navigate('home');
+    }
 
     this._setState('HeroSection');
   }

@@ -359,7 +359,15 @@ export default class SingleMovie extends Lightning.Component {
     }
     e.preventDefault();
 
-    Router.navigate('vod/movies');
+    const routerHistory = Router.getHistory().filter(
+      (history) => history.hash != 'splash' && history.hash != 'cmp'
+    );
+
+    if (routerHistory.length) {
+      Router.back();
+    } else {
+      Router.navigate('home');
+    }
   }
 
   async addToFavorite() {

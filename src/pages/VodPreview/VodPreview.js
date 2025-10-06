@@ -97,7 +97,8 @@ export default class VodPreview extends Lightning.Component {
   }
 
   _handleBack() {
-    Router.navigate('home');
+    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.back();
   }
 
   static _states() {
