@@ -17,7 +17,7 @@ export default class Button extends Lightning.Component {
         x: -10,
         zIndex: 10,
         texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/arrowLeft.svg'), 15, 15),
-        color: Colors(colors.focus).get(),
+        color: Colors(colors.unfocus).get(),
       },
       Title: {
         x: 10,
@@ -49,15 +49,6 @@ export default class Button extends Lightning.Component {
       flexItem: {
         shrink: false,
       },
-      texture: Lightning.Tools.getRoundRect(
-        w,
-        h,
-        radius,
-        strokeWidth,
-        Colors(colors.focusedHelpButton).get(),
-        true,
-        Colors(colors.focusedHelpButton).get()
-      ),
       Title: {
         text: {
           text: title.toUpperCase(),
@@ -71,17 +62,19 @@ export default class Button extends Lightning.Component {
     const { w, h, radius, strokeWidth } = this._props;
     this.patch({
       Icon: {
-        color: Colors(colors.white).get(),
+        color: Colors(colors.focus).get(),
       },
-      texture: Lightning.Tools.getRoundRect(
-        w,
-        h,
-        radius,
-        strokeWidth,
-        Colors(colors.focus).get(),
-        true,
-        Colors(colors.focus).get()
-      ),
+      texture: radius
+        ? Lightning.Tools.getRoundRect(
+            w,
+            h,
+            radius,
+            strokeWidth,
+            Colors(colors.focus).get(),
+            true,
+            Colors(colors.focus).get()
+          )
+        : {},
       Title: {
         text: {
           textColor: Colors(colors.unfocus).get(),
@@ -93,22 +86,24 @@ export default class Button extends Lightning.Component {
   _unfocus() {
     const { w, h, radius, strokeWidth } = this._props;
     this.patch({
-      texture: Lightning.Tools.getRoundRect(
-        w,
-        h,
-        radius,
-        strokeWidth,
-        Colors(colors.focusedHelpButton).get(),
-        true,
-        Colors(colors.focusedHelpButton).get()
-      ),
+      texture: radius
+        ? Lightning.Tools.getRoundRect(
+            w,
+            h,
+            radius,
+            strokeWidth,
+            Colors(colors.focusedHelpButton).get(),
+            true,
+            Colors(colors.focusedHelpButton).get()
+          )
+        : {},
       Title: {
         text: {
           textColor: Colors(colors.focus).get(),
         },
       },
       Icon: {
-        color: Colors(colors.focus).get(),
+        color: Colors(colors.unfocus).get(),
       },
     });
   }
@@ -126,6 +121,13 @@ export default class Button extends Lightning.Component {
   }
 
   async _handleEnter() {
-    Router.back();
+    const routerHistory = Router.getHistory().filter(
+      (history) => history !== 'splash' && history != 'cmp'
+    );
+    if (routerHistory.length) {
+      Router.back();
+    } else {
+      Router.navigate('home');
+    }
   }
 }

@@ -461,6 +461,11 @@ export default class Settings extends Lightning.Component {
     ]);
   }
 
+  _handleBack() {
+    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.back();
+  }
+
   static _states() {
     return [
       class DefaultState extends this {

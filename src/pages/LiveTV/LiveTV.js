@@ -286,8 +286,8 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _handleBack() {
-    this.fireAncestors('$unpunchHole');
-    return false;
+    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.back();
   }
 
   $updateChannel(singleChannel) {

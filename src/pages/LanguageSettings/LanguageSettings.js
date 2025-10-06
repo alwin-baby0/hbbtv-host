@@ -163,7 +163,7 @@ export default class LanguageSettings extends Lightning.Component {
               if (value.callback_url) {
                 const chosenValue = btnIndex === 0 ? 1 : 0;
                 await CMPService.selectCMPChoice(serialNumber, chosenValue);
-                await Router.navigate('home');
+                Router.navigate('home');
               } else {
                 Router.navigate('cmp-customize', { options: value.options });
               }
@@ -250,6 +250,11 @@ export default class LanguageSettings extends Lightning.Component {
   _active() {
     this._setState('DefaultState');
     this.$changeContent(0);
+  }
+
+  _handleBack() {
+    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.back();
   }
 
   static _states() {

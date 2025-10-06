@@ -83,9 +83,7 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   async _active() {
-    const router = Router.getHistory().filter((history) => history.hash != 'splash');
-
-    if (!router.length && !this._props.cmpShown) {
+    if (!this._props.cmpShown) {
       await CMPService.initialFetch();
       const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
       const currentTimeInMS = Math.floor(Date.now() / 1000);
@@ -258,15 +256,17 @@ export default class SingleSeries extends Lightning.Component {
       return;
     }
     e.preventDefault();
-    const router = Router.getHistory().filter(
+
+    const routerHistory = Router.getHistory().filter(
       (history) => history.hash != 'splash' && history.hash != 'cmp'
     );
-    if (router.length) {
-      Router.setHistory([...router]);
+
+    if (routerHistory.length) {
       Router.back();
     } else {
       Router.navigate('home');
     }
+
     this._setState('HeroSection');
   }
 

@@ -94,6 +94,7 @@ export default class CMPCustomize extends Lightning.Component {
           callback: async () => {
             if (button.label === 'close') {
               Router.back();
+              Router.setHistory([]);
             } else {
               console.log('refresh logic');
             }
