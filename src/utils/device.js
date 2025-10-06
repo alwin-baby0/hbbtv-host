@@ -25,6 +25,7 @@ const extractPhilipsModel = () => {
 };
 
 const getTizenInfo = () => ({
+  //Requires <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script> for older tizen OS versions
   serialNumber: webapis.productinfo.getDuid(),
   model: webapis.productinfo.getModel(),
   brand: 'samsung',
