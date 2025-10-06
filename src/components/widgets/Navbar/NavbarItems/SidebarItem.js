@@ -51,7 +51,7 @@ export default class SidebarItem extends lng.Component {
     };
 
     const { selected, index } = this._props;
-    const { label, icon } = this._props.data;
+    const { label, icon, route } = this._props.data;
     if (selected) {
       this.patch({
         Title: {
@@ -91,11 +91,11 @@ export default class SidebarItem extends lng.Component {
       });
     } else {
       this.patch({
-        w: index === 4 && label.length > 10 ? 200 : 150,
+        w: route === 'live' && label.length > 10 ? 200 : 150,
         Title: {
           text: {
             maxLines: 1,
-            wordWrapWidth: index === 4 && label.length > 10 ? 200 : 150,
+            wordWrapWidth: route === 'live' && label.length > 10 ? 200 : 150,
             fontFace: 'Montserrat-Regular',
             text: label.toUpperCase(),
           },
@@ -118,12 +118,12 @@ export default class SidebarItem extends lng.Component {
 
   _focus() {
     const { index } = this._props;
-    const { label, icon } = this._props.data;
+    const { label, icon, route } = this._props.data;
 
     setTimeout(() => {
       this.patch({
         Line: {
-          w: index === 4 && label.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni,
+          w: route === 'live' && label.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni,
           visible: true,
         },
         Icon: {

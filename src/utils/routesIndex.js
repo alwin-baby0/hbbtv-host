@@ -12,9 +12,51 @@ const ROUTES_INDEX = {
   help: 8,
 };
 
-export function getRouteNavbarIndex(route) {
+export function getRouteNavbarIndex(route, visibleSport) {
+  console.log(visibleSport);
+  const indexes = {
+    ...ROUTES_INDEX,
+    ...(!visibleSport && {
+      live: 3,
+      search: 4,
+      settings: 5,
+      langsettings: 6,
+      help: 7,
+    }),
+  };
+  !visibleSport && delete indexes['vod/sports'];
+  console.log(indexes);
   if (route) {
-    return ROUTES_INDEX[route] ?? 0;
+    return indexes[route] ?? 0;
   }
   return 0;
 }
+
+export const VISIBLE_SPORT_COUNTRIES = [
+  'de',
+  'at',
+  'ch',
+  'ae',
+  'bh',
+  'dj',
+  'dz',
+  'eg',
+  'iq',
+  'jo',
+  'kw',
+  'lb',
+  'ly',
+  'ma',
+  'mr',
+  'om',
+  'ps',
+  'qa',
+  'sa',
+  'sd',
+  'so',
+  'sy',
+  'tn',
+  'ye',
+  'th',
+  'my',
+];
