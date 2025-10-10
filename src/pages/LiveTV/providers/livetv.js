@@ -2,9 +2,11 @@ import { EPGService } from '../../../Services';
 import LiveChannelRailItem from '../../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../../utils';
 import { Router } from '@lightningjs/sdk';
+
 const liveTV = {
   timestamp: 0,
 };
+
 const fetchChannels = async (page) => {
   if (
     liveTV.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
@@ -32,7 +34,7 @@ const fetchChannels = async (page) => {
         return {
           type: LiveChannelRailItem,
           channelInfo: channelInfo,
-          channelEPG: matchingEpg || {}, // No need for || {}, as matchingEpg is already checked
+          channelEPG: matchingEpg,
           w: 190,
           h: 105,
           channelIndex: index,
@@ -52,6 +54,7 @@ const fetchChannels = async (page) => {
     };
   }
 };
+
 export default async function (page) {
   await fetchChannels(page);
   page._EPGData.setInitialOffset();

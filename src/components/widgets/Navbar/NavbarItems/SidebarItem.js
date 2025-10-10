@@ -50,7 +50,7 @@ export default class SidebarItem extends lng.Component {
       ...props,
     };
 
-    const { selected, index } = this._props;
+    const { selected } = this._props;
     const { label, icon, route } = this._props.data;
     if (selected) {
       this.patch({
@@ -117,7 +117,6 @@ export default class SidebarItem extends lng.Component {
   }
 
   _focus() {
-    const { index } = this._props;
     const { label, icon, route } = this._props.data;
 
     setTimeout(() => {

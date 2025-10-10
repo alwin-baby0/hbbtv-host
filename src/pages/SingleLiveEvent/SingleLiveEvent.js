@@ -5,6 +5,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { CMPService, t } from '../../Services';
+import { EVENT_NAMES } from '../../constants/globalConstants';
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
@@ -130,7 +131,7 @@ export default class SingleLiveEvent extends Lightning.Component {
 
     const { galleryItem } = this._props;
 
-    eventTrackPayload('view_stream', galleryItem.id);
+    eventTrackPayload(EVENT_NAMES.VIEW_STREAM, galleryItem.id);
   }
 
   _getFocused() {

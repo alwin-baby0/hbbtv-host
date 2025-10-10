@@ -4,6 +4,8 @@ import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
+import { EVENT_NAMES, LOCAL_STORAGE_KEYS, VIDEO_TYPES } from '../../constants/globalConstants';
+import { VOD_PREVIEW_TYPES } from '../utils';
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
@@ -62,7 +64,7 @@ export default class SingleSeries extends Lightning.Component {
       if (favorited) {
         await CMPService.removeFromFavorites(seriesId);
       } else {
-        await CMPService.addToFavorites(seriesId, 'series');
+        await CMPService.addToFavorites(seriesId, VOD_PREVIEW_TYPES.SERIES);
       }
 
       this._props.favorited = !this._props.favorited;
@@ -77,7 +79,6 @@ export default class SingleSeries extends Lightning.Component {
         },
       });
     } catch (e) {
-      //skip
       console.log('error', e);
     }
   }
@@ -111,7 +112,7 @@ export default class SingleSeries extends Lightning.Component {
     } = this._props;
     const { id } = galleryItem;
 
-    eventTrackPayload('view_serie', id);
+    eventTrackPayload(EVENT_NAMES.VIEW_SERIE, id, seriesId);
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
@@ -136,7 +137,7 @@ export default class SingleSeries extends Lightning.Component {
     const isValidPosition =
       position !== undefined && position !== null && !isNaN(position) && position > 0;
 
-    if (localStorage.getItem('userData')) {
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       if (isValidPosition) {
         this._HeroSection._Info.patch(
           {
@@ -158,7 +159,7 @@ export default class SingleSeries extends Lightning.Component {
                         Router.navigate('player', {
                           videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
                           duration: duration,
-                          videoType: 'series',
+                          videoType: VIDEO_TYPES.SERIES,
                           seriesID: seriesId,
                           videoId: lastPlayedId,
                           continueTime: position,
@@ -248,8 +249,6 @@ export default class SingleSeries extends Lightning.Component {
   $updateVerticalState(nextState) {
     this._setState(nextState);
   }
-
-  _getFocused() {}
 
   _handleBack(e) {
     if (Router.isNavigating()) {

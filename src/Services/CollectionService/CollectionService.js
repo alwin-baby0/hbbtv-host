@@ -1,6 +1,7 @@
 import { V2 } from '../utils';
 import { parseCollectionData } from '../../Models';
 import FetchingService from '../FetchingService';
+import { API_METHODS } from '../../constants/globalConstants';
 
 class CollectionService extends FetchingService {
   #collectionItem;
@@ -27,7 +28,7 @@ class CollectionService extends FetchingService {
     this._request({
       url: '/getCollection',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: collectionId,
       },

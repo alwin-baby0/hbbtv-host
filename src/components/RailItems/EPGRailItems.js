@@ -1,5 +1,6 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
+import { VIDEO_TYPES } from '../../constants/globalConstants';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
@@ -70,7 +71,7 @@ export default class EPGRailItems extends Lightning.Component {
     this._epgWidth = width - 5;
 
     const fixedWidth = this._epgWidth > 200 ? this._epgWidth : this._epgWidth;
-    const fixedWidth1 = this._epgWidth > 200 ? this._epgWidth - 20 : this._epgWidth - 50;
+    const fixedWordWrapWidth = this._epgWidth > 200 ? this._epgWidth - 20 : this._epgWidth - 50;
 
     this._Wrapper.patch({
       w: this._epgWidth,
@@ -83,7 +84,7 @@ export default class EPGRailItems extends Lightning.Component {
           },
           text: {
             text: this._props.title,
-            wordWrapWidth: fixedWidth1,
+            wordWrapWidth: fixedWordWrapWidth,
             maxLines: 1,
             fontSize: 20,
             fontFace: 'Montserrat-SemiBold',
@@ -214,7 +215,7 @@ export default class EPGRailItems extends Lightning.Component {
     Router.navigate('player', {
       videoUrl: this._props.content.src,
       duration: 0,
-      videoType: 'Stream now',
+      videoType: VIDEO_TYPES.STREAM_NOW,
     });
   }
 

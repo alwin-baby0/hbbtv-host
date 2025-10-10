@@ -27,9 +27,9 @@ const getGenresInfo = async (page, props) => {
   const title = props?.title?.toUpperCase();
   let searchType;
   if (type === FILTER_TYPES.MOVIE) {
-    searchType = 'movie';
+    searchType = FILTER_TYPES.MOVIE;
   } else if (type === FILTER_TYPES.SERIES) {
-    searchType = 'series';
+    searchType = FILTER_TYPES.SERIES;
   } else {
     searchType = 'unknown';
   }
@@ -84,7 +84,7 @@ const getGenresInfo = async (page, props) => {
       filtered.items = items;
     } else {
       filtered.items = [];
-      filtered.title = 'NOTHING';
+      filtered.title = `No ${searchType} found`;
     }
 
     page._Title.text = filtered.title;
@@ -111,6 +111,7 @@ const getGenresInfo = async (page, props) => {
     });
   }
 };
+
 export default async function (page, props) {
   await getGenresInfo(page, props);
 }

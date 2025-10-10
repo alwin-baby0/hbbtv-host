@@ -1,6 +1,7 @@
 // HorizontalContainer.js
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
+import { CARD_TYPES } from '../../constants/globalConstants';
 
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
@@ -108,15 +109,14 @@ export default class HorizontalContainer extends Lightning.Component {
       } else {
         this._focusedIndex = items?.length > 0 ? 0 : -1;
       }
-      // todo: change to paddingLeft
-      if (cardType === 'EPG_CARD_ITEM') {
+
+      if (cardType === CARD_TYPES.EPG_CARD_ITEM) {
         this.Items.children[0].patch({
           flex: {
             paddingLeft: this._props.paddingLeft,
           },
         });
 
-        //todo: check
         this._scrollPosition = this._props.paddingLeft + this.w || 0;
       }
     }

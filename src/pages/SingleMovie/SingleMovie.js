@@ -5,6 +5,7 @@ import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { Column, Row } from '@lightningjs/ui-components';
 import { eventTrackPayload } from '../../utils/device';
+import { EVENT_NAMES, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};
@@ -257,7 +258,7 @@ export default class SingleMovie extends Lightning.Component {
       ? buttons.filter((button) => button.buttonName !== 'TRAILER')
       : buttons;
 
-    if (localStorage.getItem('userData')) {
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       filteredButtons.push({
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonName: 'FAVORITE',
@@ -276,7 +277,7 @@ export default class SingleMovie extends Lightning.Component {
 
     const rows = [];
 
-    const languageCode = localStorage.getItem('languageCode');
+    const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
 
     const itemsInRow = languageCode === 'fr' ? 2 : 3;
 
@@ -348,7 +349,7 @@ export default class SingleMovie extends Lightning.Component {
 
     this._setState('Buttons');
 
-    eventTrackPayload('view_movie', movieId);
+    eventTrackPayload(EVENT_NAMES.VIEW_MOVIE, movieId);
 
     this.fireAncestors('$unpunchHole');
   }

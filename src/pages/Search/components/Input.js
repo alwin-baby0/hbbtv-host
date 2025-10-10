@@ -43,7 +43,6 @@ export default class InputField extends lng.Component {
         color: Colors('#ffffff').alpha(0.3).get(),
         Text: {
           text: {
-            // text: 'Search',
             fontSize: 32,
             lineHeight: 40,
             textColor: Colors('#ffffff').alpha(0.3).get(),

@@ -8,6 +8,7 @@ import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
+import { LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 
 export default class Settings extends Lightning.Component {
   _contentId = 0;
@@ -90,7 +91,8 @@ export default class Settings extends Lightning.Component {
   }
 
   _enable() {
-    if (!localStorage.getItem('languageCode')) localStorage.setItem('languageCode', 'en');
+    if (!localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE))
+      localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, 'en');
   }
 
   _active() {
@@ -221,7 +223,7 @@ export default class Settings extends Lightning.Component {
 
         window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
 
-        if (!localStorage.getItem('userData')) {
+        if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
           await CMPService.setDeviceCodeStatusInterval(device_code);
           const qrCode = verification_uri.url;
 
@@ -414,8 +416,8 @@ export default class Settings extends Lightning.Component {
           },
         });
       } else if (contentId === 3) {
-        CMPService.revokeToken(localStorage.getItem('userData').access_token);
-        localStorage.removeItem('userData');
+        CMPService.revokeToken(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA).access_token);
+        localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         CMPService.clearPollingInterval();
         this.$setFocus(0);
         this._Column._removeLastItems(3);

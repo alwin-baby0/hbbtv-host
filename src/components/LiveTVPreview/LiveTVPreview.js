@@ -3,6 +3,7 @@ import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import LiveTVPlayer from '../../pages/LiveTV/components/LiveTVPlayer';
 import ProgressBar from '../../pages/Player/components/ProgressBar/ProgressBar';
 import colors from '../../../reskin/colors.json';
+import { t } from '../../Services';
 
 export default class LiveTVPreview extends Lightning.Component {
   _props = {};
@@ -125,7 +126,7 @@ export default class LiveTVPreview extends Lightning.Component {
         },
         Message: {
           text: {
-            text: 'There was a problem playing this video, please try again later or contact support at support@wedotv.com.',
+            text: t('no_stream'),
             fontSize: 36,
             wordWrapWidth: 700,
             textAlign: 'center',

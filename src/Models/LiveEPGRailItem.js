@@ -1,3 +1,4 @@
+import { RAIL_TYPES } from '../constants/globalConstants';
 import { LiveChannelsRailItem } from './LiveChannelsRailItem';
 
 class LiveEPGRailItem extends LiveChannelsRailItem {
@@ -11,7 +12,7 @@ class LiveEPGRailItem extends LiveChannelsRailItem {
     this.summary = summary;
 
     switch (this.type) {
-      case 'livechannel':
+      case RAIL_TYPES.LIVE_CHANNEL:
         this.url = ``;
         break;
       default:

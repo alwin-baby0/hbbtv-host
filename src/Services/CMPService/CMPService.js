@@ -1,3 +1,4 @@
+import { API_METHODS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import { getDeviceInfo } from '../../utils/device';
 import FetchingService from '../FetchingService';
 import { V2, auth } from '../utils';
@@ -25,17 +26,14 @@ class CMPService extends FetchingService {
 
   async setDeviceCodeStatusInterval(deviceCode) {
     try {
-      let authCode = '';
-      console.log('device code:', deviceCode);
-
-      if (!localStorage.getItem('userData')) {
+      if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
         this._intervalId = setInterval(async () => {
           try {
             const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
             console.log('statusResponse', statusResponse.data);
 
             if (statusResponse.data.status === 'approved') {
-              this.clearPollingInterval(this._intervalId); // Use the clear function
+              this.clearPollingInterval(this._intervalId);
               console.log('Device code status condition met, stopping the interval.');
               console.log('status:', statusResponse.data.status);
               console.log('autorization code:', statusResponse.data.authorization_code);
@@ -46,7 +44,7 @@ class CMPService extends FetchingService {
                 statusResponse.data.authorization_code,
                 timestamp
               );
-              localStorage.setItem('userData', JSON.stringify(tokenData.data));
+              localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(tokenData.data));
               const event = new CustomEvent('userLogIn');
               window.dispatchEvent(event);
             }
@@ -57,7 +55,7 @@ class CMPService extends FetchingService {
       }
     } catch (error) {
       console.error('Error fetching device code:', error);
-      this.clearPollingInterval(this._intervalId); // Use the clear function on error
+      this.clearPollingInterval(this._intervalId);
     }
   }
 
@@ -73,12 +71,12 @@ class CMPService extends FetchingService {
     const response = await this._request({
       url: `/cmp`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       headers: {
         'X-DEVICE-ID': deviceCode,
       },
       params: {
-        language: localStorage.getItem('languageCode') || 'en',
+        language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || 'en',
         device_id: deviceCode,
       },
     });
@@ -90,12 +88,12 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/cmp`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       headers: {
         'X-Device-ID': deviceCode,
       },
       params: {
-        language: localStorage.getItem('languageCode') || 'en',
+        language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || 'en',
         choice: choicePick,
         device_id: deviceCode,
       },
@@ -106,10 +104,10 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/device.php`,
       apiVersion: auth,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
-        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
-        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        client_id: process.env.APP_CMP_CLIENT_ID,
+        client_secret: process.env.APP_CMP_CLIENT_SECRET,
       },
     });
   };
@@ -118,10 +116,10 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/device-status.php`,
       apiVersion: auth,
-      method: 'POST',
+      method: API_METHODS.POST,
       params: {
-        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
-        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        client_id: process.env.APP_CMP_CLIENT_ID,
+        client_secret: process.env.APP_CMP_CLIENT_SECRET,
         device_code: deviceCode,
       },
     });
@@ -133,14 +131,14 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/token.php`,
       apiVersion: auth,
-      method: 'POST',
+      method: API_METHODS.POST,
       headers: {
         'X-nocache': timestamp,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       data: {
-        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
-        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        client_id: process.env.APP_CMP_CLIENT_ID,
+        client_secret: process.env.APP_CMP_CLIENT_SECRET,
         grant_type: 'authorization_code',
         code: authorizationCode,
       },
@@ -151,24 +149,24 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/revoke.php`,
       apiVersion: auth,
-      method: 'POST',
+      method: API_METHODS.POST,
       data: {
-        client_id: 'c8a895d28ee9c800298d4e55d4e75586e7cec291',
-        client_secret: 'b6d16f854b572ac95e3bd0a12ac6ed9d921767d7',
+        client_id: process.env.APP_CMP_CLIENT_ID,
+        client_secret: process.env.APP_CMP_CLIENT_SECRET,
         token: token,
       },
     });
   };
 
   getFavorites = async (page, limit = 8) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
     return await this._request({
       url: `/user/favorites`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.POST,
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
       },
@@ -181,14 +179,14 @@ class CMPService extends FetchingService {
   };
 
   addToFavorites = async (videoID, vodType) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
     return await this._request({
       url: `/user/favorites`,
       apiVersion: V2,
-      method: 'POST',
+      method: API_METHODS.POST,
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
         'X-nocache': timestamp,
@@ -205,14 +203,14 @@ class CMPService extends FetchingService {
   };
 
   removeFromFavorites = async (videoID) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
     return await this._request({
       url: `/user/favorites`,
       apiVersion: V2,
-      method: 'DELETE',
+      method: API_METHODS.DELETE,
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
         'X-nocache': timestamp,
@@ -228,14 +226,14 @@ class CMPService extends FetchingService {
   };
 
   getRecentlyWatched = async (page, limit = 8) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
     return await this._request({
       url: `/user/recently_watched`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
       },
@@ -248,7 +246,7 @@ class CMPService extends FetchingService {
   };
 
   addRecentlyWatched = async (videoID, vodType, vodPosition, seriesID) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
@@ -259,7 +257,7 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/user/recently_watched`,
       apiVersion: V2,
-      method: 'POST',
+      method: API_METHODS.POST,
       headers: {
         'X-nocache': timestamp,
         'X-Authorization': `Bearer ${userData.access_token}`,
@@ -275,14 +273,14 @@ class CMPService extends FetchingService {
   };
 
   deleteRecentlyWatched = async (videoID) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
     return await this._request({
       url: `/user/recently_watched`,
       apiVersion: V2,
-      method: 'DELETE',
+      method: API_METHODS.DELETE,
       headers: {
         'X-nocache': timestamp,
         'X-Authorization': `Bearer ${userData.access_token}`,

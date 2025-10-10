@@ -6,6 +6,7 @@ import { constructRails } from '../utils';
 import { HomePageService, SearchService, t } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
+import { CARD_TYPES, EVENT_NAMES, RAIL_TYPES } from '../../constants/globalConstants';
 
 const search = {
   items: [],
@@ -14,6 +15,8 @@ const search = {
 
 export default class Search extends Lightning.Component {
   searchTimeout;
+  numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+
   static _template() {
     return {
       w: 1920,
@@ -79,7 +82,13 @@ export default class Search extends Lightning.Component {
     return this.tag('Spinner');
   }
 
-  numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+  get _Input() {
+    return this.tag('Input');
+  }
+
+  get _Keyboard() {
+    return this.tag('Keyboard');
+  }
 
   _handleKey(key) {
     if (this.numberKeys.includes(key.key)) {
@@ -113,15 +122,17 @@ export default class Search extends Lightning.Component {
     }
     this.searchTimeout = setTimeout(() => {
       this.$updatedVOD();
-      this.searchTimeout = null;
     }, 1000);
   }
 
   _inactive() {
     this._Input._Input.listening = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
   }
 
-  async $updatedVOD(keyword, category) {
+  async $updatedVOD() {
     let inputValue = this._Input._Input.value.toLowerCase();
 
     this.patch({
@@ -140,7 +151,7 @@ export default class Search extends Lightning.Component {
         }
       });
 
-      eventTrackPayload('search', inputValue);
+      eventTrackPayload(EVENT_NAMES.SEARCH, inputValue);
     } else {
       await HomePageService.initialFetch();
       this.$changedVODGenre(HomePageService.stripes[0]);
@@ -153,8 +164,8 @@ export default class Search extends Lightning.Component {
       rows.push({
         items: data.items.slice(i, i + 6),
         railTitle: i === 0 ? data.railTitle : '',
-        cardType: 'POSTER',
-        railType: 'search',
+        cardType: CARD_TYPES.POSTER,
+        railType: RAIL_TYPES.SEARCH,
       });
     }
 
@@ -197,20 +208,12 @@ export default class Search extends Lightning.Component {
     this.$updatedVOD();
   }
 
-  get _Input() {
-    return this.tag('Input');
-  }
-
   $getInput() {
     return this._Input._Input;
   }
 
   $setFocusKeyboard() {
     this._setState('Keyboard');
-  }
-
-  get _Keyboard() {
-    return this.tag('Keyboard');
   }
 
   _active() {
@@ -306,7 +309,6 @@ export default class Search extends Lightning.Component {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
           this._extended = this._VODSection._focusedIndex > 0;
-          this._extended = false;
           this.patch({
             InputWrapper: {
               y: -550,

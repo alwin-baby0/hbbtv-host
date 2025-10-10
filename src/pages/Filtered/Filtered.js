@@ -102,14 +102,12 @@ export default class Filtered extends Lightning.Component {
         return 530;
       case CONTENT_TYPE.CATEGORIES:
         return 200;
-      case CONTENT_TYPE.EMPTY:
       default:
         return 80;
     }
   }
 
   $updateFilteredVerticalState(nextState) {
-    console.log('nextState', nextState);
     this._setState(nextState);
   }
 
@@ -264,7 +262,7 @@ export default class Filtered extends Lightning.Component {
           }
         }
 
-        async $verticalContainerIndexChange(index) {
+        async $verticalContainerIndexChange() {
           this.correctContainerSize();
         }
       },

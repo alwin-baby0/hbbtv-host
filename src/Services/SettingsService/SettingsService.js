@@ -1,12 +1,13 @@
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
+import { API_METHODS } from '../../constants/globalConstants';
 
 export default class SettingsService extends FetchingService {
   getPages = async () => {
     return await this._request({
       url: `/getPageTabs`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
     });
   };
 
@@ -14,7 +15,7 @@ export default class SettingsService extends FetchingService {
     return await this._request({
       url: `/getPage`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: pageId,
       },

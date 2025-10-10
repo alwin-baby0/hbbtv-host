@@ -7,6 +7,8 @@ import {
   parseHomePageHeroSection,
   parseHomePageRailData,
 } from '../../Models/parsers';
+import { API_METHODS } from '../../constants/globalConstants';
+
 class HomePageService extends FetchingService {
   #heroSectionItems;
   #stripes = [];
@@ -182,7 +184,7 @@ class HomePageService extends FetchingService {
     this._request({
       url: '/start',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         row: 1,
         page: page, // Use the passed page parameter
@@ -194,7 +196,7 @@ class HomePageService extends FetchingService {
     this._request({
       url: '/start',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         row,
         page,
@@ -206,7 +208,7 @@ class HomePageService extends FetchingService {
     this._request({
       url: '/ads',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
     }).then(parseBannerData);
 }
 

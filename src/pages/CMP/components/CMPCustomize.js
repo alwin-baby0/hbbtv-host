@@ -21,7 +21,7 @@ export default class CMPCustomize extends Lightning.Component {
           w: 1000,
           h: 50,
           text: {
-            text: 'We value you privacy',
+            text: t('cmp_title'),
             fontSize: 40,
             fontFace: 'Montserrat-Bold',
             lineHeight: 50,

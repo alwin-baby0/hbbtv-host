@@ -8,6 +8,7 @@ import {
 } from '../../Models/parsers';
 import { VOD_PREVIEW_TYPES } from '../../pages/utils';
 import { V2 } from '../utils';
+import { API_METHODS } from '../../constants/globalConstants';
 
 export const VODS_PER_ROW = 6;
 export const VOD_ROWS_PER_FETCH = 3;
@@ -22,9 +23,9 @@ class VodService extends FetchingService {
   };
 
   #initState = {
-    ['movies']: { ...this.#emptyState },
-    ['series']: { ...this.#emptyState },
-    ['sports']: { ...this.#emptyState },
+    [VOD_PREVIEW_TYPES.MOVIES]: { ...this.#emptyState },
+    [VOD_PREVIEW_TYPES.SERIES]: { ...this.#emptyState },
+    [VOD_PREVIEW_TYPES.SPORTS]: { ...this.#emptyState },
   };
 
   // type of vod to preview
@@ -174,7 +175,7 @@ class VodService extends FetchingService {
     await this._request({
       url: '/getGenres',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         category: vodType,
         type: `genres_${vodType}`,
@@ -185,7 +186,7 @@ class VodService extends FetchingService {
     await this._request({
       url: '/movies',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params,
     }).then(parseVodMoviesPageData);
 
@@ -193,7 +194,7 @@ class VodService extends FetchingService {
     await this._request({
       url: '/series',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params,
     }).then(parseSeriesPageData);
 
@@ -201,7 +202,7 @@ class VodService extends FetchingService {
     await this._request({
       url: '/sports',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params,
     }).then(parseSportsPageData);
 
@@ -209,7 +210,7 @@ class VodService extends FetchingService {
     await this._request({
       url: '/getSportEvents',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         type,
         language,

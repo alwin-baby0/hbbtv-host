@@ -57,7 +57,7 @@ export default class PosterRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle, placeholderSrc, index } = this._props;
+    const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;
 
     this.setProps({
       width: CARD_SIZES.POSTER.image_width,

@@ -31,26 +31,21 @@ export default class FocusableItem extends Lightning.Component {
   _focus() {
     const { radius, strokeWidth, width, height } = this._props;
 
-    setTimeout(() => {
-      //setTimeout fix the issue of same item hover problem
-      this._FocusBorder.patch({
-        texture: lng.Tools.getRoundRect(
-          width,
-          height,
-          radius,
-          strokeWidth,
-          Colors(colors.focus).get(),
-          false
-        ),
-      });
-    }, 0);
+    this._FocusBorder.patch({
+      texture: lng.Tools.getRoundRect(
+        width,
+        height,
+        radius,
+        strokeWidth,
+        Colors(colors.focus).get(),
+        false
+      ),
+    });
   }
 
   _unfocus() {
-    setTimeout(() => {
-      this._FocusBorder.patch({
-        texture: null,
-      });
-    }, 0);
+    this._FocusBorder.patch({
+      texture: null,
+    });
   }
 }

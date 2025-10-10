@@ -11,6 +11,7 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
+import { EVENT_NAMES } from '../../constants/globalConstants';
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -48,7 +49,6 @@ export default class LiveTV extends Lightning.Component {
           w: 1620,
           h: 460,
           clipping: true,
-
           TimeSlot: {
             h: 50,
             w: 1615,
@@ -251,7 +251,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _active() {
-    eventTrackPayload('browse_channels', 4);
+    eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 
     this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
@@ -338,7 +338,7 @@ export default class LiveTV extends Lightning.Component {
         return {
           type: LiveChannelRailItem,
           channelInfo: channelInfo,
-          channelEPG: matchingEpg || {}, // No need for || {}, as matchingEpg is already checked
+          channelEPG: matchingEpg,
           w: 190,
           h: 105,
           channelIndex: index,

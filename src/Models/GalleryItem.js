@@ -1,3 +1,5 @@
+import { t } from '../Services';
+
 class GalleryItem {
   constructor(data) {
     const { id, title, content, extensions, media_group, summary, type } = data;
@@ -7,7 +9,7 @@ class GalleryItem {
     this.title = title;
     this.summary = summary;
     this.trailerSrc = ''; // this is not returned by backend
-    this.buttonLabel = 'WATCH NOW';
+    this.buttonLabel = t('watch_now');
 
     this.type = type;
     this.trailerUrl = extensions.preview_playback;
@@ -82,7 +84,7 @@ class GalleryItem {
     this.thumbnails = [];
     this.landscapePosters = [];
     this.portraitPosters = [];
-    this.buttonLabel = 'WATCH NOW';
+    this.buttonLabel = t('watch_now');
 
     media_group[0]?.media_item?.forEach((item) => {
       switch (true) {

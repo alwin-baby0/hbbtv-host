@@ -2,7 +2,8 @@ import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { EPGRailItem } from '../../Models/utils/EPGRailItem';
 import { parseVodCategories } from '../../Models/parsers';
-import { RAIL_TYPES } from '../../pages/utils';
+import { RAIL_TYPES } from '../../constants/globalConstants';
+import { CARD_TYPES, API_METHODS } from '../../constants/globalConstants';
 
 export const EPG_ROWS_PER_FETCH = 10;
 class EPGService extends FetchingService {
@@ -31,7 +32,6 @@ class EPGService extends FetchingService {
     const getGenres = await this.#getContent();
     this.genreItems = getGenres;
 
-    // const channels = await this.#getLiveChannels();
     const channels = await this.#getGenresCategory('all');
 
     if (channels?.length > 0) {
@@ -121,7 +121,7 @@ class EPGService extends FetchingService {
           return this.#getEPG(channelId);
         } catch (error) {
           console.error(`Failed to get EPG for channelId ${channelId}`, error);
-          return null; // Handle the error appropriately
+          return null;
         }
       })
     );
@@ -184,22 +184,22 @@ class EPGService extends FetchingService {
     return await this.#getGenres();
   };
 
-  #getGenres = async (type, exclude) =>
+  #getGenres = async () =>
     await this._request({
       url: '/epg_genres',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         type: `channel`,
         exclude: 'movies,channel',
       },
     }).then((result) => parseVodCategories(result, 'live'));
 
-  #getGenresCategory = async (include, exclude) =>
+  #getGenresCategory = async (include) =>
     await this._request({
       url: '/epg_channels',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         include: include,
         exclude: 'channel',
@@ -218,7 +218,7 @@ class EPGService extends FetchingService {
     await this._request({
       url: `/epg_program`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: `${channelId}`,
       },
@@ -230,7 +230,7 @@ class EPGService extends FetchingService {
 
     return {
       railType: RAIL_TYPES.LIVETV,
-      cardType: 'POSTER',
+      cardType: CARD_TYPES.POSTER,
       items: railItems,
       itemsPerRow: 1,
     };
@@ -240,7 +240,7 @@ class EPGService extends FetchingService {
     this._request({
       url: '/epg_program',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: channelId,
       },
@@ -257,7 +257,7 @@ class EPGService extends FetchingService {
     });
     return {
       railType: data.type.value,
-      cardType: 'EPG_CARD_ITEM',
+      cardType: CARD_TYPES.EPG_CARD_ITEM,
       items: channelItem,
       channelId: channelId, // Include channelId in the returned object
     };

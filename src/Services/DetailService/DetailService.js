@@ -2,10 +2,11 @@ import { GalleryItem } from '../../Models';
 import { parseDetailsData, parseSeasonData } from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
+import { API_METHODS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
@@ -14,7 +15,7 @@ class DetailService extends FetchingService {
     return await this._request({
       url: `/getMovie`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       headers: headers,
       params: {
         _: timestamp,
@@ -24,7 +25,7 @@ class DetailService extends FetchingService {
   };
 
   getSerie = async (seriesId) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
@@ -33,7 +34,7 @@ class DetailService extends FetchingService {
     const galleryItem = await this._request({
       url: '/getSerie',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       headers: headers,
       params: {
         _: timestamp,
@@ -44,7 +45,7 @@ class DetailService extends FetchingService {
     const seasonTabs = await this._request({
       url: '/getSeasonTabs',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         _: timestamp,
         series_id: seriesId,
@@ -54,11 +55,10 @@ class DetailService extends FetchingService {
         if (data && data.entry) {
           return data.entry.map((tab) => tab.id);
         }
-        // Handle case when data or data.entry is undefined
+
         return [];
       })
       .catch((error) => {
-        // Handle the error appropriately
         console.error('Error fetching season tabs:', error);
         return [];
       });
@@ -67,7 +67,7 @@ class DetailService extends FetchingService {
       this._request({
         url: '/getSeason',
         apiVersion: V2,
-        method: 'GET',
+        method: API_METHODS.GET,
         params: {
           _: timestamp,
           season_id: id,
@@ -83,7 +83,6 @@ class DetailService extends FetchingService {
       };
     } catch (error) {
       console.error('Error fetching seasons:', error);
-      // Handle or throw the error based on your application's error handling policy
       throw error;
     }
   };
@@ -92,13 +91,13 @@ class DetailService extends FetchingService {
     this._request({
       url: '/getAdcues',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         video_id: videoId,
         series_id: seriesId,
         video_url: videoUrl,
-      }
-    })
+      },
+    });
 
   getSport = async (sportId) => {
     return await this.getSerie(sportId);
@@ -108,7 +107,7 @@ class DetailService extends FetchingService {
     this._request({
       url: '/getSportEvent',
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: eventId,
       },

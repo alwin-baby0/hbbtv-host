@@ -1,7 +1,8 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { Row } from '@lightningjs/ui-components';
 import { Colors, Router, Utils } from '@lightningjs/sdk';
-import { getRouteNavbarIndex, VISIBLE_SPORT_COUNTRIES } from '../../../../utils/routesIndex';
+import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
+import { VISIBLE_SPORT_COUNTRIES } from '../../../../constants/globalConstants';
 import colors from '../../../../../reskin/colors.json';
 import SidebarItem from './SidebarItem';
 import { t } from '../../../../Services';
@@ -42,7 +43,6 @@ export default class SidebarItems extends Lightning.Component {
 
   async _active() {
     const location = await CountryService.getCountry();
-    console.log(location);
     this._visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());
 
     // setTimeout is used to give time for url hash to change before asign the right one
@@ -87,7 +87,6 @@ export default class SidebarItems extends Lightning.Component {
             { id: 7, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
           ]
         );
-    console.log(menuItems);
 
     this._menuItemRoutes = menuItems.map((item) => item.route);
 

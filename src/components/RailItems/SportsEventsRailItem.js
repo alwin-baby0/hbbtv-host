@@ -12,6 +12,7 @@ export default class SportsEventsRailItem extends FocusableItem {
     strokeWidth: 4,
     callback: () => null,
   };
+
   static _template() {
     return {
       ...super._template(),

@@ -23,11 +23,8 @@ export default class LiveTVPlayer extends Lightning.Component {
     VideoPlayer.consumer(this);
   }
 
-  _active() {
-    this._changeChannel();
-  }
-
   async _active() {
+    this._changeChannel();
     this.fireAncestors('$punchHoleTV');
     VideoPlayer.pause();
   }
@@ -42,12 +39,14 @@ export default class LiveTVPlayer extends Lightning.Component {
   }
 
   _changeChannel(previousChannel) {
-    const channelName = previousChannel.channelId ? previousChannel.channelId : previousChannel.id;
+    const channelName = previousChannel?.channelId
+      ? previousChannel.channelId
+      : previousChannel?.id;
     EPGService.getSingleEPGChannel(channelName)
       .then((singleChannel) => {
         // Get the current time
         const currentTime = new Date();
-        const matchingEntry = singleChannel.items.find((entry) => {
+        const matchingEntry = singleChannel?.items.find((entry) => {
           const startTime = new Date(entry.extensions.start_time);
           const endTime = new Date(entry.extensions.end_time);
 

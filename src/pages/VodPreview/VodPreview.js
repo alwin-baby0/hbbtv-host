@@ -5,6 +5,8 @@ import VodContentContainer, {
 } from '../../components/VodContentContainer/VodContentContainer';
 import { constructRails } from '../utils';
 import { eventTrackPayload } from '../../utils/device';
+import { VOD_PREVIEW_TYPES } from '../utils';
+import { EVENT_NAMES } from '../../constants/globalConstants';
 
 export default class VodPreview extends Lightning.Component {
   _props = {
@@ -55,11 +57,11 @@ export default class VodPreview extends Lightning.Component {
   set props(props) {
     const { vodType } = props;
 
-    if (vodType === 'movies') eventTrackPayload('browse_movies', 1);
-    if (vodType === 'series') eventTrackPayload('browse_series', 2);
-    if (vodType === 'sports') eventTrackPayload('browse_sports', 3);
+    if (vodType === VOD_PREVIEW_TYPES.MOVIES) eventTrackPayload(EVENT_NAMES.BROWSE_MOVIES, 1);
+    if (vodType === VOD_PREVIEW_TYPES.SERIES) eventTrackPayload(EVENT_NAMES.BROWSE_SERIES, 2);
+    if (vodType === VOD_PREVIEW_TYPES.SPORTS) eventTrackPayload(EVENT_NAMES.BROWSE_SPORTS, 3);
 
-    if (vodType === 'sports') {
+    if (vodType === VOD_PREVIEW_TYPES.SPORTS) {
       this._Column.patch({ y: 100 });
     } else {
       this._Column.patch({ y: 50 });

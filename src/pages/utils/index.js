@@ -3,6 +3,7 @@ import { railItemConstructor } from './railItems';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { EPGService } from '../../Services';
 import Empty from '../LiveTV/components/Empty';
+import { CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
 
 export const VOD_PREVIEW_TYPES = {
   MOVIES: 'movies',
@@ -10,21 +11,6 @@ export const VOD_PREVIEW_TYPES = {
   SPORTS: 'sports',
 };
 
-export const RAIL_TYPES = {
-  MOVIE: 'movie',
-  SERIE: 'serie',
-  SPORT: 'sport',
-  SPORT_LIVE: 'sport_live',
-  EPISODE: 'episode',
-  SEARCH: 'search',
-  CATEGORY: 'category',
-  LIVETV: 'live',
-  EPGS: 'epg-channel-programs',
-  HERO: 'HeroRails',
-  COLLECTION: 'Collection',
-  USER_CONTENT: 'UserContent',
-  BANNER: 'Banner',
-};
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,
   [RAIL_TYPES.SERIE]: 1760,
@@ -81,7 +67,14 @@ const verticalIndexReset = () => {
 };
 
 export const cronstructSingleLineRail = (rail, index) => {
-  const { items, railType, cardType = 'POSTER', railTitle, railItemsOptions, ...rest } = rail;
+  const {
+    items,
+    railType,
+    cardType = CARD_TYPES.POSTER,
+    railTitle,
+    railItemsOptions,
+    ...rest
+  } = rail;
 
   const containerDimensions =
     railType === RAIL_TYPES.LIVETV
@@ -120,7 +113,7 @@ export const cronstructSingleLineRail = (rail, index) => {
     ...containerDimensions,
     collision: true,
     props: {
-      h: CARD_SIZES[cardType]?.height, // todo: remove 50
+      h: CARD_SIZES[cardType]?.height,
       w: containerDimensions.w,
       railTitle: railTitle,
       cardType: cardType,

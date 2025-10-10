@@ -298,7 +298,7 @@ export default class LanguageSettings extends Lightning.Component {
         }
 
         _handleUp() {
-          this._setState('DefaultState');
+          Router.focusWidget('Menu');
         }
 
         _handleLeft() {

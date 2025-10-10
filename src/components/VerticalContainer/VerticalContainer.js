@@ -1,5 +1,6 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { getClosestElementIndex } from '../../utils/focus';
+import { CARD_TYPES } from '../../constants/globalConstants';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
@@ -48,7 +49,6 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   handleFocusedIndex(val) {
-    //dzoni fja
     this._handleCarryFocus(this._focusedIndex, val);
     this._reCalibrateScroll(this._focusedIndex, val);
     this._focusedIndex = val;
@@ -141,7 +141,7 @@ export default class VerticalContainer extends Lightning.Component {
 
   handleDown() {
     if (this._focusedIndex < this.Items.children.length - 1) {
-      if (this.Items.children[this._focusedIndex + 1]._props?.cardType === 'BANNER') {
+      if (this.Items.children[this._focusedIndex + 1]._props?.cardType === CARD_TYPES.BANNER) {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 2);
         this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 2);
         this._focusedIndex += 2;
@@ -160,7 +160,7 @@ export default class VerticalContainer extends Lightning.Component {
 
   handleUp() {
     if (this._focusedIndex > 0) {
-      if (this.Items.children[this._focusedIndex - 1]._props?.cardType === 'BANNER') {
+      if (this.Items.children[this._focusedIndex - 1]._props?.cardType === CARD_TYPES.BANNER) {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 2);
         this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 2);
         this._focusedIndex -= 2;

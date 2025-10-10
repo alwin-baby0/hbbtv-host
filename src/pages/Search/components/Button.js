@@ -8,6 +8,7 @@ export default class Button extends lng.Component {
   constructor(props) {
     super(props);
   }
+
   static _template() {
     return {
       Button: {
@@ -123,6 +124,7 @@ export default class Button extends lng.Component {
       color: Colors('#C40000').get(),
     });
   }
+
   _unfocus() {
     this._Button.patch({
       color: Colors('#49484d').get(),
