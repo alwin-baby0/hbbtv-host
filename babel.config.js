@@ -5,7 +5,8 @@ module.exports = {
     test: {
       plugins: [
         '@babel/plugin-transform-modules-commonjs',
-        '@babel/plugin-transform-export-namespace-from'
+        '@babel/plugin-transform-export-namespace-from',
+        'babel-plugin-dynamic-import-node'
       ]
     }
   }

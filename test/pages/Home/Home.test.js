@@ -1,4 +1,4 @@
-import TestUtils from '@lightningjs/ui-components-test-utils';
+import { TestRenderer } from '@lightningjs/ui-components-test-utils';
 import Home from 'src/pages/Home/Home';
 import homeProvider from 'src/pages/Home/provider/home';
 
@@ -13,8 +13,7 @@ describe('Home Page', () => {
       }
     };
 
-    // ✅ Pass component config, not just the class
-    testRenderer = TestApp.create(HomePage);
+    testRenderer = TestRenderer.create(HomePage);
     page = testRenderer.getInstance();
   });
 

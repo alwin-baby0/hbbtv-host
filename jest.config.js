@@ -187,7 +187,7 @@ module.exports = {
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(wpe-lightning(-sdk)|@lightning\/ui)?)'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(wpe-lightning(-sdk)?|@lightning(js)?\/ui|@lightningjs\/ui-components-test-utils)?)'],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
