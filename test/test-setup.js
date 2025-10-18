@@ -7,6 +7,22 @@ import basePathWithSubpath from 'test/mocks/basePathWithSubpath.json';
 
 fetchMock.enableMocks();
 
+// Mock VideoPlayer from @lightningjs/sdk
+jest.mock('@lightningjs/sdk', () => ({
+  ...jest.requireActual('@lightningjs/sdk'),
+  VideoPlayer: {
+    position: jest.fn(),
+    size: jest.fn(),
+    consumer: jest.fn(),
+    loader: jest.fn(),
+    unloader: jest.fn(),
+    loop: jest.fn(),
+    open: jest.fn(),
+    play: jest.fn(),
+    clear: jest.fn(),
+  }
+}));
+
 const RESPONSES = {
   basicEndpoint: JSON.stringify(basicEndpoint),
   basePathWithSubpath: JSON.stringify(basePathWithSubpath),
