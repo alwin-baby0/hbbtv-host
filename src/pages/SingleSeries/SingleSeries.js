@@ -253,10 +253,6 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('Wrapper');
   }
 
-  // $updateVerticalState(nextState) {
-  //   this._setState(nextState);
-  // }
-
   _handleBack(e) {
     if (Router.isNavigating()) {
       return;

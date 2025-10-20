@@ -22,7 +22,7 @@ export default class LandscapeRailItem extends FocusableItem {
         radius: 6,
       },
       w: CARD_SIZES.LANDSCAPE.width,
-      h: CARD_SIZES.LANDSCAPE.height + 45,
+      h: CARD_SIZES.LANDSCAPE.height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {

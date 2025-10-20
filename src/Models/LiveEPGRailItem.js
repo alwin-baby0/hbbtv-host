@@ -4,7 +4,7 @@ import { LiveChannelsRailItem } from './LiveChannelsRailItem';
 class LiveEPGRailItem extends LiveChannelsRailItem {
   constructor(data) {
     super(data);
-    const { id, title, type, media_group, summary } = data;
+    const { id, title, type, summary } = data;
 
     this.id = id;
     this.title = title;

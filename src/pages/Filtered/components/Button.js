@@ -126,10 +126,6 @@ export default class Button extends Lightning.Component {
     );
   }
 
-  _handleUnhover() {
-    this._unfocus();
-  }
-
   async _handleClick() {
     this._handleEnter();
   }

@@ -84,7 +84,6 @@ export default class GalleryItem extends Lightning.Component {
           props: {
             buttonLabel: t('watch_now'),
             buttonIcon: Utils.asset('icons/home/play.svg'),
-            // parentState: 'GalleryButton',
           },
         },
         AuthorizedButtons: {
@@ -96,9 +95,6 @@ export default class GalleryItem extends Lightning.Component {
             flexItem: {
               marginTop: 10,
             },
-            // props: {
-            //   parentState: 'ContinueWatching',
-            // },
           },
           FavoriteButton: {
             collision: true,
@@ -107,9 +103,6 @@ export default class GalleryItem extends Lightning.Component {
             flexItem: {
               marginTop: 10,
             },
-            // props: {
-            //   parentState: 'FavoriteButton',
-            // },
           },
         },
       },
@@ -117,7 +110,6 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   set props(props) {
-    console.log(props);
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
@@ -132,7 +124,7 @@ export default class GalleryItem extends Lightning.Component {
       ssai,
     } = this._props;
 
-    const { id, title, summary, description, buttonLabel, url, duration, videoType, venue } =
+    const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
 
     this._Info.patch({
@@ -303,6 +295,7 @@ export default class GalleryItem extends Lightning.Component {
       this.parent.children.indexOf(this),
       this._props.parentState
     );
+
     switch (buttonName) {
       case 'GalleryButton':
         this._setState('GalleryButton');

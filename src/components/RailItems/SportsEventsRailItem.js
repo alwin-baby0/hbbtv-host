@@ -171,10 +171,6 @@ export default class SportsEventsRailItem extends FocusableItem {
     super._focus();
   }
 
-  // _handleUnhover() {
-  //   super._unfocus();
-  // }
-
   _handleClick() {
     const { callback } = this._props;
     callback();

@@ -27,7 +27,6 @@ export default class CategoryPicker extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     const { x, y, items, parentState } = this._props;
-    items && console.log(items[0]);
 
     this.patch({
       x: x,

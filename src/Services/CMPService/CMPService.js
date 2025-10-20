@@ -152,7 +152,7 @@ class CMPService extends FetchingService {
 
   revokeToken = async (token) => {
     return await this._request({
-      url: `/revoke.php`,
+      url: `/${API_URLS.REVOKE_TOKEN}`,
       apiVersion: auth,
       method: API_METHODS.POST,
       data: {
@@ -169,7 +169,7 @@ class CMPService extends FetchingService {
     const timestamp = new Date().getTime();
 
     return await this._request({
-      url: `/user/favorites`,
+      url: `/${API_URLS.GET_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.POST,
       headers: {
@@ -189,7 +189,7 @@ class CMPService extends FetchingService {
     const timestamp = new Date().getTime();
 
     return await this._request({
-      url: `/user/favorites`,
+      url: `/${API_URLS.ADD_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.POST,
       headers: {
@@ -213,7 +213,7 @@ class CMPService extends FetchingService {
     const timestamp = new Date().getTime();
 
     return await this._request({
-      url: `/user/favorites`,
+      url: `/${API_URLS.REMOVE_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.DELETE,
       headers: {
@@ -236,7 +236,7 @@ class CMPService extends FetchingService {
     const timestamp = new Date().getTime();
 
     return await this._request({
-      url: `/user/recently_watched`,
+      url: `/${API_URLS.GET_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
@@ -260,7 +260,7 @@ class CMPService extends FetchingService {
     }
 
     return await this._request({
-      url: `/user/recently_watched`,
+      url: `/${API_URLS.ADD_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.POST,
       headers: {
@@ -283,7 +283,7 @@ class CMPService extends FetchingService {
     const timestamp = new Date().getTime();
 
     return await this._request({
-      url: `/user/recently_watched`,
+      url: `/${API_URLS.REMOVE_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.DELETE,
       headers: {

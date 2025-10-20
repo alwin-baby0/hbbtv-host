@@ -410,12 +410,10 @@ export default class LiveTV extends Lightning.Component {
   }
 
   $handleStateHover(index, stateName = null) {
-    console.log(stateName);
     if (stateName) {
       this._setState(stateName);
       return;
     }
-    console.log(this.children[index]);
     this._setState(states[index]);
   }
 

@@ -103,21 +103,8 @@ export default class MemberTabButton extends Lightning.Component {
       color: Colors(colors.focus).get(),
     });
 
-    // this.fireAncestors('$setStateOnHover', 'DefaultState');
     this.fireAncestors('$handleItemHover', this._tabIndex);
   }
-
-  // _handleUnhover() {
-  //   if (this._selected) {
-  //     this._ColumnWrapper.patch({
-  //       color: Colors(colors.focusedHelpButton).get(),
-  //     });
-  //   } else {
-  //     this._ColumnWrapper.patch({
-  //       color: Colors(colors.unfocusedHelpButton).get(),
-  //     });
-  //   }
-  // }
 
   _handleClick() {
     this._handleEnter();

@@ -4,6 +4,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
+import { RAIL_TYPES } from '../../constants/globalConstants';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -112,7 +113,6 @@ export default class Home extends Lightning.Component {
   }
 
   $handleStateHover(index, stateName = null) {
-    console.log('Home hover state');
     if (stateName) {
       this._setState(stateName);
       return;
@@ -156,7 +156,7 @@ export default class Home extends Lightning.Component {
           if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
             const newRails = await HomePageService.fetchMoreItemsForHeroSection();
             if (newRails && newRails?.items?.length > 0) {
-              const parsedItems = railItemConstructor(newRails.items, 'HeroRails', {});
+              const parsedItems = railItemConstructor(newRails.items, RAIL_TYPES.HERO, {});
               this._HeroSection._Bullets._appendItems(parsedItems);
             }
           }

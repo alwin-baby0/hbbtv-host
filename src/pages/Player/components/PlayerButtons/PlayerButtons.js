@@ -150,7 +150,6 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _handleUnhover() {
-    console.log(this._props.isLive);
     if (this._props.isLive) {
       return true;
     }

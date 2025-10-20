@@ -333,8 +333,6 @@ export default class Player extends lng.Component {
 
     this._initSpinner();
 
-    console.log(ssai);
-
     this.props = {
       ...this._props,
       ...rest,
@@ -1154,7 +1152,6 @@ export default class Player extends lng.Component {
     }
 
     this._setState(newState);
-    // this._props.isLive && this._Controls._focus();
   }
 
   // COMANDS
@@ -1222,7 +1219,6 @@ export default class Player extends lng.Component {
   }
 
   $handleStateHover(index, stateName = null) {
-    console.log(stateName);
     if (stateName) {
       this._setState(stateName);
       return;

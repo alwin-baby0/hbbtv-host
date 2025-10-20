@@ -65,7 +65,6 @@ export default class HorizontalContainer extends Lightning.Component {
     const { items, railTitle, parentState, ...rest } = props;
 
     this._props = { ...this._props, ...rest, parentState };
-    console.log(this._props);
 
     const { cardType, targetIndex } = rest;
 
@@ -227,13 +226,11 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   $handleItemHover(index) {
-    console.log(index);
     if (this._focusedIndex !== index) {
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex = index;
     }
     this._reCalibrateScroll();
-    console.log(this._props);
     this.parent.parent.type &&
     (this.parent.parent.type.name === 'VerticalContainer' ||
       this.parent.parent.type.name === 'EPGContainer')

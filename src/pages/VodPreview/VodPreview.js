@@ -72,7 +72,6 @@ export default class VodPreview extends Lightning.Component {
     if (this._props.vodType !== vodType) {
       this._props = { ...this._props, ...props };
       const { content, items } = this._props;
-      console.log(items);
 
       this._VodContentContainer.props = { ...content, parentState: 'VodContentContainer' };
       this._Column.props = { items, parentState: 'VodContainer' };

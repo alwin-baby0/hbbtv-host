@@ -157,7 +157,6 @@ export default class Button extends Lightning.Component {
   _handleHover() {
     this._focus();
     this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
-    // this.fireAncestors('$updateVerticalState', 'HeroSection');
     this.fireAncestors('$setButtonState', this.ref); //sending ref name
   }
 

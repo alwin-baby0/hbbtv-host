@@ -3,7 +3,6 @@ import Button from '../../components/Button/Button';
 import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
-import { Column, Row } from '@lightningjs/ui-components';
 import { eventTrackPayload } from '../../utils/device';
 import { EVENT_NAMES, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
