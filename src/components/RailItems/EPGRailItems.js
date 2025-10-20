@@ -159,7 +159,7 @@ export default class EPGRailItems extends Lightning.Component {
 
     this.selectEPGTimeout = setTimeout(() => {
       this.selectEPG();
-    }, 2000);
+    }, 500);
   }
 
   _unfocus() {
@@ -210,13 +210,22 @@ export default class EPGRailItems extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (this.selectEPGTimeout) {
+      clearTimeout(this.selectEPGTimeout);
+      this.selectEPGTimeout = null;
+    }
+
     VideoPlayer.close();
-    this.fireAncestors('$unpunchHole');
-    Router.navigate('player', {
-      videoUrl: this._props.content.src,
-      duration: 0,
-      videoType: VIDEO_TYPES.STREAM_NOW,
-    });
+
+    setTimeout(() => {
+      this.fireAncestors('$unpunchHole');
+
+      Router.navigate('player', {
+        videoUrl: this._props.content.src,
+        duration: 0,
+        videoType: VIDEO_TYPES.STREAM_NOW,
+      });
+    }, 500);
   }
 
   _handleHover() {
@@ -225,10 +234,6 @@ export default class EPGRailItems extends Lightning.Component {
     this.fireAncestors('$handleItemHover', index);
     this._focus();
   }
-
-  // _handleUnhover() {
-  //   this._unfocus();
-  // }
 
   _handleClick() {
     this._handleEnter();
