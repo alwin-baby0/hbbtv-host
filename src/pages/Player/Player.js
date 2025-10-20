@@ -409,6 +409,7 @@ export default class Player extends lng.Component {
           w: 1920,
           items: isLive ? playerButtonsLive : playerButtonsVOD,
           targetIndex: 1,
+          parentState: 'Controls',
         },
       });
 
@@ -1151,7 +1152,9 @@ export default class Player extends lng.Component {
     if (this._getState() === 'Subtitles') {
       return;
     }
+
     this._setState(newState);
+    // this._props.isLive && this._Controls._focus();
   }
 
   // COMANDS
@@ -1219,6 +1222,7 @@ export default class Player extends lng.Component {
   }
 
   $handleStateHover(index, stateName = null) {
+    console.log(stateName);
     if (stateName) {
       this._setState(stateName);
       return;

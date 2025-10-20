@@ -11,7 +11,7 @@ export default class PageItem extends Lightning.Component {
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         w: 240,
         h: 65,
-        type: Column,
+        // type: Column,
         color: Colors(colors.white).get(),
         rect: true,
         shader: { type: Lightning.shaders.RoundedRectangle, radius: 6 },
@@ -101,9 +101,9 @@ export default class PageItem extends Lightning.Component {
     this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
   }
 
-  _handleUnhover() {
-    this._unfocus();
-  }
+  // _handleUnhover() {
+  //   this._unfocus();
+  // }
 
   _handleClick() {
     let pageId = this._pageInfoData.id;

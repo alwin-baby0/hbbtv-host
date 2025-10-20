@@ -50,6 +50,7 @@ export const playerButtonsLive = [
         onLiveContent: true,
         position: 60,
       },
+      isLive: true,
     },
   },
   {
@@ -62,6 +63,7 @@ export const playerButtonsLive = [
         onLiveContent: true,
         position: 810,
       },
+      isLive: true,
     },
   },
   {
@@ -74,6 +76,7 @@ export const playerButtonsLive = [
         onLiveContent: true,
         position: 810,
       },
+      isLive: true,
     },
   },
 ];

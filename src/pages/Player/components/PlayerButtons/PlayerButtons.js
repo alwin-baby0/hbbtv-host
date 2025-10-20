@@ -6,6 +6,7 @@ export default class PlayerButtons extends lng.Component {
   _props = {
     buttonInfo: {},
     isStopped: false,
+    isLive: false,
   };
 
   static _template() {
@@ -149,6 +150,10 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _handleUnhover() {
+    console.log(this._props.isLive);
+    if (this._props.isLive) {
+      return true;
+    }
     const { buttonInfo } = this._props;
     this.fireAncestors('$setState', 'Controls');
     if (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') {
