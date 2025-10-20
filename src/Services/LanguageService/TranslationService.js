@@ -3,11 +3,9 @@ import { createApiCtx } from '../utils';
 
 const lngCode =
   localStorage.getItem('languageCode') || navigator.language || navigator.userLanguage || 'en-';
-
-let defTrPromise = (async () => {
-  const lng = lngCode.split('-')[0] || 'en';
-  return import(`../../../public/static/translations/${lng}.json`);
-})();
+const defTr = await import(
+  `../../../public/static/translations/${lngCode.split('-')[0] || 'en'}.json`
+);
 
 let translationsVar = undefined;
 export default class TranslationService {
@@ -23,21 +21,22 @@ export default class TranslationService {
   };
 
   setTranslations = async () => {
-    try {
-      const data = await this.getLanguageTranslations();
-      translationsVar = data;
-      localStorage.setItem('languageTr', JSON.stringify(data));
-    } catch (error) {
-      console.log('Translation error:', error);
-      const trExist = localStorage.getItem('languageTr');
-      if (trExist) {
-        translationsVar = JSON.parse(trExist);
-      } else {
-        const defTr = await defTrPromise;
-        translationsVar = defTr;
-        localStorage.setItem('languageTr', JSON.stringify(defTr));
-      }
-    }
+    this.getLanguageTranslations()
+      .then((data) => {
+        translationsVar = data;
+        localStorage.setItem('languageTr', JSON.stringify(data));
+      })
+      .catch((error) => {
+        const trExist = localStorage.getItem('languageTr');
+        console.log('Translation error:', error);
+        if (trExist) {
+          localStorage.setItem('languageTr', JSON.stringify(trExist));
+          translationsVar = trExist;
+        } else {
+          localStorage.setItem('languageTr', JSON.stringify(defTr));
+          translationsVar = defTr;
+        }
+      });
   };
 }
 
@@ -48,7 +47,6 @@ export { translationService as TranslationService };
 /**
  * @param { keyof typeof defTr } key
  */
-export async function t(key) {
-  const defTr = await defTrPromise;
+export function t(key) {
   return translationsVar[key] || defTr[key];
 }
