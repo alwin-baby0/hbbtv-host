@@ -16,6 +16,9 @@ export default class Collection extends Lightning.Component {
           texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
           x: 45,
           y: 30,
+          props: {
+            parentState: 'BackButton',
+          },
         },
         Column: {
           collision: true,
@@ -47,6 +50,15 @@ export default class Collection extends Lightning.Component {
 
   _getFocused() {
     return this._Column;
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
+    this.children[index]._unfocus();
   }
 
   static _states() {

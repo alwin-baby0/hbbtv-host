@@ -2,7 +2,7 @@ import { GalleryItem } from '../../Models';
 import { parseDetailsData, parseSeasonData } from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
-import { API_METHODS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {
@@ -13,7 +13,7 @@ class DetailService extends FetchingService {
     const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
 
     return await this._request({
-      url: `/getMovie`,
+      url: `/${API_URLS.GET_MOVIE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: headers,
@@ -32,7 +32,7 @@ class DetailService extends FetchingService {
     const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
 
     const galleryItem = await this._request({
-      url: '/getSerie',
+      url: `/${API_URLS.GET_SERIE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: headers,
@@ -43,7 +43,7 @@ class DetailService extends FetchingService {
     }).then(parseDetailsData);
 
     const seasonTabs = await this._request({
-      url: '/getSeasonTabs',
+      url: `/${API_URLS.GET_SEASON_TABS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
@@ -65,7 +65,7 @@ class DetailService extends FetchingService {
 
     const seasonsPromises = seasonTabs.map((id) =>
       this._request({
-        url: '/getSeason',
+        url: `/${API_URLS.GET_SEASON}`,
         apiVersion: V2,
         method: API_METHODS.GET,
         params: {
@@ -89,7 +89,7 @@ class DetailService extends FetchingService {
 
   getAdCues = async (videoId, seriesId, videoUrl) =>
     this._request({
-      url: '/getAdcues',
+      url: `/${API_URLS.GET_AD_CUES}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
@@ -105,7 +105,7 @@ class DetailService extends FetchingService {
 
   getEvent = async (eventId) =>
     this._request({
-      url: '/getSportEvent',
+      url: `/${API_URLS.GET_SPORT_EVENT}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {

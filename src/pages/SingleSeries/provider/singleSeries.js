@@ -84,5 +84,6 @@ export default async function (page, { seriesId, cmpShown }) {
 
   page._Column.props = {
     items: constructRails(updatedSeasons),
+    parentState: 'Items',
   };
 }

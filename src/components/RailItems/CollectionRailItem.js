@@ -104,11 +104,11 @@ export default class CollectionRailItem extends FocusableItem {
 
   _handleHover() {
     const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     super._focus();
   }
 
-  _handleUnhover() {
-    super._unfocus();
-  }
+  // _handleUnhover() {
+  //   super._unfocus();
+  // }
 }

@@ -1,5 +1,5 @@
 import { Colors, Router, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
-import routes from './pages/routes';
+import routes from './routes';
 import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
@@ -73,10 +73,6 @@ export default class App extends Router.App {
     Router.startRouter(
       {
         ...routes,
-        afterEachRoute: () => {
-          // after each route update nav bar
-          this._Menu.Items._updateFocus();
-        },
       },
       this
     );

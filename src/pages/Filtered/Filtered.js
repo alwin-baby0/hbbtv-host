@@ -52,6 +52,9 @@ export default class Filtered extends Lightning.Component {
           w: 1760,
           collision: true,
           type: VerticalContainer,
+          props: {
+            parentState: 'VodContainer',
+          },
         },
       },
     };
@@ -87,7 +90,7 @@ export default class Filtered extends Lightning.Component {
 
   _active() {
     if (this._Column.Items.children.length == 0) {
-      this._setState('Button');
+      this._setState('VodContentContainer');
     } else {
       this._setState('VodContainer');
       this._VodContentContainer.patch({
@@ -109,6 +112,15 @@ export default class Filtered extends Lightning.Component {
 
   $updateFilteredVerticalState(nextState) {
     this._setState(nextState);
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
+    this.children[index]._unfocus();
   }
 
   static _states() {
@@ -163,28 +175,7 @@ export default class Filtered extends Lightning.Component {
           return this._VodContentContainer;
         }
       },
-      class Column extends this {
-        _handleUp() {
-          this._setState('Button');
-        }
-      },
 
-      class Button extends this {
-        _handleUp() {
-          Router.focusWidget('Menu');
-          return;
-        }
-        _getFocused() {
-          return this._VodContentContainer;
-        }
-        _handleDown() {
-          if (this._Column.Items.children.length == 0) {
-            this._setState('Button');
-          } else {
-            this._setState('Column');
-          }
-        }
-      },
       class VodContainer extends this {
         $enter() {
           this.correctContainerSize();

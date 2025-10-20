@@ -84,6 +84,7 @@ export default class GalleryItem extends Lightning.Component {
           props: {
             buttonLabel: t('watch_now'),
             buttonIcon: Utils.asset('icons/home/play.svg'),
+            // parentState: 'GalleryButton',
           },
         },
         AuthorizedButtons: {
@@ -95,6 +96,9 @@ export default class GalleryItem extends Lightning.Component {
             flexItem: {
               marginTop: 10,
             },
+            // props: {
+            //   parentState: 'ContinueWatching',
+            // },
           },
           FavoriteButton: {
             collision: true,
@@ -103,6 +107,9 @@ export default class GalleryItem extends Lightning.Component {
             flexItem: {
               marginTop: 10,
             },
+            // props: {
+            //   parentState: 'FavoriteButton',
+            // },
           },
         },
       },
@@ -110,6 +117,7 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   set props(props) {
+    console.log(props);
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
@@ -239,6 +247,7 @@ export default class GalleryItem extends Lightning.Component {
             buttonLabel: buttonLabel,
             callback: callback,
             buttonIcon: btnIcon,
+            // parentState: 'GalleryButton',
           },
         });
       })();
@@ -289,15 +298,26 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   $setButtonState(buttonName) {
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
     switch (buttonName) {
       case 'GalleryButton':
         this._setState('GalleryButton');
+        this._ContinueWatching._unfocus();
+        this._FavoriteButton._unfocus();
         break;
       case 'ContinueWatching':
         this._setState('ContinueWatching');
+        this._GalleryButton._unfocus();
+        this._FavoriteButton._unfocus();
         break;
       case 'FavoriteButton':
         this._setState('FavoriteButton');
+        this._ContinueWatching._unfocus();
+        this._GalleryButton._unfocus();
         break;
     }
   }

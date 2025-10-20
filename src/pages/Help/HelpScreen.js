@@ -30,6 +30,9 @@ export default class HelpScreen extends lng.Component {
           type: VerticalContainer,
           h: 225,
           w: 240,
+          props: {
+            parentState: 'HelpItems',
+          },
         },
         Description: {
           w: 1390,
@@ -120,6 +123,14 @@ export default class HelpScreen extends lng.Component {
     this._ScrollWrapper.patch({
       content: content,
     });
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {

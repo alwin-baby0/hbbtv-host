@@ -18,6 +18,8 @@ import {
 } from './utils';
 import { EVENT_NAMES, LOCAL_STORAGE_KEYS, VIDEO_TYPES } from '../../constants/globalConstants';
 
+const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
+
 export default class Player extends lng.Component {
   _props = {
     pausedItemId: 1,
@@ -111,6 +113,9 @@ export default class Player extends lng.Component {
             rect: true,
             y: 0,
             color: Colors('#000000').alpha(0).get(),
+            props: {
+              parentState: 'Controls',
+            },
           },
         },
         ProgressBarWrapper: {
@@ -189,6 +194,7 @@ export default class Player extends lng.Component {
           props: {
             w: 600,
             h: 1080,
+            parentState: 'Subtitles',
           },
         },
       },
@@ -426,6 +432,7 @@ export default class Player extends lng.Component {
                 onLiveContent: true,
                 position: 60,
               },
+              parentState: 'Back',
             },
           },
           // SubtitlesButton: {
@@ -439,6 +446,7 @@ export default class Player extends lng.Component {
           //       onLiveContent: true,
           //       position: 60,
           //     },
+          //     parentState: 'SubtitlesButton'
           //   },
           // },
           SubtitlesButton: undefined,
@@ -624,6 +632,7 @@ export default class Player extends lng.Component {
                       props: {
                         w: 200,
                         h: 60,
+                        parentState: 'SkipButton',
                       },
                       x: 1700,
                       y: 915,
@@ -1209,6 +1218,14 @@ export default class Player extends lng.Component {
     return useKeyHandlers;
   }
 
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
+  }
+
   static _states() {
     return [
       class Controls extends this {
@@ -1250,32 +1267,6 @@ export default class Player extends lng.Component {
 
         _handleEnter() {
           VideoPlayer.seek(this._props.skipTo);
-        }
-      },
-
-      class ProgressBar extends this {
-        _getFocused() {
-          return this._ProgressBar;
-        }
-
-        _handleEnter() {
-          if (!VideoPlayer.playing) {
-            const { pausedItemId } = this._props;
-
-            VideoPlayer.pause();
-
-            this._Controls.Items.children[pausedItemId]._Icon.patch({
-              texture: lng.Tools.getSvgTexture(
-                Utils.asset('/icons/player/commands/play.svg'),
-                90,
-                90
-              ),
-            });
-          }
-
-          if (!this._props.isAdVisible) {
-            this._setState('Controls');
-          }
         }
       },
 

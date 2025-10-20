@@ -93,16 +93,18 @@ const getGenresInfo = async (page, props) => {
     });
     page._Column.props = {
       items: filtered.items,
+      parentState: 'VodContainer',
     };
 
-    page._Button?.patch({
+    page._VodContentContainer?.patch({
       collision: true,
       props: {
-        itemInfo: { category, title: type == 'movie' ? 'MOVIES' : type },
+        itemInfo: { category },
         w: 170,
         h: 64,
         radius: 30,
         strokeWidth: 3,
+        parentState: 'VodContentContainer',
       },
     });
 

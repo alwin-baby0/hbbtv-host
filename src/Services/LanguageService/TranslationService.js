@@ -52,5 +52,5 @@ export { translationService as TranslationService };
  * @param { keyof typeof defTr } key
  */
 export function t(key) {
-  return translationsVar[key] || defTr[key];
+  return translationsVar && translationsVar[key] ? translationsVar[key] : defTr[key];
 }

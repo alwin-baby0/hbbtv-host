@@ -7,7 +7,7 @@ import {
   parseHomePageHeroSection,
   parseHomePageRailData,
 } from '../../Models/parsers';
-import { API_METHODS } from '../../constants/globalConstants';
+import { API_METHODS, API_URLS } from '../../constants/globalConstants';
 
 class HomePageService extends FetchingService {
   #heroSectionItems;
@@ -182,7 +182,7 @@ class HomePageService extends FetchingService {
 
   #getHomePageHeroSection = async (page = 1) =>
     this._request({
-      url: '/start',
+      url: `/${API_URLS.GET_HOME_PAGE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
@@ -194,7 +194,7 @@ class HomePageService extends FetchingService {
 
   #getHomePage = async (row, page, limit) =>
     this._request({
-      url: '/start',
+      url: `/${API_URLS.GET_HOME_PAGE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
@@ -206,7 +206,7 @@ class HomePageService extends FetchingService {
 
   #getBanner = async () =>
     this._request({
-      url: '/ads',
+      url: `/${API_URLS.GET_BANNER}`,
       apiVersion: V2,
       method: API_METHODS.GET,
     }).then(parseBannerData);

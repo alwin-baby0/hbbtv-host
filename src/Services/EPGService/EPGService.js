@@ -2,7 +2,7 @@ import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { EPGRailItem } from '../../Models/utils/EPGRailItem';
 import { parseVodCategories } from '../../Models/parsers';
-import { RAIL_TYPES } from '../../constants/globalConstants';
+import { API_URLS, RAIL_TYPES } from '../../constants/globalConstants';
 import { CARD_TYPES, API_METHODS } from '../../constants/globalConstants';
 
 export const EPG_ROWS_PER_FETCH = 10;
@@ -186,7 +186,7 @@ class EPGService extends FetchingService {
 
   #getGenres = async () =>
     await this._request({
-      url: '/epg_genres',
+      url: `/${API_URLS.GET_EPG_GENRES}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
@@ -197,7 +197,7 @@ class EPGService extends FetchingService {
 
   #getGenresCategory = async (include) =>
     await this._request({
-      url: '/epg_channels',
+      url: `/${API_URLS.GET_EPG_CHANNELS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
@@ -216,7 +216,7 @@ class EPGService extends FetchingService {
 
   getSingleEPGChannel = async (channelId) =>
     await this._request({
-      url: `/epg_program`,
+      url: `/${API_URLS.GET_EPG_PROGRAM}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
@@ -238,7 +238,7 @@ class EPGService extends FetchingService {
 
   #getEPG = async (channelId) =>
     this._request({
-      url: '/epg_program',
+      url: `/${API_URLS.GET_EPG_PROGRAM}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {

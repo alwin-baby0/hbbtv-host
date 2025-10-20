@@ -7,6 +7,8 @@ import { eventTrackPayload } from '../../utils/device';
 import { EVENT_NAMES, LOCAL_STORAGE_KEYS, VIDEO_TYPES } from '../../constants/globalConstants';
 import { VOD_PREVIEW_TYPES } from '../utils';
 
+const states = ['HeroSection', 'BackButton', 'Items'];
+
 export default class SingleSeries extends Lightning.Component {
   _props = {};
 
@@ -21,6 +23,9 @@ export default class SingleSeries extends Lightning.Component {
         x: 85,
         y: 20,
         zIndex: 100,
+        props: {
+          parentState: 'BackButton',
+        },
       },
       Background: {
         w: 1920,
@@ -76,6 +81,7 @@ export default class SingleSeries extends Lightning.Component {
           buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
           buttonLabel: t('favorite')?.toUpperCase(),
           width: 360,
+          parentState: 'HeroSection',
         },
       });
     } catch (e) {
@@ -123,6 +129,7 @@ export default class SingleSeries extends Lightning.Component {
         isDeeplinkEpisode: isDeeplinkEpisode,
         seriesId: seriesId,
         ssai,
+        parentState: 'HeroSection',
       },
       Info: {
         GalleryButton: {
@@ -246,9 +253,9 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('Wrapper');
   }
 
-  $updateVerticalState(nextState) {
-    this._setState(nextState);
-  }
+  // $updateVerticalState(nextState) {
+  //   this._setState(nextState);
+  // }
 
   _handleBack(e) {
     if (Router.isNavigating()) {
@@ -267,6 +274,14 @@ export default class SingleSeries extends Lightning.Component {
     }
 
     this._setState('HeroSection');
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {

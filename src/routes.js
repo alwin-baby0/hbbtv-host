@@ -1,33 +1,33 @@
-import Splash from '../components/SplashScreen/Splash';
-import Home from './Home/Home';
-import home from './Home/provider/home';
-import VodPreview from './VodPreview/VodPreview';
-import onVodPage from './VodPreview/provider/onVodPage';
-import SingleMovie from './SingleMovie/SingleMovie';
-import singleMovie from './SingleMovie/provider/singleMovie';
-import Filtered from './Filtered/Filtered';
-import filtered from './Filtered/provider/filtered';
-import SingleSeries from './SingleSeries/SingleSeries';
-import singleSeries from './SingleSeries/provider/singleSeries';
-import Search from './Search/Search';
-import SingleLiveEvent from './SingleLiveEvent/SingleLiveEvent';
-import singleLiveEvent from './SingleLiveEvent/provider/singleLiveEvent';
-import Player from './Player/Player';
-import Settings from './Settings/Settings';
-import settings from './Settings/provider/settings';
-import HelpScreen from './Help/HelpScreen';
-import help from './Help/provider/help';
-import LiveTV from './LiveTV/LiveTV';
-import livetv from './LiveTV/providers/livetv';
-import onSearchPage from './Search/provider/onSearchPage';
-import Collection from './Collection/Collection';
-import collection from './Collection/provider/collection';
-import CMP from './CMP/CMP';
-import cmp from './CMP/provider/cmp';
-import CMPCustomize from './CMP/components/CMPCustomize';
-import LanguageSettings from './LanguageSettings/LanguageSettings';
-import languageSettings from './LanguageSettings/provider/languageSettings';
-// TODO: pomeriti ovaj fajl van ovog foldera u /src
+import Splash from './components/SplashScreen/Splash';
+import Home from './pages/Home/Home';
+import home from './pages/Home/provider/home';
+import VodPreview from './pages/VodPreview/VodPreview';
+import onVodPage from './pages/VodPreview/provider/onVodPage';
+import SingleMovie from './pages/SingleMovie/SingleMovie';
+import singleMovie from './pages/SingleMovie/provider/singleMovie';
+import Filtered from './pages/Filtered/Filtered';
+import filtered from './pages/Filtered/provider/filtered';
+import SingleSeries from './pages/SingleSeries/SingleSeries';
+import singleSeries from './pages/SingleSeries/provider/singleSeries';
+import Search from './pages/Search/Search';
+import SingleLiveEvent from './pages/SingleLiveEvent/SingleLiveEvent';
+import singleLiveEvent from './pages/SingleLiveEvent/provider/singleLiveEvent';
+import Player from './pages/Player/Player';
+import MyAccount from './pages/MyAccount/MyAccount';
+import myAccount from './pages/MyAccount/provider/myAccount';
+import HelpScreen from './pages/Help/HelpScreen';
+import help from './pages/Help/provider/help';
+import LiveTV from './pages/LiveTV/LiveTV';
+import livetv from './pages/LiveTV/providers/livetv';
+import onSearchPage from './pages/Search/provider/onSearchPage';
+import Collection from './pages/Collection/Collection';
+import collection from './pages/Collection/provider/collection';
+import CMP from './pages/CMP/CMP';
+import cmp from './pages/CMP/provider/cmp';
+import CMPCustomize from './pages/CMP/components/CMPCustomize';
+import LanguageSettings from './pages/LanguageSettings/LanguageSettings';
+import languageSettings from './pages/LanguageSettings/provider/languageSettings';
+
 export default {
   root: 'splash',
   routes: [
@@ -92,10 +92,10 @@ export default {
       on: onSearchPage,
     },
     {
-      path: 'settings',
-      component: Settings,
+      path: 'account',
+      component: MyAccount,
       widgets: ['Menu'],
-      on: settings,
+      on: myAccount,
     },
     {
       path: 'langsettings',

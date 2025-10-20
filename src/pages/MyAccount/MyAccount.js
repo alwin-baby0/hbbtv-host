@@ -10,7 +10,15 @@ import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
 import { LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 
-export default class Settings extends Lightning.Component {
+const states = [
+  'DefaultState',
+  'Favorites',
+  'RecentlyWatched',
+  'UserRecentlyWatched',
+  'UserFavorites',
+];
+
+export default class MyAccount extends Lightning.Component {
   _contentId = 0;
   _props = {
     lastId: 0,
@@ -82,10 +90,6 @@ export default class Settings extends Lightning.Component {
     return this.tag('Content.QRContainer.RecentlyWatched');
   }
 
-  get _Languages() {
-    return this.tag('Content.Languages');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
   }
@@ -132,23 +136,6 @@ export default class Settings extends Lightning.Component {
     }
     // Update the lastId variable with the current ID
     this._props.lastId = id;
-  }
-
-  $setFocusLanguage(id) {
-    const { lastLanguage } = this._props;
-
-    if (typeof lastLanguage !== 'undefined') {
-      // Unselect the button of the last ID before setting a new one
-      this._Languages.Items.children[lastLanguage]._unselectButton();
-    }
-    // Set the new ID
-    if (!id) {
-      this._Languages.Items.children[0]._selectButton();
-    } else {
-      this._Languages.Items.children[id]._selectButton();
-    }
-    // Update the lastId variable with the current ID
-    this._props.lastLanguage = id;
   }
 
   async $verticalContainerIndexChange(index, refName) {
@@ -208,7 +195,6 @@ export default class Settings extends Lightning.Component {
     this.changeContentTimeout = setTimeout(async () => {
       this._Content.patch({
         QRContainer: undefined,
-        Languages: undefined,
         Favorites: undefined,
         RecentlyWatched: undefined,
         y: 225,
@@ -353,6 +339,7 @@ export default class Settings extends Lightning.Component {
                 h: 500,
                 props: {
                   items: parsedMovies,
+                  parentState: 'UserRecentlyWatched',
                 },
               },
               Favorites: {
@@ -361,6 +348,7 @@ export default class Settings extends Lightning.Component {
                 h: 920,
                 props: {
                   items: parsedFavorites,
+                  parentState: 'UserFavorites',
                 },
               },
             },
@@ -388,6 +376,7 @@ export default class Settings extends Lightning.Component {
             props: {
               items: constructRails(parsedMovies),
               h: 920,
+              parentState: 'RecentlyWatched',
             },
           },
         });
@@ -412,6 +401,7 @@ export default class Settings extends Lightning.Component {
             props: {
               items: constructRails(parsedMovies),
               h: 920,
+              parentState: 'Favorites',
             },
           },
         });
@@ -468,6 +458,14 @@ export default class Settings extends Lightning.Component {
     Router.back();
   }
 
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
+  }
+
   static _states() {
     return [
       class DefaultState extends this {
@@ -480,9 +478,6 @@ export default class Settings extends Lightning.Component {
         }
 
         _handleRight() {
-          if (this._Languages) {
-            this._setState('Languages');
-          }
           if (this._Favorites) {
             this._setState('Favorites');
           }
@@ -492,20 +487,6 @@ export default class Settings extends Lightning.Component {
           if (this._UserRecentlyWatched) {
             this._setState('UserRecentlyWatched');
           }
-        }
-      },
-
-      class Languages extends this {
-        _getFocused() {
-          return this._Languages;
-        }
-
-        _handleUp() {
-          Router.focusWidget('Menu');
-        }
-
-        _handleLeft() {
-          this._setState('DefaultState');
         }
       },
 

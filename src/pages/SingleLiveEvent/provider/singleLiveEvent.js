@@ -18,6 +18,7 @@ export default async function (page, { eventId }) {
 
   page._Column.props = {
     items: constructRails(VodService.contentStripes),
+    parentState: 'Items',
   };
 
   page._setState('HeroSection');

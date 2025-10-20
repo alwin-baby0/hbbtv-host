@@ -1,9 +1,13 @@
 import { Colors, Utils } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
-import { t } from '../../../Services';
+import { t } from '../../Services';
 
 export default class InputField extends lng.Component {
+  _props = {
+    parentState: null,
+  };
+
   static _template() {
     return {
       InputWrapper: {
@@ -64,10 +68,6 @@ export default class InputField extends lng.Component {
     return this.tag('InputWrapper');
   }
 
-  $setClearButtonState() {
-    this._setState('ClearIcon');
-  }
-
   _changePlaceholder() {
     if (this._Input.value === '') {
       this._Placeholder.patch({
@@ -84,47 +84,31 @@ export default class InputField extends lng.Component {
         text: t('search'),
       },
     });
-    this._setState('Input');
   }
 
-  static _states() {
-    return [
-      class Input extends this {
-        _getFocused() {
-          return this;
-        }
+  _getFocused() {
+    return this;
+  }
 
-        _handleRight() {
-          this._setState('ClearIcon');
-        }
+  _focus() {
+    this.fireAncestors('$setInputState');
+    this._Input.listening = true;
+  }
 
-        _focus() {
-          this.fireAncestors('$setInputState');
-          this._Input.listening = true;
-        }
+  _unfocus() {
+    this._Input.listening = false;
+  }
 
-        _unfocus() {
-          this._Input.listening = false;
-        }
+  _handleHover() {
+    this._focus();
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
+  }
 
-        _handleHover() {
-          this._focus();
-        }
-
-        _handleUnhover() {
-          this._unfocus();
-        }
-      },
-
-      class ClearIcon extends this {
-        _getFocused() {
-          return this._ClearIcon;
-        }
-
-        _handleLeft() {
-          this._setState('Input');
-        }
-      },
-    ];
+  _handleUnhover() {
+    this._unfocus();
   }
 }

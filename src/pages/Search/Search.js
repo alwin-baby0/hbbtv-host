@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch';
-import InputField from './components/Input';
+import InputField from '../../components/Input/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
 import { HomePageService, SearchService, t } from '../../Services';
@@ -12,6 +12,8 @@ const search = {
   items: [],
   timestamp: 0,
 };
+
+const states = ['Input', 'VODSection', 'Keyboard'];
 
 export default class Search extends Lightning.Component {
   searchTimeout;
@@ -27,6 +29,9 @@ export default class Search extends Lightning.Component {
         w: 1700,
         Input: {
           type: InputField,
+          props: {
+            parentState: 'Input',
+          },
         },
       },
       Wrapper: {
@@ -38,6 +43,9 @@ export default class Search extends Lightning.Component {
           zIndex: 205,
           visible: false,
           limit: 50,
+          props: {
+            parentState: 'Keyboard',
+          },
         },
       },
       VODWrapper: {
@@ -55,6 +63,9 @@ export default class Search extends Lightning.Component {
           type: VerticalContainer,
           collision: true,
           plinko: true,
+          props: {
+            parentState: 'VODSection',
+          },
         },
       },
       Spinner: {
@@ -229,6 +240,14 @@ export default class Search extends Lightning.Component {
     Router.back();
   }
 
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
+  }
+
   static _states() {
     return [
       class Input extends this {
@@ -311,10 +330,10 @@ export default class Search extends Lightning.Component {
           this._extended = this._VODSection._focusedIndex > 0;
           this.patch({
             InputWrapper: {
-              y: -550,
+              y: 20,
             },
             VODWrapper: {
-              y: 0,
+              y: 120,
               h: 1920,
             },
           });
@@ -329,10 +348,10 @@ export default class Search extends Lightning.Component {
             this._extended = false;
             this.patch({
               InputWrapper: {
-                y: -100,
+                y: 20,
               },
               VODWrapper: {
-                y: 0,
+                y: 120,
                 h: 1080,
               },
               VODSection: {

@@ -47,10 +47,12 @@ const fetchChannels = async (page) => {
 
     page._Categories.props = {
       items: categoryRails,
+      parentState: 'Categories',
     };
 
     page._Channels.props = {
       items: channelsAll,
+      parentState: 'Channels',
     };
   }
 };

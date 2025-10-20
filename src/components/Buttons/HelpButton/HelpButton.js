@@ -98,6 +98,7 @@ export default class PageItem extends Lightning.Component {
 
   _handleHover() {
     this._focus();
+    this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
   }
 
   _handleUnhover() {

@@ -105,25 +105,25 @@ export default class PosterRailItem extends FocusableItem {
   _handleHover() {
     Router.focusPage();
     const { index } = this._props;
-    const ancestor = this.parent.parent.parent.parent;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    // const ancestor = this.parent.parent.parent.parent;
+    this.fireAncestors('$handleItemHover', index);
     this._focus();
 
-    if (ancestor.ref === 'RecentlyWatched') {
-      this.fireAncestors('$setStateOnHover', 'RecentlyWatched');
-    }
-    if (ancestor.ref === 'Favorites') {
-      this.fireAncestors('$setStateOnHover', 'Favorites');
-    }
-    if (ancestor.parent.parent.ref === 'QRContainer') {
-      this.fireAncestors(
-        '$setStateOnHover',
-        ancestor.parent.ref === 'RecentlyWatched' ? 'UserRecentlyWatched' : 'UserFavorites'
-      );
-    }
+    // if (ancestor.ref === 'RecentlyWatched') {
+    //   this.fireAncestors('$setStateOnHover', 'RecentlyWatched');
+    // }
+    // if (ancestor.ref === 'Favorites') {
+    //   this.fireAncestors('$setStateOnHover', 'Favorites');
+    // }
+    // if (ancestor.parent.parent.ref === 'QRContainer') {
+    //   this.fireAncestors(
+    //     '$setStateOnHover',
+    //     ancestor.parent.ref === 'RecentlyWatched' ? 'UserRecentlyWatched' : 'UserFavorites'
+    //   );
+    // }
   }
 
-  _handleUnhover() {
-    super._unfocus();
-  }
+  // _handleUnhover() {
+  //   super._unfocus();
+  // }
 }

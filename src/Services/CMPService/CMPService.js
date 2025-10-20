@@ -1,4 +1,9 @@
-import { API_METHODS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import {
+  API_METHODS,
+  API_URLS,
+  CUSTOM_EVENT_NAMES,
+  LOCAL_STORAGE_KEYS,
+} from '../../constants/globalConstants';
 import { getDeviceInfo } from '../../utils/device';
 import FetchingService from '../FetchingService';
 import { V2, auth } from '../utils';
@@ -45,7 +50,7 @@ class CMPService extends FetchingService {
                 timestamp
               );
               localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(tokenData.data));
-              const event = new CustomEvent('userLogIn');
+              const event = new CustomEvent(CUSTOM_EVENT_NAMES.USER_LOG_IN);
               window.dispatchEvent(event);
             }
           } catch (statusError) {
@@ -69,7 +74,7 @@ class CMPService extends FetchingService {
 
   #getCMP = async (deviceCode) => {
     const response = await this._request({
-      url: `/cmp`,
+      url: `/${API_URLS.GET_CMP}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
@@ -86,7 +91,7 @@ class CMPService extends FetchingService {
 
   #getCMPChoice = async (deviceCode, choicePick) => {
     return await this._request({
-      url: `/cmp`,
+      url: `/${API_URLS.GET_CMP}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
@@ -102,7 +107,7 @@ class CMPService extends FetchingService {
 
   getDeviceCode = async () => {
     return await this._request({
-      url: `/device.php`,
+      url: `/${API_URLS.GET_DEVICE_CODE}`,
       apiVersion: auth,
       method: API_METHODS.GET,
       params: {
@@ -114,7 +119,7 @@ class CMPService extends FetchingService {
 
   #getDeviceCodeStatus = async (deviceCode) => {
     return await this._request({
-      url: `/device-status.php`,
+      url: `/${API_URLS.GET_DEVICE_STATUS}`,
       apiVersion: auth,
       method: API_METHODS.POST,
       params: {
@@ -129,7 +134,7 @@ class CMPService extends FetchingService {
     const timestamp = new Date().getTime();
 
     return await this._request({
-      url: `/token.php`,
+      url: `/${API_URLS.GET_TOKEN}`,
       apiVersion: auth,
       method: API_METHODS.POST,
       headers: {

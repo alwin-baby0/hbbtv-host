@@ -58,19 +58,19 @@ export default class CategoryPickerItem extends Lightning.Component {
     Router.focusPage();
     const { index } = this._props;
 
-    const parentName = this.parent.parent.parent.parent.parent.parent.ref;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    // const parentName = this.parent.parent.parent.parent.parent.parent.ref;
+    this.fireAncestors('$handleItemHover', index);
     this._focus();
-    if (parentName === 'VodContentContainer') {
-      this.fireAncestors('$updateVerticalState', 'VodContentContainer');
-    } else {
-      this.fireAncestors('$updateVerticalState', 'Categories');
-    }
+    // if (parentName === 'VodContentContainer') {
+    //   this.fireAncestors('$updateVerticalState', 'VodContentContainer');
+    // } else {
+    //   this.fireAncestors('$updateVerticalState', 'Categories');
+    // }
   }
 
-  _handleUnhover() {
-    this._unfocus();
-  }
+  // _handleUnhover() {
+  //   this._unfocus();
+  // }
 
   _handleClick() {
     const { callback } = this._props;

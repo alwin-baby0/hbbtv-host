@@ -222,13 +222,13 @@ export default class EPGRailItems extends Lightning.Component {
   _handleHover() {
     const { index } = this._props;
 
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     this._focus();
   }
 
-  _handleUnhover() {
-    this._unfocus();
-  }
+  // _handleUnhover() {
+  //   this._unfocus();
+  // }
 
   _handleClick() {
     this._handleEnter();

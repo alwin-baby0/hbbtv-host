@@ -35,4 +35,11 @@ export default class LiveChannelRailItem extends Lightning.Component {
   get _Icon() {
     return this.tag('Icon');
   }
+
+  _handleHover() {
+    Router.focusPage();
+    const { index } = this._props;
+    this.fireAncestors('$handleItemHover', index);
+    this._focus();
+  }
 }

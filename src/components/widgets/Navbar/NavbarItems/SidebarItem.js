@@ -5,6 +5,7 @@ import colors from '../../../../../reskin/colors.json';
 export default class SidebarItem extends lng.Component {
   _props = {
     selected: false,
+    extraItemSpacing: 20,
   };
 
   static _template() {
@@ -50,7 +51,7 @@ export default class SidebarItem extends lng.Component {
       ...props,
     };
 
-    const { selected } = this._props;
+    const { selected, extraItemSpacing } = this._props;
     const { label, icon, route } = this._props.data;
     if (selected) {
       this.patch({
@@ -80,6 +81,7 @@ export default class SidebarItem extends lng.Component {
 
     if (icon !== '') {
       this.patch({
+        flexItem: { marginRight: extraItemSpacing },
         Line: {
           x: 200,
           y: 21,
@@ -92,6 +94,7 @@ export default class SidebarItem extends lng.Component {
     } else {
       this.patch({
         w: route === 'live' && label.length > 10 ? 200 : 150,
+        flexItem: { marginRight: extraItemSpacing },
         Title: {
           text: {
             maxLines: 1,
@@ -146,19 +149,12 @@ export default class SidebarItem extends lng.Component {
         visible: false,
       },
     });
+    this._Line.visible = false;
   }
 
   fja() {
     const event = new CustomEvent('verticalIndexReset');
     window.dispatchEvent(event);
-  }
-
-  _handleRight() {
-    this.fireAncestors('$incrementSidebar');
-  }
-
-  _handleLeft() {
-    this.fireAncestors('$decrementSidebar');
   }
 
   _handleEnter() {
@@ -169,17 +165,11 @@ export default class SidebarItem extends lng.Component {
 
   _handleHover() {
     this._focus();
-    this.fireAncestors('$changeHoverFocus', this._props.index);
+    this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
     Router.focusWidget('Menu');
   }
 
-  _handleUnhover() {
-    this._unfocus();
-  }
-
   _handleClick() {
-    this.fja();
-    this.fireAncestors('$changePage', this._props.index);
-    Router.focusPage();
+    this._handleEnter();
   }
 }

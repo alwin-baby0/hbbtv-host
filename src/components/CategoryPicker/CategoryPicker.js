@@ -7,6 +7,7 @@ export default class CategoryPicker extends Lightning.Component {
   _props = {
     x: 110,
     y: 150,
+    parentState: null,
   };
 
   static _template() {
@@ -25,9 +26,8 @@ export default class CategoryPicker extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { x, y, items } = this._props;
-
-    this._CaterogyItems.props = { items };
+    const { x, y, items, parentState } = this._props;
+    items && console.log(items[0]);
 
     this.patch({
       x: x,
@@ -46,6 +46,7 @@ export default class CategoryPicker extends Lightning.Component {
       CaterogyItems: {
         w: CARD_SIZES.CATEGORY.width,
         h: CARD_SIZES.CATEGORY.height,
+        props: { ...(items && items[0].props), parentState },
       },
     });
   }

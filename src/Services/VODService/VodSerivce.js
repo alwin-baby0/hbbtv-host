@@ -8,7 +8,7 @@ import {
 } from '../../Models/parsers';
 import { VOD_PREVIEW_TYPES } from '../../pages/utils';
 import { V2 } from '../utils';
-import { API_METHODS } from '../../constants/globalConstants';
+import { API_METHODS, API_URLS } from '../../constants/globalConstants';
 
 export const VODS_PER_ROW = 6;
 export const VOD_ROWS_PER_FETCH = 3;
@@ -173,7 +173,7 @@ class VodService extends FetchingService {
 
   #getGenres = async (vodType) =>
     await this._request({
-      url: '/getGenres',
+      url: `/${API_URLS.GET_GENRES}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
@@ -184,7 +184,7 @@ class VodService extends FetchingService {
 
   #getMovies = async (params) =>
     await this._request({
-      url: '/movies',
+      url: `/${API_URLS.GET_MOVIES}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
@@ -192,7 +192,7 @@ class VodService extends FetchingService {
 
   #getSeries = async (params) =>
     await this._request({
-      url: '/series',
+      url: `/${API_URLS.GET_SERIES}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
@@ -200,7 +200,7 @@ class VodService extends FetchingService {
 
   #getSports = async (params) =>
     await this._request({
-      url: '/sports',
+      url: `/${API_URLS.GET_SPORTS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
@@ -208,7 +208,7 @@ class VodService extends FetchingService {
 
   #getSportsEvents = async (type = 'video', language = 'en') =>
     await this._request({
-      url: '/getSportEvents',
+      url: `/${API_URLS.GET_SPORT_EVENTS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {

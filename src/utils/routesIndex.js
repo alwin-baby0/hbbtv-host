@@ -7,7 +7,7 @@ const ROUTES_INDEX = {
   'filterPage/series': 2,
   live: 4,
   search: 5,
-  settings: 6,
+  account: 6,
   langsettings: 7,
   help: 8,
 };
@@ -18,7 +18,7 @@ export function getRouteNavbarIndex(route, visibleSport) {
     ...(!visibleSport && {
       live: 3,
       search: 4,
-      settings: 5,
+      account: 5,
       langsettings: 6,
       help: 7,
     }),

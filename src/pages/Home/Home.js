@@ -65,13 +65,14 @@ export default class Home extends Lightning.Component {
     const { sliderData, railData } = this._props;
 
     const rails = constructRails(railData);
-    this._Column.props = { items: rails };
+    this._Column.props = { items: rails, parentState: 'Items' };
 
     if (sliderData) {
       this._HeroSection.patch({
         visible: true,
         props: {
           sliderData,
+          parentState: 'Hero',
         },
       });
       this._HeroSection._HeroSection._Info.patch({
@@ -108,6 +109,15 @@ export default class Home extends Lightning.Component {
 
   $setStateOnScroll(nextState) {
     this._setState(nextState);
+  }
+
+  $handleStateHover(index, stateName = null) {
+    console.log('Home hover state');
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {

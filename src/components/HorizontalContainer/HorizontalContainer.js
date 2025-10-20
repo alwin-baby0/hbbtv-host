@@ -8,6 +8,7 @@ export default class HorizontalContainer extends Lightning.Component {
     items: [],
     paddingLeft: 0,
     disableScroll: false,
+    parentState: null,
   };
   _focusedIndex = -1;
   _scrollPosition = 0;
@@ -61,9 +62,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   set props(props) {
-    const { items, railTitle, ...rest } = props;
+    const { items, railTitle, parentState, ...rest } = props;
 
-    this._props = { ...this._props, ...rest };
+    this._props = { ...this._props, ...rest, parentState };
+    console.log(this._props);
 
     const { cardType, targetIndex } = rest;
 
@@ -189,33 +191,6 @@ export default class HorizontalContainer extends Lightning.Component {
     return false;
   }
 
-  _handleHover() {
-    let verticalState;
-
-    const parentContainer = this.parent.parent.ref;
-    const indexForVC = this.parent.children.indexOf(this);
-    const constructorName = this.Items.children[this._focusedIndex]?.constructor.name;
-
-    if (constructorName === 'PosterRailItem' && parentContainer === 'VODSection') {
-      //case for search page
-      verticalState = 'VODSection';
-    }
-    if (constructorName === 'PosterRailItem' && parentContainer !== 'VODSection') {
-      verticalState = 'VodContainer';
-    }
-    if (constructorName === 'SportsEventsRailItem') {
-      verticalState = 'VodContentContainer';
-    }
-    if (constructorName === 'LandscapeRailItem') {
-      verticalState = 'Items';
-    }
-    if (constructorName === 'EPGRailItems') {
-      verticalState = 'EPGS';
-    }
-
-    this.fireAncestors('$horizontalContainerPosterIndexChange', indexForVC, verticalState);
-  }
-
   _handleRight() {
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
@@ -249,6 +224,25 @@ export default class HorizontalContainer extends Lightning.Component {
       return false;
     }
     return true;
+  }
+
+  $handleItemHover(index) {
+    console.log(index);
+    if (this._focusedIndex !== index) {
+      this.Items.children[this._focusedIndex]?._unfocus();
+      this._focusedIndex = index;
+    }
+    this._reCalibrateScroll();
+    console.log(this._props);
+    this.parent.parent.type &&
+    (this.parent.parent.type.name === 'VerticalContainer' ||
+      this.parent.parent.type.name === 'EPGContainer')
+      ? this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this))
+      : this.fireAncestors(
+          '$handleStateHover',
+          this.parent.children.indexOf(this),
+          this._props.parentState
+        );
   }
 
   _focus() {

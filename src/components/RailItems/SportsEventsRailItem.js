@@ -1,4 +1,4 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Utils, Router } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
@@ -165,14 +165,15 @@ export default class SportsEventsRailItem extends FocusableItem {
   }
 
   _handleHover() {
+    Router.focusPage();
     const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     super._focus();
   }
 
-  _handleUnhover() {
-    super._unfocus();
-  }
+  // _handleUnhover() {
+  //   super._unfocus();
+  // }
 
   _handleClick() {
     const { callback } = this._props;

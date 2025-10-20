@@ -8,6 +8,8 @@ import { eventTrackPayload } from '../../utils/device';
 import { VOD_PREVIEW_TYPES } from '../utils';
 import { EVENT_NAMES } from '../../constants/globalConstants';
 
+const states = ['VodContentContainer', 'VodContainer'];
+
 export default class VodPreview extends Lightning.Component {
   _props = {
     vodType: undefined,
@@ -70,12 +72,21 @@ export default class VodPreview extends Lightning.Component {
     if (this._props.vodType !== vodType) {
       this._props = { ...this._props, ...props };
       const { content, items } = this._props;
+      console.log(items);
 
-      this._VodContentContainer.props = { ...content };
-      this._Column.props = { items };
+      this._VodContentContainer.props = { ...content, parentState: 'VodContentContainer' };
+      this._Column.props = { items, parentState: 'VodContainer' };
 
       this._setState('VodContentContainer');
     }
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   calculateContentOffset(contentType) {

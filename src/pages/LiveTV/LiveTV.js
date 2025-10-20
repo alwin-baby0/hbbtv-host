@@ -33,6 +33,7 @@ export default class LiveTV extends Lightning.Component {
           props: {
             x: 110,
             y: 540,
+            parentState: 'Categories',
           },
         },
         Channels: {
@@ -68,6 +69,7 @@ export default class LiveTV extends Lightning.Component {
             type: EPGContainer,
             props: {
               w: 1615,
+              parentState: 'EPGS',
             },
           },
           Flag: {
@@ -351,6 +353,7 @@ export default class LiveTV extends Lightning.Component {
 
     this._Channels.props = {
       items: channels,
+      parentState: 'Channels',
     };
 
     this._EPGData.setInitialOffset();
@@ -404,6 +407,16 @@ export default class LiveTV extends Lightning.Component {
 
   $updateVerticalState(nextState) {
     this._setState(nextState);
+  }
+
+  $handleStateHover(index, stateName = null) {
+    console.log(stateName);
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    console.log(this.children[index]);
+    this._setState(states[index]);
   }
 
   static _states() {

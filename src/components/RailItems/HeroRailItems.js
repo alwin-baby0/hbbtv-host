@@ -114,21 +114,21 @@ export default class HeroRailItem extends FocusableItem {
     this.fireAncestors('$nextVideo', index);
   }
 
-  _handleUnhover() {
-    const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
-    super._unfocus();
-    this.fireAncestors('$unpunchHole');
+  // _handleUnhover() {
+  //   const { index } = this._props;
+  //   this.fireAncestors('$handleItemHover', index);
+  //   super._unfocus();
+  //   this.fireAncestors('$unpunchHole');
 
-    if (this._timeoutId) {
-      clearTimeout(this._timeoutId);
-    }
-    this.fireAncestors('$stopVideo');
-  }
+  //   if (this._timeoutId) {
+  //     clearTimeout(this._timeoutId);
+  //   }
+  //   this.fireAncestors('$stopVideo');
+  // }
 
-  _handleScroll(event) {
-    if (event.deltaY > 0) {
-      this.fireAncestors('$setStateOnScroll', 'Items');
-    }
-  }
+  // _handleScroll(event) {
+  //   if (event.deltaY > 0) {
+  //     this.fireAncestors('$setStateOnScroll', 'Items');
+  //   }
+  // }
 }

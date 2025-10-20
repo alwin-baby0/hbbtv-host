@@ -208,6 +208,7 @@ export default class LanguageSettings extends Lightning.Component {
             collision: true,
             props: {
               items: buttons,
+              parentState: 'CMPContainer',
             },
           },
         },
@@ -237,6 +238,7 @@ export default class LanguageSettings extends Lightning.Component {
             enableScroll: false,
             w: 1050,
             h: 300,
+            parentState: 'Languages',
           },
         },
       });
@@ -255,6 +257,14 @@ export default class LanguageSettings extends Lightning.Component {
   _handleBack() {
     Router.setHistory([{ hash: 'home', state: null }]);
     Router.back();
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {

@@ -14,6 +14,7 @@ const memberArea = (page, tabButtons) => {
   page._Column.props = {
     items: items,
     enableScroll: false,
+    parentState: 'DefaultState',
   };
 };
 

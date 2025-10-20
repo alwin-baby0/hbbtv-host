@@ -249,6 +249,10 @@ export const EVENT_NAMES = {
   VIDEO_END: 'video_end',
 };
 
+export const CUSTOM_EVENT_NAMES = {
+  USER_LOG_IN: 'userLogIn',
+};
+
 export const LOCAL_STORAGE_KEYS = {
   TITAN_DEVICE_ID: 'titanDeviceID',
   NETGEM_DEVICE_ID: 'netgemDeviceID',
@@ -305,4 +309,32 @@ export const RAIL_TYPES = {
 export const VIDEO_TYPES = {
   STREAM_NOW: 'Stream now',
   SERIES: 'Series',
+};
+
+export const API_URLS = {
+  GET_GENRES: 'getGenres',
+  GET_MOVIES: 'movies',
+  GET_MOVIE: 'getMovie',
+  GET_SERIES: 'series',
+  GET_SERIE: 'getSerie',
+  GET_SEASON_TABS: 'getSeasonTabs',
+  GET_SEASON: 'getSeason',
+  GET_SPORTS: 'sports',
+  GET_SPORT_EVENTS: 'getSportEvents',
+  GET_SPORT_EVENT: 'getSportEvent',
+  GET_PAGE_TABS: 'getPageTabs',
+  GET_PAGE: 'getPage',
+  GET_SEARCH: 'search',
+  GET_LANGUAGES: 'languageByCountry',
+  GET_HOME_PAGE: 'start',
+  GET_BANNER: 'ads',
+  GET_EPG_GENRES: 'epg_genres',
+  GET_EPG_CHANNELS: 'epg_channels',
+  GET_EPG_PROGRAM: 'epg_program',
+  GET_AD_CUES: 'getAdcues',
+  GET_COLLECTION: 'getCollection',
+  GET_CMP: 'cmp',
+  GET_DEVICE_CODE: 'device.php',
+  GET_DEVICE_STATUS: 'device-status.php',
+  GET_TOKEN: 'token.php',
 };
