@@ -1,16 +1,14 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
-import { Column } from '@lightningjs/ui-components';
 import colors from '../../../../reskin/colors.json';
-import { SettingsService } from '../../../Services';
 
 export default class PageItem extends Lightning.Component {
   static _template() {
     return {
       Column: {
+        collision: true,
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         w: 240,
         h: 65,
-        type: Column,
         color: Colors(colors.white).get(),
         rect: true,
         shader: { type: Lightning.shaders.RoundedRectangle, radius: 6 },
@@ -49,9 +47,8 @@ export default class PageItem extends Lightning.Component {
         color: Colors(colors.white).get(),
       },
     });
-    let newPage;
-    newPage = SettingsService.getSinglePage(1);
-    this.fireAncestors('$changeDescription', newPage, 1);
+
+    this.fireAncestors('$changeDescription', 1);
   }
 
   _active() {
@@ -59,11 +56,8 @@ export default class PageItem extends Lightning.Component {
   }
 
   _handleEnter() {
-    let newPage;
-    newPage = SettingsService.getSinglePage(this._pageInfoData.id);
-
     let pageId = this._pageInfoData.id;
-    this.fireAncestors('$changeDescription', newPage, pageId);
+    this.fireAncestors('$changeDescription', pageId);
     this.fireAncestors('$setFocus', this._pageIndex);
   }
 
@@ -101,18 +95,12 @@ export default class PageItem extends Lightning.Component {
 
   _handleHover() {
     this._focus();
-  }
-
-  _handleUnhover() {
-    this._unfocus();
+    this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
   }
 
   _handleClick() {
-    let newPage;
-    newPage = getSinglePage(this._pageInfoData.id);
-
     let pageId = this._pageInfoData.id;
-    this.fireAncestors('$changeDescription', newPage, pageId);
+    this.fireAncestors('$changeDescription', pageId);
     this.fireAncestors('$setFocus', this._pageIndex);
   }
 }

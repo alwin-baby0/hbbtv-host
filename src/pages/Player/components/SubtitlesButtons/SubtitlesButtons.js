@@ -1,5 +1,6 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
+import { LOCAL_STORAGE_KEYS } from '../../../../constants/globalConstants';
 
 export default class SubtitlesButtons extends Lightning.Component {
   _props = {
@@ -110,7 +111,8 @@ export default class SubtitlesButtons extends Lightning.Component {
 
   // New method to get the index based on channelId
   _getIndexForChannelId(channelId) {
-    let selectedSubtitles = JSON.parse(localStorage.getItem('selectedSubtitlesForChannel')) || [];
+    let selectedSubtitles =
+      JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SELECTED_SUBTITLES_CHANNEL)) || [];
     const selectedSubtitle = selectedSubtitles.find((item) => item.channelId === channelId);
     return selectedSubtitle ? selectedSubtitle.index : null;
   }

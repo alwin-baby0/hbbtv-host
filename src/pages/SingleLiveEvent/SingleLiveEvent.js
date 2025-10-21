@@ -5,6 +5,9 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { CMPService, t } from '../../Services';
+import { EVENT_NAMES } from '../../constants/globalConstants';
+
+const states = ['BackButton', 'HeroSection', 'Items'];
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
@@ -19,6 +22,9 @@ export default class SingleLiveEvent extends Lightning.Component {
         x: 45,
         y: 30,
         zIndex: 100,
+        props: {
+          parentState: 'BackButton',
+        },
       },
       SeriesWrapper: {
         Content: {
@@ -60,6 +66,7 @@ export default class SingleLiveEvent extends Lightning.Component {
 
     this._Column.props = {
       items: [],
+      parentState: 'Items',
     };
 
     this._props = { ...this._props, ...props };
@@ -71,6 +78,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         fallbackImage,
         height: 650,
         yPos: 100,
+        parentState: 'HeroSection',
       },
     });
 
@@ -130,7 +138,7 @@ export default class SingleLiveEvent extends Lightning.Component {
 
     const { galleryItem } = this._props;
 
-    eventTrackPayload('view_stream', galleryItem.id);
+    eventTrackPayload(EVENT_NAMES.VIEW_STREAM, galleryItem.id);
   }
 
   _getFocused() {
@@ -174,6 +182,14 @@ export default class SingleLiveEvent extends Lightning.Component {
     }
 
     this._setState('HeroSection');
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {

@@ -1,14 +1,15 @@
 import { SimpleRailItem } from '../../Models';
-import { RAIL_TYPES } from '../../pages/utils';
+import { API_URLS, RAIL_TYPES } from '../../constants/globalConstants';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
+import { CARD_TYPES, API_METHODS } from '../../constants/globalConstants';
 
 export default class SearchService extends FetchingService {
   getSearch = async (keyword, category) =>
     this._request({
-      url: '/search',
+      url: `/${API_URLS.GET_SEARCH}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         keyword,
         limit: 500,
@@ -25,7 +26,7 @@ export default class SearchService extends FetchingService {
     return {
       railType: RAIL_TYPES.MOVIE,
       railTitle: data.title,
-      cardType: 'POSTER',
+      cardType: CARD_TYPES.POSTER,
       items: railItems,
     };
   }

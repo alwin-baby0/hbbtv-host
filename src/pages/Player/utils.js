@@ -50,6 +50,7 @@ export const playerButtonsLive = [
         onLiveContent: true,
         position: 60,
       },
+      isLive: true,
     },
   },
   {
@@ -62,6 +63,7 @@ export const playerButtonsLive = [
         onLiveContent: true,
         position: 810,
       },
+      isLive: true,
     },
   },
   {
@@ -74,6 +76,7 @@ export const playerButtonsLive = [
         onLiveContent: true,
         position: 810,
       },
+      isLive: true,
     },
   },
 ];
@@ -129,36 +132,4 @@ export const formatAds = (slots) => {
       };
     });
   });
-};
-
-export const fakeAdsData = {
-  slots: [
-    {
-      slot: 'slot1',
-      total_duration: 10,
-      pods: [
-        {
-          pod: 'pod1',
-          ads: [
-            {
-              impression: 'https://springserve.com/vast/ad1',
-              cue: {
-                from: '00:00:40',
-                to: '00:00:50',
-              },
-              skipping_allowed: true,
-            },
-            {
-              impression: 'https://springserve.com/vast/ad2',
-              cue: {
-                from: '00:00:50',
-                to: '00:01:00',
-              },
-              skipping_allowed: true,
-            },
-          ],
-        },
-      ],
-    },
-  ],
 };

@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import { getDeviceInfo, getDeviceType } from '../../utils/device';
 
 export const V1 = 'v1';
@@ -18,20 +19,22 @@ const bundleIndentifierMap = (deviceType) => {
 export function createApiCtx() {
   const selectedLanguage =
     navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
+  const deviceInfo = getDeviceInfo();
+
   return btoa(
     JSON.stringify({
-      languageCode: localStorage.getItem('languageCode') || selectedLanguage,
+      languageCode: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || selectedLanguage,
       version_name: process.env.APP_VERSION,
-      osVersion: getDeviceInfo().osVersion || 'no-os-version-defined',
+      osVersion: deviceInfo.osVersion || 'no-os-version-defined',
       deviceWidth: window.innerWidth || 1920,
       deviceHeight: window.innerHeight || 1080,
       platform: bundleIndentifierMap(getDeviceType()),
       bundleIdentifier: process.env.APP_BUNDLE,
       api_key: process.env.APP_WATCH4_API_KEY,
-      deviceId: getDeviceInfo().serialNumber || 'no-id-defined',
-      deviceModel: getDeviceInfo().model || 'no-model-defined',
-      deviceMake: getDeviceInfo().brand || 'no-make-defined',
-      language: localStorage.getItem('languageCode') || selectedLanguage,
+      deviceId: deviceInfo.serialNumber || 'no-id-defined',
+      deviceModel: deviceInfo.model || 'no-model-defined',
+      deviceMake: deviceInfo.brand || 'no-make-defined',
+      language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || selectedLanguage,
     })
   );
 }

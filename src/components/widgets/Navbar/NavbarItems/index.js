@@ -1,11 +1,11 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
-import { Row } from '@lightningjs/ui-components';
-import { Colors, Router, Utils } from '@lightningjs/sdk';
-import { getRouteNavbarIndex, VISIBLE_SPORT_COUNTRIES } from '../../../../utils/routesIndex';
-import colors from '../../../../../reskin/colors.json';
+import { Router, Utils } from '@lightningjs/sdk';
+import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
+import { VISIBLE_SPORT_COUNTRIES } from '../../../../constants/globalConstants';
 import SidebarItem from './SidebarItem';
 import { t } from '../../../../Services';
 import { CountryService } from '../../../../Services';
+import HorizontalContainer from '../../../HorizontalContainer/HorizontalContainer';
 
 export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
@@ -26,7 +26,7 @@ export default class SidebarItems extends Lightning.Component {
           src: Utils.asset('/images/navbar/logo.png'),
         },
         Column: {
-          type: Row,
+          type: HorizontalContainer,
           collision: true,
           x: 300,
           h: 70,
@@ -42,7 +42,6 @@ export default class SidebarItems extends Lightning.Component {
 
   async _active() {
     const location = await CountryService.getCountry();
-    console.log(location);
     this._visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());
 
     // setTimeout is used to give time for url hash to change before asign the right one
@@ -73,7 +72,7 @@ export default class SidebarItems extends Lightning.Component {
             { id: 3, label: t('sport'), route: 'vod/sports', icon: '' },
             { id: 4, label: t('live_tv'), route: 'live', icon: '' },
             { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-            { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
+            { id: 6, label: 'user', route: 'account', icon: 'images/navbar/user.svg' },
             { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
             { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
           ]
@@ -82,33 +81,33 @@ export default class SidebarItems extends Lightning.Component {
           ...[
             { id: 3, label: t('live_tv'), route: 'live', icon: '' },
             { id: 4, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-            { id: 5, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
+            { id: 5, label: 'user', route: 'account', icon: 'images/navbar/user.svg' },
             { id: 6, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
             { id: 7, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
           ]
         );
-    console.log(menuItems);
 
     this._menuItemRoutes = menuItems.map((item) => item.route);
 
     this._sidebarLength = menuItems.length;
 
     this._Column.patch({
-      items: menuItems.map((item) => {
-        return {
-          type: SidebarItem,
-          collision: true,
-          w: this._visibleSport ? (item.id < 5 ? 150 : 50) : item.id < 4 ? 150 : 50,
-          h: 70,
-          props: {
-            selected: false,
-            index: item.id,
-            data: item,
-          },
-          extraItemSpacing: item.route === 'live' ? 270 : 0,
-          color: Colors(colors.unfocus).get(),
-        };
-      }),
+      props: {
+        items: menuItems.map((item) => {
+          return {
+            type: SidebarItem,
+            collision: true,
+            w: this._visibleSport ? (item.id < 5 ? 150 : 50) : item.id < 4 ? 150 : 50,
+            h: 70,
+            props: {
+              selected: false,
+              index: item.id,
+              data: item,
+              extraItemSpacing: item.route === 'live' ? 270 : 20,
+            },
+          };
+        }),
+      },
     });
   }
 
@@ -129,7 +128,7 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _setSelected(index) {
-    this._Column.items.forEach((item, i) => {
+    this._Column.Items.children.forEach((item, i) => {
       item.patch({
         props: {
           selected: i === index,
@@ -148,39 +147,16 @@ export default class SidebarItems extends Lightning.Component {
     }
   }
 
-  $changeHoverFocus(index) {
-    this._newIndex = index;
-    this._Column.children[0].children[this._index]._unfocus();
-    this._index = index;
-  }
-
-  _updateFocus() {
-    const activeHash = Router.getActiveHash();
-    if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
-      this._index = getRouteNavbarIndex('filterPage/movie', this._visibleSport);
-      this._setSelected(this._index);
-      return;
-    } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
-      this._index = getRouteNavbarIndex('filterPage/series', this._visibleSport);
-      this._setSelected(this._index);
-      return;
-    }
-    const newIndex = getRouteNavbarIndex(Router.getActiveHash(), this._visibleSport);
-    if (newIndex !== this._index) {
-      this._setSelected(newIndex);
-      this._index = newIndex;
-    }
-  }
-
-  $decrementSidebar() {
-    this._newIndex > 0 ? --this._newIndex : this._newIndex;
-  }
-
-  $incrementSidebar() {
-    this._newIndex < this._sidebarLength - 1 ? ++this._newIndex : this._newIndex;
-  }
-
   _getFocused() {
-    return this._Column.items[this._newIndex];
+    return this._Column;
+  }
+
+  _handleHover() {
+    Router.focusWidget('Menu');
+    this._Column._focus();
+  }
+
+  _handleUnhover() {
+    Router.focusPage();
   }
 }

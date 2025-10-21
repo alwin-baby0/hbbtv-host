@@ -3,8 +3,12 @@ import Button from '../../components/Button/Button';
 import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
-import { Column, Row } from '@lightningjs/ui-components';
 import { eventTrackPayload } from '../../utils/device';
+import { EVENT_NAMES, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+
+const states = ['Buttons', 'ContinueBtn', 'BackButton'];
 
 export default class SingleMovie extends Lightning.Component {
   _props = {};
@@ -21,6 +25,9 @@ export default class SingleMovie extends Lightning.Component {
           texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
           x: 45,
           y: 30,
+          props: {
+            parentState: 'BackButton',
+          },
         },
         Card: {
           x: 70,
@@ -111,14 +118,11 @@ export default class SingleMovie extends Lightning.Component {
               },
             },
             Buttons: {
-              type: Column,
+              type: VerticalContainer,
               collision: true,
               w: 1200,
               style: {
                 itemSpacing: 100,
-              },
-              props: {
-                disableScroll: true,
               },
               y: 72,
             },
@@ -257,7 +261,7 @@ export default class SingleMovie extends Lightning.Component {
       ? buttons.filter((button) => button.buttonName !== 'TRAILER')
       : buttons;
 
-    if (localStorage.getItem('userData')) {
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       filteredButtons.push({
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonName: 'FAVORITE',
@@ -276,7 +280,7 @@ export default class SingleMovie extends Lightning.Component {
 
     const rows = [];
 
-    const languageCode = localStorage.getItem('languageCode');
+    const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
 
     const itemsInRow = languageCode === 'fr' ? 2 : 3;
 
@@ -284,53 +288,59 @@ export default class SingleMovie extends Lightning.Component {
       rows.push({ items: filteredButtons.slice(i, i + itemsInRow) });
     }
 
-    this._Buttons.items = rows.map((row) => ({
-      type: Row,
-      collision: true,
-      items: row.items.map((item, index) => ({
-        type: Button,
+    this._Buttons.props = {
+      parentState: 'Buttons',
+      items: rows.map((row) => ({
+        type: HorizontalContainer,
         collision: true,
-        w: item.width,
-        flexItem: {
-          marginRight: 30,
-        },
         props: {
-          width: item.width,
-          index,
-          buttonLabel: item.buttonLabel,
-          buttonIcon: Utils.asset(item.icon),
-          callback: () => {
-            if (item.buttonName === 'FAVORITE') {
-              this.addToFavorite();
-            } else if (item.buttonName === 'WATCH NOW') {
-              DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
-                ({ data: result }) => {
+          parentState: 'Buttons',
+          items: row.items.map((item, index) => ({
+            type: Button,
+            collision: true,
+            w: item.width,
+            flexItem: {
+              marginRight: 30,
+            },
+            props: {
+              width: item.width,
+              index,
+              buttonLabel: item.buttonLabel,
+              buttonIcon: Utils.asset(item.icon),
+              callback: () => {
+                if (item.buttonName === 'FAVORITE') {
+                  this.addToFavorite();
+                } else if (item.buttonName === 'WATCH NOW') {
+                  DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
+                    ({ data: result }) => {
+                      Router.navigate('player', {
+                        videoUrl: result[0]?.content?.src ?? movie[item.stream],
+                        duration: duration,
+                        videoId: movieId,
+                        ssai: result[0].extensions?.ssai ?? movie.ssai,
+                      });
+                    }
+                  );
+                } else if (item.buttonName === 'TRAILER') {
                   Router.navigate('player', {
-                    videoUrl: result[0]?.content?.src ?? movie[item.stream],
+                    videoUrl: movieTrailerUrl,
+                    videoId: movieTrailerId,
+                  });
+                } else if (item.buttonName === 'CONTINUE WATCHING') {
+                  Router.navigate('player', {
+                    videoUrl: movie.url,
                     duration: duration,
                     videoId: movieId,
-                    ssai: result[0].extensions?.ssai ?? movie.ssai,
+                    continueTime: last_position,
+                    ssai: movie.ssai,
                   });
                 }
-              );
-            } else if (item.buttonName === 'TRAILER') {
-              Router.navigate('player', {
-                videoUrl: movieTrailerUrl,
-                videoId: movieTrailerId,
-              });
-            } else if (item.buttonName === 'CONTINUE WATCHING') {
-              Router.navigate('player', {
-                videoUrl: movie.url,
-                duration: duration,
-                videoId: movieId,
-                continueTime: last_position,
-                ssai: movie.ssai,
-              });
-            }
-          },
+              },
+            },
+          })),
         },
       })),
-    }));
+    };
   }
 
   async _active() {
@@ -348,7 +358,7 @@ export default class SingleMovie extends Lightning.Component {
 
     this._setState('Buttons');
 
-    eventTrackPayload('view_movie', movieId);
+    eventTrackPayload(EVENT_NAMES.VIEW_MOVIE, movieId);
 
     this.fireAncestors('$unpunchHole');
   }
@@ -396,6 +406,14 @@ export default class SingleMovie extends Lightning.Component {
       //skip
       console.log('error', e);
     }
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {

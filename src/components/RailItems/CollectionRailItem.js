@@ -16,7 +16,7 @@ export default class CollectionRailItem extends FocusableItem {
     return {
       ...super._template(),
       w: CARD_SIZES.COLLECTION.width,
-      h: CARD_SIZES.COLLECTION.height - 30, // todo: find better solution
+      h: CARD_SIZES.COLLECTION.container_height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -104,11 +104,7 @@ export default class CollectionRailItem extends FocusableItem {
 
   _handleHover() {
     const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     super._focus();
-  }
-
-  _handleUnhover() {
-    super._unfocus();
   }
 }

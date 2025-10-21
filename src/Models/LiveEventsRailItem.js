@@ -1,8 +1,9 @@
+import { RAIL_TYPES } from '../constants/globalConstants';
 import { SimpleRailItem } from './SimpleRailItem';
 
 class LiveEventsRailItem extends SimpleRailItem {
   constructor(data) {
-    super({ ...data, type: { value: 'event' } });
+    super({ ...data, type: { value: RAIL_TYPES.EVENT } });
     const { extensions, media_group } = data;
     const { description, date_as_string_with_time, button_text } = extensions;
 

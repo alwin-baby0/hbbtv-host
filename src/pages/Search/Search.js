@@ -1,19 +1,24 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch';
-import InputField from './components/Input';
+import InputField from '../../components/Input/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
 import { HomePageService, SearchService, t } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
+import { CARD_TYPES, EVENT_NAMES, RAIL_TYPES } from '../../constants/globalConstants';
 
 const search = {
   items: [],
   timestamp: 0,
 };
 
+const states = ['Input', 'VODSection', 'Keyboard'];
+
 export default class Search extends Lightning.Component {
   searchTimeout;
+  numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+
   static _template() {
     return {
       w: 1920,
@@ -24,6 +29,9 @@ export default class Search extends Lightning.Component {
         w: 1700,
         Input: {
           type: InputField,
+          props: {
+            parentState: 'Input',
+          },
         },
       },
       Wrapper: {
@@ -35,6 +43,9 @@ export default class Search extends Lightning.Component {
           zIndex: 205,
           visible: false,
           limit: 50,
+          props: {
+            parentState: 'Keyboard',
+          },
         },
       },
       VODWrapper: {
@@ -52,6 +63,9 @@ export default class Search extends Lightning.Component {
           type: VerticalContainer,
           collision: true,
           plinko: true,
+          props: {
+            parentState: 'VODSection',
+          },
         },
       },
       Spinner: {
@@ -79,7 +93,13 @@ export default class Search extends Lightning.Component {
     return this.tag('Spinner');
   }
 
-  numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+  get _Input() {
+    return this.tag('Input');
+  }
+
+  get _Keyboard() {
+    return this.tag('Keyboard');
+  }
 
   _handleKey(key) {
     if (this.numberKeys.includes(key.key)) {
@@ -113,15 +133,17 @@ export default class Search extends Lightning.Component {
     }
     this.searchTimeout = setTimeout(() => {
       this.$updatedVOD();
-      this.searchTimeout = null;
     }, 1000);
   }
 
   _inactive() {
     this._Input._Input.listening = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
   }
 
-  async $updatedVOD(keyword, category) {
+  async $updatedVOD() {
     let inputValue = this._Input._Input.value.toLowerCase();
 
     this.patch({
@@ -140,7 +162,7 @@ export default class Search extends Lightning.Component {
         }
       });
 
-      eventTrackPayload('search', inputValue);
+      eventTrackPayload(EVENT_NAMES.SEARCH, inputValue);
     } else {
       await HomePageService.initialFetch();
       this.$changedVODGenre(HomePageService.stripes[0]);
@@ -153,8 +175,8 @@ export default class Search extends Lightning.Component {
       rows.push({
         items: data.items.slice(i, i + 6),
         railTitle: i === 0 ? data.railTitle : '',
-        cardType: 'POSTER',
-        railType: 'search',
+        cardType: CARD_TYPES.POSTER,
+        railType: RAIL_TYPES.SEARCH,
       });
     }
 
@@ -197,20 +219,12 @@ export default class Search extends Lightning.Component {
     this.$updatedVOD();
   }
 
-  get _Input() {
-    return this.tag('Input');
-  }
-
   $getInput() {
     return this._Input._Input;
   }
 
   $setFocusKeyboard() {
     this._setState('Keyboard');
-  }
-
-  get _Keyboard() {
-    return this.tag('Keyboard');
   }
 
   _active() {
@@ -224,6 +238,14 @@ export default class Search extends Lightning.Component {
   _handleBack() {
     Router.setHistory([{ hash: 'home', state: null }]);
     Router.back();
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {
@@ -306,13 +328,12 @@ export default class Search extends Lightning.Component {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
           this._extended = this._VODSection._focusedIndex > 0;
-          this._extended = false;
           this.patch({
             InputWrapper: {
-              y: -550,
+              y: 20,
             },
             VODWrapper: {
-              y: 0,
+              y: 120,
               h: 1920,
             },
           });
@@ -327,10 +348,10 @@ export default class Search extends Lightning.Component {
             this._extended = false;
             this.patch({
               InputWrapper: {
-                y: -100,
+                y: 20,
               },
               VODWrapper: {
-                y: 0,
+                y: 120,
                 h: 1080,
               },
               VODSection: {

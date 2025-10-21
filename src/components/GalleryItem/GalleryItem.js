@@ -2,7 +2,7 @@ import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
-import { DetailService } from '../../Services';
+import { DetailService, t } from '../../Services';
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -82,7 +82,7 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
           },
           props: {
-            buttonLabel: 'WATCH NOW',
+            buttonLabel: t('watch_now'),
             buttonIcon: Utils.asset('icons/home/play.svg'),
           },
         },
@@ -124,7 +124,7 @@ export default class GalleryItem extends Lightning.Component {
       ssai,
     } = this._props;
 
-    const { id, title, summary, description, buttonLabel, url, duration, videoType, venue } =
+    const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
 
     this._Info.patch({
@@ -239,37 +239,48 @@ export default class GalleryItem extends Lightning.Component {
             buttonLabel: buttonLabel,
             callback: callback,
             buttonIcon: btnIcon,
+            // parentState: 'GalleryButton',
           },
         });
       })();
   }
+
   get _GradientOverlay() {
     return this.tag('GradientOverlay');
   }
+
   get _Info() {
     return this.tag('Info');
   }
+
   get _Title() {
     return this.tag('Title');
   }
+
   get _Summary() {
     return this.tag('Summary');
   }
+
   get _Description() {
     return this.tag('Description');
   }
+
   get _GalleryButton() {
     return this.tag('GalleryButton');
   }
+
   get _ContinueWatching() {
     return this.tag('AuthorizedButtons.ContinueWatching');
   }
+
   get _FavoriteButton() {
     return this.tag('AuthorizedButtons.FavoriteButton');
   }
+
   get _BackgroundImage() {
     return this.tag('BackgroundImage');
   }
+
   _firstActive() {
     this._setState('GalleryButton');
   }
@@ -279,15 +290,27 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   $setButtonState(buttonName) {
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
+
     switch (buttonName) {
       case 'GalleryButton':
         this._setState('GalleryButton');
+        this._ContinueWatching._unfocus();
+        this._FavoriteButton._unfocus();
         break;
       case 'ContinueWatching':
         this._setState('ContinueWatching');
+        this._GalleryButton._unfocus();
+        this._FavoriteButton._unfocus();
         break;
       case 'FavoriteButton':
         this._setState('FavoriteButton');
+        this._ContinueWatching._unfocus();
+        this._GalleryButton._unfocus();
         break;
     }
   }

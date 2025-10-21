@@ -1,13 +1,9 @@
 import FetchingService from '../FetchingService';
-import { V2 } from '../utils';
 import axios from 'axios';
 
 export default class CountryService extends FetchingService {
   getCountry = async () => {
-    const translations = await axios(
-      `https://api-applicaster.wedo.tv/ip2country.php?resp=json`,
-      {}
-    );
+    const translations = await axios(`${process.env.APP_BASE_URL_2}/ip2country.php?resp=json`, {});
     return translations;
   };
 }

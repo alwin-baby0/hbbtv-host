@@ -11,7 +11,9 @@ export const CONTENT_TYPE = {
 export default class VodContentContainer extends Lightning.Component {
   _props = {
     contentType: CONTENT_TYPE.EMPTY,
+    parentState: null,
   };
+
   static _template() {
     return {
       h: 200,
@@ -34,7 +36,9 @@ export default class VodContentContainer extends Lightning.Component {
   }
 
   set props(props) {
+    this._props.parentState = props.parentState;
     const { contentType, items } = props;
+
     this._props.contentType = contentType;
 
     this.#changeContentVisibility(contentType);

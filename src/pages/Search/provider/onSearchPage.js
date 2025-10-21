@@ -22,4 +22,3 @@ export default async function (page) {
     page._Input.tag('Input').value = '';
   }
 }
-// TODO: move search components into components folder, create service to handle logic behind this page

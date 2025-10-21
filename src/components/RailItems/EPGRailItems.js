@@ -1,5 +1,6 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
+import { VIDEO_TYPES } from '../../constants/globalConstants';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
@@ -70,7 +71,7 @@ export default class EPGRailItems extends Lightning.Component {
     this._epgWidth = width - 5;
 
     const fixedWidth = this._epgWidth > 200 ? this._epgWidth : this._epgWidth;
-    const fixedWidth1 = this._epgWidth > 200 ? this._epgWidth - 20 : this._epgWidth - 50;
+    const fixedWordWrapWidth = this._epgWidth > 200 ? this._epgWidth - 20 : this._epgWidth - 50;
 
     this._Wrapper.patch({
       w: this._epgWidth,
@@ -83,7 +84,7 @@ export default class EPGRailItems extends Lightning.Component {
           },
           text: {
             text: this._props.title,
-            wordWrapWidth: fixedWidth1,
+            wordWrapWidth: fixedWordWrapWidth,
             maxLines: 1,
             fontSize: 20,
             fontFace: 'Montserrat-SemiBold',
@@ -158,7 +159,7 @@ export default class EPGRailItems extends Lightning.Component {
 
     this.selectEPGTimeout = setTimeout(() => {
       this.selectEPG();
-    }, 2000);
+    }, 500);
   }
 
   _unfocus() {
@@ -209,24 +210,29 @@ export default class EPGRailItems extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (this.selectEPGTimeout) {
+      clearTimeout(this.selectEPGTimeout);
+      this.selectEPGTimeout = null;
+    }
+
     VideoPlayer.close();
-    this.fireAncestors('$unpunchHole');
-    Router.navigate('player', {
-      videoUrl: this._props.content.src,
-      duration: 0,
-      videoType: 'Stream now',
-    });
+
+    setTimeout(() => {
+      this.fireAncestors('$unpunchHole');
+
+      Router.navigate('player', {
+        videoUrl: this._props.content.src,
+        duration: 0,
+        videoType: VIDEO_TYPES.STREAM_NOW,
+      });
+    }, 500);
   }
 
   _handleHover() {
     const { index } = this._props;
 
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     this._focus();
-  }
-
-  _handleUnhover() {
-    this._unfocus();
   }
 
   _handleClick() {

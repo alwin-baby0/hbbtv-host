@@ -27,9 +27,9 @@ const getGenresInfo = async (page, props) => {
   const title = props?.title?.toUpperCase();
   let searchType;
   if (type === FILTER_TYPES.MOVIE) {
-    searchType = 'movie';
+    searchType = FILTER_TYPES.MOVIE;
   } else if (type === FILTER_TYPES.SERIES) {
-    searchType = 'series';
+    searchType = FILTER_TYPES.SERIES;
   } else {
     searchType = 'unknown';
   }
@@ -84,7 +84,7 @@ const getGenresInfo = async (page, props) => {
       filtered.items = items;
     } else {
       filtered.items = [];
-      filtered.title = 'NOTHING';
+      filtered.title = `No ${searchType} found`;
     }
 
     page._Title.text = filtered.title;
@@ -93,16 +93,18 @@ const getGenresInfo = async (page, props) => {
     });
     page._Column.props = {
       items: filtered.items,
+      parentState: 'VodContainer',
     };
 
-    page._Button?.patch({
+    page._VodContentContainer?.patch({
       collision: true,
       props: {
-        itemInfo: { category, title: type == 'movie' ? 'MOVIES' : type },
+        itemInfo: { category },
         w: 170,
         h: 64,
         radius: 30,
         strokeWidth: 3,
+        parentState: 'VodContentContainer',
       },
     });
 
@@ -111,6 +113,7 @@ const getGenresInfo = async (page, props) => {
     });
   }
 };
+
 export default async function (page, props) {
   await getGenresInfo(page, props);
 }

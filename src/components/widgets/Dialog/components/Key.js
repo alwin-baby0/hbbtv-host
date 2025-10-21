@@ -26,13 +26,16 @@ export class Key extends Lightning.Component {
   get _Button() {
     return this.tag('Button');
   }
+
   set data(obj) {
     this._data = obj;
     this._update();
   }
+
   set index(val) {
     this._index = val;
   }
+
   get data() {
     return this._data;
   }
@@ -58,31 +61,38 @@ export class Key extends Lightning.Component {
       },
     });
   }
+
   _active() {
     this._update();
   }
+
   _focus() {
     super._focus();
     this._Button.patch({
       color: Colors('#C40000').get(),
     });
   }
+
   _unfocus() {
     super._unfocus();
     this._Button.patch({
       color: Colors('#292929').get(),
     });
   }
+
   _handleClick() {
     this.fireAncestors('$handleEnter');
   }
+
   _handleHover() {
     this.fireAncestors('$setIndex', this._index);
     this._focus();
   }
+
   _handleBack() {
     this.fireAncestors('$handleBack');
   }
+
   _handleUnhover() {
     this._unfocus();
   }

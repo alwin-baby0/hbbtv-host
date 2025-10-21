@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE_KEYS } from '../../../constants/globalConstants';
 import { DetailService, CMPService } from '../../../Services';
 import { constructRails } from '../../utils';
 
@@ -30,7 +31,7 @@ export default async function (page, { seriesId, cmpShown }) {
 
   let favorited = false;
 
-  if (localStorage.getItem('userData')) {
+  if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
     const response = await CMPService.getFavorites();
 
     favorited = response.data.favorites?.some((element) => element.id === seriesId);
@@ -83,5 +84,6 @@ export default async function (page, { seriesId, cmpShown }) {
 
   page._Column.props = {
     items: constructRails(updatedSeasons),
+    parentState: 'Items',
   };
 }

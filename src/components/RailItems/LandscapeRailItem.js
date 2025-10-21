@@ -22,7 +22,7 @@ export default class LandscapeRailItem extends FocusableItem {
         radius: 6,
       },
       w: CARD_SIZES.LANDSCAPE.width,
-      h: CARD_SIZES.LANDSCAPE.height + 45,
+      h: CARD_SIZES.LANDSCAPE.container_height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -138,11 +138,11 @@ export default class LandscapeRailItem extends FocusableItem {
 
   _handleHover() {
     const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     super._focus();
   }
 
-  _handleUnhover() {
-    super._unfocus();
-  }
+  // _handleUnhover() {
+  //   super._unfocus();
+  // }
 }
