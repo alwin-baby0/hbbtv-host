@@ -3,10 +3,13 @@ module.exports = {
   ],
   env: {
     test: {
+      presets: [
+        ['@babel/preset-env', {
+          targets: { node: 'current' }
+        }]
+      ],
       plugins: [
-        '@babel/plugin-transform-modules-commonjs',
-        '@babel/plugin-transform-export-namespace-from',
-        'babel-plugin-dynamic-import-node'
+        '@babel/plugin-transform-export-namespace-from'
       ]
     }
   }

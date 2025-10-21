@@ -148,7 +148,10 @@ module.exports = {
   testEnvironment: 'jsdom',
 
   // Options that will be passed to the testEnvironment
-  testEnvironmentOptions: { resources: 'usable' },
+  testEnvironmentOptions: {
+    resources: 'usable',
+    customExportConditions: ['node', 'node-addons']
+  },
 
   // Adds a location field to test results
   // testLocationInResults: false,
@@ -183,7 +186,7 @@ module.exports = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.[m|t]?js$': 'babel-jest',
+    '^.+\\.[m|t]?js$': ['babel-jest', { rootMode: 'upward' }],
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
