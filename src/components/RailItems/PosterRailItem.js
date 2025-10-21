@@ -16,7 +16,7 @@ export default class PosterRailItem extends FocusableItem {
     return {
       ...super._template(),
       w: CARD_SIZES.POSTER.width,
-      h: CARD_SIZES.POSTER.height,
+      h: CARD_SIZES.POSTER.container_height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {

@@ -16,7 +16,7 @@ export default class CollectionRailItem extends FocusableItem {
     return {
       ...super._template(),
       w: CARD_SIZES.COLLECTION.width,
-      h: CARD_SIZES.COLLECTION.height,
+      h: CARD_SIZES.COLLECTION.container_height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {

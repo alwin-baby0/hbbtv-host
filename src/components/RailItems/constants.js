@@ -1,13 +1,15 @@
 export const CARD_SIZES = {
   POSTER: {
     width: 273,
-    height: 430,
+    height: 460,
+    container_height: 430,
     image_width: 273,
     image_height: 375,
   },
   LANDSCAPE: {
     width: 315,
-    height: 455,
+    height: 410,
+    container_height: 455,
     image_width: 315,
     image_height: 205,
   },
@@ -34,7 +36,8 @@ export const CARD_SIZES = {
   },
   COLLECTION: {
     width: 415,
-    height: 255,
+    height: 285,
+    container_height: 255,
     image_width: 415,
     image_height: 230,
   },
