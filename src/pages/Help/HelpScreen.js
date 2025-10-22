@@ -1,11 +1,10 @@
-import { Colors, Router } from '@lightningjs/sdk';
+import { Colors, Router, Lightning } from '@lightningjs/sdk';
 import { ScrollWrapper } from '@lightningjs/ui-components';
-import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 
-export default class HelpScreen extends lng.Component {
+export default class HelpScreen extends Lightning.Component {
   _props = {
     lastId: 0,
     texts: [],
