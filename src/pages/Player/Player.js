@@ -1,4 +1,4 @@
-import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
+import { Colors, Router, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import { Column } from '@lightningjs/ui-components';
 import { getPlayer, loader, unloader } from '../../components/Player/HLS';
 import lng from '@lightningjs/core';
@@ -20,7 +20,7 @@ import { EVENT_NAMES, LOCAL_STORAGE_KEYS, VIDEO_TYPES } from '../../constants/gl
 
 const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
 
-export default class Player extends lng.Component {
+export default class Player extends Lightning.Component {
   _props = {
     pausedItemId: 1,
     isAdVisible: false,
@@ -299,6 +299,7 @@ export default class Player extends lng.Component {
   }
 
   set params({ videoType, videoUrl, ssai, ...rest }) {
+    console.log('here');
     this._Subtitles.patch({
       Title: {
         text: t('subtitles'),

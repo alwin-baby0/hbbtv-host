@@ -1,8 +1,8 @@
 import lng from '@lightningjs/core';
-import { Colors, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Router, Utils, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
 
-export default class SidebarItem extends lng.Component {
+export default class SidebarItem extends Lightning.Component {
   _props = {
     selected: false,
     extraItemSpacing: 20,

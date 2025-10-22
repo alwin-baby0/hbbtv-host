@@ -1,9 +1,9 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Utils, Lightning } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
 import { t } from '../../Services';
 
-export default class InputField extends lng.Component {
+export default class InputField extends Lightning.Component {
   _props = {
     parentState: null,
   };
