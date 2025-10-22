@@ -1,6 +1,6 @@
 import { Router } from '@lightningjs/sdk';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
-import { RAIL_TYPES } from '.';
+import { RAIL_TYPES, VIDEO_TYPES, CATEGORY_TYPES } from '../../constants/globalConstants';
 import { imageSizes } from '../../Models/utils';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
@@ -8,7 +8,6 @@ import SportsEventsRailItem from '../../components/RailItems/SportsEventsRailIte
 import CategoryPickerItem from '../../components/CategoryPickerItem/CategoryPickerItem';
 import EPGRailItems from '../../components/RailItems/EPGRailItems';
 import HeroRailItem from '../../components/RailItems/HeroRailItems';
-import { CATEGORY_TYPES } from '../../Models/Category';
 import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 import BannerRailItem from '../../components/RailItems/BannerRailItem';
 import { DetailService, EPGService } from '../../Services';
@@ -165,7 +164,7 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
               Router.navigate('player', {
                 videoUrl: epgStreamSrc,
                 duration: 0,
-                videoType: 'Stream now',
+                videoType: VIDEO_TYPES.STREAM_NOW,
               });
               break;
             }
@@ -203,7 +202,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
               videoUrl: result[0]?.content.src ?? railItem.src,
               videoId: railItem.id,
               duration: railItem.duration,
-              videoType: 'series',
+              videoType: VIDEO_TYPES.SERIES,
               seriesID: railItem.seriesId,
               ssai: result[0].extensions.ssai ?? railItem.ssai,
               episodeTitle: railItem.title,

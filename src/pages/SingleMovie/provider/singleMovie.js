@@ -8,7 +8,7 @@ export default async function (page, { movieId, cmpShown }) {
 
   if (movie.trailer) {
     const movieTrailer = await fetch(
-      `https://api-applicaster.wedo.tv/getMovie?id=${movie.trailer.trim()}`
+      `${process.env.APP_BASE_URL_2}/getMovie?id=${movie.trailer.trim()}`
     );
     const res = await movieTrailer.json();
 

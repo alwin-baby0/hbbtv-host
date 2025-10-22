@@ -8,7 +8,9 @@ import LoadingScreenComponent from '../../components/LoadingScreenComponent/Load
 export default class HelpScreen extends lng.Component {
   _props = {
     lastId: 0,
+    texts: [],
   };
+
   static _template() {
     return {
       Background: {
@@ -28,6 +30,9 @@ export default class HelpScreen extends lng.Component {
           type: VerticalContainer,
           h: 225,
           w: 240,
+          props: {
+            parentState: 'HelpItems',
+          },
         },
         Description: {
           w: 1390,
@@ -106,47 +111,8 @@ export default class HelpScreen extends lng.Component {
     this._props.lastId = id;
   }
 
-  $changeDescription(newPagePromise) {
-    try {
-      newPagePromise
-        .then((resolvedPage) => {
-          const text = resolvedPage.data.entry[0].extensions.content_plain;
-          const strippedText = text.replace(/<[^>]+>/g, '');
-          const decodedText = new DOMParser().parseFromString(strippedText, 'text/html')
-            .documentElement.textContent;
-
-          this._setScrollWrapperContent(decodedText);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    } catch (error) {
-      console.error('There was a problem processing the text:', error);
-    }
-  }
-
-  async $changeDescription(newPagePromise) {
-    try {
-      let decodedText = '';
-      this._LoadingIndicator.visible = true; // Show the loading indicator
-      const resolvedPage = await newPagePromise;
-      const text = resolvedPage.data.entry[0].extensions.content_plain;
-      if (typeof text === 'string') {
-        const strippedText = text.replace(/<[^>]+>/g, '');
-        decodedText = new DOMParser().parseFromString(strippedText, 'text/html').documentElement
-          .textContent;
-      }
-      this._setScrollWrapperContent(decodedText);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      this._LoadingIndicator.visible = false; // Hide the loading indicator
-    }
-  }
-
-  _setScrollWrapperContent(text) {
-    const chunks = this._splitTextIntoChunks(text, 1000); // Adjust chunk size as needed
-    const content = chunks.map((chunk) => ({
+  $changeDescription(index) {
+    const content = this._props.texts[index - 1].map((chunk) => ({
       text: chunk,
       style: {
         fontStyle: 'italic',
@@ -159,12 +125,12 @@ export default class HelpScreen extends lng.Component {
     });
   }
 
-  _splitTextIntoChunks(text, chunkSize) {
-    const chunks = [];
-    for (let i = 0; i < text.length; i += chunkSize) {
-      chunks.push(text.slice(i, i + chunkSize));
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
     }
-    return chunks;
+    this._setState(states[index]);
   }
 
   static _states() {

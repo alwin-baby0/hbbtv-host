@@ -1,21 +1,23 @@
 import axios from 'axios';
 import { createApiCtx } from '../utils';
+import { LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 
 const lngCode =
-  localStorage.getItem('languageCode') || navigator.language || navigator.userLanguage || 'en-';
-
-let defTrPromise = (async () => {
-  const lng = lngCode.split('-')[0] || 'en';
-  return import(`../../../public/static/translations/${lng}.json`);
-})();
+  localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) ||
+  navigator.language ||
+  navigator.userLanguage ||
+  'en-';
+const defTr = await import(
+  `../../../public/static/translations/${lngCode.split('-')[0] || 'en'}.json`
+);
 
 let translationsVar = undefined;
 export default class TranslationService {
   getLanguageTranslations = async () => {
     const lng = lngCode.split('-')[0];
-    localStorage.setItem('languageCode', lng.split('-')[0]);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, lng.split('-')[0]);
 
-    const translations = await axios(`https://api-applicaster.wedo.tv/lang/${lng || 'en'}/app`, {
+    const translations = await axios(`${process.env.APP_BASE_URL_2}/lang/${lng || 'en'}/app`, {
       params: { ctx: createApiCtx() },
     });
 
@@ -23,21 +25,22 @@ export default class TranslationService {
   };
 
   setTranslations = async () => {
-    try {
-      const data = await this.getLanguageTranslations();
-      translationsVar = data;
-      localStorage.setItem('languageTr', JSON.stringify(data));
-    } catch (error) {
-      console.log('Translation error:', error);
-      const trExist = localStorage.getItem('languageTr');
-      if (trExist) {
-        translationsVar = JSON.parse(trExist);
-      } else {
-        const defTr = await defTrPromise;
-        translationsVar = defTr;
-        localStorage.setItem('languageTr', JSON.stringify(defTr));
-      }
-    }
+    this.getLanguageTranslations()
+      .then((data) => {
+        translationsVar = data;
+        localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(data));
+      })
+      .catch((error) => {
+        const trExist = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS);
+        console.log('Translation error:', error);
+        if (trExist) {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(trExist));
+          translationsVar = trExist;
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(defTr));
+          translationsVar = defTr;
+        }
+      });
   };
 }
 
@@ -48,7 +51,6 @@ export { translationService as TranslationService };
 /**
  * @param { keyof typeof defTr } key
  */
-export async function t(key) {
-  const defTr = await defTrPromise;
-  return translationsVar[key] || defTr[key];
+export function t(key) {
+  return translationsVar && translationsVar[key] ? translationsVar[key] : defTr[key];
 }

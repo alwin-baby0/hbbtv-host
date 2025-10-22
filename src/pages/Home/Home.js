@@ -4,6 +4,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
+import { RAIL_TYPES } from '../../constants/globalConstants';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -65,13 +66,14 @@ export default class Home extends Lightning.Component {
     const { sliderData, railData } = this._props;
 
     const rails = constructRails(railData);
-    this._Column.props = { items: rails };
+    this._Column.props = { items: rails, parentState: 'Items' };
 
     if (sliderData) {
       this._HeroSection.patch({
         visible: true,
         props: {
           sliderData,
+          parentState: 'Hero',
         },
       });
       this._HeroSection._HeroSection._Info.patch({
@@ -110,6 +112,14 @@ export default class Home extends Lightning.Component {
     this._setState(nextState);
   }
 
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
+  }
+
   static _states() {
     return [
       class Hero extends this {
@@ -146,7 +156,7 @@ export default class Home extends Lightning.Component {
           if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
             const newRails = await HomePageService.fetchMoreItemsForHeroSection();
             if (newRails && newRails?.items?.length > 0) {
-              const parsedItems = railItemConstructor(newRails.items, 'HeroRails', {});
+              const parsedItems = railItemConstructor(newRails.items, RAIL_TYPES.HERO, {});
               this._HeroSection._Bullets._appendItems(parsedItems);
             }
           }

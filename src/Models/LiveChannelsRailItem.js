@@ -1,5 +1,7 @@
 // This class is used as generic class for:
 // Home, Search, Movies, Series, Sports screens rails
+import { RAIL_TYPES } from '../constants/globalConstants';
+
 class LiveChannelsRailItem {
   constructor(data) {
     const { id, title, type, media_group } = data;
@@ -8,24 +10,24 @@ class LiveChannelsRailItem {
     this.type = type?.value;
 
     switch (this.type) {
-      case 'movie':
+      case RAIL_TYPES.MOVIE:
         this.url = `movie-details/${this.id}`;
         break;
-      case 'sport':
-      case 'serie':
+      case RAIL_TYPES.SPORT:
+      case RAIL_TYPES.SERIE:
         this.url = `series-details/${this.id}`;
         break;
-      case 'show':
-      case 'event':
+      case RAIL_TYPES.SHOW:
+      case RAIL_TYPES.EVENT:
         this.url = `event-details/${this.id}`;
         break;
-      case 'episode':
+      case RAIL_TYPES.EPISODE:
         this.url = data.content.src;
         this.duration = data.extensions.duration;
         break;
-      case 'livechannel':
+      case RAIL_TYPES.LIVE_CHANNEL:
         break;
-      case 'epg-channel':
+      case RAIL_TYPES.EPG_CHANNEL:
         break;
       default:
         console.warn('unknown rail item type', this.type);

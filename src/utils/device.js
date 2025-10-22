@@ -1,3 +1,5 @@
+import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
+
 let deviceInfo = {};
 
 export const getDeviceType = () => process.env.APP_PLATFORM || 'web';
@@ -125,11 +127,11 @@ const getTitanInfo = () => {
       Product: { firmwareVersion },
     } = DeviceInfo; // Requires titanos device-info-sdk script, can be found at https://docs.titanos.tv/deviceinfoapi
 
-    let serialNumber = localStorage.getItem('titanDeviceID');
+    let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.TITAN_DEVICE_ID);
 
     if (!serialNumber) {
       serialNumber = generateRandomUUID();
-      localStorage.setItem('titanDeviceID', serialNumber);
+      localStorage.setItem(LOCAL_STORAGE_KEYS.TITAN_DEVICE_ID, serialNumber);
     }
 
     return {
@@ -146,11 +148,11 @@ const getTitanInfo = () => {
 };
 
 const getNetgemInfo = () => {
-  let serialNumber = localStorage.getItem('netgemDeviceID');
+  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.NETGEM_DEVICE_ID);
 
   if (!serialNumber) {
     serialNumber = generateRandomUUID();
-    localStorage.setItem('netgemDeviceID', serialNumber);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.NETGEM_DEVICE_ID, serialNumber);
   }
 
   return {
@@ -164,11 +166,11 @@ const getNetgemInfo = () => {
 };
 
 const getFoxxumInfo = () => {
-  let serialNumber = localStorage.getItem('foxxumDeviceID');
+  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID);
 
   if (!serialNumber) {
     serialNumber = generateRandomUUID();
-    localStorage.setItem('foxxumDeviceID', serialNumber);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID, serialNumber);
   }
 
   const userAgent = navigator.userAgent;
@@ -205,11 +207,11 @@ const getFoxxumInfo = () => {
 };
 
 const getSunriseInfo = () => {
-  let serialNumber = localStorage.getItem('sunriseDeviceID');
+  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.SUNRISE_DEVICE_ID);
 
   if (!serialNumber) {
     serialNumber = generateRandomUUID();
-    localStorage.setItem('sunriseDeviceID', serialNumber);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.SUNRISE_DEVICE_ID, serialNumber);
   }
 
   const userAgent = navigator.userAgent;
@@ -228,11 +230,11 @@ const getSunriseInfo = () => {
 };
 
 const getMetrologicalInfo = () => {
-  let serialNumber = localStorage.getItem('metrologicalDeviceID');
+  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.METROLOGICAL_DEVICE_ID);
 
   if (!serialNumber) {
     serialNumber = generateRandomUUID();
-    localStorage.setItem('metrologicalDeviceID', serialNumber);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.METROLOGICAL_DEVICE_ID, serialNumber);
   }
 
   const userAgent = navigator.userAgent;
@@ -251,11 +253,11 @@ const getMetrologicalInfo = () => {
 };
 
 const getXperiInfo = () => {
-  let serialNumber = localStorage.getItem('xperiDeviceID');
+  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.XPERI_DEVICE_ID);
 
   if (!serialNumber) {
     serialNumber = generateRandomUUID();
-    localStorage.setItem('xperiDeviceID', serialNumber);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.XPERI_DEVICE_ID, serialNumber);
   }
 
   const uaString = navigator.userAgent;
@@ -281,11 +283,11 @@ const getXperiInfo = () => {
 };
 
 const getNetrangeInfo = () => {
-  let serialNumber = localStorage.getItem('netrangeDeviceID');
+  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.NETRANGE_DEVICE_ID);
 
   if (!serialNumber) {
     serialNumber = generateRandomUUID();
-    localStorage.setItem('netrangeDeviceID', serialNumber);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.NETRANGE_DEVICE_ID, serialNumber);
   }
 
   return {
@@ -299,11 +301,11 @@ const getNetrangeInfo = () => {
 };
 
 const getOcilionInfo = () => {
-  let serialNumber = localStorage.getItem('ocilionDeviceID');
+  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.OCILION_DEVICE_ID);
 
   if (!serialNumber) {
     serialNumber = generateRandomUUID();
-    localStorage.setItem('ocilionDeviceID', serialNumber);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.OCILION_DEVICE_ID, serialNumber);
   }
 
   return {
@@ -317,11 +319,11 @@ const getOcilionInfo = () => {
 };
 
 const getWebInfo = () => {
-  let serialNumber = localStorage.getItem('webDeviceID');
+  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.WEB_DEVICE_INFO);
 
   if (!serialNumber) {
     serialNumber = generateRandomUUID();
-    localStorage.setItem('webDeviceID', serialNumber);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.WEB_DEVICE_INFO, serialNumber);
   }
 
   return {
@@ -425,7 +427,7 @@ export const eventTrackPayload = (event, id, seriesID) => {
           app_domain: process.env.APP_DOMAIN,
           app_version: process.env.APP_VERSION,
           app_bundle: process.env.APP_BUNDLE,
-          video_id: id,
+          ...(id && { video_id: id }),
           device: 'SmartTV',
           model,
           brand,

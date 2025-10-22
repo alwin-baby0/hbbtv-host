@@ -2,6 +2,10 @@ import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 
 export default class BackBtn extends Lightning.Component {
+  _props = {
+    parentState: null,
+  };
+
   static _template() {
     return {
       Icon: {
@@ -13,6 +17,10 @@ export default class BackBtn extends Lightning.Component {
 
   get _Icon() {
     return this.tag('Icon');
+  }
+
+  set props(props) {
+    this._props = { ...this._props, ...props };
   }
 
   _focus() {
@@ -41,10 +49,11 @@ export default class BackBtn extends Lightning.Component {
 
   _handleHover() {
     this._focus();
-  }
-
-  _handleUnhover() {
-    this._unfocus();
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
   }
 
   _handleClick() {

@@ -1,5 +1,6 @@
 import { LanguageService, t } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
+import { LOCAL_STORAGE_KEYS } from '../../../constants/globalConstants';
 
 const memberArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
@@ -13,6 +14,7 @@ const memberArea = (page, tabButtons) => {
   page._Column.props = {
     items: items,
     enableScroll: false,
+    parentState: 'DefaultState',
   };
 };
 
@@ -30,7 +32,7 @@ export default async function (page) {
     },
   ];
 
-  if (localStorage.getItem('userData')) {
+  if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
     tabButtons.push(
       {
         id: 1,

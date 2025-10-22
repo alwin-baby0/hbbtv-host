@@ -1,18 +1,5 @@
 import { Router } from '@lightningjs/sdk';
-
-export const CATEGORY_TYPES = {
-  MOVIES: 'movies',
-  MOVIE: 'movie',
-  SERIES: 'series',
-  SPORTS: 'sports',
-  LIVE_TV: 'live',
-  CHANNELS: 'channel',
-  SERIE: 'genres_series',
-  VIDEO: 'video',
-  COLLECTION: 'collection',
-  EVENT: 'event',
-  LIVESTREAM: 'livestream',
-};
+import { CATEGORY_TYPES } from '../constants/globalConstants';
 
 class Category {
   constructor(data) {

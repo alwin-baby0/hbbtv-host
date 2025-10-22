@@ -9,6 +9,7 @@ export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
   _props = {
     sliderData: [],
+    parentState: null,
   };
 
   static _template() {
@@ -27,10 +28,6 @@ export default class Gallery extends Lightning.Component {
         x: 75,
         w: 1760,
         h: 215,
-        props: {
-          w: 1760,
-          h: 215,
-        },
       },
     };
   }
@@ -39,7 +36,7 @@ export default class Gallery extends Lightning.Component {
     this._sliderIndex = 0;
     this._Bullets._focusedIndex = 0;
     this._props = { ...this._props, ...props };
-    const { sliderData } = this._props;
+    const { sliderData, parentState } = this._props;
 
     this._Info.patch({
       GalleryButton: undefined,
@@ -50,7 +47,10 @@ export default class Gallery extends Lightning.Component {
 
     this._Bullets.patch({
       props: {
+        w: 1760,
+        h: 215,
         items: parsedItems,
+        parentState,
       },
     });
   }

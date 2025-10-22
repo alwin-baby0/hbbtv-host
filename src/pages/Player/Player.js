@@ -16,6 +16,9 @@ import {
   playerButtonsLive,
   playerButtonsVOD,
 } from './utils';
+import { EVENT_NAMES, LOCAL_STORAGE_KEYS, VIDEO_TYPES } from '../../constants/globalConstants';
+
+const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
 
 export default class Player extends lng.Component {
   _props = {
@@ -110,6 +113,9 @@ export default class Player extends lng.Component {
             rect: true,
             y: 0,
             color: Colors('#000000').alpha(0).get(),
+            props: {
+              parentState: 'Controls',
+            },
           },
         },
         ProgressBarWrapper: {
@@ -188,6 +194,7 @@ export default class Player extends lng.Component {
           props: {
             w: 600,
             h: 1080,
+            parentState: 'Subtitles',
           },
         },
       },
@@ -205,7 +212,7 @@ export default class Player extends lng.Component {
         },
         Message: {
           text: {
-            text: 'There was a problem playing this video, please try again later or contact support at support@wedotv.com.',
+            text: t('no_stream'),
             fontSize: 36,
             wordWrapWidth: 1200,
             textAlign: 'center',
@@ -332,7 +339,7 @@ export default class Player extends lng.Component {
       videoUrl,
       ads: ssai,
       pausedItemId: 1,
-      isLive: videoType === 'Stream now' || videoType === 'application/x-mpegURL',
+      isLive: videoType === VIDEO_TYPES.STREAM_NOW || videoType === 'application/x-mpegURL',
     };
   }
 
@@ -400,6 +407,7 @@ export default class Player extends lng.Component {
           w: 1920,
           items: isLive ? playerButtonsLive : playerButtonsVOD,
           targetIndex: 1,
+          parentState: 'Controls',
         },
       });
 
@@ -423,6 +431,7 @@ export default class Player extends lng.Component {
                 onLiveContent: true,
                 position: 60,
               },
+              parentState: 'Back',
             },
           },
           // SubtitlesButton: {
@@ -436,6 +445,7 @@ export default class Player extends lng.Component {
           //       onLiveContent: true,
           //       position: 60,
           //     },
+          //     parentState: 'SubtitlesButton'
           //   },
           // },
           SubtitlesButton: undefined,
@@ -621,6 +631,7 @@ export default class Player extends lng.Component {
                       props: {
                         w: 200,
                         h: 60,
+                        parentState: 'SkipButton',
                       },
                       x: 1700,
                       y: 915,
@@ -703,17 +714,17 @@ export default class Player extends lng.Component {
   }
 
   _handleSlotEnd() {
-    eventTrackPayload('ad_slot_ended', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_SLOT_ENDED, this._props.videoId);
   }
   _handlePodEnd() {
-    eventTrackPayload('ad_pod_ended', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_POD_ENDED, this._props.videoId);
   }
 
   _handleAdEnd(ad) {
     // Logic to handle when the ad finishes
     console.log('Ad has finished:', ad.impression);
 
-    eventTrackPayload('ad_ended', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_ENDED, this._props.videoId);
     this._props.isAdVisible = false;
     clearInterval(this._progressAdInterval);
     this._adStarted = false;
@@ -727,8 +738,8 @@ export default class Player extends lng.Component {
   }
 
   _handleAdPlayback(ad) {
-    eventTrackPayload('ad_slot_started', this._props.videoId);
-    eventTrackPayload('ad_pod_started', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_SLOT_STARTED, this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_POD_STARTED, this._props.videoId);
 
     this._hideWrapper();
     // Logic to handle ad playback, such as displaying the ad, hiding player controls, etc.
@@ -871,7 +882,7 @@ export default class Player extends lng.Component {
   }
 
   handleBackHelper() {
-    if (localStorage.getItem('userData')) {
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._props.seriesID) {
           CMPService.addRecentlyWatched(
@@ -955,7 +966,7 @@ export default class Player extends lng.Component {
 
       clearTimeout(this._debounceVideoPause);
       this._debounceVideoPause = setTimeout(() => {
-        eventTrackPayload('video_pause', this._props.videoId);
+        eventTrackPayload(EVENT_NAMES.VIDEO_PAUSE, this._props.videoId);
       }, 500);
 
       this.$hideSbutitles();
@@ -1063,7 +1074,7 @@ export default class Player extends lng.Component {
   $videoPlayerPlaying() {
     clearTimeout(this._debounceVideoStart);
     this._debounceVideoStart = setTimeout(() => {
-      eventTrackPayload('video_start', this._props.videoId, this._props.seriesID);
+      eventTrackPayload(EVENT_NAMES.VIDEO_START, this._props.videoId, this._props.seriesID);
     }, 1000);
   }
 
@@ -1079,7 +1090,7 @@ export default class Player extends lng.Component {
     CMPService.deleteRecentlyWatched(this._props.videoId);
     this.closeVideoPlayer();
 
-    eventTrackPayload('video_end', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.VIDEO_END, this._props.videoId);
   }
 
   $videoPlayerSeeked() {
@@ -1139,6 +1150,7 @@ export default class Player extends lng.Component {
     if (this._getState() === 'Subtitles') {
       return;
     }
+
     this._setState(newState);
   }
 
@@ -1206,6 +1218,14 @@ export default class Player extends lng.Component {
     return useKeyHandlers;
   }
 
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
+  }
+
   static _states() {
     return [
       class Controls extends this {
@@ -1247,32 +1267,6 @@ export default class Player extends lng.Component {
 
         _handleEnter() {
           VideoPlayer.seek(this._props.skipTo);
-        }
-      },
-
-      class ProgressBar extends this {
-        _getFocused() {
-          return this._ProgressBar;
-        }
-
-        _handleEnter() {
-          if (!VideoPlayer.playing) {
-            const { pausedItemId } = this._props;
-
-            VideoPlayer.pause();
-
-            this._Controls.Items.children[pausedItemId]._Icon.patch({
-              texture: lng.Tools.getSvgTexture(
-                Utils.asset('/icons/player/commands/play.svg'),
-                90,
-                90
-              ),
-            });
-          }
-
-          if (!this._props.isAdVisible) {
-            this._setState('Controls');
-          }
         }
       },
 

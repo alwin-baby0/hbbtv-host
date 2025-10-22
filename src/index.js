@@ -29,6 +29,7 @@ import {
 import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
 import { TranslationService } from './Services/index.js';
+import { EVENT_NAMES } from './constants/globalConstants.js';
 
 /**
  * This file should serve as a place to add for example polyfills, initiate
@@ -90,7 +91,7 @@ sequence([
       );
 
       TranslationService.setTranslations();
-      eventTrackPayload('launch_app', getDeviceInfo().serialNumber);
+      eventTrackPayload(EVENT_NAMES.LAUNCH_APP);
     } catch (error) {
       console.error('Failed to start the app', error);
     }

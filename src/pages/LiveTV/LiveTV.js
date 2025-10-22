@@ -11,6 +11,7 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
+import { EVENT_NAMES } from '../../constants/globalConstants';
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -32,6 +33,7 @@ export default class LiveTV extends Lightning.Component {
           props: {
             x: 110,
             y: 540,
+            parentState: 'Categories',
           },
         },
         Channels: {
@@ -48,7 +50,6 @@ export default class LiveTV extends Lightning.Component {
           w: 1620,
           h: 460,
           clipping: true,
-
           TimeSlot: {
             h: 50,
             w: 1615,
@@ -68,6 +69,7 @@ export default class LiveTV extends Lightning.Component {
             type: EPGContainer,
             props: {
               w: 1615,
+              parentState: 'EPGS',
             },
           },
           Flag: {
@@ -251,7 +253,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _active() {
-    eventTrackPayload('browse_channels', 4);
+    eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 
     this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
@@ -338,7 +340,7 @@ export default class LiveTV extends Lightning.Component {
         return {
           type: LiveChannelRailItem,
           channelInfo: channelInfo,
-          channelEPG: matchingEpg || {}, // No need for || {}, as matchingEpg is already checked
+          channelEPG: matchingEpg,
           w: 190,
           h: 105,
           channelIndex: index,
@@ -351,6 +353,7 @@ export default class LiveTV extends Lightning.Component {
 
     this._Channels.props = {
       items: channels,
+      parentState: 'Channels',
     };
 
     this._EPGData.setInitialOffset();
@@ -404,6 +407,14 @@ export default class LiveTV extends Lightning.Component {
 
   $updateVerticalState(nextState) {
     this._setState(nextState);
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {

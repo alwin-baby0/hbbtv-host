@@ -17,7 +17,7 @@ export default class Button extends Lightning.Component {
         x: -10,
         zIndex: 10,
         texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/arrowLeft.svg'), 15, 15),
-        color: Colors(colors.unfocus).get(),
+        color: Colors(colors.focus).get(),
       },
       Title: {
         x: 10,
@@ -49,9 +49,18 @@ export default class Button extends Lightning.Component {
       flexItem: {
         shrink: false,
       },
+      texture: Lightning.Tools.getRoundRect(
+        w,
+        h,
+        radius,
+        strokeWidth,
+        Colors(colors.focusedHelpButton).get(),
+        true,
+        Colors(colors.focusedHelpButton).get()
+      ),
       Title: {
         text: {
-          text: title.toUpperCase(),
+          ...(title && { text: title.toUpperCase() }),
           textColor: Colors(colors.focus).get(),
         },
       },
@@ -62,7 +71,7 @@ export default class Button extends Lightning.Component {
     const { w, h, radius, strokeWidth } = this._props;
     this.patch({
       Icon: {
-        color: Colors(colors.focus).get(),
+        color: Colors(colors.unfocus).get(),
       },
       texture: radius
         ? Lightning.Tools.getRoundRect(
@@ -103,17 +112,18 @@ export default class Button extends Lightning.Component {
         },
       },
       Icon: {
-        color: Colors(colors.unfocus).get(),
+        color: Colors(colors.focus).get(),
       },
     });
   }
 
   _handleHover() {
     this._focus();
-  }
-
-  _handleUnhover() {
-    this._unfocus();
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
   }
 
   async _handleClick() {
