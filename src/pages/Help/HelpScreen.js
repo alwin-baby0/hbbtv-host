@@ -1,6 +1,5 @@
 import { Colors, Router, Lightning } from '@lightningjs/sdk';
 import { ScrollWrapper } from '@lightningjs/ui-components';
-import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
