@@ -1,12 +1,16 @@
 module.exports = {
-  plugins: [
-  ],
+  plugins: [],
   env: {
     test: {
-      plugins: [
-        '@babel/plugin-transform-modules-commonjs',
-        '@babel/plugin-transform-export-namespace-from'
-      ]
-    }
-  }
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: { node: 'current' },
+          },
+        ],
+      ],
+      plugins: ['@babel/plugin-transform-export-namespace-from'],
+    },
+  },
 };

@@ -22,32 +22,26 @@ module.exports = {
     '<rootDir>/src/**/*.js',
     '!**/node_modules/**',
     '!**/dist/**',
-    '!<rootDir>/src/index.js'
+    '!<rootDir>/src/index.js',
   ],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [
-    '<rootDir>/src/App.js',
-    '<rootDir>/src/index.js',
-  ],
+  coveragePathIgnorePatterns: ['<rootDir>/src/App.js', '<rootDir>/src/index.js'],
 
   // A list of reporter names that Jest uses when writing coverage reports
-  coverageReporters: [
-    'text',
-    'html'
-  ],
+  coverageReporters: ['text', 'html'],
 
   // An object that configures minimum threshold enforcement for coverage results
   coverageThreshold: {
-    'global': {
-      'statements': 89.15,
-      'branches': 80.81,
-      'functions': 83,
-      'lines': 89.10
-    }
+    global: {
+      statements: 89.15,
+      branches: 80.81,
+      functions: 83,
+      lines: 89.1,
+    },
   },
 
   // A path to a custom dependency extractor
@@ -85,7 +79,7 @@ module.exports = {
     'wpe-lightning$': '@lightningjs/core',
     '^src(.*)': '<rootDir>/src$1',
     '^test(.*)': '<rootDir>/test$1',
-    '^assets(.*)': '<rootDir>/assets$1'
+    '^assets(.*)': '<rootDir>/assets$1',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -130,13 +124,10 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ['jest-webgl-canvas-mock',
-  '<rootDir>/test/test-setup.js'],
+  setupFiles: ['jest-webgl-canvas-mock', '<rootDir>/test/test-setup.js'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: [
-    '<rootDir>/test/jest.env.setup.js'
-  ],
+  setupFilesAfterEnv: ['<rootDir>/test/jest.env.setup.js'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -148,7 +139,10 @@ module.exports = {
   testEnvironment: 'jsdom',
 
   // Options that will be passed to the testEnvironment
-  testEnvironmentOptions: { resources: 'usable' },
+  testEnvironmentOptions: {
+    resources: 'usable',
+    customExportConditions: ['node', 'node-addons'],
+  },
 
   // Adds a location field to test results
   // testLocationInResults: false,
@@ -160,11 +154,7 @@ module.exports = {
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  testPathIgnorePatterns: [
-    "/node_modules/",
-    "/__tests__/utils/",
-    "cypress/"
-  ],
+  testPathIgnorePatterns: ['/node_modules/', '/__tests__/utils/', 'cypress/'],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],
@@ -183,11 +173,13 @@ module.exports = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.[m|t]?js$': 'babel-jest',
+    '^.+\\.[m|t]?js$': ['babel-jest', { rootMode: 'upward' }],
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(wpe-lightning(-sdk)|@lightning\/ui)?)'],
+  transformIgnorePatterns: [
+    '<rootDir>/node_modules/(?!(wpe-lightning(-sdk)?|@lightning(js)?/ui|@lightningjs/ui-components-test-utils)?)',
+  ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
