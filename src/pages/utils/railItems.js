@@ -271,15 +271,19 @@ const constructCategoryItems = (railItems, railItemsOptions) =>
   railItems.map((railItem, index) => {
     return {
       type: CategoryPickerItem,
+      flexItem: {
+        marginLeft: 7,
+        marginRight: 7,
+      },
       collision: true,
       ...railItemsOptions,
       props: {
         itemInfo: railItem,
         callback: railItem.navigateToLink,
         w: 195,
-        h: 64,
-        radius: 30,
-        strokeWidth: 6,
+        h: 55,
+        radius: 10,
+        strokeWidth: 1,
         index: index,
       },
     };

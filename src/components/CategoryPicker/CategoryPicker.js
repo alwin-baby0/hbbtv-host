@@ -33,14 +33,12 @@ export default class CategoryPicker extends Lightning.Component {
       y: y,
       w: CARD_SIZES.CATEGORY.width,
       h: CARD_SIZES.CATEGORY.height,
+      color: null,
       texture: Lightning.Tools.getRoundRect(
         CARD_SIZES.CATEGORY.width,
         CARD_SIZES.CATEGORY.height,
         30,
-        6,
-        Colors(colors.categoryPicker).get(),
-        true,
-        Colors(colors.categoryPicker).get()
+        6
       ),
       CaterogyItems: {
         w: CARD_SIZES.CATEGORY.width,
