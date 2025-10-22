@@ -1,7 +1,7 @@
-import { Utils } from '@lightningjs/sdk';
+import { Utils, Lightning } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
 
-export default class LoadingScreenComponent extends lng.Component {
+export default class LoadingScreenComponent extends Lightning.Component {
   _props = {
     xPos: 960,
     yPos: 540,

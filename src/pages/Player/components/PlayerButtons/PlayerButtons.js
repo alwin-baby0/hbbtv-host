@@ -1,8 +1,8 @@
-import { Colors, Utils, VideoPlayer } from '@lightningjs/sdk';
+import { Colors, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
 import colors from '../../../../../reskin/colors.json';
 
-export default class PlayerButtons extends lng.Component {
+export default class PlayerButtons extends Lightning.Component {
   _props = {
     buttonInfo: {},
     isStopped: false,
