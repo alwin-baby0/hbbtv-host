@@ -40,7 +40,6 @@ export default class FocusableItem extends Lightning.Component {
 
   _focus() {
     const { radius, strokeWidth, strokeColor, width, height } = this._props;
-    console.log(this._props);
 
     this._FocusBorder.patch({
       texture: lng.Tools.getRoundRect(width, height, radius, strokeWidth, strokeColor, false),
