@@ -1,7 +1,8 @@
 import { CARD_SIZES } from './constants';
-import { Utils, Router } from '@lightningjs/sdk';
+import { Utils, Router, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import colors from '../../../reskin/colors.json';
 
 export default class PosterRailItem extends FocusableItem {
   _props = {
@@ -9,6 +10,9 @@ export default class PosterRailItem extends FocusableItem {
     placeholderSrc: Utils.asset('images/rail-placeholder-empty.png'),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
   };
 

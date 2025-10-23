@@ -8,6 +8,8 @@ export default class FocusableItem extends Lightning.Component {
     height: 0,
     radius: 6,
     strokeWidth: 4,
+    strokeColor: Colors(colors.focus).get(),
+    zIndex: 100,
   };
 
   static _template() {
@@ -26,20 +28,22 @@ export default class FocusableItem extends Lightning.Component {
 
   setProps(props) {
     this._props = { ...this._props, ...props };
+
+    const { zIndex, x, y } = this._props;
+
+    this._FocusBorder.patch({
+      x,
+      y,
+      zIndex,
+    });
   }
 
   _focus() {
-    const { radius, strokeWidth, width, height } = this._props;
+    const { radius, strokeWidth, strokeColor, width, height } = this._props;
+    console.log(this._props);
 
     this._FocusBorder.patch({
-      texture: lng.Tools.getRoundRect(
-        width,
-        height,
-        radius,
-        strokeWidth,
-        Colors(colors.focus).get(),
-        false
-      ),
+      texture: lng.Tools.getRoundRect(width, height, radius, strokeWidth, strokeColor, false),
     });
   }
 
