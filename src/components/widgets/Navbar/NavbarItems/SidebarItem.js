@@ -44,7 +44,7 @@ export default class SidebarItem extends Lightning.Component {
         text: {
           textColor: Colors(colors.unfocus).get(),
           fontFace: 'Montserrat-Bold',
-          fontSize: 22,
+          fontSize: 24,
           textAlign: 'center',
         },
         zIndex: 2,
