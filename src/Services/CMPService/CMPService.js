@@ -38,11 +38,11 @@ class CMPService extends FetchingService {
             console.log('statusResponse', statusResponse.data);
 
             if (statusResponse.data.status === 'approved') {
+              console.log(statusResponse);
               this.clearPollingInterval(this._intervalId);
               console.log('Device code status condition met, stopping the interval.');
               console.log('status:', statusResponse.data.status);
               console.log('autorization code:', statusResponse.data.authorization_code);
-              authCode = statusResponse.data.authorization_code;
               const timestamp = Math.floor(Date.now() / 1000);
 
               const tokenData = await this.#getToken(
