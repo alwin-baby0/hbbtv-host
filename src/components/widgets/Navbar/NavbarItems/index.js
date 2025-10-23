@@ -31,6 +31,9 @@ export default class SidebarItems extends Lightning.Component {
           x: 300,
           h: 70,
           style: { itemSpacing: 30 },
+          props: {
+            disableScroll: true,
+          },
         },
       },
     };
@@ -97,8 +100,12 @@ export default class SidebarItems extends Lightning.Component {
           return {
             type: SidebarItem,
             collision: true,
-            w: this._visibleSport ? (item.id < 5 ? 150 : 50) : item.id < 4 ? 150 : 50,
-            h: 70,
+            flexItem: {
+              marginLeft: 5,
+              marginRight: 5,
+            },
+            w: this._visibleSport ? (item.id < 5 ? 170 : 50) : item.id < 4 ? 170 : 50,
+            h: 60,
             props: {
               selected: false,
               index: item.id,
