@@ -1,5 +1,4 @@
-import { Colors, Lightning } from '@lightningjs/sdk';
-import colors from '../../../reskin/colors.json';
+import { Lightning } from '@lightningjs/sdk';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import { CARD_SIZES } from '../RailItems/constants';
 
