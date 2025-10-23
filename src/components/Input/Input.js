@@ -2,6 +2,7 @@ import { Colors, Utils, Lightning } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import lng from '@lightningjs/core';
 import { t } from '../../Services';
+import { TRANSLATIONS } from '../../constants/globalConstants';
 
 export default class InputField extends Lightning.Component {
   _props = {
@@ -81,7 +82,7 @@ export default class InputField extends Lightning.Component {
   _active() {
     this._Placeholder.patch({
       Text: {
-        text: t('search'),
+        text: t(TRANSLATIONS.SEARCH),
       },
     });
   }

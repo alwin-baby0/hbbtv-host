@@ -3,6 +3,7 @@ import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
 import { DetailService, t } from '../../Services';
+import { TRANSLATIONS } from '../../constants/globalConstants';
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -82,7 +83,7 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
           },
           props: {
-            buttonLabel: t('watch_now'),
+            buttonLabel: t(TRANSLATIONS.WATCH_NOW),
             buttonIcon: Utils.asset('icons/home/play.svg'),
           },
         },

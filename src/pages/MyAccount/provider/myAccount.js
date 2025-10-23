@@ -1,6 +1,6 @@
 import { LanguageService, t } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
-import { LOCAL_STORAGE_KEYS } from '../../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, TRANSLATIONS } from '../../../constants/globalConstants';
 
 const memberArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
@@ -28,7 +28,7 @@ export default async function (page) {
   const tabButtons = [
     {
       id: 0,
-      title: t('my_account'),
+      title: t(TRANSLATIONS.MY_ACCOUNT),
     },
   ];
 
@@ -36,15 +36,15 @@ export default async function (page) {
     tabButtons.push(
       {
         id: 1,
-        title: t('continue_watching'),
+        title: t(TRANSLATIONS.CONTINUE_WATCHING),
       },
       {
         id: 2,
-        title: t('favorites'),
+        title: t(TRANSLATIONS.FAVORITES),
       },
       {
         id: 3,
-        title: t('logout'),
+        title: t(TRANSLATIONS.LOGOUT),
       }
     );
   }

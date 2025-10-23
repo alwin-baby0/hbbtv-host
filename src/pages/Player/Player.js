@@ -16,7 +16,12 @@ import {
   playerButtonsLive,
   playerButtonsVOD,
 } from './utils';
-import { EVENT_NAMES, LOCAL_STORAGE_KEYS, VIDEO_TYPES } from '../../constants/globalConstants';
+import {
+  EVENT_NAMES,
+  LOCAL_STORAGE_KEYS,
+  TRANSLATIONS,
+  VIDEO_TYPES,
+} from '../../constants/globalConstants';
 
 const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
 
@@ -212,7 +217,7 @@ export default class Player extends Lightning.Component {
         },
         Message: {
           text: {
-            text: t('no_stream'),
+            text: t(TRANSLATIONS.NO_STREAM),
             fontSize: 36,
             wordWrapWidth: 1200,
             textAlign: 'center',
@@ -302,7 +307,7 @@ export default class Player extends Lightning.Component {
     console.log('here');
     this._Subtitles.patch({
       Title: {
-        text: t('subtitles'),
+        text: t(TRANSLATIONS.SUBTITLES),
       },
       Languages: {
         items: [
@@ -311,7 +316,7 @@ export default class Player extends Lightning.Component {
             collision: true,
             props: {
               languageInfo: {
-                name: t('off').toUpperCase(),
+                name: t(TRANSLATIONS.OFF).toUpperCase(),
                 type: 'SUBTITLES',
               },
               index: 0,
@@ -1140,7 +1145,7 @@ export default class Player extends Lightning.Component {
     this._ErrorMessage.patch({
       Message: {
         text: {
-          text: t('no_stream'),
+          text: t(TRANSLATIONS.NO_STREAM),
         },
       },
     });

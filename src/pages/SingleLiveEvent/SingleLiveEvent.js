@@ -5,7 +5,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { CMPService, t } from '../../Services';
-import { EVENT_NAMES } from '../../constants/globalConstants';
+import { EVENT_NAMES, TRANSLATIONS } from '../../constants/globalConstants';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
 
@@ -92,7 +92,7 @@ export default class SingleLiveEvent extends Lightning.Component {
               marginTop: 10,
             },
             props: {
-              buttonLabel: t('watch_now')?.toUpperCase(),
+              buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
               buttonIcon: Utils.asset('icons/home/play.svg'),
               width: 400,
             },
@@ -112,7 +112,7 @@ export default class SingleLiveEvent extends Lightning.Component {
             },
             props: {
               width: 400,
-              buttonLabel: t('coming_soon')?.toUpperCase(),
+              buttonLabel: t(TRANSLATIONS.COMING_SOON)?.toUpperCase(),
               enabled: false,
             },
           },
