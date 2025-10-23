@@ -18,7 +18,7 @@ export default class CategoryPickerItem extends FocusableItem {
         mountX: 0.5,
         mountY: 0.5,
         x: (w) => w / 2,
-        y: (h) => h / 2,
+        y: (h) => h / 2 + 2,
         text: {
           fontFace: 'Montserrat-Bold',
           fontSize: 20,
@@ -46,13 +46,11 @@ export default class CategoryPickerItem extends FocusableItem {
     const { title } = itemInfo;
     this.setProps({
       x: -2,
-      y: -2,
+      y: -1,
       width: w + 10,
       height: h + 10,
       radius: 8,
       strokeWidth: 2,
-      x: -2,
-      y: -2,
       strokeColor: Colors(colors.focus).get(),
     });
 
@@ -61,7 +59,7 @@ export default class CategoryPickerItem extends FocusableItem {
       h: h + 10,
       Button: {
         x: 5,
-        y: 5,
+        y: 6,
         w,
         h,
         texture: Lightning.Tools.getRoundRect(
@@ -105,7 +103,7 @@ export default class CategoryPickerItem extends FocusableItem {
     this.patch({
       Button: {
         x: 5,
-        y: 5,
+        y: 6,
         w,
         h,
         texture: Lightning.Tools.getRoundRect(
@@ -128,7 +126,7 @@ export default class CategoryPickerItem extends FocusableItem {
     this.patch({
       Button: {
         x: 5,
-        y: 5,
+        y: 6,
         w,
         h,
         texture: Lightning.Tools.getRoundRect(

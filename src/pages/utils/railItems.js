@@ -283,7 +283,7 @@ const constructCategoryItems = (railItems, railItemsOptions) =>
         w: 195,
         h: 55,
         radius: 10,
-        strokeWidth: 1,
+        strokeWidth: 2,
         index: index,
       },
     };

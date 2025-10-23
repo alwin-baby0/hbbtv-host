@@ -34,7 +34,7 @@ export default class FocusableItem extends Lightning.Component {
     this._FocusBorder.patch({
       x,
       y,
-      zIndex,
+      // zIndex,
     });
   }
 
