@@ -10,6 +10,9 @@ export default class HeroRailItem extends FocusableItem {
     placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
     index: 0,
   };
@@ -47,7 +50,6 @@ export default class HeroRailItem extends FocusableItem {
     this.setProps({
       width: 385,
       height: 215,
-      color: '#D9D9D9',
     });
 
     this._LandscapeImage.patch({
