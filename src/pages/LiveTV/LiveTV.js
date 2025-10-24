@@ -11,7 +11,7 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
-import { EVENT_NAMES } from '../../constants/globalConstants';
+import { EVENT_NAMES, TRANSLATIONS } from '../../constants/globalConstants';
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -231,10 +231,10 @@ export default class LiveTV extends Lightning.Component {
     this._setState('Categories');
 
     this.Now.patch({
-      w: t('now')?.length * 20 + 10,
+      w: t(TRANSLATIONS.NOW)?.length * 20 + 10,
       Text: {
         text: {
-          text: t('now')?.toUpperCase(),
+          text: t(TRANSLATIONS.NOW)?.toUpperCase(),
         },
       },
     });

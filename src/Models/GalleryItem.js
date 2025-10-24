@@ -1,3 +1,4 @@
+import { TRANSLATIONS } from '../constants/globalConstants';
 import { t } from '../Services';
 
 class GalleryItem {
@@ -9,7 +10,7 @@ class GalleryItem {
     this.title = title;
     this.summary = summary;
     this.trailerSrc = ''; // this is not returned by backend
-    this.buttonLabel = t('watch_now');
+    this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
     this.type = type;
     this.trailerUrl = extensions.preview_playback;
@@ -84,7 +85,7 @@ class GalleryItem {
     this.thumbnails = [];
     this.landscapePosters = [];
     this.portraitPosters = [];
-    this.buttonLabel = t('watch_now');
+    this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
     media_group[0]?.media_item?.forEach((item) => {
       switch (true) {

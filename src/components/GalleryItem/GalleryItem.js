@@ -3,6 +3,7 @@ import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
 import { DetailService, t } from '../../Services';
+import { IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -82,8 +83,8 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
           },
           props: {
-            buttonLabel: t('watch_now'),
-            buttonIcon: Utils.asset('icons/home/play.svg'),
+            buttonLabel: t(TRANSLATIONS.WATCH_NOW),
+            buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
           },
         },
         AuthorizedButtons: {
@@ -168,7 +169,7 @@ export default class GalleryItem extends Lightning.Component {
         return src;
       } else if (fallbackImage) {
         return fallbackImage;
-      } else return Utils.asset('images/gradient.png');
+      } else return Utils.asset(IMG_PATH.GRADIENT);
     };
 
     this.patch({
@@ -179,11 +180,7 @@ export default class GalleryItem extends Lightning.Component {
         src: bgImageSrc(),
       },
       GradientOverlay: {
-        texture: Lightning.Tools.getSvgTexture(
-          Utils.asset('icons/home/gradient.svg'),
-          1920,
-          height
-        ),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, height),
       },
       Info: {
         Title: {
@@ -234,7 +231,7 @@ export default class GalleryItem extends Lightning.Component {
             );
           };
 
-          btnIcon = Utils.asset('icons/home/play.svg');
+          btnIcon = Utils.asset(IMG_PATH.PLAY_BTN);
         }
 
         // Patch the button with the correct props, including the conditionally set callback

@@ -1,3 +1,4 @@
+import { IMG_PATH } from '../../constants/globalConstants';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 
 export const playerButtonsVOD = [
@@ -7,7 +8,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'backward',
-        icon: `/icons/player/commands/fast-backward.svg`,
+        icon: IMG_PATH.FAST_BACKWARD_PLAYER,
         onLiveContent: false,
         position: 660,
       },
@@ -19,7 +20,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'pause',
-        icon: `/icons/player/commands/pause.svg`,
+        icon: IMG_PATH.PAUSE_BTN_PLAYER,
         onLiveContent: true,
         position: 690,
       },
@@ -31,7 +32,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'forward',
-        icon: `/icons/player/commands/fast-forward.svg`,
+        icon: IMG_PATH.FAST_FORWARD_PLAYER,
         onLiveContent: false,
         position: 720,
       },
@@ -46,7 +47,7 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'back',
-        icon: `/icons/player/commands/back.svg`,
+        icon: IMG_PATH.BACK_BTN_PLAYER,
         onLiveContent: true,
         position: 60,
       },
@@ -59,7 +60,7 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'pause',
-        icon: `/icons/player/commands/pause.svg`,
+        icon: IMG_PATH.PAUSE_BTN_PLAYER,
         onLiveContent: true,
         position: 810,
       },
@@ -72,7 +73,7 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'subtitles',
-        icon: `/icons/player/commands/subtitles.svg`,
+        icon: IMG_PATH.SUBTITLES,
         onLiveContent: true,
         position: 810,
       },

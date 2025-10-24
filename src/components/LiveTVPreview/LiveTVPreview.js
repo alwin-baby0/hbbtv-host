@@ -4,6 +4,7 @@ import LiveTVPlayer from '../../pages/LiveTV/components/LiveTVPlayer';
 import ProgressBar from '../../pages/Player/components/ProgressBar/ProgressBar';
 import colors from '../../../reskin/colors.json';
 import { t } from '../../Services';
+import { IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
 
 export default class LiveTVPreview extends Lightning.Component {
   _props = {};
@@ -122,11 +123,11 @@ export default class LiveTVPreview extends Lightning.Component {
         Image: {
           w: 745,
           h: 415,
-          texture: Lightning.Tools.getSvgTexture(Utils.asset('loading-screen.svg'), 890, 500),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.LOADING_SCREEN), 890, 500),
         },
         Message: {
           text: {
-            text: t('no_stream'),
+            text: t(TRANSLATIONS.NO_STREAM),
             fontSize: 36,
             wordWrapWidth: 700,
             textAlign: 'center',

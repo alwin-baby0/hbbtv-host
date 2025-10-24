@@ -15,7 +15,13 @@ import {
   playerButtonsLive,
   playerButtonsVOD,
 } from './utils';
-import { EVENT_NAMES, LOCAL_STORAGE_KEYS, VIDEO_TYPES } from '../../constants/globalConstants';
+import {
+  EVENT_NAMES,
+  IMG_PATH,
+  LOCAL_STORAGE_KEYS,
+  TRANSLATIONS,
+  VIDEO_TYPES,
+} from '../../constants/globalConstants';
 
 const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
 
@@ -52,7 +58,7 @@ export default class Player extends Lightning.Component {
         y: (y) => y / 2,
         w: 80,
         h: 80,
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('images/spinner.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.SPINNER), 80, 80),
         mount: 0.5,
         rotation: 0,
       },
@@ -207,11 +213,11 @@ export default class Player extends Lightning.Component {
         Image: {
           w: 890,
           h: 500,
-          texture: Lightning.Tools.getSvgTexture(Utils.asset('loading-screen.svg'), 890, 500),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.LOADING_SCREEN), 890, 500),
         },
         Message: {
           text: {
-            text: t('no_stream'),
+            text: t(TRANSLATIONS.NO_STREAM),
             fontSize: 36,
             wordWrapWidth: 1200,
             textAlign: 'center',
@@ -300,7 +306,7 @@ export default class Player extends Lightning.Component {
   set params({ videoType, videoUrl, ssai, ...rest }) {
     this._Subtitles.patch({
       Title: {
-        text: t('subtitles'),
+        text: t(TRANSLATIONS.SUBTITLES),
       },
       Languages: {
         items: [
@@ -309,7 +315,7 @@ export default class Player extends Lightning.Component {
             collision: true,
             props: {
               languageInfo: {
-                name: t('off').toUpperCase(),
+                name: t(TRANSLATIONS.OFF).toUpperCase(),
                 type: 'SUBTITLES',
               },
               index: 0,
@@ -426,7 +432,7 @@ export default class Player extends Lightning.Component {
             props: {
               buttonInfo: {
                 label: 'back',
-                icon: `/icons/player/commands/back.svg`,
+                icon: IMG_PATH.BACK_BTN_PLAYER,
                 onLiveContent: true,
                 position: 60,
               },
@@ -581,7 +587,7 @@ export default class Player extends Lightning.Component {
                       Icon: {
                         color: Colors(colors.adProgress).get(),
                         texture: Lightning.Tools.getSvgTexture(
-                          Utils.asset('icons/ad-icon.svg'),
+                          Utils.asset(IMG_PATH.AD_ICON),
                           65,
                           65
                         ),
@@ -958,11 +964,7 @@ export default class Player extends Lightning.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(
-          Utils.asset('/icons/player/commands/pause.svg'),
-          90,
-          90
-        ),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
       });
     }
   }
@@ -983,11 +985,7 @@ export default class Player extends Lightning.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(
-          Utils.asset('/icons/player/commands/play.svg'),
-          90,
-          90
-        ),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN), 90, 90),
       });
     }
   }
@@ -1110,11 +1108,7 @@ export default class Player extends Lightning.Component {
     const { pausedItemId } = this._props;
 
     this._Controls.Items.children[pausedItemId]._Icon.patch({
-      texture: Lightning.Tools.getSvgTexture(
-        Utils.asset('/icons/player/commands/pause.svg'),
-        90,
-        90
-      ),
+      texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
     });
   }
 
@@ -1154,7 +1148,7 @@ export default class Player extends Lightning.Component {
     this._ErrorMessage.patch({
       Message: {
         text: {
-          text: t('no_stream'),
+          text: t(TRANSLATIONS.NO_STREAM),
         },
       },
     });
@@ -1186,20 +1180,12 @@ export default class Player extends Lightning.Component {
     if (isCurrentlyPlaying) {
       // The video was playing, now it will be paused
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(
-          Utils.asset('/icons/player/commands/play.svg'),
-          90,
-          90
-        ),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 90, 90),
       });
     } else {
       // The video was paused, now it will be playing
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(
-          Utils.asset('/icons/player/commands/pause.svg'),
-          90,
-          90
-        ),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
       });
     }
   }

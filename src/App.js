@@ -5,6 +5,7 @@ import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinSc
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import { DetailService, t } from './Services';
+import { IMG_PATH, TRANSLATIONS } from './constants/globalConstants';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -33,7 +34,7 @@ export default class App extends Router.App {
         w: 1920,
         h: 1080,
         zIndex: -900,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       Widgets: {
         Menu: {
@@ -107,7 +108,7 @@ export default class App extends Router.App {
         w: 1920,
         h: 1080,
         zIndex: -900,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
         shader: undefined,
       },
     });
@@ -136,7 +137,7 @@ export default class App extends Router.App {
           w: 1920,
           h: 1080,
           zIndex: -900,
-          src: Utils.asset('images/background.jpg'),
+          src: Utils.asset(IMG_PATH.BACKGROUND),
           shader: {
             type: Lightning.shaders.Hole,
             x: x,
@@ -242,16 +243,16 @@ export default class App extends Router.App {
   $appClose() {
     const dialog = this._Dialog;
     dialog.open({
-      message: t('exit_label'),
+      message: t(TRANSLATIONS.EXIT),
       actions: [
         {
-          label: t('no_resume'),
+          label: t(TRANSLATIONS.NO_RESUME),
           action: () => {
             dialog.close();
           },
         },
         {
-          label: t('yes_exit'),
+          label: t(TRANSLATIONS.YES_EXIT),
           action: () => {
             const device = getDeviceType();
             // Router navigation for "Yes, exit now"

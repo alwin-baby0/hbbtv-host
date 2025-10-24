@@ -4,7 +4,12 @@ import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import { EVENT_NAMES, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import {
+  EVENT_NAMES,
+  IMG_PATH,
+  LOCAL_STORAGE_KEYS,
+  TRANSLATIONS,
+} from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
@@ -22,7 +27,7 @@ export default class SingleMovie extends Lightning.Component {
         BackButton: {
           collision: true,
           type: BackBtn,
-          texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
           x: 45,
           y: 30,
           props: {
@@ -184,8 +189,8 @@ export default class SingleMovie extends Lightning.Component {
     const splitDirector = director.split(':');
     const splitCast = cast.split(':');
 
-    const tdirector = t('director') + ':' + splitDirector[1];
-    const tcast = t('cast') + ':' + splitCast[1];
+    const tdirector = t(TRANSLATIONS.DIRECTOR) + ':' + splitDirector[1];
+    const tcast = t(TRANSLATIONS.CAST) + ':' + splitCast[1];
 
     this.patch({
       Content: {
@@ -242,16 +247,16 @@ export default class SingleMovie extends Lightning.Component {
 
     const buttons = [
       {
-        icon: 'icons/home/play.svg',
+        icon: IMG_PATH.PLAY_BTN,
         buttonName: 'WATCH NOW',
-        buttonLabel: t('watch_now')?.toUpperCase(),
+        buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
         width: 405,
         stream: 'url',
       },
       {
-        icon: 'icons/movies/trailer-icon.svg',
+        icon: IMG_PATH.TRAILER_ICON,
         buttonName: 'TRAILER',
-        buttonLabel: t('trailer')?.toUpperCase(),
+        buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
         width: 405,
         stream: 'trailerSrc',
       },
@@ -263,17 +268,17 @@ export default class SingleMovie extends Lightning.Component {
 
     if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       filteredButtons.push({
-        icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
+        icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
         buttonName: 'FAVORITE',
-        buttonLabel: t('favorite')?.toUpperCase(),
+        buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
         width: 335,
       });
 
       last_position &&
         filteredButtons.push({
-          icon: 'icons/home/play.svg',
+          icon: IMG_PATH.PLAY_BTN,
           buttonName: 'CONTINUE WATCHING',
-          buttonLabel: t('continue_watching')?.toUpperCase(),
+          buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
           width: 405,
         });
     }
@@ -397,9 +402,9 @@ export default class SingleMovie extends Lightning.Component {
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
           buttonIcon: Utils.asset(
-            this._props.movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'
+            this._props.movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE
           ),
-          buttonLabel: t('favorite')?.toUpperCase(),
+          buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
           width: 317,
         },
       });

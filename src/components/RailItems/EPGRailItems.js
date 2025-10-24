@@ -1,5 +1,5 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import { VIDEO_TYPES } from '../../constants/globalConstants';
+import { IMG_PATH, VIDEO_TYPES } from '../../constants/globalConstants';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
@@ -110,11 +110,7 @@ export default class EPGRailItems extends Lightning.Component {
           y: 49,
           w: 20,
           h: 20,
-          texture: Lightning.Tools.getSvgTexture(
-            Utils.asset('icons/livetv/play-button.svg'),
-            20,
-            20
-          ),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_LIVE), 20, 20),
         },
         texture: Lightning.Tools.getRoundRect(
           this._epgWidth,
