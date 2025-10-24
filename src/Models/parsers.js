@@ -77,7 +77,7 @@ export const parseSportsPageData = ({ data }) => {
   );
   if (!railItems || railItems?.length === 0) return;
 
-  const title = t(TRANSLATIONS.TR_SPORTS);
+  const title = t(TRANSLATIONS.SPORTS);
 
   return {
     railType: RAIL_TYPES.SPORT,
@@ -93,7 +93,7 @@ export const parseSportsEventsData = ({ data }) => {
   const railItems = data.entry?.map((item) => new LiveEventsRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
-  const title = t(TRANSLATIONS.TR_SPORTS_EVENTS);
+  const title = t(TRANSLATIONS.SPORTS_EVENTS);
 
   return {
     railType: RAIL_TYPES.SPORT_LIVE,

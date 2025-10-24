@@ -2,6 +2,7 @@ import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Button from './components/Button';
 import { CONTENT_TYPE } from '../../components/VodContentContainer/VodContentContainer';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class Filtered extends Lightning.Component {
   static _template() {
@@ -9,7 +10,7 @@ export default class Filtered extends Lightning.Component {
       Background: {
         w: 1920,
         h: 2080,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       GenresInfo: {
         collision: true,
@@ -24,7 +25,7 @@ export default class Filtered extends Lightning.Component {
         },
         ArrowImage: {
           x: 30,
-          texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/arrowRight.svg'), 10, 16),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.RIGHT_ARROW), 10, 16),
         },
         Genre: {
           x: 60,

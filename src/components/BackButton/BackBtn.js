@@ -1,5 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class BackBtn extends Lightning.Component {
   _props = {
@@ -10,7 +11,7 @@ export default class BackBtn extends Lightning.Component {
     return {
       Icon: {
         color: Colors('#ffffff'),
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
       },
     };
   }

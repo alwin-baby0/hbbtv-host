@@ -5,7 +5,7 @@ import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinSc
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import { DetailService, t } from './Services';
-import { TRANSLATIONS } from './constants/globalConstants';
+import { IMG_PATH, TRANSLATIONS } from './constants/globalConstants';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -34,7 +34,7 @@ export default class App extends Router.App {
         w: 1920,
         h: 1080,
         zIndex: -900,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       Widgets: {
         Menu: {
@@ -108,7 +108,7 @@ export default class App extends Router.App {
         w: 1920,
         h: 1080,
         zIndex: -900,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
         shader: undefined,
       },
     });
@@ -137,7 +137,7 @@ export default class App extends Router.App {
           w: 1920,
           h: 1080,
           zIndex: -900,
-          src: Utils.asset('images/background.jpg'),
+          src: Utils.asset(IMG_PATH.BACKGROUND),
           shader: {
             type: Lightning.shaders.Hole,
             x: x,

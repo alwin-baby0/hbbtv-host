@@ -3,11 +3,12 @@ import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class LandscapeRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder-empty.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.LANDSCAPE_RAIL_PH_EMPTY),
     radius: 6,
     strokeWidth: 4,
     x: -2,

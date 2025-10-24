@@ -6,7 +6,7 @@ import VodContentContainer, {
 import { constructRails } from '../utils';
 import { eventTrackPayload } from '../../utils/device';
 import { VOD_PREVIEW_TYPES } from '../utils';
-import { EVENT_NAMES } from '../../constants/globalConstants';
+import { EVENT_NAMES, IMG_PATH } from '../../constants/globalConstants';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -22,7 +22,7 @@ export default class VodPreview extends Lightning.Component {
       Background: {
         w: 1920,
         h: 2080,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       VodContentContainer: {
         type: VodContentContainer,
