@@ -10,7 +10,7 @@ export default class Button extends Lightning.Component {
     buttonIcon: '',
     iconWidth: 25,
     iconHeight: 25,
-    radius: 0,
+    radius: 10,
     strokeWidth: 4,
     callback: () => null,
     enabled: true,
@@ -66,6 +66,12 @@ export default class Button extends Lightning.Component {
       });
     }
 
+    if (buttonLabel === '') {
+      this._Icon.patch({
+        x: 38,
+      });
+    }
+
     let focusingColors;
     let fillColor;
 
@@ -90,16 +96,18 @@ export default class Button extends Lightning.Component {
         radius,
         strokeWidth,
         focusingColors,
-        this._isFocused,
+        true,
         this._isFocused ? fillColor : undefined
       ),
       Icon: {
         texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
+        color: this._isFocused ? Colors(colors.white).get() : Colors('#000000').get(),
       },
       Label: {
         Text: {
           text: {
             text: buttonLabel,
+            textColor: this._isFocused ? Colors(colors.white).get() : Colors('#000000').get(),
           },
         },
       },
@@ -127,12 +135,22 @@ export default class Button extends Lightning.Component {
         true,
         Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get()
       ),
+      Icon: {
+        color: Colors(colors.white).get(),
+      },
+      Label: {
+        Text: {
+          text: {
+            textColor: Colors(colors.white).get(),
+          },
+        },
+      },
     });
   }
 
   _unfocus() {
     const { width, height, radius, strokeWidth, borderColor } = this._props;
-    const colorBorder = borderColor ? borderColor : colors.unfocus;
+    const colorBorder = borderColor ? borderColor : colors.white;
     this._isFocused = false;
     this.patch({
       texture: Lightning.Tools.getRoundRect(
@@ -141,8 +159,19 @@ export default class Button extends Lightning.Component {
         radius,
         strokeWidth,
         Colors(this._props.enabled ? colorBorder : colors.unfocusDisabled).get(),
-        false
+        true,
+        Colors(colors.white).get()
       ),
+      Icon: {
+        color: Colors('#000000').get(),
+      },
+      Label: {
+        Text: {
+          text: {
+            textColor: Colors('#000000').get(),
+          },
+        },
+      },
     });
   }
 
