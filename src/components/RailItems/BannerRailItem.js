@@ -9,6 +9,9 @@ export default class BannerRailItem extends FocusableItem {
     placeholderSrc: Utils.asset('images/rail-placeholder-empty.png'),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
   };
 

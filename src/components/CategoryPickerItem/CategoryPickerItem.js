@@ -1,7 +1,8 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
+import FocusableItem from '../FocusableItem/FocusableItem';
 
-export default class CategoryPickerItem extends Lightning.Component {
+export default class CategoryPickerItem extends FocusableItem {
   _props = {
     itemInfo: null,
     callback: () => null,
@@ -9,14 +10,23 @@ export default class CategoryPickerItem extends Lightning.Component {
 
   static _template() {
     return {
-      h: 64,
-      flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+      ...super._template(),
+      Button: {
+        rect: true,
+      },
       Title: {
-        h: 24,
+        mountX: 0.5,
+        mountY: 0.5,
+        x: (w) => w / 2,
+        y: (h) => h / 2 + 2,
         text: {
+          fontFace: 'Montserrat-Bold',
           fontSize: 20,
-          lineHeight: 25,
-          fontFace: 'Montserrat-Medium',
+          textAlign: 'center',
+          textColor: Colors(colors.white).get(),
+          textOverflow: 'ellipsis',
+          wordWrapWidth: 180,
+          wordWrap: false,
         },
       },
     };
@@ -26,30 +36,44 @@ export default class CategoryPickerItem extends Lightning.Component {
     return this.tag('Title');
   }
 
+  get _ButtonItem() {
+    return this.tag('ButtonItem');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { itemInfo, w, h } = this._props;
+    const { itemInfo, w, h, strokeWidth, radius } = this._props;
     const { title } = itemInfo;
+    this.setProps({
+      x: -2,
+      y: -1,
+      width: w + 10,
+      height: h + 10,
+      radius: 8,
+      strokeWidth: 2,
+      strokeColor: Colors(colors.focus).get(),
+    });
 
     this.patch({
-      w,
-      h,
-      flexItem: {
-        shrink: false,
+      w: w + 10,
+      h: h + 10,
+      Button: {
+        x: 5,
+        y: 6,
+        w,
+        h,
+        texture: Lightning.Tools.getRoundRect(
+          w,
+          h,
+          radius,
+          strokeWidth,
+          Colors(colors.white).get(),
+          true,
+          Colors(colors.catPickerItemUnf).get()
+        ),
       },
       Title: {
-        h: 24,
-        text: {
-          textAlign: title.length < 15 ? 'center' : 'left',
-          maxLines: title.length > 15 ? 2 : 1,
-          wordWrapWidth: 180,
-          text: title.toUpperCase(),
-          fontSize: 20,
-          lineHeight: 25,
-          textColor: Colors(colors.focus).get(),
-          textOverflow: 'ellipsis',
-          wordWrap: false,
-        },
+        text: { text: title.toUpperCase() },
       },
     });
   }
@@ -73,59 +97,47 @@ export default class CategoryPickerItem extends Lightning.Component {
   }
 
   _focus() {
-    const { w, h, radius, strokeWidth, itemInfo } = this._props;
-    const { title } = itemInfo;
+    const { w, h, radius, strokeWidth } = this._props;
 
+    super._focus();
     this.patch({
-      Title: undefined,
-    });
-    this.patch({
-      texture: Lightning.Tools.getRoundRect(
+      Button: {
+        x: 5,
+        y: 6,
         w,
         h,
-        radius,
-        strokeWidth,
-        Colors(colors.focus).get(),
-        true,
-        Colors(colors.focus).get()
-      ),
-      Title: {
-        h: 24,
-        w: 180,
-        text: {
-          textAlign: title.length < 15 ? 'center' : 'left',
-          maxLines: title.length > 15 ? 2 : 1,
-          wordWrapWidth: 180,
-          text: title.toUpperCase(),
-          fontSize: 20,
-          lineHeight: 25,
-          textColor: Colors(colors.unfocus).get(),
-          textOverflow: 'ellipsis',
-          wordWrap: false,
-        },
+        texture: Lightning.Tools.getRoundRect(
+          w,
+          h,
+          radius,
+          strokeWidth,
+          Colors(colors.focus).get(),
+          true,
+          Colors(colors.focus).get()
+        ),
       },
     });
   }
 
   _unfocus() {
-    const { w, h, itemInfo } = this._props;
-    const { title } = itemInfo;
+    const { w, h, radius, strokeWidth } = this._props;
 
+    super._unfocus();
     this.patch({
-      texture: Lightning.Tools.getRoundRect(w, h),
-      Title: {
-        h: 24,
-        w: 180,
-        text: {
-          textAlign: title.length < 15 ? 'center' : 'left',
-          maxLines: title.length > 15 ? 2 : 1,
-          text: title.toUpperCase(),
-          fontSize: 20,
-          lineHeight: 25,
-          textColor: Colors(colors.focus).get(),
-          textOverflow: 'ellipsis',
-          wordWrap: false,
-        },
+      Button: {
+        x: 5,
+        y: 6,
+        w,
+        h,
+        texture: Lightning.Tools.getRoundRect(
+          w,
+          h,
+          radius,
+          strokeWidth,
+          Colors(colors.white).get(),
+          true,
+          Colors(colors.catPickerItemUnf).get()
+        ),
       },
     });
   }

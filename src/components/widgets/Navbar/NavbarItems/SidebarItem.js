@@ -6,150 +6,128 @@ export default class SidebarItem extends Lightning.Component {
   _props = {
     selected: false,
     extraItemSpacing: 20,
+    borderGap: 12,
+    w: 170,
+    h: 60,
+    iconW: 60,
+    radius: 16,
   };
 
   static _template() {
     return {
-      flex: { direction: 'column', alignItems: 'center' },
-      w: 150,
-      h: 70,
-      Title: {
-        y: 21,
-        text: {
-          textColor: Colors(colors.unfocus).get(),
-          fontSize: 24,
-          lineHeight: 27,
-          fontFace: 'Montserrat-Bold',
-        },
+      OuterStroke: {},
+      FocusFill: {
+        x: 6,
+        y: 6,
+        w: 60,
+        h: 60,
+        rect: true,
+        color: null,
+        shader: { type: lng.shaders.RoundedRectangle, radius: 12 },
+        zIndex: 1,
       },
       Icon: {
-        y: 10,
-        zIndex: 0,
-        color: Colors(colors.unfocus).get(),
+        mountX: 0.5,
+        mountY: 0.5,
+        x: (h) => 72 / 2, //70 + 12
+        y: (h) => 72 / 2,
+        w: 32,
+        h: 32,
+        // color: Colors(colors.unfocus).get(),
+        zIndex: 2,
       },
-      Line: {
-        y: 21,
-        w: 150,
-        h: 5,
-        rect: true,
-        shader: { type: lng.shaders.RoundedRectangle },
-        visible: false,
+      Title: {
+        mountX: 0.5,
+        mountY: 0.5,
+        x: (w) => (w + 15) / 2,
+        y: (h) => (h + 15) / 2,
+        text: {
+          textColor: Colors(colors.unfocus).get(),
+          fontFace: 'Montserrat-Bold',
+          fontSize: 24,
+          textAlign: 'center',
+        },
+        zIndex: 2,
       },
     };
   }
 
-  getSelectedIndex() {
-    if (this._props.selected) {
-      return this._props.index;
-    }
-    return -1;
+  get _FocusFill() {
+    return this.tag('FocusFill');
   }
-
-  set props(props) {
-    this._props = {
-      ...this._props,
-      ...props,
-    };
-
-    const { selected, extraItemSpacing } = this._props;
-    const { label, icon, route } = this._props.data;
-    if (selected) {
-      this.patch({
-        Title: {
-          color: Colors(colors.focus).get(),
-        },
-        Line: {
-          color: Colors(colors.focus).get(),
-        },
-        Icon: {
-          color: Colors(colors.focus).get(),
-        },
-      });
-    } else {
-      this.patch({
-        Title: {
-          color: Colors(colors.unfocus).get(),
-        },
-        Line: {
-          color: Colors(colors.unfocus).get(),
-        },
-        Icon: {
-          color: Colors(colors.unfocus).get(),
-        },
-      });
-    }
-
-    if (icon !== '') {
-      this.patch({
-        flexItem: { marginRight: extraItemSpacing },
-        Line: {
-          x: 200,
-          y: 21,
-          w: 0,
-        },
-        Icon: {
-          texture: lng.Tools.getSvgTexture(Utils.asset(icon), 48, 48),
-        },
-      });
-    } else {
-      this.patch({
-        w: route === 'live' && label.length > 10 ? 200 : 150,
-        flexItem: { marginRight: extraItemSpacing },
-        Title: {
-          text: {
-            maxLines: 1,
-            wordWrapWidth: route === 'live' && label.length > 10 ? 200 : 150,
-            fontFace: 'Montserrat-Regular',
-            text: label.toUpperCase(),
-          },
-        },
-      });
-    }
+  get _OuterStroke() {
+    return this.tag('OuterStroke');
   }
-
   get _Icon() {
     return this.tag('Icon');
   }
-
   get _Title() {
     return this.tag('Title');
   }
 
-  get _Line() {
-    return this.tag('Line');
+  set props(props) {
+    this._props = { ...this._props, ...props };
+    const { selected, extraItemSpacing, w } = this._props;
+    const { label, icon } = this._props.data || {};
+
+    this.patch({ flexItem: { marginRight: extraItemSpacing } });
+
+    if (icon) {
+      this._Icon.patch({
+        texture: lng.Tools.getSvgTexture(Utils.asset(icon), 32, 32),
+        visible: true,
+      });
+    } else {
+      this.patch({
+        FocusFill: {
+          w: w,
+        },
+      });
+      this._Title.visible = true;
+      this._Title.text.text = label.toUpperCase();
+    }
+
+    this._applyColors(selected);
+  }
+
+  _applyColors(selected) {
+    const textColor = selected ? Colors(colors.focus).get() : Colors(colors.unfocus).get();
+    this._Title.text.textColor = textColor;
+    this._Icon.color = textColor;
   }
 
   _focus() {
-    const { label, icon, route } = this._props.data;
+    const { w, borderGap, iconW, radius } = this._props;
 
-    setTimeout(() => {
-      this.patch({
-        Line: {
-          w: route === 'live' && label.length > 10 ? 200 : icon === '' ? 150 : this._Line.w, // čuva trenutnu širinu ako uslovi nisu zadovoljeni,
-          visible: true,
-        },
-        Icon: {
-          color: Colors(colors.focus).get(),
-        },
-      });
-    }, 0);
+    const { icon } = this._props.data || {};
+
+    this._FocusFill.color = Colors(colors.focus).get();
+    this._Title.text.textColor = Colors(colors.white).get();
+    this._Icon.color = Colors(colors.white).get();
+
+    this._OuterStroke.patch({
+      w: !icon ? w + borderGap : iconW + borderGap,
+      h: iconW + borderGap,
+      texture: lng.Tools.getRoundRect(
+        !icon ? w + borderGap : iconW + borderGap,
+        iconW + borderGap,
+        radius,
+        2,
+        Colors(colors.focus).get(), // red outline
+        false,
+        0
+      ),
+    });
   }
 
   _unfocus() {
-    this.patch({
-      Icon: {
-        color: Colors(colors.unfocus).get(),
-      },
-      Title: {
-        text: {
-          textColor: Colors(colors.unfocus).get(),
-        },
-      },
-      Line: {
-        visible: false,
-      },
+    this._FocusFill.color = null;
+
+    this._OuterStroke.patch({
+      texture: null,
     });
-    this._Line.visible = false;
+
+    this._applyColors(this._props.selected);
   }
 
   fja() {
