@@ -1,5 +1,6 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { CMPService, DetailService } from '../../Services';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class Splash extends Lightning.Component {
   static _template() {
@@ -8,14 +9,14 @@ export default class Splash extends Lightning.Component {
         rect: true,
         w: 1920,
         h: 1080,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
         zIndex: 999,
       },
       Logo: {
         w: 1920,
         h: 1080,
         rect: true,
-        src: Utils.asset('images/splash-screen.png'),
+        src: Utils.asset(IMG_PATH.SPLASH_SCREEN),
         zIndex: 1000,
       },
     };

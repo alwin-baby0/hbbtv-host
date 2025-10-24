@@ -4,7 +4,12 @@ import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import { EVENT_NAMES, LOCAL_STORAGE_KEYS, TRANSLATIONS } from '../../constants/globalConstants';
+import {
+  EVENT_NAMES,
+  IMG_PATH,
+  LOCAL_STORAGE_KEYS,
+  TRANSLATIONS,
+} from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
@@ -22,7 +27,7 @@ export default class SingleMovie extends Lightning.Component {
         BackButton: {
           collision: true,
           type: BackBtn,
-          texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
           x: 45,
           y: 30,
           props: {

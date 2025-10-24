@@ -6,6 +6,7 @@ import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
 import {
   EVENT_NAMES,
+  IMG_PATH,
   LOCAL_STORAGE_KEYS,
   TRANSLATIONS,
   VIDEO_TYPES,
@@ -24,7 +25,7 @@ export default class SingleSeries extends Lightning.Component {
       BackButton: {
         type: BackBtn,
         collision: true,
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
         x: 85,
         y: 20,
         zIndex: 100,
@@ -35,7 +36,7 @@ export default class SingleSeries extends Lightning.Component {
       Background: {
         w: 1920,
         h: 1080,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       SeriesWrapper: {
         rect: true,
@@ -162,7 +163,7 @@ export default class SingleSeries extends Lightning.Component {
                   marginRight: 10,
                 },
                 props: {
-                  buttonIcon: Utils.asset('icons/home/play.svg'),
+                  buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
                   buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
                   width: 440,
                   callback: () => {

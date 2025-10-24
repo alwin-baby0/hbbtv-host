@@ -1,6 +1,7 @@
 import { Colors, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import lng from '@lightningjs/core';
 import colors from '../../../../../reskin/colors.json';
+import { IMG_PATH } from '../../../../constants/globalConstants';
 
 export default class PlayerButtons extends Lightning.Component {
   _props = {
@@ -54,8 +55,8 @@ export default class PlayerButtons extends Lightning.Component {
       this._Icon.patch({
         texture: lng.Tools.getSvgTexture(
           VideoPlayer.playing
-            ? Utils.asset('/icons/player/commands/pause.svg')
-            : Utils.asset('/icons/player/commands/play.svg'),
+            ? Utils.asset(IMG_PATH.PLAY_PLAYER_BTN)
+            : Utils.asset(IMG_PATH.PAUSE_PLAYER_BTN),
           width,
           height
         ),

@@ -1,6 +1,7 @@
 import { Lightning, Utils } from '@lightningjs/sdk';
 import BackBtn from '../../components/BackButton/BackBtn';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class Collection extends Lightning.Component {
   _props = {};
@@ -13,7 +14,7 @@ export default class Collection extends Lightning.Component {
         BackButton: {
           collision: true,
           type: BackBtn,
-          texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
           x: 45,
           y: 30,
           props: {

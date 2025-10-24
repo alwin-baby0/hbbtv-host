@@ -2,11 +2,12 @@ import { CARD_SIZES } from './constants';
 import { Utils, Router } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class PosterRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/rail-placeholder-empty.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
     radius: 6,
     strokeWidth: 4,
     callback: () => null,

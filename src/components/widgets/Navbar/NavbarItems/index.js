@@ -1,7 +1,11 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
-import { TRANSLATIONS, VISIBLE_SPORT_COUNTRIES } from '../../../../constants/globalConstants';
+import {
+  IMG_PATH,
+  TRANSLATIONS,
+  VISIBLE_SPORT_COUNTRIES,
+} from '../../../../constants/globalConstants';
 import SidebarItem from './SidebarItem';
 import { t } from '../../../../Services';
 import { CountryService } from '../../../../Services';
@@ -23,7 +27,7 @@ export default class SidebarItems extends Lightning.Component {
         Logo: {
           w: 800 / 3.4,
           h: 215 / 3.4,
-          src: Utils.asset('/images/navbar/logo.png'),
+          src: Utils.asset(IMG_PATH.LOGO),
         },
         Column: {
           type: HorizontalContainer,
@@ -71,19 +75,19 @@ export default class SidebarItems extends Lightning.Component {
           ...[
             { id: 3, label: t(TRANSLATIONS.TR_SPORT), route: 'vod/sports', icon: '' },
             { id: 4, label: t(TRANSLATIONS.TR_LIVE_TV), route: 'live', icon: '' },
-            { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-            { id: 6, label: 'user', route: 'account', icon: 'images/navbar/user.svg' },
-            { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
-            { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
+            { id: 5, label: 'search', route: 'search', icon: IMG_PATH.NAVBAR_SEARCH },
+            { id: 6, label: 'user', route: 'account', icon: IMG_PATH.NAVBAR_USER },
+            { id: 7, label: 'settings', route: 'langsettings', icon: IMG_PATH.NAVBAR_SETTINGS },
+            { id: 8, label: 'terms', route: 'help', icon: IMG_PATH.NAVBAR_INFO },
           ]
         )
       : menuItems.push(
           ...[
             { id: 3, label: t(TRANSLATIONS.TR_LIVE_TV), route: 'live', icon: '' },
-            { id: 4, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-            { id: 5, label: 'user', route: 'account', icon: 'images/navbar/user.svg' },
-            { id: 6, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
-            { id: 7, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
+            { id: 4, label: 'search', route: 'search', icon: IMG_PATH.NAVBAR_SEARCH },
+            { id: 5, label: 'user', route: 'account', icon: IMG_PATH.NAVBAR_USER },
+            { id: 6, label: 'settings', route: 'langsettings', icon: IMG_PATH.NAVBAR_SETTINGS },
+            { id: 7, label: 'terms', route: 'help', icon: IMG_PATH.NAVBAR_INFO },
           ]
         );
 
