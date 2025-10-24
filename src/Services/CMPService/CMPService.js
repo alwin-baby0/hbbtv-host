@@ -38,7 +38,6 @@ class CMPService extends FetchingService {
             console.log('statusResponse', statusResponse.data);
 
             if (statusResponse.data.status === 'approved') {
-              console.log(statusResponse);
               this.clearPollingInterval(this._intervalId);
               console.log('Device code status condition met, stopping the interval.');
               console.log('status:', statusResponse.data.status);
@@ -171,7 +170,7 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/${API_URLS.GET_USER_FAVORITES}`,
       apiVersion: V2,
-      method: API_METHODS.POST,
+      method: API_METHODS.GET,
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
       },
