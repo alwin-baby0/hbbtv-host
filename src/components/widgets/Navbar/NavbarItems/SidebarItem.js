@@ -97,7 +97,6 @@ export default class SidebarItem extends Lightning.Component {
 
   _focus() {
     const { w, borderGap, iconW, radius } = this._props;
-    console.log(radius);
 
     const { icon } = this._props.data || {};
 

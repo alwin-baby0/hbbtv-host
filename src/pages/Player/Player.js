@@ -298,7 +298,6 @@ export default class Player extends Lightning.Component {
   }
 
   set params({ videoType, videoUrl, ssai, ...rest }) {
-    console.log('here');
     this._Subtitles.patch({
       Title: {
         text: t('subtitles'),

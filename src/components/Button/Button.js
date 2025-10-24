@@ -41,7 +41,6 @@ export default class Button extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    console.log(this._props);
 
     const {
       width,
