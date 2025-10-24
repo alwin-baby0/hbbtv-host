@@ -417,12 +417,3 @@ export const IMG_PATH = {
   PLAY_BTN_PLAYER: '/icons/player/commands/play.svg',
   SUBTITLES_PLAYER: '/icons/player/commands/subtitles.svg',
 };
-
-// export const VIDEO_PLAYER = {
-//   BACK_BTN_PLAYER: 'icons/player/commands/back.png',
-//   FAST_BACKWARD_PLAYER: '/icons/player/commands/fast-backward.svg',
-//   FAST_FORWARD_PLAYER: '/icons/player/commands/fast-forward.svg',
-//   PAUSE_BTN_PLAYER: '/icons/player/commands/pause.svg',
-//   PLAY_BTN_PLAYER: '/icons/player/commands/play.svg',
-//   SUBTITLES_PLAYER: '/icons/player/commands/subtitles.svg',
-// };
