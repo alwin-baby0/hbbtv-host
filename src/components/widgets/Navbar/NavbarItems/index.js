@@ -69,15 +69,15 @@ export default class SidebarItems extends Lightning.Component {
     });
 
     const menuItems = [
-      { id: 0, label: t(TRANSLATIONS.TR_HOME), route: 'home', icon: '' },
-      { id: 1, label: t(TRANSLATIONS.TR_MOVIES), route: 'vod/movies', icon: '' },
-      { id: 2, label: t(TRANSLATIONS.TR_SERIES), route: 'vod/series', icon: '' },
+      { id: 0, label: t(TRANSLATIONS.HOME), route: 'home', icon: '' },
+      { id: 1, label: t(TRANSLATIONS.MOVIES), route: 'vod/movies', icon: '' },
+      { id: 2, label: t(TRANSLATIONS.SERIES), route: 'vod/series', icon: '' },
     ];
     this._visibleSport
       ? menuItems.push(
           ...[
-            { id: 3, label: t(TRANSLATIONS.TR_SPORT), route: 'vod/sports', icon: '' },
-            { id: 4, label: t(TRANSLATIONS.TR_LIVE_TV), route: 'live', icon: '' },
+            { id: 3, label: t(TRANSLATIONS.SPORT), route: 'vod/sports', icon: '' },
+            { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: 'live', icon: '' },
             { id: 5, label: 'search', route: 'search', icon: IMG_PATH.NAVBAR_SEARCH },
             { id: 6, label: 'user', route: 'account', icon: IMG_PATH.NAVBAR_USER },
             { id: 7, label: 'settings', route: 'langsettings', icon: IMG_PATH.NAVBAR_SETTINGS },
@@ -86,7 +86,7 @@ export default class SidebarItems extends Lightning.Component {
         )
       : menuItems.push(
           ...[
-            { id: 3, label: t(TRANSLATIONS.TR_LIVE_TV), route: 'live', icon: '' },
+            { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: 'live', icon: '' },
             { id: 4, label: 'search', route: 'search', icon: IMG_PATH.NAVBAR_SEARCH },
             { id: 5, label: 'user', route: 'account', icon: IMG_PATH.NAVBAR_USER },
             { id: 6, label: 'settings', route: 'langsettings', icon: IMG_PATH.NAVBAR_SETTINGS },

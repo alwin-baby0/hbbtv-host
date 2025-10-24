@@ -1,4 +1,4 @@
-import { VIDEO_PLAYER } from '../../constants/globalConstants';
+import { IMG_PATH } from '../../constants/globalConstants';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 
 export const playerButtonsVOD = [
@@ -8,7 +8,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'backward',
-        icon: VIDEO_PLAYER.FAST_BACKWARD,
+        icon: IMG_PATH.FAST_BACKWARD,
         onLiveContent: false,
         position: 660,
       },
@@ -20,7 +20,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'pause',
-        icon: VIDEO_PLAYER.PAUSE_BTN,
+        icon: IMG_PATH.PAUSE_BTN,
         onLiveContent: true,
         position: 690,
       },
@@ -32,7 +32,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'forward',
-        icon: VIDEO_PLAYER.FAST_FORWARD,
+        icon: IMG_PATH.FAST_FORWARD,
         onLiveContent: false,
         position: 720,
       },
@@ -47,7 +47,7 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'back',
-        icon: VIDEO_PLAYER.BACK_BTN,
+        icon: IMG_PATH.BACK_BTN,
         onLiveContent: true,
         position: 60,
       },
@@ -60,7 +60,7 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'pause',
-        icon: VIDEO_PLAYER.PAUSE_BTN,
+        icon: IMG_PATH.PAUSE_BTN,
         onLiveContent: true,
         position: 810,
       },
@@ -73,7 +73,7 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'subtitles',
-        icon: VIDEO_PLAYER.SUBTITLES,
+        icon: IMG_PATH.SUBTITLES,
         onLiveContent: true,
         position: 810,
       },
