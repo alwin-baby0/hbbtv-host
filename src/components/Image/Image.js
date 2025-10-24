@@ -14,7 +14,7 @@ export default class Image extends Lightning.Component {
       h: height,
       src: imageSrc,
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: radius,
       },
     });
@@ -34,7 +34,7 @@ export default class Image extends Lightning.Component {
       h: height,
       src: placeholderSrc,
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: radius,
       },
     });

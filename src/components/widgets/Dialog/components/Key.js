@@ -8,7 +8,7 @@ export class Key extends Lightning.Component {
         w: 235,
         h: 75,
         color: Colors('#292929').get(),
-        texture: lng.Tools.getRoundRect(235, 75, 12, 3, false),
+        texture: Lightning.Tools.getRoundRect(235, 75, 12, 3, false),
         Wrapper: {
           Label: {
             w: 235,

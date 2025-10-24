@@ -94,7 +94,7 @@ export default class Button extends Lightning.Component {
         this._isFocused ? fillColor : undefined
       ),
       Icon: {
-        texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
+        texture: Lightning.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
       },
       Label: {
         Text: {

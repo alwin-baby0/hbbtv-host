@@ -1,4 +1,4 @@
-import { Colors, Utils } from '@lightningjs/sdk';
+import { Colors, Utils, Lightning } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
@@ -21,7 +21,7 @@ export default class LandscapeRailItem extends FocusableItem {
       color: Colors(colors.landscapeBackground).get(),
       rect: true,
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: 6,
       },
       w: CARD_SIZES.LANDSCAPE.width,

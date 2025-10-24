@@ -1,5 +1,4 @@
 import { Colors, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
-import lng from '@lightningjs/core';
 import colors from '../../../../../reskin/colors.json';
 
 export default class PlayerButtons extends Lightning.Component {
@@ -42,7 +41,7 @@ export default class PlayerButtons extends Lightning.Component {
     const width = buttonInfo.label === 'pause' ? 90 : 66;
     const height = buttonInfo.label === 'pause' ? 90 : 66;
     this._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
+      texture: Lightning.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
     });
   }
 
@@ -52,7 +51,7 @@ export default class PlayerButtons extends Lightning.Component {
     const height = buttonInfo.label === 'pause' ? 90 : 66;
     if (buttonInfo.label === 'pause') {
       this._Icon.patch({
-        texture: lng.Tools.getSvgTexture(
+        texture: Lightning.Tools.getSvgTexture(
           VideoPlayer.playing
             ? Utils.asset('/icons/player/commands/pause.svg')
             : Utils.asset('/icons/player/commands/play.svg'),

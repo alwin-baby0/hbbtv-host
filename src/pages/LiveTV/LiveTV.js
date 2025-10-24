@@ -80,13 +80,13 @@ export default class LiveTV extends Lightning.Component {
               rect: true,
               color: Colors(colors.focusEpg).get(),
               shader: {
-                type: lng.shaders.RoundedRectangle,
+                type: Lightning.shaders.RoundedRectangle,
                 radius: 18,
               },
               flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
               Text: {
                 shader: {
-                  type: lng.shaders.RoundedRectangle,
+                  type: Lightning.shaders.RoundedRectangle,
                   radius: 0,
                 },
                 h: 22,

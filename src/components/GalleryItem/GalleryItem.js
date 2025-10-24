@@ -179,7 +179,11 @@ export default class GalleryItem extends Lightning.Component {
         src: bgImageSrc(),
       },
       GradientOverlay: {
-        texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, height),
+        texture: Lightning.Tools.getSvgTexture(
+          Utils.asset('icons/home/gradient.svg'),
+          1920,
+          height
+        ),
       },
       Info: {
         Title: {

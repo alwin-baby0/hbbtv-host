@@ -1,4 +1,3 @@
-import lng from '@lightningjs/core';
 import { Colors, Router, Utils, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
 
@@ -23,7 +22,7 @@ export default class SidebarItem extends Lightning.Component {
         h: 60,
         rect: true,
         color: null,
-        shader: { type: lng.shaders.RoundedRectangle, radius: 12 },
+        shader: { type: Lightning.shaders.RoundedRectangle, radius: 16 },
         zIndex: 1,
       },
       Icon: {
@@ -74,7 +73,7 @@ export default class SidebarItem extends Lightning.Component {
 
     if (icon) {
       this._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset(icon), 32, 32),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(icon), 32, 32),
         visible: true,
       });
     } else {
@@ -98,6 +97,7 @@ export default class SidebarItem extends Lightning.Component {
 
   _focus() {
     const { w, borderGap, iconW, radius } = this._props;
+    console.log(radius);
 
     const { icon } = this._props.data || {};
 
@@ -108,7 +108,7 @@ export default class SidebarItem extends Lightning.Component {
     this._OuterStroke.patch({
       w: !icon ? w + borderGap : iconW + borderGap,
       h: iconW + borderGap,
-      texture: lng.Tools.getRoundRect(
+      texture: Lightning.Tools.getRoundRect(
         !icon ? w + borderGap : iconW + borderGap,
         iconW + borderGap,
         radius,
