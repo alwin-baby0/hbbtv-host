@@ -1,6 +1,6 @@
 import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
 import { t, VODS_PER_ROW } from '../Services';
-import { RAIL_TYPES } from '../constants/globalConstants';
+import { RAIL_TYPES, TRANSLATIONS } from '../constants/globalConstants';
 import { Banner } from './Banner';
 import { CARD_TYPES } from '../constants/globalConstants';
 
@@ -77,7 +77,7 @@ export const parseSportsPageData = ({ data }) => {
   );
   if (!railItems || railItems?.length === 0) return;
 
-  const title = t('sports');
+  const title = t(TRANSLATIONS.TR_SPORTS);
 
   return {
     railType: RAIL_TYPES.SPORT,
@@ -93,7 +93,7 @@ export const parseSportsEventsData = ({ data }) => {
   const railItems = data.entry?.map((item) => new LiveEventsRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
-  const title = t('sports_events');
+  const title = t(TRANSLATIONS.TR_SPORTS_EVENTS);
 
   return {
     railType: RAIL_TYPES.SPORT_LIVE,

@@ -4,7 +4,7 @@ import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import { EVENT_NAMES, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { EVENT_NAMES, LOCAL_STORAGE_KEYS, TRANSLATIONS } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
@@ -184,8 +184,8 @@ export default class SingleMovie extends Lightning.Component {
     const splitDirector = director.split(':');
     const splitCast = cast.split(':');
 
-    const tdirector = t('director') + ':' + splitDirector[1];
-    const tcast = t('cast') + ':' + splitCast[1];
+    const tdirector = t(TRANSLATIONS.DIRECTOR) + ':' + splitDirector[1];
+    const tcast = t(TRANSLATIONS.CAST) + ':' + splitCast[1];
 
     this.patch({
       Content: {
@@ -244,14 +244,14 @@ export default class SingleMovie extends Lightning.Component {
       {
         icon: 'icons/home/play.svg',
         buttonName: 'WATCH NOW',
-        buttonLabel: t('watch_now')?.toUpperCase(),
+        buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
         width: 405,
         stream: 'url',
       },
       {
         icon: 'icons/movies/trailer-icon.svg',
         buttonName: 'TRAILER',
-        buttonLabel: t('trailer')?.toUpperCase(),
+        buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
         width: 405,
         stream: 'trailerSrc',
       },
@@ -266,7 +266,7 @@ export default class SingleMovie extends Lightning.Component {
       filteredButtons.push({
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonName: 'FAVORITE',
-        buttonLabel: t('favorite')?.toUpperCase(),
+        buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
         width: 335,
       });
 
@@ -274,7 +274,7 @@ export default class SingleMovie extends Lightning.Component {
         filteredButtons.push({
           icon: 'icons/home/play.svg',
           buttonName: 'CONTINUE WATCHING',
-          buttonLabel: t('continue_watching')?.toUpperCase(),
+          buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
           width: 405,
         });
     }
@@ -401,7 +401,7 @@ export default class SingleMovie extends Lightning.Component {
           buttonIcon: Utils.asset(
             this._props.movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'
           ),
-          buttonLabel: t('favorite')?.toUpperCase(),
+          buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
           width: 317,
         },
       });

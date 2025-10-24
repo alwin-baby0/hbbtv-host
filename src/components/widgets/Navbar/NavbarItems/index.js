@@ -1,7 +1,7 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
-import { VISIBLE_SPORT_COUNTRIES } from '../../../../constants/globalConstants';
+import { TRANSLATIONS, VISIBLE_SPORT_COUNTRIES } from '../../../../constants/globalConstants';
 import SidebarItem from './SidebarItem';
 import { t } from '../../../../Services';
 import { CountryService } from '../../../../Services';
@@ -65,15 +65,15 @@ export default class SidebarItems extends Lightning.Component {
     });
 
     const menuItems = [
-      { id: 0, label: t('home'), route: 'home', icon: '' },
-      { id: 1, label: t('movies'), route: 'vod/movies', icon: '' },
-      { id: 2, label: t('series'), route: 'vod/series', icon: '' },
+      { id: 0, label: t(TRANSLATIONS.TR_HOME), route: 'home', icon: '' },
+      { id: 1, label: t(TRANSLATIONS.TR_MOVIES), route: 'vod/movies', icon: '' },
+      { id: 2, label: t(TRANSLATIONS.TR_SERIES), route: 'vod/series', icon: '' },
     ];
     this._visibleSport
       ? menuItems.push(
           ...[
-            { id: 3, label: t('sport'), route: 'vod/sports', icon: '' },
-            { id: 4, label: t('live_tv'), route: 'live', icon: '' },
+            { id: 3, label: t(TRANSLATIONS.TR_SPORT), route: 'vod/sports', icon: '' },
+            { id: 4, label: t(TRANSLATIONS.TR_LIVE_TV), route: 'live', icon: '' },
             { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
             { id: 6, label: 'user', route: 'account', icon: 'images/navbar/user.svg' },
             { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
@@ -82,7 +82,7 @@ export default class SidebarItems extends Lightning.Component {
         )
       : menuItems.push(
           ...[
-            { id: 3, label: t('live_tv'), route: 'live', icon: '' },
+            { id: 3, label: t(TRANSLATIONS.TR_LIVE_TV), route: 'live', icon: '' },
             { id: 4, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
             { id: 5, label: 'user', route: 'account', icon: 'images/navbar/user.svg' },
             { id: 6, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
