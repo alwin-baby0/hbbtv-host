@@ -1,6 +1,7 @@
 import { CARD_SIZES } from './constants';
-import { Utils } from '@lightningjs/sdk';
+import { Utils, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
+import colors from '../../../reskin/colors.json';
 import Image from '../Image/Image';
 import { IMG_PATH } from '../../constants/globalConstants';
 
@@ -10,6 +11,9 @@ export default class CollectionRailItem extends FocusableItem {
     placeholderSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
   };
 
