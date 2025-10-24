@@ -434,7 +434,7 @@ export default class Player extends Lightning.Component {
             props: {
               buttonInfo: {
                 label: 'back',
-                icon: IMG_PATH.BACK_BTN,
+                icon: IMG_PATH.BACK_BTN_PLAYER,
                 onLiveContent: true,
                 position: 60,
               },
@@ -588,7 +588,7 @@ export default class Player extends Lightning.Component {
                       h: 65,
                       Icon: {
                         color: Colors(colors.adProgress).get(),
-                        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.AD_ICON), 65, 65),
+                        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 65, 65),
                       },
                     },
                     AdInfoContainer: {
@@ -962,7 +962,7 @@ export default class Player extends Lightning.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN), 90, 90),
+        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
       });
     }
   }
@@ -1106,7 +1106,7 @@ export default class Player extends Lightning.Component {
     const { pausedItemId } = this._props;
 
     this._Controls.Items.children[pausedItemId]._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN), 90, 90),
+      texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
     });
   }
 
@@ -1178,12 +1178,12 @@ export default class Player extends Lightning.Component {
     if (isCurrentlyPlaying) {
       // The video was playing, now it will be paused
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN), 90, 90),
+        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 90, 90),
       });
     } else {
       // The video was paused, now it will be playing
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN), 90, 90),
+        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
       });
     }
   }

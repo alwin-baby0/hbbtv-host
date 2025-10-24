@@ -410,10 +410,19 @@ export const IMG_PATH = {
   SPLASH_SCREEN: 'images/splash-screen.png',
   SPINNER: 'images/spinner.svg',
   TRAILER_ICON: 'icons/movies/trailer-icon.svg',
-  BACK_BTN: 'icons/player/commands/back.png',
-  FAST_BACKWARD: '/icons/player/commands/fast-backward.svg',
-  FAST_FORWARD: '/icons/player/commands/fast-forward.svg',
-  PAUSE_BTN: '/icons/player/commands/pause.svg',
-  PLAY_BTN: '/icons/player/commands/play.svg',
-  SUBTITLES: '/icons/player/commands/subtitles.svg',
+  BACK_BTN_PLAYER: 'icons/player/commands/back.svg',
+  FAST_BACKWARD_PLAYER: '/icons/player/commands/fast-backward.svg',
+  FAST_FORWARD_PLAYER: '/icons/player/commands/fast-forward.svg',
+  PAUSE_BTN_PLAYER: '/icons/player/commands/pause.svg',
+  PLAY_BTN_PLAYER: '/icons/player/commands/play.svg',
+  SUBTITLES_PLAYER: '/icons/player/commands/subtitles.svg',
 };
+
+// export const VIDEO_PLAYER = {
+//   BACK_BTN_PLAYER: 'icons/player/commands/back.png',
+//   FAST_BACKWARD_PLAYER: '/icons/player/commands/fast-backward.svg',
+//   FAST_FORWARD_PLAYER: '/icons/player/commands/fast-forward.svg',
+//   PAUSE_BTN_PLAYER: '/icons/player/commands/pause.svg',
+//   PLAY_BTN_PLAYER: '/icons/player/commands/play.svg',
+//   SUBTITLES_PLAYER: '/icons/player/commands/subtitles.svg',
+// };

@@ -8,7 +8,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'backward',
-        icon: IMG_PATH.FAST_BACKWARD,
+        icon: IMG_PATH.FAST_BACKWARD_PLAYER,
         onLiveContent: false,
         position: 660,
       },
@@ -20,7 +20,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'pause',
-        icon: IMG_PATH.PAUSE_BTN,
+        icon: IMG_PATH.PAUSE_BTN_PLAYER,
         onLiveContent: true,
         position: 690,
       },
@@ -32,7 +32,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'forward',
-        icon: IMG_PATH.FAST_FORWARD,
+        icon: IMG_PATH.FAST_FORWARD_PLAYER,
         onLiveContent: false,
         position: 720,
       },
@@ -47,7 +47,7 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'back',
-        icon: IMG_PATH.BACK_BTN,
+        icon: IMG_PATH.BACK_BTN_PLAYER,
         onLiveContent: true,
         position: 60,
       },
@@ -60,7 +60,7 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'pause',
-        icon: IMG_PATH.PAUSE_BTN,
+        icon: IMG_PATH.PAUSE_BTN_PLAYER,
         onLiveContent: true,
         position: 810,
       },
