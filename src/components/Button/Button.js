@@ -1,7 +1,8 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
+import FocusableItem from '../FocusableItem/FocusableItem';
 
-export default class Button extends Lightning.Component {
+export default class Button extends FocusableItem {
   _isFocused = false;
   _props = {
     width: 285,
@@ -18,12 +19,15 @@ export default class Button extends Lightning.Component {
 
   static _template() {
     return {
-      flex: { direction: 'row', alignItems: 'center' },
+      ...super._template(),
+      // flex: { direction: 'row', alignItems: 'center' },
       Icon: {
         x: 20,
+        y: (h) => h / 2 - 12,
       },
       Label: {
-        x: 30,
+        x: 50,
+        y: (h) => h / 2 - 12,
         h: 25,
         color: Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
         Text: {
@@ -55,6 +59,16 @@ export default class Button extends Lightning.Component {
       borderColor,
       enabled,
     } = this._props;
+
+    this.setProps({
+      x: -7,
+      y: -7,
+      width: width + 10,
+      height: height + 10,
+      radius: 8,
+      strokeWidth: 2,
+      strokeColor: Colors(colors.focus).get(),
+    });
 
     const colorBorder = borderColor ? borderColor : colors.unfocus;
 
@@ -124,6 +138,7 @@ export default class Button extends Lightning.Component {
 
   _focus() {
     const { width, height, radius, strokeWidth } = this._props;
+    super._focus();
     this._isFocused = true;
     this.patch({
       texture: Lightning.Tools.getRoundRect(
@@ -150,6 +165,7 @@ export default class Button extends Lightning.Component {
 
   _unfocus() {
     const { width, height, radius, strokeWidth, borderColor } = this._props;
+    super._unfocus();
     const colorBorder = borderColor ? borderColor : colors.white;
     this._isFocused = false;
     this.patch({
