@@ -262,6 +262,7 @@ export default class SingleMovie extends Lightning.Component {
       : buttons;
 
     if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
+      console.log(movie.is_favorite);
       filteredButtons.push({
         icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
         buttonName: 'FAVORITE',
@@ -388,16 +389,18 @@ export default class SingleMovie extends Lightning.Component {
       } else {
         await CMPService.addToFavorites(movie.id, 'video');
       }
-
       this._props.movie.is_favorite = !this._props.movie.is_favorite;
 
       const { is_favorite } = this._props.movie;
 
       const id = movieTrailerUrl ? 2 : 1; //depending on movieTrailerUrl, we will know on which position is add to fav btn
-
-      this._Buttons.items[0].items[id].patch({
+      console.log(id);
+      console.log(this._Buttons.Items);
+      this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
-          buttonIcon: Utils.asset(is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+          buttonIcon: Utils.asset(
+            this._props.movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'
+          ),
           buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
           width: 317,
         },

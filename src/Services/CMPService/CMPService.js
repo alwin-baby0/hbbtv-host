@@ -42,7 +42,6 @@ class CMPService extends FetchingService {
               console.log('Device code status condition met, stopping the interval.');
               console.log('status:', statusResponse.data.status);
               console.log('autorization code:', statusResponse.data.authorization_code);
-              authCode = statusResponse.data.authorization_code;
               const timestamp = Math.floor(Date.now() / 1000);
 
               const tokenData = await this.#getToken(
@@ -171,7 +170,7 @@ class CMPService extends FetchingService {
     return await this._request({
       url: `/${API_URLS.GET_USER_FAVORITES}`,
       apiVersion: V2,
-      method: API_METHODS.POST,
+      method: API_METHODS.GET,
       headers: {
         'X-Authorization': `Bearer ${userData.access_token}`,
       },
