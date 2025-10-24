@@ -247,14 +247,14 @@ export default class SingleMovie extends Lightning.Component {
 
     const buttons = [
       {
-        icon: 'icons/home/play.svg',
+        icon: IMG_PATH.PLAY_BTN,
         buttonName: 'WATCH NOW',
         buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
         width: 405,
         stream: 'url',
       },
       {
-        icon: 'icons/movies/trailer-icon.svg',
+        icon: IMG_PATH.TRAILER_ICON,
         buttonName: 'TRAILER',
         buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
         width: 405,
@@ -269,7 +269,7 @@ export default class SingleMovie extends Lightning.Component {
     if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       console.log(movie.is_favorite);
       filteredButtons.push({
-        icon: movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg',
+        icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
         buttonName: 'FAVORITE',
         buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
         width: 335,
@@ -277,7 +277,7 @@ export default class SingleMovie extends Lightning.Component {
 
       last_position &&
         filteredButtons.push({
-          icon: 'icons/home/play.svg',
+          icon: IMG_PATH.PLAY_BTN,
           buttonName: 'CONTINUE WATCHING',
           buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
           width: 405,
@@ -404,7 +404,7 @@ export default class SingleMovie extends Lightning.Component {
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
           buttonIcon: Utils.asset(
-            this._props.movie.is_favorite ? 'icons/heart-filled.svg' : 'icons/heart.svg'
+            this._props.movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE
           ),
           buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
           width: 317,

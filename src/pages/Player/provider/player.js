@@ -1,26 +1,27 @@
+import { VIDEO_PLAYER } from '../../../constants/globalConstants';
 import PlayerButtons from '../components/PlayerButtons/PlayerButtons';
 export const controlsItems = [
   {
     label: 'back',
-    icon: `/icons/player/commands/back.svg`,
+    icon: VIDEO_PLAYER.BACK_BTN,
     onLiveContent: true,
     position: 60,
   },
   {
     label: 'backward',
-    icon: `/icons/player/commands/fast-backward.svg`,
+    icon: VIDEO_PLAYER.FAST_BACKWARD,
     onLiveContent: false,
     position: 660,
   },
   {
     label: 'pause',
-    icon: `/icons/player/commands/pause.svg`,
+    icon: VIDEO_PLAYER.PAUSE_BTN,
     onLiveContent: true,
     position: 690,
   },
   {
     label: 'forward',
-    icon: `/icons/player/commands/fast-forward.svg`,
+    icon: VIDEO_PLAYER.FAST_FORWARD,
     onLiveContent: false,
     position: 720,
   },
@@ -28,13 +29,13 @@ export const controlsItems = [
 export const liveItems = [
   {
     label: 'back',
-    icon: `/icons/player/commands/back.svg`,
+    icon: VIDEO_PLAYER.BACK_BTN,
     onLiveContent: true,
     position: 60,
   },
   {
     label: 'pause',
-    icon: `/icons/player/commands/pause.svg`,
+    icon: VIDEO_PLAYER.PAUSE_BTN,
     onLiveContent: true,
     position: 810,
   },

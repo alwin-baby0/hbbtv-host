@@ -84,7 +84,7 @@ export default class SingleSeries extends Lightning.Component {
 
       this._HeroSection._FavoriteButton.patch({
         props: {
-          buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+          buttonIcon: Utils.asset(newFavorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
           buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
           width: 360,
           parentState: 'HeroSection',
@@ -191,7 +191,7 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 alpha: 1,
                 props: {
-                  buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+                  buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
                   buttonLabel: t(TRANSLATIONS.FAVORITE).toUpperCase(),
                   width: 360,
                   callback: () => {
@@ -222,7 +222,7 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 alpha: 1,
                 props: {
-                  buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
+                  buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
                   buttonLabel: t(TRANSLATIONS.FAVORITE).toUpperCase(),
                   width: 360,
                   callback: () => {
