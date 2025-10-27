@@ -451,6 +451,8 @@ export default class SingleMovie extends Lightning.Component {
               index,
               buttonLabel: item.buttonLabel,
               buttonIcon: Utils.asset(item.icon),
+              position: item.buttonName === 'CONTINUE WATCHING' ? last_position : 0,
+              duration: duration,
               callback: () => {
                 if (item.buttonName === 'FAVORITE') {
                   this.addToFavorite();

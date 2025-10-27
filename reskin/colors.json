@@ -1,6 +1,7 @@
 {
   "background": "#17191A",
   "white": "#ffffff",
+  "black": "#000000",
   "focus": "#A61619",
   "unfocus": "#FFFFFF",
   "sliderDescription": "#BDBDBD",
