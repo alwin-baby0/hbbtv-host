@@ -417,3 +417,24 @@ export const IMG_PATH = {
   PLAY_BTN_PLAYER: '/icons/player/commands/play.svg',
   SUBTITLES_PLAYER: '/icons/player/commands/subtitles.svg',
 };
+
+export const PATH = {
+  MENU_WIDGET: 'Menu',
+  SPLASH: 'splash',
+  HOME: 'home',
+  LIVE: 'live',
+  SEARCH: 'search',
+  ACC: 'account',
+  HELP: 'help',
+  PLAYER: 'player',
+  CMP: 'cmp',
+  CMP_CUSTOMIZE: 'cmp-customize',
+  LAN_SETTINGS: 'langsettings',
+  COLLECTION: 'collection-details',
+  VOD: 'vod',
+  MOVIE_DETAILS: 'movie-details',
+  SERIES_DETAILS: 'series-details',
+  FILTER_PAGE: 'filterPage',
+  SPORTS_DETAIL: 'sports-details',
+  EVENT_DETAILS: 'event-details',
+};

@@ -27,33 +27,34 @@ import cmp from './pages/CMP/provider/cmp';
 import CMPCustomize from './pages/CMP/components/CMPCustomize';
 import LanguageSettings from './pages/LanguageSettings/LanguageSettings';
 import languageSettings from './pages/LanguageSettings/provider/languageSettings';
+import { PATH } from './constants/globalConstants';
 
 export default {
-  root: 'splash',
+  root: PATH.SPLASH,
   routes: [
     {
-      path: 'splash',
+      path: PATH.SPLASH,
       component: Splash,
     },
     {
-      path: 'home',
+      path: PATH.HOME,
       component: Home,
-      widgets: ['Menu'],
+      widgets: [PATH.MENU_WIDGET],
       on: home,
     },
     {
-      path: 'vod/:vodType',
+      path: `${PATH.VOD}/:vodType`,
       component: VodPreview,
-      widgets: ['Menu'],
+      widgets: [PATH.MENU_WIDGET],
       on: onVodPage,
     },
     {
-      path: 'movie-details/:movieId',
+      path: `${PATH.MOVIE_DETAILS}/:movieId`,
       component: SingleMovie,
       on: singleMovie,
     },
     {
-      path: 'series-details/:seriesId',
+      path: `${PATH.SERIES_DETAILS}/:seriesId`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -61,13 +62,13 @@ export default {
       },
     },
     {
-      path: 'filterPage/:action/:genre_movies',
+      path: `${PATH.FILTER_PAGE}/:action/:genre_movies`,
       component: Filtered,
       on: filtered,
-      widgets: ['Menu'],
+      widgets: [PATH.MENU_WIDGET],
     },
     {
-      path: 'sports-details/:seriesId',
+      path: `${PATH.SPORTS_DETAIL}/:seriesId`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -75,59 +76,59 @@ export default {
       },
     },
     {
-      path: 'event-details/:eventId',
+      path: `${PATH.EVENT_DETAILS}/:eventId`,
       component: SingleLiveEvent,
       on: singleLiveEvent,
     },
     {
-      path: 'live',
+      path: PATH.LIVE,
       component: LiveTV,
-      widgets: ['Menu'],
+      widgets: [PATH.MENU_WIDGET],
       on: livetv,
     },
     {
-      path: 'search',
+      path: PATH.SEARCH,
       component: Search,
-      widgets: ['Menu'],
+      widgets: [PATH.MENU_WIDGET],
       on: onSearchPage,
     },
     {
-      path: 'account',
+      path: PATH.ACC,
       component: MyAccount,
-      widgets: ['Menu'],
+      widgets: [PATH.MENU_WIDGET],
       on: myAccount,
     },
     {
-      path: 'langsettings',
+      path: PATH.LAN_SETTINGS,
       component: LanguageSettings,
-      widgets: ['Menu'],
+      widgets: [PATH.MENU_WIDGET],
       on: languageSettings,
     },
     {
-      path: 'help',
+      path: PATH.HELP,
       component: HelpScreen,
-      widgets: ['Menu'],
+      widgets: [PATH.MENU_WIDGET],
       on: help,
     },
     {
-      path: 'player',
+      path: PATH.PLAYER,
       component: Player,
       options: {
         reuseInstance: false,
       },
     },
     {
-      path: 'collection-details/:collectionId',
+      path: `${PATH.COLLECTION}/:collectionId`,
       component: Collection,
       on: collection,
     },
     {
-      path: 'cmp',
+      path: PATH.CMP,
       component: CMP,
       on: cmp,
     },
     {
-      path: 'cmp-customize',
+      path: PATH.CMP_CUSTOMIZE,
       component: CMPCustomize,
     },
   ],
