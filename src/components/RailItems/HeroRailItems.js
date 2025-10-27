@@ -17,11 +17,13 @@ export default class HeroRailItem extends FocusableItem {
     callback: () => null,
     index: 0,
   };
+
   static _template() {
     return {
       ...super._template(),
       color: Colors(colors.landscapeBackground).get(),
       rect: true,
+      zIndex: 3,
       shader: {
         type: Lightning.shaders.RoundedRectangle,
         radius: 6,
@@ -72,7 +74,7 @@ export default class HeroRailItem extends FocusableItem {
       clearTimeout(this._timeoutId);
     }
     this._timeoutId = setTimeout(() => {
-      this.fireAncestors('$punchHoleTV', 700, 0, 1220, 685, 0);
+      this.fireAncestors('$punchHoleTV', 120, 0, 1800, 1080, 0);
       this.fireAncestors('$playTrailer', url);
     }, 3000);
     this.fireAncestors('$changeGalleryItem', index);

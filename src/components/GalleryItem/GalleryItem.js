@@ -11,18 +11,22 @@ export default class GalleryItem extends Lightning.Component {
   static _template() {
     return {
       w: 1920,
+      h: 1080,
       BackgroundImage: {
-        w: 1420,
+        w: 1920,
+        h: 1080,
       },
       GradientOverlay: {
         zIndex: 1,
         w: 1920,
+        h: 1080,
       },
       Info: {
         zIndex: 2,
-        x: 110,
-        y: 110,
-        w: 740,
+        x: 100,
+        y: 350,
+        w: 500,
+        h: 500,
         flex: { direction: 'column' },
         Date: {
           w: 698,
@@ -53,6 +57,8 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         Description: {
+          w: 700,
+          h: 350,
           flexItem: {
             marginTop: 10,
             marginBottom: 5,
@@ -114,7 +120,6 @@ export default class GalleryItem extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
-      height,
       enabled,
       firstEpisodeVideoId,
       firstEpisodeUrl,
@@ -127,10 +132,6 @@ export default class GalleryItem extends Lightning.Component {
 
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
-
-    this._Info.patch({
-      h: height,
-    });
 
     if (videoType !== 'application/x-mpegURL') {
       this._Info.patch({
@@ -174,13 +175,10 @@ export default class GalleryItem extends Lightning.Component {
 
     this.patch({
       BackgroundImage: {
-        w: 1220,
-        h: height,
-        x: 700,
         src: bgImageSrc(),
       },
       GradientOverlay: {
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, height),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
       },
       Info: {
         Title: {
