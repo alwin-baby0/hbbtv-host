@@ -28,8 +28,8 @@ export default class SidebarItem extends Lightning.Component {
       Icon: {
         mountX: 0.5,
         mountY: 0.5,
-        x: (h) => 72 / 2,
-        y: (h) => 72 / 2,
+        x: (h) => 74 / 2,
+        y: (h) => 74 / 2,
         w: 32,
         h: 32,
         zIndex: 2,
