@@ -4,7 +4,13 @@ import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
-import { EVENT_NAMES, LOCAL_STORAGE_KEYS, VIDEO_TYPES } from '../../constants/globalConstants';
+import {
+  EVENT_NAMES,
+  IMG_PATH,
+  LOCAL_STORAGE_KEYS,
+  TRANSLATIONS,
+  VIDEO_TYPES,
+} from '../../constants/globalConstants';
 import { VOD_PREVIEW_TYPES } from '../utils';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
@@ -19,7 +25,7 @@ export default class SingleSeries extends Lightning.Component {
       BackButton: {
         type: BackBtn,
         collision: true,
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
         x: 85,
         y: 20,
         zIndex: 100,
@@ -30,7 +36,7 @@ export default class SingleSeries extends Lightning.Component {
       Background: {
         w: 1920,
         h: 1080,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       SeriesWrapper: {
         rect: true,
@@ -78,8 +84,8 @@ export default class SingleSeries extends Lightning.Component {
 
       this._HeroSection._FavoriteButton.patch({
         props: {
-          buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: t('favorite')?.toUpperCase(),
+          buttonIcon: Utils.asset(newFavorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
+          buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
           width: 360,
           parentState: 'HeroSection',
         },
@@ -135,7 +141,7 @@ export default class SingleSeries extends Lightning.Component {
         GalleryButton: {
           props: {
             width: 430,
-            buttonLabel: t('watch_first_episode')?.toUpperCase(),
+            buttonLabel: t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase(),
           },
         },
       },
@@ -157,8 +163,8 @@ export default class SingleSeries extends Lightning.Component {
                   marginRight: 10,
                 },
                 props: {
-                  buttonIcon: Utils.asset('icons/home/play.svg'),
-                  buttonLabel: t('continue_watching')?.toUpperCase(),
+                  buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
+                  buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
                   width: 440,
                   callback: () => {
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
@@ -185,8 +191,8 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 alpha: 1,
                 props: {
-                  buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-                  buttonLabel: t('favorite').toUpperCase(),
+                  buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
+                  buttonLabel: t(TRANSLATIONS.FAVORITE).toUpperCase(),
                   width: 360,
                   callback: () => {
                     this.addToFavorite();
@@ -216,8 +222,8 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 alpha: 1,
                 props: {
-                  buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-                  buttonLabel: t('favorite').toUpperCase(),
+                  buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
+                  buttonLabel: t(TRANSLATIONS.FAVORITE).toUpperCase(),
                   width: 360,
                   callback: () => {
                     this.addToFavorite();

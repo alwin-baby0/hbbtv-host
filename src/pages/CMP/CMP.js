@@ -2,6 +2,7 @@ import { Lightning } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { CMPService } from '../../Services';
 import { t } from '../../Services';
+import { TRANSLATIONS } from '../../constants/globalConstants';
 
 export default class CMP extends Lightning.Component {
   static _template() {
@@ -14,7 +15,7 @@ export default class CMP extends Lightning.Component {
           w: 1000,
           h: 50,
           text: {
-            text: t('cmp_title'),
+            text: t(TRANSLATIONS.CMP_TITLE),
             fontSize: 40,
             fontFace: 'Montserrat-Bold',
             lineHeight: 50,
@@ -26,7 +27,7 @@ export default class CMP extends Lightning.Component {
           h: 100,
           y: 30,
           text: {
-            text: t('cmp_description'),
+            text: t(TRANSLATIONS.CMP_DESCRIPTION),
             fontSize: 24,
             fontFace: 'Montserrat-Regular',
             lineHeight: 30,

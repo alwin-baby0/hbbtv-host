@@ -1,6 +1,5 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import lng from '@lightningjs/core';
-import { VIDEO_TYPES } from '../../constants/globalConstants';
+import { IMG_PATH, VIDEO_TYPES } from '../../constants/globalConstants';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
@@ -111,13 +110,9 @@ export default class EPGRailItems extends Lightning.Component {
           y: 49,
           w: 20,
           h: 20,
-          texture: Lightning.Tools.getSvgTexture(
-            Utils.asset('icons/livetv/play-button.svg'),
-            20,
-            20
-          ),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_LIVE), 20, 20),
         },
-        texture: lng.Tools.getRoundRect(
+        texture: Lightning.Tools.getRoundRect(
           this._epgWidth,
           95,
           8,
@@ -131,7 +126,7 @@ export default class EPGRailItems extends Lightning.Component {
       this._props.isActive = false;
       this._Wrapper.patch({
         Icon: undefined,
-        texture: lng.Tools.getRoundRect(
+        texture: Lightning.Tools.getRoundRect(
           this._epgWidth,
           95,
           8,
@@ -146,7 +141,7 @@ export default class EPGRailItems extends Lightning.Component {
 
   _focus() {
     this._Wrapper.patch({
-      texture: lng.Tools.getRoundRect(
+      texture: Lightning.Tools.getRoundRect(
         this._epgWidth,
         95,
         8,
@@ -171,7 +166,7 @@ export default class EPGRailItems extends Lightning.Component {
     this._lastClickedItemId = null;
     this._props.isActive !== true
       ? this._Wrapper.patch({
-          texture: lng.Tools.getRoundRect(
+          texture: Lightning.Tools.getRoundRect(
             this._epgWidth,
             95,
             8,
@@ -182,7 +177,7 @@ export default class EPGRailItems extends Lightning.Component {
           ),
         })
       : this._Wrapper.patch({
-          texture: lng.Tools.getRoundRect(
+          texture: Lightning.Tools.getRoundRect(
             this._epgWidth,
             95,
             8,

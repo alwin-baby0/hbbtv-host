@@ -3,6 +3,7 @@ import { Key } from './components/Key';
 import { Row } from '@lightningjs/ui-components';
 import colors from '../../../../reskin/colors.json';
 import { t } from '../../../Services';
+import { TRANSLATIONS } from '../../../constants/globalConstants';
 
 export default class Dialog extends Lightning.Component {
   static _template() {
@@ -133,7 +134,7 @@ export default class Dialog extends Lightning.Component {
     Router.focusWidget('Dialog');
     if (actions.length === 0) {
       actions.push({
-        label: t('yes_exit'),
+        label: t(TRANSLATIONS.YES_EXIT),
         action: () => {
           this.close();
         },

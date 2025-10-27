@@ -1,5 +1,5 @@
 import { Utils, Lightning } from '@lightningjs/sdk';
-import lng from '@lightningjs/core';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class LoadingScreenComponent extends Lightning.Component {
   _props = {
@@ -12,7 +12,7 @@ export default class LoadingScreenComponent extends Lightning.Component {
       Spinner: {
         w: 80,
         h: 80,
-        texture: lng.Tools.getSvgTexture(Utils.asset('images/spinner.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.SPINNER), 80, 80),
         mount: 0.5,
         rotation: 0,
       },

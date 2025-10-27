@@ -1,5 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
+import { IMG_PATH } from '../../../constants/globalConstants';
 
 export default class Button extends Lightning.Component {
   _props = {
@@ -16,7 +17,7 @@ export default class Button extends Lightning.Component {
       Icon: {
         x: -10,
         zIndex: 10,
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/arrowLeft.svg'), 15, 15),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.LEFT_ARROW), 15, 15),
         color: Colors(colors.focus).get(),
       },
       Title: {

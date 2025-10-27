@@ -1,3 +1,5 @@
+import { IMG_PATH } from '../../../constants/globalConstants';
+
 export const keyboardSearch = [
   [
     { key: '1', w: 70, h: 90, icon: false },
@@ -14,7 +16,7 @@ export const keyboardSearch = [
     { key: '0', w: 70, h: 90, icon: false },
   ],
   [
-    { key: 'backspace', w: 190, h: 90, icon: 'backspace.png' },
+    { key: 'backspace', w: 190, h: 90, icon: IMG_PATH.BACK_BTN },
     { key: 'Done', w: 190, h: 90, icon: false },
   ],
 ];

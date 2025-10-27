@@ -1,7 +1,7 @@
 import { Colors, Utils, Lightning } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
-import lng from '@lightningjs/core';
 import { t } from '../../Services';
+import { TRANSLATIONS } from '../../constants/globalConstants';
 
 export default class InputField extends Lightning.Component {
   _props = {
@@ -23,7 +23,11 @@ export default class InputField extends Lightning.Component {
             w: 80,
             flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
             Icon: {
-              texture: lng.Tools.getSvgTexture(Utils.asset('/icons/ic_menu_search.SVG'), 50, 50),
+              texture: Lightning.Tools.getSvgTexture(
+                Utils.asset('/icons/ic_menu_search.SVG'),
+                50,
+                50
+              ),
             },
           },
           Input: {
@@ -81,7 +85,7 @@ export default class InputField extends Lightning.Component {
   _active() {
     this._Placeholder.patch({
       Text: {
-        text: t('search'),
+        text: t(TRANSLATIONS.SEARCH),
       },
     });
   }

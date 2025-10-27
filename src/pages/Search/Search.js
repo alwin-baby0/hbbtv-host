@@ -6,7 +6,7 @@ import { constructRails } from '../utils';
 import { HomePageService, SearchService, t } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
-import { CARD_TYPES, EVENT_NAMES, RAIL_TYPES } from '../../constants/globalConstants';
+import { CARD_TYPES, EVENT_NAMES, RAIL_TYPES, TRANSLATIONS } from '../../constants/globalConstants';
 
 const search = {
   items: [],
@@ -196,7 +196,7 @@ export default class Search extends Lightning.Component {
     } else {
       this._VODSection.patch({
         text: {
-          text: t('no_results') || 'No matches found',
+          text: t(TRANSLATIONS.NO_RESULTS) || 'No matches found',
         },
         props: {
           items: [],

@@ -8,7 +8,7 @@ import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
-import { LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, TRANSLATIONS } from '../../constants/globalConstants';
 
 const states = [
   'DefaultState',
@@ -231,7 +231,7 @@ export default class MyAccount extends Lightning.Component {
                     h: 120,
                     w: 500,
                     text: {
-                      text: t('signup_title'),
+                      text: t(TRANSLATIONS.SIGNUP_TITLE),
                       fontFace: 'Montserrat-Bold',
                       fontSize: 30,
                       lineHeight: 35,
@@ -242,7 +242,7 @@ export default class MyAccount extends Lightning.Component {
                     h: 300,
                     w: 650,
                     text: {
-                      text: t('signup_description'),
+                      text: t(TRANSLATIONS.SIGNUP_DESCRIPTION),
                       fontFace: 'Montserrat-Regular',
                       fontSize: 25,
                       lineHeight: 30,
@@ -273,7 +273,7 @@ export default class MyAccount extends Lightning.Component {
                       marginTop: 10,
                     },
                     text: {
-                      text: t('signup_scan'),
+                      text: t(TRANSLATIONS.SIGNUP_SCAN),
                       fontFace: 'Montserrat-Bold',
                       fontSize: 25,
                       lineHeight: 30,
@@ -289,7 +289,7 @@ export default class MyAccount extends Lightning.Component {
 
           const parsedMovies = parseVodUserContentData({
             data: {
-              railTitle: t('continue_watching'),
+              railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
               entry: recentlyWatched.data.recently_watched,
             },
             itemsPerRow:
@@ -302,7 +302,7 @@ export default class MyAccount extends Lightning.Component {
 
           const parsedFavorites = parseVodUserContentData({
             data: {
-              railTitle: t('favorites'),
+              railTitle: t(TRANSLATIONS.FAVORITES),
               entry: favorites.data.favorites,
             },
             itemsPerRow:
@@ -325,7 +325,7 @@ export default class MyAccount extends Lightning.Component {
                   h: 120,
                   w: 1310,
                   text: {
-                    text: t('logged_in_message'),
+                    text: t(TRANSLATIONS.LOGGED_IN_MSG),
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,
@@ -424,7 +424,7 @@ export default class MyAccount extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 1,
-          title: t('continue_watching'),
+          title: t(TRANSLATIONS.CONTINUE_WATCHING),
         },
         w: 250,
         h: 100,
@@ -434,7 +434,7 @@ export default class MyAccount extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 2,
-          title: t('favorites'),
+          title: t(TRANSLATIONS.FAVORITES),
         },
         w: 250,
         h: 100,
@@ -444,7 +444,7 @@ export default class MyAccount extends Lightning.Component {
         type: MemberTabButton,
         tabInfoData: {
           id: 3,
-          title: t('logout'),
+          title: t(TRANSLATIONS.LOGOUT),
         },
         w: 250,
         h: 100,
@@ -532,7 +532,7 @@ export default class MyAccount extends Lightning.Component {
                   h: 120,
                   w: 1310,
                   text: {
-                    text: t('logged_in_message'),
+                    text: t(TRANSLATIONS.LOGGED_IN_MSG),
                     fontFace: 'Montserrat-Bold',
                     fontSize: 30,
                     lineHeight: 35,

@@ -1,13 +1,14 @@
-import { Colors, Utils, Router } from '@lightningjs/sdk';
+import { Colors, Utils, Router, Lightning } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class SportsEventsRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder-empty.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.LANDSCAPE_RAIL_PH_EMPTY),
     radius: 6,
     strokeWidth: 4,
     x: -2,
@@ -35,7 +36,7 @@ export default class SportsEventsRailItem extends FocusableItem {
         h: 30,
         color: Colors(colors.focus).get(),
         shader: {
-          type: lng.shaders.RoundedRectangle,
+          type: Lightning.shaders.RoundedRectangle,
           radius: [0, 4, 4, 0],
         },
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
@@ -87,7 +88,7 @@ export default class SportsEventsRailItem extends FocusableItem {
         },
       },
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: 9,
       },
     };

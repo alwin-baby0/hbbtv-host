@@ -1,4 +1,3 @@
-import lng from '@lightningjs/core';
 import { Colors, Router, Utils, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
 
@@ -6,7 +5,7 @@ export default class SidebarItem extends Lightning.Component {
   _props = {
     selected: false,
     extraItemSpacing: 20,
-    borderGap: 12,
+    borderGap: 14,
     w: 170,
     h: 60,
     iconW: 60,
@@ -17,20 +16,20 @@ export default class SidebarItem extends Lightning.Component {
     return {
       OuterStroke: {},
       FocusFill: {
-        x: 6,
-        y: 6,
+        x: 7,
+        y: 7,
         w: 60,
         h: 60,
         rect: true,
         color: null,
-        shader: { type: lng.shaders.RoundedRectangle, radius: 12 },
+        shader: { type: Lightning.shaders.RoundedRectangle, radius: 14 },
         zIndex: 1,
       },
       Icon: {
         mountX: 0.5,
         mountY: 0.5,
-        x: (h) => 72 / 2, //70 + 12
-        y: (h) => 72 / 2,
+        x: (h) => 74 / 2, //60 + 14
+        y: (h) => 74 / 2,
         w: 32,
         h: 32,
         // color: Colors(colors.unfocus).get(),
@@ -39,8 +38,8 @@ export default class SidebarItem extends Lightning.Component {
       Title: {
         mountX: 0.5,
         mountY: 0.5,
-        x: (w) => (w + 15) / 2,
-        y: (h) => (h + 15) / 2,
+        x: (w) => (w + 12) / 2,
+        y: (h) => (h + 18) / 2,
         text: {
           textColor: Colors(colors.unfocus).get(),
           fontFace: 'Montserrat-Bold',
@@ -74,7 +73,7 @@ export default class SidebarItem extends Lightning.Component {
 
     if (icon) {
       this._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset(icon), 32, 32),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(icon), 32, 32),
         visible: true,
       });
     } else {
@@ -108,7 +107,7 @@ export default class SidebarItem extends Lightning.Component {
     this._OuterStroke.patch({
       w: !icon ? w + borderGap : iconW + borderGap,
       h: iconW + borderGap,
-      texture: lng.Tools.getRoundRect(
+      texture: Lightning.Tools.getRoundRect(
         !icon ? w + borderGap : iconW + borderGap,
         iconW + borderGap,
         radius,

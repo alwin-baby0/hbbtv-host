@@ -1,5 +1,6 @@
 import { LanguageService, t } from '../../../Services';
 import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
+import { TRANSLATIONS } from '../../../constants/globalConstants';
 
 const languageArea = (page, tabButtons) => {
   const items = tabButtons.map((tabInfo, index) => ({
@@ -31,18 +32,18 @@ export default async function (page) {
     tabButtons = [
       {
         id: 0,
-        title: t('cookie_preferences'),
+        title: t(TRANSLATIONS.COOKIE_PREFERENCES),
       },
       {
         id: 1,
-        title: t('languages'),
+        title: t(TRANSLATIONS.LANGUAGES),
       },
     ];
   } else {
     tabButtons = [
       {
         id: 0,
-        title: t('cookie_preferences'),
+        title: t(TRANSLATIONS.COOKIE_PREFERENCES),
       },
     ];
   }

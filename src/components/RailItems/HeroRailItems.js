@@ -1,13 +1,14 @@
-import { Colors, Router, Utils } from '@lightningjs/sdk';
+import { Colors, Router, Utils, Lightning } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class HeroRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.LANDSCAPE_RAIL_PH),
     radius: 6,
     strokeWidth: 4,
     x: -2,
@@ -22,7 +23,7 @@ export default class HeroRailItem extends FocusableItem {
       color: Colors(colors.landscapeBackground).get(),
       rect: true,
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: 6,
       },
       w: CARD_SIZES.HERO.width,

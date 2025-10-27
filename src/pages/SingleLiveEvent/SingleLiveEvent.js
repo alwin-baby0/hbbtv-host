@@ -5,7 +5,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { CMPService, t } from '../../Services';
-import { EVENT_NAMES } from '../../constants/globalConstants';
+import { EVENT_NAMES, IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
 
@@ -18,7 +18,7 @@ export default class SingleLiveEvent extends Lightning.Component {
       BackButton: {
         collision: true,
         type: BackBtn,
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
         x: 45,
         y: 30,
         zIndex: 100,
@@ -31,7 +31,7 @@ export default class SingleLiveEvent extends Lightning.Component {
           Background: {
             w: 1920,
             h: 2080,
-            src: Utils.asset('images/background.jpg'),
+            src: Utils.asset(IMG_PATH.BACKGROUND),
           },
           HeroSection: {
             type: GalleryItem,
@@ -92,8 +92,8 @@ export default class SingleLiveEvent extends Lightning.Component {
               marginTop: 10,
             },
             props: {
-              buttonLabel: t('watch_now')?.toUpperCase(),
-              buttonIcon: Utils.asset('icons/home/play.svg'),
+              buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
+              buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
               width: 400,
             },
           },
@@ -112,7 +112,7 @@ export default class SingleLiveEvent extends Lightning.Component {
             },
             props: {
               width: 400,
-              buttonLabel: t('coming_soon')?.toUpperCase(),
+              buttonLabel: t(TRANSLATIONS.COMING_SOON)?.toUpperCase(),
               enabled: false,
             },
           },
