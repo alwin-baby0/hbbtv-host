@@ -18,18 +18,6 @@ export default class InputField extends Lightning.Component {
         flex: { direction: 'row', alignItems: 'center' },
         Children: {
           flex: { direction: 'row' },
-          IconWrapper: {
-            h: 110,
-            w: 80,
-            flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-            Icon: {
-              texture: Lightning.Tools.getSvgTexture(
-                Utils.asset('/icons/ic_menu_search.SVG'),
-                50,
-                50
-              ),
-            },
-          },
           Input: {
             type: Input,
             y: 5,

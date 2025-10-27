@@ -1,4 +1,3 @@
-// HorizontalContainer.js
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
 import { CARD_TYPES } from '../../constants/globalConstants';

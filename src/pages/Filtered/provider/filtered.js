@@ -4,8 +4,6 @@ import PosterRailItem from '../../../components/RailItems/PosterRailItem';
 import { imageSizes } from '../../../Models/utils';
 import { SearchService } from '../../../Services';
 
-// TODO: create service to handle the logic for filtered page
-
 const FILTER_TYPES = {
   MOVIE: 'movie',
   SERIES: 'series',
