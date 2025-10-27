@@ -566,7 +566,7 @@ export default class Player extends Lightning.Component {
                       w: 1920,
                       h: 200,
                       y: 880,
-                      color: 0x66000000, // Semi-transparent black (0x66 is the alpha)
+                      color: 0x66000000,
                     },
                     ProgressBarAd: {
                       type: ProgressBar,

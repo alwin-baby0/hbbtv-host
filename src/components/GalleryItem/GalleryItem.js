@@ -240,7 +240,6 @@ export default class GalleryItem extends Lightning.Component {
             buttonLabel: buttonLabel,
             callback: callback,
             buttonIcon: btnIcon,
-            // parentState: 'GalleryButton',
           },
         });
       })();
