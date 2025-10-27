@@ -145,8 +145,4 @@ export default class LandscapeRailItem extends FocusableItem {
     this.fireAncestors('$handleItemHover', index);
     super._focus();
   }
-
-  // _handleUnhover() {
-  //   super._unfocus();
-  // }
 }

@@ -568,7 +568,7 @@ export default class Player extends Lightning.Component {
                       w: 1920,
                       h: 200,
                       y: 880,
-                      color: 0x66000000, // Semi-transparent black (0x66 is the alpha)
+                      color: 0x66000000,
                     },
                     ProgressBarAd: {
                       type: ProgressBar,
@@ -588,7 +588,7 @@ export default class Player extends Lightning.Component {
                       h: 65,
                       Icon: {
                         color: Colors(colors.adProgress).get(),
-                        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 65, 65),
+                        texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.AD_ICON), 65, 65),
                       },
                     },
                     AdInfoContainer: {

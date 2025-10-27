@@ -29,12 +29,11 @@ export default class FocusableItem extends Lightning.Component {
   setProps(props) {
     this._props = { ...this._props, ...props };
 
-    const { zIndex, x, y } = this._props;
+    const { x, y } = this._props;
 
     this._FocusBorder.patch({
       x,
       y,
-      // zIndex,
     });
   }
 
