@@ -43,7 +43,15 @@ export default class Gallery extends Lightning.Component {
       Summary: undefined,
     });
 
+    // this._HeroSection.patch({
+    //   props: {
+    //     galleryItem: sliderData.items[0],
+    //     badgeText: sliderData.items[0].type.value,
+    //   },
+    // });
+
     const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
+    console.log(sliderData);
 
     this._Bullets.patch({
       props: {
@@ -90,6 +98,7 @@ export default class Gallery extends Lightning.Component {
     this._sliderIndex = index;
     this._HeroSection.patch({
       props: {
+        badgeText: sliderData.items[index].type.value,
         galleryItem: sliderData.items[index],
       },
     });

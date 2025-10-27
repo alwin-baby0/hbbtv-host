@@ -4,6 +4,8 @@ import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
 import { DetailService, t } from '../../Services';
 import { IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
+import { capitalizeFirstLetter } from '../../utils';
+
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -24,25 +26,58 @@ export default class GalleryItem extends Lightning.Component {
       Info: {
         zIndex: 2,
         x: 100,
-        y: 350,
-        w: 500,
+        y: 200,
+        w: 1000,
         h: 500,
         flex: { direction: 'column' },
+        Badge: {
+          // w: 200,
+          h: 100,
+          flex: {
+            direction: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          flexItem: {
+            marginBottom: 70,
+            minHeight: 40,
+          },
+          texture: Lightning.Tools.getRoundRect(
+            200,
+            100,
+            6,
+            2,
+            Colors(colors.white).get(),
+            true,
+            Colors('#4a4a49').get()
+          ),
+          Text: {
+            flexItem: {
+              alignSelf: 'center',
+            },
+            text: {
+              text: 'Home',
+              fontSize: 24,
+              fontFace: 'Montserrat-Regular',
+              textColor: Colors(colors.white).get(),
+            },
+          },
+        },
         Date: {
           w: 698,
           h: 30,
           text: {
-            fontSize: 24,
+            fontSize: 32,
             fontFace: 'Montserrat-Regular',
             textColor: Colors('#A61619').get(),
           },
         },
         Title: {
           w: 750,
-          h: 40,
+          h: 80,
           text: {
             fontFace: 'Montserrat-Bold',
-            fontSize: 32,
+            fontSize: 48,
             maxLines: 1,
           },
         },
@@ -57,7 +92,7 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         Description: {
-          w: 700,
+          w: 900,
           h: 350,
           flexItem: {
             marginTop: 10,
@@ -65,7 +100,7 @@ export default class GalleryItem extends Lightning.Component {
           },
           text: {
             textColor: Colors(colors.sliderDescription).get(),
-            wordWrapWidth: 650,
+            wordWrapWidth: 850,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
@@ -128,6 +163,7 @@ export default class GalleryItem extends Lightning.Component {
       isDeeplinkEpisode,
       seriesId,
       ssai,
+      badgeText,
     } = this._props;
 
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
@@ -172,6 +208,7 @@ export default class GalleryItem extends Lightning.Component {
         return fallbackImage;
       } else return Utils.asset(IMG_PATH.GRADIENT);
     };
+    console.log(badgeText);
 
     this.patch({
       BackgroundImage: {
@@ -181,6 +218,13 @@ export default class GalleryItem extends Lightning.Component {
         texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
       },
       Info: {
+        Badge: {
+          Text: {
+            text: {
+              text: capitalizeFirstLetter(badgeText),
+            },
+          },
+        },
         Title: {
           text: {
             text: title,
