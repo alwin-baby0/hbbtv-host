@@ -208,7 +208,6 @@ export default class GalleryItem extends Lightning.Component {
         return fallbackImage;
       } else return Utils.asset(IMG_PATH.GRADIENT);
     };
-    console.log(badgeText);
 
     this.patch({
       BackgroundImage: {

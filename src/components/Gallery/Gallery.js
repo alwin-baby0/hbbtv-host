@@ -51,7 +51,6 @@ export default class Gallery extends Lightning.Component {
     // });
 
     const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
-    console.log(sliderData);
 
     this._Bullets.patch({
       props: {
