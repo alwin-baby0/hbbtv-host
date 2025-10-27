@@ -394,6 +394,7 @@ export default class SingleMovie extends Lightning.Component {
         buttonName: 'WATCH NOW',
         buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
         width: 405,
+        height: 78,
         stream: 'url',
       },
       {
@@ -401,6 +402,7 @@ export default class SingleMovie extends Lightning.Component {
         buttonName: 'TRAILER',
         buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
         width: 405,
+        height: 78,
         stream: 'trailerSrc',
       },
     ];
@@ -415,6 +417,7 @@ export default class SingleMovie extends Lightning.Component {
         buttonName: 'FAVORITE',
         buttonLabel: '',
         width: 100,
+        height: 78,
       });
 
       last_position &&
@@ -423,6 +426,7 @@ export default class SingleMovie extends Lightning.Component {
           buttonName: 'CONTINUE WATCHING',
           buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
           width: 405,
+          height: 78,
         });
     }
 
@@ -447,11 +451,13 @@ export default class SingleMovie extends Lightning.Component {
             type: Button,
             collision: true,
             w: item.width,
+            h: item.height,
             flexItem: {
               marginRight: 30,
             },
             props: {
               width: item.width,
+              height: item.height,
               index,
               buttonLabel: item.buttonLabel,
               buttonIcon: Utils.asset(item.icon),
@@ -551,6 +557,7 @@ export default class SingleMovie extends Lightning.Component {
           ),
           buttonLabel: '',
           width: 100,
+          height: 78,
         },
       });
     } catch (e) {

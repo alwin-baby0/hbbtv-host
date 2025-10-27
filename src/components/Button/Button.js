@@ -21,6 +21,7 @@ export default class Button extends FocusableItem {
     return {
       ...super._template(),
       // flex: { direction: 'row', alignItems: 'center' },
+      maxHeight: 88,
       Icon: {
         x: 20,
         y: (h) => h / 2 - 12,
@@ -70,7 +71,7 @@ export default class Button extends FocusableItem {
       x: -7,
       y: -7,
       width: width + 10,
-      height: 88,
+      height: height + 10,
       radius: 8,
       strokeWidth: 2,
       strokeColor: Colors(colors.focus).get(),
@@ -112,7 +113,7 @@ export default class Button extends FocusableItem {
 
     this.patch({
       w: width,
-      h: 78,
+      h: height,
       texture: Lightning.Tools.getRoundRect(
         width,
         height,
