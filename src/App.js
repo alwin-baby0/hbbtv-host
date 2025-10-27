@@ -5,7 +5,7 @@ import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinSc
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import { DetailService, t } from './Services';
-import { IMG_PATH, TRANSLATIONS } from './constants/globalConstants';
+import { IMG_PATH, PATH, TRANSLATIONS } from './constants/globalConstants';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -87,7 +87,7 @@ export default class App extends Router.App {
   async getMovie(id) {
     const movie = await DetailService.getMovie(id);
     if (movie) {
-      Router.navigate('player', {
+      Router.navigate(PATH.PLAYER, {
         videoUrl: movie.url,
         duration: movie.duration,
         videoId: id,

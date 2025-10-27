@@ -8,6 +8,7 @@ import {
   EVENT_NAMES,
   IMG_PATH,
   LOCAL_STORAGE_KEYS,
+  PATH,
   TRANSLATIONS,
   VIDEO_TYPES,
 } from '../../constants/globalConstants';
@@ -102,7 +103,11 @@ export default class SingleSeries extends Lightning.Component {
       const currentTimeInMS = Math.floor(Date.now() / 1000);
 
       if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate('cmp', { movieId: this._props.seriesId, url: 'series-details' }, false);
+        Router.navigate(
+          PATH.CMP,
+          { movieId: this._props.seriesId, url: PATH.SERIES_DETAILS },
+          false
+        );
       }
     }
 
@@ -169,7 +174,7 @@ export default class SingleSeries extends Lightning.Component {
                   callback: () => {
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
-                        Router.navigate('player', {
+                        Router.navigate(PATH.PLAYER, {
                           videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
                           duration: duration,
                           videoType: VIDEO_TYPES.SERIES,
@@ -266,13 +271,13 @@ export default class SingleSeries extends Lightning.Component {
     e.preventDefault();
 
     const routerHistory = Router.getHistory().filter(
-      (history) => history.hash != 'splash' && history.hash != 'cmp'
+      (history) => history.hash != PATH.SPLASH && history.hash != PATH.CMP
     );
 
     if (routerHistory.length) {
       Router.back();
     } else {
-      Router.navigate('home');
+      Router.navigate(PATH.HOME);
     }
 
     this._setState('HeroSection');

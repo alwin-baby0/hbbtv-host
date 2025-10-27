@@ -3,6 +3,7 @@ import { ScrollWrapper } from '@lightningjs/ui-components';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
+import { PATH } from '../../constants/globalConstants';
 
 export default class HelpScreen extends Lightning.Component {
   _props = {
@@ -96,7 +97,7 @@ export default class HelpScreen extends Lightning.Component {
   }
 
   _handleBack() {
-    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.setHistory([{ hash: PATH.HOME, state: null }]);
     Router.back();
   }
 
@@ -140,7 +141,7 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('Menu');
+          Router.focusWidget(PATH.MENU_WIDGET);
         }
 
         _handleRight() {
@@ -157,7 +158,7 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('Menu');
+          Router.focusWidget(PATH.MENU_WIDGET);
         }
       },
     ];

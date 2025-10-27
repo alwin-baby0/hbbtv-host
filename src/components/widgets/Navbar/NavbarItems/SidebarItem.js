@@ -1,5 +1,6 @@
 import { Colors, Router, Utils, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
+import { PATH } from '../../../../constants/globalConstants';
 
 export default class SidebarItem extends Lightning.Component {
   _props = {
@@ -142,7 +143,7 @@ export default class SidebarItem extends Lightning.Component {
   _handleHover() {
     this._focus();
     this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
-    Router.focusWidget('Menu');
+    Router.focusWidget(PATH.MENU_WIDGET);
   }
 
   _handleClick() {

@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
-import { IMG_PATH } from '../../../constants/globalConstants';
+import { IMG_PATH, PATH } from '../../../constants/globalConstants';
 
 export default class Button extends Lightning.Component {
   _props = {
@@ -133,12 +133,12 @@ export default class Button extends Lightning.Component {
 
   async _handleEnter() {
     const routerHistory = Router.getHistory().filter(
-      (history) => history !== 'splash' && history != 'cmp'
+      (history) => history !== PATH.SPLASH && history != PATH.CMP
     );
     if (routerHistory.length) {
       Router.back();
     } else {
-      Router.navigate('home');
+      Router.navigate(PATH.HOME);
     }
   }
 }

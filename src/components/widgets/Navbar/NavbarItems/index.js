@@ -2,7 +2,9 @@ import Lightning from '@lightningjs/sdk/src/Lightning';
 import { Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import {
+  CATEGORY_TYPES,
   IMG_PATH,
+  PATH,
   TRANSLATIONS,
   VISIBLE_SPORT_COUNTRIES,
 } from '../../../../constants/globalConstants';
@@ -55,12 +57,21 @@ export default class SidebarItems extends Lightning.Component {
     setTimeout(() => {
       const activeHash = Router.getActiveHash();
       // Check if activeHash contains both 'filtered' and 'movies'
-      if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
-        this._index = getRouteNavbarIndex('filterPage/movie', this._visibleSport);
+      if (activeHash.includes(PATH.FILTER_PAGE) && activeHash.includes('movie')) {
+        this._index = getRouteNavbarIndex(
+          `${PATH.FILTER_PAGE}/${CATEGORY_TYPES.MOVIE}`,
+          this._visibleSport
+        );
         this._setSelected(this._index);
         return;
-      } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
-        this._index = getRouteNavbarIndex('filterPage/series', this._visibleSport);
+      } else if (
+        activeHash.includes(PATH.FILTER_PAGE) &&
+        activeHash.includes(CATEGORY_TYPES.SERIES)
+      ) {
+        this._index = getRouteNavbarIndex(
+          `${PATH.FILTER_PAGE}/${CATEGORY_TYPES.SERIES}`,
+          this._visibleSport
+        );
         this._setSelected(this._index);
         return;
       }
@@ -69,28 +80,43 @@ export default class SidebarItems extends Lightning.Component {
     });
 
     const menuItems = [
-      { id: 0, label: t(TRANSLATIONS.HOME), route: 'home', icon: '' },
-      { id: 1, label: t(TRANSLATIONS.MOVIES), route: 'vod/movies', icon: '' },
-      { id: 2, label: t(TRANSLATIONS.SERIES), route: 'vod/series', icon: '' },
+      { id: 0, label: t(TRANSLATIONS.HOME), route: PATH.HOME, icon: '' },
+      {
+        id: 1,
+        label: t(TRANSLATIONS.MOVIES),
+        route: `${PATH.VOD}/${CATEGORY_TYPES.MOVIES}`,
+        icon: '',
+      },
+      {
+        id: 2,
+        label: t(TRANSLATIONS.SERIES),
+        route: `${PATH.VOD}/${CATEGORY_TYPES.SERIES}`,
+        icon: '',
+      },
     ];
     this._visibleSport
       ? menuItems.push(
           ...[
-            { id: 3, label: t(TRANSLATIONS.SPORT), route: 'vod/sports', icon: '' },
-            { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: 'live', icon: '' },
-            { id: 5, label: 'search', route: 'search', icon: IMG_PATH.NAVBAR_SEARCH },
-            { id: 6, label: 'user', route: 'account', icon: IMG_PATH.NAVBAR_USER },
-            { id: 7, label: 'settings', route: 'langsettings', icon: IMG_PATH.NAVBAR_SETTINGS },
-            { id: 8, label: 'terms', route: 'help', icon: IMG_PATH.NAVBAR_INFO },
+            {
+              id: 3,
+              label: t(TRANSLATIONS.SPORT),
+              route: `${PATH.VOD}/${CATEGORY_TYPES.SPORTS}`,
+              icon: '',
+            },
+            { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: PATH.LIVE, icon: '' },
+            { id: 5, label: 'search', route: PATH.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
+            { id: 6, label: 'user', route: PATH.ACC, icon: IMG_PATH.NAVBAR_USER },
+            { id: 7, label: 'settings', route: PATH.LAN_SETTINGS, icon: IMG_PATH.NAVBAR_SETTINGS },
+            { id: 8, label: 'terms', route: PATH.HELP, icon: IMG_PATH.NAVBAR_INFO },
           ]
         )
       : menuItems.push(
           ...[
-            { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: 'live', icon: '' },
-            { id: 4, label: 'search', route: 'search', icon: IMG_PATH.NAVBAR_SEARCH },
-            { id: 5, label: 'user', route: 'account', icon: IMG_PATH.NAVBAR_USER },
-            { id: 6, label: 'settings', route: 'langsettings', icon: IMG_PATH.NAVBAR_SETTINGS },
-            { id: 7, label: 'terms', route: 'help', icon: IMG_PATH.NAVBAR_INFO },
+            { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: PATH.LIVE, icon: '' },
+            { id: 4, label: 'search', route: PATH.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
+            { id: 5, label: 'user', route: PATH.ACC, icon: IMG_PATH.NAVBAR_USER },
+            { id: 6, label: 'settings', route: PATH.LAN_SETTINGS, icon: IMG_PATH.NAVBAR_SETTINGS },
+            { id: 7, label: 'terms', route: PATH.HELP, icon: IMG_PATH.NAVBAR_INFO },
           ]
         );
 
@@ -114,7 +140,7 @@ export default class SidebarItems extends Lightning.Component {
               selected: false,
               index: item.id,
               data: item,
-              extraItemSpacing: item.route === 'live' ? 270 : 20,
+              extraItemSpacing: item.route === PATH.LIVE ? 270 : 20,
             },
           };
         }),
@@ -125,12 +151,21 @@ export default class SidebarItems extends Lightning.Component {
   _focus() {
     const activeHash = Router.getActiveHash();
     // Check if activeHash contains both 'filtered' and 'movies'
-    if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
-      this._index = getRouteNavbarIndex('filterPage/movie', this._visibleSport);
+    if (activeHash?.includes(PATH.FILTER_PAGE) && activeHash?.includes(CATEGORY_TYPES.MOVIE)) {
+      this._index = getRouteNavbarIndex(
+        `${PATH.FILTER_PAGE}/${CATEGORY_TYPES.MOVIE}`,
+        this._visibleSport
+      );
       this._setSelected(this._index);
       return;
-    } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
-      this._index = getRouteNavbarIndex('filterPage/series', this._visibleSport);
+    } else if (
+      activeHash?.includes(PATH.FILTER_PAGE) &&
+      activeHash?.includes(CATEGORY_TYPES.SERIES)
+    ) {
+      this._index = getRouteNavbarIndex(
+        `${PATH.FILTER_PAGE}/${CATEGORY_TYPES.SERIES}`,
+        this._visibleSport
+      );
       this._setSelected(this._index);
       return;
     }
@@ -163,7 +198,7 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _handleHover() {
-    Router.focusWidget('Menu');
+    Router.focusWidget(PATH.MENU_WIDGET);
     this._Column._focus();
   }
 

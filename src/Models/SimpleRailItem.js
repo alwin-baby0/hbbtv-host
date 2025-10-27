@@ -1,6 +1,6 @@
 // This class is used as generic class for:
 // Home, Search, Movies, Series, Sports screens rails
-import { RAIL_TYPES } from '../constants/globalConstants';
+import { PATH, RAIL_TYPES } from '../constants/globalConstants';
 
 class SimpleRailItem {
   constructor(data) {
@@ -24,21 +24,21 @@ class SimpleRailItem {
     switch (this.type) {
       case RAIL_TYPES.MOVIE:
       case RAIL_TYPES.VIDEO:
-        this.url = `movie-details/${this.id}`;
+        this.url = `${PATH.MOVIE_DETAILS}/${this.id}`;
         break;
       case RAIL_TYPES.SPORT:
       case RAIL_TYPES.SERIE:
       case RAIL_TYPES.SERIES:
         if (this.episodeSeriesID) {
           //case if you are coming from recently watched list
-          this.url = `series-details/${this.episodeSeriesID}`;
+          this.url = `${PATH.SERIES_DETAILS}/${this.episodeSeriesID}`;
         } else {
-          this.url = `series-details/${this.id}`;
+          this.url = `${PATH.SERIES_DETAILS}/${this.id}`;
         }
         break;
       case RAIL_TYPES.SHOW:
       case RAIL_TYPES.EVENT:
-        this.url = `event-details/${this.id}`;
+        this.url = `${PATH.EVENT_DETAILS}/${this.id}`;
         break;
       case RAIL_TYPES.EPISODE:
         this.url = data.content?.src;
