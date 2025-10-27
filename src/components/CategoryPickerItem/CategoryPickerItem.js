@@ -49,7 +49,7 @@ export default class CategoryPickerItem extends FocusableItem {
       y: -1,
       width: w + 10,
       height: h + 10,
-      radius: 8,
+      radius: 12,
       strokeWidth: 2,
       strokeColor: Colors(colors.focus).get(),
     });

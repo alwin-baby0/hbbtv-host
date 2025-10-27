@@ -267,7 +267,6 @@ export default class SingleMovie extends Lightning.Component {
       : buttons;
 
     if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-      console.log(movie.is_favorite);
       filteredButtons.push({
         icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
         buttonName: 'FAVORITE',
@@ -399,8 +398,7 @@ export default class SingleMovie extends Lightning.Component {
       const { is_favorite } = this._props.movie;
 
       const id = movieTrailerUrl ? 2 : 1; //depending on movieTrailerUrl, we will know on which position is add to fav btn
-      console.log(id);
-      console.log(this._Buttons.Items);
+
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
           buttonIcon: Utils.asset(

@@ -1,4 +1,4 @@
-import { Colors, Utils, Router } from '@lightningjs/sdk';
+import { Colors, Utils, Router, Lightning } from '@lightningjs/sdk';
 import { CARD_SIZES } from './constants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
@@ -36,7 +36,7 @@ export default class SportsEventsRailItem extends FocusableItem {
         h: 30,
         color: Colors(colors.focus).get(),
         shader: {
-          type: lng.shaders.RoundedRectangle,
+          type: Lightning.shaders.RoundedRectangle,
           radius: [0, 4, 4, 0],
         },
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
@@ -88,7 +88,7 @@ export default class SportsEventsRailItem extends FocusableItem {
         },
       },
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: 9,
       },
     };
