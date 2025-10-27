@@ -31,7 +31,6 @@ export default class GalleryItem extends Lightning.Component {
         h: 500,
         flex: { direction: 'column' },
         Badge: {
-          // w: 200,
           h: 100,
           flex: {
             direction: 'row',
