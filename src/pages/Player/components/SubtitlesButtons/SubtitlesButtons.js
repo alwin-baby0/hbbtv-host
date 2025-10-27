@@ -1,5 +1,4 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
-import lng from '@lightningjs/core';
 import { LOCAL_STORAGE_KEYS } from '../../../../constants/globalConstants';
 
 export default class SubtitlesButtons extends Lightning.Component {
@@ -81,7 +80,7 @@ export default class SubtitlesButtons extends Lightning.Component {
 
   _focus() {
     this._Column.patch({
-      texture: lng.Tools.getRoundRect(505, 60, 0, 2, Colors('#C40000').get(), false),
+      texture: Lightning.Tools.getRoundRect(505, 60, 0, 2, Colors('#C40000').get(), false),
     });
   }
 

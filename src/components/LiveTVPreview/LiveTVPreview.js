@@ -123,7 +123,7 @@ export default class LiveTVPreview extends Lightning.Component {
         Image: {
           w: 745,
           h: 415,
-          texture: lng.Tools.getSvgTexture(Utils.asset(IMG_PATH.LOADING_SCREEN), 890, 500),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.LOADING_SCREEN), 890, 500),
         },
         Message: {
           text: {

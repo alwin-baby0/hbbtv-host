@@ -1,6 +1,5 @@
 import { Colors, Utils, Lightning } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
-import lng from '@lightningjs/core';
 import { t } from '../../Services';
 import { TRANSLATIONS } from '../../constants/globalConstants';
 
