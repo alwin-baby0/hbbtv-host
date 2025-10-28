@@ -2,7 +2,7 @@ import { Router } from '@lightningjs/sdk';
 import Button from '../../../components/Button/Button';
 import { CMPService } from '../../../Services';
 import { getDeviceInfo } from '../../../utils/device';
-import { PATH } from '../../../constants/globalConstants';
+import { ROUTES } from '../../../constants/globalConstants';
 
 export default async function (page, { movieId, url }) {
   await CMPService.initialFetch();
@@ -34,10 +34,10 @@ export default async function (page, { movieId, url }) {
             if (url && movieId) {
               Router.navigate(`${url}/${movieId}`, { cmpShown: true });
             } else {
-              Router.navigate(PATH.HOME, false);
+              Router.navigate(ROUTES.HOME, false);
             }
           } else {
-            Router.navigate(PATH.CMP_CUSTOMIZE, { options: value.options });
+            Router.navigate(ROUTES.CMP_CUSTOMIZE, { options: value.options });
           }
         },
       },

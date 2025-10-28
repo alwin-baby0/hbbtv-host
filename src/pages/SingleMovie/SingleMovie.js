@@ -8,7 +8,7 @@ import {
   EVENT_NAMES,
   IMG_PATH,
   LOCAL_STORAGE_KEYS,
-  PATH,
+  ROUTES,
   TRANSLATIONS,
 } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
@@ -319,7 +319,7 @@ export default class SingleMovie extends Lightning.Component {
                 } else if (item.buttonName === 'WATCH NOW') {
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
-                      Router.navigate(PATH.PLAYER, {
+                      Router.navigate(ROUTES.PLAYER, {
                         videoUrl: result[0]?.content?.src ?? movie[item.stream],
                         duration: duration,
                         videoId: movieId,
@@ -328,12 +328,12 @@ export default class SingleMovie extends Lightning.Component {
                     }
                   );
                 } else if (item.buttonName === 'TRAILER') {
-                  Router.navigate(PATH.PLAYER, {
+                  Router.navigate(ROUTES.PLAYER, {
                     videoUrl: movieTrailerUrl,
                     videoId: movieTrailerId,
                   });
                 } else if (item.buttonName === 'CONTINUE WATCHING') {
-                  Router.navigate(PATH.PLAYER, {
+                  Router.navigate(ROUTES.PLAYER, {
                     videoUrl: movie.url,
                     duration: duration,
                     videoId: movieId,
@@ -356,7 +356,11 @@ export default class SingleMovie extends Lightning.Component {
       const currentTimeInMS = Math.floor(Date.now() / 1000);
 
       if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(PATH.CMP, { movieId: this._props.movieId, url: PATH.MOVIE_DETAILS }, false);
+        Router.navigate(
+          ROUTES.CMP,
+          { movieId: this._props.movieId, url: ROUTES.MOVIE_DETAILS },
+          false
+        );
       }
     }
 
@@ -376,13 +380,13 @@ export default class SingleMovie extends Lightning.Component {
     e.preventDefault();
 
     const routerHistory = Router.getHistory().filter(
-      (history) => history.hash != PATH.SPLASH && history.hash != PATH.CMP
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
 
     if (routerHistory.length) {
       Router.back();
     } else {
-      Router.navigate(PATH.HOME);
+      Router.navigate(ROUTES.HOME);
     }
   }
 

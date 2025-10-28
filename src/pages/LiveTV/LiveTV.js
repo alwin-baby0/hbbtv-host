@@ -11,7 +11,7 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
-import { EVENT_NAMES, PATH, TRANSLATIONS } from '../../constants/globalConstants';
+import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -288,7 +288,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _handleBack() {
-    Router.setHistory([{ hash: PATH.HOME, state: null }]);
+    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
 
@@ -452,7 +452,7 @@ export default class LiveTV extends Lightning.Component {
 
         _handleUp() {
           if (!Router.isNavigating()) {
-            Router.focusWidget(PATH.MENU_WIDGET);
+            Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 

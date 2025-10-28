@@ -16,11 +16,10 @@ import {
   playerButtonsVOD,
 } from './utils';
 import {
-  CATEGORY_TYPES,
   EVENT_NAMES,
   IMG_PATH,
   LOCAL_STORAGE_KEYS,
-  PATH,
+  ROUTES,
   TRANSLATIONS,
   VIDEO_TYPES,
 } from '../../constants/globalConstants';
@@ -905,7 +904,7 @@ export default class Player extends Lightning.Component {
         } else {
           CMPService.addRecentlyWatched(
             this._props.videoId,
-            CATEGORY_TYPES.VIDEO,
+            VIDEO_TYPES.VIDEO,
             VideoPlayer.currentTime
           );
         }
@@ -926,7 +925,7 @@ export default class Player extends Lightning.Component {
 
     console.log('routerHistory in player back: ', Router.getHistory());
     const router = Router.getHistory().filter(
-      (history) => history.hash != PATH.SPLASH && history.hash != PATH.CMP
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
     Router.setHistory([...router]);
 

@@ -8,7 +8,7 @@ import { constructRails } from '../utils';
 import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
-import { LOCAL_STORAGE_KEYS, PATH, TRANSLATIONS } from '../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
 
 const states = [
   'DefaultState',
@@ -454,7 +454,7 @@ export default class MyAccount extends Lightning.Component {
   }
 
   _handleBack() {
-    Router.setHistory([{ hash: PATH.HOME, state: null }]);
+    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
 
@@ -474,7 +474,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(PATH.MENU_WIDGET);
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleRight() {
@@ -496,7 +496,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(PATH.MENU_WIDGET);
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleLeft() {
@@ -510,7 +510,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(PATH.MENU_WIDGET);
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleLeft() {
@@ -546,7 +546,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(PATH.MENU_WIDGET);
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleDown() {

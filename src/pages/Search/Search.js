@@ -9,7 +9,7 @@ import LoadingScreenComponent from '../../components/LoadingScreenComponent/Load
 import {
   CARD_TYPES,
   EVENT_NAMES,
-  PATH,
+  ROUTES,
   RAIL_TYPES,
   TRANSLATIONS,
 } from '../../constants/globalConstants';
@@ -242,7 +242,7 @@ export default class Search extends Lightning.Component {
   }
 
   _handleBack() {
-    Router.setHistory([{ hash: PATH.HOME, state: null }]);
+    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
 
@@ -285,7 +285,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(PATH.MENU_WIDGET);
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleDown() {

@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { CMPService, DetailService } from '../../Services';
-import { IMG_PATH, PATH } from '../../constants/globalConstants';
+import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
 
 export default class Splash extends Lightning.Component {
   static _template() {
@@ -26,7 +26,7 @@ export default class Splash extends Lightning.Component {
     const movie = await DetailService.getMovie(id);
 
     if (movie) {
-      Router.navigate(PATH.PLAYER, {
+      Router.navigate(ROUTES.PLAYER, {
         videoUrl: movie.url,
         duration: movie.duration,
         videoId: id,
@@ -51,22 +51,22 @@ export default class Splash extends Lightning.Component {
         const seriesId = params.get('seriesId');
 
         if (type === 'movie') {
-          Router.setHistory([{ hash: PATH.HOME }]);
-          Router.navigate(`${PATH.MOVIE_DETAILS}/${id}`);
+          Router.setHistory([{ hash: ROUTES.HOME }]);
+          Router.navigate(`${ROUTES.MOVIE_DETAILS}/${id}`);
         } else if (type === 'series') {
-          Router.setHistory([{ hash: PATH.HOME }]);
-          Router.navigate(`${PATH.SERIES_DETAILS}/${id}`);
+          Router.setHistory([{ hash: ROUTES.HOME }]);
+          Router.navigate(`${ROUTES.SERIES_DETAILS}/${id}`);
         } else if (type === 'episode') {
-          Router.setHistory([{ hash: PATH.HOME }]);
+          Router.setHistory([{ hash: ROUTES.HOME }]);
           history.replaceState(null, '', window.location.pathname);
           Router.navigate(
-            `${PATH.SERIES_DETAILS}/${seriesId}?episodeId=${id}&isDeeplinkEpisode=true`
+            `${ROUTES.SERIES_DETAILS}/${seriesId}?episodeId=${id}&isDeeplinkEpisode=true`
           );
         }
       } else if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(PATH.CMP, false);
+        Router.navigate(ROUTES.CMP, false);
       } else {
-        Router.navigate(PATH.HOME, false);
+        Router.navigate(ROUTES.HOME, false);
       }
     }, 3000);
   }

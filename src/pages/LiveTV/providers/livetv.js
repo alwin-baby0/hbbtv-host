@@ -1,6 +1,6 @@
 import { EPGService } from '../../../Services';
 import LiveChannelRailItem from '../../../components/RailItems/LiveChannelRailItem';
-import { PATH } from '../../../constants/globalConstants';
+import { ROUTES } from '../../../constants/globalConstants';
 import { constructRails } from '../../utils';
 import { Router } from '@lightningjs/sdk';
 
@@ -11,7 +11,7 @@ const liveTV = {
 const fetchChannels = async (page) => {
   if (
     liveTV.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
-    Router.getActiveHash() !== PATH.PLAYER
+    Router.getActiveHash() !== ROUTES.PLAYER
   ) {
     liveTV.timestamp = new Date().getTime();
     await EPGService.initialFetch();

@@ -2,9 +2,8 @@ import Lightning from '@lightningjs/sdk/src/Lightning';
 import { Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
 import {
-  CATEGORY_TYPES,
   IMG_PATH,
-  PATH,
+  ROUTES,
   TRANSLATIONS,
   VISIBLE_SPORT_COUNTRIES,
 } from '../../../../constants/globalConstants';
@@ -57,19 +56,16 @@ export default class SidebarItems extends Lightning.Component {
     setTimeout(() => {
       const activeHash = Router.getActiveHash();
       // Check if activeHash contains both 'filtered' and 'movies'
-      if (activeHash.includes(PATH.FILTER_PAGE) && activeHash.includes('movie')) {
+      if (activeHash.includes(ROUTES.FILTER_PAGE) && activeHash.includes(ROUTES.MOVIE)) {
         this._index = getRouteNavbarIndex(
-          `${PATH.FILTER_PAGE}/${CATEGORY_TYPES.MOVIE}`,
+          `${ROUTES.FILTER_PAGE}/${ROUTES.MOVIE}`,
           this._visibleSport
         );
         this._setSelected(this._index);
         return;
-      } else if (
-        activeHash.includes(PATH.FILTER_PAGE) &&
-        activeHash.includes(CATEGORY_TYPES.SERIES)
-      ) {
+      } else if (activeHash.includes(ROUTES.FILTER_PAGE) && activeHash.includes(ROUTES.SERIES)) {
         this._index = getRouteNavbarIndex(
-          `${PATH.FILTER_PAGE}/${CATEGORY_TYPES.SERIES}`,
+          `${ROUTES.FILTER_PAGE}/${ROUTES.SERIES}`,
           this._visibleSport
         );
         this._setSelected(this._index);
@@ -80,17 +76,17 @@ export default class SidebarItems extends Lightning.Component {
     });
 
     const menuItems = [
-      { id: 0, label: t(TRANSLATIONS.HOME), route: PATH.HOME, icon: '' },
+      { id: 0, label: t(TRANSLATIONS.HOME), route: ROUTES.HOME, icon: '' },
       {
         id: 1,
         label: t(TRANSLATIONS.MOVIES),
-        route: `${PATH.VOD}/${CATEGORY_TYPES.MOVIES}`,
+        route: `${ROUTES.VOD}/${ROUTES.MOVIES}`,
         icon: '',
       },
       {
         id: 2,
         label: t(TRANSLATIONS.SERIES),
-        route: `${PATH.VOD}/${CATEGORY_TYPES.SERIES}`,
+        route: `${ROUTES.VOD}/${ROUTES.SERIES}`,
         icon: '',
       },
     ];
@@ -100,23 +96,33 @@ export default class SidebarItems extends Lightning.Component {
             {
               id: 3,
               label: t(TRANSLATIONS.SPORT),
-              route: `${PATH.VOD}/${CATEGORY_TYPES.SPORTS}`,
+              route: `${ROUTES.VOD}/${ROUTES.SPORTS}`,
               icon: '',
             },
-            { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: PATH.LIVE, icon: '' },
-            { id: 5, label: 'search', route: PATH.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
-            { id: 6, label: 'user', route: PATH.ACC, icon: IMG_PATH.NAVBAR_USER },
-            { id: 7, label: 'settings', route: PATH.LAN_SETTINGS, icon: IMG_PATH.NAVBAR_SETTINGS },
-            { id: 8, label: 'terms', route: PATH.HELP, icon: IMG_PATH.NAVBAR_INFO },
+            { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
+            { id: 5, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
+            { id: 6, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
+            {
+              id: 7,
+              label: 'settings',
+              route: ROUTES.LAN_SETTINGS,
+              icon: IMG_PATH.NAVBAR_SETTINGS,
+            },
+            { id: 8, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
           ]
         )
       : menuItems.push(
           ...[
-            { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: PATH.LIVE, icon: '' },
-            { id: 4, label: 'search', route: PATH.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
-            { id: 5, label: 'user', route: PATH.ACC, icon: IMG_PATH.NAVBAR_USER },
-            { id: 6, label: 'settings', route: PATH.LAN_SETTINGS, icon: IMG_PATH.NAVBAR_SETTINGS },
-            { id: 7, label: 'terms', route: PATH.HELP, icon: IMG_PATH.NAVBAR_INFO },
+            { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
+            { id: 4, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
+            { id: 5, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
+            {
+              id: 6,
+              label: 'settings',
+              route: ROUTES.LAN_SETTINGS,
+              icon: IMG_PATH.NAVBAR_SETTINGS,
+            },
+            { id: 7, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
           ]
         );
 
@@ -140,7 +146,7 @@ export default class SidebarItems extends Lightning.Component {
               selected: false,
               index: item.id,
               data: item,
-              extraItemSpacing: item.route === PATH.LIVE ? 270 : 20,
+              extraItemSpacing: item.route === ROUTES.LIVE ? 270 : 20,
             },
           };
         }),
@@ -151,19 +157,16 @@ export default class SidebarItems extends Lightning.Component {
   _focus() {
     const activeHash = Router.getActiveHash();
     // Check if activeHash contains both 'filtered' and 'movies'
-    if (activeHash?.includes(PATH.FILTER_PAGE) && activeHash?.includes(CATEGORY_TYPES.MOVIE)) {
+    if (activeHash?.includes(ROUTES.FILTER_PAGE) && activeHash?.includes(ROUTES.MOVIE)) {
       this._index = getRouteNavbarIndex(
-        `${PATH.FILTER_PAGE}/${CATEGORY_TYPES.MOVIE}`,
+        `${ROUTES.FILTER_PAGE}/${ROUTES.MOVIE}`,
         this._visibleSport
       );
       this._setSelected(this._index);
       return;
-    } else if (
-      activeHash?.includes(PATH.FILTER_PAGE) &&
-      activeHash?.includes(CATEGORY_TYPES.SERIES)
-    ) {
+    } else if (activeHash?.includes(ROUTES.FILTER_PAGE) && activeHash?.includes(ROUTES.SERIES)) {
       this._index = getRouteNavbarIndex(
-        `${PATH.FILTER_PAGE}/${CATEGORY_TYPES.SERIES}`,
+        `${ROUTES.FILTER_PAGE}/${ROUTES.SERIES}`,
         this._visibleSport
       );
       this._setSelected(this._index);
@@ -198,7 +201,7 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _handleHover() {
-    Router.focusWidget(PATH.MENU_WIDGET);
+    Router.focusWidget(ROUTES.MENU_WIDGET);
     this._Column._focus();
   }
 

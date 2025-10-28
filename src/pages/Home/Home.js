@@ -4,7 +4,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
-import { PATH, RAIL_TYPES } from '../../constants/globalConstants';
+import { ROUTES, RAIL_TYPES } from '../../constants/globalConstants';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -145,7 +145,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(PATH.MENU_WIDGET);
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleDown() {

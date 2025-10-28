@@ -1,6 +1,6 @@
 // This class is used as generic class for:
 // Home, Search, Movies, Series, Sports screens rails
-import { PATH, RAIL_TYPES } from '../constants/globalConstants';
+import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
 
 class LiveChannelsRailItem {
   constructor(data) {
@@ -11,15 +11,15 @@ class LiveChannelsRailItem {
 
     switch (this.type) {
       case RAIL_TYPES.MOVIE:
-        this.url = `${PATH.MOVIE_DETAILS}/${this.id}`;
+        this.url = `${ROUTES.MOVIE_DETAILS}/${this.id}`;
         break;
       case RAIL_TYPES.SPORT:
       case RAIL_TYPES.SERIE:
-        this.url = `${PATH.SERIES_DETAILS}/${this.id}`;
+        this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
         break;
       case RAIL_TYPES.SHOW:
       case RAIL_TYPES.EVENT:
-        this.url = `${PATH.EVENT_DETAILS}/${this.id}`;
+        this.url = `${ROUTES.EVENT_DETAILS}/${this.id}`;
         break;
       case RAIL_TYPES.EPISODE:
         this.url = data.content.src;

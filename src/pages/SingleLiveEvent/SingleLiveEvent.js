@@ -5,7 +5,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { CMPService, t } from '../../Services';
-import { EVENT_NAMES, IMG_PATH, PATH, TRANSLATIONS } from '../../constants/globalConstants';
+import { EVENT_NAMES, IMG_PATH, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
 
@@ -129,8 +129,8 @@ export default class SingleLiveEvent extends Lightning.Component {
 
       if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
         Router.navigate(
-          PATH.CMP,
-          { movieId: this._props.galleryItem.id, url: PATH.EVENT_DETAILS },
+          ROUTES.CMP,
+          { movieId: this._props.galleryItem.id, url: ROUTES.EVENT_DETAILS },
           false
         );
       }
@@ -172,13 +172,13 @@ export default class SingleLiveEvent extends Lightning.Component {
     e.preventDefault();
 
     const routerHistory = Router.getHistory().filter(
-      (history) => history.hash != PATH.SPLASH && history.hash != PATH.CMP
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
 
     if (routerHistory.length) {
       Router.back();
     } else {
-      Router.navigate(PATH.HOME);
+      Router.navigate(ROUTES.HOME);
     }
 
     this._setState('HeroSection');

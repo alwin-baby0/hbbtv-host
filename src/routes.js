@@ -27,34 +27,34 @@ import cmp from './pages/CMP/provider/cmp';
 import CMPCustomize from './pages/CMP/components/CMPCustomize';
 import LanguageSettings from './pages/LanguageSettings/LanguageSettings';
 import languageSettings from './pages/LanguageSettings/provider/languageSettings';
-import { PATH } from './constants/globalConstants';
+import { ROUTES } from './constants/globalConstants';
 
 export default {
-  root: PATH.SPLASH,
+  root: ROUTES.SPLASH,
   routes: [
     {
-      path: PATH.SPLASH,
+      path: ROUTES.SPLASH,
       component: Splash,
     },
     {
-      path: PATH.HOME,
+      path: ROUTES.HOME,
       component: Home,
-      widgets: [PATH.MENU_WIDGET],
+      widgets: [ROUTES.MENU_WIDGET],
       on: home,
     },
     {
-      path: `${PATH.VOD}/:vodType`,
+      path: `${ROUTES.VOD}/:vodType`,
       component: VodPreview,
-      widgets: [PATH.MENU_WIDGET],
+      widgets: [ROUTES.MENU_WIDGET],
       on: onVodPage,
     },
     {
-      path: `${PATH.MOVIE_DETAILS}/:movieId`,
+      path: `${ROUTES.MOVIE_DETAILS}/:movieId`,
       component: SingleMovie,
       on: singleMovie,
     },
     {
-      path: `${PATH.SERIES_DETAILS}/:seriesId`,
+      path: `${ROUTES.SERIES_DETAILS}/:seriesId`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -62,13 +62,13 @@ export default {
       },
     },
     {
-      path: `${PATH.FILTER_PAGE}/:action/:genre_movies`,
+      path: `${ROUTES.FILTER_PAGE}/:action/:genre_movies`,
       component: Filtered,
       on: filtered,
-      widgets: [PATH.MENU_WIDGET],
+      widgets: [ROUTES.MENU_WIDGET],
     },
     {
-      path: `${PATH.SPORTS_DETAIL}/:seriesId`,
+      path: `${ROUTES.SPORTS_DETAIL}/:seriesId`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -76,59 +76,59 @@ export default {
       },
     },
     {
-      path: `${PATH.EVENT_DETAILS}/:eventId`,
+      path: `${ROUTES.EVENT_DETAILS}/:eventId`,
       component: SingleLiveEvent,
       on: singleLiveEvent,
     },
     {
-      path: PATH.LIVE,
+      path: ROUTES.LIVE,
       component: LiveTV,
-      widgets: [PATH.MENU_WIDGET],
+      widgets: [ROUTES.MENU_WIDGET],
       on: livetv,
     },
     {
-      path: PATH.SEARCH,
+      path: ROUTES.SEARCH,
       component: Search,
-      widgets: [PATH.MENU_WIDGET],
+      widgets: [ROUTES.MENU_WIDGET],
       on: onSearchPage,
     },
     {
-      path: PATH.ACC,
+      path: ROUTES.ACC,
       component: MyAccount,
-      widgets: [PATH.MENU_WIDGET],
+      widgets: [ROUTES.MENU_WIDGET],
       on: myAccount,
     },
     {
-      path: PATH.LAN_SETTINGS,
+      path: ROUTES.LAN_SETTINGS,
       component: LanguageSettings,
-      widgets: [PATH.MENU_WIDGET],
+      widgets: [ROUTES.MENU_WIDGET],
       on: languageSettings,
     },
     {
-      path: PATH.HELP,
+      path: ROUTES.HELP,
       component: HelpScreen,
-      widgets: [PATH.MENU_WIDGET],
+      widgets: [ROUTES.MENU_WIDGET],
       on: help,
     },
     {
-      path: PATH.PLAYER,
+      path: ROUTES.PLAYER,
       component: Player,
       options: {
         reuseInstance: false,
       },
     },
     {
-      path: `${PATH.COLLECTION}/:collectionId`,
+      path: `${ROUTES.COLLECTION}/:collectionId`,
       component: Collection,
       on: collection,
     },
     {
-      path: PATH.CMP,
+      path: ROUTES.CMP,
       component: CMP,
       on: cmp,
     },
     {
-      path: PATH.CMP_CUSTOMIZE,
+      path: ROUTES.CMP_CUSTOMIZE,
       component: CMPCustomize,
     },
   ],

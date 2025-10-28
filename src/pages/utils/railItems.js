@@ -1,6 +1,6 @@
 import { Router } from '@lightningjs/sdk';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
-import { RAIL_TYPES, VIDEO_TYPES, CATEGORY_TYPES, PATH } from '../../constants/globalConstants';
+import { RAIL_TYPES, VIDEO_TYPES, CATEGORY_TYPES, ROUTES } from '../../constants/globalConstants';
 import { imageSizes } from '../../Models/utils';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
@@ -131,33 +131,33 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
         callback: async () => {
           switch (railItem.type.value) {
             case CATEGORY_TYPES.MOVIE: {
-              Router.navigate(`${PATH.MOVIE_DETAILS}/${railItem.id}`);
+              Router.navigate(`${ROUTES.MOVIE_DETAILS}/${railItem.id}`);
               break;
             }
-            case CATEGORY_TYPES.SERIES: {
-              Router.navigate(`${PATH.SERIES_DETAILS}/${railItem.id}`);
+            case CATEGORY_TYPES.SERIE: {
+              Router.navigate(`${ROUTES.SERIES_DETAILS}/${railItem.id}`);
               break;
             }
             case CATEGORY_TYPES.EVENT: {
-              Router.navigate(`${PATH.EVENT_DETAILS}/${railItem.id}`);
+              Router.navigate(`${ROUTES.EVENT_DETAILS}/${railItem.id}`);
               break;
             }
             case CATEGORY_TYPES.VIDEO: {
-              Router.navigate(PATH.PLAYER, {
+              Router.navigate(ROUTES.PLAYER, {
                 videoUrl: railItem.url,
                 duration: railItem.duration,
               });
               break;
             }
             case CATEGORY_TYPES.COLLECTION: {
-              Router.navigate(`${PATH.COLLECTION}/${railItem.id}`);
+              Router.navigate(`${ROUTES.COLLECTION}/${railItem.id}`);
               break;
             }
             case CATEGORY_TYPES.LIVESTREAM: {
               const epgProgram = await EPGService.getSingleEPGChannel(`channel_${railItem.id}`);
               const epgStreamSrc = epgProgram.items[0].content.src;
 
-              Router.navigate(PATH.PLAYER, {
+              Router.navigate(ROUTES.PLAYER, {
                 videoUrl: epgStreamSrc,
                 duration: 0,
                 videoType: VIDEO_TYPES.STREAM_NOW,
@@ -194,7 +194,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       callback: () => {
         DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(
           ({ data: result }) => {
-            Router.navigate(PATH.PLAYER, {
+            Router.navigate(ROUTES.PLAYER, {
               videoUrl: result[0]?.content.src ?? railItem.src,
               videoId: railItem.id,
               duration: railItem.duration,

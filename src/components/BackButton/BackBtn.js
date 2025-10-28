@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import { IMG_PATH, PATH } from '../../constants/globalConstants';
+import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
 
 export default class BackBtn extends Lightning.Component {
   _props = {
@@ -38,13 +38,13 @@ export default class BackBtn extends Lightning.Component {
 
   _handleEnter() {
     const router = Router.getHistory().filter(
-      (history) => history.hash != PATH.SPLASH && history.hash != PATH.CMP
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
     if (router.length) {
       Router.setHistory([...router]);
       Router.back();
     } else {
-      Router.navigate(PATH.HOME);
+      Router.navigate(ROUTES.HOME);
     }
   }
 
@@ -63,13 +63,13 @@ export default class BackBtn extends Lightning.Component {
     }
 
     const router = Router.getHistory().filter(
-      (history) => history.hash != PATH.SPLASH && history.hash != PATH.CMP
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
     if (router.length) {
       Router.setHistory([...router]);
       Router.back();
     } else {
-      Router.navigate(PATH.HOME);
+      Router.navigate(ROUTES.HOME);
     }
   }
 }

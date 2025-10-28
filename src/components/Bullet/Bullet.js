@@ -1,7 +1,7 @@
 import { Colors, Router, Lightning } from '@lightningjs/sdk';
 import { CATEGORY_TYPES } from '../../Models/Category';
 import HeroRailItem from '../../components/RailItems/HeroRailItems';
-import { PATH } from '../../constants/globalConstants';
+import { ROUTES } from '../../constants/globalConstants';
 
 export default class Bullet extends HeroRailItem {
   _props = {};
@@ -53,15 +53,15 @@ export default class Bullet extends HeroRailItem {
 
     switch (item.type.value) {
       case CATEGORY_TYPES.MOVIE: {
-        Router.navigate(`${PATH.MOVIE_DETAILS}/${item.id}`);
+        Router.navigate(`${ROUTES.MOVIE_DETAILS}/${item.id}`);
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        Router.navigate(`${PATH.SERIES_DETAILS}/${item.id}`);
+        Router.navigate(`${ROUTES.SERIES_DETAILS}/${item.id}`);
         break;
       }
       case CATEGORY_TYPES.EVENTS: {
-        Router.navigate(`${PATH.EVENT_DETAILS}/${item.id}`);
+        Router.navigate(`${ROUTES.EVENT_DETAILS}/${item.id}`);
         break;
       }
       case CATEGORY_TYPES.LIVE_TV: {
@@ -69,7 +69,7 @@ export default class Bullet extends HeroRailItem {
       }
       case CATEGORY_TYPES.CHANNELS: {
         this.changeGenre = this.data;
-        Router.navigate(`${PATH.LIVE}/:${this.id}?`);
+        Router.navigate(`${ROUTES.LIVE}/:${this.id}?`);
         break;
       }
       default:
