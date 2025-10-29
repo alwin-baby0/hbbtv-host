@@ -273,7 +273,6 @@ export const CATEGORY_TYPES = {
   MOVIES: 'movies',
   MOVIE: 'movie',
   SERIES: 'series',
-  SERIE: 'serie',
   SPORTS: 'sports',
   LIVE_TV: 'live',
   CHANNELS: 'channel',
@@ -419,7 +418,6 @@ export const IMG_PATH = {
   PLAY_BTN_PLAYER: '/icons/player/commands/play.svg',
   SUBTITLES_PLAYER: '/icons/player/commands/subtitles.svg',
 };
-
 export const ROUTES = {
   MENU_WIDGET: 'Menu',
   SPLASH: 'splash',
