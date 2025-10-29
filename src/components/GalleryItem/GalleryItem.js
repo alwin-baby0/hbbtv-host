@@ -3,7 +3,7 @@ import colors from '../../../reskin/colors.json';
 import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
 import { DetailService, t } from '../../Services';
-import { IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
+import { IMG_PATH, ROUTES, TRANSLATIONS, VIDEO_TYPES } from '../../constants/globalConstants';
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -205,7 +205,7 @@ export default class GalleryItem extends Lightning.Component {
         if (enabled) {
           callback = () => {
             if (isDeeplinkEpisode) {
-              Router.navigate('player', {
+              Router.navigate(ROUTES.PLAYER, {
                 videoUrl: url,
                 videoId: firstEpisodeVideoId,
                 duration: duration,
@@ -218,12 +218,12 @@ export default class GalleryItem extends Lightning.Component {
             }
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
-                Router.navigate('player', {
+                Router.navigate(ROUTES.PLAYER, {
                   videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
                   episodeTitle: firstEpisodeTitle,
                   videoId: firstEpisodeVideoId,
                   duration: duration,
-                  videoType: 'series',
+                  videoType: VIDEO_TYPES.SERIES,
                   seriesID: seriesId,
                   ssai: result[0].extensions?.ssai ?? ssai,
                 });

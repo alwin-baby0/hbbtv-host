@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { CMPService, DetailService } from '../../Services';
-import { IMG_PATH } from '../../constants/globalConstants';
+import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
 
 export default class Splash extends Lightning.Component {
   static _template() {
@@ -26,7 +26,7 @@ export default class Splash extends Lightning.Component {
     const movie = await DetailService.getMovie(id);
 
     if (movie) {
-      Router.navigate('player', {
+      Router.navigate(ROUTES.PLAYER, {
         videoUrl: movie.url,
         duration: movie.duration,
         videoId: id,
@@ -51,20 +51,22 @@ export default class Splash extends Lightning.Component {
         const seriesId = params.get('seriesId');
 
         if (type === 'movie') {
-          Router.setHistory([{ hash: 'home' }]);
-          Router.navigate(`movie-details/${id}`);
+          Router.setHistory([{ hash: ROUTES.HOME }]);
+          Router.navigate(`${ROUTES.MOVIE_DETAILS}/${id}`);
         } else if (type === 'series') {
-          Router.setHistory([{ hash: 'home' }]);
-          Router.navigate(`series-details/${id}`);
+          Router.setHistory([{ hash: ROUTES.HOME }]);
+          Router.navigate(`${ROUTES.SERIES_DETAILS}/${id}`);
         } else if (type === 'episode') {
-          Router.setHistory([{ hash: 'home' }]);
+          Router.setHistory([{ hash: ROUTES.HOME }]);
           history.replaceState(null, '', window.location.pathname);
-          Router.navigate(`series-details/${seriesId}?episodeId=${id}&isDeeplinkEpisode=true`);
+          Router.navigate(
+            `${ROUTES.SERIES_DETAILS}/${seriesId}?episodeId=${id}&isDeeplinkEpisode=true`
+          );
         }
       } else if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate('cmp', false);
+        Router.navigate(ROUTES.CMP, false);
       } else {
-        Router.navigate('home', false);
+        Router.navigate(ROUTES.HOME, false);
       }
     }, 3000);
   }

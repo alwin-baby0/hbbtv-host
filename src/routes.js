@@ -27,33 +27,34 @@ import cmp from './pages/CMP/provider/cmp';
 import CMPCustomize from './pages/CMP/components/CMPCustomize';
 import LanguageSettings from './pages/LanguageSettings/LanguageSettings';
 import languageSettings from './pages/LanguageSettings/provider/languageSettings';
+import { ROUTES } from './constants/globalConstants';
 
 export default {
-  root: 'splash',
+  root: ROUTES.SPLASH,
   routes: [
     {
-      path: 'splash',
+      path: ROUTES.SPLASH,
       component: Splash,
     },
     {
-      path: 'home',
+      path: ROUTES.HOME,
       component: Home,
-      widgets: ['Menu'],
+      widgets: [ROUTES.MENU_WIDGET],
       on: home,
     },
     {
-      path: 'vod/:vodType',
+      path: `${ROUTES.VOD}/:vodType`,
       component: VodPreview,
-      widgets: ['Menu'],
+      widgets: [ROUTES.MENU_WIDGET],
       on: onVodPage,
     },
     {
-      path: 'movie-details/:movieId',
+      path: `${ROUTES.MOVIE_DETAILS}/:movieId`,
       component: SingleMovie,
       on: singleMovie,
     },
     {
-      path: 'series-details/:seriesId',
+      path: `${ROUTES.SERIES_DETAILS}/:seriesId`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -61,13 +62,13 @@ export default {
       },
     },
     {
-      path: 'filterPage/:action/:genre_movies',
+      path: `${ROUTES.FILTER_PAGE}/:action/:genre_movies`,
       component: Filtered,
       on: filtered,
-      widgets: ['Menu'],
+      widgets: [ROUTES.MENU_WIDGET],
     },
     {
-      path: 'sports-details/:seriesId',
+      path: `${ROUTES.SPORTS_DETAIL}/:seriesId`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -75,59 +76,59 @@ export default {
       },
     },
     {
-      path: 'event-details/:eventId',
+      path: `${ROUTES.EVENT_DETAILS}/:eventId`,
       component: SingleLiveEvent,
       on: singleLiveEvent,
     },
     {
-      path: 'live',
+      path: ROUTES.LIVE,
       component: LiveTV,
-      widgets: ['Menu'],
+      widgets: [ROUTES.MENU_WIDGET],
       on: livetv,
     },
     {
-      path: 'search',
+      path: ROUTES.SEARCH,
       component: Search,
-      widgets: ['Menu'],
+      widgets: [ROUTES.MENU_WIDGET],
       on: onSearchPage,
     },
     {
-      path: 'account',
+      path: ROUTES.ACC,
       component: MyAccount,
-      widgets: ['Menu'],
+      widgets: [ROUTES.MENU_WIDGET],
       on: myAccount,
     },
     {
-      path: 'langsettings',
+      path: ROUTES.LAN_SETTINGS,
       component: LanguageSettings,
-      widgets: ['Menu'],
+      widgets: [ROUTES.MENU_WIDGET],
       on: languageSettings,
     },
     {
-      path: 'help',
+      path: ROUTES.HELP,
       component: HelpScreen,
-      widgets: ['Menu'],
+      widgets: [ROUTES.MENU_WIDGET],
       on: help,
     },
     {
-      path: 'player',
+      path: ROUTES.PLAYER,
       component: Player,
       options: {
         reuseInstance: false,
       },
     },
     {
-      path: 'collection-details/:collectionId',
+      path: `${ROUTES.COLLECTION}/:collectionId`,
       component: Collection,
       on: collection,
     },
     {
-      path: 'cmp',
+      path: ROUTES.CMP,
       component: CMP,
       on: cmp,
     },
     {
-      path: 'cmp-customize',
+      path: ROUTES.CMP_CUSTOMIZE,
       component: CMPCustomize,
     },
   ],
