@@ -1,6 +1,6 @@
 import { Lightning } from '@lightningjs/sdk';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
-import { CARD_SIZES } from '../RailItems/constants';
+import { CARD_SIZES } from '../../constants/globalConstants';
 
 export default class CategoryPicker extends Lightning.Component {
   _props = {

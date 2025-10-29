@@ -1,4 +1,5 @@
-import { CARD_SIZES } from './constants';
+import { CARD_SIZES } from '../../constants/globalConstants';
+
 import { Utils, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import colors from '../../../reskin/colors.json';

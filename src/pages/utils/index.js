@@ -1,4 +1,5 @@
-import { CARD_SIZES } from '../../components/RailItems/constants';
+import { CARD_SIZES } from '../../constants/globalConstants';
+
 import { railItemConstructor } from './railItems';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { EPGService } from '../../Services';

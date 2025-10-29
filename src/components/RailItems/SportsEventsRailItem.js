@@ -1,5 +1,5 @@
 import { Colors, Utils, Router, Lightning } from '@lightningjs/sdk';
-import { CARD_SIZES } from './constants';
+import { CARD_SIZES } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
