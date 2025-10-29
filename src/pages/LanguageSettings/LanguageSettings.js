@@ -5,6 +5,7 @@ import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButt
 import { CMPService } from '../../Services';
 import Button from '../../components/Button/Button';
 import { getDeviceInfo } from '../../utils/device';
+import { ROUTES } from '../../constants/globalConstants';
 
 export default class LanguageSettings extends Lightning.Component {
   static _template() {
@@ -163,9 +164,9 @@ export default class LanguageSettings extends Lightning.Component {
               if (value.callback_url) {
                 const chosenValue = btnIndex === 0 ? 1 : 0;
                 await CMPService.selectCMPChoice(serialNumber, chosenValue);
-                Router.navigate('home');
+                Router.navigate(ROUTES.HOME);
               } else {
-                Router.navigate('cmp-customize', { options: value.options });
+                Router.navigate(ROUTES.CMP_CUSTOMIZE, { options: value.options });
               }
             },
           },
@@ -255,7 +256,7 @@ export default class LanguageSettings extends Lightning.Component {
   }
 
   _handleBack() {
-    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
 
@@ -275,7 +276,7 @@ export default class LanguageSettings extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('Menu');
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleRight() {
@@ -298,7 +299,7 @@ export default class LanguageSettings extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('Menu');
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
       },
 
@@ -308,7 +309,7 @@ export default class LanguageSettings extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('Menu');
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleLeft() {

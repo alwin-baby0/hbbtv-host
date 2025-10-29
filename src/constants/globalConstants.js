@@ -273,6 +273,7 @@ export const CATEGORY_TYPES = {
   MOVIES: 'movies',
   MOVIE: 'movie',
   SERIES: 'series',
+  SERIE: 'serie',
   SPORTS: 'sports',
   LIVE_TV: 'live',
   CHANNELS: 'channel',
@@ -308,7 +309,8 @@ export const RAIL_TYPES = {
 
 export const VIDEO_TYPES = {
   STREAM_NOW: 'Stream now',
-  SERIES: 'Series',
+  SERIES: 'series',
+  VIDEO: 'video',
 };
 
 export const API_URLS = {
@@ -416,4 +418,29 @@ export const IMG_PATH = {
   PAUSE_BTN_PLAYER: '/icons/player/commands/pause.svg',
   PLAY_BTN_PLAYER: '/icons/player/commands/play.svg',
   SUBTITLES_PLAYER: '/icons/player/commands/subtitles.svg',
+};
+
+export const ROUTES = {
+  MENU_WIDGET: 'Menu',
+  SPLASH: 'splash',
+  HOME: 'home',
+  LIVE: 'live',
+  SEARCH: 'search',
+  ACC: 'account',
+  HELP: 'help',
+  PLAYER: 'player',
+  CMP: 'cmp',
+  CMP_CUSTOMIZE: 'cmp-customize',
+  LAN_SETTINGS: 'langsettings',
+  COLLECTION: 'collection-details',
+  VOD: 'vod',
+  MOVIE_DETAILS: 'movie-details',
+  SERIES_DETAILS: 'series-details',
+  FILTER_PAGE: 'filterPage',
+  SPORTS_DETAIL: 'sports-details',
+  EVENT_DETAILS: 'event-details',
+  MOVIES: 'movies',
+  MOVIE: 'movie',
+  SERIES: 'series',
+  SPORTS: 'sports',
 };

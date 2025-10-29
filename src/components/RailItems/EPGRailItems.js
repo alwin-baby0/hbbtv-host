@@ -1,5 +1,5 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import { IMG_PATH, VIDEO_TYPES } from '../../constants/globalConstants';
+import { IMG_PATH, VIDEO_TYPES, ROUTES } from '../../constants/globalConstants';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
@@ -215,7 +215,7 @@ export default class EPGRailItems extends Lightning.Component {
     setTimeout(() => {
       this.fireAncestors('$unpunchHole');
 
-      Router.navigate('player', {
+      Router.navigate(ROUTES.PLAYER, {
         videoUrl: this._props.content.src,
         duration: 0,
         videoType: VIDEO_TYPES.STREAM_NOW,

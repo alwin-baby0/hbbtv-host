@@ -6,7 +6,7 @@ import VodContentContainer, {
 import { constructRails } from '../utils';
 import { eventTrackPayload } from '../../utils/device';
 import { VOD_PREVIEW_TYPES } from '../utils';
-import { EVENT_NAMES, IMG_PATH } from '../../constants/globalConstants';
+import { EVENT_NAMES, IMG_PATH, ROUTES } from '../../constants/globalConstants';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -109,7 +109,7 @@ export default class VodPreview extends Lightning.Component {
   }
 
   _handleBack() {
-    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
 
@@ -146,7 +146,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('Menu');
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleDown() {
@@ -206,7 +206,7 @@ export default class VodPreview extends Lightning.Component {
 
         _handleUp() {
           if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
-            Router.focusWidget('Menu');
+            Router.focusWidget(ROUTES.MENU_WIDGET);
           } else {
             this._setState('VodContentContainer');
           }
