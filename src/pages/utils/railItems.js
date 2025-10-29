@@ -1,7 +1,7 @@
 import { Router } from '@lightningjs/sdk';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { RAIL_TYPES, VIDEO_TYPES, CATEGORY_TYPES, ROUTES } from '../../constants/globalConstants';
-import { imageSizes } from '../../Models/utils';
+import { imageSizes } from '../../constants/globalConstants';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
 import SportsEventsRailItem from '../../components/RailItems/SportsEventsRailItem';

@@ -1,7 +1,7 @@
 import { Router } from '@lightningjs/sdk';
 import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
 import PosterRailItem from '../../../components/RailItems/PosterRailItem';
-import { imageSizes } from '../../../Models/utils';
+import { imageSizes } from '../../../constants/globalConstants';
 import { SearchService } from '../../../Services';
 
 const FILTER_TYPES = {

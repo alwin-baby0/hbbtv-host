@@ -1,7 +1,7 @@
 import FetchingService from '../FetchingService';
 import { SimpleRailItem } from '../../Models';
 import { V2 } from '../utils';
-import { imageSizes } from '../../Models/utils';
+import { imageSizes } from '../../constants/globalConstants';
 import {
   parseBannerData,
   parseHomePageHeroSection,

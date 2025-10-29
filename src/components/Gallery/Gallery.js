@@ -1,7 +1,7 @@
 import { Lightning, VideoPlayer } from '@lightningjs/sdk';
 import GalleryItem from '../GalleryItem/GalleryItem';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
-import { imageSizes } from '../../Models/utils';
+import { imageSizes } from '../../constants/globalConstants';
 import { railItemConstructor } from '../../pages/utils/railItems';
 import { loader, unloader } from '../Player/HLS';
 

@@ -1,4 +1,4 @@
-import { imageSizes } from '../../../Models/utils';
+import { imageSizes } from '../../../constants/globalConstants';
 import { VodService, DetailService } from '../../../Services';
 import { VOD_PREVIEW_TYPES, constructRails } from '../../utils';
 
