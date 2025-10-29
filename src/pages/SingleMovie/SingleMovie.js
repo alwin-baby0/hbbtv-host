@@ -26,7 +26,7 @@ export default class SingleMovie extends Lightning.Component {
         h: 1080,
         GradientOverlay: {
           w: 1920,
-          x: 2,
+          zIndex: 2,
         },
         Image: {
           w: 1920,
@@ -84,8 +84,8 @@ export default class SingleMovie extends Lightning.Component {
             h: 720,
             flex: { direction: 'column' },
             Title: {
-              w: 700,
-              h: 90,
+              w: 900,
+              wordWrapWidth: 900,
               text: {
                 text: '',
                 fontSize: 59,
@@ -99,7 +99,7 @@ export default class SingleMovie extends Lightning.Component {
               text: {
                 fontSize: 25,
                 lineHeight: 31,
-                maxLines: 8,
+                maxLines: 4,
                 wordWrapWidth: 900,
                 fontFace: 'Montserrat-Regular',
               },
@@ -187,11 +187,6 @@ export default class SingleMovie extends Lightning.Component {
                   fontFace: 'Montserrat-Regular',
                 },
               },
-              text: {
-                fontSize: 22,
-                lineHeight: 31,
-                fontFace: 'Montserrat-Regular',
-              },
             },
             Director: {
               w: 700,
@@ -216,11 +211,6 @@ export default class SingleMovie extends Lightning.Component {
                   lineHeight: 34,
                   fontFace: 'Montserrat-Regular',
                 },
-              },
-              text: {
-                fontSize: 22,
-                lineHeight: 31,
-                fontFace: 'Montserrat-Regular',
               },
             },
           },
@@ -282,33 +272,27 @@ export default class SingleMovie extends Lightning.Component {
       rating,
     } = movie;
 
+    const titleLength = title.length;
+
     const splitDirector = director.split(':');
     const splitCast = cast.split(':');
 
     const tdirector = t(TRANSLATIONS.DIRECTOR) + ':' + splitDirector[1];
     const tcastTitle = t(TRANSLATIONS.CAST) + ':';
-    const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const tDirText = splitDirector[1];
     const castText = splitCast[1];
-
-    const ageRating = `Age rating: ${rating}`;
-    const genreTxt = `Genre: ${genre}`;
+    const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
+    const dirText = splitDirector[1];
 
     this.patch({
       Content: {
         GradientOverlay: {
-          texture: lng.Tools.getSvgTexture(Utils.asset('icons/home/gradient.svg'), 1920, 900),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
         },
         Image: {
           src: movie.getLandscapePoster(imageSizes.XL)?.src,
         },
         Card: {
           Info: {
-            /* Category: {
-              text: {
-                text: genre,
-              },
-            }, */
             Summary: {
               text: {
                 text: summary,
@@ -324,7 +308,9 @@ export default class SingleMovie extends Lightning.Component {
         CardInfo: {
           AboutMovie: {
             Title: {
+              h: titleLength > 28 ? 130 : 90,
               text: {
+                lineHeight: titleLength > 28 ? 58 : 34,
                 text: title,
               },
             },
@@ -365,7 +351,7 @@ export default class SingleMovie extends Lightning.Component {
               },
               TextValue: {
                 text: {
-                  text: tDirText,
+                  text: dirText,
                 },
               },
               visible: splitDirector[1] ? true : false,

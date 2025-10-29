@@ -281,6 +281,7 @@ export const CATEGORY_TYPES = {
   COLLECTION: 'collection',
   EVENT: 'event',
   LIVESTREAM: 'livestream',
+  SEASON_TABS: 'seasonTabs',
 };
 
 export const RAIL_TYPES = {

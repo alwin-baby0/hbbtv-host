@@ -12,7 +12,8 @@ export default class GalleryItem extends Lightning.Component {
     return {
       w: 1920,
       BackgroundImage: {
-        w: 1420,
+        w: 1920,
+        h: 1080,
       },
       GradientOverlay: {
         zIndex: 1,
@@ -33,23 +34,37 @@ export default class GalleryItem extends Lightning.Component {
             textColor: Colors('#A61619').get(),
           },
         },
-        Title: {
-          w: 750,
-          h: 40,
-          text: {
-            fontFace: 'Montserrat-Bold',
-            fontSize: 32,
-            maxLines: 1,
+        SummSub: {
+          flex: { direction: 'row' },
+          flexItem: {
+            marginBottom: 20,
+          },
+          Summary: {
+            w: 200,
+            h: 29,
+            text: {
+              fontSize: 24,
+              lineHeight: 30,
+              fontFace: 'Montserrat-SemiBold',
+            },
+          },
+          Subtitle: {
+            w: 400,
+            h: 29,
+            text: {
+              fontSize: 24,
+              lineHeight: 30,
+            },
           },
         },
-        Summary: {
-          flexItem: {
-            marginTop: 10,
-          },
+        Title: {
+          w: 1000,
+          h: 90,
           text: {
-            textColor: Colors(colors.focus).get(),
-            fontFace: 'Montserrat-Medium',
-            fontSize: 20,
+            text: '',
+            fontSize: 59,
+            lineHeight: 34,
+            fontFace: 'Montserrat-SemiBold',
           },
         },
         Description: {
@@ -57,13 +72,15 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
             marginBottom: 5,
           },
+          w: 900,
+          h: 150,
           text: {
-            textColor: Colors(colors.sliderDescription).get(),
-            wordWrapWidth: 650,
+            // textColor: Colors(colors.sliderDescription).get(),
+            wordWrapWidth: 900,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
-            maxLines: 6,
+            maxLines: 4,
           },
         },
         Venue: {
@@ -88,8 +105,11 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         AuthorizedButtons: {
+          x: 445,
+          y: -87,
+          h: 70,
           flex: { direction: 'row' },
-          ContinueWatching: {
+          FavoriteButton: {
             collision: true,
             alpha: 0,
             type: Button,
@@ -97,12 +117,116 @@ export default class GalleryItem extends Lightning.Component {
               marginTop: 10,
             },
           },
-          FavoriteButton: {
+          ContinueWatching: {
             collision: true,
             alpha: 0,
             type: Button,
             flexItem: {
               marginTop: 10,
+              marginLeft: 10,
+            },
+          },
+        },
+        Metadata: {
+          flex: { direction: 'column' },
+          AgeRating: {
+            w: 700,
+            y: 0,
+            flex: { direction: 'row', alignItems: 'center' },
+            Title: {
+              w: 150,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
+              },
+            },
+            TextValue: {
+              w: 700,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-Regular',
+              },
+            },
+          },
+          Genre: {
+            w: 700,
+            y: -60,
+            flex: { direction: 'row', alignItems: 'center' },
+            Title: {
+              w: 90,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
+              },
+            },
+            TextValue: {
+              w: 700,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-Regular',
+              },
+            },
+          },
+          Cast: {
+            w: 700,
+            y: -120,
+            flex: { direction: 'row', alignItems: 'center' },
+            Title: {
+              w: 90,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
+              },
+            },
+            TextValue: {
+              w: 700,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-Regular',
+              },
+            },
+          },
+          Director: {
+            w: 700,
+            y: -180,
+            flex: { direction: 'row', alignItems: 'center' },
+            Title: {
+              w: 100,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
+              },
+            },
+            TextValue: {
+              w: 700,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-Regular',
+              },
             },
           },
         },
@@ -125,8 +249,29 @@ export default class GalleryItem extends Lightning.Component {
       ssai,
     } = this._props;
 
-    const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
-      galleryItem;
+    const {
+      title,
+      summary,
+      description,
+      buttonLabel,
+      url,
+      duration,
+      videoType,
+      venue,
+      subtitle,
+      director,
+      cast,
+      genre,
+      rating,
+    } = galleryItem;
+
+    const splitDirector = director.split(':');
+    const splitCast = cast.split(':');
+
+    const tcastTitle = t(TRANSLATIONS.CAST) + ':';
+    const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
+    const tDirText = splitDirector[1];
+    const castText = splitCast[1];
 
     this._Info.patch({
       h: height,
@@ -143,6 +288,66 @@ export default class GalleryItem extends Lightning.Component {
             text: summary,
           },
         });
+      this._Subtitle?.patch({
+        text: {
+          text: 'US • 2011 • FSK12 • IMDb: 7.1',
+        },
+      });
+
+      this._Info.patch({
+        Metadata: {
+          AgeRating: {
+            Title: {
+              text: {
+                text: 'Age Rating:',
+              },
+            },
+            TextValue: {
+              text: {
+                text: rating,
+              },
+            },
+          },
+          Genre: {
+            Title: {
+              text: {
+                text: 'Genre:',
+              },
+            },
+            TextValue: {
+              text: {
+                text: genre,
+              },
+            },
+          },
+          Director: {
+            Title: {
+              text: {
+                text: tDirTitle,
+              },
+            },
+            TextValue: {
+              text: {
+                text: tDirText,
+              },
+            },
+            // visible: splitDirector[1] ? true : false,
+          },
+          Cast: {
+            Title: {
+              text: {
+                text: tcastTitle,
+              },
+            },
+            TextValue: {
+              text: {
+                text: castText,
+              },
+            },
+            // visible: splitCast[1] ? true : false,
+          },
+        },
+      });
     } else {
       this._Info.patch({
         Summary: undefined,
@@ -164,8 +369,8 @@ export default class GalleryItem extends Lightning.Component {
       if (isDeeplinkEpisode && galleryItem.getThumbnailImage(imageSizes.XL)?.src) {
         src = galleryItem.getThumbnailImage(imageSizes.XL)?.src;
         return src;
-      } else if (galleryItem.getLandscapePoster(imageSizes.S)?.src) {
-        src = galleryItem.getLandscapePoster(imageSizes.S)?.src;
+      } else if (galleryItem.getLandscapePoster(imageSizes.XL)?.src) {
+        src = galleryItem.getLandscapePoster(imageSizes.XL)?.src;
         return src;
       } else if (fallbackImage) {
         return fallbackImage;
@@ -174,9 +379,9 @@ export default class GalleryItem extends Lightning.Component {
 
     this.patch({
       BackgroundImage: {
-        w: 1220,
-        h: height,
-        x: 700,
+        w: 1920,
+        h: 1080,
+        // x: 700,
         src: bgImageSrc(),
       },
       GradientOverlay: {
@@ -262,6 +467,10 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('Summary');
   }
 
+  get _Subtitle() {
+    return this.tag('Subtitle');
+  }
+
   get _Description() {
     return this.tag('Description');
   }
@@ -280,6 +489,24 @@ export default class GalleryItem extends Lightning.Component {
 
   get _BackgroundImage() {
     return this.tag('BackgroundImage');
+  }
+
+  get _SummSub() {
+    return this.tag('SummSub');
+  }
+
+  get _AgeRating() {
+    return this.tag('AgeRating');
+  }
+  get _Genre() {
+    return this.tag('Genre');
+  }
+
+  get _Director() {
+    return this.tag('Director');
+  }
+  get _Cast() {
+    return this.tag('Cast');
   }
 
   _firstActive() {
@@ -322,10 +549,8 @@ export default class GalleryItem extends Lightning.Component {
         _getFocused() {
           return this._GalleryButton;
         }
-        _handleDown() {
-          if (this._FavoriteButton.alpha > 0 && this._ContinueWatching.alpha > 0) {
-            this._setState('ContinueWatching');
-          } else if (this._FavoriteButton.alpha > 0) {
+        _handleRight() {
+          if (this._FavoriteButton.alpha > 0) {
             this._setState('FavoriteButton');
           } else return false;
         }
@@ -335,13 +560,12 @@ export default class GalleryItem extends Lightning.Component {
           return this._ContinueWatching;
         }
 
-        _handleUp() {
-          this._setState('GalleryButton');
+        _handleLeft() {
+          this._setState('FavoriteButton');
         }
 
         _handleRight() {
-          if (this._ContinueWatching.alpha > 0) this._setState('FavoriteButton');
-          else return false;
+          return false;
         }
 
         _handleDown() {
@@ -352,10 +576,10 @@ export default class GalleryItem extends Lightning.Component {
         _getFocused() {
           return this._FavoriteButton;
         }
-        _handleUp() {
+        _handleLeft() {
           this._setState('GalleryButton');
         }
-        _handleLeft() {
+        _handleRight() {
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
           } else {

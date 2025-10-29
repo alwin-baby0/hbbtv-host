@@ -12,11 +12,18 @@ import {
   VIDEO_TYPES,
 } from '../../constants/globalConstants';
 import { VOD_PREVIEW_TYPES } from '../utils';
+import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
+import { constructRails } from '../utils';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
+
+  constructor(context) {
+    super(context);
+    this.switchSeason = this.switchSeason.bind(this);
+  }
 
   static _template() {
     return {
@@ -48,12 +55,21 @@ export default class SingleSeries extends Lightning.Component {
           type: GalleryItem,
         },
       },
+      SeasonsBar: {
+        type: CategoryPicker,
+        props: {
+          x: 110,
+          y: 810,
+        },
+        zIndex: 2,
+      },
       Wrapper: {
         collision: true,
         x: 110,
-        y: 715,
+        y: 915,
         h: 600,
         w: 1770,
+        zIndex: 2,
         clipping: true,
         Column: {
           collision: true,
@@ -85,8 +101,9 @@ export default class SingleSeries extends Lightning.Component {
       this._HeroSection._FavoriteButton.patch({
         props: {
           buttonIcon: Utils.asset(newFavorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
-          buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
-          width: 360,
+          buttonLabel: '',
+          width: 100,
+          height: 78,
           parentState: 'HeroSection',
         },
       });
@@ -128,7 +145,7 @@ export default class SingleSeries extends Lightning.Component {
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
-        height: 620,
+        height: 1080,
         firstEpisodeVideoId: firstEpisodeVideoId,
         firstEpisodeUrl: firstEpisodeUrl,
         firstEpisodeTitle: firstEpisodeTitle,
@@ -141,6 +158,7 @@ export default class SingleSeries extends Lightning.Component {
         GalleryButton: {
           props: {
             width: 430,
+            height: 78,
             buttonLabel: t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase(),
           },
         },
@@ -166,6 +184,9 @@ export default class SingleSeries extends Lightning.Component {
                   buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
                   buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
                   width: 440,
+                  height: 78,
+                  position,
+                  duration,
                   callback: () => {
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
@@ -192,8 +213,9 @@ export default class SingleSeries extends Lightning.Component {
                 alpha: 1,
                 props: {
                   buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
-                  buttonLabel: t(TRANSLATIONS.FAVORITE).toUpperCase(),
-                  width: 360,
+                  buttonLabel: '',
+                  width: 100,
+                  height: 78,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -223,8 +245,9 @@ export default class SingleSeries extends Lightning.Component {
                 alpha: 1,
                 props: {
                   buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
-                  buttonLabel: t(TRANSLATIONS.FAVORITE).toUpperCase(),
-                  width: 360,
+                  buttonLabel: '',
+                  width: 100,
+                  height: 78,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -237,7 +260,12 @@ export default class SingleSeries extends Lightning.Component {
       }
     }
     this._setState('HeroSection');
+    window.addEventListener('switchS', (event) => {
+      this.switchSeason(event.detail.seasonId);
+    });
   }
+
+  _disable() {}
 
   get _HeroSection() {
     return this.tag('HeroSection');
@@ -257,6 +285,10 @@ export default class SingleSeries extends Lightning.Component {
 
   get _Wrapper() {
     return this.tag('Wrapper');
+  }
+
+  get _SeasonsBar() {
+    return this.tag('SeasonsBar');
   }
 
   _handleBack(e) {
@@ -286,6 +318,14 @@ export default class SingleSeries extends Lightning.Component {
     this._setState(states[index]);
   }
 
+  switchSeason(seasonId) {
+    let targetSeason = this._props.allSeasons.find((season) => season.seasonId === seasonId);
+    this._Column.props = {
+      items: constructRails(targetSeason),
+      parentState: 'Items',
+    };
+  }
+
   static _states() {
     return [
       class HeroSection extends this {
@@ -297,16 +337,19 @@ export default class SingleSeries extends Lightning.Component {
             BackButton: {
               y: 20,
             },
+            SeasonsBar: {
+              y: 810,
+            },
+            Wrapper: {
+              y: 915,
+              h: 600,
+            },
           });
           return this._HeroSection;
         }
 
         _handleDown() {
-          if (this._Column.Items.children.length > 0) {
-            this._setState('Items');
-          } else {
-            return false;
-          }
+          this._setState('SeasonBar');
         }
 
         _handleUp() {
@@ -323,6 +366,22 @@ export default class SingleSeries extends Lightning.Component {
         }
       },
 
+      class SeasonBar extends this {
+        _getFocused() {
+          return this._SeasonsBar;
+        }
+        _handleUp() {
+          this._setState('HeroSection');
+        }
+        _handleDown() {
+          if (this._Column.Items.children.length > 0) {
+            this._setState('Items');
+          } else {
+            return false;
+          }
+        }
+      },
+
       class Items extends this {
         _getFocused() {
           return this._Column;
@@ -333,10 +392,10 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $exit() {
-          this._Wrapper.patch({
-            y: 715,
+          /* this._Wrapper.patch({
+            y: 915,
             h: 600,
-          });
+          }); */
         }
 
         $verticalContainerIndexChange(index) {
@@ -359,7 +418,10 @@ export default class SingleSeries extends Lightning.Component {
                 y: -180,
               },
               SeriesWrapper: {
-                y: -140,
+                y: -340,
+              },
+              SeasonsBar: {
+                y: 420,
               },
               Wrapper: {
                 y: 500,
@@ -373,7 +435,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleUp() {
-          this._setState('HeroSection');
+          this._setState('SeasonBar');
         }
       },
     ];

@@ -29,6 +29,13 @@ class Category {
         Router.navigate(`live/:${this.id}?`);
         break;
       }
+      case CATEGORY_TYPES.SEASON_TABS: {
+        const event = new CustomEvent('switchS', {
+          detail: { seasonId: this.id }, // pass whatever value you need here
+        });
+        window.dispatchEvent(event);
+        break;
+      }
       default:
         console.warn('unknown category type:', this.type);
     }

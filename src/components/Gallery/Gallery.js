@@ -41,6 +41,10 @@ export default class Gallery extends Lightning.Component {
     this._Info.patch({
       GalleryButton: undefined,
       Summary: undefined,
+      SummSub: undefined,
+      Metadata: {
+        visible: false,
+      },
     });
 
     const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
