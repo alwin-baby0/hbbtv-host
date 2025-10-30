@@ -58,8 +58,8 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         Title: {
-          w: 1000,
-          h: 90,
+          w: 900,
+          wordWrapWidth: 900,
           text: {
             text: '',
             fontSize: 59,
@@ -106,7 +106,7 @@ export default class GalleryItem extends Lightning.Component {
         },
         AuthorizedButtons: {
           x: 445,
-          y: -87,
+          y: -88,
           h: 70,
           flex: { direction: 'row' },
           FavoriteButton: {
@@ -123,7 +123,7 @@ export default class GalleryItem extends Lightning.Component {
             type: Button,
             flexItem: {
               marginTop: 10,
-              marginLeft: 10,
+              marginLeft: 15,
             },
           },
         },
@@ -265,6 +265,8 @@ export default class GalleryItem extends Lightning.Component {
       rating,
     } = galleryItem;
 
+    const titleLength = title.length;
+
     const splitDirector = director.split(':');
     const splitCast = cast.split(':');
 
@@ -389,7 +391,9 @@ export default class GalleryItem extends Lightning.Component {
       },
       Info: {
         Title: {
+          h: titleLength > 28 ? 130 : 90,
           text: {
+            lineHeight: titleLength > 28 ? 58 : 34,
             text: title,
           },
         },
