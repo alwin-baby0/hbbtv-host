@@ -137,7 +137,6 @@ export default class HorizontalContainer extends Lightning.Component {
       if (!currentFocus) return;
 
       let isChildLive = false;
-      let scrollOffsetLive = 0;
       if (
         this.Items.children[this._focusedIndex]._props.extensions &&
         this.Items.children[this._focusedIndex]._props.extensions.end_time
@@ -150,8 +149,6 @@ export default class HorizontalContainer extends Lightning.Component {
           this.Items.children[this._focusedIndex]._props.extensions.end_time
         );
         isChildLive = startTime < currentTime && currentTime < endTime;
-
-        scrollOffsetLive = ((currentTime - startTime) / (1000 * 60)) * 8.33 + 10;
       }
 
       const containerFinalWidth = this.finalW;
@@ -246,6 +243,7 @@ export default class HorizontalContainer extends Lightning.Component {
     if (this._focusedIndex >= 0 && this._focusedIndex < items.length) {
       this.Items.children[this._focusedIndex]?._focus();
     }
+    this._reCalibrateScroll();
   }
 
   _unfocus() {

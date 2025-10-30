@@ -5,6 +5,7 @@ import Button from '../Button/Button';
 import { DetailService, t } from '../../Services';
 import { capitalizeFirstLetter } from '../../utils';
 import { IMG_PATH, ROUTES, TRANSLATIONS, VIDEO_TYPES } from '../../constants/globalConstants';
+
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -25,11 +26,12 @@ export default class GalleryItem extends Lightning.Component {
       Info: {
         zIndex: 2,
         x: 100,
-        y: 200,
+        y: 300,
         w: 1000,
         h: 500,
         flex: { direction: 'column' },
         Badge: {
+          rect: true,
           h: 100,
           flex: {
             direction: 'row',
@@ -37,18 +39,9 @@ export default class GalleryItem extends Lightning.Component {
             justifyContent: 'center',
           },
           flexItem: {
-            marginBottom: 70,
-            minHeight: 40,
+            marginBottom: 50,
+            minHeight: 50,
           },
-          texture: Lightning.Tools.getRoundRect(
-            200,
-            100,
-            6,
-            2,
-            Colors(colors.white).get(),
-            true,
-            Colors('#4a4a49').get()
-          ),
           Text: {
             flexItem: {
               alignSelf: 'center',
@@ -93,7 +86,7 @@ export default class GalleryItem extends Lightning.Component {
           w: 900,
           h: 350,
           flexItem: {
-            marginTop: 10,
+            marginTop: 5,
             marginBottom: 5,
           },
           text: {
@@ -169,24 +162,27 @@ export default class GalleryItem extends Lightning.Component {
 
     if (videoType !== 'application/x-mpegURL') {
       this._Info.patch({
-        Date: undefined,
-        Venue: undefined,
+        Date: { visible: false },
+        Venue: { visible: false },
       });
       galleryItem.summary &&
         this._Summary?.patch({
+          ...(summary ?? { visible: false }),
           text: {
             text: summary,
           },
         });
     } else {
       this._Info.patch({
-        Summary: undefined,
+        Summary: { visible: false },
         Date: {
+          ...(summary ?? { visible: false }),
           text: {
             text: summary,
           },
         },
         Venue: {
+          ...(venue ?? { visible: false }),
           text: {
             text: venue,
           },
@@ -204,7 +200,7 @@ export default class GalleryItem extends Lightning.Component {
         return src;
       } else if (fallbackImage) {
         return fallbackImage;
-      } else return Utils.asset(IMG_PATH.GRADIENT);
+      } else return Utils.asset(IMG_PATH.GRADIENT_SVG);
     };
 
     this.patch({
@@ -216,6 +212,15 @@ export default class GalleryItem extends Lightning.Component {
       },
       Info: {
         Badge: {
+          texture: Lightning.Tools.getRoundRect(
+            200,
+            100,
+            15,
+            4,
+            Colors(colors.white).get(),
+            true,
+            Colors('#4a4a49').get()
+          ),
           Text: {
             text: {
               text: capitalizeFirstLetter(badgeText),

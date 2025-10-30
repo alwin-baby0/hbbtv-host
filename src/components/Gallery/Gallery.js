@@ -24,10 +24,12 @@ export default class Gallery extends Lightning.Component {
       Bullets: {
         type: HorizontalContainer,
         collision: true,
-        y: 820 - 115,
-        x: 75,
-        w: 1760,
-        h: 215,
+        props: {
+          y: 820 - 115,
+          x: 75,
+          w: 1760,
+          h: 215,
+        },
       },
     };
   }
