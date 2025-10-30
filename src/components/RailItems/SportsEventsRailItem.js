@@ -1,9 +1,8 @@
 import { Colors, Utils, Router, Lightning } from '@lightningjs/sdk';
-import { CARD_SIZES } from './constants';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
-import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class SportsEventsRailItem extends FocusableItem {
   _props = {

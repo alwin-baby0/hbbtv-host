@@ -1,13 +1,8 @@
 import { Router } from '@lightningjs/sdk';
 import HorizontalContainer from '../../../components/HorizontalContainer/HorizontalContainer';
 import PosterRailItem from '../../../components/RailItems/PosterRailItem';
-import { imageSizes } from '../../../Models/utils';
+import { IMAGE_SIZES, FILTER_TYPES } from '../../../constants/globalConstants';
 import { SearchService } from '../../../Services';
-
-const FILTER_TYPES = {
-  MOVIE: 'movie',
-  SERIES: 'series',
-};
 
 const filtered = {
   items: [],
@@ -67,7 +62,7 @@ const getGenresInfo = async (page, props) => {
               },
               props: {
                 itemTitle: item.title,
-                imageSrc: item.getPortraitPoster(imageSizes.S).src,
+                imageSrc: item.getPortraitPoster(IMAGE_SIZES.S).src,
                 callback: () => {
                   Router.navigate(`${searchType}-details/${item.id}`);
                 },

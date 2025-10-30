@@ -1,9 +1,14 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
 import { DetailService, t } from '../../Services';
-import { IMG_PATH, ROUTES, TRANSLATIONS, VIDEO_TYPES } from '../../constants/globalConstants';
+import {
+  IMG_PATH,
+  ROUTES,
+  TRANSLATIONS,
+  VIDEO_TYPES,
+  IMAGE_SIZES,
+} from '../../constants/globalConstants';
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -161,11 +166,11 @@ export default class GalleryItem extends Lightning.Component {
 
     const bgImageSrc = () => {
       let src;
-      if (isDeeplinkEpisode && galleryItem.getThumbnailImage(imageSizes.XL)?.src) {
-        src = galleryItem.getThumbnailImage(imageSizes.XL)?.src;
+      if (isDeeplinkEpisode && galleryItem.getThumbnailImage(IMAGE_SIZES.XL)?.src) {
+        src = galleryItem.getThumbnailImage(IMAGE_SIZES.XL)?.src;
         return src;
-      } else if (galleryItem.getLandscapePoster(imageSizes.S)?.src) {
-        src = galleryItem.getLandscapePoster(imageSizes.S)?.src;
+      } else if (galleryItem.getLandscapePoster(IMAGE_SIZES.S)?.src) {
+        src = galleryItem.getLandscapePoster(IMAGE_SIZES.S)?.src;
         return src;
       } else if (fallbackImage) {
         return fallbackImage;

@@ -1,8 +1,8 @@
-import { CARD_SIZES } from './constants';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
+
 import { Utils } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
-import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class BannerRailItem extends FocusableItem {
   _props = {

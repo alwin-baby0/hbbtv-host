@@ -1,7 +1,7 @@
 import { Lightning, VideoPlayer } from '@lightningjs/sdk';
 import GalleryItem from '../GalleryItem/GalleryItem';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
-import { imageSizes } from '../../Models/utils';
+import { IMAGE_SIZES } from '../../constants/globalConstants';
 import { railItemConstructor } from '../../pages/utils/railItems';
 import { loader, unloader } from '../Player/HLS';
 
@@ -103,7 +103,7 @@ export default class Gallery extends Lightning.Component {
       w: 1220,
       h: 690,
       x: 700,
-      src: sliderData.items[index].getLandscapePoster(imageSizes.S)?.src,
+      src: sliderData.items[index].getLandscapePoster(IMAGE_SIZES.S)?.src,
     });
   }
 
