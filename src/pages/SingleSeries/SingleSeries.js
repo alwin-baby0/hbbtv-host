@@ -11,8 +11,8 @@ import {
   ROUTES,
   TRANSLATIONS,
   VIDEO_TYPES,
+  VOD_PREVIEW_TYPES,
 } from '../../constants/globalConstants';
-import { VOD_PREVIEW_TYPES } from '../utils';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
 

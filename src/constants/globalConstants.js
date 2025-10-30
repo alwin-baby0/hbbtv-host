@@ -1,3 +1,10 @@
+export const IMAGE_SIZES = {
+  S: '360',
+  M: '480',
+  L: '720',
+  XL: '1080',
+};
+
 export const VISIBLE_SPORT_COUNTRIES = [
   'de',
   'at',
@@ -273,8 +280,8 @@ export const CATEGORY_TYPES = {
   MOVIES: 'movies',
   MOVIE: 'movie',
   SERIES: 'series',
-  SERIE: 'serie',
   SPORTS: 'sports',
+  SERIE: 'serie',
   LIVE_TV: 'live',
   CHANNELS: 'channel',
   SERIE: 'genres_series',
@@ -439,8 +446,74 @@ export const ROUTES = {
   FILTER_PAGE: 'filterPage',
   SPORTS_DETAIL: 'sports-details',
   EVENT_DETAILS: 'event-details',
-  MOVIES: 'movies',
+};
+
+export const CARD_SIZES = {
+  POSTER: {
+    width: 273,
+    height: 460,
+    container_height: 430,
+    image_width: 273,
+    image_height: 375,
+  },
+  LANDSCAPE: {
+    width: 315,
+    height: 410,
+    container_height: 455,
+    image_width: 315,
+    image_height: 205,
+  },
+  THUMBNAIL: {
+    width: 0,
+    height: 0,
+  },
+  SPORTS: {
+    width: 350,
+    height: 370,
+  },
+  CATEGORY: {
+    height: 75,
+    width: 1740,
+  },
+  EPG_CARD_ITEM: {
+    height: 105,
+  },
+  HERO: {
+    width: 385,
+    height: 215,
+    image_width: 385,
+    image_height: 215,
+  },
+  COLLECTION: {
+    width: 415,
+    height: 285,
+    container_height: 255,
+    image_width: 415,
+    image_height: 230,
+  },
+  BANNER: {
+    width: 1730,
+    height: 300,
+    image_width: 1760,
+    image_height: 260,
+  },
+};
+
+export const FILTER_TYPES = {
   MOVIE: 'movie',
+  MOVIES: 'movies',
+  SERIES: 'series',
+  SPORTS: 'sports',
+};
+
+export const CONTENT_TYPE = {
+  CATEGORIES: '_Categories',
+  EVENTS: '_LiveEvents',
+  EMPTY: 'empty',
+};
+
+export const VOD_PREVIEW_TYPES = {
+  MOVIES: 'movies',
   SERIES: 'series',
   SPORTS: 'sports',
 };

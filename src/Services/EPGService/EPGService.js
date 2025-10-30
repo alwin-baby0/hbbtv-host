@@ -2,8 +2,13 @@ import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { EPGRailItem } from '../../Models/utils/EPGRailItem';
 import { parseVodCategories } from '../../Models/parsers';
-import { API_URLS, ROUTES, RAIL_TYPES } from '../../constants/globalConstants';
-import { CARD_TYPES, API_METHODS } from '../../constants/globalConstants';
+import {
+  API_URLS,
+  ROUTES,
+  RAIL_TYPES,
+  CARD_TYPES,
+  API_METHODS,
+} from '../../constants/globalConstants';
 
 export const EPG_ROWS_PER_FETCH = 10;
 class EPGService extends FetchingService {

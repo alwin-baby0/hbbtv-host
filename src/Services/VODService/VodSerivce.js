@@ -6,9 +6,8 @@ import {
   parseVodCategories,
   parseVodMoviesPageData,
 } from '../../Models/parsers';
-import { VOD_PREVIEW_TYPES } from '../../pages/utils';
 import { V2 } from '../utils';
-import { API_METHODS, API_URLS } from '../../constants/globalConstants';
+import { API_METHODS, API_URLS, VOD_PREVIEW_TYPES } from '../../constants/globalConstants';
 
 export const VODS_PER_ROW = 6;
 export const VOD_ROWS_PER_FETCH = 3;

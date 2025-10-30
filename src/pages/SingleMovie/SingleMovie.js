@@ -1,6 +1,5 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
-import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, t } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
@@ -10,6 +9,7 @@ import {
   LOCAL_STORAGE_KEYS,
   ROUTES,
   TRANSLATIONS,
+  IMAGE_SIZES,
 } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
@@ -214,7 +214,7 @@ export default class SingleMovie extends Lightning.Component {
             },
           },
           Image: {
-            src: movie.getPortraitPoster(imageSizes.XL)?.src,
+            src: movie.getPortraitPoster(IMAGE_SIZES.XL)?.src,
           },
         },
         CardInfo: {

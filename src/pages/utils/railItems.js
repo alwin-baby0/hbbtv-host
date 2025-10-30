@@ -1,7 +1,12 @@
 import { Router } from '@lightningjs/sdk';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
-import { RAIL_TYPES, VIDEO_TYPES, CATEGORY_TYPES, ROUTES } from '../../constants/globalConstants';
-import { imageSizes } from '../../Models/utils';
+import {
+  RAIL_TYPES,
+  VIDEO_TYPES,
+  CATEGORY_TYPES,
+  ROUTES,
+  IMAGE_SIZES,
+} from '../../constants/globalConstants';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
 import SportsEventsRailItem from '../../components/RailItems/SportsEventsRailItem';
@@ -56,7 +61,7 @@ const constructSimpleRailItems = (railItems, railItemsOptions) => {
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
+      imageSrc: railItem.getPortraitPoster(IMAGE_SIZES.S).src,
       itemType: railItem.type,
       index: index,
       callback: () => {
@@ -80,7 +85,7 @@ const constructLandscapeRailItems = (railItems, railItemsOptions) => {
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getLandscapePoster(imageSizes.S).src,
+      imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
       itemType: railItem.type,
       index,
       callback: () => {
@@ -127,7 +132,7 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
       ...railItemsOptions,
       props: {
         index,
-        imageSrc: railItem.getLandscapePoster(imageSizes.S).src,
+        imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
         callback: async () => {
           switch (railItem.type.value) {
             case CATEGORY_TYPES.MOVIE: {
@@ -189,7 +194,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       itemTitle: railItem.title,
       itemSummary: railItem.summary,
       itemDescription: railItem.description,
-      imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
+      imageSrc: railItem.getThumbnailImage(IMAGE_SIZES.M).src,
       index,
       callback: () => {
         DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(
