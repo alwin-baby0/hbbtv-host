@@ -1,4 +1,4 @@
-export const imageSizes = {
+export const IMAGE_SIZES = {
   S: '360',
   M: '480',
   L: '720',

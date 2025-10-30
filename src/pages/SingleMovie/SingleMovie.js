@@ -9,7 +9,7 @@ import {
   LOCAL_STORAGE_KEYS,
   ROUTES,
   TRANSLATIONS,
-  imageSizes,
+  IMAGE_SIZES,
 } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
@@ -214,7 +214,7 @@ export default class SingleMovie extends Lightning.Component {
             },
           },
           Image: {
-            src: movie.getPortraitPoster(imageSizes.XL)?.src,
+            src: movie.getPortraitPoster(IMAGE_SIZES.XL)?.src,
           },
         },
         CardInfo: {

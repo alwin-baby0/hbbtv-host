@@ -1,4 +1,4 @@
-import { imageSizes, VOD_PREVIEW_TYPES } from '../../../constants/globalConstants';
+import { IMAGE_SIZES, VOD_PREVIEW_TYPES } from '../../../constants/globalConstants';
 import { VodService, DetailService } from '../../../Services';
 import { constructRails } from '../../utils';
 
@@ -9,7 +9,7 @@ export default async function (page, { eventId }) {
   await VodService.initialFetch();
 
   const singleItemCoverBg = VodService.contentStripes.items.find((item) => item.id === eventId);
-  const fallbackImage = singleItemCoverBg?.getLandscapePoster(imageSizes.S)?.src;
+  const fallbackImage = singleItemCoverBg?.getLandscapePoster(IMAGE_SIZES.S)?.src;
 
   page.props = {
     galleryItem,

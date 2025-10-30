@@ -6,7 +6,7 @@ import {
   parseHomePageHeroSection,
   parseHomePageRailData,
 } from '../../Models/parsers';
-import { API_METHODS, API_URLS, imageSizes } from '../../constants/globalConstants';
+import { API_METHODS, API_URLS, IMAGE_SIZES } from '../../constants/globalConstants';
 
 class HomePageService extends FetchingService {
   #heroSectionItems;
@@ -29,7 +29,7 @@ class HomePageService extends FetchingService {
       const galleryItems = await this.#getHomePageHeroSection();
       // preload gallry items
       if (galleryItems?.items) {
-        galleryItems.items.forEach((item) => item.preloadImages(imageSizes.S));
+        galleryItems.items.forEach((item) => item.preloadImages(IMAGE_SIZES.S));
         this.#heroSectionItems = galleryItems;
       }
     }
