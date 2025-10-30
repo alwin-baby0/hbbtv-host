@@ -15,6 +15,7 @@ export default class VerticalContainer extends Lightning.Component {
     return {
       Items: {
         w: (w) => w,
+        zIndex: 2,
         flex: {
           direction: 'column',
         },

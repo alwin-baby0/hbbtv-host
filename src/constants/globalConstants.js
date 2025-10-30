@@ -394,7 +394,7 @@ export const IMG_PATH = {
   FAVORITE: 'icons/heart.svg',
   FAVORITE_FILL: 'icons/heart-filled.svg',
   GRADIENT: 'images/gradient.png',
-  GRADIENT_SVG: 'icons/home/gradient.svg',
+  GRADIENT_SVG: 'icons/home/overlay.png',
   LANDSCAPE_RAIL_PH: 'images/landscape-rail-placeholder.png',
   LANDSCAPE_RAIL_PH_EMPTY: 'images/landscape-rail-placeholder-empty.png',
   LIVE_CHANNEL_BG: 'images/Rectangle.png',

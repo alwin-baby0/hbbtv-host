@@ -69,7 +69,6 @@ export default class SingleSeries extends Lightning.Component {
         y: 915,
         h: 600,
         w: 1770,
-        zIndex: 2,
         clipping: true,
         Column: {
           collision: true,
