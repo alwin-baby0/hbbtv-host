@@ -446,10 +446,6 @@ export const ROUTES = {
   FILTER_PAGE: 'filterPage',
   SPORTS_DETAIL: 'sports-details',
   EVENT_DETAILS: 'event-details',
-  MOVIES: 'movies',
-  MOVIE: 'movie',
-  SERIES: 'series',
-  SPORTS: 'sports',
 };
 
 export const CARD_SIZES = {
@@ -501,4 +497,11 @@ export const CARD_SIZES = {
     image_width: 1760,
     image_height: 260,
   },
+};
+
+export const FILTER_TYPES = {
+  MOVIE: 'movie',
+  MOVIES: 'movies',
+  SERIES: 'series',
+  SPORTS: 'sports',
 };

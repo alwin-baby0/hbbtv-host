@@ -4,11 +4,6 @@ import PosterRailItem from '../../../components/RailItems/PosterRailItem';
 import { imageSizes } from '../../../constants/globalConstants';
 import { SearchService } from '../../../Services';
 
-const FILTER_TYPES = {
-  MOVIE: 'movie',
-  SERIES: 'series',
-};
-
 const filtered = {
   items: [],
   title: '',

@@ -6,6 +6,7 @@ import {
   ROUTES,
   TRANSLATIONS,
   VISIBLE_SPORT_COUNTRIES,
+  FILTER_TYPES,
 } from '../../../../constants/globalConstants';
 import SidebarItem from './SidebarItem';
 import { t } from '../../../../Services';
@@ -56,16 +57,19 @@ export default class SidebarItems extends Lightning.Component {
     setTimeout(() => {
       const activeHash = Router.getActiveHash();
       // Check if activeHash contains both 'filtered' and 'movies'
-      if (activeHash.includes(ROUTES.FILTER_PAGE) && activeHash.includes(ROUTES.MOVIE)) {
+      if (activeHash.includes(ROUTES.FILTER_PAGE) && activeHash.includes(FILTER_TYPES.MOVIE)) {
         this._index = getRouteNavbarIndex(
-          `${ROUTES.FILTER_PAGE}/${ROUTES.MOVIE}`,
+          `${ROUTES.FILTER_PAGE}/${FILTER_TYPES.MOVIE}`,
           this._visibleSport
         );
         this._setSelected(this._index);
         return;
-      } else if (activeHash.includes(ROUTES.FILTER_PAGE) && activeHash.includes(ROUTES.SERIES)) {
+      } else if (
+        activeHash.includes(ROUTES.FILTER_PAGE) &&
+        activeHash.includes(FILTER_TYPES.SERIES)
+      ) {
         this._index = getRouteNavbarIndex(
-          `${ROUTES.FILTER_PAGE}/${ROUTES.SERIES}`,
+          `${ROUTES.FILTER_PAGE}/${FILTER_TYPES.SERIES}`,
           this._visibleSport
         );
         this._setSelected(this._index);
@@ -80,13 +84,13 @@ export default class SidebarItems extends Lightning.Component {
       {
         id: 1,
         label: t(TRANSLATIONS.MOVIES),
-        route: `${ROUTES.VOD}/${ROUTES.MOVIES}`,
+        route: `${ROUTES.VOD}/${FILTER_TYPES.MOVIES}`,
         icon: '',
       },
       {
         id: 2,
         label: t(TRANSLATIONS.SERIES),
-        route: `${ROUTES.VOD}/${ROUTES.SERIES}`,
+        route: `${ROUTES.VOD}/${FILTER_TYPES.SERIES}`,
         icon: '',
       },
     ];
@@ -96,7 +100,7 @@ export default class SidebarItems extends Lightning.Component {
             {
               id: 3,
               label: t(TRANSLATIONS.SPORT),
-              route: `${ROUTES.VOD}/${ROUTES.SPORTS}`,
+              route: `${ROUTES.VOD}/${FILTER_TYPES.SPORTS}`,
               icon: '',
             },
             { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
@@ -157,16 +161,19 @@ export default class SidebarItems extends Lightning.Component {
   _focus() {
     const activeHash = Router.getActiveHash();
     // Check if activeHash contains both 'filtered' and 'movies'
-    if (activeHash?.includes(ROUTES.FILTER_PAGE) && activeHash?.includes(ROUTES.MOVIE)) {
+    if (activeHash?.includes(ROUTES.FILTER_PAGE) && activeHash?.includes(FILTER_TYPES.MOVIE)) {
       this._index = getRouteNavbarIndex(
-        `${ROUTES.FILTER_PAGE}/${ROUTES.MOVIE}`,
+        `${ROUTES.FILTER_PAGE}/${FILTER_TYPES.MOVIE}`,
         this._visibleSport
       );
       this._setSelected(this._index);
       return;
-    } else if (activeHash?.includes(ROUTES.FILTER_PAGE) && activeHash?.includes(ROUTES.SERIES)) {
+    } else if (
+      activeHash?.includes(ROUTES.FILTER_PAGE) &&
+      activeHash?.includes(FILTER_TYPES.SERIES)
+    ) {
       this._index = getRouteNavbarIndex(
-        `${ROUTES.FILTER_PAGE}/${ROUTES.SERIES}`,
+        `${ROUTES.FILTER_PAGE}/${FILTER_TYPES.SERIES}`,
         this._visibleSport
       );
       this._setSelected(this._index);
