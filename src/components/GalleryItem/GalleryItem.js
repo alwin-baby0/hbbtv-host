@@ -220,7 +220,7 @@ export default class GalleryItem extends Lightning.Component {
           texture: Lightning.Tools.getRoundRect(
             200,
             100,
-            15,
+            20,
             4,
             Colors(colors.white).get(),
             true,
