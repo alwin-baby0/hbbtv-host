@@ -1,13 +1,12 @@
 import FetchingService from '../FetchingService';
 import { SimpleRailItem } from '../../Models';
 import { V2 } from '../utils';
-import { imageSizes } from '../../constants/globalConstants';
 import {
   parseBannerData,
   parseHomePageHeroSection,
   parseHomePageRailData,
 } from '../../Models/parsers';
-import { API_METHODS, API_URLS } from '../../constants/globalConstants';
+import { API_METHODS, API_URLS, imageSizes } from '../../constants/globalConstants';
 
 class HomePageService extends FetchingService {
   #heroSectionItems;

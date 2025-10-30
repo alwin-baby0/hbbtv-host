@@ -1,9 +1,8 @@
 import { Colors, Utils, Lightning } from '@lightningjs/sdk';
-import { CARD_SIZES } from '../../constants/globalConstants';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
-import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class LandscapeRailItem extends FocusableItem {
   _props = {

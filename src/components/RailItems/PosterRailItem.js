@@ -1,9 +1,8 @@
-import { CARD_SIZES } from '../../constants/globalConstants';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 
 import { Utils, Router, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
-import { IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 
 export default class PosterRailItem extends FocusableItem {

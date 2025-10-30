@@ -505,3 +505,15 @@ export const FILTER_TYPES = {
   SERIES: 'series',
   SPORTS: 'sports',
 };
+
+export const CONTENT_TYPE = {
+  CATEGORIES: '_Categories',
+  EVENTS: '_LiveEvents',
+  EMPTY: 'empty',
+};
+
+export const VOD_PREVIEW_TYPES = {
+  MOVIES: 'movies',
+  SERIES: 'series',
+  SPORTS: 'sports',
+};

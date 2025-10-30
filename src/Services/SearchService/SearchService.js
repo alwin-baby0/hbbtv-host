@@ -1,8 +1,7 @@
 import { SimpleRailItem } from '../../Models';
-import { API_URLS, RAIL_TYPES } from '../../constants/globalConstants';
+import { API_URLS, RAIL_TYPES, CARD_TYPES, API_METHODS } from '../../constants/globalConstants';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
-import { CARD_TYPES, API_METHODS } from '../../constants/globalConstants';
 
 export default class SearchService extends FetchingService {
   getSearch = async (keyword, category) =>

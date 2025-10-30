@@ -1,16 +1,8 @@
-import { CARD_SIZES } from '../../constants/globalConstants';
-
 import { railItemConstructor } from './railItems';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { EPGService } from '../../Services';
 import Empty from '../LiveTV/components/Empty';
-import { CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
-
-export const VOD_PREVIEW_TYPES = {
-  MOVIES: 'movies',
-  SERIES: 'series',
-  SPORTS: 'sports',
-};
+import { CARD_TYPES, RAIL_TYPES, CARD_SIZES } from '../../constants/globalConstants';
 
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,

@@ -1,6 +1,6 @@
-import { imageSizes } from '../../../constants/globalConstants';
+import { imageSizes, VOD_PREVIEW_TYPES } from '../../../constants/globalConstants';
 import { VodService, DetailService } from '../../../Services';
-import { VOD_PREVIEW_TYPES, constructRails } from '../../utils';
+import { constructRails } from '../../utils';
 
 export default async function (page, { eventId }) {
   const galleryItem = await DetailService.getEvent(eventId);

@@ -1,8 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Button from './components/Button';
-import { CONTENT_TYPE } from '../../components/VodContentContainer/VodContentContainer';
-import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
+import { IMG_PATH, ROUTES, CONTENT_TYPE } from '../../constants/globalConstants';
 
 export default class Filtered extends Lightning.Component {
   static _template() {

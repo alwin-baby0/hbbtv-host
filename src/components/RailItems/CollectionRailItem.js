@@ -1,10 +1,9 @@
-import { CARD_SIZES } from '../../constants/globalConstants';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 
 import { Utils, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import colors from '../../../reskin/colors.json';
 import Image from '../Image/Image';
-import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class CollectionRailItem extends FocusableItem {
   _props = {
