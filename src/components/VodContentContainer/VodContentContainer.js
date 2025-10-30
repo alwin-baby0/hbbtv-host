@@ -3,12 +3,6 @@ import CategoryPicker from '../CategoryPicker/CategoryPicker';
 import VerticalContainer from '../VerticalContainer/VerticalContainer';
 import { CONTENT_TYPE } from '../../constants/globalConstants';
 
-// export const CONTENT_TYPE = {
-//   CATEGORIES: '_Categories',
-//   EVENTS: '_LiveEvents',
-//   EMPTY: 'empty',
-// };
-
 export default class VodContentContainer extends Lightning.Component {
   _props = {
     contentType: CONTENT_TYPE.EMPTY,
