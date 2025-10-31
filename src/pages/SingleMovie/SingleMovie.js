@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
-import { CMPService, DetailService, t } from '../../Services';
+import { CMPService, DetailService, t, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
 import {
@@ -394,9 +394,9 @@ export default class SingleMovie extends Lightning.Component {
     try {
       const { movie, movieTrailerUrl } = this._props;
       if (movie.is_favorite) {
-        await CMPService.removeFromFavorites(movie.id);
+        await UserService.removeFromFavorites(movie.id);
       } else {
-        await CMPService.addToFavorites(movie.id, 'video');
+        await UserService.addToFavorites(movie.id, 'video');
       }
       this._props.movie.is_favorite = !this._props.movie.is_favorite;
 

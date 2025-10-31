@@ -6,7 +6,7 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { CMPService, t } from '../../Services';
+import { t, UserService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import {
   convertCueTimeToSeconds,
@@ -895,14 +895,14 @@ export default class Player extends Lightning.Component {
     if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._props.seriesID) {
-          CMPService.addRecentlyWatched(
+          UserService.addRecentlyWatched(
             this._props.videoId,
             'series',
             VideoPlayer.currentTime,
             this._props.seriesID
           );
         } else {
-          CMPService.addRecentlyWatched(
+          UserService.addRecentlyWatched(
             this._props.videoId,
             VIDEO_TYPES.VIDEO,
             VideoPlayer.currentTime
@@ -1101,7 +1101,7 @@ export default class Player extends Lightning.Component {
   }
 
   $videoPlayerEnded() {
-    CMPService.deleteRecentlyWatched(this._props.videoId);
+    UserService.deleteRecentlyWatched(this._props.videoId);
     this.closeVideoPlayer();
 
     eventTrackPayload(EVENT_NAMES.VIDEO_END, this._props.videoId);

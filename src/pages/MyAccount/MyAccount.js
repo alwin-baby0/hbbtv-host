@@ -1,7 +1,7 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import { CMPService, t } from '../../Services';
+import { AuthorizationService, t, UserService } from '../../Services';
 import qrcode from 'qrcode';
 import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
@@ -107,7 +107,7 @@ export default class MyAccount extends Lightning.Component {
   }
 
   _disable() {
-    CMPService.clearPollingInterval();
+    AuthorizationService.clearPollingInterval();
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
     this._props.hasMoreFav = true;
     this._props.favoritesPage = 1;
@@ -142,7 +142,7 @@ export default class MyAccount extends Lightning.Component {
     if (refName === 'RecentlyWatched') {
       if (index === this._RecentlyWatched.Items.children.length - 1 && this._props.hasMoreRcw) {
         this._props.recentlyWPage++;
-        const rcw = await CMPService.getRecentlyWatched(this._props.recentlyWPage);
+        const rcw = await UserService.getRecentlyWatched(this._props.recentlyWPage);
 
         if (rcw.data.recently_watched.length < 8) {
           this._props.hasMoreRcw = false;
@@ -164,15 +164,15 @@ export default class MyAccount extends Lightning.Component {
     if (refName === 'Favorites') {
       if (index === this._Favorites.Items.children.length - 1 && this._props.hasMoreFav) {
         this._props.favoritesPage++;
-        const faovrites = await CMPService.getFavorites(this._props.favoritesPage);
+        const favorites = await UserService.getFavorites(this._props.favoritesPage);
 
-        if (faovrites.data.favorites.length < 8) {
+        if (favorites.data.favorites.length < 8) {
           this._props.hasMoreFav = false;
         }
 
         const parsedMovies = parseVodMoviesPageData({
           data: {
-            entry: faovrites.data.favorites,
+            entry: favorites.data.favorites,
           },
           itemsPerRow: 4,
         });
@@ -199,10 +199,10 @@ export default class MyAccount extends Lightning.Component {
         RecentlyWatched: undefined,
         y: 225,
       });
-      CMPService.clearPollingInterval();
+      AuthorizationService.clearPollingInterval();
       window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
       if (contentId === 0) {
-        const response = await CMPService.getDeviceCode();
+        const response = await AuthorizationService.getDeviceCode();
 
         const device_code = response.data.device_code;
         const verification_uri = response.data.verification_uri;
@@ -210,7 +210,7 @@ export default class MyAccount extends Lightning.Component {
         window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
 
         if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-          await CMPService.setDeviceCodeStatusInterval(device_code);
+          await AuthorizationService.setDeviceCodeStatusInterval(device_code);
           const qrCode = verification_uri.url;
 
           qrcode.toDataURL(qrCode).then((image) => {
@@ -285,7 +285,7 @@ export default class MyAccount extends Lightning.Component {
             });
           });
         } else {
-          const recentlyWatched = await CMPService.getRecentlyWatched();
+          const recentlyWatched = await UserService.getRecentlyWatched();
 
           const parsedMovies = parseVodUserContentData({
             data: {
@@ -297,7 +297,9 @@ export default class MyAccount extends Lightning.Component {
                 ? recentlyWatched.data.recently_watched.length
                 : 0,
           });
-          const favorites = await CMPService.getFavorites();
+
+          const favorites = await UserService.getFavorites();
+
           const parsedFavorites = parseVodUserContentData({
             data: {
               railTitle: t(TRANSLATIONS.FAVORITES),
@@ -342,11 +344,10 @@ export default class MyAccount extends Lightning.Component {
                 props: {
                   items: parsedMovies,
                   parentState: 'UserRecentlyWatched',
-                  railTitle:
-                    !recentlyWatched?.data?.recently_watched ||
-                    recentlyWatched?.data?.recently_watched?.length === 0
-                      ? t(TRANSLATIONS.NO_CONTINUE_WATCHING)
-                      : '',
+                  ...((!recentlyWatched?.data?.recently_watched ||
+                    recentlyWatched?.data?.recently_watched?.length === 0) && {
+                    railTitle: t(TRANSLATIONS.NO_CONTINUE_WATCHING),
+                  }),
                 },
               },
               Favorites: {
@@ -356,9 +357,9 @@ export default class MyAccount extends Lightning.Component {
                 props: {
                   items: parsedFavorites,
                   parentState: 'UserFavorites',
-                  railTitle: !(favorites?.data?.favorites?.length > 0)
-                    ? t(TRANSLATIONS.NO_FAVORITES)
-                    : '',
+                  ...((!favorites?.data?.favorites || favorites?.data?.favorites?.length === 0) && {
+                    railTitle: t(TRANSLATIONS.NO_FAVORITES),
+                  }),
                 },
               },
             },
@@ -367,7 +368,8 @@ export default class MyAccount extends Lightning.Component {
       } else if (contentId === 1) {
         this._props.hasMoreRcw = true;
         this._props.recentlyWPage = 1;
-        const recentlyWatched = await CMPService.getRecentlyWatched();
+        const recentlyWatched = await UserService.getRecentlyWatched();
+
         const parsedMovies = parseVodMoviesPageData({
           data: {
             entry: recentlyWatched.data.recently_watched,
@@ -386,22 +388,24 @@ export default class MyAccount extends Lightning.Component {
               items: constructRails(parsedMovies),
               h: 920,
               parentState: 'RecentlyWatched',
-              railTitle: !(recentlyWatched?.data?.recently_watched?.length > 0)
-                ? t(TRANSLATIONS.NO_CONTINUE_WATCHING)
-                : '',
+              ...((!recentlyWatched?.data?.recently_watched ||
+                recentlyWatched?.data?.recently_watched?.length === 0) && {
+                railTitle: t(TRANSLATIONS.NO_CONTINUE_WATCHING),
+              }),
             },
           },
         });
       } else if (contentId === 2) {
         this._props.hasMoreFav = true;
         this._props.favoritesPage = 1;
-        const favorites = await CMPService.getFavorites();
+        const favorites = await UserService.getFavorites();
         const parsedMovies = parseVodMoviesPageData({
           data: {
             entry: favorites.data.favorites,
           },
           itemsPerRow: 4,
         });
+
         this._Content.patch({
           QRContainer: undefined,
           Favorites: {
@@ -413,16 +417,18 @@ export default class MyAccount extends Lightning.Component {
               items: constructRails(parsedMovies),
               h: 920,
               parentState: 'Favorites',
-              railTitle: !(favorites?.data?.favorites?.length > 0)
-                ? t(TRANSLATIONS.NO_FAVORITES)
-                : '',
+              ...((!favorites?.data?.favorites || favorites?.data?.favorites?.length === 0) && {
+                railTitle: t(TRANSLATIONS.NO_FAVORITES),
+              }),
             },
           },
         });
       } else if (contentId === 3) {
-        CMPService.revokeToken(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA).access_token);
+        AuthorizationService.revokeToken(
+          localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA).access_token
+        );
         localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        CMPService.clearPollingInterval();
+        AuthorizationService.clearPollingInterval();
         this.$setFocus(0);
         this._Column._removeLastItems(3);
         this.$changeContent(0);
