@@ -13,11 +13,6 @@ export default class UserRecentlyWatched extends Lightning.Component {
         collision: true,
         type: VerticalContainer,
         w: 1450,
-        h: 500,
-        props: {
-          h: 920,
-          w: 1450,
-        },
       },
     };
   }
@@ -29,9 +24,13 @@ export default class UserRecentlyWatched extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     this._RecentlyWatched.patch({
+      h: !this._props.items || !this._props.items.length ? 95 : 500,
       props: {
         items: constructRails(this._props.items),
         parentState: this._props.parentState,
+        railTitle: this._props.railTitle,
+        h: !this._props.items || !this._props.items.length ? 0 : 920,
+        w: 1450,
       },
     });
   }

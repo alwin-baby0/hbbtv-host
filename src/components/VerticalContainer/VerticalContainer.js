@@ -18,6 +18,7 @@ export default class VerticalContainer extends Lightning.Component {
         flex: {
           direction: 'column',
         },
+        visible: true,
       },
     };
   }
@@ -38,8 +39,26 @@ export default class VerticalContainer extends Lightning.Component {
    * @param {{ items: any[]; carryRowPosition: boolean; }} props
    */
   set props(props) {
-    let { items, ...rest } = props;
+    let { items, railTitle, ...rest } = props;
     this._props = { ...this._props, ...rest };
+
+    if (railTitle && railTitle !== '') {
+      const { h } = rest;
+      this.patch({
+        h: h + 95,
+        Title: {
+          x: 9,
+          y: 10,
+          h: 55,
+          text: {
+            text: railTitle,
+            fontFace: 'Montserrat-Bold',
+            fontSize: 32,
+            lineHeight: 39,
+          },
+        },
+      });
+    }
 
     if (items !== this._props.items) {
       items &&
@@ -57,6 +76,7 @@ export default class VerticalContainer extends Lightning.Component {
 
       this._focusedIndex = -1;
       this.Items.y = 0;
+      this.Items.visible = true;
 
       this.Items.childList.clear();
       if (items?.length > 0) {
@@ -67,6 +87,13 @@ export default class VerticalContainer extends Lightning.Component {
 
       this._focusedIndex = items && items.length > 0 ? 0 : -1;
       this._scrollPosition = 0;
+    }
+
+    if (!items || !items.length) {
+      this.patch({
+        h: 95,
+        Items: { h: 0, visible: false },
+      });
     }
   }
 
