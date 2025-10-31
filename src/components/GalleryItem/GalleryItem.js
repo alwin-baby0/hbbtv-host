@@ -2,6 +2,7 @@ import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import Button from '../Button/Button';
 import { DetailService, t } from '../../Services';
+import { capitalizeFirstLetter } from '../../utils';
 import {
   IMG_PATH,
   ROUTES,
@@ -9,6 +10,7 @@ import {
   VIDEO_TYPES,
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
+
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -16,34 +18,62 @@ export default class GalleryItem extends Lightning.Component {
   static _template() {
     return {
       w: 1920,
+      h: 1080,
       BackgroundImage: {
-        w: 1420,
+        w: 1920,
+        h: 1080,
       },
       GradientOverlay: {
         zIndex: 1,
         w: 1920,
+        h: 1080,
       },
       Info: {
         zIndex: 2,
-        x: 110,
-        y: 110,
-        w: 740,
+        x: 100,
+        y: 300,
+        w: 1000,
+        h: 500,
         flex: { direction: 'column' },
+        Badge: {
+          rect: true,
+          h: 100,
+          flex: {
+            direction: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          flexItem: {
+            marginBottom: 50,
+            minHeight: 50,
+          },
+          Text: {
+            flexItem: {
+              alignSelf: 'center',
+            },
+            text: {
+              text: 'Home',
+              fontSize: 24,
+              fontFace: 'Montserrat-Regular',
+              textColor: Colors(colors.white).get(),
+            },
+          },
+        },
         Date: {
           w: 698,
           h: 30,
           text: {
-            fontSize: 24,
+            fontSize: 32,
             fontFace: 'Montserrat-Regular',
             textColor: Colors('#A61619').get(),
           },
         },
         Title: {
           w: 750,
-          h: 40,
+          h: 80,
           text: {
             fontFace: 'Montserrat-Bold',
-            fontSize: 32,
+            fontSize: 48,
             maxLines: 1,
           },
         },
@@ -58,13 +88,15 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         Description: {
+          w: 900,
+          h: 350,
           flexItem: {
-            marginTop: 10,
+            marginTop: 5,
             marginBottom: 5,
           },
           text: {
             textColor: Colors(colors.sliderDescription).get(),
-            wordWrapWidth: 650,
+            wordWrapWidth: 850,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
@@ -119,7 +151,6 @@ export default class GalleryItem extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
-      height,
       enabled,
       firstEpisodeVideoId,
       firstEpisodeUrl,
@@ -128,35 +159,35 @@ export default class GalleryItem extends Lightning.Component {
       isDeeplinkEpisode,
       seriesId,
       ssai,
+      badgeText,
     } = this._props;
 
     const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
       galleryItem;
 
-    this._Info.patch({
-      h: height,
-    });
-
     if (videoType !== 'application/x-mpegURL') {
       this._Info.patch({
-        Date: undefined,
-        Venue: undefined,
+        Date: { visible: false },
+        Venue: { visible: false },
       });
       galleryItem.summary &&
         this._Summary?.patch({
+          ...(summary ?? { visible: false }),
           text: {
             text: summary,
           },
         });
     } else {
       this._Info.patch({
-        Summary: undefined,
+        Summary: { visible: false },
         Date: {
+          ...(summary ?? { visible: false }),
           text: {
             text: summary,
           },
         },
         Venue: {
+          ...(venue ?? { visible: false }),
           text: {
             text: venue,
           },
@@ -174,20 +205,33 @@ export default class GalleryItem extends Lightning.Component {
         return src;
       } else if (fallbackImage) {
         return fallbackImage;
-      } else return Utils.asset(IMG_PATH.GRADIENT);
+      } else return Utils.asset(IMG_PATH.GRADIENT_SVG);
     };
 
     this.patch({
       BackgroundImage: {
-        w: 1220,
-        h: height,
-        x: 700,
         src: bgImageSrc(),
       },
       GradientOverlay: {
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, height),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
       },
       Info: {
+        Badge: {
+          texture: Lightning.Tools.getRoundRect(
+            200,
+            100,
+            20,
+            4,
+            Colors(colors.white).get(),
+            true,
+            Colors('#4a4a49').get()
+          ),
+          Text: {
+            text: {
+              text: capitalizeFirstLetter(badgeText),
+            },
+          },
+        },
         Title: {
           text: {
             text: title,
