@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import { CMPService, DetailService, t } from '../../Services';
+import { CMPService, DetailService, t, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
 import {
@@ -74,9 +74,9 @@ export default class SingleSeries extends Lightning.Component {
     try {
       const { favorited, seriesId } = this._props;
       if (favorited) {
-        await CMPService.removeFromFavorites(seriesId);
+        await UserService.removeFromFavorites(seriesId);
       } else {
-        await CMPService.addToFavorites(seriesId, VOD_PREVIEW_TYPES.SERIES);
+        await UserService.addToFavorites(seriesId, VOD_PREVIEW_TYPES.SERIES);
       }
 
       this._props.favorited = !this._props.favorited;

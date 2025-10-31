@@ -8,3 +8,5 @@ export * from './LanguageService';
 export * from './SettingsService';
 export * from './SearchService';
 export * from './CountryService';
+export * from './AuthorizationService';
+export * from './UserService';
