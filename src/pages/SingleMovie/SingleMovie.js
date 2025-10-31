@@ -1,4 +1,4 @@
-import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils, Colors } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
 import { imageSizes } from '../../Models/utils';
 import { CMPService, DetailService, t } from '../../Services';
@@ -12,6 +12,7 @@ import {
 } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import colors from '../../../reskin/colors.json';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
 
@@ -113,103 +114,117 @@ export default class SingleMovie extends Lightning.Component {
               },
               y: 42,
             },
-            AgeRating: {
-              w: 700,
-              y: 160,
-              flex: { direction: 'row', alignItems: 'center' },
-              Title: {
-                w: 150,
-                h: 90,
-                text: {
-                  text: '',
-                  fontSize: 22,
-                  lineHeight: 34,
-                  fontFace: 'Montserrat-SemiBold',
-                },
-              },
-              TextValue: {
+            Metadata: {
+              flex: { direction: 'column' },
+              y: 210,
+              AgeRating: {
                 w: 700,
-                h: 90,
-                text: {
-                  text: '',
-                  fontSize: 22,
-                  lineHeight: 34,
-                  fontFace: 'Montserrat-Regular',
+                h: 30,
+                flex: { direction: 'row', alignItems: 'center' },
+                Title: {
+                  w: 150,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-SemiBold',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+                TextValue: {
+                  w: 700,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-Regular',
+                    textColor: Colors(colors.metadata).get(),
+                  },
                 },
               },
-            },
-            Genre: {
-              w: 700,
-              y: 100,
-              flex: { direction: 'row', alignItems: 'center' },
-              Title: {
-                w: 90,
-                h: 90,
-                text: {
-                  text: '',
-                  fontSize: 22,
-                  lineHeight: 34,
-                  fontFace: 'Montserrat-SemiBold',
-                },
-              },
-              TextValue: {
+              Genre: {
                 w: 700,
-                h: 90,
-                text: {
-                  text: '',
-                  fontSize: 22,
-                  lineHeight: 34,
-                  fontFace: 'Montserrat-Regular',
+                h: 30,
+                flex: { direction: 'row', alignItems: 'center' },
+                Title: {
+                  w: 90,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-SemiBold',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+                TextValue: {
+                  w: 700,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-Regular',
+                    textColor: Colors(colors.metadata).get(),
+                  },
                 },
               },
-            },
-            Cast: {
-              w: 700,
-              y: 40,
-              flex: { direction: 'row', alignItems: 'center' },
-              Title: {
-                w: 90,
-                h: 90,
-                text: {
-                  text: '',
-                  fontSize: 22,
-                  lineHeight: 34,
-                  fontFace: 'Montserrat-SemiBold',
-                },
-              },
-              TextValue: {
+              Cast: {
                 w: 700,
-                h: 90,
-                text: {
-                  text: '',
-                  fontSize: 22,
-                  lineHeight: 34,
-                  fontFace: 'Montserrat-Regular',
+                h: 30,
+                flex: { direction: 'row', alignItems: 'center' },
+                Title: {
+                  w: 90,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-SemiBold',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+                TextValue: {
+                  w: 700,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-Regular',
+                    wordWrapWidth: 650,
+                    maxLines: 1,
+                    textColor: Colors(colors.metadata).get(),
+                  },
                 },
               },
-            },
-            Director: {
-              w: 700,
-              y: 50,
-              flex: { direction: 'row', alignItems: 'center' },
-              Title: {
-                w: 100,
-                h: 90,
-                text: {
-                  text: '',
-                  fontSize: 22,
-                  lineHeight: 34,
-                  fontFace: 'Montserrat-SemiBold',
-                },
-              },
-              TextValue: {
+              Director: {
                 w: 700,
-                h: 90,
-                text: {
-                  text: '',
-                  fontSize: 22,
-                  lineHeight: 34,
-                  fontFace: 'Montserrat-Regular',
+                h: 30,
+                flex: { direction: 'row', alignItems: 'center' },
+                Title: {
+                  w: 100,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-SemiBold',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+                TextValue: {
+                  w: 700,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-Regular',
+                    textColor: Colors(colors.metadata).get(),
+                  },
                 },
               },
             },
@@ -319,55 +334,57 @@ export default class SingleMovie extends Lightning.Component {
                 text: description,
               },
             },
-            AgeRating: {
-              Title: {
-                text: {
-                  text: 'Age Rating:',
+            Metadata: {
+              AgeRating: {
+                Title: {
+                  text: {
+                    text: 'Age Rating:',
+                  },
+                },
+                TextValue: {
+                  text: {
+                    text: rating,
+                  },
                 },
               },
-              TextValue: {
-                text: {
-                  text: rating,
+              Genre: {
+                Title: {
+                  text: {
+                    text: 'Genre:',
+                  },
+                },
+                TextValue: {
+                  text: {
+                    text: genre,
+                  },
                 },
               },
-            },
-            Genre: {
-              Title: {
-                text: {
-                  text: 'Genre:',
+              Director: {
+                Title: {
+                  text: {
+                    text: tDirTitle,
+                  },
                 },
-              },
-              TextValue: {
-                text: {
-                  text: genre,
+                TextValue: {
+                  text: {
+                    text: dirText,
+                  },
                 },
+                visible: splitDirector[1] ? true : false,
               },
-            },
-            Director: {
-              Title: {
-                text: {
-                  text: tDirTitle,
+              Cast: {
+                Title: {
+                  text: {
+                    text: tcastTitle,
+                  },
                 },
-              },
-              TextValue: {
-                text: {
-                  text: dirText,
+                TextValue: {
+                  text: {
+                    text: castText,
+                  },
                 },
+                visible: splitCast[1] ? true : false,
               },
-              visible: splitDirector[1] ? true : false,
-            },
-            Cast: {
-              Title: {
-                text: {
-                  text: tcastTitle,
-                },
-              },
-              TextValue: {
-                text: {
-                  text: castText,
-                },
-              },
-              visible: splitCast[1] ? true : false,
             },
           },
         },

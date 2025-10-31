@@ -129,9 +129,10 @@ export default class GalleryItem extends Lightning.Component {
         },
         Metadata: {
           flex: { direction: 'column' },
+          y: 20,
           AgeRating: {
             w: 700,
-            y: 0,
+            h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
               w: 150,
@@ -141,6 +142,7 @@ export default class GalleryItem extends Lightning.Component {
                 fontSize: 22,
                 lineHeight: 34,
                 fontFace: 'Montserrat-SemiBold',
+                textColor: Colors(colors.metadata).get(),
               },
             },
             TextValue: {
@@ -151,12 +153,13 @@ export default class GalleryItem extends Lightning.Component {
                 fontSize: 22,
                 lineHeight: 34,
                 fontFace: 'Montserrat-Regular',
+                textColor: Colors(colors.metadata).get(),
               },
             },
           },
           Genre: {
             w: 700,
-            y: -60,
+            h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
               w: 90,
@@ -166,6 +169,7 @@ export default class GalleryItem extends Lightning.Component {
                 fontSize: 22,
                 lineHeight: 34,
                 fontFace: 'Montserrat-SemiBold',
+                textColor: Colors(colors.metadata).get(),
               },
             },
             TextValue: {
@@ -176,12 +180,13 @@ export default class GalleryItem extends Lightning.Component {
                 fontSize: 22,
                 lineHeight: 34,
                 fontFace: 'Montserrat-Regular',
+                textColor: Colors(colors.metadata).get(),
               },
             },
           },
           Cast: {
             w: 700,
-            y: -120,
+            h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
               w: 90,
@@ -191,6 +196,7 @@ export default class GalleryItem extends Lightning.Component {
                 fontSize: 22,
                 lineHeight: 34,
                 fontFace: 'Montserrat-SemiBold',
+                textColor: Colors(colors.metadata).get(),
               },
             },
             TextValue: {
@@ -201,12 +207,15 @@ export default class GalleryItem extends Lightning.Component {
                 fontSize: 22,
                 lineHeight: 34,
                 fontFace: 'Montserrat-Regular',
+                wordWrapWidth: 650,
+                maxLines: 1,
+                textColor: Colors(colors.metadata).get(),
               },
             },
           },
           Director: {
             w: 700,
-            y: -180,
+            h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
               w: 100,
@@ -216,6 +225,7 @@ export default class GalleryItem extends Lightning.Component {
                 fontSize: 22,
                 lineHeight: 34,
                 fontFace: 'Montserrat-SemiBold',
+                textColor: Colors(colors.metadata).get(),
               },
             },
             TextValue: {
@@ -226,6 +236,7 @@ export default class GalleryItem extends Lightning.Component {
                 fontSize: 22,
                 lineHeight: 34,
                 fontFace: 'Montserrat-Regular',
+                textColor: Colors(colors.metadata).get(),
               },
             },
           },
