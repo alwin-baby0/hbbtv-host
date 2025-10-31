@@ -164,15 +164,15 @@ export default class MyAccount extends Lightning.Component {
     if (refName === 'Favorites') {
       if (index === this._Favorites.Items.children.length - 1 && this._props.hasMoreFav) {
         this._props.favoritesPage++;
-        const favorrrr = await UserService.getFavorites(this._props.favoritesPage);
+        const favorites = await UserService.getFavorites(this._props.favoritesPage);
 
-        if (favorrrr.data.favorites.length < 8) {
+        if (favorites.data.favorites.length < 8) {
           this._props.hasMoreFav = false;
         }
 
         const parsedMovies = parseVodMoviesPageData({
           data: {
-            entry: favorrrr.data.favorites,
+            entry: favorites.data.favorites,
           },
           itemsPerRow: 4,
         });
