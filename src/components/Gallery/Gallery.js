@@ -24,10 +24,12 @@ export default class Gallery extends Lightning.Component {
       Bullets: {
         type: HorizontalContainer,
         collision: true,
-        y: 820 - 115,
-        x: 75,
-        w: 1760,
-        h: 215,
+        props: {
+          y: 820 - 115,
+          x: 75,
+          w: 1760,
+          h: 215,
+        },
       },
     };
   }
@@ -47,8 +49,6 @@ export default class Gallery extends Lightning.Component {
 
     this._Bullets.patch({
       props: {
-        w: 1760,
-        h: 215,
         items: parsedItems,
         parentState,
       },
@@ -68,8 +68,8 @@ export default class Gallery extends Lightning.Component {
   }
 
   _enable() {
-    VideoPlayer.position(-3, 700);
-    VideoPlayer.size(1220, 690);
+    VideoPlayer.position(0, 0);
+    VideoPlayer.size(1920, 1080);
     VideoPlayer.consumer(this);
     VideoPlayer.loader(loader);
     VideoPlayer.unloader(unloader);
@@ -92,17 +92,15 @@ export default class Gallery extends Lightning.Component {
     this._sliderIndex = index;
     this._HeroSection.patch({
       props: {
+        badgeText: sliderData.items[index].type.value,
         galleryItem: sliderData.items[index],
-        height: 690,
-        yPos: 215,
       },
     });
 
     this._HeroSection._BackgroundImage.patch({
       visible: true,
-      w: 1220,
-      h: 690,
-      x: 700,
+      w: 1920,
+      h: 1080,
       src: sliderData.items[index].getLandscapePoster(IMAGE_SIZES.S)?.src,
     });
   }

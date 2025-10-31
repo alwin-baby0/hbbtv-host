@@ -115,7 +115,7 @@ export default class App extends Router.App {
   }
 
   $punchHoleTV(x, y, w, h, radius) {
-    if (!x) {
+    if (!x && x !== 0) {
       y = 106;
       x = 1071;
       w = 736;

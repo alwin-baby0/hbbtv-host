@@ -76,9 +76,6 @@ export default class Home extends Lightning.Component {
           parentState: 'Hero',
         },
       });
-      this._HeroSection._HeroSection._Info.patch({
-        y: 150,
-      });
     } else {
       this._setState('Items');
       this.patch({
