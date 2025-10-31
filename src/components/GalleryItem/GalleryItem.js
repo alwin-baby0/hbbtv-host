@@ -292,7 +292,7 @@ export default class GalleryItem extends Lightning.Component {
         });
       this._Subtitle?.patch({
         text: {
-          text: 'US • 2011 • FSK12 • IMDb: 7.1',
+          text: subtitle || 'US • 2011 • FSK12 • IMDb: 7.1',
         },
       });
 
