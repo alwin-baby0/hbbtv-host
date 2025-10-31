@@ -32,6 +32,7 @@ export default class UserFavorites extends Lightning.Component {
       props: {
         items: constructRails(this._props.items),
         parentState: this._props.parentState,
+        railTitle: this._props.railTitle,
       },
     });
   }

@@ -391,6 +391,8 @@ export const TRANSLATIONS = {
   WATCH_FIRST_EPISODE: 'watch_first_episode',
   WATCH_NOW: 'watch_now',
   YES_EXIT: 'yes_exit',
+  NO_FAVORITES: 'no_favorites',
+  NO_CONTINUE_WATCHING: 'no_continue_watching',
 };
 
 export const IMG_PATH = {

@@ -164,15 +164,15 @@ export default class MyAccount extends Lightning.Component {
     if (refName === 'Favorites') {
       if (index === this._Favorites.Items.children.length - 1 && this._props.hasMoreFav) {
         this._props.favoritesPage++;
-        const favorrrr = await CMPService.getFavorites(this._props.favoritesPage);
+        const faovrites = await CMPService.getFavorites(this._props.favoritesPage);
 
-        if (favorrrr.data.favorites.length < 8) {
+        if (faovrites.data.favorites.length < 8) {
           this._props.hasMoreFav = false;
         }
 
         const parsedMovies = parseVodMoviesPageData({
           data: {
-            entry: favorrrr.data.favorites,
+            entry: faovrites.data.favorites,
           },
           itemsPerRow: 4,
         });
@@ -297,9 +297,7 @@ export default class MyAccount extends Lightning.Component {
                 ? recentlyWatched.data.recently_watched.length
                 : 0,
           });
-
           const favorites = await CMPService.getFavorites();
-
           const parsedFavorites = parseVodUserContentData({
             data: {
               railTitle: t(TRANSLATIONS.FAVORITES),
@@ -336,10 +334,19 @@ export default class MyAccount extends Lightning.Component {
               RecentlyWatched: {
                 type: UserRecentlyWatched,
                 w: 1450,
-                h: 500,
+                h:
+                  !recentlyWatched?.data?.recently_watched ||
+                  recentlyWatched?.data?.recently_watched?.length === 0
+                    ? 95
+                    : 500,
                 props: {
                   items: parsedMovies,
                   parentState: 'UserRecentlyWatched',
+                  railTitle:
+                    !recentlyWatched?.data?.recently_watched ||
+                    recentlyWatched?.data?.recently_watched?.length === 0
+                      ? t(TRANSLATIONS.NO_CONTINUE_WATCHING)
+                      : '',
                 },
               },
               Favorites: {
@@ -349,6 +356,9 @@ export default class MyAccount extends Lightning.Component {
                 props: {
                   items: parsedFavorites,
                   parentState: 'UserFavorites',
+                  railTitle: !(favorites?.data?.favorites?.length > 0)
+                    ? t(TRANSLATIONS.NO_FAVORITES)
+                    : '',
                 },
               },
             },
@@ -358,7 +368,6 @@ export default class MyAccount extends Lightning.Component {
         this._props.hasMoreRcw = true;
         this._props.recentlyWPage = 1;
         const recentlyWatched = await CMPService.getRecentlyWatched();
-
         const parsedMovies = parseVodMoviesPageData({
           data: {
             entry: recentlyWatched.data.recently_watched,
@@ -377,6 +386,9 @@ export default class MyAccount extends Lightning.Component {
               items: constructRails(parsedMovies),
               h: 920,
               parentState: 'RecentlyWatched',
+              railTitle: !(recentlyWatched?.data?.recently_watched?.length > 0)
+                ? t(TRANSLATIONS.NO_CONTINUE_WATCHING)
+                : '',
             },
           },
         });
@@ -390,7 +402,6 @@ export default class MyAccount extends Lightning.Component {
           },
           itemsPerRow: 4,
         });
-
         this._Content.patch({
           QRContainer: undefined,
           Favorites: {
@@ -402,6 +413,9 @@ export default class MyAccount extends Lightning.Component {
               items: constructRails(parsedMovies),
               h: 920,
               parentState: 'Favorites',
+              railTitle: !(favorites?.data?.favorites?.length > 0)
+                ? t(TRANSLATIONS.NO_FAVORITES)
+                : '',
             },
           },
         });
