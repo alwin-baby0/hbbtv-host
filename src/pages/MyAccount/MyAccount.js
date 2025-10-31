@@ -336,10 +336,18 @@ export default class MyAccount extends Lightning.Component {
               RecentlyWatched: {
                 type: UserRecentlyWatched,
                 w: 1450,
-                h: 500,
+                h:
+                  !recentlyWatched?.data?.recently_watched ||
+                  recentlyWatched?.data?.recently_watched?.length === 0
+                    ? 95
+                    : 500,
                 props: {
                   items: parsedMovies,
                   parentState: 'UserRecentlyWatched',
+                  ...((!recentlyWatched?.data?.recently_watched ||
+                    recentlyWatched?.data?.recently_watched?.length === 0) && {
+                    railTitle: t(TRANSLATIONS.NO_CONTINUE_WATCHING),
+                  }),
                 },
               },
               Favorites: {
@@ -349,6 +357,9 @@ export default class MyAccount extends Lightning.Component {
                 props: {
                   items: parsedFavorites,
                   parentState: 'UserFavorites',
+                  ...((!favorites?.data?.favorites || favorites?.data?.favorites?.length === 0) && {
+                    railTitle: t(TRANSLATIONS.NO_FAVORITES),
+                  }),
                 },
               },
             },
@@ -377,6 +388,10 @@ export default class MyAccount extends Lightning.Component {
               items: constructRails(parsedMovies),
               h: 920,
               parentState: 'RecentlyWatched',
+              ...((!recentlyWatched?.data?.recently_watched ||
+                recentlyWatched?.data?.recently_watched?.length === 0) && {
+                railTitle: t(TRANSLATIONS.NO_CONTINUE_WATCHING),
+              }),
             },
           },
         });
@@ -402,6 +417,9 @@ export default class MyAccount extends Lightning.Component {
               items: constructRails(parsedMovies),
               h: 920,
               parentState: 'Favorites',
+              ...((!favorites?.data?.favorites || favorites?.data?.favorites?.length === 0) && {
+                railTitle: t(TRANSLATIONS.NO_FAVORITES),
+              }),
             },
           },
         });
