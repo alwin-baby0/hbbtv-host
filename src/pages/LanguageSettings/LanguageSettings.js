@@ -4,7 +4,6 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
 import { CMPService } from '../../Services';
 import Button from '../../components/Button/Button';
-import { getDeviceInfo } from '../../utils/device';
 import { ROUTES } from '../../constants/globalConstants';
 
 export default class LanguageSettings extends Lightning.Component {
@@ -138,9 +137,6 @@ export default class LanguageSettings extends Lightning.Component {
       Languages: undefined,
     });
     if (contentId === 0) {
-      await CMPService.initialFetch();
-      const serialNumber = getDeviceInfo().serialNumber;
-
       const buttonsResult = CMPService.cmpData?.buttons;
       const cmpTitle = CMPService.cmpData?.title;
       const cmpDescription = CMPService.cmpData?.description;
@@ -163,7 +159,7 @@ export default class LanguageSettings extends Lightning.Component {
             callback: async () => {
               if (value.callback_url) {
                 const chosenValue = btnIndex === 0 ? 1 : 0;
-                await CMPService.selectCMPChoice(serialNumber, chosenValue);
+                await CMPService.selectCMPChoice(this._props.serialNumber, chosenValue);
                 Router.navigate(ROUTES.HOME);
               } else {
                 Router.navigate(ROUTES.CMP_CUSTOMIZE, { options: value.options });
@@ -217,7 +213,6 @@ export default class LanguageSettings extends Lightning.Component {
     } else if (contentId === 1) {
       const { languages } = this._props.languagesData;
       const languagesArr = languages.split(',');
-
       const items = languagesArr.map((language, index) => ({
         type: LanguageButton,
         props: {
