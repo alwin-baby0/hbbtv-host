@@ -27,5 +27,7 @@ export default async function (page, { vodType }) {
     },
     vodType,
     fetchMoreStripes: (index) => VodService.fetchMoreStripes(index),
+    sliderData: VodService.heroSectionItems,
+    fetchMoreHeroStripes: () => VodService.fetchMoreItemsForHeroSection(),
   };
 }

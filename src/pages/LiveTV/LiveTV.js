@@ -405,10 +405,6 @@ export default class LiveTV extends Lightning.Component {
     return this.tag('Column.LiveSection.Player');
   }
 
-  $updateVerticalState(nextState) {
-    this._setState(nextState);
-  }
-
   $handleStateHover(index, stateName = null) {
     if (stateName) {
       this._setState(stateName);
