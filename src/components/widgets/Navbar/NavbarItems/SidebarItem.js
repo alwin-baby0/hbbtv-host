@@ -1,5 +1,6 @@
 import { Colors, Router, Utils, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
+import { ROUTES } from '../../../../constants/globalConstants';
 
 export default class SidebarItem extends Lightning.Component {
   _props = {
@@ -28,11 +29,10 @@ export default class SidebarItem extends Lightning.Component {
       Icon: {
         mountX: 0.5,
         mountY: 0.5,
-        x: (h) => 74 / 2, //60 + 14
+        x: (h) => 74 / 2,
         y: (h) => 74 / 2,
         w: 32,
         h: 32,
-        // color: Colors(colors.unfocus).get(),
         zIndex: 2,
       },
       Title: {
@@ -143,7 +143,7 @@ export default class SidebarItem extends Lightning.Component {
   _handleHover() {
     this._focus();
     this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
-    Router.focusWidget('Menu');
+    Router.focusWidget(ROUTES.MENU_WIDGET);
   }
 
   _handleClick() {

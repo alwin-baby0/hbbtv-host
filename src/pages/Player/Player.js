@@ -6,7 +6,7 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { CMPService, t } from '../../Services';
+import { t, UserService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import {
   convertCueTimeToSeconds,
@@ -19,6 +19,7 @@ import {
   EVENT_NAMES,
   IMG_PATH,
   LOCAL_STORAGE_KEYS,
+  ROUTES,
   TRANSLATIONS,
   VIDEO_TYPES,
 } from '../../constants/globalConstants';
@@ -566,7 +567,7 @@ export default class Player extends Lightning.Component {
                       w: 1920,
                       h: 200,
                       y: 880,
-                      color: 0x66000000, // Semi-transparent black (0x66 is the alpha)
+                      color: 0x66000000,
                     },
                     ProgressBarAd: {
                       type: ProgressBar,
@@ -894,14 +895,18 @@ export default class Player extends Lightning.Component {
     if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._props.seriesID) {
-          CMPService.addRecentlyWatched(
+          UserService.addRecentlyWatched(
             this._props.videoId,
             'series',
             VideoPlayer.currentTime,
             this._props.seriesID
           );
         } else {
-          CMPService.addRecentlyWatched(this._props.videoId, 'video', VideoPlayer.currentTime);
+          UserService.addRecentlyWatched(
+            this._props.videoId,
+            VIDEO_TYPES.VIDEO,
+            VideoPlayer.currentTime
+          );
         }
       }
     }
@@ -920,7 +925,7 @@ export default class Player extends Lightning.Component {
 
     console.log('routerHistory in player back: ', Router.getHistory());
     const router = Router.getHistory().filter(
-      (history) => history.hash != 'splash' && history.hash != 'cmp'
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
     Router.setHistory([...router]);
 
@@ -1096,7 +1101,7 @@ export default class Player extends Lightning.Component {
   }
 
   $videoPlayerEnded() {
-    CMPService.deleteRecentlyWatched(this._props.videoId);
+    UserService.deleteRecentlyWatched(this._props.videoId);
     this.closeVideoPlayer();
 
     eventTrackPayload(EVENT_NAMES.VIDEO_END, this._props.videoId);

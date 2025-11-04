@@ -1,3 +1,10 @@
+export const IMAGE_SIZES = {
+  S: '360',
+  M: '480',
+  L: '720',
+  XL: '1080',
+};
+
 export const VISIBLE_SPORT_COUNTRIES = [
   'de',
   'at',
@@ -274,6 +281,7 @@ export const CATEGORY_TYPES = {
   MOVIE: 'movie',
   SERIES: 'series',
   SPORTS: 'sports',
+  SERIE: 'serie',
   LIVE_TV: 'live',
   CHANNELS: 'channel',
   SERIE: 'genres_series',
@@ -309,7 +317,8 @@ export const RAIL_TYPES = {
 
 export const VIDEO_TYPES = {
   STREAM_NOW: 'Stream now',
-  SERIES: 'Series',
+  SERIES: 'series',
+  VIDEO: 'video',
 };
 
 export const API_URLS = {
@@ -383,38 +392,131 @@ export const TRANSLATIONS = {
   WATCH_FIRST_EPISODE: 'watch_first_episode',
   WATCH_NOW: 'watch_now',
   YES_EXIT: 'yes_exit',
+  NO_FAVORITES: 'no_favorites',
+  NO_CONTINUE_WATCHING: 'no_continue_watching',
 };
 
 export const IMG_PATH = {
-  AD_ICON: 'icons/ad-icon.svg',
+  AD_ICON: 'icons/ad-icon.png',
   BACKGROUND: 'images/background.jpg',
   BACKSPACE: 'backspace.png',
-  BACK_BTN: 'icons/backbtn.svg',
+  BACK_BTN: 'icons/backbtn.png',
   EMPTY_RAIL_PH: 'images/rail-placeholder-empty.png',
-  FAVORITE: 'icons/heart.svg',
-  FAVORITE_FILL: 'icons/heart-filled.svg',
+  FAVORITE: 'icons/heart.png',
+  FAVORITE_FILL: 'icons/heart-filled.png',
   GRADIENT: 'images/gradient.png',
   GRADIENT_SVG: 'icons/home/overlay.png',
   LANDSCAPE_RAIL_PH: 'images/landscape-rail-placeholder.png',
   LANDSCAPE_RAIL_PH_EMPTY: 'images/landscape-rail-placeholder-empty.png',
   LIVE_CHANNEL_BG: 'images/Rectangle.png',
-  LOADING_SCREEN: 'loading-screen.svg',
+  LOADING_SCREEN: 'loading-screen.png',
   LOGO: 'images/navbar/logo.png',
-  NAVBAR_INFO: 'images/navbar/question-mark.svg',
-  NAVBAR_SEARCH: 'images/navbar/search.svg',
-  NAVBAR_SETTINGS: 'images/navbar/settings.svg',
-  NAVBAR_USER: 'images/navbar/user.svg',
-  PLAY_BTN: 'icons/home/play.svg',
-  PLAY_BTN_LIVE: 'icons/livetv/play-button.svg',
-  RIGHT_ARROW: 'icons/arrowRight.svg',
-  LEFT_ARROW: 'icons/arrowLeft.svg',
+  NAVBAR_INFO: 'images/navbar/question-mark.png',
+  NAVBAR_SEARCH: 'images/navbar/search.png',
+  NAVBAR_SETTINGS: 'images/navbar/settings.png',
+  NAVBAR_USER: 'images/navbar/user.png',
+  PLAY_BTN: 'icons/home/play.png',
+  PLAY_BTN_LIVE: 'icons/livetv/play-button.png',
+  RIGHT_ARROW: 'icons/arrowRight.png',
+  LEFT_ARROW: 'icons/arrowLeft.png',
   SPLASH_SCREEN: 'images/splash-screen.png',
   SPINNER: 'images/spinner.svg',
-  TRAILER_ICON: 'icons/movies/trailer-icon.svg',
+  TRAILER_ICON: 'icons/movies/trailer-icon.png',
   BACK_BTN_PLAYER: 'icons/player/commands/back.svg',
   FAST_BACKWARD_PLAYER: '/icons/player/commands/fast-backward.svg',
   FAST_FORWARD_PLAYER: '/icons/player/commands/fast-forward.svg',
   PAUSE_BTN_PLAYER: '/icons/player/commands/pause.svg',
   PLAY_BTN_PLAYER: '/icons/player/commands/play.svg',
   SUBTITLES_PLAYER: '/icons/player/commands/subtitles.svg',
+};
+
+export const ROUTES = {
+  MENU_WIDGET: 'Menu',
+  SPLASH: 'splash',
+  HOME: 'home',
+  LIVE: 'live',
+  SEARCH: 'search',
+  ACC: 'account',
+  HELP: 'help',
+  PLAYER: 'player',
+  CMP: 'cmp',
+  CMP_CUSTOMIZE: 'cmp-customize',
+  LAN_SETTINGS: 'langsettings',
+  COLLECTION: 'collection-details',
+  VOD: 'vod',
+  MOVIE_DETAILS: 'movie-details',
+  SERIES_DETAILS: 'series-details',
+  FILTER_PAGE: 'filterPage',
+  SPORTS_DETAIL: 'sports-details',
+  EVENT_DETAILS: 'event-details',
+};
+
+export const CARD_SIZES = {
+  POSTER: {
+    width: 273,
+    height: 460,
+    container_height: 430,
+    image_width: 273,
+    image_height: 375,
+  },
+  LANDSCAPE: {
+    width: 315,
+    height: 410,
+    container_height: 455,
+    image_width: 315,
+    image_height: 205,
+  },
+  THUMBNAIL: {
+    width: 0,
+    height: 0,
+  },
+  SPORTS: {
+    width: 350,
+    height: 370,
+  },
+  CATEGORY: {
+    height: 75,
+    width: 1740,
+  },
+  EPG_CARD_ITEM: {
+    height: 105,
+  },
+  HERO: {
+    width: 385,
+    height: 215,
+    image_width: 385,
+    image_height: 215,
+  },
+  COLLECTION: {
+    width: 415,
+    height: 285,
+    container_height: 255,
+    image_width: 415,
+    image_height: 230,
+  },
+  BANNER: {
+    width: 1730,
+    height: 300,
+    image_width: 1760,
+    image_height: 260,
+  },
+};
+
+export const FILTER_TYPES = {
+  MOVIE: 'movie',
+  MOVIES: 'movies',
+  SERIES: 'series',
+  SPORTS: 'sports',
+};
+
+export const CONTENT_TYPE = {
+  CATEGORIES: '_Categories',
+  EVENTS: '_LiveEvents',
+  EMPTY: 'empty',
+};
+
+export const VOD_PREVIEW_TYPES = {
+  MOVIES: 'movies',
+  SERIES: 'series',
+  SPORTS: 'sports',
 };

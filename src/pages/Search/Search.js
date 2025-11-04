@@ -6,7 +6,13 @@ import { constructRails } from '../utils';
 import { HomePageService, SearchService, t } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
-import { CARD_TYPES, EVENT_NAMES, RAIL_TYPES, TRANSLATIONS } from '../../constants/globalConstants';
+import {
+  CARD_TYPES,
+  EVENT_NAMES,
+  ROUTES,
+  RAIL_TYPES,
+  TRANSLATIONS,
+} from '../../constants/globalConstants';
 
 const search = {
   items: [],
@@ -236,7 +242,7 @@ export default class Search extends Lightning.Component {
   }
 
   _handleBack() {
-    Router.setHistory([{ hash: 'home', state: null }]);
+    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
 
@@ -279,7 +285,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('menu');
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleDown() {

@@ -1,8 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Button from './components/Button';
-import { CONTENT_TYPE } from '../../components/VodContentContainer/VodContentContainer';
-import { IMG_PATH } from '../../constants/globalConstants';
+import { IMG_PATH, ROUTES, CONTENT_TYPE } from '../../constants/globalConstants';
 
 export default class Filtered extends Lightning.Component {
   static _template() {
@@ -161,7 +160,7 @@ export default class Filtered extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('Menu');
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleDown() {
@@ -248,7 +247,7 @@ export default class Filtered extends Lightning.Component {
 
         _handleUp() {
           if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
-            Router.focusWidget('Menu');
+            Router.focusWidget(ROUTES.MENU_WIDGET);
           } else {
             this._setState('VodContentContainer');
           }

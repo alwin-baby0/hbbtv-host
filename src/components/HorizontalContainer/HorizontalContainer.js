@@ -1,4 +1,3 @@
-// HorizontalContainer.js
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
 import { CARD_TYPES } from '../../constants/globalConstants';
@@ -63,7 +62,6 @@ export default class HorizontalContainer extends Lightning.Component {
 
   set props(props) {
     const { items, railTitle, parentState, ...rest } = props;
-
     this._props = { ...this._props, ...rest, parentState };
 
     const { cardType, targetIndex } = rest;
@@ -138,7 +136,6 @@ export default class HorizontalContainer extends Lightning.Component {
       if (!currentFocus) return;
 
       let isChildLive = false;
-      let scrollOffsetLive = 0;
       if (
         this.Items.children[this._focusedIndex]._props.extensions &&
         this.Items.children[this._focusedIndex]._props.extensions.end_time
@@ -151,8 +148,6 @@ export default class HorizontalContainer extends Lightning.Component {
           this.Items.children[this._focusedIndex]._props.extensions.end_time
         );
         isChildLive = startTime < currentTime && currentTime < endTime;
-
-        scrollOffsetLive = ((currentTime - startTime) / (1000 * 60)) * 8.33 + 10;
       }
 
       const containerFinalWidth = this.finalW;
@@ -247,6 +242,7 @@ export default class HorizontalContainer extends Lightning.Component {
     if (this._focusedIndex >= 0 && this._focusedIndex < items.length) {
       this.Items.children[this._focusedIndex]?._focus();
     }
+    this._reCalibrateScroll();
   }
 
   _unfocus() {

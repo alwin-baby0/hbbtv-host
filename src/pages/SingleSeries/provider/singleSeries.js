@@ -1,5 +1,5 @@
 import { LOCAL_STORAGE_KEYS } from '../../../constants/globalConstants';
-import { DetailService, CMPService } from '../../../Services';
+import { DetailService, UserService } from '../../../Services';
 import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId, cmpShown }) {
@@ -32,7 +32,7 @@ export default async function (page, { seriesId, cmpShown }) {
   let favorited = false;
 
   if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-    const response = await CMPService.getFavorites();
+    const response = await UserService.getFavorites();
 
     favorited = response.data.favorites?.some((element) => element.id === seriesId);
   }

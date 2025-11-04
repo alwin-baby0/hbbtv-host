@@ -1,18 +1,20 @@
 import { Lightning, Router, Utils, Colors } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
-import { imageSizes } from '../../Models/utils';
-import { CMPService, DetailService, t } from '../../Services';
+import { CMPService, DetailService, t, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload } from '../../utils/device';
 import {
   EVENT_NAMES,
   IMG_PATH,
   LOCAL_STORAGE_KEYS,
+  ROUTES,
   TRANSLATIONS,
+  IMAGE_SIZES,
 } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import colors from '../../../reskin/colors.json';
+import { capitalizeFirstLetter } from '../../utils';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
 
@@ -50,12 +52,35 @@ export default class SingleMovie extends Lightning.Component {
           zIndex: 2,
           x: 100,
           y: 120,
-          w: 405,
+          w: 1000,
           h: 1080,
           Info: {
-            w: 205,
+            w: 1000,
             h: 105,
             flex: { direction: 'row', alignItems: 'center' },
+            Badge: {
+              rect: true,
+              h: 55,
+              flex: {
+                direction: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              flexItem: {
+                marginRight: 40,
+              },
+              Text: {
+                flexItem: {
+                  alignSelf: 'center',
+                },
+                text: {
+                  text: 'Home',
+                  fontSize: 24,
+                  fontFace: 'Montserrat-Regular',
+                  textColor: Colors(colors.white).get(),
+                },
+              },
+            },
             Summary: {
               w: 160,
               h: 29,
@@ -285,6 +310,7 @@ export default class SingleMovie extends Lightning.Component {
       cast,
       last_position,
       rating,
+      badgeText,
     } = movie;
 
     const titleLength = title.length;
@@ -304,10 +330,26 @@ export default class SingleMovie extends Lightning.Component {
           texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
         },
         Image: {
-          src: movie.getLandscapePoster(imageSizes.XL)?.src,
+          src: movie.getLandscapePoster(IMAGE_SIZES.XL)?.src,
         },
         Card: {
           Info: {
+            Badge: {
+              texture: Lightning.Tools.getRoundRect(
+                200,
+                55,
+                10,
+                2,
+                Colors(colors.white).get(),
+                true,
+                Colors('#4a4a49').get()
+              ),
+              Text: {
+                text: {
+                  text: capitalizeFirstLetter(badgeText),
+                },
+              },
+            },
             Summary: {
               text: {
                 text: summary,
@@ -472,7 +514,7 @@ export default class SingleMovie extends Lightning.Component {
                 } else if (item.buttonName === 'WATCH NOW') {
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
-                      Router.navigate('player', {
+                      Router.navigate(ROUTES.PLAYER, {
                         videoUrl: result[0]?.content?.src ?? movie[item.stream],
                         duration: duration,
                         videoId: movieId,
@@ -481,12 +523,12 @@ export default class SingleMovie extends Lightning.Component {
                     }
                   );
                 } else if (item.buttonName === 'TRAILER') {
-                  Router.navigate('player', {
+                  Router.navigate(ROUTES.PLAYER, {
                     videoUrl: movieTrailerUrl,
                     videoId: movieTrailerId,
                   });
                 } else if (item.buttonName === 'CONTINUE WATCHING') {
-                  Router.navigate('player', {
+                  Router.navigate(ROUTES.PLAYER, {
                     videoUrl: movie.url,
                     duration: duration,
                     videoId: movieId,
@@ -509,7 +551,11 @@ export default class SingleMovie extends Lightning.Component {
       const currentTimeInMS = Math.floor(Date.now() / 1000);
 
       if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate('cmp', { movieId: this._props.movieId, url: 'movie-details' }, false);
+        Router.navigate(
+          ROUTES.CMP,
+          { movieId: this._props.movieId, url: ROUTES.MOVIE_DETAILS },
+          false
+        );
       }
     }
 
@@ -529,13 +575,13 @@ export default class SingleMovie extends Lightning.Component {
     e.preventDefault();
 
     const routerHistory = Router.getHistory().filter(
-      (history) => history.hash != 'splash' && history.hash != 'cmp'
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
 
     if (routerHistory.length) {
       Router.back();
     } else {
-      Router.navigate('home');
+      Router.navigate(ROUTES.HOME);
     }
   }
 
@@ -543,9 +589,9 @@ export default class SingleMovie extends Lightning.Component {
     try {
       const { movie, movieTrailerUrl } = this._props;
       if (movie.is_favorite) {
-        await CMPService.removeFromFavorites(movie.id);
+        await UserService.removeFromFavorites(movie.id);
       } else {
-        await CMPService.addToFavorites(movie.id, 'video');
+        await UserService.addToFavorites(movie.id, 'video');
       }
       this._props.movie.is_favorite = !this._props.movie.is_favorite;
 

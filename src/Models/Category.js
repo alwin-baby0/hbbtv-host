@@ -1,5 +1,5 @@
 import { Router } from '@lightningjs/sdk';
-import { CATEGORY_TYPES } from '../constants/globalConstants';
+import { CATEGORY_TYPES, FILTER_TYPES, ROUTES } from '../constants/globalConstants';
 
 class Category {
   constructor(data) {
@@ -13,11 +13,11 @@ class Category {
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
-        Router.navigate(`filterPage/${this.id}/movie`, this.data);
+        Router.navigate(`${ROUTES.FILTER_PAGE}/${this.id}/${FILTER_TYPES.MOVIES}`, this.data);
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        Router.navigate(`filterPage/${this.id}/series`, this.data);
+        Router.navigate(`${ROUTES.FILTER_PAGE}/${this.id}/${FILTER_TYPES.SERIES}`, this.data);
         break;
       }
       case CATEGORY_TYPES.LIVE_TV: {
@@ -26,7 +26,7 @@ class Category {
       }
       case CATEGORY_TYPES.CHANNELS: {
         this.changeGenre = this.data;
-        Router.navigate(`live/:${this.id}?`);
+        Router.navigate(`${ROUTES.LIVE}/:${this.id}?`);
         break;
       }
       case CATEGORY_TYPES.SEASON_TABS: {

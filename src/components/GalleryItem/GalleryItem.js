@@ -1,9 +1,15 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import { imageSizes } from '../../Models/utils';
 import Button from '../Button/Button';
 import { DetailService, t } from '../../Services';
-import { IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
+import { capitalizeFirstLetter } from '../../utils';
+import {
+  IMG_PATH,
+  ROUTES,
+  TRANSLATIONS,
+  VIDEO_TYPES,
+  IMAGE_SIZES,
+} from '../../constants/globalConstants';
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -33,11 +39,35 @@ export default class GalleryItem extends Lightning.Component {
         y: 110,
         w: 740,
         flex: { direction: 'column' },
+        Badge: {
+          rect: true,
+          h: 55,
+          flex: {
+            direction: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          flexItem: {
+            marginRight: 40,
+          },
+          Text: {
+            flexItem: {
+              alignSelf: 'center',
+            },
+            text: {
+              text: 'Home',
+              fontSize: 24,
+              fontFace: 'Montserrat-Regular',
+              textColor: Colors(colors.white).get(),
+            },
+          },
+        },
         Date: {
           visible: false,
           w: 750,
           h: 40,
-          y: 30,
+          y: -47,
+          x: 230,
           color: Colors('#cf1c1e').get(),
           rect: true,
           shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
@@ -54,12 +84,14 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         SummSub: {
-          flex: { direction: 'row' },
+          x: 230,
+          y: -43,
+          flex: { direction: 'row', alignItems: 'center' },
           flexItem: {
             marginBottom: 20,
           },
           Summary: {
-            w: 200,
+            w: 150,
             h: 29,
             text: {
               fontSize: 24,
@@ -367,6 +399,7 @@ export default class GalleryItem extends Lightning.Component {
       isDeeplinkEpisode,
       seriesId,
       ssai,
+      badgeText,
       startDate,
     } = this._props;
 
@@ -499,7 +532,7 @@ export default class GalleryItem extends Lightning.Component {
       });
     } else {
       this._Info.patch({
-        Summary: undefined,
+        SummSub: undefined,
         Date: {
           visible: true,
           Text: {
@@ -549,15 +582,15 @@ export default class GalleryItem extends Lightning.Component {
 
     const bgImageSrc = () => {
       let src;
-      if (isDeeplinkEpisode && galleryItem.getThumbnailImage(imageSizes.XL)?.src) {
-        src = galleryItem.getThumbnailImage(imageSizes.XL)?.src;
+      if (isDeeplinkEpisode && galleryItem.getThumbnailImage(IMAGE_SIZES.XL)?.src) {
+        src = galleryItem.getThumbnailImage(IMAGE_SIZES.XL)?.src;
         return src;
-      } else if (galleryItem.getLandscapePoster(imageSizes.XL)?.src) {
-        src = galleryItem.getLandscapePoster(imageSizes.XL)?.src;
+      } else if (galleryItem.getLandscapePoster(IMAGE_SIZES.XL)?.src) {
+        src = galleryItem.getLandscapePoster(IMAGE_SIZES.XL)?.src;
         return src;
       } else if (fallbackImage) {
         return fallbackImage;
-      } else return Utils.asset(IMG_PATH.GRADIENT);
+      } else return Utils.asset(IMG_PATH.GRADIENT_SVG);
     };
 
     this.patch({
@@ -568,9 +601,25 @@ export default class GalleryItem extends Lightning.Component {
         src: bgImageSrc(),
       },
       GradientOverlay: {
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, height),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
       },
       Info: {
+        Badge: {
+          texture: Lightning.Tools.getRoundRect(
+            200,
+            55,
+            10,
+            2,
+            Colors(colors.white).get(),
+            true,
+            Colors('#4a4a49').get()
+          ),
+          Text: {
+            text: {
+              text: capitalizeFirstLetter(badgeText),
+            },
+          },
+        },
         Title: {
           h: titleLength > 28 ? 130 : 90,
           text: {
@@ -597,7 +646,7 @@ export default class GalleryItem extends Lightning.Component {
         if (enabled) {
           callback = () => {
             if (isDeeplinkEpisode) {
-              Router.navigate('player', {
+              Router.navigate(ROUTES.PLAYER, {
                 videoUrl: url,
                 videoId: firstEpisodeVideoId,
                 duration: duration,
@@ -610,12 +659,12 @@ export default class GalleryItem extends Lightning.Component {
             }
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
-                Router.navigate('player', {
+                Router.navigate(ROUTES.PLAYER, {
                   videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
                   episodeTitle: firstEpisodeTitle,
                   videoId: firstEpisodeVideoId,
                   duration: duration,
-                  videoType: 'series',
+                  videoType: VIDEO_TYPES.SERIES,
                   seriesID: seriesId,
                   ssai: result[0].extensions?.ssai ?? ssai,
                 });
@@ -632,7 +681,6 @@ export default class GalleryItem extends Lightning.Component {
             buttonLabel: buttonLabel,
             callback: callback,
             buttonIcon: btnIcon,
-            // parentState: 'GalleryButton',
           },
         });
       })();

@@ -5,7 +5,7 @@ import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinSc
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import { DetailService, t } from './Services';
-import { IMG_PATH, TRANSLATIONS } from './constants/globalConstants';
+import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -87,7 +87,7 @@ export default class App extends Router.App {
   async getMovie(id) {
     const movie = await DetailService.getMovie(id);
     if (movie) {
-      Router.navigate('player', {
+      Router.navigate(ROUTES.PLAYER, {
         videoUrl: movie.url,
         duration: movie.duration,
         videoId: id,
@@ -115,7 +115,7 @@ export default class App extends Router.App {
   }
 
   $punchHoleTV(x, y, w, h, radius) {
-    if (!x) {
+    if (!x && x !== 0) {
       y = 106;
       x = 1071;
       w = 736;

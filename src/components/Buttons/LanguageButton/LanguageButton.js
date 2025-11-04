@@ -2,7 +2,7 @@ import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
 import { createApiCtx } from '../../../Services/utils';
 import axios from 'axios';
-import { languageMapper, LOCAL_STORAGE_KEYS } from '../../../constants/globalConstants';
+import { languageMapper, LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
 
 export default class LanguageButton extends Lightning.Component {
   _props = {
@@ -78,7 +78,7 @@ export default class LanguageButton extends Lightning.Component {
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
     const translations = await this.#getLanguageTranslations(this._props.languageInfo);
     localStorage.setItem('languageTr', JSON.stringify(translations));
-    Router.navigate('home');
+    Router.navigate(ROUTES.HOME);
     window.location.reload();
   }
 
@@ -104,7 +104,7 @@ export default class LanguageButton extends Lightning.Component {
 
   _handleClick() {
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
-    Router.navigate('home');
+    Router.navigate(ROUTES.HOME);
     window.location.reload();
   }
 
