@@ -150,7 +150,7 @@ export default class SidebarItems extends Lightning.Component {
               selected: false,
               index: item.id,
               data: item,
-              extraItemSpacing: item.route === ROUTES.LIVE ? 270 : 20,
+              extraItemSpacing: item.route === ROUTES.LIVE ? (this._visibleSport ? 270 : 480) : 20,
             },
           };
         }),

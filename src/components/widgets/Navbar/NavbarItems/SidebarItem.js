@@ -31,8 +31,8 @@ export default class SidebarItem extends Lightning.Component {
         mountY: 0.5,
         x: (h) => 74 / 2,
         y: (h) => 74 / 2,
-        w: 32,
-        h: 32,
+        w: 40,
+        h: 41,
         zIndex: 2,
       },
       Title: {
