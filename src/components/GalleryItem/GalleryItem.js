@@ -8,6 +8,14 @@ export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
   };
+
+  _countDownInterval = null;
+  _days = 0;
+  _hours = 0;
+  _minutes = 0;
+  _seconds = 0;
+  remaining = 0;
+
   static _template() {
     return {
       w: 1920,
@@ -26,12 +34,23 @@ export default class GalleryItem extends Lightning.Component {
         w: 740,
         flex: { direction: 'column' },
         Date: {
-          w: 698,
-          h: 30,
-          text: {
-            fontSize: 24,
-            fontFace: 'Montserrat-Regular',
-            textColor: Colors('#A61619').get(),
+          visible: false,
+          w: 750,
+          h: 40,
+          y: 30,
+          color: Colors('#cf1c1e').get(),
+          rect: true,
+          shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
+          Text: {
+            h: 30,
+            w: 750,
+            y: 5,
+            text: {
+              fontSize: 24,
+              fontFace: 'Montserrat-Semibold',
+              textColor: Colors('#FFFFFF').get(),
+              textAlign: 'center',
+            },
           },
         },
         SummSub: {
@@ -54,6 +73,96 @@ export default class GalleryItem extends Lightning.Component {
             text: {
               fontSize: 24,
               lineHeight: 30,
+            },
+          },
+        },
+        Countdown: {
+          flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+          flexItem: {
+            marginBottom: 25,
+          },
+          texture: Lightning.Tools.getRoundRect(800, 100, 10, 2, '#FFFFFF', false, false),
+          h: 100,
+          w: 800,
+          Start: {
+            w: 200,
+            x: 50,
+            text: {
+              text: 'Start in:',
+              fontSize: 24,
+              fontFace: 'Montserrat-Semibold',
+            },
+          },
+          Days: {
+            w: 230,
+            flex: { direction: 'row' },
+            Number: {
+              text: {
+                text: '7',
+                fontFace: 'Montserrat-Bold',
+                fontSize: 44,
+              },
+            },
+            Label: {
+              y: 19,
+              text: {
+                text: 'Days',
+                fontSize: 24,
+              },
+            },
+          },
+          Hours: {
+            w: 230,
+            flex: { direction: 'row' },
+            Number: {
+              text: {
+                text: '8',
+                fontSize: 44,
+                fontFace: 'Montserrat-Bold',
+              },
+            },
+            Label: {
+              y: 19,
+              text: {
+                text: 'Hours',
+                fontSize: 24,
+              },
+            },
+          },
+          Mins: {
+            w: 230,
+            flex: { direction: 'row' },
+            Number: {
+              text: {
+                text: '13',
+                fontSize: 44,
+                fontFace: 'Montserrat-Bold',
+              },
+            },
+            Label: {
+              y: 19,
+              text: {
+                text: 'Min',
+                fontSize: 24,
+              },
+            },
+          },
+          Sec: {
+            w: 230,
+            flex: { direction: 'row' },
+            Number: {
+              text: {
+                text: '4',
+                fontSize: 44,
+                fontFace: 'Montserrat-Bold',
+              },
+            },
+            Label: {
+              y: 19,
+              text: {
+                text: 'Sec',
+                fontSize: 24,
+              },
             },
           },
         },
@@ -258,6 +367,7 @@ export default class GalleryItem extends Lightning.Component {
       isDeeplinkEpisode,
       seriesId,
       ssai,
+      startDate,
     } = this._props;
 
     const {
@@ -278,13 +388,38 @@ export default class GalleryItem extends Lightning.Component {
 
     const titleLength = title.length;
 
-    const splitDirector = director.split(':');
-    const splitCast = cast.split(':');
+    const splitDirector = director && director.split(':');
+    const splitCast = cast && cast.split(':');
 
     const tcastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const tDirText = splitDirector[1];
-    const castText = splitCast[1];
+    const tDirText = splitDirector && splitDirector[1];
+    const castText = splitCast && splitCast[1];
+
+    if (videoType === 'application/x-mpegURL') {
+      const targetTimestamp = startDate;
+      this.remaining = targetTimestamp - Date.now();
+
+      console.log('asdf start, remain', startDate, this.remaining);
+
+      const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+
+      this._days = Math.floor(totalSeconds / (24 * 60 * 60));
+      this._hours = Math.floor((totalSeconds % (24 * 60 * 60)) / 3600);
+      this._minutes = Math.floor((totalSeconds % 3600) / 60);
+      this._seconds = totalSeconds % 60;
+
+      if (!this._countDownInterval) {
+        this._countDownInterval = setInterval(() => {
+          this.remaining -= 1000;
+          if (this.remaining <= 0) {
+            this.remaining = 0;
+            clearInterval(this._countDownInterval);
+          }
+          this.updateUI();
+        }, 1000);
+      }
+    }
 
     this._Info.patch({
       h: height,
@@ -294,6 +429,7 @@ export default class GalleryItem extends Lightning.Component {
       this._Info.patch({
         Date: undefined,
         Venue: undefined,
+        Countdown: undefined,
       });
       galleryItem.summary &&
         this._Summary?.patch({
@@ -365,13 +501,47 @@ export default class GalleryItem extends Lightning.Component {
       this._Info.patch({
         Summary: undefined,
         Date: {
-          text: {
-            text: summary,
+          visible: true,
+          Text: {
+            text: {
+              text: summary,
+            },
           },
         },
-        Venue: {
+        /* Venue: {
           text: {
             text: venue,
+          },
+        }, */
+        Countdown: {
+          visible: this.remaining > 0,
+          Days: {
+            Number: {
+              text: {
+                text: this._days,
+              },
+            },
+          },
+          Hours: {
+            Number: {
+              text: {
+                text: this._hours,
+              },
+            },
+          },
+          Mins: {
+            Number: {
+              text: {
+                text: this._minutes,
+              },
+            },
+          },
+          Sec: {
+            Number: {
+              text: {
+                text: this._seconds,
+              },
+            },
           },
         },
       });
@@ -410,7 +580,9 @@ export default class GalleryItem extends Lightning.Component {
         },
         Description: {
           text: {
-            text: description,
+            text:
+              description ||
+              'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse, voluptates exercitationem. Eaque autem molestias vel veniam, vero totam. Ut quia ipsa corporis odit praesentium, aliquam ducimus. Autem quas consectetur corporis.',
           },
         },
       },
@@ -464,6 +636,49 @@ export default class GalleryItem extends Lightning.Component {
           },
         });
       })();
+  }
+
+  updateUI() {
+    const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    console.log(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+
+    this._Info.patch({
+      Countdown: {
+        Days: {
+          Number: {
+            text: {
+              text: days,
+            },
+          },
+        },
+        Hours: {
+          Number: {
+            text: {
+              text: hours,
+            },
+          },
+        },
+        Mins: {
+          Number: {
+            text: {
+              text: minutes,
+            },
+          },
+        },
+        Sec: {
+          Number: {
+            text: {
+              text: seconds,
+            },
+          },
+        },
+      },
+    });
   }
 
   get _GradientOverlay() {
@@ -530,6 +745,11 @@ export default class GalleryItem extends Lightning.Component {
 
   _disable() {
     this._props.enabled = true;
+  }
+
+  _inactive() {
+    clearInterval(this._countDownInterval);
+    this._countDownInterval = null;
   }
 
   $setButtonState(buttonName) {
