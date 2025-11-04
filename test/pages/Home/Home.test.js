@@ -2,7 +2,6 @@ import { TestRenderer } from '@lightningjs/ui-components-test-utils';
 import Home from 'src/pages/Home/Home';
 import homeProvider from 'src/pages/Home/provider/home';
 import { GalleryItem } from 'src/Models/GalleryItem';
-import { MovieRailItem } from 'src/api/models/MovieRailItem';
 
 describe('Home Page', () => {
   let testRenderer;
@@ -69,7 +68,7 @@ describe('Home Page', () => {
       }]
     };
 
-    const railItem = new MovieRailItem(railItemData);
+    const railItem = new GalleryItem(railItemData);
 
     const mockSliderData = {
       items: [galleryItem]
