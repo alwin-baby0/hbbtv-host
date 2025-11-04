@@ -13,6 +13,8 @@ import {
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
+    infoY: 110,
+    badgeY: 0,
   };
 
   _countDownInterval = null;
@@ -36,10 +38,11 @@ export default class GalleryItem extends Lightning.Component {
       Info: {
         zIndex: 2,
         x: 110,
-        y: 110,
+        y: 310,
         w: 740,
         flex: { direction: 'column' },
         Badge: {
+          y: 0,
           rect: true,
           h: 55,
           flex: {
@@ -401,6 +404,8 @@ export default class GalleryItem extends Lightning.Component {
       ssai,
       badgeText,
       startDate,
+      infoY,
+      badgeY,
     } = this._props;
 
     const {
@@ -455,7 +460,10 @@ export default class GalleryItem extends Lightning.Component {
     }
 
     this._Info.patch({
-      h: height,
+      y: infoY,
+      Badge: {
+        y: badgeY,
+      },
     });
 
     if (videoType !== 'application/x-mpegURL') {

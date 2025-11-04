@@ -50,7 +50,7 @@ export default class SingleMovie extends Lightning.Component {
         },
         Card: {
           zIndex: 2,
-          x: 100,
+          x: 90,
           y: 120,
           w: 1000,
           h: 1080,

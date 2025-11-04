@@ -98,6 +98,8 @@ export default class Gallery extends Lightning.Component {
       props: {
         badgeText: sliderData.items[index].type.value,
         galleryItem: sliderData.items[index],
+        infoY: 310,
+        badgeY: -50,
       },
     });
 
