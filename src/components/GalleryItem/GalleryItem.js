@@ -92,6 +92,7 @@ export default class GalleryItem extends Lightning.Component {
               fontFace: 'Montserrat-Semibold',
               textColor: Colors('#FFFFFF').get(),
               textAlign: 'center',
+              maxLines: 1,
             },
           },
         },
