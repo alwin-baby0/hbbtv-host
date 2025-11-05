@@ -1,4 +1,4 @@
-import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils, Colors } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
 import { CMPService, DetailService, t, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
@@ -13,6 +13,8 @@ import {
 } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import colors from '../../../reskin/colors.json';
+import { capitalizeFirstLetter } from '../../utils';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
 
@@ -25,6 +27,16 @@ export default class SingleMovie extends Lightning.Component {
         collision: true,
         w: 1920,
         h: 1080,
+        GradientOverlay: {
+          w: 1920,
+          zIndex: 2,
+        },
+        Image: {
+          w: 1920,
+          h: 1080,
+          y: 0,
+          zIndex: 1,
+        },
         BackButton: {
           collision: true,
           type: BackBtn,
@@ -34,35 +46,52 @@ export default class SingleMovie extends Lightning.Component {
           props: {
             parentState: 'BackButton',
           },
+          zIndex: 2,
         },
         Card: {
-          x: 70,
+          zIndex: 2,
+          x: 90,
           y: 120,
-          w: 405,
-          h: 725,
-          flex: { direction: 'column' },
+          w: 1000,
+          h: 1080,
           Info: {
-            w: 405,
+            w: 1000,
             h: 105,
-            flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
-            Category: {
-              w: 405,
-              h: 29,
-              text: {
-                fontSize: 24,
-                lineHeight: 30,
+            flex: { direction: 'row', alignItems: 'center' },
+            Badge: {
+              rect: true,
+              h: 55,
+              flex: {
+                direction: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              flexItem: {
+                marginRight: 40,
+              },
+              Text: {
+                flexItem: {
+                  alignSelf: 'center',
+                },
+                text: {
+                  text: 'Home',
+                  fontSize: 24,
+                  fontFace: 'Montserrat-Regular',
+                  textColor: Colors(colors.white).get(),
+                },
               },
             },
             Summary: {
-              w: 405,
+              w: 160,
               h: 29,
               text: {
                 fontSize: 24,
                 lineHeight: 30,
+                fontFace: 'Montserrat-SemiBold',
               },
             },
             Subtitle: {
-              w: 405,
+              w: 400,
               h: 29,
               text: {
                 fontSize: 24,
@@ -70,14 +99,10 @@ export default class SingleMovie extends Lightning.Component {
               },
             },
           },
-          Image: {
-            w: 405,
-            h: 598,
-            y: 22,
-          },
         },
         CardInfo: {
-          x: 670,
+          zIndex: 2,
+          x: 90,
           y: 250,
           flex: { direction: 'column' },
           AboutMovie: {
@@ -85,42 +110,24 @@ export default class SingleMovie extends Lightning.Component {
             h: 720,
             flex: { direction: 'column' },
             Title: {
-              w: 700,
-              h: 40,
+              w: 900,
+              wordWrapWidth: 900,
               text: {
                 text: '',
-                fontSize: 32,
+                fontSize: 59,
                 lineHeight: 34,
                 fontFace: 'Montserrat-SemiBold',
               },
             },
             Description: {
-              w: 700,
+              w: 900,
               y: 24,
               text: {
                 fontSize: 25,
                 lineHeight: 31,
-                maxLines: 8,
-                wordWrapWidth: 700,
+                maxLines: 4,
+                wordWrapWidth: 900,
                 fontFace: 'Montserrat-Regular',
-              },
-            },
-            Director: {
-              w: 700,
-              y: 48,
-              text: {
-                fontSize: 22,
-                lineHeight: 31,
-                fontFace: 'Montserrat-SemiBold',
-              },
-            },
-            Cast: {
-              w: 700,
-              y: 50,
-              text: {
-                fontSize: 22,
-                lineHeight: 31,
-                fontFace: 'Montserrat-SemiBold',
               },
             },
             Buttons: {
@@ -130,7 +137,121 @@ export default class SingleMovie extends Lightning.Component {
               style: {
                 itemSpacing: 100,
               },
-              y: 72,
+              y: 42,
+            },
+            Metadata: {
+              flex: { direction: 'column' },
+              y: 210,
+              AgeRating: {
+                w: 700,
+                h: 30,
+                flex: { direction: 'row', alignItems: 'center' },
+                Title: {
+                  w: 150,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-SemiBold',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+                TextValue: {
+                  w: 700,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-Regular',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+              },
+              Genre: {
+                w: 700,
+                h: 30,
+                flex: { direction: 'row', alignItems: 'center' },
+                Title: {
+                  w: 90,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-SemiBold',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+                TextValue: {
+                  w: 700,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-Regular',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+              },
+              Cast: {
+                w: 700,
+                h: 30,
+                flex: { direction: 'row', alignItems: 'center' },
+                Title: {
+                  w: 90,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-SemiBold',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+                TextValue: {
+                  w: 700,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-Regular',
+                    wordWrapWidth: 650,
+                    maxLines: 1,
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+              },
+              Director: {
+                w: 700,
+                h: 30,
+                flex: { direction: 'row', alignItems: 'center' },
+                Title: {
+                  w: 100,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-SemiBold',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+                TextValue: {
+                  w: 700,
+                  h: 90,
+                  text: {
+                    text: '',
+                    fontSize: 22,
+                    lineHeight: 34,
+                    fontFace: 'Montserrat-Regular',
+                    textColor: Colors(colors.metadata).get(),
+                  },
+                },
+              },
             },
           },
         },
@@ -138,8 +259,11 @@ export default class SingleMovie extends Lightning.Component {
     };
   }
 
-  get _Category() {
-    return this.tag('Category');
+  get _AgeRating() {
+    return this.tag('AgeRating');
+  }
+  get _Genre() {
+    return this.tag('Genre');
   }
   get _Summary() {
     return this.tag('Summary');
@@ -185,21 +309,47 @@ export default class SingleMovie extends Lightning.Component {
       subtitle,
       cast,
       last_position,
+      rating,
     } = movie;
 
-    const splitDirector = director.split(':');
-    const splitCast = cast.split(':');
+    const titleLength = title.length;
 
-    const tdirector = t(TRANSLATIONS.DIRECTOR) + ':' + splitDirector[1];
-    const tcast = t(TRANSLATIONS.CAST) + ':' + splitCast[1];
+    const splitDirector = director && director.split(':');
+    const splitCast = cast && cast.split(':');
+
+    const tAgeR = t(TRANSLATIONS.AGE_RATING) || 'Age Rating';
+    const tGenre = t(TRANSLATIONS.GENRE) || 'Genre';
+    const tCastTitle = t(TRANSLATIONS.CAST) + ':';
+    const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
+    const castText = splitCast && splitCast[1];
+    const dirText = splitDirector && splitDirector[1];
+
+    const badgeText = t(TRANSLATIONS.MOVIES);
 
     this.patch({
       Content: {
+        GradientOverlay: {
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
+        },
+        Image: {
+          src: movie.getLandscapePoster(IMAGE_SIZES.XL)?.src,
+        },
         Card: {
           Info: {
-            Category: {
-              text: {
-                text: genre,
+            Badge: {
+              texture: Lightning.Tools.getRoundRect(
+                200,
+                55,
+                10,
+                2,
+                Colors(colors.white).get(),
+                true,
+                Colors('#4a4a49').get()
+              ),
+              Text: {
+                text: {
+                  text: capitalizeFirstLetter(badgeText),
+                },
               },
             },
             Summary: {
@@ -213,14 +363,13 @@ export default class SingleMovie extends Lightning.Component {
               },
             },
           },
-          Image: {
-            src: movie.getPortraitPoster(IMAGE_SIZES.XL)?.src,
-          },
         },
         CardInfo: {
           AboutMovie: {
             Title: {
+              h: titleLength > 26 ? 130 : 90,
               text: {
+                lineHeight: titleLength > 26 ? 58 : 34,
                 text: title,
               },
             },
@@ -229,17 +378,57 @@ export default class SingleMovie extends Lightning.Component {
                 text: description,
               },
             },
-            Director: {
-              text: {
-                text: tdirector,
+            Metadata: {
+              AgeRating: {
+                Title: {
+                  text: {
+                    text: tAgeR,
+                  },
+                },
+                TextValue: {
+                  text: {
+                    text: rating,
+                  },
+                },
               },
-              visible: splitDirector[1] ? true : false,
-            },
-            Cast: {
-              text: {
-                text: tcast,
+              Genre: {
+                Title: {
+                  text: {
+                    text: tGenre,
+                  },
+                },
+                TextValue: {
+                  text: {
+                    text: genre,
+                  },
+                },
               },
-              visible: splitCast[1] ? true : false,
+              Director: {
+                Title: {
+                  text: {
+                    text: tDirTitle,
+                  },
+                },
+                TextValue: {
+                  text: {
+                    text: dirText,
+                  },
+                },
+                visible: splitDirector[1] ? true : false,
+              },
+              Cast: {
+                Title: {
+                  text: {
+                    text: tCastTitle,
+                  },
+                },
+                TextValue: {
+                  text: {
+                    text: castText,
+                  },
+                },
+                visible: splitCast[1] ? true : false,
+              },
             },
           },
         },
@@ -252,6 +441,7 @@ export default class SingleMovie extends Lightning.Component {
         buttonName: 'WATCH NOW',
         buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
         width: 405,
+        height: 78,
         stream: 'url',
       },
       {
@@ -259,6 +449,7 @@ export default class SingleMovie extends Lightning.Component {
         buttonName: 'TRAILER',
         buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
         width: 405,
+        height: 78,
         stream: 'trailerSrc',
       },
     ];
@@ -271,8 +462,9 @@ export default class SingleMovie extends Lightning.Component {
       filteredButtons.push({
         icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
         buttonName: 'FAVORITE',
-        buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
-        width: 335,
+        buttonLabel: '',
+        width: 100,
+        height: 78,
       });
 
       last_position &&
@@ -281,6 +473,7 @@ export default class SingleMovie extends Lightning.Component {
           buttonName: 'CONTINUE WATCHING',
           buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
           width: 405,
+          height: 78,
         });
     }
 
@@ -305,14 +498,18 @@ export default class SingleMovie extends Lightning.Component {
             type: Button,
             collision: true,
             w: item.width,
+            h: item.height,
             flexItem: {
               marginRight: 30,
             },
             props: {
               width: item.width,
+              height: item.height,
               index,
               buttonLabel: item.buttonLabel,
               buttonIcon: Utils.asset(item.icon),
+              position: item.buttonName === 'CONTINUE WATCHING' ? last_position : 0,
+              duration: duration,
               callback: () => {
                 if (item.buttonName === 'FAVORITE') {
                   this.addToFavorite();
@@ -409,8 +606,9 @@ export default class SingleMovie extends Lightning.Component {
           buttonIcon: Utils.asset(
             this._props.movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE
           ),
-          buttonLabel: t(TRANSLATIONS.FAVORITE)?.toUpperCase(),
-          width: 317,
+          buttonLabel: '',
+          width: 100,
+          height: 78,
         },
       });
     } catch (e) {

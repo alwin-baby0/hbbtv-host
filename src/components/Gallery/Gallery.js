@@ -43,6 +43,10 @@ export default class Gallery extends Lightning.Component {
     this._Info.patch({
       GalleryButton: undefined,
       Summary: undefined,
+      SummSub: undefined,
+      Metadata: {
+        visible: false,
+      },
     });
 
     const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
@@ -94,6 +98,8 @@ export default class Gallery extends Lightning.Component {
       props: {
         badgeText: sliderData.items[index].type.value,
         galleryItem: sliderData.items[index],
+        infoY: 310,
+        badgeY: -50,
       },
     });
 

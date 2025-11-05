@@ -10,15 +10,23 @@ import {
   VIDEO_TYPES,
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
-
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
+    infoY: 110,
+    badgeY: 0,
   };
+
+  _countDownInterval = null;
+  _days = 0;
+  _hours = 0;
+  _minutes = 0;
+  _seconds = 0;
+  remaining = 0;
+
   static _template() {
     return {
       w: 1920,
-      h: 1080,
       BackgroundImage: {
         w: 1920,
         h: 1080,
@@ -26,26 +34,33 @@ export default class GalleryItem extends Lightning.Component {
       GradientOverlay: {
         zIndex: 1,
         w: 1920,
-        h: 1080,
       },
       Info: {
         zIndex: 2,
-        x: 100,
-        y: 300,
-        w: 1000,
-        h: 500,
+        x: 110,
+        y: 310,
+        w: 740,
         flex: { direction: 'column' },
         Badge: {
+          visible: false,
           rect: true,
-          h: 100,
+          texture: Lightning.Tools.getRoundRect(
+            200,
+            55,
+            10,
+            2,
+            Colors(colors.white).get(),
+            true,
+            Colors('#4a4a49').get()
+          ),
+          h: 55,
           flex: {
             direction: 'row',
             alignItems: 'center',
             justifyContent: 'center',
           },
           flexItem: {
-            marginBottom: 50,
-            minHeight: 50,
+            marginRight: 40,
           },
           Text: {
             flexItem: {
@@ -60,47 +75,169 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         Date: {
-          w: 698,
-          h: 30,
-          text: {
-            fontSize: 32,
-            fontFace: 'Montserrat-Regular',
-            textColor: Colors('#A61619').get(),
+          visible: false,
+          w: 750,
+          h: 40,
+          y: -47,
+          x: 230,
+          color: Colors('#cf1c1e').get(),
+          rect: true,
+          shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
+          Text: {
+            h: 30,
+            w: 750,
+            y: 5,
+            text: {
+              fontSize: 24,
+              fontFace: 'Montserrat-Semibold',
+              textColor: Colors('#FFFFFF').get(),
+              textAlign: 'center',
+              maxLines: 1,
+            },
+          },
+        },
+        SummSub: {
+          x: 230,
+          y: -43,
+          flex: { direction: 'row', alignItems: 'center' },
+          flexItem: {
+            marginBottom: 20,
+          },
+          Summary: {
+            w: 165,
+            h: 29,
+            text: {
+              fontSize: 24,
+              lineHeight: 30,
+              fontFace: 'Montserrat-SemiBold',
+            },
+          },
+          Subtitle: {
+            w: 400,
+            h: 29,
+            text: {
+              fontSize: 24,
+              lineHeight: 30,
+            },
+            flexItem: {
+              marginLeft: 10,
+            },
+          },
+        },
+        Countdown: {
+          visible: false,
+          flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+          flexItem: {
+            marginBottom: 25,
+          },
+          texture: Lightning.Tools.getRoundRect(800, 100, 10, 2, '#FFFFFF', false, false),
+          h: 100,
+          w: 800,
+          Start: {
+            w: 200,
+            x: 50,
+            text: {
+              text: 'Start in:',
+              fontSize: 24,
+              fontFace: 'Montserrat-Semibold',
+            },
+          },
+          Days: {
+            w: 230,
+            flex: { direction: 'row' },
+            Number: {
+              text: {
+                text: '7',
+                fontFace: 'Montserrat-Bold',
+                fontSize: 44,
+              },
+            },
+            Label: {
+              y: 19,
+              text: {
+                text: 'Days',
+                fontSize: 24,
+              },
+            },
+          },
+          Hours: {
+            w: 230,
+            flex: { direction: 'row' },
+            Number: {
+              text: {
+                text: '8',
+                fontSize: 44,
+                fontFace: 'Montserrat-Bold',
+              },
+            },
+            Label: {
+              y: 19,
+              text: {
+                text: 'Hours',
+                fontSize: 24,
+              },
+            },
+          },
+          Mins: {
+            w: 230,
+            flex: { direction: 'row' },
+            Number: {
+              text: {
+                text: '13',
+                fontSize: 44,
+                fontFace: 'Montserrat-Bold',
+              },
+            },
+            Label: {
+              y: 19,
+              text: {
+                text: 'Min',
+                fontSize: 24,
+              },
+            },
+          },
+          Sec: {
+            w: 230,
+            flex: { direction: 'row' },
+            Number: {
+              text: {
+                text: '4',
+                fontSize: 44,
+                fontFace: 'Montserrat-Bold',
+              },
+            },
+            Label: {
+              y: 19,
+              text: {
+                text: 'Sec',
+                fontSize: 24,
+              },
+            },
           },
         },
         Title: {
-          w: 750,
-          h: 80,
+          w: 900,
+          wordWrapWidth: 900,
           text: {
-            fontFace: 'Montserrat-Bold',
-            fontSize: 48,
-            maxLines: 1,
-          },
-        },
-        Summary: {
-          flexItem: {
-            marginTop: 10,
-          },
-          text: {
-            textColor: Colors(colors.focus).get(),
-            fontFace: 'Montserrat-Medium',
-            fontSize: 20,
+            text: '',
+            fontSize: 59,
+            lineHeight: 34,
+            fontFace: 'Montserrat-SemiBold',
           },
         },
         Description: {
-          w: 900,
-          h: 350,
           flexItem: {
-            marginTop: 5,
+            marginTop: 10,
             marginBottom: 5,
           },
+          w: 900,
+          h: 150,
           text: {
-            textColor: Colors(colors.sliderDescription).get(),
-            wordWrapWidth: 850,
+            wordWrapWidth: 900,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
-            maxLines: 6,
+            maxLines: 4,
           },
         },
         Venue: {
@@ -119,14 +256,13 @@ export default class GalleryItem extends Lightning.Component {
           flexItem: {
             marginTop: 10,
           },
-          props: {
-            buttonLabel: t(TRANSLATIONS.WATCH_NOW),
-            buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
-          },
         },
         AuthorizedButtons: {
+          x: 445,
+          y: -88,
+          h: 70,
           flex: { direction: 'row' },
-          ContinueWatching: {
+          FavoriteButton: {
             collision: true,
             alpha: 0,
             type: Button,
@@ -134,12 +270,127 @@ export default class GalleryItem extends Lightning.Component {
               marginTop: 10,
             },
           },
-          FavoriteButton: {
+          ContinueWatching: {
             collision: true,
             alpha: 0,
             type: Button,
             flexItem: {
               marginTop: 10,
+              marginLeft: 15,
+            },
+          },
+        },
+        Metadata: {
+          flex: { direction: 'column' },
+          y: 20,
+          AgeRating: {
+            w: 700,
+            h: 30,
+            flex: { direction: 'row', alignItems: 'center' },
+            Title: {
+              w: 150,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
+                textColor: Colors(colors.metadata).get(),
+              },
+            },
+            TextValue: {
+              w: 700,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-Regular',
+                textColor: Colors(colors.metadata).get(),
+              },
+            },
+          },
+          Genre: {
+            w: 700,
+            h: 30,
+            flex: { direction: 'row', alignItems: 'center' },
+            Title: {
+              w: 90,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
+                textColor: Colors(colors.metadata).get(),
+              },
+            },
+            TextValue: {
+              w: 700,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-Regular',
+                textColor: Colors(colors.metadata).get(),
+              },
+            },
+          },
+          Cast: {
+            w: 700,
+            h: 30,
+            flex: { direction: 'row', alignItems: 'center' },
+            Title: {
+              w: 90,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
+                textColor: Colors(colors.metadata).get(),
+              },
+            },
+            TextValue: {
+              w: 700,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-Regular',
+                wordWrapWidth: 650,
+                maxLines: 1,
+                textColor: Colors(colors.metadata).get(),
+              },
+            },
+          },
+          Director: {
+            w: 700,
+            h: 30,
+            flex: { direction: 'row', alignItems: 'center' },
+            Title: {
+              w: 100,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-SemiBold',
+                textColor: Colors(colors.metadata).get(),
+              },
+            },
+            TextValue: {
+              w: 700,
+              h: 90,
+              text: {
+                text: '',
+                fontSize: 22,
+                lineHeight: 34,
+                fontFace: 'Montserrat-Regular',
+                textColor: Colors(colors.metadata).get(),
+              },
             },
           },
         },
@@ -151,6 +402,7 @@ export default class GalleryItem extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
+      height,
       enabled,
       firstEpisodeVideoId,
       firstEpisodeUrl,
@@ -160,36 +412,199 @@ export default class GalleryItem extends Lightning.Component {
       seriesId,
       ssai,
       badgeText,
+      startDate,
+      infoY,
+      badgeY,
     } = this._props;
 
-    const { title, summary, description, buttonLabel, url, duration, videoType, venue } =
-      galleryItem;
+    const {
+      title,
+      summary,
+      description,
+      buttonLabel,
+      url,
+      duration,
+      videoType,
+      venue,
+      subtitle,
+      director,
+      cast,
+      genre,
+      rating,
+    } = galleryItem;
+
+    const titleLength = title.length;
+
+    const splitDirector = director && director.split(':');
+    const splitCast = cast && cast.split(':');
+
+    const tAgeR = t(TRANSLATIONS.AGE_RATING) || 'Age Rating';
+    const tGenre = t(TRANSLATIONS.GENRE) || 'Genre';
+    const tCastTitle = t(TRANSLATIONS.CAST) + ':';
+    const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
+    const castText = splitCast && splitCast[1];
+    const dirText = splitDirector && splitDirector[1];
+
+    if (videoType === 'application/x-mpegURL') {
+      const targetTimestamp = startDate;
+      this.remaining = targetTimestamp - Date.now();
+
+      console.log('asdf start, remain', startDate, this.remaining);
+
+      const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+
+      this._days = Math.floor(totalSeconds / (24 * 60 * 60));
+      this._hours = Math.floor((totalSeconds % (24 * 60 * 60)) / 3600);
+      this._minutes = Math.floor((totalSeconds % 3600) / 60);
+      this._seconds = totalSeconds % 60;
+
+      if (!this._countDownInterval) {
+        this._countDownInterval = setInterval(() => {
+          this.remaining -= 1000;
+          if (this.remaining <= 0) {
+            this.remaining = 0;
+            clearInterval(this._countDownInterval);
+          }
+          this.updateUI();
+        }, 1000);
+      }
+    }
+
+    this._Info.patch({
+      y: infoY,
+      Badge: {
+        y: badgeY,
+        visible: true,
+      },
+    });
 
     if (videoType !== 'application/x-mpegURL') {
-      this._Info.patch({
-        Date: { visible: false },
-        Venue: { visible: false },
-      });
       galleryItem.summary &&
         this._Summary?.patch({
-          ...(summary ?? { visible: false }),
           text: {
             text: summary,
           },
         });
-    } else {
-      this._Info.patch({
-        Summary: { visible: false },
-        Date: {
-          ...(summary ?? { visible: false }),
+      galleryItem.subtitle &&
+        this._Subtitle?.patch({
           text: {
-            text: summary,
+            text: subtitle,
+          },
+        });
+
+      this._Info.patch({
+        Date: undefined,
+        Venue: undefined,
+        Countdown: undefined,
+        Badge: {
+          Text: {
+            text: {
+              text: capitalizeFirstLetter(badgeText) || capitalizeFirstLetter(TRANSLATIONS.SERIES),
+            },
           },
         },
-        Venue: {
-          ...(venue ?? { visible: false }),
-          text: {
-            text: venue,
+        Metadata: {
+          AgeRating: {
+            Title: {
+              text: {
+                text: tAgeR,
+              },
+            },
+            TextValue: {
+              text: {
+                text: rating,
+              },
+            },
+            visible: rating,
+          },
+          Genre: {
+            Title: {
+              text: {
+                text: tGenre,
+              },
+            },
+            TextValue: {
+              text: {
+                text: genre,
+              },
+            },
+            visible: genre,
+          },
+          Director: {
+            Title: {
+              text: {
+                text: tDirTitle,
+              },
+            },
+            TextValue: {
+              text: {
+                text: dirText,
+              },
+            },
+            visible: splitDirector[1] ? true : false,
+          },
+          Cast: {
+            Title: {
+              text: {
+                text: tCastTitle,
+              },
+            },
+            TextValue: {
+              text: {
+                text: castText,
+              },
+            },
+            visible: splitCast[1] ? true : false,
+          },
+        },
+      });
+    } else {
+      this._Info.patch({
+        SummSub: undefined,
+        Badge: {
+          Text: {
+            text: {
+              text: capitalizeFirstLetter(TRANSLATIONS.SPORTS),
+            },
+          },
+        },
+        Date: {
+          visible: true,
+          Text: {
+            text: {
+              text: summary,
+            },
+          },
+        },
+        Countdown: {
+          visible: this.remaining > 0,
+          Days: {
+            Number: {
+              text: {
+                text: this._days,
+              },
+            },
+          },
+          Hours: {
+            Number: {
+              text: {
+                text: this._hours,
+              },
+            },
+          },
+          Mins: {
+            Number: {
+              text: {
+                text: this._minutes,
+              },
+            },
+          },
+          Sec: {
+            Number: {
+              text: {
+                text: this._seconds,
+              },
+            },
           },
         },
       });
@@ -200,8 +615,8 @@ export default class GalleryItem extends Lightning.Component {
       if (isDeeplinkEpisode && galleryItem.getThumbnailImage(IMAGE_SIZES.XL)?.src) {
         src = galleryItem.getThumbnailImage(IMAGE_SIZES.XL)?.src;
         return src;
-      } else if (galleryItem.getLandscapePoster(IMAGE_SIZES.S)?.src) {
-        src = galleryItem.getLandscapePoster(IMAGE_SIZES.S)?.src;
+      } else if (galleryItem.getLandscapePoster(IMAGE_SIZES.XL)?.src) {
+        src = galleryItem.getLandscapePoster(IMAGE_SIZES.XL)?.src;
         return src;
       } else if (fallbackImage) {
         return fallbackImage;
@@ -210,30 +625,18 @@ export default class GalleryItem extends Lightning.Component {
 
     this.patch({
       BackgroundImage: {
+        w: 1920,
+        h: 1080,
         src: bgImageSrc(),
       },
       GradientOverlay: {
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1082),
       },
       Info: {
-        Badge: {
-          texture: Lightning.Tools.getRoundRect(
-            200,
-            100,
-            20,
-            4,
-            Colors(colors.white).get(),
-            true,
-            Colors('#4a4a49').get()
-          ),
-          Text: {
-            text: {
-              text: capitalizeFirstLetter(badgeText),
-            },
-          },
-        },
         Title: {
+          h: titleLength > 26 ? 130 : 90,
           text: {
+            lineHeight: titleLength > 26 ? 58 : 34,
             text: title,
           },
         },
@@ -294,6 +697,49 @@ export default class GalleryItem extends Lightning.Component {
       })();
   }
 
+  updateUI() {
+    const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    console.log(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+
+    this._Info.patch({
+      Countdown: {
+        Days: {
+          Number: {
+            text: {
+              text: days,
+            },
+          },
+        },
+        Hours: {
+          Number: {
+            text: {
+              text: hours,
+            },
+          },
+        },
+        Mins: {
+          Number: {
+            text: {
+              text: minutes,
+            },
+          },
+        },
+        Sec: {
+          Number: {
+            text: {
+              text: seconds,
+            },
+          },
+        },
+      },
+    });
+  }
+
   get _GradientOverlay() {
     return this.tag('GradientOverlay');
   }
@@ -308,6 +754,10 @@ export default class GalleryItem extends Lightning.Component {
 
   get _Summary() {
     return this.tag('Summary');
+  }
+
+  get _Subtitle() {
+    return this.tag('Subtitle');
   }
 
   get _Description() {
@@ -330,12 +780,35 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('BackgroundImage');
   }
 
+  get _SummSub() {
+    return this.tag('SummSub');
+  }
+
+  get _AgeRating() {
+    return this.tag('AgeRating');
+  }
+  get _Genre() {
+    return this.tag('Genre');
+  }
+
+  get _Director() {
+    return this.tag('Director');
+  }
+  get _Cast() {
+    return this.tag('Cast');
+  }
+
   _firstActive() {
     this._setState('GalleryButton');
   }
 
   _disable() {
     this._props.enabled = true;
+  }
+
+  _inactive() {
+    clearInterval(this._countDownInterval);
+    this._countDownInterval = null;
   }
 
   $setButtonState(buttonName) {
@@ -370,10 +843,8 @@ export default class GalleryItem extends Lightning.Component {
         _getFocused() {
           return this._GalleryButton;
         }
-        _handleDown() {
-          if (this._FavoriteButton.alpha > 0 && this._ContinueWatching.alpha > 0) {
-            this._setState('ContinueWatching');
-          } else if (this._FavoriteButton.alpha > 0) {
+        _handleRight() {
+          if (this._FavoriteButton.alpha > 0) {
             this._setState('FavoriteButton');
           } else return false;
         }
@@ -383,13 +854,12 @@ export default class GalleryItem extends Lightning.Component {
           return this._ContinueWatching;
         }
 
-        _handleUp() {
-          this._setState('GalleryButton');
+        _handleLeft() {
+          this._setState('FavoriteButton');
         }
 
         _handleRight() {
-          if (this._ContinueWatching.alpha > 0) this._setState('FavoriteButton');
-          else return false;
+          return false;
         }
 
         _handleDown() {
@@ -400,10 +870,10 @@ export default class GalleryItem extends Lightning.Component {
         _getFocused() {
           return this._FavoriteButton;
         }
-        _handleUp() {
+        _handleLeft() {
           this._setState('GalleryButton');
         }
-        _handleLeft() {
+        _handleRight() {
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
           } else {

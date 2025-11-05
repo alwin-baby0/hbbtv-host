@@ -1,7 +1,8 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
+import FocusableItem from '../FocusableItem/FocusableItem';
 
-export default class Button extends Lightning.Component {
+export default class Button extends FocusableItem {
   _isFocused = false;
   _props = {
     width: 285,
@@ -10,7 +11,7 @@ export default class Button extends Lightning.Component {
     buttonIcon: '',
     iconWidth: 25,
     iconHeight: 25,
-    radius: 0,
+    radius: 10,
     strokeWidth: 4,
     callback: () => null,
     enabled: true,
@@ -18,12 +19,16 @@ export default class Button extends Lightning.Component {
 
   static _template() {
     return {
-      flex: { direction: 'row', alignItems: 'center' },
+      ...super._template(),
+      // flex: { direction: 'row', alignItems: 'center' },
+      maxHeight: 88,
       Icon: {
         x: 20,
+        y: (h) => h / 2 - 12,
       },
       Label: {
-        x: 30,
+        x: 50,
+        y: (h) => h / 2 - 12,
         h: 25,
         color: Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
         Text: {
@@ -36,8 +41,13 @@ export default class Button extends Lightning.Component {
           },
         },
       },
+      Progress: {
+        clipping: true,
+      },
     };
   }
+
+  progressW;
 
   set props(props) {
     this._props = { ...this._props, ...props };
@@ -53,7 +63,22 @@ export default class Button extends Lightning.Component {
       strokeWidth,
       borderColor,
       enabled,
+      position,
+      duration,
     } = this._props;
+
+    this.setProps({
+      x: -7,
+      y: -7,
+      width: width + 10,
+      height: height + 10,
+      radius: 8,
+      strokeWidth: 2,
+      strokeColor: Colors(colors.focus).get(),
+    });
+
+    const progressPercent = Math.round((position / duration) * 100);
+    this.progressW = Math.min((width * progressPercent) / 100, width);
 
     const colorBorder = borderColor ? borderColor : colors.unfocus;
 
@@ -62,6 +87,12 @@ export default class Button extends Lightning.Component {
         w: width,
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         x: 0,
+      });
+    }
+
+    if (buttonLabel === '') {
+      this._Icon.patch({
+        x: 38,
       });
     }
 
@@ -89,20 +120,34 @@ export default class Button extends Lightning.Component {
         radius,
         strokeWidth,
         focusingColors,
-        this._isFocused,
+        true,
         this._isFocused ? fillColor : undefined
       ),
       Icon: {
-        texture: Lightning.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
+        texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
+        color: this._isFocused ? Colors(colors.white).get() : Colors(colors.black).get(),
       },
       Label: {
         Text: {
           text: {
             text: buttonLabel,
+            textColor: this._isFocused ? Colors(colors.white).get() : Colors(colors.black).get(),
           },
         },
       },
     });
+
+    if (position && this.progressW) {
+      this.patch({
+        Progress: {
+          w: this.progressW,
+          h: 10,
+          y: 68,
+          clipping: true,
+          texture: Lightning.Tools.getRoundRect(this.progressW, 10, 6, null, null, true, fillColor),
+        },
+      });
+    }
   }
 
   get _Icon() {
@@ -114,7 +159,8 @@ export default class Button extends Lightning.Component {
   }
 
   _focus() {
-    const { width, height, radius, strokeWidth } = this._props;
+    const { width, height, radius, strokeWidth, position } = this._props;
+    super._focus();
     this._isFocused = true;
     this.patch({
       texture: Lightning.Tools.getRoundRect(
@@ -126,12 +172,36 @@ export default class Button extends Lightning.Component {
         true,
         Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get()
       ),
+      Icon: {
+        color: Colors(colors.white).get(),
+      },
+      Label: {
+        Text: {
+          text: {
+            textColor: Colors(colors.white).get(),
+          },
+        },
+      },
+      Progress: {
+        texture: position
+          ? Lightning.Tools.getRoundRect(
+              this.progressW,
+              10,
+              6,
+              null,
+              null,
+              true,
+              Colors(colors.white).get()
+            )
+          : null,
+      },
     });
   }
 
   _unfocus() {
-    const { width, height, radius, strokeWidth, borderColor } = this._props;
-    const colorBorder = borderColor ? borderColor : colors.unfocus;
+    const { width, height, radius, strokeWidth, borderColor, position } = this._props;
+    super._unfocus();
+    const colorBorder = borderColor ? borderColor : colors.white;
     this._isFocused = false;
     this.patch({
       texture: Lightning.Tools.getRoundRect(
@@ -140,8 +210,32 @@ export default class Button extends Lightning.Component {
         radius,
         strokeWidth,
         Colors(this._props.enabled ? colorBorder : colors.unfocusDisabled).get(),
-        false
+        true,
+        Colors(colors.white).get()
       ),
+      Icon: {
+        color: Colors(colors.black).get(),
+      },
+      Label: {
+        Text: {
+          text: {
+            textColor: Colors(colors.black).get(),
+          },
+        },
+      },
+      Progress: {
+        texture: position
+          ? Lightning.Tools.getRoundRect(
+              this.progressW,
+              10,
+              6,
+              null,
+              null,
+              true,
+              Colors(colors.focus).get()
+            )
+          : null,
+      },
     });
   }
 
