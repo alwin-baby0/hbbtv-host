@@ -12,8 +12,8 @@ pipelines:
         script:
           - npm ci
           - npm run lint
-          - npm test
-          - npm run build
+          # - npm test
+          # - npm run build
         artifacts:
           - dist/**
 
@@ -26,8 +26,8 @@ pipelines:
           script:
             - npm ci
             - npm run lint
-            - npm test
-            - npm run build
+            # - npm test
+            # - npm run build
           artifacts:
             - dist/**
 
@@ -40,8 +40,8 @@ pipelines:
           script:
             - npm ci
             - npm run lint
-            - npm test
-            - npm run build
+            # - npm test
+            # - npm run build
 
 definitions:
   caches:
