@@ -34,6 +34,8 @@ export default class VodContentContainer extends Lightning.Component {
     this._props.parentState = props.parentState;
     const { contentType, items } = props;
 
+    this._Categories.props = { parentState: this._props.parentState };
+
     this._props.contentType = contentType;
 
     this.#changeContentVisibility(contentType);
