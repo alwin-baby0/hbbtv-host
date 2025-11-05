@@ -1,5 +1,5 @@
 import { GalleryItem } from '../../Models';
-import { parseDetailsData, parseSeasonData } from '../../Models/parsers';
+import { parseDetailsData, parseSeasonData, parseVodCategories } from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
@@ -23,6 +23,8 @@ class DetailService extends FetchingService {
       },
     }).then(parseDetailsData);
   };
+
+  seasonTabsParsed;
 
   getSerie = async (seriesId) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
@@ -53,7 +55,8 @@ class DetailService extends FetchingService {
     })
       .then(({ data }) => {
         if (data && data.entry) {
-          return data.entry.map((tab) => tab.id);
+          this.seasonTabsParsed = parseVodCategories({ data }, 'seasonTabs');
+          return data.entry.map((tab) => ({ id: tab.id, title: tab.title }));
         }
 
         return [];
@@ -63,7 +66,7 @@ class DetailService extends FetchingService {
         return [];
       });
 
-    const seasonsPromises = seasonTabs.map((id) =>
+    const seasonsPromises = seasonTabs.map(({ id }) =>
       this._request({
         url: `/${API_URLS.GET_SEASON}`,
         apiVersion: V2,
@@ -72,7 +75,7 @@ class DetailService extends FetchingService {
           _: timestamp,
           season_id: id,
         },
-      }).then((data) => parseSeasonData(data, seriesId))
+      }).then((data) => parseSeasonData(data, seriesId, id))
     );
 
     try {
@@ -80,6 +83,8 @@ class DetailService extends FetchingService {
       return {
         galleryItem,
         seasons,
+        seasonTabs,
+        seasonTabsParsed: this.seasonTabsParsed,
       };
     } catch (error) {
       console.error('Error fetching seasons:', error);

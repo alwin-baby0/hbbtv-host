@@ -27,24 +27,24 @@ export default class SingleLiveEvent extends Lightning.Component {
         },
       },
       SeriesWrapper: {
-        Content: {
-          Background: {
-            w: 1920,
-            h: 2080,
-            src: Utils.asset(IMG_PATH.BACKGROUND),
-          },
-          HeroSection: {
-            type: GalleryItem,
-          },
+        rect: true,
+        h: 1080,
+        w: 1920,
+        HeroSection: {
+          collision: true,
+          h: 1080,
+          type: GalleryItem,
         },
       },
       Wrapper: {
+        collision: true,
         x: 110,
-        y: 715,
+        y: 800,
         h: 600,
         w: 1765,
         clipping: true,
         Column: {
+          collision: true,
           h: 600,
           w: 1700,
           type: VerticalContainer,
@@ -76,9 +76,10 @@ export default class SingleLiveEvent extends Lightning.Component {
       props: {
         galleryItem: galleryItem,
         fallbackImage,
-        height: 650,
+        height: 1080,
         yPos: 100,
         parentState: 'HeroSection',
+        startDate,
       },
     });
 
@@ -95,7 +96,9 @@ export default class SingleLiveEvent extends Lightning.Component {
               buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
               buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
               width: 400,
+              height: 78,
             },
+            visible: true,
           },
         },
       });
@@ -114,6 +117,7 @@ export default class SingleLiveEvent extends Lightning.Component {
               width: 400,
               buttonLabel: t(TRANSLATIONS.COMING_SOON)?.toUpperCase(),
               enabled: false,
+              height: 78,
             },
           },
         },
@@ -196,11 +200,14 @@ export default class SingleLiveEvent extends Lightning.Component {
     return [
       class BackButton extends this {
         _getFocused() {
+          this._SeriesWrapper.patch({
+            y: 0,
+          });
           return this._BackButton;
         }
 
         _handleDown() {
-          this._setState('Items');
+          this._setState('HeroSection');
         }
 
         _handleRight() {
@@ -239,7 +246,7 @@ export default class SingleLiveEvent extends Lightning.Component {
 
         $exit() {
           this._Wrapper.patch({
-            y: 715,
+            y: 800,
             h: 600,
           });
         }
@@ -262,13 +269,10 @@ export default class SingleLiveEvent extends Lightning.Component {
             this.patch({
               SeriesWrapper: {
                 y: -140,
+                h: 1080,
               },
               Wrapper: {
-                y: 500,
-                h: 1080,
-                Column: {
-                  h: 1080,
-                },
+                y: 600,
               },
             });
           }
