@@ -310,19 +310,21 @@ export default class SingleMovie extends Lightning.Component {
       cast,
       last_position,
       rating,
-      badgeText,
     } = movie;
 
     const titleLength = title.length;
 
-    const splitDirector = director.split(':');
-    const splitCast = cast.split(':');
+    const splitDirector = director && director.split(':');
+    const splitCast = cast && cast.split(':');
 
-    const tdirector = t(TRANSLATIONS.DIRECTOR) + ':' + splitDirector[1];
-    const tcastTitle = t(TRANSLATIONS.CAST) + ':';
-    const castText = splitCast[1];
+    const tAgeR = t(TRANSLATIONS.AGE_RATING) || 'Age Rating';
+    const tGenre = t(TRANSLATIONS.GENRE) || 'Genre';
+    const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const dirText = splitDirector[1];
+    const castText = splitCast && splitCast[1];
+    const dirText = splitDirector && splitDirector[1];
+
+    const badgeText = t(TRANSLATIONS.MOVIES);
 
     this.patch({
       Content: {
@@ -365,9 +367,9 @@ export default class SingleMovie extends Lightning.Component {
         CardInfo: {
           AboutMovie: {
             Title: {
-              h: titleLength > 28 ? 130 : 90,
+              h: titleLength > 26 ? 130 : 90,
               text: {
-                lineHeight: titleLength > 28 ? 58 : 34,
+                lineHeight: titleLength > 26 ? 58 : 34,
                 text: title,
               },
             },
@@ -380,7 +382,7 @@ export default class SingleMovie extends Lightning.Component {
               AgeRating: {
                 Title: {
                   text: {
-                    text: 'Age Rating:',
+                    text: tAgeR,
                   },
                 },
                 TextValue: {
@@ -392,7 +394,7 @@ export default class SingleMovie extends Lightning.Component {
               Genre: {
                 Title: {
                   text: {
-                    text: 'Genre:',
+                    text: tGenre,
                   },
                 },
                 TextValue: {
@@ -417,7 +419,7 @@ export default class SingleMovie extends Lightning.Component {
               Cast: {
                 Title: {
                   text: {
-                    text: tcastTitle,
+                    text: tCastTitle,
                   },
                 },
                 TextValue: {

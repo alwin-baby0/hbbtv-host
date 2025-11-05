@@ -273,10 +273,6 @@ export default class SingleLiveEvent extends Lightning.Component {
               },
               Wrapper: {
                 y: 600,
-                // h: 1080,
-                /* Column: {
-                  h: 1080,
-                }, */
               },
             });
           }

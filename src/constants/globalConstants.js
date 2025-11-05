@@ -357,13 +357,15 @@ export const API_URLS = {
 };
 
 export const TRANSLATIONS = {
+  AGE_RATING: 'age_rating',
+  GENRE: 'genre',
   CAST: 'cast',
+  DIRECTOR: 'director',
   CMP_DESCRIPTION: 'cmp_descriptions',
   CMP_TITLE: 'cmp_title',
   COMING_SOON: 'coming_soon',
   CONTINUE_WATCHING: 'continue_watching',
   COOKIE_PREFERENCES: 'cookie_preferences',
-  DIRECTOR: 'director',
   EXIT: 'exit_label',
   FAVORITE: 'favorite',
   FAVORITES: 'favorites',

@@ -44,6 +44,15 @@ export default class GalleryItem extends Lightning.Component {
         Badge: {
           y: 0,
           rect: true,
+          texture: Lightning.Tools.getRoundRect(
+            200,
+            55,
+            10,
+            2,
+            Colors(colors.white).get(),
+            true,
+            Colors('#4a4a49').get()
+          ),
           h: 55,
           flex: {
             direction: 'row',
@@ -94,7 +103,7 @@ export default class GalleryItem extends Lightning.Component {
             marginBottom: 20,
           },
           Summary: {
-            w: 150,
+            w: 165,
             h: 29,
             text: {
               fontSize: 24,
@@ -109,9 +118,13 @@ export default class GalleryItem extends Lightning.Component {
               fontSize: 24,
               lineHeight: 30,
             },
+            flexItem: {
+              marginLeft: 10,
+            },
           },
         },
         Countdown: {
+          visible: false,
           flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
           flexItem: {
             marginBottom: 25,
@@ -219,7 +232,6 @@ export default class GalleryItem extends Lightning.Component {
           w: 900,
           h: 150,
           text: {
-            // textColor: Colors(colors.sliderDescription).get(),
             wordWrapWidth: 900,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
@@ -242,10 +254,6 @@ export default class GalleryItem extends Lightning.Component {
           collision: true,
           flexItem: {
             marginTop: 10,
-          },
-          props: {
-            buttonLabel: t(TRANSLATIONS.WATCH_NOW),
-            buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
           },
         },
         AuthorizedButtons: {
@@ -429,10 +437,12 @@ export default class GalleryItem extends Lightning.Component {
     const splitDirector = director && director.split(':');
     const splitCast = cast && cast.split(':');
 
-    const tcastTitle = t(TRANSLATIONS.CAST) + ':';
+    const tAgeR = t(TRANSLATIONS.AGE_RATING) || 'Age Rating';
+    const tGenre = t(TRANSLATIONS.GENRE) || 'Genre';
+    const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const tDirText = splitDirector && splitDirector[1];
     const castText = splitCast && splitCast[1];
+    const dirText = splitDirector && splitDirector[1];
 
     if (videoType === 'application/x-mpegURL') {
       const targetTimestamp = startDate;
@@ -467,29 +477,35 @@ export default class GalleryItem extends Lightning.Component {
     });
 
     if (videoType !== 'application/x-mpegURL') {
-      this._Info.patch({
-        Date: undefined,
-        Venue: undefined,
-        Countdown: undefined,
-      });
       galleryItem.summary &&
         this._Summary?.patch({
           text: {
             text: summary,
           },
         });
-      this._Subtitle?.patch({
-        text: {
-          text: subtitle || 'US • 2011 • FSK12 • IMDb: 7.1',
-        },
-      });
+      galleryItem.subtitle &&
+        this._Subtitle?.patch({
+          text: {
+            text: subtitle,
+          },
+        });
 
       this._Info.patch({
+        Date: undefined,
+        Venue: undefined,
+        Countdown: undefined,
+        Badge: {
+          Text: {
+            text: {
+              text: capitalizeFirstLetter(badgeText) || capitalizeFirstLetter(TRANSLATIONS.SERIES),
+            },
+          },
+        },
         Metadata: {
           AgeRating: {
             Title: {
               text: {
-                text: 'Age Rating:',
+                text: tAgeR,
               },
             },
             TextValue: {
@@ -497,11 +513,12 @@ export default class GalleryItem extends Lightning.Component {
                 text: rating,
               },
             },
+            visible: rating,
           },
           Genre: {
             Title: {
               text: {
-                text: 'Genre:',
+                text: tGenre,
               },
             },
             TextValue: {
@@ -509,6 +526,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: genre,
               },
             },
+            visible: genre,
           },
           Director: {
             Title: {
@@ -518,15 +536,15 @@ export default class GalleryItem extends Lightning.Component {
             },
             TextValue: {
               text: {
-                text: tDirText,
+                text: dirText,
               },
             },
-            // visible: splitDirector[1] ? true : false,
+            visible: splitDirector[1] ? true : false,
           },
           Cast: {
             Title: {
               text: {
-                text: tcastTitle,
+                text: tCastTitle,
               },
             },
             TextValue: {
@@ -534,13 +552,20 @@ export default class GalleryItem extends Lightning.Component {
                 text: castText,
               },
             },
-            // visible: splitCast[1] ? true : false,
+            visible: splitCast[1] ? true : false,
           },
         },
       });
     } else {
       this._Info.patch({
         SummSub: undefined,
+        Badge: {
+          Text: {
+            text: {
+              text: capitalizeFirstLetter(TRANSLATIONS.SPORTS),
+            },
+          },
+        },
         Date: {
           visible: true,
           Text: {
@@ -549,11 +574,6 @@ export default class GalleryItem extends Lightning.Component {
             },
           },
         },
-        /* Venue: {
-          text: {
-            text: venue,
-          },
-        }, */
         Countdown: {
           visible: this.remaining > 0,
           Days: {
@@ -605,41 +625,22 @@ export default class GalleryItem extends Lightning.Component {
       BackgroundImage: {
         w: 1920,
         h: 1080,
-        // x: 700,
         src: bgImageSrc(),
       },
       GradientOverlay: {
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1080),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1082),
       },
       Info: {
-        Badge: {
-          texture: Lightning.Tools.getRoundRect(
-            200,
-            55,
-            10,
-            2,
-            Colors(colors.white).get(),
-            true,
-            Colors('#4a4a49').get()
-          ),
-          Text: {
-            text: {
-              text: capitalizeFirstLetter(badgeText),
-            },
-          },
-        },
         Title: {
-          h: titleLength > 28 ? 130 : 90,
+          h: titleLength > 26 ? 130 : 90,
           text: {
-            lineHeight: titleLength > 28 ? 58 : 34,
+            lineHeight: titleLength > 26 ? 58 : 34,
             text: title,
           },
         },
         Description: {
           text: {
-            text:
-              description ||
-              'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse, voluptates exercitationem. Eaque autem molestias vel veniam, vero totam. Ut quia ipsa corporis odit praesentium, aliquam ducimus. Autem quas consectetur corporis.',
+            text: description,
           },
         },
       },
