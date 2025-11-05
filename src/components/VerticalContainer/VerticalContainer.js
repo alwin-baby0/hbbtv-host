@@ -90,7 +90,7 @@ export default class VerticalContainer extends Lightning.Component {
       this._scrollPosition = 0;
     }
 
-    if (!items || !items.length) {
+    if ((!items || !items.length) && this.ref !== 'EPGData') {
       this.patch({
         h: 95,
         Items: { h: 0, visible: false },
