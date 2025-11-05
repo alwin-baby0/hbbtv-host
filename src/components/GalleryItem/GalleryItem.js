@@ -42,7 +42,7 @@ export default class GalleryItem extends Lightning.Component {
         w: 740,
         flex: { direction: 'column' },
         Badge: {
-          y: 0,
+          visible: false,
           rect: true,
           texture: Lightning.Tools.getRoundRect(
             200,
@@ -474,6 +474,7 @@ export default class GalleryItem extends Lightning.Component {
       y: infoY,
       Badge: {
         y: badgeY,
+        visible: true,
       },
     });
 
