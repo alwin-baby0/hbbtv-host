@@ -113,7 +113,7 @@ export const parseDetailsData = ({ data }) => {
 };
 
 // Season
-export const parseSeasonData = ({ data }, seriesId) => {
+export const parseSeasonData = ({ data }, seriesId, seasonId) => {
   const railItems = data.entry?.map(
     (item) =>
       new SimpleRailItem({ ...item, type: { value: RAIL_TYPES.EPISODE }, seriesId: seriesId })
@@ -126,6 +126,7 @@ export const parseSeasonData = ({ data }, seriesId) => {
     items: railItems,
     railTitle: data.title,
     itemsPerRow: data.entry.length,
+    seasonId,
   };
 };
 

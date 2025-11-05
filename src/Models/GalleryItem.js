@@ -46,6 +46,7 @@ class GalleryItem {
         is_favorite,
         last_position,
         trailer,
+        rating,
       } = extensions;
 
       if (button_text && button_text !== '') {
@@ -80,6 +81,7 @@ class GalleryItem {
       this.is_favorite = is_favorite;
       this.last_position = last_position;
       this.trailer = trailer;
+      this.rating = rating;
     }
 
     this.thumbnails = [];

@@ -15,7 +15,7 @@ export default async function (page, { seriesId, cmpShown }) {
     galleryItemSingleEp = await DetailService.getMovie(pathname.episodeId);
   }
 
-  const { galleryItem, seasons } = await DetailService.getSerie(seriesId);
+  const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(seriesId);
 
   const updatedSeasons = seasons.map((season) => {
     return {
@@ -80,10 +80,18 @@ export default async function (page, { seriesId, cmpShown }) {
     ssai: galleryItem.ssai,
     ssaiLastEp: ssaiLastEp,
     cmpShown,
+    allSeasons: updatedSeasons,
+  };
+
+  const seasonsRail = constructRails(seasonTabsParsed);
+
+  page._SeasonsBar.props = {
+    items: seasonsRail,
+    parentState: 'SeasonBar',
   };
 
   page._Column.props = {
-    items: constructRails(updatedSeasons),
+    items: constructRails(updatedSeasons[0]),
     parentState: 'Items',
   };
 }
