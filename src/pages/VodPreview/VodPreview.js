@@ -6,7 +6,6 @@ import { constructRails } from '../utils';
 import { eventTrackPayload } from '../../utils/device';
 import {
   EVENT_NAMES,
-  IMG_PATH,
   ROUTES,
   VOD_PREVIEW_TYPES,
   CONTENT_TYPE,
@@ -128,10 +127,6 @@ export default class VodPreview extends Lightning.Component {
   $setStateOnScroll(nextState) {
     this._setState(nextState);
   }
-
-  // _handleHover() {
-  //   Router.focusPage();
-  // }
 
   _handleBack() {
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
