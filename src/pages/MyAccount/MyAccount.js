@@ -1,22 +1,14 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import { AuthorizationService, t, UserService } from '../../Services';
+import { AuthorizationService, UserService, t } from '../../Services';
 import qrcode from 'qrcode';
-import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';
-import { constructRails } from '../utils';
-import MemberTabButton from '../../components/MemberTabButton/MemberTabButton';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
 import { LOCAL_STORAGE_KEYS, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+import { parseVodMoviesPageData } from '../../Models';
+import { constructRails } from '../utils';
 
-const states = [
-  // 'DefaultState',
-  'Favorites',
-  'RecentlyWatched',
-  'UserRecentlyWatched',
-  'UserFavorites',
-];
+const states = ['UserRecentlyWatched', 'UserFavorites'];
 
 export default class MyAccount extends Lightning.Component {
   _contentId = 0;
@@ -58,16 +50,8 @@ export default class MyAccount extends Lightning.Component {
     return this.tag('Content');
   }
 
-  get _Favorites() {
-    return this.tag('Content.Favorites');
-  }
-
   get _UserFavorites() {
     return this.tag('Content.QRContainer.Favorites');
-  }
-
-  get _RecentlyWatched() {
-    return this.tag('Content.RecentlyWatched');
   }
 
   get _UserRecentlyWatched() {
@@ -76,16 +60,13 @@ export default class MyAccount extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
+    this.$changeContent();
+    this._setState('UserRecentlyWatched');
   }
 
   _enable() {
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE))
       localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, 'en');
-  }
-
-  _active() {
-    this._setState('UserRecentlyWatched');
-    this.$changeContent();
   }
 
   _disable() {
@@ -101,27 +82,68 @@ export default class MyAccount extends Lightning.Component {
     this._setState(nextState);
   }
 
+  async $horizontalContainerIndexChange(index, refName) {
+    if (refName === 'RecentlyWatched') {
+      if (
+        index === this._UserRecentlyWatched._RecentlyWatched.Items.children.length - 1 &&
+        this._props.hasMoreRcw
+      ) {
+        this._props.recentlyWPage++;
+        const rcw = await UserService.getRecentlyWatched(this._props.recentlyWPage);
+
+        if (rcw.data.recently_watched.length < 8) {
+          this._props.hasMoreRcw = false;
+        }
+
+        const parsedMovies = parseVodMoviesPageData({
+          data: {
+            entry: rcw.data.recently_watched,
+          },
+          itemsPerRow: 4,
+        });
+
+        const rails = constructRails(parsedMovies);
+
+        this._UserRecentlyWatched._appendItems(rails);
+      }
+    }
+
+    if (refName === 'Favorites') {
+      if (
+        index === this._UserFavorites._Favorites.Items.children.length - 1 &&
+        this._props.hasMoreFav
+      ) {
+        this._props.favoritesPage++;
+        const favorites = await UserService.getFavorites(this._props.favoritesPage);
+
+        if (favorites.data.favorites.length < 8) {
+          this._props.hasMoreFav = false;
+        }
+
+        const parsedMovies = parseVodMoviesPageData({
+          data: {
+            entry: favorites.data.favorites,
+          },
+          itemsPerRow: 4,
+        });
+
+        const rails = constructRails(parsedMovies);
+
+        this._UserFavorites._Favorites._appendItems(rails);
+      }
+    }
+  }
+
   async $changeContent() {
-    this._Content.patch({
-      QRContainer: undefined,
-      Favorites: undefined,
-      RecentlyWatched: undefined,
-      y: 225,
-    });
-    AuthorizationService.clearPollingInterval();
+    const { recentlyWatched, favorites, parsedFavorites, parsedMovies, verificationUri } =
+      this._props;
+
     window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
-
-    const response = await AuthorizationService.getDeviceCode();
-
-    const device_code = response.data.device_code;
-    const verification_uri = response.data.verification_uri;
 
     window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
 
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-      await AuthorizationService.setDeviceCodeStatusInterval(device_code);
-      const qrCode = verification_uri.url;
-      console.log(qrCode);
+      const qrCode = verificationUri.url;
 
       qrcode.toDataURL(qrCode).then((image) => {
         this._Content.patch({
@@ -195,33 +217,6 @@ export default class MyAccount extends Lightning.Component {
         });
       });
     } else {
-      const recentlyWatched = await UserService.getRecentlyWatched();
-      console.log(recentlyWatched);
-
-      const parsedMovies = parseVodUserContentData({
-        data: {
-          railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
-          entry: recentlyWatched.data.recently_watched,
-        },
-        itemsPerRow:
-          recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length
-            ? recentlyWatched.data.recently_watched.length
-            : 0,
-      });
-
-      const favorites = await UserService.getFavorites();
-
-      const parsedFavorites = parseVodUserContentData({
-        data: {
-          railTitle: t(TRANSLATIONS.FAVORITES),
-          entry: favorites.data.favorites,
-        },
-        itemsPerRow:
-          favorites.data.favorites && favorites.data.favorites.length
-            ? favorites.data.favorites.length
-            : 0,
-      });
-
       this._Content.patch({
         QRContainer: {
           w: 1450,
@@ -279,7 +274,7 @@ export default class MyAccount extends Lightning.Component {
   }
 
   userLoginButtonsUpdate() {
-    this.$changeContent(0);
+    this.$changeContent();
   }
 
   _handleBack() {

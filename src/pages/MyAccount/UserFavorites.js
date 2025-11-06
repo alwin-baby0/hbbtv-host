@@ -1,6 +1,6 @@
 import { Lightning } from '@lightningjs/sdk';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
 export default class UserFavorites extends Lightning.Component {
   _props = {
@@ -11,7 +11,7 @@ export default class UserFavorites extends Lightning.Component {
     return {
       Favorites: {
         collision: true,
-        type: VerticalContainer,
+        type: HorizontalContainer,
         w: 1450,
         h: 500,
         props: {
@@ -35,6 +35,10 @@ export default class UserFavorites extends Lightning.Component {
         railTitle: this._props.railTitle,
       },
     });
+  }
+
+  $horizontalContainerIndexChange(index) {
+    this.fireAncestors('$horizontalContainerIndexChange', index, 'RecentlyWatched');
   }
 
   _getFocused() {

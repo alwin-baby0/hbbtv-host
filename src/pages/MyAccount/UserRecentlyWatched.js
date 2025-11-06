@@ -1,6 +1,6 @@
 import { Lightning } from '@lightningjs/sdk';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
 export default class UserRecentlyWatched extends Lightning.Component {
   _props = {
@@ -11,7 +11,7 @@ export default class UserRecentlyWatched extends Lightning.Component {
     return {
       RecentlyWatched: {
         collision: true,
-        type: VerticalContainer,
+        type: HorizontalContainer,
         w: 1450,
       },
     };
@@ -33,6 +33,10 @@ export default class UserRecentlyWatched extends Lightning.Component {
         w: 1450,
       },
     });
+  }
+
+  $horizontalContainerIndexChange(index) {
+    this.fireAncestors('$horizontalContainerIndexChange', index, 'RecentlyWatched');
   }
 
   _getFocused() {
