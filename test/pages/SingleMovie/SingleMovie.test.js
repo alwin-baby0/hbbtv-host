@@ -229,4 +229,298 @@ describe('SingleMovie Page', () => {
       expect(eventTrackPayloadSpy).toHaveBeenCalledWith(EVENT_NAMES.VIEW_MOVIE, mockMovieId);
     });
   });
+
+  describe('Button visibility logic', () => {
+    beforeEach(() => {
+      // Clear localStorage before each test
+      localStorage.clear();
+    });
+
+    it('shows WATCH NOW button when movie has no trailer', () => {
+      const mockMovieData = {
+        id: 'movie-no-trailer',
+        title: 'Movie Without Trailer',
+        summary: '2024',
+        type: { value: 'movie' },
+        extensions: {
+          preview_playback: 'https://test.com/trailer.mp4',
+          description: 'Test description',
+          duration: '7200',
+          genre: 'Action',
+          is_favorite: false,
+        },
+        media_group: [
+          {
+            media_item: [
+              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
+              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            ],
+          },
+        ],
+        content: {
+          src: 'https://test.com/video.mp4',
+          type: 'video/mp4',
+        },
+      };
+
+      const galleryItem = new GalleryItem(mockMovieData);
+
+      // Build button configuration with no trailer URL
+      const buttons = page._buildButtonConfiguration(galleryItem, '', null);
+
+      // Should only have WATCH NOW button (no trailer, not logged in)
+      expect(buttons).toHaveLength(1);
+      expect(buttons[0].buttonName).toBe('WATCH NOW');
+    });
+
+    it('shows both WATCH NOW and TRAILER buttons when trailer exists', () => {
+      const mockMovieData = {
+        id: 'movie-with-trailer',
+        title: 'Movie With Trailer',
+        summary: '2024',
+        type: { value: 'movie' },
+        extensions: {
+          preview_playback: 'https://test.com/trailer.mp4',
+          description: 'Test description',
+          duration: '7200',
+          genre: 'Action',
+          is_favorite: false,
+        },
+        media_group: [
+          {
+            media_item: [
+              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
+              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            ],
+          },
+        ],
+        content: {
+          src: 'https://test.com/video.mp4',
+          type: 'video/mp4',
+        },
+      };
+
+      const galleryItem = new GalleryItem(mockMovieData);
+
+      // Build button configuration with trailer URL
+      const buttons = page._buildButtonConfiguration(
+        galleryItem,
+        'https://test.com/trailer.mp4',
+        null
+      );
+
+      // Should have both WATCH NOW and TRAILER buttons (not logged in)
+      expect(buttons).toHaveLength(2);
+      expect(buttons[0].buttonName).toBe('WATCH NOW');
+      expect(buttons[1].buttonName).toBe('TRAILER');
+    });
+
+    it('shows FAVORITE button only when user is logged in', () => {
+      const mockMovieData = {
+        id: 'movie-logged-in',
+        title: 'Movie Logged In',
+        summary: '2024',
+        type: { value: 'movie' },
+        extensions: {
+          preview_playback: 'https://test.com/trailer.mp4',
+          description: 'Test description',
+          duration: '7200',
+          genre: 'Action',
+          is_favorite: false,
+        },
+        media_group: [
+          {
+            media_item: [
+              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
+              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            ],
+          },
+        ],
+        content: {
+          src: 'https://test.com/video.mp4',
+          type: 'video/mp4',
+        },
+      };
+
+      const galleryItem = new GalleryItem(mockMovieData);
+
+      // Test without user data - no favorite button
+      const buttonsNotLoggedIn = page._buildButtonConfiguration(galleryItem, '', null);
+      expect(buttonsNotLoggedIn.some((btn) => btn.buttonName === 'FAVORITE')).toBe(false);
+
+      // Set user data in localStorage (use correct key: 'userData')
+      localStorage.setItem('userData', JSON.stringify({ userId: '123' }));
+
+      // Test with user data - favorite button should appear
+      const buttonsLoggedIn = page._buildButtonConfiguration(galleryItem, '', null);
+      expect(buttonsLoggedIn.some((btn) => btn.buttonName === 'FAVORITE')).toBe(true);
+      expect(buttonsLoggedIn).toHaveLength(2); // WATCH NOW + FAVORITE
+    });
+
+    it('shows CONTINUE WATCHING button only when user is logged in AND has last_position', () => {
+      const mockMovieData = {
+        id: 'movie-with-progress',
+        title: 'Movie With Progress',
+        summary: '2024',
+        type: { value: 'movie' },
+        extensions: {
+          preview_playback: 'https://test.com/trailer.mp4',
+          description: 'Test description',
+          duration: '7200',
+          genre: 'Action',
+          is_favorite: false,
+          last_position: 1200,
+        },
+        media_group: [
+          {
+            media_item: [
+              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
+              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            ],
+          },
+        ],
+        content: {
+          src: 'https://test.com/video.mp4',
+          type: 'video/mp4',
+        },
+      };
+
+      const galleryItem = new GalleryItem(mockMovieData);
+
+      // Test 1: Not logged in, has last_position - no continue watching button
+      const buttonsNotLoggedIn = page._buildButtonConfiguration(galleryItem, '', 1200);
+      expect(buttonsNotLoggedIn.some((btn) => btn.buttonName === 'CONTINUE WATCHING')).toBe(false);
+
+      // Test 2: Logged in but no last_position - no continue watching button
+      localStorage.setItem('userData', JSON.stringify({ userId: '123' }));
+      const buttonsNoProgress = page._buildButtonConfiguration(galleryItem, '', null);
+      expect(buttonsNoProgress.some((btn) => btn.buttonName === 'CONTINUE WATCHING')).toBe(false);
+
+      // Test 3: Logged in AND has last_position - continue watching button appears
+      const buttonsWithProgress = page._buildButtonConfiguration(galleryItem, '', 1200);
+      expect(buttonsWithProgress.some((btn) => btn.buttonName === 'CONTINUE WATCHING')).toBe(true);
+      expect(buttonsWithProgress).toHaveLength(3); // WATCH NOW + FAVORITE + CONTINUE WATCHING
+    });
+
+    it('shows correct favorite icon based on is_favorite state', () => {
+      localStorage.setItem('userData', JSON.stringify({ userId: '123' }));
+
+      // Test with is_favorite = false
+      const mockMovieNotFavorited = {
+        id: 'movie-not-fav',
+        title: 'Movie Not Favorited',
+        summary: '2024',
+        type: { value: 'movie' },
+        extensions: {
+          preview_playback: 'https://test.com/trailer.mp4',
+          description: 'Test description',
+          duration: '7200',
+          genre: 'Action',
+          is_favorite: false,
+        },
+        media_group: [
+          {
+            media_item: [
+              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
+              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            ],
+          },
+        ],
+        content: {
+          src: 'https://test.com/video.mp4',
+          type: 'video/mp4',
+        },
+      };
+
+      const galleryItemNotFav = new GalleryItem(mockMovieNotFavorited);
+      const buttonsNotFav = page._buildButtonConfiguration(galleryItemNotFav, '', null);
+      const favoriteBtn = buttonsNotFav.find((btn) => btn.buttonName === 'FAVORITE');
+      expect(favoriteBtn.icon).toBe('icons/heart.png');
+
+      // Test with is_favorite = true
+      const mockMovieFavorited = {
+        ...mockMovieNotFavorited,
+        extensions: {
+          ...mockMovieNotFavorited.extensions,
+          is_favorite: true,
+        },
+      };
+
+      const galleryItemFav = new GalleryItem(mockMovieFavorited);
+      const buttonsFav = page._buildButtonConfiguration(galleryItemFav, '', null);
+      const favoriteBtnFilled = buttonsFav.find((btn) => btn.buttonName === 'FAVORITE');
+      expect(favoriteBtnFilled.icon).toBe('icons/heart-filled.png');
+    });
+  });
+
+  describe('Button grid layout', () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    it('arranges buttons in rows of 3 for non-French languages', () => {
+      // Set English language
+      localStorage.setItem('languageCode', 'en');
+
+      // Create 5 buttons to test the arrangement
+      const mockButtons = [
+        { buttonName: 'WATCH NOW' },
+        { buttonName: 'TRAILER' },
+        { buttonName: 'FAVORITE' },
+        { buttonName: 'CONTINUE WATCHING' },
+        { buttonName: 'EXTRA' },
+      ];
+
+      const rows = page._arrangeButtonsInRowsDependingOnLanguage(mockButtons);
+
+      // Should create 2 rows: [3 items, 2 items]
+      expect(rows).toHaveLength(2);
+      expect(rows[0].items).toHaveLength(3);
+      expect(rows[1].items).toHaveLength(2);
+    });
+
+    it('arranges buttons in rows of 2 for French language', () => {
+      // Set French language
+      localStorage.setItem('languageCode', 'fr');
+
+      // Create 5 buttons to test the arrangement
+      const mockButtons = [
+        { buttonName: 'WATCH NOW' },
+        { buttonName: 'TRAILER' },
+        { buttonName: 'FAVORITE' },
+        { buttonName: 'CONTINUE WATCHING' },
+        { buttonName: 'EXTRA' },
+      ];
+
+      const rows = page._arrangeButtonsInRowsDependingOnLanguage(mockButtons);
+
+      // Should create 3 rows: [2 items, 2 items, 1 item]
+      expect(rows).toHaveLength(3);
+      expect(rows[0].items).toHaveLength(2);
+      expect(rows[1].items).toHaveLength(2);
+      expect(rows[2].items).toHaveLength(1);
+    });
+
+    it('handles single button correctly for both languages', () => {
+      const mockButtons = [{ buttonName: 'WATCH NOW' }];
+
+      // Test English
+      localStorage.setItem('languageCode', 'en');
+      const rowsEn = page._arrangeButtonsInRowsDependingOnLanguage(mockButtons);
+      expect(rowsEn).toHaveLength(1);
+      expect(rowsEn[0].items).toHaveLength(1);
+
+      // Test French
+      localStorage.setItem('languageCode', 'fr');
+      const rowsFr = page._arrangeButtonsInRowsDependingOnLanguage(mockButtons);
+      expect(rowsFr).toHaveLength(1);
+      expect(rowsFr[0].items).toHaveLength(1);
+    });
+
+    it('handles empty button array', () => {
+      localStorage.setItem('languageCode', 'en');
+      const rows = page._arrangeButtonsInRowsDependingOnLanguage([]);
+      expect(rows).toHaveLength(0);
+    });
+  });
 });
