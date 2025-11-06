@@ -36,6 +36,7 @@ export default class UserRecentlyWatched extends Lightning.Component {
   }
 
   _getFocused() {
+    console.log('UserRecentlyWatched focused');
     return this._RecentlyWatched;
   }
 }
