@@ -262,7 +262,7 @@ export default class GalleryItem extends Lightning.Component {
           y: -88,
           h: 70,
           flex: { direction: 'row' },
-          FavoriteButton: {
+          ContinueWatching: {
             collision: true,
             alpha: 0,
             type: Button,
@@ -270,13 +270,12 @@ export default class GalleryItem extends Lightning.Component {
               marginTop: 10,
             },
           },
-          ContinueWatching: {
+          FavoriteButton: {
             collision: true,
             alpha: 0,
             type: Button,
             flexItem: {
               marginTop: 10,
-              marginLeft: 15,
             },
           },
         },
@@ -844,9 +843,13 @@ export default class GalleryItem extends Lightning.Component {
           return this._GalleryButton;
         }
         _handleRight() {
-          if (this._FavoriteButton.alpha > 0) {
+          if (this._ContinueWatching.alpha > 0) {
+            this._setState('ContinueWatching');
+          } else if (this._FavoriteButton.alpha > 0) {
             this._setState('FavoriteButton');
-          } else return false;
+          } else {
+            return false;
+          }
         }
       },
       class ContinueWatching extends this {
@@ -854,12 +857,14 @@ export default class GalleryItem extends Lightning.Component {
           return this._ContinueWatching;
         }
 
-        _handleLeft() {
-          this._setState('FavoriteButton');
+        _handleRight() {
+          if (this._FavoriteButton.alpha > 0) {
+            this._setState('FavoriteButton');
+          } else return false;
         }
 
-        _handleRight() {
-          return false;
+        _handleLeft() {
+          this._setState('GalleryButton');
         }
 
         _handleDown() {
@@ -870,14 +875,14 @@ export default class GalleryItem extends Lightning.Component {
         _getFocused() {
           return this._FavoriteButton;
         }
-        _handleLeft() {
-          this._setState('GalleryButton');
-        }
         _handleRight() {
+          return false;
+        }
+        _handleLeft() {
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
           } else {
-            return false;
+            this._setState('GalleryButton');
           }
         }
       },
