@@ -9,7 +9,8 @@ export default class Key extends Lightning.Component {
         zIndex: 400,
         collision: true,
         rect: true,
-        color: Colors('#1b1b1b').get(),
+        shader: { type: Lightning.shaders.RoundedRectangle, radius: 6 },
+        color: Colors('#1b1b1b').alpha(0).get(),
         flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
         Title: {},
       },
@@ -30,6 +31,7 @@ export default class Key extends Lightning.Component {
 
   set rowIndex(val) {
     this._rowIndex = val;
+    console.log('rowIND', this._rowIndex, val);
   }
 
   set data({ w, h, key, icon }) {
@@ -53,6 +55,7 @@ export default class Key extends Lightning.Component {
       Key: {
         w: this._data.w,
         h: this._data.h,
+        color: this._rowIndex === 0 ? Colors('#383643').get() : '',
       },
     });
   }
@@ -75,7 +78,7 @@ export default class Key extends Lightning.Component {
       zIndex: 400,
       w: this._data.w,
       h: this._data.h,
-      color: Colors('#1b1b1b').get(),
+      color: this._rowIndex === 0 ? Colors('#383643').get() : '',
       Title: {
         color: Colors('#ffffff').get(),
       },

@@ -8,19 +8,16 @@ import { keyboardKeys } from './keyboardKeys';
 export default class KeyboardSearch extends Lightning.Component {
   static _template() {
     return {
-      w: 1920,
-      h: 1080,
-      rect: true,
-      color: Colors('#000000').alpha(0.1).get(),
+      w: 500,
+      h: 500,
       collision: true,
-      flex: { direction: 'column', alignItems: 'center' },
 
       Keyboard: {
-        y: 580,
+        x: -140,
         w: 1000,
         h: 500,
         rect: true,
-        color: Colors('#000000').alpha(0.9).get(),
+        color: Colors('#000000').alpha(0).get(),
         collision: true,
         type: Column,
         plinko: true,
@@ -36,13 +33,12 @@ export default class KeyboardSearch extends Lightning.Component {
   _active() {
     const items = keyboardKeys.map((keys, rowIndex) => ({
       type: KeyboardRow,
-      w: 1000,
-      h: 100,
+      w: 700,
+      h: 70,
       collision: true,
       rowIndex: rowIndex,
-
       style: {
-        itemSpacing: 10,
+        itemSpacing: rowIndex !== 0 ? 10 : 20,
       },
       flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
       items: keys.map((key, index) => ({
@@ -55,7 +51,7 @@ export default class KeyboardSearch extends Lightning.Component {
     }));
 
     this._Keyboard.patch({
-      w: 1000,
+      w: 700,
       h: 500,
       items: items,
     });
