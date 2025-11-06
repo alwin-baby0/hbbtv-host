@@ -459,14 +459,6 @@ export default class SingleMovie extends Lightning.Component {
       : buttons;
 
     if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-      filteredButtons.push({
-        icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
-        buttonName: 'FAVORITE',
-        buttonLabel: '',
-        width: 100,
-        height: 78,
-      });
-
       last_position &&
         filteredButtons.push({
           icon: IMG_PATH.PLAY_BTN,
@@ -475,6 +467,13 @@ export default class SingleMovie extends Lightning.Component {
           width: 405,
           height: 78,
         });
+      filteredButtons.push({
+        icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
+        buttonName: 'FAVORITE',
+        buttonLabel: '',
+        width: 100,
+        height: 78,
+      });
     }
 
     const rows = [];
@@ -500,7 +499,7 @@ export default class SingleMovie extends Lightning.Component {
             w: item.width,
             h: item.height,
             flexItem: {
-              marginRight: 30,
+              marginRight: 20,
             },
             props: {
               width: item.width,
@@ -599,7 +598,7 @@ export default class SingleMovie extends Lightning.Component {
 
       const { is_favorite } = this._props.movie;
 
-      const id = movieTrailerUrl ? 2 : 1; //depending on movieTrailerUrl, we will know on which position is add to fav btn
+      const id = movieTrailerUrl ? 3 : 2; //depending on movieTrailerUrl, we will know on which position is add to fav btn
 
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {

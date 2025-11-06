@@ -182,7 +182,7 @@ export default class SingleSeries extends Lightning.Component {
               ContinueWatching: {
                 alpha: 1,
                 flexItem: {
-                  marginRight: 10,
+                  marginRight: 15,
                 },
                 props: {
                   buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
