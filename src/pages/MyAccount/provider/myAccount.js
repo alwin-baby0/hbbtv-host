@@ -8,35 +8,46 @@ export default async function (page) {
   const languages = await LanguageService.getLanguages();
 
   !localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
-  const response = await AuthorizationService.getDeviceCode();
+  const response = !localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+    ? await AuthorizationService.getDeviceCode()
+    : {};
 
-  const recentlyWatched = await UserService.getRecentlyWatched();
+  const recentlyWatched = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+    ? await UserService.getRecentlyWatched()
+    : undefined;
 
-  const parsedMovies = parseVodUserContentData({
-    data: {
-      railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
-      entry: recentlyWatched.data.recently_watched,
-    },
-    itemsPerRow:
-      recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length
-        ? recentlyWatched.data.recently_watched.length
-        : 0,
-  });
+  const parsedMovies = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+    ? parseVodUserContentData({
+        data: {
+          railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
+          entry: recentlyWatched.data.recently_watched,
+        },
+        itemsPerRow:
+          recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length
+            ? recentlyWatched.data.recently_watched.length
+            : 0,
+      })
+    : undefined;
 
-  const favorites = await UserService.getFavorites();
+  const favorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+    ? await UserService.getFavorites()
+    : undefined;
 
-  const parsedFavorites = parseVodUserContentData({
-    data: {
-      railTitle: t(TRANSLATIONS.FAVORITES),
-      entry: favorites.data.favorites,
-    },
-    itemsPerRow:
-      favorites.data.favorites && favorites.data.favorites.length
-        ? favorites.data.favorites.length
-        : 0,
-  });
+  const parsedFavorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+    ? parseVodUserContentData({
+        data: {
+          railTitle: t(TRANSLATIONS.FAVORITES),
+          entry: favorites.data.favorites,
+        },
+        itemsPerRow:
+          favorites.data.favorites && favorites.data.favorites.length
+            ? favorites.data.favorites.length
+            : 0,
+      })
+    : undefined;
 
-  const deviceCode = response.data.device_code;
+  const deviceCode = response && response.data ? response.data.device_code : '';
+  const verificationUri = response && response.data ? response.data.verification_uri : '';
 
   if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
     await AuthorizationService.setDeviceCodeStatusInterval(deviceCode);
@@ -45,7 +56,7 @@ export default async function (page) {
   page.props = {
     languagesData: languages.data,
     deviceCode,
-    verificationUri: response.data.verification_uri,
+    verificationUri,
     recentlyWatched,
     favorites,
     parsedMovies,

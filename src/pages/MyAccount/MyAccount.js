@@ -5,7 +5,7 @@ import qrcode from 'qrcode';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
 import { LOCAL_STORAGE_KEYS, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { parseVodMoviesPageData } from '../../Models';
+import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
 
 const states = ['UserRecentlyWatched', 'UserFavorites'];
@@ -26,6 +26,7 @@ export default class MyAccount extends Lightning.Component {
   constructor(context) {
     super(context);
     this.userLoginButtonsUpdate = this.userLoginButtonsUpdate.bind(this);
+    window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
   }
 
   static _template() {
@@ -42,6 +43,18 @@ export default class MyAccount extends Lightning.Component {
         x: 480,
         y: 225,
         clipping: true,
+        QRContainer: {
+          Info: {
+            Title: {
+              text: {
+                fontFace: 'Montserrat-Bold',
+                fontSize: 25,
+                lineHeight: 30,
+                letterSpacing: 2,
+              },
+            },
+          },
+        },
       },
     };
   }
@@ -61,7 +74,6 @@ export default class MyAccount extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     this.$changeContent();
-    this._setState('UserRecentlyWatched');
   }
 
   _enable() {
@@ -134,13 +146,51 @@ export default class MyAccount extends Lightning.Component {
     }
   }
 
+  async retrieveContentOnLogin() {
+    const recentlyWatched = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+      ? await UserService.getRecentlyWatched()
+      : undefined;
+
+    const parsedMovies = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+      ? parseVodUserContentData({
+          data: {
+            railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
+            entry: recentlyWatched.data.recently_watched,
+          },
+          itemsPerRow:
+            recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length
+              ? recentlyWatched.data.recently_watched.length
+              : 0,
+        })
+      : undefined;
+
+    const favorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+      ? await UserService.getFavorites()
+      : undefined;
+
+    const parsedFavorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+      ? parseVodUserContentData({
+          data: {
+            railTitle: t(TRANSLATIONS.FAVORITES),
+            entry: favorites.data.favorites,
+          },
+          itemsPerRow:
+            favorites.data.favorites && favorites.data.favorites.length
+              ? favorites.data.favorites.length
+              : 0,
+        })
+      : undefined;
+
+    this._props = { ...this._props, recentlyWatched, parsedMovies, favorites, parsedFavorites };
+  }
+
   async $changeContent() {
+    !this._props.recentlyWatched && (await this.retrieveContentOnLogin());
+    console.log('here');
+
     const { recentlyWatched, favorites, parsedFavorites, parsedMovies, verificationUri } =
       this._props;
-
-    window.removeEventListener('userLogIn', this.userLoginButtonsUpdate);
-
-    window.addEventListener('userLogIn', this.userLoginButtonsUpdate);
+    console.log(parsedMovies);
 
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       const qrCode = verificationUri.url;
@@ -164,10 +214,6 @@ export default class MyAccount extends Lightning.Component {
                 w: 500,
                 text: {
                   text: t(TRANSLATIONS.SIGNUP_TITLE),
-                  fontFace: 'Montserrat-Bold',
-                  fontSize: 30,
-                  lineHeight: 35,
-                  letterSpacing: 2,
                 },
               },
               Text: {
@@ -217,6 +263,7 @@ export default class MyAccount extends Lightning.Component {
         });
       });
     } else {
+      console.log('Update Content Logged In');
       this._Content.patch({
         QRContainer: {
           w: 1450,
@@ -224,21 +271,9 @@ export default class MyAccount extends Lightning.Component {
           flex: {
             direction: 'column',
           },
-          Info: {
-            w: 1310,
-            h: 100,
-            Title: {
-              h: 120,
-              w: 1310,
-              text: {
-                text: t(TRANSLATIONS.LOGGED_IN_MSG),
-                fontFace: 'Montserrat-Bold',
-                fontSize: 30,
-                lineHeight: 35,
-                letterSpacing: 2,
-              },
-            },
-          },
+          Info: undefined,
+          Divider: undefined,
+          QRCodeInfo: undefined,
           RecentlyWatched: {
             type: UserRecentlyWatched,
             w: 1450,
@@ -270,10 +305,14 @@ export default class MyAccount extends Lightning.Component {
           },
         },
       });
+
+      this._setState('UserRecentlyWatched');
     }
   }
 
-  userLoginButtonsUpdate() {
+  async userLoginButtonsUpdate() {
+    console.log('buttons update');
+    Router.navigate(ROUTES.ACC);
     this.$changeContent();
   }
 
