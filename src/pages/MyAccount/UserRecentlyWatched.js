@@ -4,11 +4,12 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 
 export default class UserRecentlyWatched extends Lightning.Component {
   _props = {
-    parentState: null,
+    parentState: 'UserRecentlyWatched',
   };
 
   static _template() {
     return {
+      collision: true,
       RecentlyWatched: {
         collision: true,
         type: HorizontalContainer,
@@ -33,6 +34,14 @@ export default class UserRecentlyWatched extends Lightning.Component {
         w: 1450,
       },
     });
+  }
+
+  $handleStateHover() {
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
   }
 
   $horizontalContainerIndexChange(index) {

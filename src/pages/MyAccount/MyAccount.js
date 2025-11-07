@@ -31,6 +31,7 @@ export default class MyAccount extends Lightning.Component {
 
   static _template() {
     return {
+      collision: true,
       Background: {
         w: 1920,
         h: 1080,
@@ -38,12 +39,14 @@ export default class MyAccount extends Lightning.Component {
         rect: true,
       },
       Content: {
+        coliison: true,
         w: 1450,
         h: 1020,
         x: 480,
         y: 225,
         clipping: true,
         QRContainer: {
+          collision: true,
           Info: {
             Title: {
               text: {
@@ -263,6 +266,7 @@ export default class MyAccount extends Lightning.Component {
     } else {
       this._Content.patch({
         QRContainer: {
+          collision: true,
           w: 1450,
           h: 800,
           flex: {
@@ -273,6 +277,7 @@ export default class MyAccount extends Lightning.Component {
           QRCodeInfo: undefined,
           RecentlyWatched: {
             type: UserRecentlyWatched,
+            collision: true,
             w: 1450,
             h:
               !recentlyWatched?.data?.recently_watched ||
@@ -290,6 +295,7 @@ export default class MyAccount extends Lightning.Component {
           },
           Favorites: {
             type: UserFavorites,
+            collision: true,
             w: 1450,
             h: 920,
             props: {
@@ -317,6 +323,7 @@ export default class MyAccount extends Lightning.Component {
   }
 
   $handleStateHover(index, stateName = null) {
+    console.log(stateName);
     if (stateName) {
       this._setState(stateName);
       return;
@@ -331,28 +338,6 @@ export default class MyAccount extends Lightning.Component {
           return this._UserRecentlyWatched;
         }
 
-        $enter() {
-          this._Content.patch({
-            y: 225,
-            QRContainer: {
-              Info: {
-                Title: {
-                  h: 120,
-                  w: 1310,
-                  text: {
-                    text: t(TRANSLATIONS.LOGGED_IN_MSG),
-                    fontFace: 'Montserrat-Bold',
-                    fontSize: 30,
-                    lineHeight: 35,
-                    letterSpacing: 2,
-                  },
-                },
-                h: 100,
-              },
-            },
-          });
-        }
-
         _handleUp() {
           Router.focusWidget(ROUTES.MENU_WIDGET);
         }
@@ -365,18 +350,6 @@ export default class MyAccount extends Lightning.Component {
       class UserFavorites extends this {
         _getFocused() {
           return this._UserFavorites;
-        }
-
-        $enter() {
-          this._Content.patch({
-            y: 80,
-            QRContainer: {
-              Info: {
-                Title: undefined,
-                h: 0,
-              },
-            },
-          });
         }
 
         _handleUp() {
