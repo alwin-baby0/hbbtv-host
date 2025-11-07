@@ -103,7 +103,7 @@ export default class MyAccount extends Lightning.Component {
         this._props.recentlyWPage++;
         const rcw = await UserService.getRecentlyWatched(this._props.recentlyWPage);
 
-        if (rcw.data.recently_watched.length < 8) {
+        if (!rcw.data.recently_watched || rcw.data.recently_watched.length < 8) {
           this._props.hasMoreRcw = false;
         }
 
@@ -116,7 +116,7 @@ export default class MyAccount extends Lightning.Component {
 
         const rails = constructRails(parsedMovies);
 
-        this._UserRecentlyWatched._appendItems(rails);
+        this._UserRecentlyWatched._RecentlyWatched._appendItems(rails);
       }
     }
 
@@ -128,7 +128,7 @@ export default class MyAccount extends Lightning.Component {
         this._props.favoritesPage++;
         const favorites = await UserService.getFavorites(this._props.favoritesPage);
 
-        if (favorites.data.favorites.length < 8) {
+        if (!favorites.data.favorites || favorites.data.favorites.length < 8) {
           this._props.hasMoreFav = false;
         }
 
@@ -186,11 +186,9 @@ export default class MyAccount extends Lightning.Component {
 
   async $changeContent() {
     !this._props.recentlyWatched && (await this.retrieveContentOnLogin());
-    console.log('here');
 
     const { recentlyWatched, favorites, parsedFavorites, parsedMovies, verificationUri } =
       this._props;
-    console.log(parsedMovies);
 
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       const qrCode = verificationUri.url;
@@ -263,7 +261,6 @@ export default class MyAccount extends Lightning.Component {
         });
       });
     } else {
-      console.log('Update Content Logged In');
       this._Content.patch({
         QRContainer: {
           w: 1450,
@@ -311,8 +308,6 @@ export default class MyAccount extends Lightning.Component {
   }
 
   async userLoginButtonsUpdate() {
-    console.log('buttons update');
-    Router.navigate(ROUTES.ACC);
     this.$changeContent();
   }
 
@@ -333,7 +328,6 @@ export default class MyAccount extends Lightning.Component {
     return [
       class UserRecentlyWatched extends this {
         _getFocused() {
-          console.log('here');
           return this._UserRecentlyWatched;
         }
 
