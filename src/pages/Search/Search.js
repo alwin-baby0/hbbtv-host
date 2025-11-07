@@ -12,18 +12,23 @@ import {
   ROUTES,
   RAIL_TYPES,
   TRANSLATIONS,
+  LOCAL_STORAGE_KEYS,
 } from '../../constants/globalConstants';
+import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
 
 const search = {
   items: [],
   timestamp: 0,
 };
 
-const states = ['Input', 'VODSection', 'Keyboard'];
+const states = ['Input', 'VODSection', 'Keyboard', 'Queries'];
+
+// const searchTerms = ['bell', 'ameri', 'pass'];
 
 export default class Search extends Lightning.Component {
   searchTimeout;
   numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+  searchTerms = [];
 
   static _template() {
     return {
@@ -50,9 +55,7 @@ export default class Search extends Lightning.Component {
             parentState: 'Input',
           },
         },
-        // alpha: 0,
         visible: false,
-        // zIndex: 99,
       },
       Wrapper: {
         w: 500,
@@ -61,8 +64,6 @@ export default class Search extends Lightning.Component {
         y: 260,
         flex: { direction: 'row', justifyContent: 'center' },
         Keyboard: {
-          /* y: -50,
-          x: -30, */
           type: KeyboardSearch,
           zIndex: 25,
           visible: true,
@@ -89,6 +90,7 @@ export default class Search extends Lightning.Component {
           plinko: true,
           props: {
             parentState: 'VODSection',
+            enableScroll: false,
           },
         },
       },
@@ -97,6 +99,33 @@ export default class Search extends Lightning.Component {
         y: 540,
         visible: false,
         type: LoadingScreenComponent,
+      },
+      SearchQueries: {
+        w: 420,
+        h: 320,
+        y: 700,
+        x: 100,
+        flex: { direction: 'column' },
+        Title: {
+          w: 350,
+          h: 40,
+          y: 80,
+          text: {
+            text: 'No recent searches',
+            fontSize: 35,
+          },
+        },
+        Queries: {
+          y: 85,
+          w: 350,
+          h: 300,
+          flex: { direction: 'column' },
+          type: VerticalContainer,
+          collision: true,
+          props: {
+            parentState: 'Queries',
+          },
+        },
       },
     };
   }
@@ -129,6 +158,14 @@ export default class Search extends Lightning.Component {
     return this.tag('SearchLabel');
   }
 
+  get _SearchQueries() {
+    return this.tag('SearchQueries');
+  }
+
+  get _Queries() {
+    return this.tag('Queries');
+  }
+
   _handleKey(key) {
     if (this.numberKeys.includes(key.key)) {
       this.$onSoftKey(key);
@@ -142,22 +179,16 @@ export default class Search extends Lightning.Component {
     if (inputTag.listening) {
       if (key === 'Space') {
         inputTag.insert(' ');
-      } else if (key === 'Delete') {
-        inputTag.backspace();
-      } else if (key === 'Clear') {
-        inputTag.clear();
       } else if (key === 'backspace') {
         inputTag.backspace();
-      } else if (key === 'Done') {
-        // this._Keyboard.visible = false;
-        this._setState('Input');
+      } else if (key === 'CLEAR') {
+        inputTag.clear();
       } else {
         inputTag.insert(key);
       }
     }
 
     let inputValue = inputTag.value.toLowerCase();
-    console.log('asdf inputval: ', inputValue);
 
     this.patch({
       SearchLabel: {
@@ -187,6 +218,23 @@ export default class Search extends Lightning.Component {
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
     }
+  }
+
+  $searchRecent(term) {
+    const inputTag = this._Input._Input;
+    inputTag.value = term;
+    inputTag.position = term.length;
+    const inputValue = inputTag.value.toLowerCase();
+
+    this.patch({
+      SearchLabel: {
+        text: {
+          text: (inputValue && inputValue) || 'Search',
+        },
+      },
+    });
+
+    this.$updatedVOD();
   }
 
   async $updatedVOD() {
@@ -235,6 +283,7 @@ export default class Search extends Lightning.Component {
       this._VODSection.patch({
         props: {
           items: search.items,
+          enableScroll: rows.length > 2,
         },
         text: {
           text: '',
@@ -277,6 +326,35 @@ export default class Search extends Lightning.Component {
 
   _active() {
     this.fireAncestors('$unpunchHole');
+    if (!localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH))
+      localStorage.setItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH, JSON.stringify(this.searchTerms));
+
+    const localSearchs = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH));
+
+    if (localSearchs && localSearchs.length > 0) {
+      const items = localSearchs.map((term) => ({
+        type: QueryButton,
+        title: term,
+        w: 250,
+        h: 65,
+      }));
+
+      if (localSearchs && localSearchs.length > 0) {
+        this.patch({
+          SearchQueries: {
+            Title: {
+              visible: false,
+            },
+            Queries: {
+              props: {
+                items: items,
+                enableScroll: false,
+              },
+            },
+          },
+        });
+      }
+    }
   }
 
   _handleHover() {
@@ -315,6 +393,38 @@ export default class Search extends Lightning.Component {
 
         $enter() {
           // this.fireAncestors('$setNavbarVisibility', false);
+          const localSearchs = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH));
+
+          let inputValue = this._Input._Input.value.toLowerCase();
+          if (
+            inputValue.length > 2 &&
+            !localSearchs.includes(inputValue) &&
+            localSearchs.length < 4
+          ) {
+            localSearchs.unshift(inputValue);
+            const items = localSearchs.map((term) => ({
+              type: QueryButton,
+              title: term,
+              w: 250,
+              h: 65,
+            }));
+            this.patch({
+              SearchQueries: {
+                Title: {
+                  visible: false,
+                },
+                Queries: {
+                  props: {
+                    items: items,
+                    enableScroll: false,
+                  },
+                },
+              },
+            });
+          }
+
+          localStorage.setItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH, JSON.stringify(localSearchs));
+
           this._extended = this._VODSection._focusedIndex > 0;
           this.patch({
             VODWrapper: {
@@ -372,16 +482,26 @@ export default class Search extends Lightning.Component {
           return true;
         }
 
-        /* _handleRight() {
-          this._setState('VODSection');
-        } */
-
         _handleRight() {
           if (this._VODSection.Items.children.length > 0 && this._VodWrapper.visible) {
             this._setState('VODSection');
           } else {
             return false;
           }
+        }
+
+        _handleDown() {
+          this._setState('Queries');
+        }
+      },
+
+      class Queries extends this {
+        _getFocused() {
+          return this._Queries;
+        }
+
+        _handleUp() {
+          this._setState('Keyboard');
         }
       },
     ];

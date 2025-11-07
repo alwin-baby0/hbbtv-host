@@ -274,6 +274,7 @@ export const LOCAL_STORAGE_KEYS = {
   LANGUAGE_TRANSLATIONS: 'languageTr',
   USER_DATA: 'userData',
   SELECTED_SUBTITLES_CHANNEL: 'selectedSubtitlesForChannel',
+  RECENT_SEARCH: 'recentSearch',
 };
 
 export const CATEGORY_TYPES = {
