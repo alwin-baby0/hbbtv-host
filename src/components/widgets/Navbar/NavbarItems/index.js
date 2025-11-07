@@ -104,29 +104,29 @@ export default class SidebarItems extends Lightning.Component {
               icon: '',
             },
             { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
-            { id: 5, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
-            { id: 6, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
+            { id: 5, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH_NEW },
+            { id: 6, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER_NEW },
             {
               id: 7,
               label: 'settings',
               route: ROUTES.LAN_SETTINGS,
-              icon: IMG_PATH.NAVBAR_SETTINGS,
+              icon: IMG_PATH.NAVBAR_SETTINGS_NEW,
             },
-            { id: 8, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
+            { id: 8, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO_NEW },
           ]
         )
       : menuItems.push(
           ...[
             { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
-            { id: 4, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
-            { id: 5, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
+            { id: 4, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH_NEW },
+            { id: 5, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER_NEW },
             {
               id: 6,
               label: 'settings',
               route: ROUTES.LAN_SETTINGS,
-              icon: IMG_PATH.NAVBAR_SETTINGS,
+              icon: IMG_PATH.NAVBAR_SETTINGS_NEW,
             },
-            { id: 7, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
+            { id: 7, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO_NEW },
           ]
         );
 
