@@ -20,7 +20,6 @@ export default class Button extends FocusableItem {
   static _template() {
     return {
       ...super._template(),
-      // flex: { direction: 'row', alignItems: 'center' },
       maxHeight: 88,
       Icon: {
         x: 20,
