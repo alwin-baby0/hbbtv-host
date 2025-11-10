@@ -39,8 +39,16 @@ export default class ContinueWatchingRailItem extends FocusableItem {
             type: Image,
           },
         },
+        PlayButton: {
+          color: Colors(colors.unfocus).alpha(0.6).get(),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 30, 30),
+          y: -70,
+          x: 20,
+          w: 30,
+          h: 30,
+        },
         ProgressBar: {
-          y: -20,
+          y: -60,
           type: ProgressBar,
           props: {
             width: CARD_SIZES.CONTINUE_WATCHING.width - 40,
