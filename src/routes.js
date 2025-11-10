@@ -26,7 +26,7 @@ import CMP from './pages/CMP/CMP';
 import cmp from './pages/CMP/provider/cmp';
 import CMPCustomize from './pages/CMP/components/CMPCustomize';
 import Settings from './pages/Settings/Settings';
-import settings from './pages/Settings/provider/Settings';
+import settings from './pages/Settings/provider/settings';
 import { ROUTES } from './constants/globalConstants';
 
 export default {
