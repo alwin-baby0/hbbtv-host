@@ -111,7 +111,7 @@ export default class SidebarItem extends Lightning.Component {
         !icon ? w + borderGap : iconW + borderGap,
         iconW + borderGap,
         radius,
-        2, //
+        2,
         Colors(colors.focus).get(),
         false,
         0
