@@ -29,13 +29,13 @@ export default class LandscapeRailItem extends FocusableItem {
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
-          flex: { justifyContent: 'center', alignItems: 'center' },
+          flex: { alignItems: 'center' },
           LandscapeImage: {
             type: Image,
           },
         },
         Title: {
-          h: 50,
+          h: 40,
           flexItem: {
             marginTop: 15,
             marginLeft: 20,
@@ -43,28 +43,44 @@ export default class LandscapeRailItem extends FocusableItem {
           },
           text: {
             fontFace: 'Montserrat-Bold',
-            fontSize: 18,
+            fontSize: 24,
             lineHeight: 25,
-            maxLines: 2,
+            maxLines: 1,
             maxLinesSuffix: '...',
-            wordWrapWidth: 275,
+            wordWrapWidth: 400,
           },
         },
         Description: {
-          h: 160,
-          w: 275,
+          h: 140,
+          w: 415,
           flexItem: {
-            marginTop: 15,
+            // marginTop: 5,
             marginLeft: 20,
             marginRight: 20,
           },
           text: {
             fontFace: 'Montserrat-Regular',
-            fontSize: 16,
-            lineHeight: 20,
-            wordWrapWidth: 275,
-            maxLines: 8,
+            fontSize: 18,
+            lineHeight: 25,
+            wordWrapWidth: 385,
+            maxLines: 5,
             maxLinesSuffix: '...',
+            textColor: Colors('#cccccf').get(),
+          },
+        },
+        Summary: {
+          h: 30,
+          w: 400,
+          flexItem: {
+            marginLeft: 20,
+            marginRight: 20,
+          },
+          text: {
+            fontFace: 'Montserrat-Regular',
+            fontSize: 18,
+            wordWrapWidth: 385,
+            maxLines: 1,
+            textColor: Colors('#868687').get(),
           },
         },
       },
@@ -89,11 +105,12 @@ export default class LandscapeRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle, itemDescription, placeholderSrc } = this._props;
+    const { imageSrc, radius, itemTitle, itemDescription, placeholderSrc, itemSummary } =
+      this._props;
 
     this.setProps({
-      width: 315,
-      height: 455,
+      width: CARD_SIZES.LANDSCAPE.width,
+      height: CARD_SIZES.LANDSCAPE.container_height,
     });
 
     this._Wrapper.patch({
@@ -116,6 +133,11 @@ export default class LandscapeRailItem extends FocusableItem {
       Description: {
         text: {
           text: itemDescription || '',
+        },
+      },
+      Summary: {
+        text: {
+          text: itemSummary || '',
         },
       },
     });
