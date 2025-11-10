@@ -296,6 +296,71 @@ export default class SingleMovie extends Lightning.Component {
     return this.tag('BackButton');
   }
 
+  _buildButtonConfiguration(movie, movieTrailerUrl, last_position) {
+    const buttons = [
+      {
+        icon: IMG_PATH.PLAY_BTN,
+        buttonName: 'WATCH NOW',
+        buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
+        width: 405,
+        height: 78,
+        stream: 'url',
+      },
+      {
+        icon: IMG_PATH.TRAILER_ICON,
+        buttonName: 'TRAILER',
+        buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
+        width: 405,
+        height: 78,
+        stream: 'trailerSrc',
+      },
+    ];
+
+    // Filter out trailer button if no trailer URL is available
+    const filteredButtons = !movieTrailerUrl
+      ? buttons.filter((button) => button.buttonName !== 'TRAILER')
+      : buttons;
+
+    // Add user-specific buttons if logged in
+    const isUserLoggedIn = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
+
+    if (isUserLoggedIn) {
+      // Add continue watching button if user has progress
+      if (last_position) {
+        filteredButtons.push({
+          icon: IMG_PATH.PLAY_BTN,
+          buttonName: 'CONTINUE WATCHING',
+          buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
+          width: 405,
+          height: 78,
+        });
+      }
+
+      // Add favorite button
+      filteredButtons.push({
+        icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
+        buttonName: 'FAVORITE',
+        buttonLabel: '',
+        width: 100,
+        height: 78,
+      });
+    }
+
+    return filteredButtons;
+  }
+
+  _arrangeButtonsInRowsDependingOnLanguage(buttons) {
+    const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
+    const itemsPerRow = languageCode === 'fr' ? 2 : 3;
+
+    const rows = [];
+    for (let i = 0; i < buttons.length; i += itemsPerRow) {
+      rows.push({ items: buttons.slice(i, i + itemsPerRow) });
+    }
+
+    return rows;
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
     const { movie, movieId, movieTrailerId, movieTrailerUrl } = this._props;
@@ -435,56 +500,10 @@ export default class SingleMovie extends Lightning.Component {
       },
     });
 
-    const buttons = [
-      {
-        icon: IMG_PATH.PLAY_BTN,
-        buttonName: 'WATCH NOW',
-        buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
-        width: 405,
-        height: 78,
-        stream: 'url',
-      },
-      {
-        icon: IMG_PATH.TRAILER_ICON,
-        buttonName: 'TRAILER',
-        buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
-        width: 405,
-        height: 78,
-        stream: 'trailerSrc',
-      },
-    ];
+    // Build button configuration based on movie data and user state
+    const buttonConfigs = this._buildButtonConfiguration(movie, movieTrailerUrl, last_position);
 
-    const filteredButtons = !movieTrailerUrl
-      ? buttons.filter((button) => button.buttonName !== 'TRAILER')
-      : buttons;
-
-    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-      last_position &&
-        filteredButtons.push({
-          icon: IMG_PATH.PLAY_BTN,
-          buttonName: 'CONTINUE WATCHING',
-          buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
-          width: 405,
-          height: 78,
-        });
-      filteredButtons.push({
-        icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
-        buttonName: 'FAVORITE',
-        buttonLabel: '',
-        width: 100,
-        height: 78,
-      });
-    }
-
-    const rows = [];
-
-    const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-
-    const itemsInRow = languageCode === 'fr' ? 2 : 3;
-
-    for (let i = 0, j = filteredButtons.length; i < j; i += itemsInRow) {
-      rows.push({ items: filteredButtons.slice(i, i + itemsInRow) });
-    }
+    const rows = this._arrangeButtonsInRowsDependingOnLanguage(buttonConfigs);
 
     this._Buttons.props = {
       parentState: 'Buttons',
