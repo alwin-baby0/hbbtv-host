@@ -10,7 +10,7 @@ export default class Navbar extends Lightning.Component {
         type: SidebarItems,
         collision: true,
         x: 40,
-        y: 15,
+        y: 35,
         h: 70,
       },
     };
