@@ -23,8 +23,6 @@ const search = {
 
 const states = ['Input', 'VODSection', 'Keyboard', 'Queries'];
 
-// const searchTerms = ['bell', 'ameri', 'pass'];
-
 export default class Search extends Lightning.Component {
   searchTimeout;
   numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
@@ -311,8 +309,6 @@ export default class Search extends Lightning.Component {
 
   _firstEnable() {
     this._setState('Keyboard');
-
-    // this.$updatedVOD();
   }
 
   $getInput() {
@@ -391,7 +387,6 @@ export default class Search extends Lightning.Component {
         }
 
         $enter() {
-          // this.fireAncestors('$setNavbarVisibility', false);
           const localSearchs = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH));
 
           let inputValue = this._Input._Input.value.toLowerCase();
