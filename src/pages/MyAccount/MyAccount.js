@@ -276,7 +276,7 @@ export default class MyAccount extends Lightning.Component {
       this._Content.patch({
         QRContainer: {
           collision: true,
-          y: 50,
+          y: 100,
           x: 100,
           w: 1450,
           h: 800,
@@ -334,7 +334,6 @@ export default class MyAccount extends Lightning.Component {
   }
 
   $handleStateHover(index, stateName = null) {
-    console.log(stateName);
     if (stateName) {
       this._setState(stateName);
       return;

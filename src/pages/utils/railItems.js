@@ -315,7 +315,6 @@ const constructBannerRailItems = (railItems, railItemsOptions) => {
 };
 
 const constructContinueWatchingRailItems = (railItems, railItemsOptions) => {
-  console.log(railItems);
   return railItems.map((railItem, index) => ({
     type: ContinueWatchingRailItem,
     collision: true,
