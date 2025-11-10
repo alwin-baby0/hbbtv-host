@@ -312,6 +312,7 @@ export const RAIL_TYPES = {
   COLLECTION: 'Collection',
   USER_CONTENT: 'UserContent',
   BANNER: 'Banner',
+  CONTINUE_WATCHING: 'ContinueWatching',
   VIDEO: 'video',
 };
 
@@ -505,6 +506,12 @@ export const CARD_SIZES = {
     height: 300,
     image_width: 1760,
     image_height: 260,
+  },
+  CONTINUE_WATCHING: {
+    width: 385,
+    height: 215,
+    image_width: 385,
+    image_height: 215,
   },
 };
 

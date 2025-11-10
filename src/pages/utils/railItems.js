@@ -16,6 +16,7 @@ import HeroRailItem from '../../components/RailItems/HeroRailItems';
 import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 import BannerRailItem from '../../components/RailItems/BannerRailItem';
 import { DetailService, EPGService } from '../../Services';
+import ContinueWatchingRailItem from '../../components/RailItems/ContinueWatchingRailItem';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -40,6 +41,8 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
       return constructLandscapeRailItems(railItems, railItemsOptions);
     case RAIL_TYPES.BANNER:
       return constructBannerRailItems(railItems, railItemsOptions);
+    case RAIL_TYPES.CONTINUE_WATCHING:
+      return constructContinueWatchingRailItems(railItems, railItemsOptions);
     default: {
       console.warn('unknown rail type:', railType, ', defaulting to simple rail items');
       return constructSimpleRailItems(railItems, railItemsOptions);
@@ -307,6 +310,30 @@ const constructBannerRailItems = (railItems, railItemsOptions) => {
       imageSrc: railItem.getCtvPoster(1080),
       itemType: railItem.type,
       callback: () => {},
+    },
+  }));
+};
+
+const constructContinueWatchingRailItems = (railItems, railItemsOptions) => {
+  console.log(railItems);
+  return railItems.map((railItem, index) => ({
+    type: ContinueWatchingRailItem,
+    collision: true,
+    flexItem: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    ...railItemsOptions,
+    props: {
+      itemTitle: railItem.title ? railItem.title : '',
+      imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
+      itemType: railItem.type,
+      index: index,
+      callback: () => {
+        Router.navigate(railItem.url);
+      },
     },
   }));
 };

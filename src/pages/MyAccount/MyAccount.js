@@ -4,8 +4,13 @@ import { AuthorizationService, UserService, t } from '../../Services';
 import qrcode from 'qrcode';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
-import { LOCAL_STORAGE_KEYS, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { parseVodMoviesPageData, parseVodUserContentData } from '../../Models';
+import {
+  LOCAL_STORAGE_KEYS,
+  ROUTES,
+  TRANSLATIONS,
+  RAIL_TYPES,
+} from '../../constants/globalConstants';
+import { parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
 
 const states = ['UserRecentlyWatched', 'UserFavorites'];
@@ -40,10 +45,9 @@ export default class MyAccount extends Lightning.Component {
       },
       Content: {
         coliison: true,
-        w: 1450,
-        h: 1020,
-        x: 480,
-        y: 225,
+        w: 1920,
+        h: 1000,
+        y: 80,
         clipping: true,
         QRContainer: {
           collision: true,
@@ -51,8 +55,8 @@ export default class MyAccount extends Lightning.Component {
             Title: {
               text: {
                 fontFace: 'Montserrat-Bold',
-                fontSize: 25,
-                lineHeight: 30,
+                fontSize: 32,
+                lineHeight: 36,
                 letterSpacing: 2,
               },
             },
@@ -110,9 +114,10 @@ export default class MyAccount extends Lightning.Component {
           this._props.hasMoreRcw = false;
         }
 
-        const parsedMovies = parseVodMoviesPageData({
+        const parsedMovies = parseVodUserContentData({
           data: {
             entry: rcw.data.recently_watched,
+            railType: RAIL_TYPES.CONTINUE_WATCHING,
           },
           itemsPerRow: 4,
         });
@@ -135,9 +140,10 @@ export default class MyAccount extends Lightning.Component {
           this._props.hasMoreFav = false;
         }
 
-        const parsedMovies = parseVodMoviesPageData({
+        const parsedMovies = parseVodUserContentData({
           data: {
             entry: favorites.data.favorites,
+            railType: RAIL_TYPES.USER_CONTENT,
           },
           itemsPerRow: 4,
         });
@@ -158,6 +164,7 @@ export default class MyAccount extends Lightning.Component {
       ? parseVodUserContentData({
           data: {
             railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
+            railType: RAIL_TYPES.CONTINUE_WATCHING,
             entry: recentlyWatched.data.recently_watched,
           },
           itemsPerRow:
@@ -175,6 +182,7 @@ export default class MyAccount extends Lightning.Component {
       ? parseVodUserContentData({
           data: {
             railTitle: t(TRANSLATIONS.FAVORITES),
+            railType: RAIL_TYPES.USER_CONTENT,
             entry: favorites.data.favorites,
           },
           itemsPerRow:
@@ -199,6 +207,8 @@ export default class MyAccount extends Lightning.Component {
       qrcode.toDataURL(qrCode).then((image) => {
         this._Content.patch({
           QRContainer: {
+            y: 200,
+            x: 100,
             w: 1310,
             h: 800,
             flex: {
@@ -209,12 +219,17 @@ export default class MyAccount extends Lightning.Component {
                 direction: 'column',
               },
               w: 750,
-              h: 800,
+              h: 540,
+              y: 100,
               Title: {
                 h: 120,
-                w: 500,
+                w: 600,
                 text: {
                   text: t(TRANSLATIONS.SIGNUP_TITLE),
+                  wordWrap: true,
+                  wordWrapWidth: 500,
+                  maxLines: 2,
+                  maxLinesSuffix: '...',
                 },
               },
               Text: {
@@ -229,32 +244,26 @@ export default class MyAccount extends Lightning.Component {
                 },
               },
             },
-            Divider: {
-              w: 1,
-              h: 450,
-              rect: true,
-              color: Colors('#ffffff').alpha(0.5).get(),
-            },
             QRCodeInfo: {
-              x: 150,
+              x: 300,
               flex: {
                 direction: 'column',
                 alignItems: 'center',
               },
               QRCode: {
-                w: 280,
-                h: 280,
+                w: 440,
+                h: 440,
                 src: image,
                 zIndex: 100,
               },
               QRText: {
                 flexItem: {
-                  marginTop: 10,
+                  marginTop: 30,
                 },
                 text: {
                   text: t(TRANSLATIONS.SIGNUP_SCAN),
                   fontFace: 'Montserrat-Bold',
-                  fontSize: 25,
+                  fontSize: 27,
                   lineHeight: 30,
                   letterSpacing: 2,
                 },
@@ -267,6 +276,8 @@ export default class MyAccount extends Lightning.Component {
       this._Content.patch({
         QRContainer: {
           collision: true,
+          y: 50,
+          x: 100,
           w: 1450,
           h: 800,
           flex: {
@@ -283,7 +294,7 @@ export default class MyAccount extends Lightning.Component {
               !recentlyWatched?.data?.recently_watched ||
               recentlyWatched?.data?.recently_watched?.length === 0
                 ? 95
-                : 500,
+                : 320,
             props: {
               items: parsedMovies,
               parentState: 'UserRecentlyWatched',

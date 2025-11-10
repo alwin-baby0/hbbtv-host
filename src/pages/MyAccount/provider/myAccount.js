@@ -1,5 +1,5 @@
 import { LanguageService, t, AuthorizationService, UserService } from '../../../Services';
-import { LOCAL_STORAGE_KEYS, TRANSLATIONS } from '../../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
 import { parseVodUserContentData } from '../../../Models';
 
 export default async function (page) {
@@ -20,6 +20,7 @@ export default async function (page) {
     ? parseVodUserContentData({
         data: {
           railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
+          railType: RAIL_TYPES.CONTINUE_WATCHING,
           entry: recentlyWatched.data.recently_watched,
         },
         itemsPerRow:
@@ -28,6 +29,7 @@ export default async function (page) {
             : 0,
       })
     : undefined;
+  console.log(parsedMovies);
 
   const favorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? await UserService.getFavorites()
@@ -37,6 +39,7 @@ export default async function (page) {
     ? parseVodUserContentData({
         data: {
           railTitle: t(TRANSLATIONS.FAVORITES),
+          railType: RAIL_TYPES.USER_CONTENT,
           entry: favorites.data.favorites,
         },
         itemsPerRow:
