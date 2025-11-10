@@ -12,7 +12,7 @@ export default class InputField extends Lightning.Component {
     return {
       InputWrapper: {
         collision: true,
-        w: 1700,
+        w: 500,
         h: 110,
         rect: true,
         flex: { direction: 'row', alignItems: 'center' },
