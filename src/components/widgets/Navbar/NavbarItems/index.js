@@ -29,6 +29,7 @@ export default class SidebarItems extends Lightning.Component {
         Logo: {
           w: 800 / 3.4,
           h: 215 / 3.4,
+          y: 10,
           src: Utils.asset(IMG_PATH.LOGO),
         },
         Column: {
@@ -150,7 +151,7 @@ export default class SidebarItems extends Lightning.Component {
               selected: false,
               index: item.id,
               data: item,
-              extraItemSpacing: item.route === ROUTES.LIVE ? 270 : 20,
+              extraItemSpacing: item.route === ROUTES.LIVE ? (this._visibleSport ? 270 : 480) : 20,
             },
           };
         }),

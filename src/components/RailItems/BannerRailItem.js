@@ -1,8 +1,9 @@
 import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 
-import { Utils } from '@lightningjs/sdk';
+import { Utils, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import colors from '../../../reskin/colors.json';
 
 export default class BannerRailItem extends FocusableItem {
   _props = {
