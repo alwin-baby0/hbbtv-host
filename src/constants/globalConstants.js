@@ -464,11 +464,11 @@ export const CARD_SIZES = {
     image_height: 375,
   },
   LANDSCAPE: {
-    width: 315,
+    width: 425,
     height: 410,
-    container_height: 455,
-    image_width: 315,
-    image_height: 205,
+    container_height: 470,
+    image_width: 425,
+    image_height: 235,
   },
   THUMBNAIL: {
     width: 0,
