@@ -312,6 +312,7 @@ export const RAIL_TYPES = {
   COLLECTION: 'Collection',
   USER_CONTENT: 'UserContent',
   BANNER: 'Banner',
+  CONTINUE_WATCHING: 'ContinueWatching',
   VIDEO: 'video',
 };
 
@@ -413,7 +414,7 @@ export const IMG_PATH = {
   LIVE_CHANNEL_BG: 'images/Rectangle.png',
   LOADING_SCREEN: 'loading-screen.png',
   LOGO: 'images/navbar/logo.png',
-  NAVBAR_INFO: 'images/navbar/question-mark.png',
+  NAVBAR_INFO: 'images/navbar/questionmark.png',
   NAVBAR_SEARCH: 'images/navbar/search.png',
   NAVBAR_SETTINGS: 'images/navbar/settings.png',
   NAVBAR_USER: 'images/navbar/user.png',
@@ -501,6 +502,12 @@ export const CARD_SIZES = {
     height: 300,
     image_width: 1760,
     image_height: 260,
+  },
+  CONTINUE_WATCHING: {
+    width: 385,
+    height: 215,
+    image_width: 385,
+    image_height: 215,
   },
 };
 

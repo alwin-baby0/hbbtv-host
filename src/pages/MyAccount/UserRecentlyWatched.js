@@ -1,17 +1,18 @@
 import { Lightning } from '@lightningjs/sdk';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
 export default class UserRecentlyWatched extends Lightning.Component {
   _props = {
-    parentState: null,
+    parentState: 'UserRecentlyWatched',
   };
 
   static _template() {
     return {
+      collision: true,
       RecentlyWatched: {
         collision: true,
-        type: VerticalContainer,
+        type: HorizontalContainer,
         w: 1450,
       },
     };
@@ -24,15 +25,26 @@ export default class UserRecentlyWatched extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     this._RecentlyWatched.patch({
-      h: !this._props.items || !this._props.items.length ? 95 : 500,
+      h: !this._props.items || !this._props.items.length ? 95 : 320,
       props: {
         items: constructRails(this._props.items),
         parentState: this._props.parentState,
         railTitle: this._props.railTitle,
-        h: !this._props.items || !this._props.items.length ? 0 : 920,
-        w: 1450,
+        h: !this._props.items || !this._props.items.length ? 0 : 320,
       },
     });
+  }
+
+  $handleStateHover() {
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
+  }
+
+  $horizontalContainerIndexChange(index) {
+    this.fireAncestors('$horizontalContainerIndexChange', index, 'RecentlyWatched');
   }
 
   _getFocused() {

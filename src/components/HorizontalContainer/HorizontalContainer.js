@@ -61,8 +61,8 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   set props(props) {
-    const { items, railTitle, parentState, ...rest } = props;
-    this._props = { ...this._props, ...rest, parentState };
+    const { items, railTitle, ...rest } = props;
+    this._props = { ...this._props, ...rest };
 
     const { cardType, targetIndex } = rest;
 

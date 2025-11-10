@@ -149,7 +149,7 @@ export const parseVodUserContentData = ({ data, itemsPerRow = VODS_PER_ROW }) =>
   if (!railItems || railItems?.length === 0) return;
 
   return {
-    railType: RAIL_TYPES.USER_CONTENT,
+    railType: data.railType,
     railTitle: data.railTitle,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
