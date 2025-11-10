@@ -403,6 +403,8 @@ export const TRANSLATIONS = {
 export const IMG_PATH = {
   AD_ICON: 'icons/ad-icon.png',
   BACKGROUND: 'images/background.jpg',
+  BACKGROUND_SEARCH_PAGE: 'images/abstract-wavy-background2.jpg',
+  BACKGROUND_SUPPORT_PAGES: 'images/abstract-wavy-background2.jpg',
   BACKSPACE: 'backspace.png',
   BACK_BTN: 'icons/backbtn.png',
   EMPTY_RAIL_PH: 'images/rail-placeholder-empty.png',
@@ -445,7 +447,7 @@ export const ROUTES = {
   PLAYER: 'player',
   CMP: 'cmp',
   CMP_CUSTOMIZE: 'cmp-customize',
-  LAN_SETTINGS: 'langsettings',
+  SETTINGS: 'settings',
   COLLECTION: 'collection-details',
   VOD: 'vod',
   MOVIE_DETAILS: 'movie-details',

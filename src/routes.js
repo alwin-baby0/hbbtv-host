@@ -25,8 +25,8 @@ import collection from './pages/Collection/provider/collection';
 import CMP from './pages/CMP/CMP';
 import cmp from './pages/CMP/provider/cmp';
 import CMPCustomize from './pages/CMP/components/CMPCustomize';
-import LanguageSettings from './pages/LanguageSettings/LanguageSettings';
-import languageSettings from './pages/LanguageSettings/provider/languageSettings';
+import Settings from './pages/Settings/Settings';
+import settings from './pages/Settings/provider/Settings';
 import { ROUTES } from './constants/globalConstants';
 
 export default {
@@ -99,10 +99,10 @@ export default {
       on: myAccount,
     },
     {
-      path: ROUTES.LAN_SETTINGS,
-      component: LanguageSettings,
+      path: ROUTES.SETTINGS,
+      component: Settings,
       widgets: [ROUTES.MENU_WIDGET],
-      on: languageSettings,
+      on: settings,
     },
     {
       path: ROUTES.HELP,

@@ -97,10 +97,6 @@ export default class MyAccount extends Lightning.Component {
     this._props.recentlyWPage = 1;
   }
 
-  $setStateOnHover(nextState) {
-    this._setState(nextState);
-  }
-
   async $horizontalContainerIndexChange(index, refName) {
     if (refName === 'RecentlyWatched') {
       if (

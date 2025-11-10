@@ -6,7 +6,7 @@ import { CMPService } from '../../Services';
 import Button from '../../components/Button/Button';
 import { ROUTES } from '../../constants/globalConstants';
 
-export default class LanguageSettings extends Lightning.Component {
+export default class Settings extends Lightning.Component {
   static _template() {
     return {
       Background: {
@@ -32,6 +32,19 @@ export default class LanguageSettings extends Lightning.Component {
         h: 920,
         x: 480,
         y: 225,
+        Languages: {
+          type: VerticalContainer,
+          collision: true,
+          w: 1050,
+          h: 300,
+          // props: {
+          //   items: items,
+          //   enableScroll: false,
+          //   w: 1050,
+          //   h: 300,
+          //   parentState: 'Languages',
+          // },
+        },
         CMPContainer: {
           w: 1310,
           h: 920,
@@ -239,10 +252,6 @@ export default class LanguageSettings extends Lightning.Component {
         },
       });
     }
-  }
-
-  $setStateOnHover(nextState) {
-    this._setState(nextState);
   }
 
   _active() {
