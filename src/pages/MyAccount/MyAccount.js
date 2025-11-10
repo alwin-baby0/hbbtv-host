@@ -328,6 +328,12 @@ export default class MyAccount extends Lightning.Component {
     this.$changeContent();
   }
 
+  _getFocused() {
+    if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
+      Router.focusWidget('Menu');
+    }
+  }
+
   _handleBack() {
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
