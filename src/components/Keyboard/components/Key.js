@@ -31,7 +31,6 @@ export default class Key extends Lightning.Component {
 
   set rowIndex(val) {
     this._rowIndex = val;
-    console.log('rowIND', this._rowIndex, val);
   }
 
   set data({ w, h, key, icon }) {
