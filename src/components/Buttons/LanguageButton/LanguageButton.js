@@ -86,7 +86,6 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   async _handleEnter() {
-    console.log('here');
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
     const translations = await this.#getLanguageTranslations(this._props.languageInfo);
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
