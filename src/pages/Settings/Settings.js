@@ -77,6 +77,7 @@ export default class Settings extends Lightning.Component {
         y: 980,
         w: 230,
         h: 100,
+        zIndex: 3,
         Text: {
           w: 230,
           h: 35,
@@ -205,7 +206,7 @@ export default class Settings extends Lightning.Component {
           Buttons: {
             w: 1050,
             h: 400,
-            y: 60,
+            y: 20,
             type: VerticalContainer,
             collision: true,
             props: {
