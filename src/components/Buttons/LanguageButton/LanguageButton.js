@@ -12,6 +12,7 @@ export default class LanguageButton extends Lightning.Component {
   static _template() {
     return {
       collision: true,
+      zIndex: 3,
       flex: { direction: 'row', alignItems: 'center' },
       flexItem: {
         marginBottom: 20,
@@ -60,7 +61,7 @@ export default class LanguageButton extends Lightning.Component {
         .get(),
       Text: {
         text: languageMapper[languageInfo].name,
-        color: Colors(colors.unfocusedLanguage).alpha(0).get(),
+        color: Colors(colors.white).get(),
         fontFace: 'Montserrat-Bold',
       },
     });
