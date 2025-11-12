@@ -10,13 +10,19 @@ export default class LanguageButton extends Lightning.Component {
   };
   static _template() {
     return {
-      Column: {
-        collision: true,
-        flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
-        w: 1045,
-        h: 85,
-        rect: true,
-        Text: {},
+      collision: true,
+      flex: { direction: 'row', alignItems: 'center' },
+      flexItem: {
+        marginBottom: 20,
+      },
+      w: 300,
+      h: 65,
+      rect: true,
+      shader: { type: Lightning.shaders.RoundedRectangle, radius: 12 },
+      Text: {
+        text: {
+          paddingLeft: 20,
+        },
       },
     };
   }
@@ -26,35 +32,31 @@ export default class LanguageButton extends Lightning.Component {
     this._props = { ...this._props, ...rest };
   }
 
-  get _Column() {
-    return this.tag('Column');
-  }
-
   _selectButton() {
     this._selected = true;
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
     const isSelected = this._props.languageInfo === languageCode;
 
-    this._Column.patch({
+    this.patch({
       color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
     });
   }
 
   _unselectButton() {
     this._selected = false;
-    this._Column.patch({
+    this.patch({
       color: Colors(colors.unfocusedLanguage).get(),
     });
   }
 
   _enable() {
     const { languageInfo } = this._props;
-    this._Column.patch({
+    this.patch({
       color: Colors(colors.background).get(),
       Text: {
         text: languageMapper[languageInfo].name,
         color: Colors(colors.white).get(),
-        fontFace: 'Montserrat-SemiBold',
+        fontFace: 'Montserrat-Bold',
       },
     });
   }
@@ -83,7 +85,7 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   _focus() {
-    this._Column.patch({
+    this.patch({
       color: Colors(colors.focus).get(),
     });
   }
@@ -92,7 +94,7 @@ export default class LanguageButton extends Lightning.Component {
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
     const isSelected = this._props.languageInfo === languageCode;
 
-    this._Column.patch({
+    this.patch({
       color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
     });
   }

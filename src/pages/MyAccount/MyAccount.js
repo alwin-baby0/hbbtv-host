@@ -280,7 +280,6 @@ export default class MyAccount extends Lightning.Component {
             direction: 'column',
           },
           Info: undefined,
-          Divider: undefined,
           QRCodeInfo: undefined,
           RecentlyWatched: {
             type: UserRecentlyWatched,

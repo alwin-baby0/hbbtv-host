@@ -4,7 +4,9 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
 import { CMPService } from '../../Services';
 import Button from '../../components/Button/Button';
-import { ROUTES } from '../../constants/globalConstants';
+import { ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+import { t } from '../../Services';
+import CMPButton from '../../components/Buttons/CMPButton/CMPButton';
 
 export default class Settings extends Lightning.Component {
   static _template() {
@@ -15,45 +17,57 @@ export default class Settings extends Lightning.Component {
         color: Colors(colors.background).get(),
         rect: true,
       },
-      Wrapper: {
-        x: 110,
-        y: 225,
-        h: 300,
-        w: 1720,
-        Column: {
-          h: 300,
-          w: 1720,
-          collision: true,
-          type: VerticalContainer,
-        },
-      },
       Content: {
         w: 1310,
         h: 920,
-        x: 480,
-        y: 225,
-        Languages: {
-          type: VerticalContainer,
-          collision: true,
-          w: 1050,
-          h: 300,
-          // props: {
-          //   items: items,
-          //   enableScroll: false,
-          //   w: 1050,
-          //   h: 300,
-          //   parentState: 'Languages',
-          // },
+        x: 80,
+        y: 150,
+        LanguagesContainer: {
+          Title: {
+            text: {
+              text: t(TRANSLATIONS.LANGUAGES),
+              fontFace: 'Montserrat-Bold',
+            },
+          },
+          Divider: {
+            y: 20,
+            x: 480,
+            h: 4,
+            w: 1310,
+            rect: true,
+            color: Colors('#ffffff').alpha(0.5).get(),
+          },
+          Languages: {
+            y: 50,
+            x: 480,
+            type: VerticalContainer,
+            collision: true,
+            w: 1050,
+            h: 300,
+          },
         },
         CMPContainer: {
-          w: 1310,
-          h: 920,
-          Buttons: {
-            w: 1050,
-            h: 400,
-            y: 100,
-            collision: true,
-            type: VerticalContainer,
+          y: 350,
+          Title: {
+            text: {
+              text: t(TRANSLATIONS.COOKIE_PREFERENCES),
+              fontFace: 'Montserrat-Bold',
+            },
+          },
+          CMPData: {
+            x: 480,
+            w: 1310,
+            h: 920,
+            Divider: {
+              h: 4,
+              w: 1310,
+              rect: true,
+              color: Colors('#ffffff').alpha(0.5).get(),
+              flexItem: {
+                marginTop: 30,
+                marginBottom: 30,
+              },
+            },
           },
         },
       },
@@ -84,107 +98,83 @@ export default class Settings extends Lightning.Component {
     return this.tag('Version');
   }
 
-  get _Column() {
-    return this.tag('Column');
-  }
-
   get _Languages() {
-    return this.tag('Content.Languages');
+    return this.tag('Content.LanguagesContainer.Languages');
   }
 
   get _Content() {
     return this.tag('Content');
   }
 
-  get _CMPContainer() {
-    return this.tag('Content.CMPContainer');
+  get _CMPData() {
+    return this.tag('Content.CMPContainer.CMPData');
   }
 
   get CMPButtons() {
-    return this.tag('Content.CMPContainer.Buttons');
+    return this.tag('Content.CMPContainer.CMPData.Buttons');
   }
 
   set props(props) {
     this._props = { ...this._props, ...props };
-  }
 
-  $setFocus(id) {
-    const { lastId } = this._props;
+    const buttonsResult = CMPService.cmpData?.buttons;
+    const cmpTitle = CMPService.cmpData?.title;
+    const cmpDescription = CMPService.cmpData?.description;
 
-    if (typeof lastId !== 'undefined') {
-      // Unselect the button of the last ID before setting a new one
-      this._Column.Items.children[lastId]._unselectButton();
-    }
-    // Set the new ID
-    if (!id) {
-      this._Column.Items.children[0]._selectButton();
-      this._Column._focusedIndex = 0;
-    } else {
-      this._Column.Items.children[id]._selectButton();
-      this._Column._focusedIndex = id;
-    }
-    // Update the lastId variable with the current ID
-    this._props.lastId = id;
-  }
-
-  $setFocusLanguage(id) {
-    const { lastLanguage } = this._props;
-
-    if (typeof lastLanguage !== 'undefined') {
-      // Unselect the button of the last ID before setting a new one
-      this._Languages.Items.children[lastLanguage]._unselectButton();
-    }
-    // Set the new ID
-    if (!id) {
-      this._Languages.Items.children[0]._selectButton();
-    } else {
-      this._Languages.Items.children[id]._selectButton();
-    }
-    // Update the lastId variable with the current ID
-    this._props.lastLanguage = id;
-  }
-
-  async $changeContent(contentId) {
-    this._Content.patch({
-      CMPContainer: undefined,
-      Languages: undefined,
+    const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
+      return {
+        type: CMPButton,
+        collision: true,
+        flexItem: {
+          marginBottom: 18,
+        },
+        props: {
+          label: value.label,
+          width: btnIndex === 0 ? 270 : btnIndex === 1 ? 420 : 500,
+          callback: async () => {
+            if (value.callback_url) {
+              const chosenValue = btnIndex === 0 ? 1 : 0;
+              await CMPService.selectCMPChoice(this._props.serialNumber, chosenValue);
+              Router.navigate(ROUTES.HOME);
+            } else {
+              Router.navigate(ROUTES.CMP_CUSTOMIZE, { options: value.options });
+            }
+          },
+        },
+      };
     });
-    if (contentId === 0) {
-      const buttonsResult = CMPService.cmpData?.buttons;
-      const cmpTitle = CMPService.cmpData?.title;
-      const cmpDescription = CMPService.cmpData?.description;
 
-      const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
-        return {
-          type: Button,
+    const { languages } = this._props.languagesData;
+    const languagesArr = languages.split(',');
+    const languageItems = languagesArr.map((language, index) => ({
+      type: LanguageButton,
+      props: {
+        languageInfo: language,
+        languageIndex: index,
+      },
+      w: 300,
+      h: 65,
+    }));
+
+    this._Content.patch({
+      LanguagesContainer: {
+        Languages: {
+          type: VerticalContainer,
           collision: true,
           w: 1050,
-          flexItem: {
-            marginBottom: 18,
-          },
+          h: 300,
           props: {
-            width: 1050,
-            height: 72,
-            buttonLabel: value.label,
-            buttonIcon: '',
-            strokeWidth: 1.5,
-            borderColor: '#696969',
-            callback: async () => {
-              if (value.callback_url) {
-                const chosenValue = btnIndex === 0 ? 1 : 0;
-                await CMPService.selectCMPChoice(this._props.serialNumber, chosenValue);
-                Router.navigate(ROUTES.HOME);
-              } else {
-                Router.navigate(ROUTES.CMP_CUSTOMIZE, { options: value.options });
-              }
-            },
+            items: languageItems,
+            enableScroll: false,
+            w: 1050,
+            h: 300,
+            parentState: 'Languages',
           },
-        };
-      });
-
-      this._Content.patch({
-        CMPContainer: {
-          flex: { direction: 'column', alignItems: 'center' },
+        },
+      },
+      CMPContainer: {
+        CMPData: {
+          flex: { direction: 'column' },
           w: 1310,
           h: 920,
           Title: {
@@ -195,11 +185,11 @@ export default class Settings extends Lightning.Component {
               fontSize: 40,
               fontFace: 'Montserrat-Bold',
               lineHeight: 50,
-              textAlign: 'center',
+              textAlign: 'left',
             },
           },
           Description: {
-            w: 1000,
+            w: 1300,
             h: 100,
             y: 30,
             text: {
@@ -207,13 +197,13 @@ export default class Settings extends Lightning.Component {
               fontSize: 24,
               fontFace: 'Montserrat-Regular',
               lineHeight: 30,
-              textAlign: 'center',
+              textAlign: 'left',
             },
           },
           Buttons: {
             w: 1050,
             h: 400,
-            y: 100,
+            y: 60,
             type: VerticalContainer,
             collision: true,
             props: {
@@ -222,41 +212,12 @@ export default class Settings extends Lightning.Component {
             },
           },
         },
-      });
-    } else if (contentId === 1) {
-      const { languages } = this._props.languagesData;
-      const languagesArr = languages.split(',');
-      const items = languagesArr.map((language, index) => ({
-        type: LanguageButton,
-        props: {
-          languageInfo: language,
-          languageIndex: index,
-        },
-        w: 1050,
-        h: 100,
-      }));
-
-      this._Content.patch({
-        Languages: {
-          type: VerticalContainer,
-          collision: true,
-          w: 1050,
-          h: 300,
-          props: {
-            items: items,
-            enableScroll: false,
-            w: 1050,
-            h: 300,
-            parentState: 'Languages',
-          },
-        },
-      });
-    }
+      },
+    });
   }
 
   _active() {
-    this._setState('DefaultState');
-    this.$changeContent(0);
+    this._setState('Languages');
   }
 
   _handleBack() {
@@ -274,36 +235,13 @@ export default class Settings extends Lightning.Component {
 
   static _states() {
     return [
-      class DefaultState extends this {
-        _getFocused() {
-          return this._Column;
-        }
-
-        _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
-        }
-
-        _handleRight() {
-          if (this._CMPContainer) {
-            this._setState('CMPContainer');
-          }
-          if (this._Languages) {
-            this._setState('Languages');
-          }
-        }
-      },
-
       class CMPContainer extends this {
         _getFocused() {
           return this.CMPButtons;
         }
 
-        _handleLeft() {
-          this._setState('DefaultState');
-        }
-
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          this._setState('Languages');
         }
       },
 
@@ -316,8 +254,8 @@ export default class Settings extends Lightning.Component {
           Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
-        _handleLeft() {
-          this._setState('DefaultState');
+        _handleDown() {
+          this._setState('CMPContainer');
         }
       },
     ];

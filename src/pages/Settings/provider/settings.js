@@ -14,11 +14,11 @@ const languageArea = (page, tabButtons) => {
     tabIndex: index,
   }));
 
-  page._Column.props = {
-    items: items,
-    enableScroll: false,
-    parentState: 'DefaultState',
-  };
+  // page._Column.props = {
+  //   items: items,
+  //   enableScroll: false,
+  //   parentState: 'DefaultState',
+  // };
 };
 
 export default async function (page) {
