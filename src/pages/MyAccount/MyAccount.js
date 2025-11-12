@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router } from '@lightningjs/sdk';
+import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import { AuthorizationService, UserService, t } from '../../Services';
 import qrcode from 'qrcode';
@@ -9,6 +9,7 @@ import {
   ROUTES,
   TRANSLATIONS,
   RAIL_TYPES,
+  IMG_PATH,
 } from '../../constants/globalConstants';
 import { parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
@@ -38,16 +39,19 @@ export default class MyAccount extends Lightning.Component {
     return {
       collision: true,
       Background: {
-        w: 1920,
-        h: 1080,
-        color: Colors(colors.background).get(),
-        rect: true,
+        src: Utils.asset(IMG_PATH.BACKGROUND_SEARCH_PAGE),
+        zIndex: 1,
+      },
+      Overlay: {
+        src: Utils.asset(IMG_PATH.GRADIENT_SVG),
+        zIndex: 2,
       },
       Content: {
         coliison: true,
         w: 1920,
         h: 1000,
         y: 80,
+        zIndex: 3,
         clipping: true,
         QRContainer: {
           collision: true,
@@ -95,10 +99,6 @@ export default class MyAccount extends Lightning.Component {
     this._props.favoritesPage = 1;
     this._props.hasMoreRcw = true;
     this._props.recentlyWPage = 1;
-  }
-
-  $setStateOnHover(nextState) {
-    this._setState(nextState);
   }
 
   async $horizontalContainerIndexChange(index, refName) {
@@ -284,7 +284,6 @@ export default class MyAccount extends Lightning.Component {
             direction: 'column',
           },
           Info: undefined,
-          Divider: undefined,
           QRCodeInfo: undefined,
           RecentlyWatched: {
             type: UserRecentlyWatched,

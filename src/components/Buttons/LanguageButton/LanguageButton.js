@@ -8,15 +8,23 @@ export default class LanguageButton extends Lightning.Component {
   _props = {
     languageInfo: {},
   };
+
   static _template() {
     return {
-      Column: {
-        collision: true,
-        flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
-        w: 1045,
-        h: 85,
-        rect: true,
-        Text: {},
+      collision: true,
+      zIndex: 3,
+      flex: { direction: 'row', alignItems: 'center' },
+      flexItem: {
+        marginBottom: 20,
+      },
+      w: 300,
+      h: 65,
+      rect: true,
+      shader: { type: Lightning.shaders.RoundedRectangle, radius: 12 },
+      Text: {
+        text: {
+          paddingLeft: 20,
+        },
       },
     };
   }
@@ -26,35 +34,38 @@ export default class LanguageButton extends Lightning.Component {
     this._props = { ...this._props, ...rest };
   }
 
-  get _Column() {
-    return this.tag('Column');
-  }
-
   _selectButton() {
     this._selected = true;
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
     const isSelected = this._props.languageInfo === languageCode;
 
-    this._Column.patch({
-      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
+    this.patch({
+      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
+        .alpha(isSelected ? 1 : 0)
+        .get(),
     });
   }
 
   _unselectButton() {
     this._selected = false;
-    this._Column.patch({
-      color: Colors(colors.unfocusedLanguage).get(),
+    this.patch({
+      color: Colors(colors.unfocusedLanguage).alpha(0).get(),
     });
   }
 
   _enable() {
     const { languageInfo } = this._props;
-    this._Column.patch({
-      color: Colors(colors.background).get(),
+    const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
+    const isSelected = this._props.languageInfo === languageCode;
+
+    this.patch({
+      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
+        .alpha(isSelected ? 1 : 0)
+        .get(),
       Text: {
         text: languageMapper[languageInfo].name,
         color: Colors(colors.white).get(),
-        fontFace: 'Montserrat-SemiBold',
+        fontFace: 'Montserrat-Bold',
       },
     });
   }
@@ -77,13 +88,13 @@ export default class LanguageButton extends Lightning.Component {
   async _handleEnter() {
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
     const translations = await this.#getLanguageTranslations(this._props.languageInfo);
-    localStorage.setItem('languageTr', JSON.stringify(translations));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
     Router.navigate(ROUTES.HOME);
     window.location.reload();
   }
 
   _focus() {
-    this._Column.patch({
+    this.patch({
       color: Colors(colors.focus).get(),
     });
   }
@@ -92,8 +103,10 @@ export default class LanguageButton extends Lightning.Component {
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
     const isSelected = this._props.languageInfo === languageCode;
 
-    this._Column.patch({
-      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
+    this.patch({
+      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
+        .alpha(isSelected ? 1 : 0)
+        .get(),
     });
   }
 
@@ -102,8 +115,10 @@ export default class LanguageButton extends Lightning.Component {
     this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
   }
 
-  _handleClick() {
+  async _handleClick() {
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
+    const translations = await this.#getLanguageTranslations(this._props.languageInfo);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
     Router.navigate(ROUTES.HOME);
     window.location.reload();
   }

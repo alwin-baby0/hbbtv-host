@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router } from '@lightningjs/sdk';
+import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch';
 import InputField from '../../components/Input/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
@@ -13,6 +13,7 @@ import {
   RAIL_TYPES,
   TRANSLATIONS,
   LOCAL_STORAGE_KEYS,
+  IMG_PATH,
 } from '../../constants/globalConstants';
 import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
 
@@ -32,6 +33,14 @@ export default class Search extends Lightning.Component {
     return {
       w: 1920,
       h: 1080,
+      Background: {
+        src: Utils.asset(IMG_PATH.BACKGROUND_SEARCH_PAGE),
+        zIndex: 1,
+      },
+      Overlay: {
+        src: Utils.asset(IMG_PATH.GRADIENT_SVG),
+        zIndex: 2,
+      },
       SearchLabel: {
         w: 420,
         h: 80,

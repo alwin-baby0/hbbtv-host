@@ -110,7 +110,7 @@ export default class SidebarItems extends Lightning.Component {
             {
               id: 7,
               label: 'settings',
-              route: ROUTES.LAN_SETTINGS,
+              route: ROUTES.SETTINGS,
               icon: IMG_PATH.NAVBAR_SETTINGS,
             },
             { id: 8, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
@@ -124,7 +124,7 @@ export default class SidebarItems extends Lightning.Component {
             {
               id: 6,
               label: 'settings',
-              route: ROUTES.LAN_SETTINGS,
+              route: ROUTES.SETTINGS,
               icon: IMG_PATH.NAVBAR_SETTINGS,
             },
             { id: 7, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
@@ -180,8 +180,6 @@ export default class SidebarItems extends Lightning.Component {
       this._setSelected(this._index);
       return;
     }
-    let focusedId = getRouteNavbarIndex(activeHash, this._visibleSport);
-    this.$changePage(focusedId);
   }
 
   _setSelected(index) {

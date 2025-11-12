@@ -137,7 +137,7 @@ export default class SidebarItem extends Lightning.Component {
   _handleEnter() {
     this.fja();
     this.fireAncestors('$changePage', this._props.index);
-    Router.focusPage();
+    this._props.data.route !== 'account' && Router.focusPage();
   }
 
   _handleHover() {

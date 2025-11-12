@@ -13,12 +13,6 @@ const languageArea = (page, tabButtons) => {
     h: 100,
     tabIndex: index,
   }));
-
-  page._Column.props = {
-    items: items,
-    enableScroll: false,
-    parentState: 'DefaultState',
-  };
 };
 
 export default async function (page) {
