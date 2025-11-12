@@ -8,6 +8,7 @@ export default class LanguageButton extends Lightning.Component {
   _props = {
     languageInfo: {},
   };
+
   static _template() {
     return {
       collision: true,
@@ -38,24 +39,28 @@ export default class LanguageButton extends Lightning.Component {
     const isSelected = this._props.languageInfo === languageCode;
 
     this.patch({
-      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
+      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
+        .alpha(isSelected ? 1 : 0)
+        .get(),
     });
   }
 
   _unselectButton() {
     this._selected = false;
     this.patch({
-      color: Colors(colors.unfocusedLanguage).get(),
+      color: Colors(colors.unfocusedLanguage).alpha(0).get(),
     });
   }
 
   _enable() {
-    const { languageInfo } = this._props;
+    const { languageInfo, isSelected } = this._props;
     this.patch({
-      color: Colors(colors.background).get(),
+      color: Colors(colors.unfocusedLanguage)
+        .alpha(isSelected ? 1 : 0)
+        .get(),
       Text: {
         text: languageMapper[languageInfo].name,
-        color: Colors(colors.white).get(),
+        color: Colors(colors.unfocusedLanguage).alpha(0).get(),
         fontFace: 'Montserrat-Bold',
       },
     });
@@ -77,9 +82,10 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   async _handleEnter() {
+    console.log('here');
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
     const translations = await this.#getLanguageTranslations(this._props.languageInfo);
-    localStorage.setItem('languageTr', JSON.stringify(translations));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
     Router.navigate(ROUTES.HOME);
     window.location.reload();
   }
@@ -95,7 +101,9 @@ export default class LanguageButton extends Lightning.Component {
     const isSelected = this._props.languageInfo === languageCode;
 
     this.patch({
-      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage).get(),
+      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
+        .alpha(isSelected ? 1 : 0)
+        .get(),
     });
   }
 
@@ -104,8 +112,10 @@ export default class LanguageButton extends Lightning.Component {
     this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
   }
 
-  _handleClick() {
+  async _handleClick() {
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
+    const translations = await this.#getLanguageTranslations(this._props.languageInfo);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
     Router.navigate(ROUTES.HOME);
     window.location.reload();
   }

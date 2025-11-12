@@ -180,8 +180,6 @@ export default class SidebarItems extends Lightning.Component {
       this._setSelected(this._index);
       return;
     }
-    let focusedId = getRouteNavbarIndex(activeHash, this._visibleSport);
-    this.$changePage(focusedId);
   }
 
   _setSelected(index) {

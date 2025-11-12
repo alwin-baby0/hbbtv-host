@@ -1,26 +1,28 @@
-import { Colors, Lightning, Router } from '@lightningjs/sdk';
-import colors from '../../../reskin/colors.json';
+import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
 import CMPButton from '../../components/Buttons/CMPButton/CMPButton';
 import { CMPService } from '../../Services';
-import { ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
 import { t } from '../../Services';
 
 export default class Settings extends Lightning.Component {
   static _template() {
     return {
       Background: {
-        w: 1920,
-        h: 1080,
-        color: Colors(colors.background).get(),
-        rect: true,
+        src: Utils.asset(IMG_PATH.BACKGROUND_SEARCH_PAGE),
+        zIndex: 1,
+      },
+      Overlay: {
+        src: Utils.asset(IMG_PATH.GRADIENT_SVG),
+        zIndex: 2,
       },
       Content: {
         w: 1310,
         h: 920,
         x: 80,
         y: 150,
+        zIndex: 3,
         LanguagesContainer: {
           Title: {
             text: {
@@ -158,6 +160,7 @@ export default class Settings extends Lightning.Component {
     this._Content.patch({
       LanguagesContainer: {
         Languages: {
+          zIndex: 3,
           type: VerticalContainer,
           collision: true,
           w: 1050,

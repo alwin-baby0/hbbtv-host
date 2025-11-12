@@ -6,6 +6,7 @@ export default class CMPButton extends Lightning.Component {
     label: '',
     callback: () => {},
   };
+
   static _template() {
     return {
       collision: true,
@@ -33,7 +34,7 @@ export default class CMPButton extends Lightning.Component {
     const { label, width } = this._props;
     this.patch({
       w: width,
-      color: Colors(colors.background).get(),
+      color: Colors(colors.unfocusedLanguage).alpha(0).get(),
       Text: {
         text: label,
         color: Colors(colors.white).get(),
@@ -55,7 +56,7 @@ export default class CMPButton extends Lightning.Component {
 
   _unfocus() {
     this.patch({
-      color: Colors(colors.unfocusedLanguage).get(),
+      color: Colors(colors.unfocusedLanguage).alpha(0).get(),
     });
   }
 
