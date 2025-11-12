@@ -2,11 +2,10 @@ import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
+import CMPButton from '../../components/Buttons/CMPButton/CMPButton';
 import { CMPService } from '../../Services';
-import Button from '../../components/Button/Button';
 import { ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
 import { t } from '../../Services';
-import CMPButton from '../../components/Buttons/CMPButton/CMPButton';
 
 export default class Settings extends Lightning.Component {
   static _template() {
