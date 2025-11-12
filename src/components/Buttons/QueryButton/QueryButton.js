@@ -37,7 +37,7 @@ export default class QueryButton extends Lightning.Component {
 
   _enable() {
     this._Column.patch({
-      color: Colors('#1b1b23').get(),
+      color: Colors('#1b1b23').alpha(0).get(),
       Icon: {
         texture: Img(Utils.asset(`/icons/recentIcon.png`)).contain(40, 40),
       },
@@ -68,7 +68,7 @@ export default class QueryButton extends Lightning.Component {
 
   _unfocus() {
     this._Column.patch({
-      color: Colors('#1b1b23').get(),
+      color: Colors('#1b1b23').alpha(0).get(),
       Text: {
         text: {
           textColor: Colors(colors.white).get(),
