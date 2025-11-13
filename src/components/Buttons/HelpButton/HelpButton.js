@@ -4,23 +4,39 @@ import colors from '../../../../reskin/colors.json';
 export default class PageItem extends Lightning.Component {
   static _template() {
     return {
-      Column: {
-        collision: true,
-        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-        w: 240,
-        h: 65,
-        color: Colors(colors.white).get(),
-        rect: true,
-        shader: { type: Lightning.shaders.RoundedRectangle, radius: 6 },
-        Text: {
-          w: 230,
-          h: 25,
-          text: {
-            textAlign: 'center',
-            fontFace: 'Montserrat-Medium',
-            fontSize: 20,
-            lineHeight: 25,
-            letterSpacing: 1.2,
+      FocusBorder: {
+        flex: {
+          direction: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        texture: Lightning.Tools.getRoundRect(
+          401,
+          74,
+          15,
+          2,
+          Colors('#000000').alpha(0).get(),
+          false
+        ),
+        zIndex: 100,
+        Column: {
+          collision: true,
+          flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+          w: 390,
+          h: 62,
+          color: Colors(colors.white).alpha(0).get(),
+          rect: true,
+          shader: { type: Lightning.shaders.RoundedRectangle, radius: 15 },
+          Text: {
+            w: 360,
+            h: 45,
+            text: {
+              textAlign: 'center',
+              fontFace: 'Montserrat-Bold',
+              fontSize: 33,
+              lineHeight: 30,
+              letterSpacing: 1.2,
+            },
           },
         },
       },
@@ -29,6 +45,10 @@ export default class PageItem extends Lightning.Component {
 
   get _Column() {
     return this.tag('Column');
+  }
+
+  get _FocusBorder() {
+    return this.tag('FocusBorder');
   }
 
   set pageInfoData(val) {
@@ -41,7 +61,7 @@ export default class PageItem extends Lightning.Component {
 
   _enable() {
     this._Column.patch({
-      color: Colors(colors.background).get(),
+      color: Colors(colors.background).alpha(0).get(),
       Text: {
         text: { text: this._pageInfoData.title },
         color: Colors(colors.white).get(),
@@ -71,13 +91,17 @@ export default class PageItem extends Lightning.Component {
   _unselectButton() {
     this._selected = false;
     this._Column.patch({
-      color: Colors(colors.background).get(),
+      color: Colors(colors.background).alpha(0).get(),
     });
   }
 
   _focus() {
     this._Column.patch({
       color: Colors(colors.focus).get(),
+    });
+
+    this._FocusBorder.patch({
+      texture: lng.Tools.getRoundRect(401, 74, 15, 2, Colors(colors.focus).get(), false),
     });
   }
 
@@ -88,9 +112,20 @@ export default class PageItem extends Lightning.Component {
       });
     } else {
       this._Column.patch({
-        color: Colors(colors.unfocusedHelpButton).get(),
+        color: Colors(colors.unfocusedHelpButton).alpha(0).get(),
       });
     }
+
+    this._FocusBorder.patch({
+      texture: lng.Tools.getRoundRect(
+        401,
+        74,
+        15,
+        2,
+        Colors(colors.background).alpha(0).get(),
+        false
+      ),
+    });
   }
 
   _handleHover() {
