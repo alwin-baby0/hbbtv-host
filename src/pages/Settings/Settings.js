@@ -32,7 +32,7 @@ export default class Settings extends Lightning.Component {
           },
           Divider: {
             y: 20,
-            x: 480,
+            x: 500,
             h: 4,
             w: 1310,
             rect: true,
@@ -40,7 +40,7 @@ export default class Settings extends Lightning.Component {
           },
           Languages: {
             y: 50,
-            x: 480,
+            x: 500,
             type: VerticalContainer,
             collision: true,
             w: 1050,
@@ -56,7 +56,7 @@ export default class Settings extends Lightning.Component {
             },
           },
           CMPData: {
-            x: 480,
+            x: 500,
             w: 1310,
             h: 920,
             Divider: {
@@ -132,7 +132,6 @@ export default class Settings extends Lightning.Component {
         },
         props: {
           label: value.label,
-          width: btnIndex === 0 ? 270 : btnIndex === 1 ? 420 : 500,
           callback: async () => {
             if (value.callback_url) {
               const chosenValue = btnIndex === 0 ? 1 : 0;

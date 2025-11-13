@@ -25,15 +25,27 @@ export default class CMPButton extends Lightning.Component {
     };
   }
 
+  get _Text() {
+    return this.tag('Text');
+  }
+
   set props(props) {
     const { items, ...rest } = props;
     this._props = { ...this._props, ...rest };
   }
 
+  _active() {
+    this.stage.once('frameStart', () => {
+      this.patch({
+        w: this._Text.finalW + 20,
+      });
+    });
+  }
+
   _enable() {
     const { label, width } = this._props;
     this.patch({
-      w: width,
+      // w: width,
       color: Colors(colors.unfocusedLanguage).alpha(0).get(),
       Text: {
         text: label,
