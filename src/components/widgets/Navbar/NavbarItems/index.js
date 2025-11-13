@@ -50,6 +50,28 @@ export default class SidebarItems extends Lightning.Component {
     return this.tag('Column');
   }
 
+  async _updateFocus() {
+    const location = await CountryService.getCountry();
+    const visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());
+    const activeHash = Router.getActiveHash();
+
+    if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
+      this._index = getRouteNavbarIndex('filterPage/movie', visibleSport);
+      this._setSelected(this._index);
+      return;
+    } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
+      this._index = getRouteNavbarIndex('filterPage/series', visibleSport);
+      this._setSelected(this._index);
+      return;
+    }
+
+    const newIndex = getRouteNavbarIndex(Router.getActiveHash(), visibleSport);
+    if (newIndex !== this._index) {
+      this._setSelected(newIndex);
+      this._index = newIndex;
+    }
+  }
+
   async _active() {
     const location = await CountryService.getCountry();
     this._visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());

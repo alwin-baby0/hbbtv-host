@@ -1,6 +1,6 @@
 import { Colors, Router, Utils, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
-import { ROUTES } from '../../../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../../constants/globalConstants';
 
 export default class SidebarItem extends Lightning.Component {
   _props = {
@@ -45,6 +45,9 @@ export default class SidebarItem extends Lightning.Component {
           fontFace: 'Montserrat-Bold',
           fontSize: 24,
           textAlign: 'center',
+          wordWrapWidth: 100,
+          maxLines: 1,
+          maxLinesSuffix: '...',
         },
         zIndex: 2,
       },
@@ -137,7 +140,10 @@ export default class SidebarItem extends Lightning.Component {
   _handleEnter() {
     this.fja();
     this.fireAncestors('$changePage', this._props.index);
-    this._props.data.route !== 'account' && Router.focusPage();
+    (this._props.data.route !== 'account' ||
+      (this._props.data.route === 'account' &&
+        localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA))) &&
+      Router.focusPage();
   }
 
   _handleHover() {

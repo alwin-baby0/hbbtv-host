@@ -48,11 +48,10 @@ export default class SingleSeries extends Lightning.Component {
       },
       SeriesWrapper: {
         rect: true,
-        h: 1080,
-        w: 1920,
+        h: 883,
+        w: 1570,
         HeroSection: {
           collision: true,
-          h: 1080,
           type: GalleryItem,
         },
       },

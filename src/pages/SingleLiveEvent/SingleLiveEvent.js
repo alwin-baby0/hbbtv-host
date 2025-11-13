@@ -28,11 +28,10 @@ export default class SingleLiveEvent extends Lightning.Component {
       },
       SeriesWrapper: {
         rect: true,
-        h: 1080,
-        w: 1920,
+        h: 883,
+        w: 1570,
         HeroSection: {
           collision: true,
-          h: 1080,
           type: GalleryItem,
         },
       },
@@ -76,7 +75,7 @@ export default class SingleLiveEvent extends Lightning.Component {
       props: {
         galleryItem: galleryItem,
         fallbackImage,
-        height: 1080,
+        height: 883,
         yPos: 100,
         parentState: 'HeroSection',
         startDate,

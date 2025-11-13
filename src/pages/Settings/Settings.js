@@ -32,15 +32,15 @@ export default class Settings extends Lightning.Component {
           },
           Divider: {
             y: 20,
-            x: 480,
+            x: 550,
             h: 4,
-            w: 1310,
+            w: 1210,
             rect: true,
             color: Colors('#ffffff').alpha(0.5).get(),
           },
           Languages: {
             y: 50,
-            x: 480,
+            x: 550,
             type: VerticalContainer,
             collision: true,
             w: 1050,
@@ -56,12 +56,12 @@ export default class Settings extends Lightning.Component {
             },
           },
           CMPData: {
-            x: 480,
-            w: 1310,
+            x: 550,
+            w: 1210,
             h: 920,
             Divider: {
               h: 4,
-              w: 1310,
+              w: 1210,
               rect: true,
               color: Colors('#ffffff').alpha(0.5).get(),
               flexItem: {
@@ -132,7 +132,6 @@ export default class Settings extends Lightning.Component {
         },
         props: {
           label: value.label,
-          width: btnIndex === 0 ? 270 : btnIndex === 1 ? 420 : 500,
           callback: async () => {
             if (value.callback_url) {
               const chosenValue = btnIndex === 0 ? 1 : 0;
@@ -178,7 +177,7 @@ export default class Settings extends Lightning.Component {
       CMPContainer: {
         CMPData: {
           flex: { direction: 'column' },
-          w: 1310,
+          w: 1210,
           h: 920,
           Title: {
             w: 1000,
@@ -192,9 +191,12 @@ export default class Settings extends Lightning.Component {
             },
           },
           Description: {
-            w: 1300,
+            w: 1200,
             h: 100,
             y: 30,
+            flexItem: {
+              marginBottom: 20,
+            },
             text: {
               text: cmpDescription,
               fontSize: 24,

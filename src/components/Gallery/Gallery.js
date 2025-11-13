@@ -72,8 +72,8 @@ export default class Gallery extends Lightning.Component {
   }
 
   _enable() {
-    VideoPlayer.position(0, 0);
-    VideoPlayer.size(1920, 1080);
+    VideoPlayer.position(0, 350);
+    VideoPlayer.size(1570, 883);
     VideoPlayer.consumer(this);
     VideoPlayer.loader(loader);
     VideoPlayer.unloader(unloader);
@@ -105,8 +105,8 @@ export default class Gallery extends Lightning.Component {
 
     this._HeroSection._BackgroundImage.patch({
       visible: true,
-      w: 1920,
-      h: 1080,
+      w: 1570,
+      h: 883,
       src: sliderData.items[index].getLandscapePoster(IMAGE_SIZES.S)?.src,
     });
   }

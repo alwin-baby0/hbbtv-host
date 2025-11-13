@@ -109,7 +109,6 @@ export default class Search extends Lightning.Component {
         type: LoadingScreenComponent,
       },
       SearchQueries: {
-        zIndex: 3,
         w: 420,
         h: 320,
         y: 700,
