@@ -48,10 +48,11 @@ export default class Search extends Lightning.Component {
         x: 100,
         y: 160,
         text: {
-          text: 'Search',
+          text: t(TRANSLATIONS.SEARCH) || 'Search',
           fontFace: 'Montserrat-Bold',
           fontSize: 50,
         },
+        zIndex: 3,
       },
       InputWrapper: {
         zIndex: 3,
@@ -123,7 +124,7 @@ export default class Search extends Lightning.Component {
           h: 40,
           y: 80,
           text: {
-            text: 'No recent searches',
+            text: t(TRANSLATIONS.NO_RECENT_SEARCHES) || 'No recent searches',
             fontSize: 35,
           },
         },
@@ -205,7 +206,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: (inputValue && inputValue) || 'Search',
+          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH) || 'Search',
         },
       },
     });
@@ -223,7 +224,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: 'Search',
+          text: t(TRANSLATIONS.SEARCH) || 'Search',
         },
       },
     });
@@ -241,7 +242,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: (inputValue && inputValue) || 'Search',
+          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH) || 'Search',
         },
       },
     });
@@ -338,17 +339,17 @@ export default class Search extends Lightning.Component {
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH))
       localStorage.setItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH, JSON.stringify(this.searchTerms));
 
-    const localSearchs = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH));
+    const localSearches = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH));
 
-    if (localSearchs && localSearchs.length > 0) {
-      const items = localSearchs.map((term) => ({
+    if (localSearches && localSearches.length > 0) {
+      const items = localSearches.map((term) => ({
         type: QueryButton,
         title: term,
         w: 250,
         h: 65,
       }));
 
-      if (localSearchs && localSearchs.length > 0) {
+      if (localSearches && localSearches.length > 0) {
         this.patch({
           SearchQueries: {
             Title: {
@@ -401,21 +402,23 @@ export default class Search extends Lightning.Component {
         }
 
         $enter() {
-          const localSearchs = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH));
+          const localSearches =
+            JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH)) || [];
 
           let inputValue = this._Input._Input.value.toLowerCase();
-          if (
-            inputValue.length > 2 &&
-            !localSearchs.includes(inputValue) &&
-            localSearchs.length < 4
-          ) {
-            localSearchs.unshift(inputValue);
-            const items = localSearchs.map((term) => ({
+          if (inputValue.length > 2 && !localSearches.includes(inputValue)) {
+            if (localSearches.length >= 4) {
+              localSearches.pop();
+            }
+            localSearches.unshift(inputValue);
+
+            const items = localSearches.map((term) => ({
               type: QueryButton,
               title: term,
               w: 250,
               h: 65,
             }));
+
             this.patch({
               SearchQueries: {
                 Title: {
@@ -429,9 +432,9 @@ export default class Search extends Lightning.Component {
                 },
               },
             });
-          }
 
-          localStorage.setItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH, JSON.stringify(localSearchs));
+            localStorage.setItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH, JSON.stringify(localSearches));
+          }
 
           this._extended = this._VODSection._focusedIndex > 0;
           this.patch({

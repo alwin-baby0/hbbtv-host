@@ -398,6 +398,8 @@ export const TRANSLATIONS = {
   YES_EXIT: 'yes_exit',
   NO_FAVORITES: 'no_favorites',
   NO_CONTINUE_WATCHING: 'no_continue_watching',
+  HELP_INFO_LABEL: 'help_info_label',
+  NO_RECENT_SEARCHES: 'no_recent_searches',
 };
 
 export const IMG_PATH = {
