@@ -1,19 +1,19 @@
 import { Colors, Lightning, Utils } from '@lightningjs/sdk';
-import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import LiveTVPlayer from '../../pages/LiveTV/components/LiveTVPlayer';
 import ProgressBar from '../../pages/Player/components/ProgressBar/ProgressBar';
 import colors from '../../../reskin/colors.json';
 import { t } from '../../Services';
 import { IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
+import { capitalizeFirstLetter } from '../../utils';
 
 export default class LiveTVPreview extends Lightning.Component {
   _props = {};
   static _template() {
     return {
       LiveSection: {
-        type: HorizontalContainer,
+        // type: HorizontalContainer,
         x: 110,
-        y: 105,
+        y: 150,
         w: 1700,
         h: 415,
         ChannelInfo: {
@@ -21,20 +21,54 @@ export default class LiveTVPreview extends Lightning.Component {
           h: 295,
           flex: { direction: 'column' },
           ChannelName: {
-            flex: { direction: 'row' },
+            flex: { direction: 'row', alignItems: 'center' },
+            Badge: {
+              rect: true,
+              texture: Lightning.Tools.getRoundRect(
+                200,
+                55,
+                10,
+                2,
+                Colors(colors.white).get(),
+                true,
+                Colors('#4a4a49').get()
+              ),
+              w: 150,
+              h: 45,
+              flex: {
+                direction: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              flexItem: {
+                marginRight: 40,
+                minWidth: 150,
+              },
+              Text: {
+                flexItem: {
+                  alignSelf: 'center',
+                },
+                text: {
+                  text: capitalizeFirstLetter(t(TRANSLATIONS.LIVE_TV)),
+                  fontSize: 18,
+                  fontFace: 'Montserrat-Regular',
+                  textColor: Colors(colors.white).get(),
+                },
+              },
+            },
             Icon: {
-              w: 70,
-              h: 35,
+              w: 80,
+              h: 50,
             },
             Name: {
               w: 670,
-              h: 34,
+              h: 40,
               flexItem: {
                 marginLeft: 20,
               },
               text: {
                 text: 'TV MAX',
-                fontSize: 28,
+                fontSize: 30,
                 fontFace: 'Montserrat-ExtraBold',
               },
             },

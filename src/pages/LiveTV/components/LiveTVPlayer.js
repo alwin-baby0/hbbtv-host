@@ -11,7 +11,7 @@ export default class LiveTVPlayer extends Lightning.Component {
   }
 
   _enable() {
-    VideoPlayer.position(105, 1067);
+    VideoPlayer.position(150, 1067);
     VideoPlayer.size(743, 415);
     VideoPlayer.consumer(this);
     VideoPlayer.loader(loader);
