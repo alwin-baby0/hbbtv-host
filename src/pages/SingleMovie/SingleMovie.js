@@ -32,9 +32,10 @@ export default class SingleMovie extends Lightning.Component {
           zIndex: 2,
         },
         Image: {
-          w: 1920,
+          w: 1570,
           h: 1080,
           y: 0,
+          x: 350,
           zIndex: 1,
         },
         BackButton: {

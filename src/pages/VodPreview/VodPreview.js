@@ -32,8 +32,10 @@ export default class VodPreview extends Lightning.Component {
       },
       VodContentContainer: {
         type: VodContentContainer,
+        zIndex: 2,
       },
       VodContainer: {
+        zIndex: 2,
         x: 90,
         y: 980,
         w: 1740,

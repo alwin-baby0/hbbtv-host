@@ -28,8 +28,9 @@ export default class GalleryItem extends Lightning.Component {
     return {
       w: 1920,
       BackgroundImage: {
-        w: 1920,
-        h: 1080,
+        x: 350,
+        w: 1570,
+        h: 883,
       },
       GradientOverlay: {
         zIndex: 1,
@@ -233,11 +234,12 @@ export default class GalleryItem extends Lightning.Component {
           w: 900,
           h: 150,
           text: {
-            wordWrapWidth: 900,
+            wordWrapWidth: 500,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
             maxLines: 4,
+            maxLinesSuffix: '...',
           },
         },
         Venue: {
@@ -624,8 +626,8 @@ export default class GalleryItem extends Lightning.Component {
 
     this.patch({
       BackgroundImage: {
-        w: 1920,
-        h: 1080,
+        w: 1570,
+        h: 883,
         src: bgImageSrc(),
       },
       GradientOverlay: {
