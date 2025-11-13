@@ -8,7 +8,7 @@ const ROUTES_INDEX = {
   live: 4,
   search: 5,
   account: 6,
-  langsettings: 7,
+  settings: 7,
   help: 8,
 };
 
@@ -19,7 +19,7 @@ export function getRouteNavbarIndex(route, visibleSport) {
       live: 3,
       search: 4,
       account: 5,
-      langsettings: 6,
+      settings: 6,
       help: 7,
     }),
   };

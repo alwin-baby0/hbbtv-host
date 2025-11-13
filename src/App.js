@@ -74,6 +74,10 @@ export default class App extends Router.App {
     Router.startRouter(
       {
         ...routes,
+        afterEachRoute: () => {
+          // after each route update nav bar
+          this._Menu.Items._updateFocus();
+        },
       },
       this
     );
