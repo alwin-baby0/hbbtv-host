@@ -42,7 +42,6 @@ export default class Search extends Lightning.Component {
         zIndex: 2,
       },
       SearchLabel: {
-        zIndex: 3,
         w: 420,
         h: 80,
         x: 100,
@@ -55,7 +54,6 @@ export default class Search extends Lightning.Component {
         zIndex: 3,
       },
       InputWrapper: {
-        zIndex: 3,
         x: 610,
         y: 250,
         w: 200,
@@ -68,7 +66,6 @@ export default class Search extends Lightning.Component {
         visible: false,
       },
       Wrapper: {
-        zIndex: 3,
         w: 500,
         h: 500,
         x: 100,
@@ -85,7 +82,6 @@ export default class Search extends Lightning.Component {
         },
       },
       VODWrapper: {
-        zIndex: 3,
         x: 600,
         y: 160,
         w: 1760,
@@ -113,7 +109,6 @@ export default class Search extends Lightning.Component {
         type: LoadingScreenComponent,
       },
       SearchQueries: {
-        zIndex: 3,
         w: 420,
         h: 320,
         y: 700,

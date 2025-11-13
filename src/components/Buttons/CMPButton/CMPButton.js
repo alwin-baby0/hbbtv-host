@@ -45,7 +45,6 @@ export default class CMPButton extends Lightning.Component {
   _enable() {
     const { label, width } = this._props;
     this.patch({
-      // w: width,
       color: Colors(colors.unfocusedLanguage).alpha(0).get(),
       Text: {
         text: label,
