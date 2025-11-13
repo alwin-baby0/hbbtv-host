@@ -1,9 +1,12 @@
-import { Colors, Router, Lightning } from '@lightningjs/sdk';
+import { Colors, Router, Lightning, Utils } from '@lightningjs/sdk';
 import { ScrollWrapper } from '@lightningjs/ui-components';
 import colors from '../../../reskin/colors.json';
-import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
-import { ROUTES } from '../../constants/globalConstants';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
+import { t } from '../../Services';
+
+const states = ['HelpItems', 'ScrollWrapper'];
 
 export default class HelpScreen extends Lightning.Component {
   _props = {
@@ -14,30 +17,47 @@ export default class HelpScreen extends Lightning.Component {
   static _template() {
     return {
       Background: {
-        w: 1920,
-        h: 1080,
-        color: Colors(colors.background).get(),
-        rect: true,
+        src: Utils.asset(IMG_PATH.BACKGROUND_SEARCH_PAGE),
+        zIndex: 1,
+      },
+      Overlay: {
+        src: Utils.asset(IMG_PATH.GRADIENT_SVG),
+        zIndex: 2,
+      },
+      InfoLabel: {
+        zIndex: 3,
+        w: 420,
+        h: 80,
+        x: 100,
+        y: 150,
+        text: {
+          text: t(TRANSLATIONS.HELP_INFO_LABEL) || 'Info',
+          fontFace: 'Montserrat-Bold',
+          fontSize: 50,
+        },
       },
       Wrapper: {
+        zIndex: 3,
         x: 110,
         y: 120,
         h: 1080,
         w: 1800,
-        Column: {
-          y: 105,
+        Row: {
+          y: 30,
+          x: 300,
           collision: true,
-          type: VerticalContainer,
+          type: HorizontalContainer,
           h: 225,
-          w: 240,
+          w: 290,
           props: {
             parentState: 'HelpItems',
+            disableScroll: true,
           },
         },
         Description: {
           w: 1390,
           h: 760,
-          y: 85,
+          y: 155,
           x: 290,
           color: Colors(colors.white).get(),
           QRDesc: {
@@ -46,7 +66,7 @@ export default class HelpScreen extends Lightning.Component {
             Wrapper: {
               ScrollWrapper: {
                 type: ScrollWrapper,
-                h: 560,
+                h: 650,
                 w: 1380,
                 autoScroll: false,
                 autoScrollDelay: 2000,
@@ -80,8 +100,8 @@ export default class HelpScreen extends Lightning.Component {
     this._props = { ...this._props, ...props };
   }
 
-  get _Column() {
-    return this.tag('Column');
+  get _Row() {
+    return this.tag('Row');
   }
 
   get _LoadingIndicator() {
@@ -105,9 +125,9 @@ export default class HelpScreen extends Lightning.Component {
     const { lastId } = this._props;
 
     if (typeof lastId !== 'undefined') {
-      this._Column.Items.children[lastId]._unselectButton();
+      this._Row.Items.children[lastId]._unselectButton();
     }
-    this._Column.Items.children[id]._selectButton();
+    this._Row.Items.children[id]._selectButton();
     this._props.lastId = id;
   }
 
@@ -115,8 +135,10 @@ export default class HelpScreen extends Lightning.Component {
     const content = this._props.texts[index - 1].map((chunk) => ({
       text: chunk,
       style: {
-        fontStyle: 'italic',
         alignContent: 'center',
+        fontSize: 26,
+        textColor: Colors('#f3f4f5').get(),
+        fontFace: 'Montserrat-Regular',
       },
     }));
 
@@ -137,14 +159,14 @@ export default class HelpScreen extends Lightning.Component {
     return [
       class HelpItems extends this {
         _getFocused() {
-          return this._Column;
+          return this._Row;
         }
 
         _handleUp() {
           Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
-        _handleRight() {
+        _handleDown() {
           this._setState('ScrollWrapper');
         }
       },
@@ -153,12 +175,9 @@ export default class HelpScreen extends Lightning.Component {
           return this._ScrollWrapper;
         }
 
-        _handleLeft() {
-          this._setState('HelpItems');
-        }
-
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          this._setState('HelpItems');
+          return false;
         }
       },
     ];

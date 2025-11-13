@@ -31,12 +31,12 @@ export default async function (page) {
   const items = data.entry.map((pageInfo, index) => ({
     type: HelpButton,
     pageInfoData: pageInfo,
-    w: 250,
+    w: 410,
     h: 100,
     pageIndex: index,
   }));
 
-  page._Column.props = {
+  page._Row.props = {
     items: items,
     enableScroll: false,
   };
