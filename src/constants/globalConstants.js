@@ -405,8 +405,8 @@ export const TRANSLATIONS = {
 export const IMG_PATH = {
   AD_ICON: 'icons/ad-icon.png',
   BACKGROUND: 'images/background.jpg',
-  BACKGROUND_SEARCH_PAGE: 'images/abstract-wavy-background2.jpg',
-  BACKGROUND_SUPPORT_PAGES: 'images/abstract-wavy-background3.jpg',
+  BACKGROUND_SEARCH_PAGE: 'images/abstract-wavy-background2.png',
+  BACKGROUND_SUPPORT_PAGES: 'images/abstract-wavy-background3.png',
   BACKSPACE: 'backspace.png',
   BACK_BTN: 'icons/backbtn.png',
   EMPTY_RAIL_PH: 'images/rail-placeholder-empty.png',
