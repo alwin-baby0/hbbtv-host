@@ -38,13 +38,7 @@ export default class LanguageButton extends Lightning.Component {
   _selectButton() {
     this._selected = true;
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-    const isSelected = this._props.languageInfo === languageCode;
 
-    // this.patch({
-    //   color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
-    //     .alpha(isSelected ? 1 : 0)
-    //     .get(),
-    // });
     this.patch({
       Text: {
         color: Colors(colors.focus).get(),
@@ -67,9 +61,6 @@ export default class LanguageButton extends Lightning.Component {
     const isSelected = this._props.languageInfo === languageCode;
 
     this.patch({
-      // color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
-      //   .alpha(isSelected ? 1 : 0)
-      //   .get(),
       Text: {
         text: languageMapper[languageInfo].name,
         color: Colors(isSelected ? colors.focus : colors.white).get(),

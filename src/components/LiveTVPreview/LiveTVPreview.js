@@ -11,7 +11,6 @@ export default class LiveTVPreview extends Lightning.Component {
   static _template() {
     return {
       LiveSection: {
-        // type: HorizontalContainer,
         x: 110,
         y: 150,
         w: 1700,
