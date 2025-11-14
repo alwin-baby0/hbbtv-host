@@ -9,11 +9,20 @@ import {
   ROUTES,
   VOD_PREVIEW_TYPES,
   CONTENT_TYPE,
+  IMAGE_SIZES,
 } from '../../constants/globalConstants';
+import { SearchService } from '../../Services';
+import PosterRailItem from '../../components/RailItems/PosterRailItem';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
 export default class VodPreview extends Lightning.Component {
+  constructor(context) {
+    super(context);
+    this.changeContent = this.changeContent.bind(this);
+  }
+
   _props = {
     vodType: undefined,
     fetchMoreStripes: async () => null,
@@ -49,6 +58,63 @@ export default class VodPreview extends Lightning.Component {
           type: VerticalContainer,
         },
       },
+    };
+  }
+
+  _active() {
+    window.addEventListener('changeContent', (event) => {
+      this.changeContent(event.detail.category, event.detail.type);
+    });
+  }
+
+  async changeContent(category, type) {
+    const ROW_SIZE = 6;
+    const { items } = await SearchService.getSearch(category, type);
+    console.log(items);
+    this._Column._clear();
+    let rows = [];
+    let grid;
+    if (items.length > 0) {
+      for (let i = 0; i < items.length; i += ROW_SIZE) {
+        rows.push({ items: items.slice(i, i + ROW_SIZE) });
+      }
+      grid = rows.map((row) => {
+        return {
+          type: HorizontalContainer,
+          collision: true,
+          h: 460,
+          w: 1760,
+          itemSpacing: 520,
+          props: {
+            items: row.items.map((item, index) => ({
+              type: PosterRailItem,
+              collision: true,
+              flexItem: {
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 10,
+                marginBottom: 10,
+              },
+              props: {
+                itemTitle: item.title,
+                imageSrc: item.getPortraitPoster(IMAGE_SIZES.S).src,
+                callback: () => {
+                  Router.navigate(`${searchType}-details/${item.id}`);
+                },
+                index,
+              },
+            })),
+          },
+        };
+      });
+    }
+    this._Column.props = {
+      ...(items
+        ? {
+            items: grid,
+          }
+        : { railTitle: `No items found for category: ${category}` }),
+      parentState: 'VodContainer',
     };
   }
 

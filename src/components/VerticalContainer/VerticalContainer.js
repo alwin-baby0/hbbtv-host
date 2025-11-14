@@ -41,6 +41,7 @@ export default class VerticalContainer extends Lightning.Component {
    */
   set props(props) {
     let { items, railTitle, ...rest } = props;
+    console.log(items);
     this._props = { ...this._props, ...rest };
 
     if (railTitle && railTitle !== '') {
