@@ -17,6 +17,7 @@ export default class LanguageButton extends Lightning.Component {
       flexItem: {
         marginBottom: 20,
       },
+      color: Colors(colors.unfocusedLanguage).alpha(0).get(),
       w: 300,
       h: 65,
       rect: true,
@@ -37,19 +38,20 @@ export default class LanguageButton extends Lightning.Component {
   _selectButton() {
     this._selected = true;
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-    const isSelected = this._props.languageInfo === languageCode;
 
     this.patch({
-      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
-        .alpha(isSelected ? 1 : 0)
-        .get(),
+      Text: {
+        color: Colors(colors.focus).get(),
+      },
     });
   }
 
   _unselectButton() {
     this._selected = false;
     this.patch({
-      color: Colors(colors.unfocusedLanguage).alpha(0).get(),
+      Text: {
+        color: Colors(colors.white).get(),
+      },
     });
   }
 
@@ -59,12 +61,9 @@ export default class LanguageButton extends Lightning.Component {
     const isSelected = this._props.languageInfo === languageCode;
 
     this.patch({
-      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
-        .alpha(isSelected ? 1 : 0)
-        .get(),
       Text: {
         text: languageMapper[languageInfo].name,
-        color: Colors(colors.white).get(),
+        color: Colors(isSelected ? colors.focus : colors.white).get(),
         fontFace: 'Montserrat-Bold',
       },
     });
@@ -96,6 +95,9 @@ export default class LanguageButton extends Lightning.Component {
   _focus() {
     this.patch({
       color: Colors(colors.focus).get(),
+      Text: {
+        color: Colors(colors.white).get(),
+      },
     });
   }
 
@@ -104,9 +106,10 @@ export default class LanguageButton extends Lightning.Component {
     const isSelected = this._props.languageInfo === languageCode;
 
     this.patch({
-      color: Colors(isSelected ? colors.focusedLanguage : colors.unfocusedLanguage)
-        .alpha(isSelected ? 1 : 0)
-        .get(),
+      color: Colors(colors.unfocusedLanguage).alpha(0).get(),
+      Text: {
+        color: Colors(isSelected ? colors.focus : colors.white).get(),
+      },
     });
   }
 

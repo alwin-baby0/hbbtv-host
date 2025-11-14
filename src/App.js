@@ -120,10 +120,10 @@ export default class App extends Router.App {
 
   $punchHoleTV(x, y, w, h, radius) {
     if (!x && x !== 0) {
-      y = 106;
+      y = 152;
       x = 1071;
-      w = 736;
-      h = 412;
+      w = 734;
+      h = 409;
       radius = 20;
     }
     if (this._Background) {

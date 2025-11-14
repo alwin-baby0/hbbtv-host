@@ -32,20 +32,20 @@ export default class LiveTV extends Lightning.Component {
           type: CategoryPicker,
           props: {
             x: 110,
-            y: 540,
+            y: 580,
             parentState: 'Categories',
           },
         },
         Channels: {
           clipping: true,
-          y: 705,
+          y: 745,
           w: 180,
           h: 360,
           x: 110,
           type: VerticalContainer,
         },
         EPGChannels: {
-          y: 625,
+          y: 665,
           x: 290,
           w: 1620,
           h: 460,
