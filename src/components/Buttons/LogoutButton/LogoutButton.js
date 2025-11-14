@@ -30,11 +30,14 @@ export default class LogoutButton extends Lightning.Component {
           rect: true,
           shader: { type: Lightning.shaders.RoundedRectangle, radius: 12 },
           Text: {
+            y: 5,
             w: 250,
             text: {
               color: Colors(colors.white).get(),
               fontFace: 'Montserrat-Bold',
               textAlign: 'center',
+              lineHeight: 65,
+              verticalAlign: 'center',
             },
           },
         },
@@ -74,12 +77,8 @@ export default class LogoutButton extends Lightning.Component {
   }
 
   _focus() {
-    // this.patch({
-    //   color: Colors(colors.focus).get(),
-    // });
-
     this._FocusBorder.patch({
-      texture: lng.Tools.getRoundRect(260, 75, 12, 4, Colors(colors.focus).get(), false),
+      texture: Lightning.Tools.getRoundRect(260, 75, 12, 4, Colors(colors.focus).get(), false),
       Column: {
         color: Colors(colors.focus).get(),
       },
@@ -87,12 +86,8 @@ export default class LogoutButton extends Lightning.Component {
   }
 
   _unfocus() {
-    // this.patch({
-    //   color: Colors(colors.unfocusedLanguage).alpha(0).get(),
-    // });
-
     this._FocusBorder.patch({
-      texture: lng.Tools.getRoundRect(
+      texture: Lightning.Tools.getRoundRect(
         260,
         75,
         12,
@@ -108,7 +103,11 @@ export default class LogoutButton extends Lightning.Component {
 
   _handleHover() {
     this._focus();
-    this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
   }
 
   _handleClick() {

@@ -83,7 +83,7 @@ export default class MyAccount extends Lightning.Component {
   }
 
   get _LogoutButton() {
-    return this.tag('Content.QRContainer.LogoutContainer.LogoutButton');
+    return this.tag('Content.QRContainer.LogoutButton');
   }
 
   set props(props) {
@@ -291,7 +291,6 @@ export default class MyAccount extends Lightning.Component {
           Info: undefined,
           QRCodeInfo: undefined,
           LogoutContainer: {
-            w: 1450,
             Title: {
               text: {
                 text: t(TRANSLATIONS.MY_ACCOUNT),
@@ -299,31 +298,11 @@ export default class MyAccount extends Lightning.Component {
                 fontSize: 50,
               },
             },
-            LogoutButton: {
-              x: 1400,
-              type: LogoutButton,
-              collision: true,
-              h: 65,
-              props: {
-                parentState: 'LogoutButton',
-                label: t(TRANSLATIONS.LOGOUT),
-                fontSize: 40,
-                width: 250,
-                callback: async () => {
-                  AuthorizationService.revokeToken(
-                    localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA).access_token
-                  );
-                  localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-                  AuthorizationService.clearPollingInterval();
-                  window.location.reload();
-                },
-              },
-            },
           },
           RecentlyWatched: {
             type: UserRecentlyWatched,
             collision: true,
-            y: 200,
+            y: 100,
             w: 1450,
             h:
               !recentlyWatched?.data?.recently_watched ||
@@ -345,8 +324,8 @@ export default class MyAccount extends Lightning.Component {
             y:
               !recentlyWatched?.data?.recently_watched ||
               recentlyWatched?.data?.recently_watched?.length === 0
-                ? 100
-                : 200,
+                ? 0
+                : 100,
             w: 1450,
             h: !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0 ? 320 : 95,
             props: {
@@ -357,10 +336,30 @@ export default class MyAccount extends Lightning.Component {
               }),
             },
           },
+          LogoutButton: {
+            y: 350,
+            type: LogoutButton,
+            collision: true,
+            h: 65,
+            props: {
+              parentState: 'LogoutButton',
+              label: t(TRANSLATIONS.LOGOUT),
+              fontSize: 40,
+              width: 250,
+              callback: async () => {
+                AuthorizationService.revokeToken(
+                  localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA).access_token
+                );
+                localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+                AuthorizationService.clearPollingInterval();
+                window.location.reload();
+              },
+            },
+          },
         },
       });
 
-      this._setState('LogoutButton');
+      this._setState('UserRecentlyWatched');
     }
   }
 
@@ -395,11 +394,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
-        }
-
-        _handleDown() {
-          this._setState('UserRecentlyWatched');
+          this._setState('UserFavorites');
         }
       },
 
@@ -409,8 +404,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          // Router.focusWidget(ROUTES.MENU_WIDGET);
-          this._setState('LogoutButton');
+          Router.focusWidget(ROUTES.MENU_WIDGET);
         }
 
         _handleDown() {
@@ -425,6 +419,10 @@ export default class MyAccount extends Lightning.Component {
 
         _handleUp() {
           this._setState('UserRecentlyWatched');
+        }
+
+        _handleDown() {
+          this._setState('LogoutButton');
         }
       },
     ];
