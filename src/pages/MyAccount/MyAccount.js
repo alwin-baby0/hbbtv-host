@@ -1,5 +1,4 @@
-import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
-import colors from '../../../reskin/colors.json';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import { AuthorizationService, UserService, t } from '../../Services';
 import qrcode from 'qrcode';
 import UserRecentlyWatched from './UserRecentlyWatched';
@@ -13,8 +12,9 @@ import {
 } from '../../constants/globalConstants';
 import { parseVodUserContentData } from '../../Models';
 import { constructRails } from '../utils';
+import LogoutButton from '../../components/Buttons/LogoutButton/LogoutButton';
 
-const states = ['UserRecentlyWatched', 'UserFavorites'];
+const states = ['LogoutButton', 'UserRecentlyWatched', 'UserFavorites'];
 
 export default class MyAccount extends Lightning.Component {
   _contentId = 0;
@@ -82,6 +82,10 @@ export default class MyAccount extends Lightning.Component {
     return this.tag('Content.QRContainer.RecentlyWatched');
   }
 
+  get _LogoutButton() {
+    return this.tag('Content.QRContainer.LogoutContainer.LogoutButton');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
     this.$changeContent();
@@ -143,7 +147,7 @@ export default class MyAccount extends Lightning.Component {
         const parsedMovies = parseVodUserContentData({
           data: {
             entry: favorites.data.favorites,
-            railType: RAIL_TYPES.USER_CONTENT,
+            railType: RAIL_TYPES.FAVORITES,
           },
           itemsPerRow: 4,
         });
@@ -182,7 +186,7 @@ export default class MyAccount extends Lightning.Component {
       ? parseVodUserContentData({
           data: {
             railTitle: t(TRANSLATIONS.FAVORITES),
-            railType: RAIL_TYPES.USER_CONTENT,
+            railType: RAIL_TYPES.FAVORITES,
             entry: favorites.data.favorites,
           },
           itemsPerRow:
@@ -214,6 +218,7 @@ export default class MyAccount extends Lightning.Component {
             flex: {
               direction: 'row',
             },
+            LogoutContainer: undefined,
             Info: {
               flex: {
                 direction: 'column',
@@ -285,9 +290,40 @@ export default class MyAccount extends Lightning.Component {
           },
           Info: undefined,
           QRCodeInfo: undefined,
+          LogoutContainer: {
+            w: 1450,
+            Title: {
+              text: {
+                text: t(TRANSLATIONS.MY_ACCOUNT),
+                fontFace: 'Montserrat-Bold',
+                fontSize: 50,
+              },
+            },
+            LogoutButton: {
+              x: 1400,
+              type: LogoutButton,
+              collision: true,
+              h: 65,
+              props: {
+                parentState: 'LogoutButton',
+                label: t(TRANSLATIONS.LOGOUT),
+                fontSize: 40,
+                width: 250,
+                callback: async () => {
+                  AuthorizationService.revokeToken(
+                    localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA).access_token
+                  );
+                  localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+                  AuthorizationService.clearPollingInterval();
+                  window.location.reload();
+                },
+              },
+            },
+          },
           RecentlyWatched: {
             type: UserRecentlyWatched,
             collision: true,
+            y: 200,
             w: 1450,
             h:
               !recentlyWatched?.data?.recently_watched ||
@@ -306,8 +342,13 @@ export default class MyAccount extends Lightning.Component {
           Favorites: {
             type: UserFavorites,
             collision: true,
+            y:
+              !recentlyWatched?.data?.recently_watched ||
+              recentlyWatched?.data?.recently_watched?.length === 0
+                ? 100
+                : 200,
             w: 1450,
-            h: 920,
+            h: !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0 ? 320 : 95,
             props: {
               items: parsedFavorites,
               parentState: 'UserFavorites',
@@ -319,7 +360,7 @@ export default class MyAccount extends Lightning.Component {
         },
       });
 
-      this._setState('UserRecentlyWatched');
+      this._setState('LogoutButton');
     }
   }
 
@@ -348,13 +389,28 @@ export default class MyAccount extends Lightning.Component {
 
   static _states() {
     return [
+      class LogoutButton extends this {
+        _getFocused() {
+          return this._LogoutButton;
+        }
+
+        _handleUp() {
+          Router.focusWidget(ROUTES.MENU_WIDGET);
+        }
+
+        _handleDown() {
+          this._setState('UserRecentlyWatched');
+        }
+      },
+
       class UserRecentlyWatched extends this {
         _getFocused() {
           return this._UserRecentlyWatched;
         }
 
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          // Router.focusWidget(ROUTES.MENU_WIDGET);
+          this._setState('LogoutButton');
         }
 
         _handleDown() {

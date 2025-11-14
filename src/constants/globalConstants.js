@@ -314,6 +314,7 @@ export const RAIL_TYPES = {
   USER_CONTENT: 'UserContent',
   BANNER: 'Banner',
   CONTINUE_WATCHING: 'ContinueWatching',
+  FAVORITES: 'Favorites',
   VIDEO: 'video',
 };
 
