@@ -61,7 +61,6 @@ export default class PageItem extends Lightning.Component {
 
   _enable() {
     this._Column.patch({
-      color: Colors(colors.background).alpha(0).get(),
       Text: {
         text: { text: this._pageInfoData.title },
         color: Colors(colors.white).get(),
@@ -84,45 +83,50 @@ export default class PageItem extends Lightning.Component {
   _selectButton() {
     this._selected = true;
     this._Column.patch({
-      color: Colors(colors.focus).get(),
+      Text: {
+        color: Colors(this._focused ? colors.white : colors.focus).get(),
+      },
     });
   }
 
   _unselectButton() {
     this._selected = false;
     this._Column.patch({
-      color: Colors(colors.background).alpha(0).get(),
+      Text: {
+        color: Colors(colors.white).get(),
+      },
     });
   }
 
   _focus() {
     this._Column.patch({
       color: Colors(colors.focus).get(),
+      Text: {
+        color: Colors(colors.white).get(),
+      },
     });
 
     this._FocusBorder.patch({
-      texture: lng.Tools.getRoundRect(401, 74, 15, 2, Colors(colors.focus).get(), false),
+      texture: Lightning.Tools.getRoundRect(401, 74, 15, 2, Colors(colors.focus).get(), false),
     });
+    this._focused = true;
   }
 
   _unfocus() {
-    if (this._selected) {
-      this._Column.patch({
-        color: Colors(colors.focusedHelpButton).get(),
-      });
-    } else {
-      this._Column.patch({
-        color: Colors(colors.unfocusedHelpButton).alpha(0).get(),
-      });
-    }
+    this._Column.patch({
+      color: Colors(colors.unfocusedHelpButton).alpha(0).get(),
+      Text: {
+        color: Colors(this._selected ? colors.focus : colors.white).get(),
+      },
+    });
 
     this._FocusBorder.patch({
-      texture: lng.Tools.getRoundRect(
+      texture: Lightning.Tools.getRoundRect(
         401,
         74,
         15,
         2,
-        Colors(colors.background).alpha(0).get(),
+        Colors(colors.focus).alpha(0).get(),
         false
       ),
     });

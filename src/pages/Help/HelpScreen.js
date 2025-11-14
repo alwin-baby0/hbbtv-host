@@ -17,7 +17,9 @@ export default class HelpScreen extends Lightning.Component {
   static _template() {
     return {
       Background: {
-        src: Utils.asset(IMG_PATH.BACKGROUND_SEARCH_PAGE),
+        w: 1920,
+        h: 1080,
+        src: Utils.asset(IMG_PATH.BACKGROUND_SUPPORT_PAGES),
         zIndex: 1,
       },
       Overlay: {
