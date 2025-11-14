@@ -35,11 +35,13 @@ export default class CMPButton extends Lightning.Component {
   }
 
   _active() {
-    this.stage.once('frameStart', () => {
-      this.patch({
-        w: this._Text.finalW + 20,
+    setTimeout(() => {
+      this.stage.once('frameStart', () => {
+        this.patch({
+          w: this._Text.finalW + 20,
+        });
       });
-    });
+    }, 200);
   }
 
   _enable() {

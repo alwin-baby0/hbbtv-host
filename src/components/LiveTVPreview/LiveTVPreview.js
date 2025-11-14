@@ -16,7 +16,7 @@ export default class LiveTVPreview extends Lightning.Component {
         w: 1700,
         h: 415,
         ChannelInfo: {
-          w: 760,
+          w: 810,
           h: 295,
           flex: { direction: 'column' },
           ChannelName: {
@@ -24,7 +24,7 @@ export default class LiveTVPreview extends Lightning.Component {
             Badge: {
               rect: true,
               texture: Lightning.Tools.getRoundRect(
-                200,
+                300,
                 55,
                 10,
                 2,
@@ -32,7 +32,7 @@ export default class LiveTVPreview extends Lightning.Component {
                 true,
                 Colors('#4a4a49').get()
               ),
-              w: 150,
+              w: 200,
               h: 45,
               flex: {
                 direction: 'row',
@@ -41,7 +41,7 @@ export default class LiveTVPreview extends Lightning.Component {
               },
               flexItem: {
                 marginRight: 40,
-                minWidth: 150,
+                minWidth: 200,
               },
               Text: {
                 flexItem: {
