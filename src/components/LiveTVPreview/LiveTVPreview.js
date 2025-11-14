@@ -41,7 +41,7 @@ export default class LiveTVPreview extends Lightning.Component {
               },
               flexItem: {
                 marginRight: 40,
-                minWidth: 200,
+                minWidth: 150,
               },
               Text: {
                 flexItem: {
@@ -52,6 +52,9 @@ export default class LiveTVPreview extends Lightning.Component {
                   fontSize: 18,
                   fontFace: 'Montserrat-Regular',
                   textColor: Colors(colors.white).get(),
+                  wordWrapWidth: 120,
+                  maxLines: 1,
+                  maxLinesSuffix: '...',
                 },
               },
             },
