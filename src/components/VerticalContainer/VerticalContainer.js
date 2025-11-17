@@ -271,6 +271,10 @@ export default class VerticalContainer extends Lightning.Component {
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex = index;
     }
+    if (index === 0) {
+      this._scrollPosition = 0;
+      this.Items.patch({ y: 0 });
+    }
     this.fireAncestors('$verticalContainerIndexChange', index);
     this._reCalibrateScroll();
     this.fireAncestors(
