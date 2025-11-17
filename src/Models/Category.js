@@ -13,8 +13,6 @@ class Category {
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
-        console.log(this.data);
-        // Router.navigate(`${ROUTES.FILTER_PAGE}/${this.id}/${FILTER_TYPES.MOVIES}`, this.data);
         const event = new CustomEvent('changeContent', {
           detail: { category: this.data.title, type: this.data.type }, // pass whatever value you need here
         });
@@ -22,7 +20,6 @@ class Category {
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        // Router.navigate(`${ROUTES.FILTER_PAGE}/${this.id}/${FILTER_TYPES.SERIES}`, this.data);
         const event = new CustomEvent('changeContent', {
           detail: { category: this.data.title, type: this.data.type }, // pass whatever value you need here
         });

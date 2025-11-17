@@ -1,4 +1,4 @@
-import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import VodContentContainer from '../../components/VodContentContainer/VodContentContainer';
 import Gallery from '../../components/Gallery/Gallery';
@@ -11,7 +11,7 @@ import {
   CONTENT_TYPE,
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
-import { SearchService } from '../../Services';
+import { SearchService, VodService } from '../../Services';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
@@ -68,9 +68,32 @@ export default class VodPreview extends Lightning.Component {
   }
 
   async changeContent(category, type) {
+    if (category.toUpperCase() === 'ALL') {
+      VodService.vodType = this._props.vodType;
+
+      await VodService.initialFetch();
+
+      const vodStripes = constructRails(VodService.vodStripes);
+
+      this._Column.props = {
+        items: Array.isArray(vodStripes)
+          ? vodStripes.reduce((acc, rail) => {
+              if (Array.isArray(rail)) {
+                acc.push(...rail);
+              } else {
+                acc.push(rail);
+              }
+              return acc;
+            }, [])
+          : vodStripes,
+        railTitle: '',
+      };
+
+      return;
+    }
+
     const ROW_SIZE = 6;
     const { items } = await SearchService.getSearch(category, type);
-    console.log(items);
     this._Column._clear();
     let rows = [];
     let grid;
@@ -109,7 +132,7 @@ export default class VodPreview extends Lightning.Component {
       });
     }
     this._Column.props = {
-      ...(items
+      ...(items && items.length
         ? {
             items: grid,
           }
