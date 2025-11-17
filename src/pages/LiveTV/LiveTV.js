@@ -302,7 +302,6 @@ export default class LiveTV extends Lightning.Component {
   }
 
   async fetchChannels() {
-    console.log('Updating channels');
     if (
       liveTV.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
       Router.getActiveHash() !== ROUTES.PLAYER
@@ -338,7 +337,6 @@ export default class LiveTV extends Lightning.Component {
           };
         })
         .filter((channel) => channel !== null);
-      // this._Channels.clear();
 
       this._Channels.props = {
         items: channelsAll,
