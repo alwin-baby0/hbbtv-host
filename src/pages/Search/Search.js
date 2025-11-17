@@ -47,7 +47,7 @@ export default class Search extends Lightning.Component {
         x: 100,
         y: 160,
         text: {
-          text: t(TRANSLATIONS.SEARCH) || 'Search',
+          text: t(TRANSLATIONS.SEARCH),
           fontFace: 'Montserrat-Bold',
           fontSize: 50,
         },
@@ -119,7 +119,7 @@ export default class Search extends Lightning.Component {
           h: 40,
           y: 80,
           text: {
-            text: t(TRANSLATIONS.NO_RECENT_SEARCHES) || 'No recent searches',
+            text: t(TRANSLATIONS.NO_RECENT_SEARCHES),
             fontSize: 35,
           },
         },
@@ -201,7 +201,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH) || 'Search',
+          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH),
         },
       },
     });
@@ -219,7 +219,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: t(TRANSLATIONS.SEARCH) || 'Search',
+          text: t(TRANSLATIONS.SEARCH),
         },
       },
     });
@@ -237,7 +237,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH) || 'Search',
+          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH),
         },
       },
     });

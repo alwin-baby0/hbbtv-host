@@ -383,8 +383,8 @@ export default class SingleMovie extends Lightning.Component {
     const splitDirector = director && director.split(':');
     const splitCast = cast && cast.split(':');
 
-    const tAgeR = t(TRANSLATIONS.AGE_RATING) || 'Age Rating';
-    const tGenre = t(TRANSLATIONS.GENRE) || 'Genre';
+    const tAgeR = t(TRANSLATIONS.AGE_RATING);
+    const tGenre = t(TRANSLATIONS.GENRE);
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
     const castText = splitCast && splitCast[1];
