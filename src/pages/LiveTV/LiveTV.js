@@ -12,11 +12,14 @@ import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+import { liveTV } from './providers/livetv';
+
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
   };
   pixelPerHour = 500; // Pixels per hour for EPG time slots
+  channelUpdateInterval = null;
 
   static _template() {
     return {
@@ -281,6 +284,8 @@ export default class LiveTV extends Lightning.Component {
 
       this._EPGData.setInitialOffset();
     });
+
+    this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 300000);
   }
 
   _disable() {
@@ -294,6 +299,61 @@ export default class LiveTV extends Lightning.Component {
 
   $updateChannel(singleChannel) {
     this._LiveSectionPlayer._changeChannel(singleChannel);
+  }
+
+  async fetchChannels() {
+    console.log('Updating channels');
+    if (
+      liveTV.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
+      Router.getActiveHash() !== ROUTES.PLAYER
+    ) {
+      liveTV.timestamp = new Date().getTime();
+      await EPGService.initialFetch();
+
+      this._EPGData._clear();
+
+      const channelsAll = EPGService.channelsItems
+        .map((channelInfo, index) => {
+          if (!channelInfo) {
+            console.warn(`No channelInfo for index ${index}`);
+            return null;
+          }
+
+          const matchingEpg = EPGService.epgs.find((epgInfo) => {
+            return epgInfo.channelId === channelInfo.id;
+          });
+          const rails = constructRails(matchingEpg);
+
+          this._EPGData._appendItems(rails);
+          return {
+            type: LiveChannelRailItem,
+            channelInfo: channelInfo,
+            channelEPG: matchingEpg,
+            w: 190,
+            h: 105,
+            channelIndex: index,
+            props: {
+              icon: channelInfo.icon,
+            },
+          };
+        })
+        .filter((channel) => channel !== null);
+      // this._Channels.clear();
+
+      this._Channels.props = {
+        items: channelsAll,
+        parentState: 'Channels',
+      };
+    }
+
+    this._EPGData.setInitialOffset();
+
+    this.stage.update();
+  }
+
+  _inactive() {
+    clearInterval(this.channelUpdateInterval);
+    this.channelUpdateInterval = null;
   }
 
   async $updateChannels(val) {
