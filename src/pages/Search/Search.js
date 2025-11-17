@@ -99,7 +99,6 @@ export default class Search extends Lightning.Component {
           props: {
             parentState: 'VODSection',
             enableScroll: false,
-            railTitle: '',
           },
         },
       },
@@ -286,13 +285,12 @@ export default class Search extends Lightning.Component {
     if (rows.length > 0) {
       search.timestamp = new Date().getTime();
 
-      search.items = constructRails(rows, false);
+      search.items = constructRails(rows);
 
       this._VODSection.patch({
         props: {
           items: search.items,
           enableScroll: rows.length > 2,
-          railTitle: '',
         },
         text: {
           text: '',
@@ -301,11 +299,10 @@ export default class Search extends Lightning.Component {
     } else {
       this._VODSection.patch({
         text: {
-          text: t(TRANSLATIONS.NO_RESULTS) || 'No matches found',
+          text: t(TRANSLATIONS.NO_RESULTS),
         },
         props: {
           items: [],
-          railTitle: '',
         },
       });
     }
