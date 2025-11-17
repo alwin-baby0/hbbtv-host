@@ -348,8 +348,6 @@ export default class LiveTV extends Lightning.Component {
 
     this._EPGData.setInitialOffset();
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
-
-    this.stage.update();
   }
 
   _inactive() {
