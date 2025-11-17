@@ -14,7 +14,9 @@ export default async function (page) {
     page.tag('VODSection').props = {
       items: [],
     };
+
     await HomePageService.initialFetch();
+
     page.$changedVODGenre(HomePageService.stripes[0]);
     page._Input._Placeholder.patch({
       visible: true,

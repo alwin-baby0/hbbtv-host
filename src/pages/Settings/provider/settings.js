@@ -1,19 +1,6 @@
-import { LanguageService, t } from '../../../Services';
-import MemberTabButton from '../../../components/MemberTabButton/MemberTabButton';
-import { TRANSLATIONS } from '../../../constants/globalConstants';
+import { LanguageService } from '../../../Services';
 import { CMPService } from '../../../Services';
 import { getDeviceInfo } from '../../../utils/device';
-
-const languageArea = (page, tabButtons) => {
-  const items = tabButtons.map((tabInfo, index) => ({
-    type: MemberTabButton,
-    collision: true,
-    tabInfoData: tabInfo,
-    w: 250,
-    h: 100,
-    tabIndex: index,
-  }));
-};
 
 export default async function (page) {
   const languages = await LanguageService.getLanguages();
@@ -24,28 +11,4 @@ export default async function (page) {
     languagesData: languages.data,
     serialNumber,
   };
-
-  let tabButtons = [];
-
-  if (languages.data.languages.split(',').length > 1) {
-    tabButtons = [
-      {
-        id: 0,
-        title: t(TRANSLATIONS.COOKIE_PREFERENCES),
-      },
-      {
-        id: 1,
-        title: t(TRANSLATIONS.LANGUAGES),
-      },
-    ];
-  } else {
-    tabButtons = [
-      {
-        id: 0,
-        title: t(TRANSLATIONS.COOKIE_PREFERENCES),
-      },
-    ];
-  }
-
-  languageArea(page, tabButtons);
 }

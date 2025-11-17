@@ -50,4 +50,10 @@ export default class CategoryPicker extends Lightning.Component {
   _getFocused() {
     return this._CaterogyItems;
   }
+
+  _handleScroll(event) {
+    if (event.deltaY < 0) {
+      this.fireAncestors('$setStateOnScroll', 'Hero');
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch';
 import InputField from '../../components/Input/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
@@ -323,10 +323,6 @@ export default class Search extends Lightning.Component {
 
   $getInput() {
     return this._Input._Input;
-  }
-
-  $setFocusKeyboard() {
-    this._setState('Keyboard');
   }
 
   _active() {

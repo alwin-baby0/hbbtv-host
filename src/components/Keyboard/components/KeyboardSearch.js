@@ -11,7 +11,6 @@ export default class KeyboardSearch extends Lightning.Component {
       w: 500,
       h: 500,
       collision: true,
-
       Keyboard: {
         x: -140,
         w: 1000,
@@ -57,6 +56,10 @@ export default class KeyboardSearch extends Lightning.Component {
     });
   }
 
+  set props(props) {
+    this._props = { ...this._props, ...props };
+  }
+
   set limit(val) {
     this._limit = val;
   }
@@ -75,7 +78,11 @@ export default class KeyboardSearch extends Lightning.Component {
   }
 
   _handleHover() {
-    this.fireAncestors('$setFocusKeyboard');
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
     return false;
   }
 
