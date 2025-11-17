@@ -337,6 +337,7 @@ export default class MyAccount extends Lightning.Component {
             },
           },
           LogoutButton: {
+            zIndex: 4,
             y: 350,
             type: LogoutButton,
             collision: true,

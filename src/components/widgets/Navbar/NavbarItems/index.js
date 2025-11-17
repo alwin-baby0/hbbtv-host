@@ -80,7 +80,7 @@ export default class SidebarItems extends Lightning.Component {
     setTimeout(() => {
       this._index = getRouteNavbarIndex(Router.getActiveHash(), this._visibleSport);
       this._setSelected(this._index);
-    }, 200);
+    });
 
     const menuItems = [
       { id: 0, label: t(TRANSLATIONS.HOME), route: ROUTES.HOME, icon: '' },
