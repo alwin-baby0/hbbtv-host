@@ -310,7 +310,6 @@ export default class VerticalContainer extends Lightning.Component {
 
   _unfocus() {
     if (this._focusedIndex >= 0 && this._focusedIndex < this.Items.children.length) {
-      console.log('here');
       this.Items.children[this._focusedIndex]?._unfocus();
     }
   }
