@@ -352,7 +352,7 @@ export default class SingleMovie extends Lightning.Component {
 
   _arrangeButtonsInRowsDependingOnLanguage(buttons) {
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-    const itemsPerRow = languageCode === 'fr' ? 2 : 3;
+    const itemsPerRow = 3;
 
     const rows = [];
     for (let i = 0; i < buttons.length; i += itemsPerRow) {

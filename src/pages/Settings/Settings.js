@@ -177,7 +177,9 @@ export default class Settings extends Lightning.Component {
         },
       },
       CMPContainer: {
+        collision: true,
         CMPData: {
+          collision: true,
           flex: { direction: 'column' },
           w: 1210,
           h: 920,

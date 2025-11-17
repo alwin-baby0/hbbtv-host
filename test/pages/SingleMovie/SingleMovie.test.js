@@ -479,28 +479,6 @@ describe('SingleMovie Page', () => {
       expect(rows[1].items).toHaveLength(2);
     });
 
-    it('arranges buttons in rows of 2 for French language', () => {
-      // Set French language
-      localStorage.setItem('languageCode', 'fr');
-
-      // Create 5 buttons to test the arrangement
-      const mockButtons = [
-        { buttonName: 'WATCH NOW' },
-        { buttonName: 'TRAILER' },
-        { buttonName: 'FAVORITE' },
-        { buttonName: 'CONTINUE WATCHING' },
-        { buttonName: 'EXTRA' },
-      ];
-
-      const rows = page._arrangeButtonsInRowsDependingOnLanguage(mockButtons);
-
-      // Should create 3 rows: [2 items, 2 items, 1 item]
-      expect(rows).toHaveLength(3);
-      expect(rows[0].items).toHaveLength(2);
-      expect(rows[1].items).toHaveLength(2);
-      expect(rows[2].items).toHaveLength(1);
-    });
-
     it('handles single button correctly for both languages', () => {
       const mockButtons = [{ buttonName: 'WATCH NOW' }];
 

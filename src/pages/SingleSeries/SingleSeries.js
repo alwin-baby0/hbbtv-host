@@ -52,6 +52,7 @@ export default class SingleSeries extends Lightning.Component {
         w: 1570,
         HeroSection: {
           collision: true,
+          h: 1080,
           type: GalleryItem,
         },
       },
