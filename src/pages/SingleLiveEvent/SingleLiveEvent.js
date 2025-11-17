@@ -31,6 +31,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         h: 883,
         w: 1570,
         HeroSection: {
+          h: 1080,
           collision: true,
           type: GalleryItem,
         },

@@ -182,7 +182,7 @@ export default class Button extends FocusableItem {
         },
       },
       Progress: {
-        texture: position
+        texture: this.progressW
           ? Lightning.Tools.getRoundRect(
               this.progressW,
               10,
@@ -223,7 +223,7 @@ export default class Button extends FocusableItem {
         },
       },
       Progress: {
-        texture: position
+        texture: this.progressW
           ? Lightning.Tools.getRoundRect(
               this.progressW,
               10,
