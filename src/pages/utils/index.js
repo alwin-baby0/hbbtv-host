@@ -22,10 +22,10 @@ const RAIL_WIDTHS = {
 
 let globalVerticalIndex = 0;
 
-export const constructRails = (rails) => {
+export const constructRails = (rails, shouldContainRailTitle = true) => {
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
-    return constructRails([rails]);
+    return constructRails([rails], shouldContainRailTitle);
   }
 
   return rails
@@ -47,10 +47,10 @@ export const constructRails = (rails) => {
           const currentIndex = globalVerticalIndex;
           globalVerticalIndex += 1;
 
-          return cronstructSingleLineRail(newRail, currentIndex);
+          return cronstructSingleLineRail(newRail, currentIndex, shouldContainRailTitle);
         });
       }
-      return cronstructSingleLineRail(rail, index); //-1 is placeholder value if items are not chunked
+      return cronstructSingleLineRail(rail, index, shouldContainRailTitle); //-1 is placeholder value if items are not chunked
     });
 };
 
@@ -59,7 +59,7 @@ const verticalIndexReset = () => {
   globalVerticalIndex = 0;
 };
 
-export const cronstructSingleLineRail = (rail, index) => {
+export const cronstructSingleLineRail = (rail, index, shouldContainRailTitle = true) => {
   const {
     items,
     railType,
@@ -110,7 +110,7 @@ export const cronstructSingleLineRail = (rail, index) => {
     props: {
       h: CARD_SIZES[cardType]?.height,
       w: containerDimensions.w,
-      railTitle: railTitle,
+      ...(shouldContainRailTitle && { railTitle: railTitle }),
       cardType: cardType,
       items: railItemConstructor(
         items.length === 0 ? [{ type: Empty }] : items,

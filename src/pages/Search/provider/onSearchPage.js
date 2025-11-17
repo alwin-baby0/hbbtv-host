@@ -13,6 +13,7 @@ export default async function (page) {
     searchTV.timestamp = new Date().getTime();
     page.tag('VODSection').props = {
       items: [],
+      railTitle: '',
     };
 
     await HomePageService.initialFetch();
