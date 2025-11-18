@@ -88,6 +88,9 @@ export default class VodPreview extends Lightning.Component {
           : vodStripes,
         railTitle: '',
       };
+      this._Column.patch({
+        h: 795,
+      });
 
       return;
     }
