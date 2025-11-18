@@ -283,7 +283,9 @@ export default class VodPreview extends Lightning.Component {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', true);
 
-          this._Column.Items.children[this._Column._focusedIndex]._unfocus();
+          if (this._Column.Items.children.length > 0) {
+            this._Column.Items.children[this._Column._focusedIndex]._unfocus();
+          }
           if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
             this._setState('VodContainer');
           }
@@ -314,7 +316,9 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleDown() {
-          this._setState('VodContainer');
+          if (this._Column.Items.children.length > 0) {
+            this._setState('VodContainer');
+          }
         }
 
         _getFocused() {
