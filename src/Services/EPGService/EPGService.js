@@ -83,6 +83,7 @@ class EPGService extends FetchingService {
       this.pointer++;
       this.stripesFetched = this.epgs.length;
     }
+    console.log(this.channelsItems);
   }
 
   async fetchMoreEPGs() {
@@ -182,6 +183,7 @@ class EPGService extends FetchingService {
    * @returns {boolean} - 'true' if we can fetch more stripes
    */
   get hasMore() {
+    console.log(this.channelsItems);
     return this.stripesFetched < this.channelsItems.length;
   }
 

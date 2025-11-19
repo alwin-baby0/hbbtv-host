@@ -73,6 +73,7 @@ export const cronstructSingleLineRail = (rail, index) => {
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
       : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
+  const flexItem = RAIL_TYPES.LIVETV ? { marginBottom: 20 } : {};
 
   let paddingLeft = 0;
   let targetIndex = null;
@@ -104,6 +105,7 @@ export const cronstructSingleLineRail = (rail, index) => {
     type: HorizontalContainer,
     ...rest,
     ...containerDimensions,
+    ...flexItem,
     collision: true,
     props: {
       h: CARD_SIZES[cardType]?.height,
