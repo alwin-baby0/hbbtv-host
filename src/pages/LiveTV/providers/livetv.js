@@ -4,7 +4,7 @@ import { ROUTES } from '../../../constants/globalConstants';
 import { constructRails } from '../../utils';
 import { Router } from '@lightningjs/sdk';
 
-const liveTV = {
+export const liveTV = {
   timestamp: 0,
 };
 

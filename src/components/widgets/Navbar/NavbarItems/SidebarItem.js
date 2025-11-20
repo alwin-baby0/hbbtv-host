@@ -149,7 +149,9 @@ export default class SidebarItem extends Lightning.Component {
   _handleHover() {
     this._focus();
     this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
-    Router.focusWidget(ROUTES.MENU_WIDGET);
+    if (!Router.isNavigating()) {
+      Router.focusWidget(ROUTES.MENU_WIDGET);
+    }
   }
 
   _handleClick() {

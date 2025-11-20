@@ -369,8 +369,8 @@ export default class MyAccount extends Lightning.Component {
   }
 
   _getFocused() {
-    if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-      Router.focusWidget('Menu');
+    if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA && !Router.isNavigating())) {
+      Router.focusWidget(ROUTES.MENU_WIDGET);
     }
   }
 
@@ -405,7 +405,9 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleDown() {

@@ -285,7 +285,7 @@ export default class Search extends Lightning.Component {
     if (rows.length > 0) {
       search.timestamp = new Date().getTime();
 
-      search.items = constructRails(rows);
+      search.items = constructRails(rows, ROUTES.SEARCH);
 
       this._VODSection.patch({
         props: {
@@ -359,7 +359,9 @@ export default class Search extends Lightning.Component {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
   }
 
   _handleBack() {
@@ -381,7 +383,9 @@ export default class Search extends Lightning.Component {
         _extended = true;
 
         _handleUp() {
-          Router.focusWidget('menu');
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleLeft() {
@@ -477,7 +481,9 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('menu');
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleLeft() {

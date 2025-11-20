@@ -103,7 +103,9 @@ export default class HeroRailItem extends FocusableItem {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index, url } = this._props;
 
     this.fireAncestors('$horizontalPosterIndexChange', index);

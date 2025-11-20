@@ -165,7 +165,9 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleDown() {

@@ -108,7 +108,9 @@ export default class PosterRailItem extends FocusableItem {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index } = this._props;
     this.fireAncestors('$handleItemHover', index);
     this._focus();

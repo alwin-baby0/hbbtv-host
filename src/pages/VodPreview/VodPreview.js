@@ -255,7 +255,9 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleDown() {
@@ -368,7 +370,10 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
+          if (
+            this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY &&
+            !Router.isNavigating()
+          ) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           } else {
             this._setState('VodContentContainer');
