@@ -12,7 +12,6 @@ import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { liveTV } from './providers/livetv';
 
 export default class LiveTV extends Lightning.Component {
   _props = {

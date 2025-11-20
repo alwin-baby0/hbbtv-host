@@ -359,7 +359,9 @@ export default class Search extends Lightning.Component {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
   }
 
   _handleBack() {
@@ -381,7 +383,9 @@ export default class Search extends Lightning.Component {
         _extended = true;
 
         _handleUp() {
-          Router.focusWidget('menu');
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleLeft() {
@@ -477,7 +481,9 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('menu');
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleLeft() {

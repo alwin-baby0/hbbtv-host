@@ -8,13 +8,14 @@ export default class HorizontalContainer extends Lightning.Component {
     paddingLeft: 0,
     disableScroll: false,
     parentState: null,
+    wrap: false,
   };
   _focusedIndex = -1;
   _scrollPosition = 0;
 
   static _template() {
     return {
-      flex: { direction: 'column', wrap: true },
+      flex: { direction: 'column' },
       Title: {},
       Items: {
         y: 0,
@@ -64,7 +65,7 @@ export default class HorizontalContainer extends Lightning.Component {
     const { items, railTitle, ...rest } = props;
     this._props = { ...this._props, ...rest };
 
-    const { cardType, targetIndex } = rest;
+    const { cardType, targetIndex, wrap } = rest;
 
     if (railTitle && railTitle !== '') {
       const { h } = rest;
@@ -90,6 +91,7 @@ export default class HorizontalContainer extends Lightning.Component {
     }
 
     this.patch({
+      flex: { wrap },
       w: this._props.w,
     });
 

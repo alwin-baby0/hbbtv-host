@@ -1,4 +1,4 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Utils, Router } from '@lightningjs/sdk';
 import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class LiveChannelRailItem extends Lightning.Component {
@@ -38,7 +38,9 @@ export default class LiveChannelRailItem extends Lightning.Component {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index } = this._props;
     this.fireAncestors('$handleItemHover', index);
     this._focus();

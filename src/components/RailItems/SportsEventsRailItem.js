@@ -168,7 +168,9 @@ export default class SportsEventsRailItem extends FocusableItem {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index } = this._props;
     this.fireAncestors('$handleItemHover', index);
     super._focus();

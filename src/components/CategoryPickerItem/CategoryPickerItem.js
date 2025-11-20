@@ -80,7 +80,9 @@ export default class CategoryPickerItem extends FocusableItem {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index } = this._props;
 
     this.fireAncestors('$handleItemHover', index);

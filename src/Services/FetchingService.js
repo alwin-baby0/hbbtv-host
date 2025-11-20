@@ -46,6 +46,7 @@ export default class FetchingService {
   }
 
   #onSuccess = (response) => {
+    console.log('here');
     this.#loading = false;
     return response;
   };

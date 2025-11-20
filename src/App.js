@@ -38,7 +38,7 @@ export default class App extends Router.App {
       },
       Widgets: {
         Menu: {
-          zIndex: 2,
+          zIndex: 3,
           type: Navbar,
         },
         Dialog: {
