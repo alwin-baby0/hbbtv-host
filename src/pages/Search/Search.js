@@ -285,7 +285,7 @@ export default class Search extends Lightning.Component {
     if (rows.length > 0) {
       search.timestamp = new Date().getTime();
 
-      search.items = constructRails(rows);
+      search.items = constructRails(rows, ROUTES.SEARCH);
 
       this._VODSection.patch({
         props: {
