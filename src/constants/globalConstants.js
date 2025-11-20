@@ -350,12 +350,12 @@ export const API_URLS = {
   GET_DEVICE_STATUS: 'device-status.php',
   GET_TOKEN: 'token.php',
   REVOKE_TOKEN: 'revoke.php',
-  GET_USER_FAVORITES: 'user/favorites',
-  ADD_USER_FAVORITES: 'user/favorites',
-  REMOVE_USER_FAVORITES: 'user/favorites',
-  GET_USER_RECENTLY_WATCHED: 'user/recently_watched',
-  ADD_USER_RECENTLY_WATCHED: 'user/recently_watched',
-  REMOVE_USER_RECENTLY_WATCHED: 'user/recently_watched',
+  GET_USER_FAVORITES: 'oauth/favorites',
+  ADD_USER_FAVORITES: 'oauth/favorites',
+  REMOVE_USER_FAVORITES: 'oauth/favorites',
+  GET_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
+  ADD_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
+  REMOVE_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
 };
 
 export const TRANSLATIONS = {

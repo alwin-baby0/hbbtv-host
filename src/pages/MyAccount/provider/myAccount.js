@@ -1,11 +1,9 @@
-import { LanguageService, t, AuthorizationService, UserService } from '../../../Services';
+import { t, AuthorizationService, UserService } from '../../../Services';
 import { LOCAL_STORAGE_KEYS, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
 import { parseVodUserContentData } from '../../../Models';
 
 export default async function (page) {
   AuthorizationService.clearPollingInterval();
-
-  const languages = await LanguageService.getLanguages();
 
   !localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
   const response = !localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
@@ -56,7 +54,6 @@ export default async function (page) {
   }
 
   page.props = {
-    languagesData: languages.data,
     deviceCode,
     verificationUri,
     recentlyWatched,
