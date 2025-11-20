@@ -102,7 +102,9 @@ export default class Home extends Lightning.Component {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
   }
 
   $setStateOnScroll(nextState) {
@@ -142,7 +144,9 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleDown() {

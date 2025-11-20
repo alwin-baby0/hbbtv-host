@@ -59,6 +59,10 @@ export default class VerticalContainer extends Lightning.Component {
           },
         },
       });
+    } else {
+      this.patch({
+        Title: undefined,
+      });
     }
 
     if (items !== this._props.items) {
@@ -267,6 +271,9 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   $handleItemHover(index) {
+    const oldIndex = this._focusedIndex;
+    const newIndex = index;
+
     if (this._focusedIndex !== index) {
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex = index;
@@ -276,7 +283,7 @@ export default class VerticalContainer extends Lightning.Component {
       this.Items.patch({ y: 0 });
     }
     this.fireAncestors('$verticalContainerIndexChange', index);
-    this._reCalibrateScroll();
+    this._reCalibrateScroll(oldIndex, newIndex);
     this.fireAncestors(
       '$handleStateHover',
       this.parent.children.indexOf(this),
@@ -301,6 +308,12 @@ export default class VerticalContainer extends Lightning.Component {
           closestElementFunction(nextContainer, previouslyFocusedItem)
         );
       }
+    }
+  }
+
+  _unfocus() {
+    if (this._focusedIndex >= 0 && this._focusedIndex < this.Items.children.length) {
+      this.Items.children[this._focusedIndex]?._unfocus();
     }
   }
 }

@@ -12,11 +12,14 @@ import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
   };
   pixelPerHour = 500; // Pixels per hour for EPG time slots
+  channelUpdateInterval = null;
+  focusedState = '';
 
   static _template() {
     return {
@@ -229,6 +232,7 @@ export default class LiveTV extends Lightning.Component {
     this.fireAncestors('$punchHoleTV');
     this.$updateChannel(EPGService.channelsItems[0]);
     this._setState('Categories');
+    this.focusedState = 'Categories';
 
     this.Now.patch({
       w: t(TRANSLATIONS.NOW)?.length * 20 + 10,
@@ -281,6 +285,12 @@ export default class LiveTV extends Lightning.Component {
 
       this._EPGData.setInitialOffset();
     });
+
+    this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
+  }
+
+  _inactive() {
+    this.fireAncestors('$unpunchHole');
   }
 
   _disable() {
@@ -294,6 +304,60 @@ export default class LiveTV extends Lightning.Component {
 
   $updateChannel(singleChannel) {
     this._LiveSectionPlayer._changeChannel(singleChannel);
+  }
+
+  async fetchChannels() {
+    if (Router.getActiveHash() !== ROUTES.PLAYER) {
+      await EPGService.initialFetch();
+
+      const focusedIndex = this._EPGData._focusedIndex;
+      this._EPGData._clear();
+
+      const channelsAll = EPGService.channelsItems
+        .map((channelInfo, index) => {
+          if (!channelInfo) {
+            console.warn(`No channelInfo for index ${index}`);
+            return null;
+          }
+
+          const matchingEpg = EPGService.epgs.find((epgInfo) => {
+            return epgInfo.channelId === channelInfo.id;
+          });
+          const rails = constructRails(matchingEpg);
+
+          this._EPGData._appendItems(rails);
+          return {
+            type: LiveChannelRailItem,
+            channelInfo: channelInfo,
+            channelEPG: matchingEpg,
+            w: 190,
+            h: 105,
+            channelIndex: index,
+            props: {
+              icon: channelInfo.icon,
+            },
+          };
+        })
+        .filter((channel) => channel !== null);
+
+      this._Channels.props = {
+        items: channelsAll,
+        parentState: 'Channels',
+      };
+
+      this._EPGData.setInitialOffset();
+      this._EPGData._focusedIndex = focusedIndex;
+      this.focusedState === 'EPGS' &&
+        this._EPGData.Items.children[this._EPGData._focusedIndex]._focus();
+
+      this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
+    }
+  }
+
+  _inactive() {
+    clearInterval(this.channelUpdateInterval);
+    this.channelUpdateInterval = null;
+    this.fireAncestors('$unpunchHole');
   }
 
   async $updateChannels(val) {
@@ -408,9 +472,11 @@ export default class LiveTV extends Lightning.Component {
   $handleStateHover(index, stateName = null) {
     if (stateName) {
       this._setState(stateName);
+      this.focusedState = stateName;
       return;
     }
     this._setState(states[index]);
+    this.focusedState = states[index];
   }
 
   static _states() {
@@ -422,10 +488,12 @@ export default class LiveTV extends Lightning.Component {
 
         _handleRight() {
           this._setState('EPGS');
+          this.focusedState = 'EPGS';
         }
 
         _handleUp() {
           this._setState('Categories');
+          this.focusedState = 'Categories';
         }
 
         async $verticalContainerIndexChange(index) {
@@ -454,6 +522,7 @@ export default class LiveTV extends Lightning.Component {
 
         _handleDown() {
           this._setState('EPGS');
+          this.focusedState = 'EPGS';
         }
       },
 
@@ -464,6 +533,7 @@ export default class LiveTV extends Lightning.Component {
 
         _handleUp() {
           this._setState('Categories');
+          this.focusedState = 'Categories';
         }
 
         async $verticalContainerIndexChange(index) {

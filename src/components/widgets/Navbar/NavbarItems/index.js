@@ -78,26 +78,6 @@ export default class SidebarItems extends Lightning.Component {
 
     // setTimeout is used to give time for url hash to change before asign the right one
     setTimeout(() => {
-      const activeHash = Router.getActiveHash();
-      // Check if activeHash contains both 'filtered' and 'movies'
-      if (activeHash.includes(ROUTES.FILTER_PAGE) && activeHash.includes(FILTER_TYPES.MOVIE)) {
-        this._index = getRouteNavbarIndex(
-          `${ROUTES.FILTER_PAGE}/${FILTER_TYPES.MOVIE}`,
-          this._visibleSport
-        );
-        this._setSelected(this._index);
-        return;
-      } else if (
-        activeHash.includes(ROUTES.FILTER_PAGE) &&
-        activeHash.includes(FILTER_TYPES.SERIES)
-      ) {
-        this._index = getRouteNavbarIndex(
-          `${ROUTES.FILTER_PAGE}/${FILTER_TYPES.SERIES}`,
-          this._visibleSport
-        );
-        this._setSelected(this._index);
-        return;
-      }
       this._index = getRouteNavbarIndex(Router.getActiveHash(), this._visibleSport);
       this._setSelected(this._index);
     });
@@ -181,29 +161,6 @@ export default class SidebarItems extends Lightning.Component {
     });
   }
 
-  _focus() {
-    const activeHash = Router.getActiveHash();
-    // Check if activeHash contains both 'filtered' and 'movies'
-    if (activeHash?.includes(ROUTES.FILTER_PAGE) && activeHash?.includes(FILTER_TYPES.MOVIE)) {
-      this._index = getRouteNavbarIndex(
-        `${ROUTES.FILTER_PAGE}/${FILTER_TYPES.MOVIE}`,
-        this._visibleSport
-      );
-      this._setSelected(this._index);
-      return;
-    } else if (
-      activeHash?.includes(ROUTES.FILTER_PAGE) &&
-      activeHash?.includes(FILTER_TYPES.SERIES)
-    ) {
-      this._index = getRouteNavbarIndex(
-        `${ROUTES.FILTER_PAGE}/${FILTER_TYPES.SERIES}`,
-        this._visibleSport
-      );
-      this._setSelected(this._index);
-      return;
-    }
-  }
-
   _setSelected(index) {
     this._Column.Items.children.forEach((item, i) => {
       item.patch({
@@ -229,11 +186,15 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _handleHover() {
-    Router.focusWidget(ROUTES.MENU_WIDGET);
+    if (!Router.isNavigating()) {
+      Router.focusWidget(ROUTES.MENU_WIDGET);
+    }
     this._Column._focus();
   }
 
   _handleUnhover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
   }
 }

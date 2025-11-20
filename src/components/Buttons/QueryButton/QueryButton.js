@@ -85,10 +85,6 @@ export default class QueryButton extends Lightning.Component {
     this._focus();
   }
 
-  _handleUnhover() {
-    this._unfocus();
-  }
-
   _handleClick() {
     this._handleEnter();
   }

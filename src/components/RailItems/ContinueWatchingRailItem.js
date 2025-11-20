@@ -17,6 +17,7 @@ export default class ContinueWatchingRailItem extends FocusableItem {
     strokeColor: Colors(colors.focus).get(),
     callback: () => null,
     index: 0,
+    enableProgressBar: false,
   };
 
   static _template() {
@@ -46,10 +47,12 @@ export default class ContinueWatchingRailItem extends FocusableItem {
           x: 20,
           w: 30,
           h: 30,
+          visible: false,
         },
         ProgressBar: {
           y: -60,
           type: ProgressBar,
+          visible: false,
           props: {
             width: CARD_SIZES.CONTINUE_WATCHING.width - 40,
             flexItem: {
@@ -72,14 +75,21 @@ export default class ContinueWatchingRailItem extends FocusableItem {
     return this.tag('ProgressBar');
   }
 
+  get _PlayButton() {
+    return this.tag('PlayButton');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, placeholderSrc } = this._props;
+    const { imageSrc, radius, placeholderSrc, enableProgressBar } = this._props;
 
     this.setProps({
       width: 385,
       height: 215,
     });
+
+    this._PlayButton.visible = enableProgressBar;
+    this._ProgressBar.visible = enableProgressBar;
 
     this._LandscapeImage.patch({
       props: {
@@ -111,7 +121,9 @@ export default class ContinueWatchingRailItem extends FocusableItem {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index } = this._props;
     this.fireAncestors('$handleItemHover', index);
     this._focus();

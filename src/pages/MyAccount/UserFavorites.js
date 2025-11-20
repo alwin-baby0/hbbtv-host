@@ -26,12 +26,12 @@ export default class UserFavorites extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     this._Favorites.patch({
+      h: !this._props.items || !this._props.items.length ? 95 : 320,
       props: {
-        w: 1450,
-        h: 920,
         items: constructRails(this._props.items),
         parentState: this._props.parentState,
         railTitle: this._props.railTitle,
+        h: !this._props.items || !this._props.items.length ? 0 : 320,
       },
     });
   }

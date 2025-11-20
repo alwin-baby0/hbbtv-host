@@ -42,6 +42,7 @@ export default class CategoryPickerItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
+
     const { itemInfo, w, h, strokeWidth, radius } = this._props;
     const { title } = itemInfo;
     this.setProps({
@@ -79,7 +80,9 @@ export default class CategoryPickerItem extends FocusableItem {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index } = this._props;
 
     this.fireAncestors('$handleItemHover', index);

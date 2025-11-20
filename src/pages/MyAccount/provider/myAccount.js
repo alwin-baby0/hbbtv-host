@@ -36,7 +36,7 @@ export default async function (page) {
     ? parseVodUserContentData({
         data: {
           railTitle: t(TRANSLATIONS.FAVORITES),
-          railType: RAIL_TYPES.USER_CONTENT,
+          railType: RAIL_TYPES.FAVORITES,
           entry: favorites.data.favorites,
         },
         itemsPerRow:

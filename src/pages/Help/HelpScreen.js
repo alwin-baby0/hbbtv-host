@@ -33,7 +33,7 @@ export default class HelpScreen extends Lightning.Component {
         x: 100,
         y: 150,
         text: {
-          text: t(TRANSLATIONS.HELP_INFO_LABEL) || 'Info',
+          text: t(TRANSLATIONS.HELP_INFO_LABEL),
           fontFace: 'Montserrat-Bold',
           fontSize: 50,
         },
@@ -165,7 +165,9 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleDown() {

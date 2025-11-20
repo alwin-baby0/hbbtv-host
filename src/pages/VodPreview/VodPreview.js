@@ -1,4 +1,4 @@
-import { Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import VodContentContainer from '../../components/VodContentContainer/VodContentContainer';
 import Gallery from '../../components/Gallery/Gallery';
@@ -9,11 +9,20 @@ import {
   ROUTES,
   VOD_PREVIEW_TYPES,
   CONTENT_TYPE,
+  IMAGE_SIZES,
 } from '../../constants/globalConstants';
+import { SearchService, VodService } from '../../Services';
+import PosterRailItem from '../../components/RailItems/PosterRailItem';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
 export default class VodPreview extends Lightning.Component {
+  constructor(context) {
+    super(context);
+    this.changeContent = this.changeContent.bind(this);
+  }
+
   _props = {
     vodType: undefined,
     fetchMoreStripes: async () => null,
@@ -49,6 +58,89 @@ export default class VodPreview extends Lightning.Component {
           type: VerticalContainer,
         },
       },
+    };
+  }
+
+  _active() {
+    window.addEventListener('changeContent', (event) => {
+      this.changeContent(event.detail.category, event.detail.type);
+    });
+  }
+
+  async changeContent(category, type) {
+    if (category.toUpperCase() === 'ALL') {
+      VodService.vodType = this._props.vodType;
+
+      await VodService.initialFetch();
+
+      const vodStripes = constructRails(VodService.vodStripes);
+
+      this._Column.props = {
+        items: Array.isArray(vodStripes)
+          ? vodStripes.reduce((acc, rail) => {
+              if (Array.isArray(rail)) {
+                acc.push(...rail);
+              } else {
+                acc.push(rail);
+              }
+              return acc;
+            }, [])
+          : vodStripes,
+        railTitle: '',
+      };
+      this._Column.patch({
+        h: 795,
+      });
+
+      return;
+    }
+
+    const ROW_SIZE = 6;
+    const { items } = await SearchService.getSearch(category, type);
+    this._Column._clear();
+    let rows = [];
+    let grid;
+    if (items.length > 0) {
+      for (let i = 0; i < items.length; i += ROW_SIZE) {
+        rows.push({ items: items.slice(i, i + ROW_SIZE) });
+      }
+      grid = rows.map((row) => {
+        return {
+          type: HorizontalContainer,
+          collision: true,
+          h: 460,
+          w: 1760,
+          itemSpacing: 520,
+          props: {
+            items: row.items.map((item, index) => ({
+              type: PosterRailItem,
+              collision: true,
+              flexItem: {
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 10,
+                marginBottom: 10,
+              },
+              props: {
+                itemTitle: item.title,
+                imageSrc: item.getPortraitPoster(IMAGE_SIZES.S).src,
+                callback: () => {
+                  Router.navigate(`${searchType}-details/${item.id}`);
+                },
+                index,
+              },
+            })),
+          },
+        };
+      });
+    }
+    this._Column.props = {
+      ...(items && items.length
+        ? {
+            items: grid,
+          }
+        : { railTitle: `No items found for category: ${category}` }),
+      parentState: 'VodContainer',
     };
   }
 
@@ -163,7 +255,9 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget(ROUTES.MENU_WIDGET);
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleDown() {
@@ -191,7 +285,9 @@ export default class VodPreview extends Lightning.Component {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', true);
 
-          this._Column.Items.children[this._Column._focusedIndex]._unfocus();
+          if (this._Column.Items.children.length > 0) {
+            this._Column.Items.children[this._Column._focusedIndex]._unfocus();
+          }
           if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
             this._setState('VodContainer');
           }
@@ -222,7 +318,9 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleDown() {
-          this._setState('VodContainer');
+          if (this._Column.Items.children.length > 0) {
+            this._setState('VodContainer');
+          }
         }
 
         _getFocused() {
@@ -272,7 +370,10 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          if (this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY) {
+          if (
+            this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY &&
+            !Router.isNavigating()
+          ) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           } else {
             this._setState('VodContentContainer');

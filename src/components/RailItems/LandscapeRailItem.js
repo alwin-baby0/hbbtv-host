@@ -54,7 +54,6 @@ export default class LandscapeRailItem extends FocusableItem {
           h: 140,
           w: 415,
           flexItem: {
-            // marginTop: 5,
             marginLeft: 20,
             marginRight: 20,
           },

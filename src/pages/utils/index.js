@@ -2,7 +2,7 @@ import { railItemConstructor } from './railItems';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { EPGService } from '../../Services';
 import Empty from '../LiveTV/components/Empty';
-import { CARD_TYPES, RAIL_TYPES, CARD_SIZES } from '../../constants/globalConstants';
+import { CARD_TYPES, RAIL_TYPES, CARD_SIZES, ROUTES } from '../../constants/globalConstants';
 
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,
@@ -22,15 +22,15 @@ const RAIL_WIDTHS = {
 
 let globalVerticalIndex = 0;
 
-export const constructRails = (rails) => {
+export const constructRails = (rails, page = '') => {
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
-    return constructRails([rails]);
+    return constructRails([rails], page);
   }
 
   return rails
     .filter((rail) => !!rail)
-    .map((rail) => {
+    .map((rail, index) => {
       const items = rail.items;
       const itemsPerRow = rail.itemsPerRow;
 
@@ -47,10 +47,10 @@ export const constructRails = (rails) => {
           const currentIndex = globalVerticalIndex;
           globalVerticalIndex += 1;
 
-          return cronstructSingleLineRail(newRail, currentIndex);
+          return cronstructSingleLineRail(newRail, currentIndex, page);
         });
       }
-      return cronstructSingleLineRail(rail, 0); //-1 is placeholder value if items are not chunked
+      return cronstructSingleLineRail(rail, index, page); //-1 is placeholder value if items are not chunked
     });
 };
 
@@ -59,7 +59,7 @@ const verticalIndexReset = () => {
   globalVerticalIndex = 0;
 };
 
-export const cronstructSingleLineRail = (rail, index) => {
+export const cronstructSingleLineRail = (rail, index, page = '') => {
   const {
     items,
     railType,
@@ -73,6 +73,12 @@ export const cronstructSingleLineRail = (rail, index) => {
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
       : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
+  console.log(railTitle);
+  const flexItem =
+    (railType === RAIL_TYPES.EPGS || page === ROUTES.SEARCH) && !railTitle
+      ? {}
+      : { marginBottom: 40 };
+  console.log(flexItem);
 
   let paddingLeft = 0;
   let targetIndex = null;
@@ -100,21 +106,25 @@ export const cronstructSingleLineRail = (rail, index) => {
       console.error('items[0].startTime is undefined or null');
     }
   }
+
   return {
     type: HorizontalContainer,
     ...rest,
     ...containerDimensions,
     collision: true,
+    index,
     props: {
       h: CARD_SIZES[cardType]?.height,
       w: containerDimensions.w,
       railTitle: railTitle,
       cardType: cardType,
+      ...(railType === RAIL_TYPES.EPGS && { wrap: true }),
       items: railItemConstructor(
         items.length === 0 ? [{ type: Empty }] : items,
         railType,
         railItemsOptions
       ),
+      flexItem: flexItem,
       paddingLeft,
       targetIndex: targetIndex,
       index: index,

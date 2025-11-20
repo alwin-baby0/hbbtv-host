@@ -90,10 +90,6 @@ export default class Key extends Lightning.Component {
     this._focus();
   }
 
-  _handleUnhover() {
-    this._unfocus();
-  }
-
   _handleEnter() {
     this.fireAncestors('$onSoftKey', { key: this._data.key });
   }
