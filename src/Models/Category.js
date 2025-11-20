@@ -13,11 +13,17 @@ class Category {
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
-        Router.navigate(`${ROUTES.FILTER_PAGE}/${this.id}/${FILTER_TYPES.MOVIES}`, this.data);
+        const event = new CustomEvent('changeContent', {
+          detail: { category: this.data.title, type: this.data.type }, // pass whatever value you need here
+        });
+        window.dispatchEvent(event);
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        Router.navigate(`${ROUTES.FILTER_PAGE}/${this.id}/${FILTER_TYPES.SERIES}`, this.data);
+        const event = new CustomEvent('changeContent', {
+          detail: { category: this.data.title, type: this.data.type }, // pass whatever value you need here
+        });
+        window.dispatchEvent(event);
         break;
       }
       case CATEGORY_TYPES.LIVE_TV: {

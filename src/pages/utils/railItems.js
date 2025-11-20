@@ -42,6 +42,8 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
     case RAIL_TYPES.BANNER:
       return constructBannerRailItems(railItems, railItemsOptions);
     case RAIL_TYPES.CONTINUE_WATCHING:
+      return constructContinueWatchingRailItems(railItems, railItemsOptions, true);
+    case RAIL_TYPES.FAVORITES:
       return constructContinueWatchingRailItems(railItems, railItemsOptions);
     default: {
       console.warn('unknown rail type:', railType, ', defaulting to simple rail items');
@@ -314,7 +316,11 @@ const constructBannerRailItems = (railItems, railItemsOptions) => {
   }));
 };
 
-const constructContinueWatchingRailItems = (railItems, railItemsOptions) => {
+const constructContinueWatchingRailItems = (
+  railItems,
+  railItemsOptions,
+  enableProgressBar = false
+) => {
   return railItems.map((railItem, index) => ({
     type: ContinueWatchingRailItem,
     collision: true,
@@ -330,6 +336,7 @@ const constructContinueWatchingRailItems = (railItems, railItemsOptions) => {
       imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
       itemType: railItem.type,
       index: index,
+      enableProgressBar,
       callback: () => {
         Router.navigate(railItem.url);
       },

@@ -59,7 +59,6 @@ export default class Collection extends Lightning.Component {
       return;
     }
     this._setState(states[index]);
-    this.children[index]._unfocus();
   }
 
   static _states() {

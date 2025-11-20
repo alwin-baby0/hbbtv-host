@@ -1,4 +1,4 @@
-import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch';
 import InputField from '../../components/Input/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
@@ -47,7 +47,7 @@ export default class Search extends Lightning.Component {
         x: 100,
         y: 160,
         text: {
-          text: t(TRANSLATIONS.SEARCH) || 'Search',
+          text: t(TRANSLATIONS.SEARCH),
           fontFace: 'Montserrat-Bold',
           fontSize: 50,
         },
@@ -119,7 +119,7 @@ export default class Search extends Lightning.Component {
           h: 40,
           y: 80,
           text: {
-            text: t(TRANSLATIONS.NO_RECENT_SEARCHES) || 'No recent searches',
+            text: t(TRANSLATIONS.NO_RECENT_SEARCHES),
             fontSize: 35,
           },
         },
@@ -201,7 +201,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH) || 'Search',
+          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH),
         },
       },
     });
@@ -219,7 +219,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: t(TRANSLATIONS.SEARCH) || 'Search',
+          text: t(TRANSLATIONS.SEARCH),
         },
       },
     });
@@ -237,7 +237,7 @@ export default class Search extends Lightning.Component {
     this.patch({
       SearchLabel: {
         text: {
-          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH) || 'Search',
+          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH),
         },
       },
     });
@@ -299,7 +299,7 @@ export default class Search extends Lightning.Component {
     } else {
       this._VODSection.patch({
         text: {
-          text: t(TRANSLATIONS.NO_RESULTS) || 'No matches found',
+          text: t(TRANSLATIONS.NO_RESULTS),
         },
         props: {
           items: [],
@@ -323,10 +323,6 @@ export default class Search extends Lightning.Component {
 
   $getInput() {
     return this._Input._Input;
-  }
-
-  $setFocusKeyboard() {
-    this._setState('Keyboard');
   }
 
   _active() {

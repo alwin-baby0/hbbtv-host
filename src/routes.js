@@ -5,8 +5,6 @@ import VodPreview from './pages/VodPreview/VodPreview';
 import onVodPage from './pages/VodPreview/provider/onVodPage';
 import SingleMovie from './pages/SingleMovie/SingleMovie';
 import singleMovie from './pages/SingleMovie/provider/singleMovie';
-import Filtered from './pages/Filtered/Filtered';
-import filtered from './pages/Filtered/provider/filtered';
 import SingleSeries from './pages/SingleSeries/SingleSeries';
 import singleSeries from './pages/SingleSeries/provider/singleSeries';
 import Search from './pages/Search/Search';
@@ -60,12 +58,6 @@ export default {
       options: {
         reuseInstance: false,
       },
-    },
-    {
-      path: `${ROUTES.FILTER_PAGE}/:action/:genre_movies`,
-      component: Filtered,
-      on: filtered,
-      widgets: [ROUTES.MENU_WIDGET],
     },
     {
       path: `${ROUTES.SPORTS_DETAIL}/:seriesId`,

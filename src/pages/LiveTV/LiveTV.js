@@ -283,6 +283,10 @@ export default class LiveTV extends Lightning.Component {
     });
   }
 
+  _inactive() {
+    this.fireAncestors('$unpunchHole');
+  }
+
   _disable() {
     VideoPlayer.clear();
   }
