@@ -30,7 +30,7 @@ export const constructRails = (rails, page = '') => {
 
   return rails
     .filter((rail) => !!rail)
-    .map((rail) => {
+    .map((rail, index) => {
       const items = rail.items;
       const itemsPerRow = rail.itemsPerRow;
 
@@ -50,7 +50,11 @@ export const constructRails = (rails, page = '') => {
           return cronstructSingleLineRail(newRail, currentIndex, page);
         });
       }
+<<<<<<< HEAD
       return cronstructSingleLineRail(rail, 0, page); //-1 is placeholder value if items are not chunked
+=======
+      return cronstructSingleLineRail(rail, index); //-1 is placeholder value if items are not chunked
+>>>>>>> development
     });
 };
 
@@ -102,11 +106,13 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
       console.error('items[0].startTime is undefined or null');
     }
   }
+
   return {
     type: HorizontalContainer,
     ...rest,
     ...containerDimensions,
     collision: true,
+    index,
     props: {
       h: CARD_SIZES[cardType]?.height,
       w: containerDimensions.w,

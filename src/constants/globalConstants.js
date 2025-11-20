@@ -314,6 +314,7 @@ export const RAIL_TYPES = {
   USER_CONTENT: 'UserContent',
   BANNER: 'Banner',
   CONTINUE_WATCHING: 'ContinueWatching',
+  FAVORITES: 'Favorites',
   VIDEO: 'video',
 };
 
@@ -462,8 +463,8 @@ export const ROUTES = {
 export const CARD_SIZES = {
   POSTER: {
     width: 273,
-    height: 460,
-    container_height: 430,
+    height: 390,
+    container_height: 360,
     image_width: 273,
     image_height: 375,
   },

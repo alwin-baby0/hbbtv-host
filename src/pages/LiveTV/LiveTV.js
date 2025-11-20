@@ -290,6 +290,10 @@ export default class LiveTV extends Lightning.Component {
     this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
   }
 
+  _inactive() {
+    this.fireAncestors('$unpunchHole');
+  }
+
   _disable() {
     VideoPlayer.clear();
   }
