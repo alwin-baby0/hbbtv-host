@@ -50,11 +50,7 @@ export const constructRails = (rails, page = '') => {
           return cronstructSingleLineRail(newRail, currentIndex, page);
         });
       }
-<<<<<<< HEAD
-      return cronstructSingleLineRail(rail, 0, page); //-1 is placeholder value if items are not chunked
-=======
-      return cronstructSingleLineRail(rail, index); //-1 is placeholder value if items are not chunked
->>>>>>> development
+      return cronstructSingleLineRail(rail, index, page); //-1 is placeholder value if items are not chunked
     });
 };
 

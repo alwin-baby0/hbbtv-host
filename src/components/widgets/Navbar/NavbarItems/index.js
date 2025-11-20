@@ -191,6 +191,8 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   _handleUnhover() {
-    Router.focusPage();
+    if (Router.isNavigating()) {
+      Router.focusPage();
+    }
   }
 }

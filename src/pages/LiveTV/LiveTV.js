@@ -308,11 +308,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   async fetchChannels() {
-    if (
-      liveTV.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
-      Router.getActiveHash() !== ROUTES.PLAYER
-    ) {
-      liveTV.timestamp = new Date().getTime();
+    if (Router.getActiveHash() !== ROUTES.PLAYER) {
       await EPGService.initialFetch();
 
       const focusedIndex = this._EPGData._focusedIndex;
