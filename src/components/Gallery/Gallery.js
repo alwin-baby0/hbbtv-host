@@ -25,7 +25,7 @@ export default class Gallery extends Lightning.Component {
         type: HorizontalContainer,
         collision: true,
         props: {
-          y: 820 - 115,
+          y: 820 - 265,
           x: 75,
           w: 1760,
           h: 215,
@@ -92,13 +92,14 @@ export default class Gallery extends Lightning.Component {
   }
 
   $changeGalleryItem(index) {
-    const { sliderData } = this._props;
+    const { sliderData, bgY } = this._props;
     this._sliderIndex = index;
     this._HeroSection.patch({
       props: {
         badgeText: sliderData.items[index].type.value,
         galleryItem: sliderData.items[index],
-        infoY: 310,
+        infoY: 160,
+        bgY: bgY,
         badgeY: -50,
       },
     });
@@ -118,5 +119,11 @@ export default class Gallery extends Lightning.Component {
 
   _getFocused() {
     return this._Bullets;
+  }
+
+  _handleScroll(event) {
+    if (event.deltaY > 0) {
+      this.fireAncestors('$setStateOnScroll', this._props.scrollDownState);
+    }
   }
 }

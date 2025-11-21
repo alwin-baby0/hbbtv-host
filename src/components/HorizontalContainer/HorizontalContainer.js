@@ -68,9 +68,10 @@ export default class HorizontalContainer extends Lightning.Component {
     const { cardType, targetIndex, wrap } = rest;
 
     if (railTitle && railTitle !== '') {
-      const { h } = rest;
+      const { h, flexItem } = rest;
       this.patch({
         h: h + 95,
+        flexItem: flexItem,
         Title: {
           x: 9,
           y: 10,

@@ -34,9 +34,10 @@ export default class VodPreview extends Lightning.Component {
       collision: true,
       HeroSection: {
         x: 0,
-        y: 0,
+        y: 150,
         w: 1920,
-        h: 800,
+        h: 650,
+        collision: true,
         type: Gallery,
       },
       VodContentContainer: {
@@ -183,6 +184,8 @@ export default class VodPreview extends Lightning.Component {
           props: {
             sliderData,
             parentState: 'Hero',
+            scrollDownState: 'VodContentContainer',
+            bgY: -150,
           },
         });
       } else {
@@ -240,7 +243,7 @@ export default class VodPreview extends Lightning.Component {
 
           this.patch({
             HeroSection: {
-              y: 0,
+              y: 150,
             },
             VodContentContainer: {
               y: 820,
@@ -330,6 +333,20 @@ export default class VodPreview extends Lightning.Component {
       class VodContainer extends this {
         $enter() {
           this.correctContainerSize();
+
+          this._HeroSection.patch({
+            props: {
+              bgY: 0,
+            },
+          });
+        }
+
+        $exit() {
+          this._HeroSection.patch({
+            props: {
+              bgY: -150,
+            },
+          });
         }
 
         correctContainerSize() {
