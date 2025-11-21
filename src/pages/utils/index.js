@@ -75,9 +75,10 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
       : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
   console.log(railTitle);
   const flexItem =
-    (railType === RAIL_TYPES.EPGS || page === ROUTES.SEARCH) && !railTitle
+    ((railType === RAIL_TYPES.EPGS || page === ROUTES.SEARCH) && !railTitle) ||
+    (page !== ROUTES.HOME && railTitle)
       ? {}
-      : { marginBottom: 40 };
+      : { marginBottom: railTitle ? 40 : 60 };
   console.log(flexItem);
 
   let paddingLeft = 0;
@@ -118,7 +119,9 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
       w: containerDimensions.w,
       railTitle: railTitle,
       cardType: cardType,
-      ...(railType === RAIL_TYPES.EPGS && { wrap: true }),
+      ...((railType === RAIL_TYPES.EPGS ||
+        railType === RAIL_TYPES.CONTINUE_WATCHING ||
+        railType === RAIL_TYPES.FAVORITES) && { wrap: true }),
       items: railItemConstructor(
         items.length === 0 ? [{ type: Empty }] : items,
         railType,
