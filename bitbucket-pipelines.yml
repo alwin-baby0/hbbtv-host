@@ -31,4 +31,4 @@ pipelines:
               - source config-webos.sh
               - ./build_lg_ci.sh
             artifacts:
-              - webotv-lg-build-prod/**
+              - build/**
