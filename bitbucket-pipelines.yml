@@ -18,8 +18,6 @@ pipelines:
           - npm run lint
           - npm test
           - npm run build
-        artifacts:
-          - dist/**
     - parallel:
         - step:
             name: Build LG
@@ -33,4 +31,4 @@ pipelines:
               - source config-webos.sh
               - ./build_lg_ci.sh
             artifacts:
-              - webotv-lg-build-prod
+              - webotv-lg-build-prod/**
