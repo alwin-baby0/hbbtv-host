@@ -15,8 +15,8 @@ mkdir -p "$buildfolder"/static
 cp public/static/icon.png "$buildfolder"/static
 
 echo run ares-generate
-ares-generate -p "id=wedotv-$environment" -p "version=${APP_VERSION}" -p "title=WeDoTV" "$buildfolder"
-mv build/* "$buildfolder"
+ares-generate -p "id=wedotv-$environment" -p "version=${APP_VERSION}" -p "title=WeDoTV" "$buildfolder" --overwrite
+mv -f build/* "$buildfolder" || true
 
 sed -i 's#<body>#<body>\n<script src="./webOSTVjs-1.2.10/webOSTV-dev.js" charset="UTF-8"></script>\n<script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>\n#' "$buildfolder"/index.html
 
