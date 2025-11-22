@@ -30,6 +30,7 @@ pipelines:
               - node
             script:
               - npm install -g @webos-tools/cli
+              - source config-webos.sh
               - ./build_lg.sh
             artifacts:
               - webotv-lg-build-prod
