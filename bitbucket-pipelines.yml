@@ -6,19 +6,19 @@ definitions:
 
 pipelines:
   default:
-    - step:
-        name: Build and Test
-        runs-on:
-          - self.hosted
-          - linux
-        caches:
-          - node
-        script:
-          - npm ci
-          - npm run lint
-          - npm test
-          - npm run build
     - parallel:
+        - step:
+            name: Build and Test
+            runs-on:
+              - self.hosted
+              - linux
+            caches:
+              - node
+            script:
+              - npm ci
+              - npm run lint
+              - npm test
+              - npm run build
         - step:
             name: Build LG
             runs-on:
