@@ -1,5 +1,9 @@
 image: node:18
 
+definitions:
+  caches:
+    node: node_modules
+
 pipelines:
   default:
     - step:
@@ -16,33 +20,16 @@ pipelines:
           - npm run build
         artifacts:
           - dist/**
-
-  branches:
-    development:
-      - step:
-          name: Build and Test
-          caches:
-            - node
-          script:
-            - npm ci
-            - npm run lint
-            - npm test
-            - npm run build
-          artifacts:
-            - dist/**
-
-  pull-requests:
-    '**':
-      - step:
-          name: Build and Test
-          caches:
-            - node
-          script:
-            - npm ci
-            - npm run lint
-            - npm test
-            - npm run build
-
-definitions:
-  caches:
-    node: node_modules
+    - parallel:
+        - step:
+            name: Build LG
+            runs-on:
+              - self.hosted
+              - linux
+            caches:
+              - node
+            script:
+              - npm install -g @webos-tools/cli
+              - ./build_lg.sh
+            artifacts:
+              - webotv-lg-build-prod
