@@ -73,13 +73,13 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
       : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
-  console.log(railTitle);
   const flexItem =
-    ((railType === RAIL_TYPES.EPGS || page === ROUTES.SEARCH) && !railTitle) ||
-    (page !== ROUTES.HOME && railTitle)
+    ((railType === RAIL_TYPES.EPGS && !railTitle) || (page !== ROUTES.HOME && railTitle)) &&
+    page !== ROUTES.SEARCH
       ? {}
-      : { marginBottom: railTitle ? 40 : 60 };
-  console.log(flexItem);
+      : {
+          marginBottom: railTitle && page !== ROUTES.SEARCH ? 40 : page === ROUTES.SEARCH ? 30 : 60,
+        };
 
   let paddingLeft = 0;
   let targetIndex = null;

@@ -39,7 +39,7 @@ export default class PosterRailItem extends FocusableItem {
             fontFace: 'Montserrat-Regular',
             fontSize: 18,
             lineHeight: 22,
-            maxLines: 2,
+            maxLines: 1,
             wordWrapWidth: 273,
             maxLinesSuffix: '...',
           },
