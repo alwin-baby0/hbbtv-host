@@ -1196,14 +1196,25 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaRewind() {
+    const wasPlaying = VideoPlayer.playing;
+
     this.$hideSbutitles();
     this._skipVideo(false);
-    VideoPlayer.play();
+
+    if (wasPlaying) {
+      VideoPlayer.play();
+    }
   }
 
   _handleMediaFastForward() {
+    const wasPlaying = VideoPlayer.playing;
+
     this.$hideSbutitles();
     this._skipVideo(true);
+
+    if (wasPlaying) {
+      VideoPlayer.play();
+    }
   }
 
   _handleMediaPlay() {
@@ -1225,11 +1236,29 @@ export default class Player extends Lightning.Component {
   }
 
   _captureKey({ keyCode }) {
-    const useKeyHandlers = !this._Wrapper.visible;
-    if (this._getState() !== 'Subtitles') this._showWrapper();
+    const keyName = window.keyCodes[keyCode];
 
-    if (window.keyCodes[keyCode] === 'Back' && this._getState() !== 'Subtitles') return false;
-    return useKeyHandlers;
+    const isMediaKey =
+      keyName === 'MediaRewind' ||
+      keyName === 'MediaFastForward' ||
+      keyName === 'MediaPlayPause' ||
+      keyName === 'MediaPlay' ||
+      keyName === 'MediaPause' ||
+      keyName === 'MediaStop';
+
+    if (this._getState() !== 'Subtitles') {
+      this._showWrapper();
+    }
+
+    if (keyName === 'Back' && this._getState() !== 'Subtitles') {
+      return false;
+    }
+
+    if (isMediaKey) {
+      return true;
+    }
+
+    return !this._Wrapper.visible;
   }
 
   $handleStateHover(index, stateName = null) {
