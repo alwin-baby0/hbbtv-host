@@ -50,10 +50,10 @@ class AuthorizationService extends FetchingService {
     return await this._request({
       url: `/${API_URLS.GET_DEVICE_CODE}`,
       apiVersion: auth,
-      method: API_METHODS.GET,
+      method: API_METHODS.POST,
       params: {
         client_id: process.env.APP_CMP_CLIENT_ID,
-        client_secret: process.env.APP_CMP_CLIENT_SECRET,
+        // client_secret: process.env.APP_CMP_CLIENT_SECRET,
       },
     });
   };
