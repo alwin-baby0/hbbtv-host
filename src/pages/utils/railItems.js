@@ -19,7 +19,6 @@ import { DetailService, EPGService } from '../../Services';
 import ContinueWatchingRailItem from '../../components/RailItems/ContinueWatchingRailItem';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
-  console.log(railType);
   switch (railType) {
     case RAIL_TYPES.MOVIE:
     case RAIL_TYPES.SERIE:
@@ -54,7 +53,6 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
 };
 
 const constructSimpleRailItems = (railItems, railItemsOptions) => {
-  console.log(railItems);
   return railItems.map((railItem, index) => ({
     type: PosterRailItem,
     collision: true,
@@ -275,8 +273,8 @@ const constructLiveChannelRailItems = (railItems, railItemsOptions) =>
     };
   });
 
-const constructCategoryItems = (railItems, railItemsOptions) =>
-  railItems.map((railItem, index) => {
+const constructCategoryItems = (railItems, railItemsOptions) => {
+  return railItems.map((railItem, index) => {
     return {
       type: CategoryPickerItem,
       flexItem: {
@@ -296,6 +294,7 @@ const constructCategoryItems = (railItems, railItemsOptions) =>
       },
     };
   });
+};
 
 // Banner
 const constructBannerRailItems = (railItems, railItemsOptions) => {

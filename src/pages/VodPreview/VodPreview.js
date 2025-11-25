@@ -10,10 +10,12 @@ import {
   VOD_PREVIEW_TYPES,
   CONTENT_TYPE,
   IMAGE_SIZES,
+  RAIL_TYPES,
 } from '../../constants/globalConstants';
 import { SearchService, VodService } from '../../Services';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import { railItemConstructor } from '../utils/railItems';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -209,7 +211,6 @@ export default class VodPreview extends Lightning.Component {
   calculateContentOffset(contentType) {
     switch (contentType) {
       case CONTENT_TYPE.EVENTS:
-        return 530;
       case CONTENT_TYPE.CATEGORIES:
         return 200;
       case CONTENT_TYPE.EMPTY:

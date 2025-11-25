@@ -56,7 +56,6 @@ export default class FetchingService {
 
   #onError = (error) => {
     this.#loading = false;
-    console.log(error);
     if (process.env.NODE_ENV === 'development') {
       if (error.response) {
         // Request was made but server responded with something

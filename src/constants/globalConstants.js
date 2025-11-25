@@ -275,6 +275,7 @@ export const LOCAL_STORAGE_KEYS = {
   USER_DATA: 'userData',
   SELECTED_SUBTITLES_CHANNEL: 'selectedSubtitlesForChannel',
   RECENT_SEARCH: 'recentSearch',
+  SETTINGS: 'settings',
 };
 
 export const CATEGORY_TYPES = {
@@ -358,6 +359,7 @@ export const API_URLS = {
   GET_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
   ADD_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
   REMOVE_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
+  GET_SETTINGS: 'getSettings',
 };
 
 export const TRANSLATIONS = {

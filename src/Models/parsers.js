@@ -5,8 +5,7 @@ import { Banner } from './Banner';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
-  console.log(data);
-  const railItems = data.entry?.items.map((item) => new SimpleRailItem(item));
+  const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems.length === 0) return;
 
   return {
@@ -33,7 +32,7 @@ export const parseHomePageHeroSection = ({ data }) => {
 // VodPreview
 // Movies
 export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
-  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
   return {
@@ -47,7 +46,7 @@ export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => 
 
 // Series
 export const parseSeriesPageData = ({ data }) => {
-  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  const railItems = data.entries?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
   return {
@@ -59,8 +58,8 @@ export const parseSeriesPageData = ({ data }) => {
 };
 
 // Categories
-export const parseVodCategories = ({ data }, vodType) => {
-  const railItems = data?.entry.map((category) => {
+export const parseVodCategories = (data, vodType) => {
+  const railItems = data?.items.map((category) => {
     return new Category({ ...category, type: vodType });
   });
   if (!railItems || railItems?.length === 0) return;
@@ -74,8 +73,9 @@ export const parseVodCategories = ({ data }, vodType) => {
 
 // Sports
 export const parseSportsPageData = ({ data }) => {
-  const railItems = data.entry?.map(
-    (item) => new SimpleRailItem({ ...item, type: { value: RAIL_TYPES.SPORT } })
+  const railItems = data.entry?.items?.map(
+    (item) =>
+      new SimpleRailItem({ ...item, type: { value: item.type ? item.type : RAIL_TYPES.SPORT } })
   );
   if (!railItems || railItems?.length === 0) return;
 
@@ -92,7 +92,7 @@ export const parseSportsPageData = ({ data }) => {
 
 // Live Events
 export const parseSportsEventsData = ({ data }) => {
-  const railItems = data.entry?.map((item) => new LiveEventsRailItem(item));
+  const railItems = data.entry?.items?.map((item) => new LiveEventsRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
   const title = t(TRANSLATIONS.SPORTS_EVENTS);

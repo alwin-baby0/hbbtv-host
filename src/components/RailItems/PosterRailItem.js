@@ -62,7 +62,6 @@ export default class PosterRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    console.log(this._props);
     const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;
 
     this.setProps({

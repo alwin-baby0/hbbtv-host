@@ -4,28 +4,25 @@ import { SimpleRailItem } from './SimpleRailItem';
 class LiveEventsRailItem extends SimpleRailItem {
   constructor(data) {
     super({ ...data, type: { value: RAIL_TYPES.EVENT } });
-    const { extensions, media_group } = data;
-    const { description, date_as_string_with_time, button_text } = extensions;
+    const { meta, images, date, time } = data;
+    const { summary, button_text } = meta;
 
-    this.dateWithTime = date_as_string_with_time;
-    this.description = description;
+    this.dateWithTime = date + ': ' + time;
+    this.description = summary;
 
     this.buttonText = button_text;
 
     this.landscapePosters = [];
 
-    if (media_group) {
-      media_group[0]?.media_item?.forEach((item) => {
-        switch (true) {
-          case item.key.includes('image'): {
-            this.landscapePosters.push(item);
-            break;
-          }
-          default:
-            break;
-        }
-      });
-    }
+    const landscapeKeysOriginal = Object.keys(images.landscape);
+    const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
+
+    landscapeKeys.forEach((item, index) =>
+      this.landscapePosters.push({
+        key: item,
+        src: images.landscape[landscapeKeysOriginal[index]],
+      })
+    );
   }
 
   getLandscapePoster() {

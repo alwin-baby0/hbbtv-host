@@ -42,9 +42,7 @@ class HomePageService extends FetchingService {
         this.#pointer++;
       }
 
-      console.log(promises);
       const newStripes = await Promise.allSettled(promises);
-      console.log(newStripes);
 
       newStripes.forEach(({ value: stripeData }, index) => {
         if (stripeData) {

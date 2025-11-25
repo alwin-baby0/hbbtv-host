@@ -32,8 +32,6 @@ export default async function (page) {
     ...HomePageService.stripes.slice(1),
   ];
 
-  console.log(modifiedRailData);
-
   page.props = {
     sliderData: HomePageService.heroSectionItems,
     railData: modifiedRailData,

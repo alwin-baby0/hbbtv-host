@@ -4,7 +4,6 @@ import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
 
 class SimpleRailItem {
   constructor(data) {
-    console.log(data);
     const { id, title, type, summary, images } = data;
 
     this.id = id;
@@ -55,34 +54,48 @@ class SimpleRailItem {
     this.thumbnails = [];
     this.landscapePosters = [];
     this.portraitPosters = [];
+    this.channelImages;
 
-    const landscapeKeysOriginal = Object.keys(images.landscape);
-    const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
+    if (images.landscape) {
+      const landscapeKeysOriginal = Object.keys(images.landscape);
+      const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
 
-    landscapeKeys.forEach((item, index) =>
-      this.landscapePosters.push({ key: item, src: images.landscape[landscapeKeysOriginal[index]] })
-    );
+      landscapeKeys.forEach((item, index) =>
+        this.landscapePosters.push({
+          key: item,
+          src: images.landscape[landscapeKeysOriginal[index]],
+        })
+      );
+    }
 
-    const thumbnailKeysOriginal = Object.keys(images.thumbnail);
-    const thumbnailKeys = thumbnailKeysOriginal.map((item) => `thumbnail_${item}`);
+    if (images.thumbnail) {
+      const thumbnailKeysOriginal = Object.keys(images.thumbnail);
+      const thumbnailKeys = thumbnailKeysOriginal.map((item) => `thumbnail_${item}`);
 
-    thumbnailKeys.forEach((item, index) =>
-      this.thumbnails.push({ key: item, src: images.thumbnail[thumbnailKeysOriginal[index]] })
-    );
+      thumbnailKeys.forEach((item, index) =>
+        this.thumbnails.push({ key: item, src: images.thumbnail[thumbnailKeysOriginal[index]] })
+      );
+    }
 
-    const portraitKeysOriginal = Object.keys(images.poster);
-    const portraitKeys = portraitKeysOriginal.map((item) => `poster_portrait_${item}`);
+    if (images.poster) {
+      const portraitKeysOriginal = Object.keys(images.poster);
+      const portraitKeys = portraitKeysOriginal.map((item) => `poster_portrait_${item}`);
 
-    portraitKeys.forEach((item, index) =>
-      this.portraitPosters.push({ key: item, src: images.poster[portraitKeysOriginal[index]] })
-    );
+      portraitKeys.forEach((item, index) =>
+        this.portraitPosters.push({ key: item, src: images.poster[portraitKeysOriginal[index]] })
+      );
+    }
+
+    if (Array.isArray(images)) {
+      this.channelImages = images[0];
+    }
   }
 
   preloadImages(size) {
     const imageUrls = [
-      this.getThumbnailImage(size).src,
-      this.getLandscapePoster(size).src,
-      this.getPortraitPoster(size).src,
+      this.getThumbnailImage(size)?.src,
+      this.getLandscapePoster(size)?.src,
+      this.getPortraitPoster(size)?.src,
     ];
 
     imageUrls.forEach((url) => {
@@ -98,17 +111,23 @@ class SimpleRailItem {
 
   getThumbnailImage(size) {
     const thumbnail = this.thumbnails.find((thumbnail) => thumbnail.key.includes(size));
-    return thumbnail ?? this.thumbnails[0];
+    return thumbnail
+      ? this.thumbnails[0]
+      : { key: 'applicaster_logo', src: this.channelImages.applicaster_logo };
   }
 
   getLandscapePoster(size) {
     const poster = this.landscapePosters.find((poster) => poster.key.includes(size));
-    return poster ?? this.landscapePosters[0];
+    return poster
+      ? this.landscapePosters[0]
+      : { key: 'applicaster_logo', src: this.channelImages.applicaster_logo };
   }
 
   getPortraitPoster(size) {
     const poster = this.portraitPosters.find((poster) => poster.key.includes(size));
-    return poster ?? this.portraitPosters[0];
+    return poster
+      ? this.portraitPosters[0]
+      : { key: 'applicaster_logo', src: this.channelImages.applicaster_logo };
   }
 }
 

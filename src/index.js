@@ -28,8 +28,8 @@ import {
 } from './utils/device.js';
 import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
-import { TranslationService } from './Services/index.js';
-import { EVENT_NAMES } from './constants/globalConstants.js';
+import { SettingsService, TranslationService } from './Services/index.js';
+import { EVENT_NAMES, LOCAL_STORAGE_KEYS } from './constants/globalConstants.js';
 
 /**
  * This file should serve as a place to add for example polyfills, initiate
@@ -81,6 +81,10 @@ sequence([
   },
   async () =>
     loadJS(`${process.env.APP_BASE_WATCH4}/track.js?api_key=${process.env.APP_WATCH4_API_KEY}`),
+  async () => {
+    const settings = await SettingsService.getSettings();
+    localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify(settings.data));
+  },
   () => {
     try {
       const app = Launch(App, appSettings, platformSettings);

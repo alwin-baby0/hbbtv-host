@@ -13,6 +13,7 @@ import {
   API_URLS,
   VOD_PREVIEW_TYPES,
   IMAGE_SIZES,
+  LOCAL_STORAGE_KEYS,
 } from '../../constants/globalConstants';
 
 export const VODS_PER_ROW = 6;
@@ -66,7 +67,18 @@ class VodService extends FetchingService {
 
     // get content (categories or sport events)
     if (!currentState.contentStripe) {
-      currentState.contentStripe = await this.#getContent();
+      const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+      currentState.contentStripe = parseVodCategories(
+        {
+          items: settings.genres.types[this.#vodType].map((item) => {
+            return {
+              value: item,
+              localised: settings.genres.localized[item],
+            };
+          }),
+        },
+        this.#vodType
+      );
     }
 
     // fetch initial vod stripes (movies series sports)
@@ -78,8 +90,16 @@ class VodService extends FetchingService {
       currentState.pointer++;
 
       if (stripeData) {
+        let eventData = {};
+        if (this.#vodType === VOD_PREVIEW_TYPES.SPORTS) {
+          eventData = await this.#getSportsEvents();
+          currentState.sportEvents = [eventData];
+        }
+
         currentState.stripesFetched += stripeData.items.length / VODS_PER_ROW;
-        currentState.vodStripes = [stripeData];
+        currentState.vodStripes = Object.keys(eventData).length
+          ? [eventData, stripeData]
+          : [stripeData];
 
         // if we get less items then requested, its the last page
         if (stripeData.items.length < VOD_ROWS_PER_FETCH * VODS_PER_ROW) {
@@ -93,32 +113,22 @@ class VodService extends FetchingService {
   }
 
   #getHeroSection = async (page = 1) => {
-    // const params = {
-    //   row: 1,
-    //   page,
-    //   limit: 6,
-    // };
+    const params = {
+      row: 1,
+      page,
+      limit: 6,
+    };
 
-    // switch (this.#vodType) {
-    //   case VOD_PREVIEW_TYPES.MOVIES:
-    //     return await this.#getMovies(params);
-    //   case VOD_PREVIEW_TYPES.SERIES:
-    //     return await this.#getSeries(params);
-    //   case VOD_PREVIEW_TYPES.SPORTS:
-    //     return await this.#getSports(params);
-    //   default:
-    //     console.warn('wrong vodType getVods');
-    // }
-    return this._request({
-      url: `/${API_URLS.GET_HOME_PAGE}`,
-      apiVersion: V2,
-      method: API_METHODS.GET,
-      params: {
-        row: 1,
-        page: page, // Use the passed page parameter
-        limit: 6,
-      },
-    }).then(parseHomePageHeroSection);
+    switch (this.#vodType) {
+      case VOD_PREVIEW_TYPES.MOVIES:
+        return await this.#getMoviesHeroSection(params);
+      case VOD_PREVIEW_TYPES.SERIES:
+        return await this.#getSeriesHeroSection(params);
+      case VOD_PREVIEW_TYPES.SPORTS:
+        return await this.#getSportHeroSection(params);
+      default:
+        console.warn('wrong vodType getVods');
+    }
   };
 
   async fetchMoreItemsForHeroSection() {
@@ -203,6 +213,10 @@ class VodService extends FetchingService {
     return this.#getCurrentState().contentStripe;
   }
 
+  get sportEvents() {
+    return this.#getCurrentState().sportEvents;
+  }
+
   /**
    * @returns {{ type: string, sectionTitle: string, items: RailItem[] }}
    */
@@ -217,19 +231,6 @@ class VodService extends FetchingService {
     return this.#getCurrentState().hasMore;
   }
 
-  #getContent = async () => {
-    switch (this.#vodType) {
-      case VOD_PREVIEW_TYPES.MOVIES:
-        return await this.#getGenres(this.#vodType);
-      case VOD_PREVIEW_TYPES.SERIES:
-        return await this.#getGenres(this.#vodType);
-      case VOD_PREVIEW_TYPES.SPORTS:
-        return await this.#getSportsEvents();
-      default:
-        console.warn('wrong vodType getContent');
-    }
-  };
-
   #getVods = async (params) => {
     switch (this.#vodType) {
       case VOD_PREVIEW_TYPES.MOVIES:
@@ -242,17 +243,6 @@ class VodService extends FetchingService {
         console.warn('wrong vodType getVods');
     }
   };
-
-  #getGenres = async (vodType) =>
-    await this._request({
-      url: `/${API_URLS.GET_GENRES}`,
-      apiVersion: V2,
-      method: API_METHODS.GET,
-      params: {
-        category: vodType,
-        type: `genres_${vodType}`,
-      },
-    }).then((result) => parseVodCategories(result, vodType));
 
   #getMovies = async (params) =>
     await this._request({
@@ -278,22 +268,42 @@ class VodService extends FetchingService {
       params,
     }).then(parseSeriesPageData);
 
-  #getSports = async (params) =>
+  #getSeriesHeroSection = async (params) =>
     await this._request({
+      url: `/${API_URLS.GET_SERIES}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+      params,
+    }).then(parseHomePageHeroSection);
+
+  #getSports = async (params) => {
+    return await this._request({
       url: `/${API_URLS.GET_SPORTS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
     }).then(parseSportsPageData);
+  };
+
+  #getSportHeroSection = async (params) =>
+    await this._request({
+      url: `/${API_URLS.GET_SPORTS}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+      params,
+    }).then(parseHomePageHeroSection);
 
   #getSportsEvents = async (type = 'video', language = 'en') =>
     await this._request({
-      url: `/${API_URLS.GET_SPORT_EVENTS}`,
+      url: `/${API_URLS.GET_SPORTS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
         type,
         language,
+        page: 1,
+        row: 2,
+        limit: VODS_PER_ROW,
       },
     }).then(parseSportsEventsData);
 }

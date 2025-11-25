@@ -3,9 +3,9 @@ import { CATEGORY_TYPES, FILTER_TYPES, ROUTES } from '../constants/globalConstan
 
 class Category {
   constructor(data) {
-    const { id, title, type } = data;
+    const { id, localised, type } = data;
     this.id = id;
-    this.title = title;
+    this.title = localised;
     this.type = type;
     this.data = data;
   }
@@ -14,14 +14,21 @@ class Category {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
         const event = new CustomEvent('changeContent', {
-          detail: { category: this.data.title, type: this.data.type }, // pass whatever value you need here
+          detail: { category: this.data.localised, type: this.data.type }, // pass whatever value you need here
         });
         window.dispatchEvent(event);
         break;
       }
       case CATEGORY_TYPES.SERIES: {
         const event = new CustomEvent('changeContent', {
-          detail: { category: this.data.title, type: this.data.type }, // pass whatever value you need here
+          detail: { category: this.data.localised, type: this.data.type }, // pass whatever value you need here
+        });
+        window.dispatchEvent(event);
+        break;
+      }
+      case CATEGORY_TYPES.SPORTS: {
+        const event = new CustomEvent('changeContent', {
+          detail: { category: this.data.localised, type: this.data.type }, // pass whatever value you need here
         });
         window.dispatchEvent(event);
         break;

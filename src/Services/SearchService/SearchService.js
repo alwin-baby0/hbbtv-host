@@ -4,13 +4,13 @@ import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 
 export default class SearchService extends FetchingService {
-  getSearch = async (keyword, category) =>
+  getSearch = async (keywords, category) =>
     this._request({
       url: `/${API_URLS.GET_SEARCH}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
-        keyword,
+        keywords,
         limit: 500,
         page: 1,
         orderBy: 'name:desc',
@@ -19,7 +19,7 @@ export default class SearchService extends FetchingService {
     }).then(this.#parseSearchPageData);
 
   #parseSearchPageData({ data }) {
-    const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+    const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
     if (!railItems) return;
 
     return {

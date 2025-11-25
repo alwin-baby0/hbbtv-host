@@ -44,7 +44,7 @@ export default class CategoryPickerItem extends FocusableItem {
     this._props = { ...this._props, ...props };
 
     const { itemInfo, w, h, strokeWidth, radius } = this._props;
-    const { title } = itemInfo;
+    const { data } = itemInfo;
     this.setProps({
       x: -2,
       y: -1,
@@ -74,7 +74,7 @@ export default class CategoryPickerItem extends FocusableItem {
         ),
       },
       Title: {
-        text: { text: title.toUpperCase() },
+        text: { text: data.localised.toUpperCase() },
       },
     });
   }

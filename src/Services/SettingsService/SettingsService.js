@@ -21,6 +21,14 @@ export default class SettingsService extends FetchingService {
       },
     });
   };
+
+  getSettings = async () => {
+    return this._request({
+      url: `/${API_URLS.GET_SETTINGS}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+    });
+  };
 }
 
 const settingsService = new SettingsService();
