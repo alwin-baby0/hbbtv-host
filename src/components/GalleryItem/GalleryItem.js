@@ -436,8 +436,8 @@ export default class GalleryItem extends Lightning.Component {
 
     const titleLength = title.length;
 
-    const splitDirector = director && director.split(':');
-    const splitCast = cast && cast.split(':');
+    const splitDirector = director ? director.split(':') : '';
+    const splitCast = cast ? cast.split(':') : '';
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING);
     const tGenre = t(TRANSLATIONS.GENRE);
@@ -635,15 +635,15 @@ export default class GalleryItem extends Lightning.Component {
       },
       Info: {
         Title: {
-          h: titleLength > 26 ? 130 : 90,
+          h: 90,
           text: {
-            lineHeight: titleLength > 26 ? 58 : 34,
+            lineHeight: 34,
             text: title,
           },
         },
         Description: {
           text: {
-            text: description,
+            text: summary,
           },
         },
       },

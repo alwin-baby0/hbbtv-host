@@ -73,12 +73,10 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
       : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
-  console.log(railTitle);
   const flexItem =
     (railType === RAIL_TYPES.EPGS || page === ROUTES.SEARCH) && !railTitle
       ? {}
       : { marginBottom: 40 };
-  console.log(flexItem);
 
   let paddingLeft = 0;
   let targetIndex = null;

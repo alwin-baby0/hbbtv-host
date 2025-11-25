@@ -5,19 +5,22 @@ import { Banner } from './Banner';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
-  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  console.log(data);
+  const railItems = data.entry?.items.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems.length === 0) return;
 
   return {
     railType: railItems[0].type,
-    railTitle: data.title,
+    railTitle: data.entry.name,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
   };
 };
 
 export const parseHomePageHeroSection = ({ data }) => {
-  const galleryItems = data.entry?.map((item) => new GalleryItem(item));
+  const galleryItems = data.entry?.items?.map(
+    (item) => new GalleryItem({ ...item, media_group: data.app.contentType })
+  );
   if (!galleryItems || galleryItems?.length === 0) return;
   return {
     railType: galleryItems[0].type,

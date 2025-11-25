@@ -38,9 +38,6 @@ class CMPService extends FetchingService {
       url: `/${API_URLS.GET_CMP}`,
       apiVersion: V2,
       method: API_METHODS.GET,
-      headers: {
-        'X-DEVICE-ID': deviceCode,
-      },
       params: {
         language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || 'en',
         device_id: deviceCode,

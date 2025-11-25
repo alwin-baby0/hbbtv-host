@@ -22,7 +22,7 @@ class HomePageService extends FetchingService {
    * Fetches initial stripes for Home page
    */
   async initialFetch() {
-    this.#banner = await this.#getBanner();
+    // this.#banner = await this.#getBanner();
 
     if (!this.#heroSectionItems) {
       //get gallery data
@@ -42,7 +42,9 @@ class HomePageService extends FetchingService {
         this.#pointer++;
       }
 
+      console.log(promises);
       const newStripes = await Promise.allSettled(promises);
+      console.log(newStripes);
 
       newStripes.forEach(({ value: stripeData }, index) => {
         if (stripeData) {

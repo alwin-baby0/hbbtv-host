@@ -4,22 +4,23 @@ import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
 
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, media_group, summary, extensions } = data;
+    console.log(data);
+    const { id, title, type, summary, images } = data;
 
     this.id = id;
     this.title = title;
-    this.type = type?.value;
+    this.type = type;
     this.summary = summary;
 
-    if (extensions) {
-      this.description = extensions.description;
-      this.episodeSeriesID = extensions?.series_id;
-      this.duration = extensions?.duration;
-    }
+    // if (extensions) {
+    //   this.description = extensions.description;
+    //   this.episodeSeriesID = extensions?.series_id;
+    //   this.duration = extensions?.duration;
+    // }
 
-    if (extensions?.ssai) {
-      this.ssai = extensions.ssai;
-    }
+    // if (extensions?.ssai) {
+    //   this.ssai = extensions.ssai;
+    // }
 
     switch (this.type) {
       case RAIL_TYPES.MOVIE:
@@ -29,12 +30,12 @@ class SimpleRailItem {
       case RAIL_TYPES.SPORT:
       case RAIL_TYPES.SERIE:
       case RAIL_TYPES.SERIES:
-        if (this.episodeSeriesID) {
-          //case if you are coming from recently watched list
-          this.url = `${ROUTES.SERIES_DETAILS}/${this.episodeSeriesID}`;
-        } else {
-          this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
-        }
+        // if (this.episodeSeriesID) {
+        //   //case if you are coming from recently watched list
+        //   this.url = `${ROUTES.SERIES_DETAILS}/${this.episodeSeriesID}`;
+        // } else {
+        this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
+        // }
         break;
       case RAIL_TYPES.SHOW:
       case RAIL_TYPES.EVENT:
@@ -45,6 +46,8 @@ class SimpleRailItem {
         this.duration = data.extensions?.duration;
         this.seriesId = data.seriesId;
         break;
+      case RAIL_TYPES.CHANNEL:
+        this.url = `${ROUTES.LIVE}`;
       default:
         console.warn('unknown rail item type', this.type);
     }
@@ -53,26 +56,26 @@ class SimpleRailItem {
     this.landscapePosters = [];
     this.portraitPosters = [];
 
-    if (media_group) {
-      media_group[0]?.media_item?.forEach((item) => {
-        switch (true) {
-          case item.key.includes('thumbnail'): {
-            this.thumbnails.push(item);
-            break;
-          }
-          case item.key.includes('poster_landscape'): {
-            this.landscapePosters.push(item);
-            break;
-          }
-          case item.key.includes('poster_portrait'): {
-            this.portraitPosters.push(item);
-            break;
-          }
-          default:
-            break;
-        }
-      });
-    }
+    const landscapeKeysOriginal = Object.keys(images.landscape);
+    const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
+
+    landscapeKeys.forEach((item, index) =>
+      this.landscapePosters.push({ key: item, src: images.landscape[landscapeKeysOriginal[index]] })
+    );
+
+    const thumbnailKeysOriginal = Object.keys(images.thumbnail);
+    const thumbnailKeys = thumbnailKeysOriginal.map((item) => `thumbnail_${item}`);
+
+    thumbnailKeys.forEach((item, index) =>
+      this.thumbnails.push({ key: item, src: images.thumbnail[thumbnailKeysOriginal[index]] })
+    );
+
+    const portraitKeysOriginal = Object.keys(images.poster);
+    const portraitKeys = portraitKeysOriginal.map((item) => `poster_portrait_${item}`);
+
+    portraitKeys.forEach((item, index) =>
+      this.portraitPosters.push({ key: item, src: images.poster[portraitKeysOriginal[index]] })
+    );
   }
 
   preloadImages(size) {

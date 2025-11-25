@@ -3,7 +3,7 @@ import { t } from '../Services';
 
 class GalleryItem {
   constructor(data) {
-    const { id, title, content, extensions, media_group, summary, type } = data;
+    const { id, title, content, files, summary, type, meta, images } = data;
 
     this.id = id;
 
@@ -13,26 +13,26 @@ class GalleryItem {
     this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
     this.type = type;
-    this.trailerUrl = extensions.preview_playback;
+    this.trailerUrl = files[0].url;
 
-    this.dateRange = extensions.date_range?.timestamp[0];
+    this.dateRange = meta.date_range?.timestamp[0];
 
     if (content) {
       this.url = content.src;
       this.videoType = content.type;
     }
 
-    if (extensions.ssai) {
-      this.ssai = extensions.ssai;
+    if (files.ssai) {
+      this.ssai = files.ssai;
     }
 
-    if (extensions.last_played_episode) {
-      this.url = extensions.last_played_episode.hls;
-      this.position = extensions.last_played_episode.position;
-      this.lastPlayedId = extensions.last_played_episode.video_id;
+    if (files.last_played_episode) {
+      this.url = files.last_played_episode.hls;
+      this.position = files.last_played_episode.position;
+      this.lastPlayedId = files.last_played_episode.video_id;
     }
 
-    if (extensions) {
+    if (meta) {
       const {
         button_text,
         description,
@@ -47,7 +47,7 @@ class GalleryItem {
         last_position,
         trailer,
         rating,
-      } = extensions;
+      } = files;
 
       if (button_text && button_text !== '') {
         this.buttonLabel = button_text;
@@ -58,16 +58,16 @@ class GalleryItem {
       }
 
       if (!this.summary || this.summary === '') {
-        const { date, time, venue } = extensions;
+        const { date, time, venue } = files;
         this.summary = '';
         if (date) {
-          this.summary += `${extensions.date} - `;
+          this.summary += `${files.date} - `;
         }
         if (time) {
-          this.summary += `${extensions.time} | `;
+          this.summary += `${files.time} | `;
         }
         if (venue) {
-          this.summary += `${extensions.venue}`;
+          this.summary += `${files.venue}`;
         }
       }
 
@@ -89,27 +89,26 @@ class GalleryItem {
     this.portraitPosters = [];
     this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
-    media_group[0]?.media_item?.forEach((item) => {
-      switch (true) {
-        case item.key.includes('thumbnail'): {
-          this.thumbnails.push(item);
-          break;
-        }
-        case item.key.includes('poster_landscape'): {
-          this.landscapePosters.push(item);
-          break;
-        }
-        case item.key.includes('poster_portrait'): {
-          this.portraitPosters.push(item);
-          break;
-        }
-        case item.key.includes('stream_placeholder'): {
-          this.landscapePosters.push(item);
-        }
-        default:
-          break;
-      }
-    });
+    const landscapeKeysOriginal = Object.keys(images.landscape);
+    const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
+
+    landscapeKeys.forEach((item, index) =>
+      this.landscapePosters.push({ key: item, src: images.landscape[landscapeKeysOriginal[index]] })
+    );
+
+    const thumbnailKeysOriginal = Object.keys(images.thumbnail);
+    const thumbnailKeys = thumbnailKeysOriginal.map((item) => `thumbnail_${item}`);
+
+    thumbnailKeys.forEach((item, index) =>
+      this.thumbnails.push({ key: item, src: images.thumbnail[thumbnailKeysOriginal[index]] })
+    );
+
+    const portraitKeysOriginal = Object.keys(images.poster);
+    const portraitKeys = portraitKeysOriginal.map((item) => `poster_portrait_${item}`);
+
+    portraitKeys.forEach((item, index) =>
+      this.portraitPosters.push({ key: item, src: images.poster[portraitKeysOriginal[index]] })
+    );
   }
 
   preloadImages(size) {

@@ -7,6 +7,8 @@ const API_BASE_URLS = {
   auth: process.env.APP_BASE_OAUTH,
 };
 
+const API_BASE_URL = process.env.APP_BASE_URL;
+
 export default class FetchingService {
   // we create static instance of axios to be unique throught the project
   static axiosInstance = null;
@@ -14,8 +16,7 @@ export default class FetchingService {
     if (FetchingService.axiosInstance) return;
     FetchingService.axiosInstance = axios.create({
       headers: {
-        'Cache-Control': 'no-cache, must-revalidate',
-        Pragma: 'no-cache',
+        Authorization: `Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563`,
       },
       params: {
         ctx: createApiCtx(),
@@ -40,19 +41,22 @@ export default class FetchingService {
    */
   async _request({ apiVersion, url, ...options }) {
     this.#loading = true;
-    return FetchingService.axiosInstance({ url: API_BASE_URLS[apiVersion] + url, ...options })
+    return FetchingService.axiosInstance({
+      url: /* API_BASE_URLS[apiVersion] */ API_BASE_URL + url,
+      ...options,
+    })
       .then(this.#onSuccess)
       .catch(this.#onError);
   }
 
   #onSuccess = (response) => {
-    console.log('here');
     this.#loading = false;
     return response;
   };
 
   #onError = (error) => {
     this.#loading = false;
+    console.log(error);
     if (process.env.NODE_ENV === 'development') {
       if (error.response) {
         // Request was made but server responded with something

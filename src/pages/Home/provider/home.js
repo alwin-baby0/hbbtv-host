@@ -22,14 +22,17 @@ export default async function (page) {
 
   await HomePageService.initialFetch();
 
-  const isBannerImageExist = await checkImageVisibility(
-    HomePageService.banner?.items[0].ctvPosters['1080'] // ovo je undefined
-  );
+  // const isBannerImageExist = await checkImageVisibility(
+  //   HomePageService.banner?.items[0].ctvPosters['1080'] // ovo je undefined
+  // );
+  const isBannerImageExist = '';
   const modifiedRailData = [
     HomePageService.stripes[0],
     ...(isBannerImageExist && HomePageService.banner?.items ? [HomePageService.banner] : []),
     ...HomePageService.stripes.slice(1),
   ];
+
+  console.log(modifiedRailData);
 
   page.props = {
     sliderData: HomePageService.heroSectionItems,
