@@ -68,7 +68,7 @@ export default class SingleMovie extends Lightning.Component {
                 justifyContent: 'center',
               },
               flexItem: {
-                marginRight: 40,
+                marginRight: 30,
               },
               Text: {
                 flexItem: {
@@ -82,21 +82,13 @@ export default class SingleMovie extends Lightning.Component {
                 },
               },
             },
-            Summary: {
-              w: 160,
-              h: 29,
-              text: {
-                fontSize: 24,
-                lineHeight: 30,
-                fontFace: 'Montserrat-SemiBold',
-              },
-            },
-            Subtitle: {
+            FactLine: {
               w: 400,
               h: 29,
               text: {
                 fontSize: 24,
                 lineHeight: 30,
+                fontFace: 'Montserrat-Regular',
               },
             },
           },
@@ -194,6 +186,7 @@ export default class SingleMovie extends Lightning.Component {
                     lineHeight: 34,
                     fontFace: 'Montserrat-Regular',
                     textColor: Colors(colors.metadata).get(),
+                    maxLines: 1,
                   },
                 },
               },
@@ -266,11 +259,8 @@ export default class SingleMovie extends Lightning.Component {
   get _Genre() {
     return this.tag('Genre');
   }
-  get _Summary() {
-    return this.tag('Summary');
-  }
-  get _Subtitle() {
-    return this.tag('Subtitle');
+  get _FactLine() {
+    return this.tag('FactLine');
   }
   get _Image() {
     return this.tag('Image');
@@ -372,23 +362,32 @@ export default class SingleMovie extends Lightning.Component {
       director,
       genre,
       summary,
-      subtitle,
       cast,
       last_position,
       rating,
+      durationString,
+      year,
+      country,
+      imdbScore,
     } = movie;
+
+    const imdbScoreLabeled = `IMDB ${imdbScore}`;
+    console.log('asdf data MOVIE: ', durationString, year, country, imdbScoreLabeled);
 
     const titleLength = title.length;
 
-    const splitDirector = director && director.split(':');
-    const splitCast = cast && cast.split(':');
+    const factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
+
+    // const splitDirector = director ? director.split(':') : '';
+    // const splitCast = cast ? cast.split(':') : '';
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING);
     const tGenre = t(TRANSLATIONS.GENRE);
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const castText = splitCast && splitCast[1];
-    const dirText = splitDirector && splitDirector[1];
+    const castText = cast ? cast.join(', ') : '';
+    const dirText = director;
+    const genreText = genre ? genre.join(', ') : '';
 
     const badgeText = t(TRANSLATIONS.MOVIES);
 
@@ -418,14 +417,9 @@ export default class SingleMovie extends Lightning.Component {
                 },
               },
             },
-            Summary: {
+            FactLine: {
               text: {
-                text: summary,
-              },
-            },
-            Subtitle: {
-              text: {
-                text: subtitle,
+                text: factLine,
               },
             },
           },
@@ -441,7 +435,7 @@ export default class SingleMovie extends Lightning.Component {
             },
             Description: {
               text: {
-                text: description,
+                text: summary,
               },
             },
             Metadata: {
@@ -465,7 +459,7 @@ export default class SingleMovie extends Lightning.Component {
                 },
                 TextValue: {
                   text: {
-                    text: genre,
+                    text: genreText,
                   },
                 },
               },
@@ -480,7 +474,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: dirText,
                   },
                 },
-                visible: splitDirector[1] ? true : false,
+                visible: director,
               },
               Cast: {
                 Title: {
@@ -493,7 +487,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: castText,
                   },
                 },
-                visible: splitCast[1] ? true : false,
+                visible: cast,
               },
             },
           },

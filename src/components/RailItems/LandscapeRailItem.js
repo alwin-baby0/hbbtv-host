@@ -131,12 +131,12 @@ export default class LandscapeRailItem extends FocusableItem {
       },
       Description: {
         text: {
-          text: itemDescription || '',
+          text: itemSummary || '',
         },
       },
       Summary: {
         text: {
-          text: itemSummary || '',
+          text: '',
         },
       },
     });

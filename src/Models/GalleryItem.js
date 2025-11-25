@@ -3,6 +3,7 @@ import { t } from '../Services';
 
 class GalleryItem {
   constructor(data) {
+    console.log('asdf data: ', data);
     const { id, title, content, files, summary, type, meta, images } = data;
 
     this.id = id;
@@ -13,7 +14,7 @@ class GalleryItem {
     this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
     this.type = type;
-    this.trailerUrl = files[0].url;
+    this.trailerUrl = files && files[0].url;
 
     this.dateRange = meta.date_range?.timestamp[0];
 
@@ -22,40 +23,34 @@ class GalleryItem {
       this.videoType = content.type;
     }
 
-    if (files.ssai) {
+    /* if (files.ssai) {
       this.ssai = files.ssai;
-    }
+    } */
 
-    if (files.last_played_episode) {
+    /* if (files.last_played_episode) {
       this.url = files.last_played_episode.hls;
       this.position = files.last_played_episode.position;
       this.lastPlayedId = files.last_played_episode.video_id;
-    }
+    } */
 
     if (meta) {
-      const {
+      /* const {
         button_text,
         description,
-        duration,
-        genre,
-        director,
         subtitle,
         first_episode_mp4,
-        cast,
         venue,
         is_favorite,
         last_position,
         trailer,
         rating,
-      } = files;
+      } = files; */
 
-      if (button_text && button_text !== '') {
-        this.buttonLabel = button_text;
-      }
+      const { cast, director, genre, ratings, duration, year, country, imdb } = meta;
 
-      if (!this.url) {
+      /* if (!this.url) {
         this.url = first_episode_mp4;
-      }
+      } */
 
       if (!this.summary || this.summary === '') {
         const { date, time, venue } = files;
@@ -71,17 +66,21 @@ class GalleryItem {
         }
       }
 
-      this.description = description;
-      this.duration = duration;
+      // this.description = description;
+      this.duration = duration?.seconds;
       this.genre = genre;
       this.director = director;
-      this.subtitle = subtitle;
+      // this.subtitle = subtitle;
       this.cast = cast;
-      this.venue = venue;
-      this.is_favorite = is_favorite;
-      this.last_position = last_position;
-      this.trailer = trailer;
-      this.rating = rating;
+      // this.venue = venue;
+      // this.is_favorite = is_favorite;
+      // this.last_position = last_position;
+      // this.trailer = trailer;
+      this.rating = ratings?.fsk;
+      this.durationString = duration?.string;
+      this.year = year;
+      this.country = country;
+      this.imdbScore = imdb?.score;
     }
 
     this.thumbnails = [];

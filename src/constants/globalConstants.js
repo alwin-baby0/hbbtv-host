@@ -332,7 +332,7 @@ export const API_URLS = {
   GET_MOVIE: 'getMovie',
   GET_SERIES: 'series',
   GET_SERIE: 'getSerie',
-  GET_SEASON_TABS: 'getSeasonTabs',
+  GET_SEASON_TABS: 'getSeasons',
   GET_SEASON: 'getSeason',
   GET_SPORTS: 'sports',
   GET_SPORT_EVENTS: 'getSportEvents',

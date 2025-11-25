@@ -432,9 +432,18 @@ export default class GalleryItem extends Lightning.Component {
       cast,
       genre,
       rating,
+      durationString,
+      year,
+      country,
+      imdbScore,
     } = galleryItem;
 
     const titleLength = title.length;
+
+    const imdbScoreLabeled = `IMDB ${imdbScore}`;
+    console.log('asdf data MOVIE: ', durationString, year, country, imdbScoreLabeled);
+
+    const factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
 
     const splitDirector = director ? director.split(':') : '';
     const splitCast = cast ? cast.split(':') : '';

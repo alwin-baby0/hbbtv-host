@@ -13,7 +13,7 @@ class UserService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
+        Authorization: `Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563`,
       },
       params: {
         cachebuster: timestamp,
