@@ -147,12 +147,12 @@ export default class Settings extends Lightning.Component {
       };
     });
 
-    const { languages } = this._props.languagesData;
-    const languagesArr = languages.split(',');
-    const languageItems = languagesArr.map((language, index) => ({
+    const languages = this._props.languagesData;
+    // const languagesArr = languages.split(',');
+    const languageItems = Object.keys(languages).map((language, index) => ({
       type: LanguageButton,
       props: {
-        languageInfo: language,
+        languageInfo: languages[language],
         languageIndex: index,
       },
       w: 300,

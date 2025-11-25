@@ -16,13 +16,14 @@ class CMPService extends FetchingService {
       const cmpResults = await this.#getCMP(deviceCode);
       this.#cmpData = cmpResults;
       if (cmpResults && cmpResults.data) {
-        this.#cmpData = cmpResults.data;
+        this.#cmpData = cmpResults.data.entry;
       } else {
         console.error('No data found in CMP results');
       }
     } catch (error) {
       console.error('Error fetching CMP data:', error);
     }
+    console.log(this.#cmpData);
   }
 
   async selectCMPChoice(deviceCode, choicePick) {

@@ -62,7 +62,7 @@ export default class LanguageButton extends Lightning.Component {
 
     this.patch({
       Text: {
-        text: languageMapper[languageInfo].name,
+        text: /* languageMapper[languageInfo].name*/ this._props.languageInfo,
         color: Colors(isSelected ? colors.focus : colors.white).get(),
         fontFace: 'Montserrat-Bold',
       },
