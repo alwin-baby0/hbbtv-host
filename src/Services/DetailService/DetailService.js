@@ -1,5 +1,10 @@
 import { GalleryItem } from '../../Models';
-import { parseDetailsData, parseSeasonData, parseVodCategories } from '../../Models/parsers';
+import {
+  parseDetailsData,
+  parseSeasonData,
+  parseVodCategories,
+  parseSeasonTabs,
+} from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
@@ -10,13 +15,10 @@ class DetailService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
-    const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
-
     return await this._request({
       url: `/${API_URLS.GET_MOVIE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
-      headers: headers,
       params: {
         _: timestamp,
         id: movieId,
@@ -31,13 +33,10 @@ class DetailService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
-    const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
-
     const galleryItem = await this._request({
       url: `/${API_URLS.GET_SERIE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
-      headers: headers,
       params: {
         _: timestamp,
         id: seriesId,
@@ -55,8 +54,8 @@ class DetailService extends FetchingService {
     })
       .then(({ data }) => {
         if (data && data.entry) {
-          this.seasonTabsParsed = parseVodCategories({ data }, 'seasonTabs');
-          return data.entry.map((tab) => ({ id: tab.id, title: tab.title }));
+          this.seasonTabsParsed = parseSeasonTabs({ data }, 'seasonTabs');
+          return data.entry.items.map((tab) => ({ id: tab.id, title: tab.name }));
         }
 
         return [];

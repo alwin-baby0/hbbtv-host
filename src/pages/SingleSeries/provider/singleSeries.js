@@ -32,9 +32,11 @@ export default async function (page, { seriesId, cmpShown }) {
   let favorited = false;
 
   if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-    const response = await UserService.getFavorites();
+    /* const response = await UserService.getFavorites();
 
-    favorited = response.data.favorites?.some((element) => element.id === seriesId);
+    favorited = response.data.favorites?.some((element) => element.id === seriesId); */
+
+    favorited = false;
   }
   const firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
   const firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;

@@ -71,6 +71,20 @@ export const parseVodCategories = (data, vodType) => {
   };
 };
 
+// Season tabs
+export const parseSeasonTabs = ({ data }, vodType) => {
+  const railItems = data?.entry?.items.map((category) => {
+    return new Category({ ...category, type: vodType });
+  });
+  if (!railItems || railItems?.length === 0) return;
+
+  return {
+    railType: RAIL_TYPES.CATEGORY,
+    cardType: CARD_TYPES.CATEGORY,
+    items: railItems,
+  };
+};
+
 // Sports
 export const parseSportsPageData = ({ data }) => {
   const railItems = data.entry?.items?.map(
@@ -112,12 +126,12 @@ export const parseSportsEventsData = ({ data }) => {
 // Single assets
 // Movie
 export const parseDetailsData = ({ data }) => {
-  return new GalleryItem(data?.entry[0]);
+  return new GalleryItem(data?.entry);
 };
 
 // Season
 export const parseSeasonData = ({ data }, seriesId, seasonId) => {
-  const railItems = data.entry?.map(
+  const railItems = data.entry?.items?.map(
     (item) =>
       new SimpleRailItem({ ...item, type: { value: RAIL_TYPES.EPISODE }, seriesId: seriesId })
   );

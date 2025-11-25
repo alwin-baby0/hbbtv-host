@@ -3,9 +3,9 @@ import { CATEGORY_TYPES, FILTER_TYPES, ROUTES } from '../constants/globalConstan
 
 class Category {
   constructor(data) {
-    const { id, localised, type } = data;
+    const { id, title, type, name } = data;
     this.id = id;
-    this.title = localised;
+    this.title = title || name;
     this.type = type;
     this.data = data;
   }
