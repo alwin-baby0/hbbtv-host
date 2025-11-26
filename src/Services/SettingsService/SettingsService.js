@@ -17,7 +17,7 @@ export default class SettingsService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
-        id: pageId,
+        page_id: pageId,
       },
     });
   };

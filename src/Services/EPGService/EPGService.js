@@ -8,6 +8,7 @@ import {
   RAIL_TYPES,
   CARD_TYPES,
   API_METHODS,
+  LOCAL_STORAGE_KEYS,
 } from '../../constants/globalConstants';
 
 export const EPG_ROWS_PER_FETCH = 10;
@@ -34,7 +35,19 @@ class EPGService extends FetchingService {
     this.stripesFetched = 0;
     this.genreItems = [];
 
-    const getGenres = await this.#getContent();
+    const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+    // const getGenres = await this.#getContent();
+    const getGenres = parseVodCategories(
+      {
+        items: settings.genres.types.channels.map((item) => {
+          return {
+            value: item,
+            localised: settings.genres.localized[item],
+          };
+        }),
+      },
+      ROUTES.LIVE
+    );
     this.genreItems = getGenres;
 
     const channels = await this.#getGenresCategory('all');
@@ -43,7 +56,7 @@ class EPGService extends FetchingService {
       this.channelsItems = channels;
 
       const channelsEPGs = this.channelsItems.slice(0, EPG_ROWS_PER_FETCH).map((channel) => {
-        return this.#getEPG(channel.id);
+        return this.#getEPG(channel.id, channel.url);
       });
 
       const epgResults = await Promise.all(channelsEPGs);
@@ -145,8 +158,8 @@ class EPGService extends FetchingService {
   reCalculateEpgContainer = () => {
     const { start, end } = this.epgsAll.reduce(
       (acc, epg) => {
-        const endTimeMS = new Date(epg.items[epg.items.length - 1].extensions.end_time).getTime();
-        const startTimeMS = new Date(epg.items[0].extensions.start_time).getTime();
+        const endTimeMS = new Date(epg.items[epg.items.length - 1].endTimeAll.ms).getTime();
+        const startTimeMS = new Date(epg.items[0].startTimeAll.ms).getTime();
         return {
           end: Math.max(endTimeMS, acc.end),
           start: Math.min(startTimeMS, acc.start),
@@ -212,10 +225,11 @@ class EPGService extends FetchingService {
     }).then(this.#parseLiveChannelsData);
 
   #parseLiveChannelsData({ data }) {
-    return data.entry.map((channel) => ({
+    return data.entry.items.map((channel) => ({
       id: channel.id,
       title: channel.title,
-      icon: channel.media_group[0]?.media_item[0]?.src,
+      icon: channel.images[0]?.applicaster_logo,
+      url: channel.files[0].url,
     }));
   }
 
@@ -225,12 +239,12 @@ class EPGService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
-        id: `${channelId}`,
+        channel_id: `${channelId}`,
       },
     }).then(this.#parseSingleEPGChannel);
 
   #parseSingleEPGChannel({ data }) {
-    const railItems = data.entry?.map((item) => new EPGRailItem(item));
+    const railItems = data.entry?.items?.map((item) => new EPGRailItem(item));
     if (!railItems) return;
 
     return {
@@ -241,27 +255,27 @@ class EPGService extends FetchingService {
     };
   }
 
-  #getEPG = async (channelId) =>
+  #getEPG = async (channelId, url) =>
     this._request({
       url: `/${API_URLS.GET_EPG_PROGRAM}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
-        id: channelId,
+        channel_id: channelId,
       },
-    }).then(this.#parseLiveEPGData);
+    }).then((response) => this.#parseLiveEPGData(response, url));
 
-  #parseLiveEPGData({ data }) {
-    const channelId = data.id; // Extract the channel ID from the data
+  #parseLiveEPGData({ data }, url) {
+    const channelId = data.entry.channel_id; // Extract the channel ID from the data
 
-    const channelItem = data.entry?.map((item) => new EPGRailItem(item));
+    const channelItem = data.entry?.items?.map((item) => new EPGRailItem({ ...item, url: url }));
 
     // Add channelId to each EPGRailItem object
     channelItem.forEach((item) => {
       item.channelId = channelId;
     });
     return {
-      railType: data.type.value,
+      railType: RAIL_TYPES.EPGS,
       cardType: CARD_TYPES.EPG_CARD_ITEM,
       items: channelItem,
       channelId: channelId, // Include channelId in the returned object

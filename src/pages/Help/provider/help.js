@@ -10,23 +10,25 @@ function splitTextIntoChunks(text, chunkSize) {
 }
 
 export default async function (page) {
-  const { data } = await SettingsService.getPages();
-  const texts = (
-    await Promise.all(data.entry.map((pageInfo, index) => SettingsService.getSinglePage(index + 1)))
-  ).map((text) => {
-    const plainText = text.data.entry[0].extensions.content_plain;
-    let decodedText = '';
+  // const { data } = await SettingsService.getPages();
+  const data = ['terms', 'privacy', 'imprint'];
+  const texts = (await Promise.all(data.map((page) => SettingsService.getSinglePage(page)))).map(
+    (text) => {
+      console.log(text);
+      const plainText = text.data.entry[0].extensions.content_plain;
+      let decodedText = '';
 
-    if (typeof plainText === 'string') {
-      const strippedText = plainText.replace(/<[^>]+>/g, '');
-      decodedText = new DOMParser().parseFromString(strippedText, 'text/html').documentElement
-        .textContent;
+      if (typeof plainText === 'string') {
+        const strippedText = plainText.replace(/<[^>]+>/g, '');
+        decodedText = new DOMParser().parseFromString(strippedText, 'text/html').documentElement
+          .textContent;
+      }
+
+      decodedText = splitTextIntoChunks(decodedText, 1000);
+
+      return decodedText;
     }
-
-    decodedText = splitTextIntoChunks(decodedText, 1000);
-
-    return decodedText;
-  });
+  );
 
   const items = data.entry.map((pageInfo, index) => ({
     type: HelpButton,
