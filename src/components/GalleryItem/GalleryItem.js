@@ -14,6 +14,7 @@ export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
     infoY: 110,
+    bgY: 0,
     badgeY: 0,
   };
 
@@ -28,12 +29,14 @@ export default class GalleryItem extends Lightning.Component {
     return {
       w: 1920,
       BackgroundImage: {
+        y: 0,
         x: 350,
         w: 1570,
         h: 883,
       },
       GradientOverlay: {
         zIndex: 1,
+        y: 0,
         w: 1920,
       },
       Info: {
@@ -415,6 +418,7 @@ export default class GalleryItem extends Lightning.Component {
       badgeText,
       startDate,
       infoY,
+      bgY,
       badgeY,
     } = this._props;
 
@@ -638,9 +642,11 @@ export default class GalleryItem extends Lightning.Component {
         w: 1570,
         h: 883,
         src: bgImageSrc(),
+        y: bgY,
       },
       GradientOverlay: {
         texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.GRADIENT_SVG), 1920, 1082),
+        y: bgY,
       },
       Info: {
         Title: {

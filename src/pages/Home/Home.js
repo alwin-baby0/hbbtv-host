@@ -16,9 +16,10 @@ export default class Home extends Lightning.Component {
       Background: {},
       HeroSection: {
         x: 0,
-        y: 0,
+        y: 150,
         w: 1920,
-        h: 800,
+        h: 650,
+        collision: true,
         type: Gallery,
       },
       Wrapper: {
@@ -65,7 +66,7 @@ export default class Home extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const { sliderData, railData } = this._props;
 
-    const rails = constructRails(railData);
+    const rails = constructRails(railData, ROUTES.HOME);
     this._Column.props = { items: rails, parentState: 'Items' };
 
     if (sliderData) {
@@ -74,6 +75,8 @@ export default class Home extends Lightning.Component {
         props: {
           sliderData,
           parentState: 'Hero',
+          scrollDownState: 'Items',
+          bgY: -150,
         },
       });
     } else {
@@ -133,6 +136,10 @@ export default class Home extends Lightning.Component {
           this._Wrapper.patch({
             y: 980,
           });
+
+          this._HeroSection.patch({
+            y: 150,
+          });
         }
 
         _handleBack(e) {
@@ -167,12 +174,19 @@ export default class Home extends Lightning.Component {
       class Items extends this {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
+
           this.patch({
             HeroSection: {
               y: -980,
             },
             Wrapper: {
               y: 0,
+            },
+          });
+
+          this._HeroSection.patch({
+            props: {
+              bgY: 0,
             },
           });
         }
@@ -185,6 +199,12 @@ export default class Home extends Lightning.Component {
             },
             Wrapper: {
               y: 900,
+            },
+          });
+
+          this._HeroSection.patch({
+            props: {
+              bgY: -150,
             },
           });
         }
@@ -253,7 +273,7 @@ export default class Home extends Lightning.Component {
             HomePageService.stripesFetched - 2 === index - indexNumber
           ) {
             const newStripes = await HomePageService.fetchMoreStripes();
-            const rails = constructRails(newStripes);
+            const rails = constructRails(newStripes, ROUTES.HOME);
             this._Column._appendItems(rails);
           }
         }
