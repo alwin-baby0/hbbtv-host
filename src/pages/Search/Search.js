@@ -234,19 +234,22 @@ export default class Search extends Lightning.Component {
 
   $searchRecent(term) {
     const inputTag = this._Input._Input;
+    const oldTerm = inputTag.value;
     inputTag.value = term;
     inputTag.position = term.length;
     const inputValue = inputTag.value.toLowerCase();
 
-    this.patch({
-      SearchLabel: {
-        text: {
-          text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH),
+    if (oldTerm !== term) {
+      this.patch({
+        SearchLabel: {
+          text: {
+            text: (inputValue && inputValue) || t(TRANSLATIONS.SEARCH),
+          },
         },
-      },
-    });
+      });
 
-    this.$updatedVOD();
+      this.$updatedVOD();
+    }
   }
 
   async $updatedVOD() {
@@ -514,6 +517,14 @@ export default class Search extends Lightning.Component {
 
         _handleUp() {
           this._setState('Keyboard');
+        }
+
+        _handleRight() {
+          if (this._VODSection.Items.children.length > 0 && this._VodWrapper.visible) {
+            this._setState('VODSection');
+          } else {
+            return false;
+          }
         }
       },
     ];

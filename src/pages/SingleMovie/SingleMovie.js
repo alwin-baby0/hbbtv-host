@@ -131,6 +131,9 @@ export default class SingleMovie extends Lightning.Component {
                 itemSpacing: 100,
               },
               y: 42,
+              props: {
+                enableScroll: false,
+              },
             },
             Metadata: {
               flex: { direction: 'column' },
@@ -342,7 +345,7 @@ export default class SingleMovie extends Lightning.Component {
 
   _arrangeButtonsInRowsDependingOnLanguage(buttons) {
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-    const itemsPerRow = 3;
+    const itemsPerRow = 4;
 
     const rows = [];
     for (let i = 0; i < buttons.length; i += itemsPerRow) {
@@ -505,6 +508,7 @@ export default class SingleMovie extends Lightning.Component {
         collision: true,
         props: {
           parentState: 'Buttons',
+          disableScroll: true,
           items: row.items.map((item, index) => ({
             type: Button,
             collision: true,
@@ -601,6 +605,7 @@ export default class SingleMovie extends Lightning.Component {
   async addToFavorite() {
     try {
       const { movie, movieTrailerUrl } = this._props;
+      const { last_position } = this._props.movie;
       if (movie.is_favorite) {
         await UserService.removeFromFavorites(movie.id);
       } else {
@@ -610,7 +615,7 @@ export default class SingleMovie extends Lightning.Component {
 
       const { is_favorite } = this._props.movie;
 
-      const id = movieTrailerUrl ? 3 : 2; //depending on movieTrailerUrl, we will know on which position is add to fav btn
+      const id = movieTrailerUrl && last_position ? 3 : movieTrailerUrl || last_position ? 2 : 1;
 
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
