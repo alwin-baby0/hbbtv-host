@@ -1255,7 +1255,7 @@ export default class Player extends Lightning.Component {
     }
 
     if (isMediaKey) {
-      return true;
+      return false;
     }
 
     return !this._Wrapper.visible;
