@@ -23,7 +23,6 @@ class CMPService extends FetchingService {
     } catch (error) {
       console.error('Error fetching CMP data:', error);
     }
-    console.log(this.#cmpData);
   }
 
   async selectCMPChoice(deviceCode, choicePick) {
@@ -52,9 +51,6 @@ class CMPService extends FetchingService {
       url: `/${API_URLS.GET_CMP}`,
       apiVersion: V2,
       method: API_METHODS.GET,
-      headers: {
-        'X-Device-ID': deviceCode,
-      },
       params: {
         language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || 'en',
         choice: choicePick,

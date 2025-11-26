@@ -2,11 +2,12 @@ import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
 import { createApiCtx } from '../../../Services/utils';
 import axios from 'axios';
-import { languageMapper, LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
 
 export default class LanguageButton extends Lightning.Component {
   _props = {
-    languageInfo: {},
+    languageInfo: '',
+    languageCode: '',
   };
 
   static _template() {
@@ -56,13 +57,12 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   _enable() {
-    const { languageInfo } = this._props;
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
     const isSelected = this._props.languageInfo === languageCode;
 
     this.patch({
       Text: {
-        text: /* languageMapper[languageInfo].name*/ this._props.languageInfo,
+        text: this._props.languageInfo,
         color: Colors(isSelected ? colors.focus : colors.white).get(),
         fontFace: 'Montserrat-Bold',
       },
@@ -71,13 +71,13 @@ export default class LanguageButton extends Lightning.Component {
 
   _findLanguageIndex() {
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-    const index = this._props.languageInfo.findIndex((info) => info.languageInfo === languageCode);
+    const index = this._props.languageInfo.findIndex((info) => info.languageCode === languageCode);
     return index; // Vratiće -1 ako nije pronađen
   }
 
   _active() {
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-    const isSelected = this._props.languageInfo === languageCode;
+    const isSelected = this._props.languageCode === languageCode;
 
     if (isSelected) {
       this.fireAncestors('$setFocusLanguage', this._props.languageIndex);
@@ -85,8 +85,8 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   async _handleEnter() {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
-    const translations = await this.#getLanguageTranslations(this._props.languageInfo);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageCode);
+    const translations = await this.#getLanguageTranslations(this._props.languageCode);
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
     Router.navigate(ROUTES.HOME);
     window.location.reload();
@@ -103,7 +103,7 @@ export default class LanguageButton extends Lightning.Component {
 
   _unfocus() {
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-    const isSelected = this._props.languageInfo === languageCode;
+    const isSelected = this._props.languageCode === languageCode;
 
     this.patch({
       color: Colors(colors.unfocusedLanguage).alpha(0).get(),
@@ -119,8 +119,8 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   async _handleClick() {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
-    const translations = await this.#getLanguageTranslations(this._props.languageInfo);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageCode);
+    const translations = await this.#getLanguageTranslations(this._props.languageCode);
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
     Router.navigate(ROUTES.HOME);
     window.location.reload();

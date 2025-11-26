@@ -154,6 +154,7 @@ export default class Settings extends Lightning.Component {
       props: {
         languageInfo: languages[language],
         languageIndex: index,
+        languageCode: language,
       },
       w: 300,
       h: 65,
