@@ -43,11 +43,16 @@ class VodService extends FetchingService {
   #heroSectionPage = 1; // Page counter for Hero Section
   #heroSectionItems;
   #isLastFetchEmpty = false; // Initialize to false
+  lastVodType = null;
 
   /**
    * Fetches initial stripes for page
    */
   async initialFetch() {
+    if (this.lastVodType !== this.#vodType) {
+      this.resetData();
+    }
+
     if (!this.#vodType) {
       console.warn('no vod type selected in vod service');
       return;
@@ -110,6 +115,8 @@ class VodService extends FetchingService {
         currentState.hasMore = false;
       }
     }
+
+    this.lastVodType = this.#vodType;
   }
 
   #getHeroSection = async (page = 1) => {

@@ -104,6 +104,8 @@ export default class Gallery extends Lightning.Component {
       },
     });
 
+    this._HeroSection._BackgroundImage.visible = false;
+
     this._HeroSection._BackgroundImage.patch({
       visible: true,
       w: 1570,
