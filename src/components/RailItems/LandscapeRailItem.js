@@ -35,7 +35,7 @@ export default class LandscapeRailItem extends FocusableItem {
           },
         },
         Title: {
-          h: 40,
+          h: 60,
           flexItem: {
             marginTop: 15,
             marginLeft: 20,
@@ -45,7 +45,7 @@ export default class LandscapeRailItem extends FocusableItem {
             fontFace: 'Montserrat-Bold',
             fontSize: 24,
             lineHeight: 25,
-            maxLines: 1,
+            maxLines: 2,
             maxLinesSuffix: '...',
             wordWrapWidth: 400,
           },
@@ -104,8 +104,18 @@ export default class LandscapeRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle, itemDescription, placeholderSrc, itemSummary } =
-      this._props;
+    const {
+      imageSrc,
+      radius,
+      itemTitle,
+      itemDescription,
+      placeholderSrc,
+      itemSummary,
+      durationString,
+      year,
+    } = this._props;
+
+    const durYear = [durationString, year].join(`${durationString && year ? ' | ' : ''}`);
 
     this.setProps({
       width: CARD_SIZES.LANDSCAPE.width,
@@ -136,7 +146,7 @@ export default class LandscapeRailItem extends FocusableItem {
       },
       Summary: {
         text: {
-          text: '',
+          text: durYear,
         },
       },
     });

@@ -4,7 +4,8 @@ import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
 
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, summary, images } = data;
+    console.log('asdf data: ', data);
+    const { id, title, type, summary, images, meta } = data;
 
     this.id = id;
     this.title = title;
@@ -49,6 +50,13 @@ class SimpleRailItem {
         this.url = `${ROUTES.LIVE}`;
       default:
         console.warn('unknown rail item type', this.type);
+    }
+
+    if (meta) {
+      const { duration, year } = meta;
+
+      this.durationString = duration?.string;
+      this.year = year;
     }
 
     this.thumbnails = [];

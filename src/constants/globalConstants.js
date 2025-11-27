@@ -474,7 +474,7 @@ export const CARD_SIZES = {
   LANDSCAPE: {
     width: 425,
     height: 410,
-    container_height: 470,
+    container_height: 485,
     image_width: 425,
     image_height: 235,
   },

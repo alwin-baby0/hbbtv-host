@@ -199,6 +199,8 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       itemTitle: railItem.title,
       itemSummary: railItem.summary,
       itemDescription: railItem.description,
+      durationString: railItem.durationString,
+      year: railItem.year,
       imageSrc: railItem.getThumbnailImage(IMAGE_SIZES.M).src,
       index,
       callback: () => {
