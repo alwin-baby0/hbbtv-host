@@ -32,7 +32,7 @@ export default async function (page) {
   const items = data.entry.map((pageInfo, index) => ({
     type: HelpButton,
     pageInfoData: pageInfo,
-    w: 410,
+    w: index === 0 ? 400 : 350,
     h: 100,
     pageIndex: index,
   }));
