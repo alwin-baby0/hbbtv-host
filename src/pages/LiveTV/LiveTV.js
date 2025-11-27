@@ -396,8 +396,10 @@ export default class LiveTV extends Lightning.Component {
           console.warn(`No channelInfo for index ${index}`);
           return null;
         }
+        console.log(channelInfo);
 
         const matchingEpg = EPGService.epgs.find((epgInfo) => epgInfo.channelId === channelInfo.id);
+        console.log(matchingEpg);
 
         const rails = constructRails(matchingEpg);
         this._EPGData._appendItems(rails);

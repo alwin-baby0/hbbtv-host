@@ -105,7 +105,7 @@ const constructEPGS = (railItems, railItemsOptions) => {
 
   items.push(
     ...railItems.map((railItem, index) => {
-      const year = new Date(railItem.extensions.start_time).getFullYear();
+      const year = new Date(railItem.startTime).getFullYear();
       const width = year < 2023 ? 12000 : railItem.getDuration() * 8.33;
 
       return {
