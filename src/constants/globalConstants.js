@@ -337,7 +337,7 @@ export const API_URLS = {
   GET_SPORTS: 'sports',
   GET_SPORT_EVENTS: 'getSportEvents',
   GET_SPORT_EVENT: 'getSportEvent',
-  GET_PAGE_TABS: 'getPageTabs',
+  GET_PAGE_TABS: 'pages',
   GET_PAGE: 'getPage',
   GET_SEARCH: 'search',
   GET_LANGUAGES: 'languageByCountry',

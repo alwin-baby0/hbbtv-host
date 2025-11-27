@@ -445,7 +445,6 @@ export default class GalleryItem extends Lightning.Component {
     const titleLength = title.length;
 
     const imdbScoreLabeled = `IMDB ${imdbScore}`;
-    console.log('asdf data MOVIE: ', durationString, year, country, imdbScoreLabeled);
 
     const factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
 
@@ -462,8 +461,6 @@ export default class GalleryItem extends Lightning.Component {
     if (videoType === 'application/x-mpegURL') {
       const targetTimestamp = startDate;
       this.remaining = targetTimestamp - Date.now();
-
-      console.log('asdf start, remain', startDate, this.remaining);
 
       const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
 

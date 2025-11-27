@@ -76,7 +76,7 @@ export default class PageItem extends Lightning.Component {
 
   _handleEnter() {
     let pageId = this._pageInfoData.id;
-    this.fireAncestors('$changeDescription', pageId);
+    this.fireAncestors('$changeDescription', this._pageIndex);
     this.fireAncestors('$setFocus', this._pageIndex);
   }
 

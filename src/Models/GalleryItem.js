@@ -3,7 +3,6 @@ import { t } from '../Services';
 
 class GalleryItem {
   constructor(data) {
-    console.log('asdf data: ', data);
     const { id, title, content, files, summary, type, meta, images } = data;
 
     this.id = id;

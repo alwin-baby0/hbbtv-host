@@ -134,7 +134,7 @@ export default class HelpScreen extends Lightning.Component {
   }
 
   $changeDescription(index) {
-    const content = this._props.texts[index - 1].map((chunk) => ({
+    const content = this._props.texts[index].map((chunk) => ({
       text: chunk,
       style: {
         alignContent: 'center',
