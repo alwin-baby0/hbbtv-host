@@ -91,7 +91,7 @@ export default class VerticalContainer extends Lightning.Component {
       }
 
       this._focusedIndex = items && items.length > 0 ? 0 : -1;
-      this._scrollPosition = 0;
+      this._scrollPosition = this.ref === 'VODSection' ? 250 : 0;
     }
 
     if ((!items || !items.length) && this.ref !== 'EPGData') {
@@ -232,7 +232,7 @@ export default class VerticalContainer extends Lightning.Component {
     this._props.items = [];
     this.Items.childList.clear();
     this._focusedIndex = 0;
-    this._scrollPosition = 0;
+    this._scrollPosition = this.ref === 'VODSection' ? 250 : 0;
     this.Items.y = 0;
     this.stage.update();
   }
@@ -245,6 +245,7 @@ export default class VerticalContainer extends Lightning.Component {
   _reCalibrateScroll(oldIndex, newIndex) {
     const { enableScroll } = this._props;
     if (!enableScroll) return;
+    console.log(oldIndex, newIndex);
 
     this.stage.update();
 
@@ -256,11 +257,20 @@ export default class VerticalContainer extends Lightning.Component {
     }
 
     if (newIndex === 0) {
-      this._scrollPosition = 0;
+      this._scrollPosition = this.ref === 'VODSection' ? 250 : 0;
       this.Items.patch({ y: 0 });
     } else {
+      const margin =
+        prevFocus._props.flexItem && prevFocus._props.flexItem.marginBottom
+          ? prevFocus._props.flexItem.marginBottom
+          : 0;
       const multiplier = oldIndex - newIndex;
-      this._scrollPosition += multiplier * prevFocus.finalH;
+      this._scrollPosition +=
+        newIndex > oldIndex
+          ? multiplier * prevFocus.finalH - margin
+          : multiplier * prevFocus.finalH + margin;
+      console.log(this.ref);
+
       this.Items.patch({
         y: Math.min(this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition, 0),
       });
@@ -279,7 +289,7 @@ export default class VerticalContainer extends Lightning.Component {
       this._focusedIndex = index;
     }
     if (index === 0) {
-      this._scrollPosition = 0;
+      this._scrollPosition = this.ref === 'VODSection' ? 250 : 0;
       this.Items.patch({ y: 0 });
     }
     this.fireAncestors('$verticalContainerIndexChange', index);

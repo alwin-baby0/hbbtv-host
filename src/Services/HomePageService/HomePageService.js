@@ -1,12 +1,13 @@
 import FetchingService from '../FetchingService';
 import { SimpleRailItem } from '../../Models';
 import { V2 } from '../utils';
+import { parseHomePageHeroSection, parseHomePageRailData } from '../../Models/parsers';
 import {
-  parseBannerData,
-  parseHomePageHeroSection,
-  parseHomePageRailData,
-} from '../../Models/parsers';
-import { API_METHODS, API_URLS, IMAGE_SIZES } from '../../constants/globalConstants';
+  API_METHODS,
+  API_URLS,
+  IMAGE_SIZES,
+  LOCAL_STORAGE_KEYS,
+} from '../../constants/globalConstants';
 
 class HomePageService extends FetchingService {
   #heroSectionItems;
@@ -22,7 +23,8 @@ class HomePageService extends FetchingService {
    * Fetches initial stripes for Home page
    */
   async initialFetch() {
-    // this.#banner = await this.#getBanner();
+    const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+    this.#banner = settings.ads.creative.banner;
 
     if (!this.#heroSectionItems) {
       //get gallery data
@@ -202,13 +204,6 @@ class HomePageService extends FetchingService {
         limit,
       },
     }).then(parseHomePageRailData);
-
-  #getBanner = async () =>
-    this._request({
-      url: `/${API_URLS.GET_BANNER}`,
-      apiVersion: V2,
-      method: API_METHODS.GET,
-    }).then(parseBannerData);
 }
 
 const homePageService = new HomePageService();

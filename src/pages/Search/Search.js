@@ -267,7 +267,7 @@ export default class Search extends Lightning.Component {
     if (inputValue.length > 2) {
       SearchService.getSearch(inputValue, '').then((data) => {
         if (data?.items) {
-          data.items && this.$changedVODGenre(data);
+          data.items && this.$changedVODGenre({ ...data, railTitle: `Search for: ${inputValue}` });
         }
       });
 
@@ -279,6 +279,7 @@ export default class Search extends Lightning.Component {
   }
 
   async $changedVODGenre(data) {
+    console.log(data);
     const rows = [];
     for (let i = 0, j = data.items.length; i < j; i += 4) {
       rows.push({
@@ -441,7 +442,7 @@ export default class Search extends Lightning.Component {
           this._extended = this._VODSection._focusedIndex > 0;
           this.patch({
             VODWrapper: {
-              h: 1920,
+              h: 1080,
             },
           });
         }
@@ -459,6 +460,9 @@ export default class Search extends Lightning.Component {
               },
               VODSection: {
                 h: 795,
+                props: {
+                  y: 125,
+                },
               },
             });
           }
