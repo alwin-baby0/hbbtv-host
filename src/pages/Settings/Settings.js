@@ -173,23 +173,7 @@ export default class Settings extends Lightning.Component {
     });
 
     const languages = this._props.languagesData;
-    //todo - implement row with columns for these
-    const languagesTEST = {
-      de: 'Deutsch',
-      en: 'English',
-      es: 'Español',
-      fr: 'Français',
-      it: 'Italiano',
-      nl: 'Nederlands',
-      pt: 'Português',
-      pl: 'Polski',
-      sv: 'Svenska',
-      ru: 'Русский',
-    };
-    console.log('asdf langs: ', languages);
-
     const cols = this._arrangeLngBtns(languages);
-    console.log('asdf col items: ', cols);
 
     this._LanguagesRowContainer.props = {
       parentState: 'Languages',

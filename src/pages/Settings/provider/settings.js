@@ -6,7 +6,7 @@ export default async function (page) {
   const languages = Object.fromEntries(
     Object.entries(
       JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS)).supported_languages
-    ).slice(0, 4)
+    )
   );
 
   await CMPService.initialFetch();
