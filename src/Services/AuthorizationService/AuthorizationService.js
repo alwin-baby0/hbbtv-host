@@ -16,17 +16,14 @@ class AuthorizationService extends FetchingService {
             const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
             console.log('statusResponse', statusResponse.data);
 
-            if (statusResponse.data.status === 'approved') {
+            if (statusResponse.data.status === 'authorized') {
               this.clearPollingInterval(this._intervalId);
               console.log('Device code status condition met, stopping the interval.');
               console.log('status:', statusResponse.data.status);
-              console.log('autorization code:', statusResponse.data.authorization_code);
+              console.log('autorization code:', statusResponse.data.pin);
               const timestamp = Math.floor(Date.now() / 1000);
 
-              const tokenData = await this.#getToken(
-                statusResponse.data.authorization_code,
-                timestamp
-              );
+              const tokenData = await this.#getToken(deviceCode, timestamp);
               localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(tokenData.data));
               const event = new CustomEvent(CUSTOM_EVENT_NAMES.USER_LOG_IN);
               window.dispatchEvent(event);
@@ -62,10 +59,13 @@ class AuthorizationService extends FetchingService {
     return await this._request({
       url: `/${API_URLS.GET_DEVICE_STATUS}`,
       apiVersion: auth,
-      method: API_METHODS.POST,
+      method: API_METHODS.GET,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       params: {
         client_id: process.env.APP_CMP_CLIENT_ID,
-        client_secret: process.env.APP_CMP_CLIENT_SECRET,
+        grant_type: `urn:ietf:params:oauth:grant-type:device_code`,
         device_code: deviceCode,
       },
     });
@@ -79,14 +79,13 @@ class AuthorizationService extends FetchingService {
       apiVersion: auth,
       method: API_METHODS.POST,
       headers: {
-        'X-nocache': timestamp,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       data: {
         client_id: process.env.APP_CMP_CLIENT_ID,
         client_secret: process.env.APP_CMP_CLIENT_SECRET,
-        grant_type: 'authorization_code',
-        code: authorizationCode,
+        grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
+        device_code: authorizationCode,
       },
     });
   };

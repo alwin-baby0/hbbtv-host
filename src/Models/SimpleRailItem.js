@@ -12,16 +12,6 @@ class SimpleRailItem {
     this.type = type;
     this.summary = summary;
 
-    // if (extensions) {
-    //   this.description = extensions.description;
-    //   this.episodeSeriesID = extensions?.series_id;
-    //   this.duration = extensions?.duration;
-    // }
-
-    // if (extensions?.ssai) {
-    //   this.ssai = extensions.ssai;
-    // }
-
     switch (this.type) {
       case RAIL_TYPES.MOVIE:
       case RAIL_TYPES.VIDEO:
@@ -30,12 +20,8 @@ class SimpleRailItem {
       case RAIL_TYPES.SPORT:
       case RAIL_TYPES.SERIE:
       case RAIL_TYPES.SERIES:
-        // if (this.episodeSeriesID) {
-        //   //case if you are coming from recently watched list
-        //   this.url = `${ROUTES.SERIES_DETAILS}/${this.episodeSeriesID}`;
-        // } else {
+      case RAIL_TYPES.SEASON:
         this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
-        // }
         break;
       case RAIL_TYPES.SHOW:
       case RAIL_TYPES.EVENT:
@@ -48,6 +34,10 @@ class SimpleRailItem {
         break;
       case RAIL_TYPES.CHANNEL:
         this.url = `${ROUTES.LIVE}`;
+        break;
+      case RAIL_TYPES.PLAYLIST:
+        this.url = `${ROUTES.COLLECTION}/${this.id}`;
+        break;
       default:
         console.warn('unknown rail item type', this.type);
     }

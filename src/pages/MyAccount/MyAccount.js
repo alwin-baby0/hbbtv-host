@@ -206,7 +206,7 @@ export default class MyAccount extends Lightning.Component {
       this._props;
 
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-      const qrCode = verificationUri.url;
+      const qrCode = verificationUri;
 
       qrcode.toDataURL(qrCode).then((image) => {
         this._Content.patch({

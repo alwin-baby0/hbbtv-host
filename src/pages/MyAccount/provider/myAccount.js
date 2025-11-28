@@ -47,7 +47,7 @@ export default async function (page) {
     : undefined;
 
   const deviceCode = response && response.data ? response.data.device_code : '';
-  const verificationUri = response && response.data ? response.data.verification_uri : '';
+  const verificationUri = response && response.data ? response.data.verification_uri_complete : '';
 
   if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
     await AuthorizationService.setDeviceCodeStatusInterval(deviceCode);

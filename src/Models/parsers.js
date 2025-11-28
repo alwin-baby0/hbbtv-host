@@ -32,7 +32,7 @@ export const parseHomePageHeroSection = ({ data }) => {
 // VodPreview
 // Movies
 export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
-  const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
+  const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item, RAIL_TYPES.MOVIE));
   if (!railItems || railItems?.length === 0) return;
 
   return {
@@ -46,7 +46,7 @@ export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => 
 
 // Series
 export const parseSeriesPageData = ({ data }) => {
-  const railItems = data.entries?.map((item) => new SimpleRailItem(item));
+  const railItems = data.entries?.map((item) => new SimpleRailItem(item, RAIL_TYPES.SERIE));
   if (!railItems || railItems?.length === 0) return;
 
   return {
@@ -89,7 +89,10 @@ export const parseSeasonTabs = ({ data }, vodType) => {
 export const parseSportsPageData = ({ data }) => {
   const railItems = data.entry?.items?.map(
     (item) =>
-      new SimpleRailItem({ ...item, type: { value: item.type ? item.type : RAIL_TYPES.SPORT } })
+      new SimpleRailItem(
+        { ...item, type: { value: item.type ? item.type : RAIL_TYPES.SPORT } },
+        RAIL_TYPES.SPORT
+      )
   );
   if (!railItems || railItems?.length === 0) return;
 

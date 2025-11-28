@@ -295,11 +295,13 @@ export const CATEGORY_TYPES = {
 };
 
 export const RAIL_TYPES = {
+  PLAYLIST: 'playlist',
   MOVIE: 'movie',
   SPORT: 'sport',
   SPORTS: 'sports',
   SERIE: 'serie',
   SERIES: 'series',
+  SEASON: 'season',
   SHOW: 'show',
   EVENT: 'event',
   EPISODE: 'episode',
@@ -350,15 +352,15 @@ export const API_URLS = {
   GET_COLLECTION: 'getCollection',
   GET_CMP: 'getCMP',
   GET_DEVICE_CODE: 'oauth/device/code',
-  GET_DEVICE_STATUS: 'oauth/device',
-  GET_TOKEN: 'token.php',
+  GET_DEVICE_STATUS: 'oauth/status',
+  GET_TOKEN: 'oauth/token',
   REVOKE_TOKEN: 'revoke.php',
   GET_USER_FAVORITES: 'oauth/favorites',
   ADD_USER_FAVORITES: 'oauth/favorites',
   REMOVE_USER_FAVORITES: 'oauth/favorites',
-  GET_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
-  ADD_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
-  REMOVE_USER_RECENTLY_WATCHED: 'oauth/recently_watched',
+  GET_USER_RECENTLY_WATCHED: 'oauth/recently-watched',
+  ADD_USER_RECENTLY_WATCHED: 'oauth/recently-watched',
+  REMOVE_USER_RECENTLY_WATCHED: 'oauth/recently-watched',
   GET_SETTINGS: 'getSettings',
 };
 
