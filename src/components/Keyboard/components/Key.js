@@ -40,7 +40,9 @@ export default class Key extends Lightning.Component {
   _enable() {
     if (this._data.icon) {
       this._Title.patch({
-        texture: Img(Utils.asset(`/icons/${this._data.icon}`)).contain(60, 60),
+        h: 60,
+        w: 60,
+        src: Utils.asset(`/icons/${this._data.icon}`),
       });
     } else {
       this._Title.patch({
