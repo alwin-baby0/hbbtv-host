@@ -245,7 +245,6 @@ export default class VerticalContainer extends Lightning.Component {
   _reCalibrateScroll(oldIndex, newIndex) {
     const { enableScroll } = this._props;
     if (!enableScroll) return;
-    console.log(oldIndex, newIndex);
 
     this.stage.update();
 
@@ -269,7 +268,6 @@ export default class VerticalContainer extends Lightning.Component {
         newIndex > oldIndex
           ? multiplier * prevFocus.finalH - margin
           : multiplier * prevFocus.finalH + margin;
-      console.log(this.ref);
 
       this.Items.patch({
         y: Math.min(this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition, 0),
@@ -283,6 +281,10 @@ export default class VerticalContainer extends Lightning.Component {
   $handleItemHover(index) {
     const oldIndex = this._focusedIndex;
     const newIndex = index;
+
+    if (this.parent.parent.type && this.parent.parent.type.name === 'HorizontalContainer') {
+      this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
+    }
 
     if (this._focusedIndex !== index) {
       this.Items.children[this._focusedIndex]?._unfocus();

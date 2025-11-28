@@ -58,7 +58,7 @@ export default class LanguageButton extends Lightning.Component {
 
   _enable() {
     const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
-    const isSelected = this._props.languageInfo === languageCode;
+    const isSelected = this._props.languageCode === languageCode;
 
     this.patch({
       Text: {

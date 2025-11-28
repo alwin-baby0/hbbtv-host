@@ -5,6 +5,7 @@ import CMPButton from '../../components/Buttons/CMPButton/CMPButton';
 import { CMPService } from '../../Services';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
 import { t } from '../../Services';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 
 export default class Settings extends Lightning.Component {
   static _template() {
@@ -40,13 +41,13 @@ export default class Settings extends Lightning.Component {
             rect: true,
             color: Colors('#ffffff').alpha(0.5).get(),
           },
-          Languages: {
+          LanguagesRowContainer: {
+            type: HorizontalContainer,
             y: 50,
             x: 550,
-            type: VerticalContainer,
             collision: true,
-            w: 1050,
             h: 300,
+            w: 1050,
           },
         },
         CMPContainer: {
@@ -102,8 +103,8 @@ export default class Settings extends Lightning.Component {
     return this.tag('Version');
   }
 
-  get _Languages() {
-    return this.tag('Content.LanguagesContainer.Languages');
+  get _LanguagesRowContainer() {
+    return this.tag('Content.LanguagesContainer.LanguagesRowContainer');
   }
 
   get _Content() {
@@ -116,6 +117,30 @@ export default class Settings extends Lightning.Component {
 
   get CMPButtons() {
     return this.tag('Content.CMPContainer.CMPData.Buttons');
+  }
+
+  _arrangeLngBtns(languages) {
+    const itemsPerCol = 4;
+    const cols = [];
+
+    const langArray = Object.entries(languages).map(([key, value]) => ({
+      key,
+      value,
+    }));
+
+    for (let i = 0; i < langArray.length; i += itemsPerCol) {
+      cols.push({ items: langArray.slice(i, i + itemsPerCol) });
+    }
+
+    return cols;
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   set props(props) {
@@ -148,35 +173,53 @@ export default class Settings extends Lightning.Component {
     });
 
     const languages = this._props.languagesData;
-    // const languagesArr = languages.split(',');
-    const languageItems = Object.keys(languages).map((language, index) => ({
-      type: LanguageButton,
-      props: {
-        languageInfo: languages[language],
-        languageIndex: index,
-        languageCode: language,
-      },
-      w: 300,
-      h: 65,
-    }));
+    //todo - implement row with columns for these
+    const languagesTEST = {
+      de: 'Deutsch',
+      en: 'English',
+      es: 'Español',
+      fr: 'Français',
+      it: 'Italiano',
+      nl: 'Nederlands',
+      pt: 'Português',
+      pl: 'Polski',
+      sv: 'Svenska',
+      ru: 'Русский',
+    };
+    console.log('asdf langs: ', languages);
+
+    const cols = this._arrangeLngBtns(languages);
+    console.log('asdf col items: ', cols);
+
+    this._LanguagesRowContainer.props = {
+      parentState: 'Languages',
+      items: cols.map((col) => ({
+        type: VerticalContainer,
+        collision: true,
+        h: 500,
+        w: 300,
+        flexItem: {
+          marginRight: 20,
+        },
+        props: {
+          parentState: 'Languages',
+          disableScroll: true,
+          items: col.items.map((item, index) => ({
+            type: LanguageButton,
+            collision: true,
+            props: {
+              languageInfo: item.value,
+              languageIndex: index,
+              languageCode: item.key,
+            },
+            w: 300,
+            h: 65,
+          })),
+        },
+      })),
+    };
 
     this._Content.patch({
-      LanguagesContainer: {
-        Languages: {
-          zIndex: 3,
-          type: VerticalContainer,
-          collision: true,
-          w: 1050,
-          h: 300,
-          props: {
-            items: languageItems,
-            enableScroll: false,
-            w: 1050,
-            h: 300,
-            parentState: 'Languages',
-          },
-        },
-      },
       CMPContainer: {
         collision: true,
         CMPData: {
@@ -257,7 +300,7 @@ export default class Settings extends Lightning.Component {
 
       class Languages extends this {
         _getFocused() {
-          return this._Languages;
+          return this._LanguagesRowContainer;
         }
 
         _handleUp() {
