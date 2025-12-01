@@ -7,9 +7,7 @@ const lngCode =
   navigator.language ||
   navigator.userLanguage ||
   'en-';
-const defTr = await import(
-  `../../../public/static/translations/${lngCode.split('-')[0] || 'en'}.json`
-);
+const defTr = await import(`../../../public/static/translations/en.json`);
 
 let translationsVar = undefined;
 export default class TranslationService {
@@ -52,5 +50,7 @@ export { translationService as TranslationService };
  * @param { keyof typeof defTr } key
  */
 export function t(key) {
+  console.log(defTr[key]);
+  console.log(key, translationsVar && translationsVar[key] ? translationsVar[key] : defTr[key]);
   return translationsVar && translationsVar[key] ? translationsVar[key] : defTr[key];
 }

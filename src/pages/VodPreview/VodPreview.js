@@ -212,7 +212,7 @@ export default class VodPreview extends Lightning.Component {
   calculateContentOffset(contentType) {
     switch (contentType) {
       case CONTENT_TYPE.EVENTS:
-        return 530;
+        return 580;
       case CONTENT_TYPE.CATEGORIES:
         return 200;
       case CONTENT_TYPE.EMPTY:

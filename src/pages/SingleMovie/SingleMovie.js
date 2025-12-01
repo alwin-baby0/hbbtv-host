@@ -32,10 +32,10 @@ export default class SingleMovie extends Lightning.Component {
           zIndex: 2,
         },
         Image: {
-          w: 1570,
-          h: 1080,
           y: 0,
           x: 350,
+          w: 1570,
+          h: 883,
           zIndex: 1,
         },
         BackButton: {
@@ -164,6 +164,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
+                  flexItem: { marginLeft: 20 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -191,6 +192,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
+                  flexItem: { marginLeft: 20 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -218,6 +220,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
+                  flexItem: { marginLeft: 20 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -247,6 +250,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
+                  flexItem: { marginLeft: 20 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -468,7 +472,7 @@ export default class SingleMovie extends Lightning.Component {
                 },
                 TextValue: {
                   text: {
-                    text: genre,
+                    text: genre.charAt(0).toUpperCase() + genre.slice(1),
                   },
                 },
               },
