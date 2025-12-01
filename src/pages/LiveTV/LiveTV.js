@@ -257,6 +257,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _active() {
+    this.fireAncestors('$setNavbarVisibility', true);
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 

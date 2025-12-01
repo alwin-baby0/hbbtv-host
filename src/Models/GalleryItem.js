@@ -51,19 +51,19 @@ class GalleryItem {
         this.url = first_episode_mp4;
       } */
 
-      if (!this.summary || this.summary === '') {
-        const { date, time, venue } = files;
-        this.summary = '';
-        if (date) {
-          this.summary += `${files.date} - `;
-        }
-        if (time) {
-          this.summary += `${files.time} | `;
-        }
-        if (venue) {
-          this.summary += `${files.venue}`;
-        }
-      }
+      // if (!this.summary || this.summary === '') {
+      //   const { date, time, venue } = files;
+      //   this.summary = '';
+      //   if (date) {
+      //     this.summary += `${files.date} - `;
+      //   }
+      //   if (time) {
+      //     this.summary += `${files.time} | `;
+      //   }
+      //   if (venue) {
+      //     this.summary += `${files.venue}`;
+      //   }
+      // }
 
       // this.description = description;
       this.duration = duration?.seconds;

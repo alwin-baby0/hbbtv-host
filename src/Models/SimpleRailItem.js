@@ -6,10 +6,11 @@ class SimpleRailItem {
   constructor(data) {
     console.log('asdf data: ', data);
     const { id, title, type, summary, images, meta } = data;
+    console.log(type);
 
     this.id = id;
     this.title = title;
-    this.type = type;
+    this.type = type.value ? type.value : type;
     this.summary = summary;
 
     switch (this.type) {
@@ -20,17 +21,21 @@ class SimpleRailItem {
       case RAIL_TYPES.SPORT:
       case RAIL_TYPES.SERIE:
       case RAIL_TYPES.SERIES:
-      case RAIL_TYPES.SEASON:
         this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
         break;
       case RAIL_TYPES.SHOW:
       case RAIL_TYPES.EVENT:
         this.url = `${ROUTES.EVENT_DETAILS}/${this.id}`;
         break;
+      case RAIL_TYPES.SEASON:
+        this.url = `${ROUTES.SERIES_DETAILS}/${this.series_id}`;
+        this.seriesId = data.series_id;
       case RAIL_TYPES.EPISODE:
-        this.url = data.content?.src;
-        this.duration = data.extensions?.duration;
-        this.seriesId = data.seriesId;
+        // this.url = data.content?.src;
+        this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}`;
+        this.duration = meta?.duration.seconds;
+        this.seasonId = data.season_id;
+        this.seriesId = data.series_id;
         break;
       case RAIL_TYPES.CHANNEL:
         this.url = `${ROUTES.LIVE}`;

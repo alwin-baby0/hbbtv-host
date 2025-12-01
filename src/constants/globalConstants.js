@@ -287,7 +287,7 @@ export const CATEGORY_TYPES = {
   LIVE_TV: 'live',
   CHANNELS: 'channel',
   SERIE: 'genres_series',
-  VIDEO: 'video',
+  TRAILER: 'trailer',
   COLLECTION: 'collection',
   EVENT: 'event',
   LIVESTREAM: 'livestream',

@@ -126,6 +126,7 @@ const constructEPGS = (railItems, railItemsOptions) => {
 };
 
 const constructHeroRailItems = (railItems, railItemsOptions) => {
+  console.log(railItems);
   return railItems.map((railItem, index) => {
     return {
       type: HeroRailItem,
@@ -139,7 +140,7 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
         index,
         imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
         callback: async () => {
-          switch (railItem.type.value) {
+          switch (railItem.type) {
             case CATEGORY_TYPES.MOVIE: {
               Router.navigate(`${ROUTES.MOVIE_DETAILS}/${railItem.id}`);
               break;
@@ -152,7 +153,8 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
               Router.navigate(`${ROUTES.EVENT_DETAILS}/${railItem.id}`);
               break;
             }
-            case CATEGORY_TYPES.VIDEO: {
+            case CATEGORY_TYPES.TRAILER: {
+              console.log(railItem.trailerUrl);
               Router.navigate(ROUTES.PLAYER, {
                 videoUrl: railItem.url,
                 duration: railItem.duration,
