@@ -10,9 +10,11 @@ export default class Settings extends Lightning.Component {
   static _template() {
     return {
       Background: {
-        w: 1920,
-        h: 1080,
         src: Utils.asset(IMG_PATH.BACKGROUND_SUPPORT_PAGES),
+        y: 0,
+        x: 350,
+        w: 1570,
+        h: 883,
         zIndex: 1,
       },
       Overlay: {
