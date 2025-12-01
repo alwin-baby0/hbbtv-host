@@ -71,7 +71,7 @@ export default class HorizontalContainer extends Lightning.Component {
       const { h, flexItem } = rest;
       this.patch({
         h: h + 95,
-        flexItem: flexItem,
+        ...(flexItem && { flexItem: flexItem }),
         Title: {
           x: 9,
           y: 10,

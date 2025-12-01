@@ -321,11 +321,7 @@ export default class MyAccount extends Lightning.Component {
           Favorites: {
             type: UserFavorites,
             collision: true,
-            y:
-              !recentlyWatched?.data?.recently_watched ||
-              recentlyWatched?.data?.recently_watched?.length === 0
-                ? 0
-                : 100,
+            y: 100,
             w: 1450,
             h: !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0 ? 320 : 95,
             props: {
@@ -360,7 +356,12 @@ export default class MyAccount extends Lightning.Component {
         },
       });
 
-      this._setState('UserRecentlyWatched');
+      !recentlyWatched?.data?.recently_watched ||
+      recentlyWatched?.data?.recently_watched?.length === 0
+        ? !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
+          ? this._setState('LogoutButton')
+          : this._setState('UserFavorites')
+        : this._setState('UserRecentlyWatched');
     }
   }
 
@@ -395,7 +396,14 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          this._setState('UserFavorites');
+          const { recentlyWatched, favorites } = this._props;
+
+          !recentlyWatched?.data?.recently_watched ||
+          recentlyWatched?.data?.recently_watched?.length === 0
+            ? !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
+              ? Router.focusWidget(ROUTES.MENU_WIDGET)
+              : this._setState('UserFavorites')
+            : this._setState('UserRecentlyWatched');
         }
       },
 
