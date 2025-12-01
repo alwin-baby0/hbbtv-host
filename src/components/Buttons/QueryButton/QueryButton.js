@@ -39,7 +39,9 @@ export default class QueryButton extends Lightning.Component {
     this._Column.patch({
       color: Colors('#1b1b23').alpha(0).get(),
       Icon: {
-        texture: Img(Utils.asset(`/icons/recentIcon.png`)).contain(40, 40),
+        h: 40,
+        w: 40,
+        src: Utils.asset(`/icons/recentIcon.png`),
       },
       Text: {
         text: { text: this.title },

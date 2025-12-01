@@ -40,6 +40,10 @@ export default class MyAccount extends Lightning.Component {
       collision: true,
       Background: {
         src: Utils.asset(IMG_PATH.BACKGROUND_SEARCH_PAGE),
+        y: 0,
+        x: 350,
+        w: 1570,
+        h: 883,
         zIndex: 1,
       },
       Overlay: {
@@ -228,11 +232,11 @@ export default class MyAccount extends Lightning.Component {
               y: 100,
               Title: {
                 h: 120,
-                w: 600,
+                w: 700,
                 text: {
                   text: t(TRANSLATIONS.SIGNUP_TITLE),
                   wordWrap: true,
-                  wordWrapWidth: 500,
+                  wordWrapWidth: 600,
                   maxLines: 2,
                   maxLinesSuffix: '...',
                 },

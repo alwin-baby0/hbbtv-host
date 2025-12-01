@@ -35,6 +35,10 @@ export default class Search extends Lightning.Component {
       h: 1080,
       Background: {
         src: Utils.asset(IMG_PATH.BACKGROUND_SEARCH_PAGE),
+        y: 0,
+        x: 350,
+        w: 1570,
+        h: 883,
         zIndex: 1,
       },
       Overlay: {

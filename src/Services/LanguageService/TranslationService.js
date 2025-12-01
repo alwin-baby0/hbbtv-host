@@ -7,9 +7,7 @@ const lngCode =
   navigator.language ||
   navigator.userLanguage ||
   'en-';
-const defTr = await import(
-  `../../../public/static/translations/${lngCode.split('-')[0] || 'en'}.json`
-);
+const defTr = await import(`../../../public/static/translations/en.json`);
 
 let translationsVar = undefined;
 export default class TranslationService {

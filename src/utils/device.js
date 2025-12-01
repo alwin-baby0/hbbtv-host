@@ -285,6 +285,54 @@ const getXperiInfo = () => {
   };
 };
 
+const parseNetrangeUserAgent = (uaString = '') => {
+  const defaultInfo = {
+    brand: 'Netrange',
+    model: 'model-unknown',
+    os: 'Netrange',
+    osVersion: 'unknown',
+    macAddress: 'unknown',
+  };
+
+  if (!uaString) return defaultInfo;
+
+  const osVersionMatch = uaString.match(/QJY\/([0-9.]+)/i);
+  const osVersion = osVersionMatch?.[1] || defaultInfo.osVersion;
+
+  const modelBlockMatch = uaString.match(/QJY\/[0-9.]+\s+([^\s]+)/i);
+  let brand = defaultInfo.brand;
+  let model = defaultInfo.model;
+
+  if (modelBlockMatch && modelBlockMatch[1]) {
+    const parts = modelBlockMatch[1].split('_');
+    if (parts.length >= 2) {
+      brand = parts[0] || brand;
+      model = parts[1] || model;
+    }
+  }
+
+  const didMatch = uaString.match(/DID\/([A-Za-z0-9]+)/i);
+  let macAddress = defaultInfo.macAddress;
+
+  if (didMatch && didMatch[1]) {
+    const raw = didMatch[1];
+
+    if (/^[0-9A-Fa-f]{12}$/.test(raw)) {
+      macAddress = raw
+        .toUpperCase()
+        .match(/.{1,2}/g)
+        .join(':'); // 00198B9FBE25 → 00:19:8B:9F:BE:25
+    }
+    return {
+      brand,
+      model,
+      os: defaultInfo.os,
+      osVersion,
+      macAddress,
+    };
+  }
+};
+
 const getNetrangeInfo = () => {
   let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.NETRANGE_DEVICE_ID);
 
@@ -292,14 +340,16 @@ const getNetrangeInfo = () => {
     serialNumber = generateRandomUUID();
     localStorage.setItem(LOCAL_STORAGE_KEYS.NETRANGE_DEVICE_ID, serialNumber);
   }
+  const ua = navigator.userAgent || '';
+  const parsed = parseNetrangeUserAgent(ua);
 
   return {
     serialNumber: serialNumber,
-    model: 'model-unknown',
-    brand: 'Netrange',
-    os: 'Netrange',
-    osVersion: 'unknown',
-    macAddress: 'unknown',
+    model: parsed.model,
+    brand: parsed.brand,
+    os: parsed.os,
+    osVersion: parsed.osVersion,
+    macAddress: parsed.macAddress,
   };
 };
 
