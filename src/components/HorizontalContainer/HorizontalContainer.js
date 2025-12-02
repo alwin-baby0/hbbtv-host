@@ -154,11 +154,11 @@ export default class HorizontalContainer extends Lightning.Component {
         isChildLive = startTime < currentTime && currentTime < endTime;
       }
 
-      const railWidth = this._props.railWidth;
+      const railWidth = this._props.railWidth ? this._props.railWidth : this.finalW;
       const containerFinalWidth = this.finalW;
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
-      console.log(railWidth, elementX, elementW);
+      console.log(this._props.railWidth, elementX, elementW);
 
       if (isChildLive && elementW > railWidth) {
         return;

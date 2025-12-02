@@ -150,7 +150,7 @@ export const parseSeasonData = ({ data }, seriesId, seasonId) => {
 
   return {
     railType: RAIL_TYPES.EPISODE,
-    cardType: CARD_TYPES.POSTER,
+    cardType: CARD_TYPES.LANDSCAPE,
     items: railItems,
     railTitle: data.entry?.label,
     itemsPerRow: data.entry.length,

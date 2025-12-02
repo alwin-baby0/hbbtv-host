@@ -113,6 +113,8 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
           w: RAIL_WIDTHS[railType] || 1500,
         };
 
+  console.log((CARD_SIZES[cardType]?.width + 20) * items.length, RAIL_WIDTHS[railType]);
+
   return {
     type: HorizontalContainer,
     ...rest,
@@ -121,7 +123,7 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     index,
     props: {
       h: CARD_SIZES[cardType]?.height,
-      w: CARD_SIZES[cardType]?.width * items.length,
+      w: (CARD_SIZES[cardType]?.width + 20) * items.length,
       railWidth: RAIL_WIDTHS[railType] || 1500,
       railTitle: railTitle,
       cardType: cardType,
