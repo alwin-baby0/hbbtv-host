@@ -13,15 +13,24 @@ class Category {
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
+        console.log(this.data);
         const event = new CustomEvent('changeContent', {
-          detail: { category: this.data.title, type: this.data.type }, // pass whatever value you need here
+          detail: {
+            category: this.data.id,
+            type: this.data.type,
+            categoryMessage: this.data.title,
+          }, // pass whatever value you need here
         });
         window.dispatchEvent(event);
         break;
       }
       case CATEGORY_TYPES.SERIES: {
         const event = new CustomEvent('changeContent', {
-          detail: { category: this.data.title, type: this.data.type }, // pass whatever value you need here
+          detail: {
+            category: this.data.id,
+            type: this.data.type,
+            categoryMessage: this.data.title,
+          }, // pass whatever value you need here
         });
         window.dispatchEvent(event);
         break;
