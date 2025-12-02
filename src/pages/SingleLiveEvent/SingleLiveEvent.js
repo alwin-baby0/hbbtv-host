@@ -58,10 +58,10 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   set props(props) {
-    // Assuming dateRange[0] is the start date and dateRange[1] is the end date
-    // dateRange is in seconds
-    const startDate = props.galleryItem.dateRange[0] * 1000;
-    const endDate = props.galleryItem.dateRange[1] * 1000;
+    const startTime = props.galleryItem.startTime;
+    const endTime = props.galleryItem.endTime;
+    /* const startTime = 1764840639000;
+    const endTime = 1764999639000; */
     const currentDate = new Date().getTime();
 
     this._Column.props = {
@@ -79,12 +79,12 @@ export default class SingleLiveEvent extends Lightning.Component {
         height: 883,
         yPos: 100,
         parentState: 'HeroSection',
-        startDate,
+        startTime,
       },
     });
 
     //Hide Button
-    if (currentDate >= startDate && currentDate <= endDate) {
+    if (currentDate >= startTime && currentDate <= endTime) {
       this._HeroSection.patch({
         Info: {
           GalleryButton: {

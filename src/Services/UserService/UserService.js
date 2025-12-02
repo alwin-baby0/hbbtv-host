@@ -6,8 +6,6 @@ class UserService extends FetchingService {
   getFavorites = async (page, limit = 8) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    const timestamp = new Date().getTime();
-
     return await this._request({
       url: `/${API_URLS.GET_USER_FAVORITES}`,
       apiVersion: V2,
@@ -16,7 +14,6 @@ class UserService extends FetchingService {
         Authorization: `Bearer ${userData.access_token}`,
       },
       params: {
-        cachebuster: timestamp,
         page,
         limit,
       },
@@ -26,23 +23,17 @@ class UserService extends FetchingService {
   addToFavorites = async (videoID, vodType) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    const timestamp = new Date().getTime();
-
     return await this._request({
       url: `/${API_URLS.ADD_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.POST,
       headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
-        'X-nocache': timestamp,
+        Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      params: {
-        _: timestamp,
-      },
       data: {
-        video_id: videoID,
-        type: vodType,
+        content_id: videoID,
+        content_type: vodType,
       },
     });
   };
@@ -50,22 +41,16 @@ class UserService extends FetchingService {
   removeFromFavorites = async (videoID) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    const timestamp = new Date().getTime();
-
     return await this._request({
       url: `/${API_URLS.REMOVE_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.DELETE,
       headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
-        'X-nocache': timestamp,
+        Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      params: {
-        _: timestamp,
-      },
       data: {
-        video_id: videoID,
+        content_id: videoID,
       },
     });
   };
@@ -93,8 +78,6 @@ class UserService extends FetchingService {
   addRecentlyWatched = async (videoID, vodType, vodPosition, seriesID) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    const timestamp = new Date().getTime();
-
     if (vodPosition === 0) {
       vodPosition++;
     }
@@ -104,12 +87,11 @@ class UserService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.POST,
       headers: {
-        'X-nocache': timestamp,
-        'X-Authorization': `Bearer ${userData.access_token}`,
+        Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       data: {
-        video_id: videoID,
+        content_id: videoID,
         type: vodType,
         position: vodPosition,
         ...(seriesID && { series_id: seriesID }),
@@ -133,6 +115,61 @@ class UserService extends FetchingService {
       },
       data: {
         video_id: videoID,
+      },
+    });
+  };
+
+  getProgress = async (videoID) => {
+    console.log('asdf ID getPROG: ', videoID);
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
+
+    return await this._request({
+      url: `/${API_URLS.GET_PROGRESS}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+      headers: {
+        Authorization: `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      params: {
+        content_id: videoID,
+      },
+    });
+  };
+
+  addProgress = async (videoID, position, duration) => {
+    console.log('asdf ADD PROG: ', videoID, position, duration);
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
+
+    return await this._request({
+      url: `/${API_URLS.ADD_PROGRESS}`,
+      apiVersion: V2,
+      method: API_METHODS.POST,
+      headers: {
+        Authorization: `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: {
+        video_id: videoID,
+        position,
+        duration,
+      },
+    });
+  };
+
+  getSeriesProgress = async (seriesID) => {
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
+
+    return await this._request({
+      url: `/${API_URLS.ADD_SERIES_PROGRESS}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+      headers: {
+        Authorization: `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      params: {
+        series_id: seriesID,
       },
     });
   };

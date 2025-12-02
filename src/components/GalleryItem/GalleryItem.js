@@ -416,7 +416,7 @@ export default class GalleryItem extends Lightning.Component {
       seriesId,
       ssai,
       badgeText,
-      startDate,
+      startTime,
       infoY,
       bgY,
       badgeY,
@@ -440,13 +440,20 @@ export default class GalleryItem extends Lightning.Component {
       year,
       country,
       imdbScore,
+      eventDate,
+      eventTime,
     } = galleryItem;
 
     const titleLength = title.length;
 
     const imdbScoreLabeled = `IMDB ${imdbScore}`;
+    let factLine;
 
-    const factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
+    if (videoType !== 'event') {
+      factLine = '';
+    } else {
+      factLine = eventDate && eventTime ? [eventDate, eventTime].join(' | ') : '';
+    }
 
     const splitDirector = director ? director.split(':') : '';
     const splitCast = cast ? cast.split(':') : '';
@@ -458,8 +465,8 @@ export default class GalleryItem extends Lightning.Component {
     const castText = splitCast && splitCast[1];
     const dirText = splitDirector && splitDirector[1];
 
-    if (videoType === 'application/x-mpegURL') {
-      const targetTimestamp = startDate;
+    if (videoType === 'event') {
+      const targetTimestamp = startTime;
       this.remaining = targetTimestamp - Date.now();
 
       const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
@@ -489,11 +496,11 @@ export default class GalleryItem extends Lightning.Component {
       },
     });
 
-    if (videoType !== 'application/x-mpegURL') {
+    if (videoType !== 'event') {
       galleryItem.summary &&
         this._Summary?.patch({
           text: {
-            text: summary,
+            text: factLine,
           },
         });
       galleryItem.subtitle &&
@@ -583,7 +590,7 @@ export default class GalleryItem extends Lightning.Component {
           visible: true,
           Text: {
             text: {
-              text: summary,
+              text: factLine,
             },
           },
         },
@@ -682,13 +689,13 @@ export default class GalleryItem extends Lightning.Component {
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
                 Router.navigate(ROUTES.PLAYER, {
-                  videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
+                  videoUrl: result?.entry[0]?.files?.url ?? firstEpisodeUrl,
                   episodeTitle: firstEpisodeTitle,
                   videoId: firstEpisodeVideoId,
                   duration: duration,
                   videoType: VIDEO_TYPES.SERIES,
                   seriesID: seriesId,
-                  ssai: result[0].extensions?.ssai ?? ssai,
+                  ssai: result?.entry[0]?.extensions?.ssai ?? ssai,
                 });
               }
             );

@@ -4,7 +4,6 @@ import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
 
 class SimpleRailItem {
   constructor(data) {
-    console.log('asdf data: ', data);
     const { id, title, type, summary, images, meta } = data;
     console.log(type);
 

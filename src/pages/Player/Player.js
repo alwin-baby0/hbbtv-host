@@ -907,6 +907,11 @@ export default class Player extends Lightning.Component {
             VIDEO_TYPES.VIDEO,
             VideoPlayer.currentTime
           );
+          UserService.addProgress(
+            this._props.videoId,
+            VideoPlayer.currentTime,
+            VideoPlayer.duration
+          );
         }
       }
     }

@@ -115,7 +115,7 @@ class DetailService extends FetchingService {
       params: {
         id: eventId,
       },
-    }).then(({ data }) => new GalleryItem(data?.entry[0]));
+    }).then(parseDetailsData);
 }
 
 const detailService = new DetailService();
