@@ -292,7 +292,7 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 150,
+              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -319,7 +319,7 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 90,
+              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -346,7 +346,7 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 90,
+              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -375,7 +375,7 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 100,
+              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -443,8 +443,8 @@ export default class GalleryItem extends Lightning.Component {
     const splitDirector = director && director.split(':');
     const splitCast = cast && cast.split(':');
 
-    const tAgeR = t(TRANSLATIONS.AGE_RATING);
-    const tGenre = t(TRANSLATIONS.GENRE);
+    const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
+    const tGenre = t(TRANSLATIONS.GENRE) + ':';
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
     const castText = splitCast && splitCast[1];
@@ -806,7 +806,7 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   _firstActive() {
-    this._setState('GalleryButton');
+    setTimeout(this._setState('GalleryButton'));
   }
 
   _disable() {

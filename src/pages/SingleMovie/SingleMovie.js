@@ -151,7 +151,7 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 150,
+                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -164,7 +164,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
-                  flexItem: { marginLeft: 20 },
+                  flexItem: { marginLeft: 18 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -179,7 +179,7 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 90,
+                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -192,7 +192,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
-                  flexItem: { marginLeft: 20 },
+                  flexItem: { marginLeft: 18 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -207,7 +207,7 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 90,
+                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -220,7 +220,6 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
-                  flexItem: { marginLeft: 20 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -237,7 +236,7 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 100,
+                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -250,7 +249,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
-                  flexItem: { marginLeft: 20 },
+                  flexItem: { marginLeft: -10 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -390,8 +389,8 @@ export default class SingleMovie extends Lightning.Component {
     const splitDirector = director && director.split(':');
     const splitCast = cast && cast.split(':');
 
-    const tAgeR = t(TRANSLATIONS.AGE_RATING);
-    const tGenre = t(TRANSLATIONS.GENRE);
+    const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
+    const tGenre = t(TRANSLATIONS.GENRE) + ':';
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
     const castText = splitCast && splitCast[1];
