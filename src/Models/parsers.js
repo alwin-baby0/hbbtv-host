@@ -2,17 +2,25 @@ import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
 import { t, VODS_PER_ROW } from '../Services';
 import { RAIL_TYPES, TRANSLATIONS, CARD_TYPES } from '../constants/globalConstants';
 import { Banner } from './Banner';
+import { ViewMoreRailItem } from './ViewMore';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
-  const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
+  console.log(data);
+  const railItems = data.entry?.items?.map(
+    (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
+  );
   if (!railItems || railItems.length === 0) return;
+  railItems.push(
+    new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+  );
 
   return {
     railType: railItems[0].type,
     railTitle: data.entry.name,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
+    railId: data.entry.id,
   };
 };
 

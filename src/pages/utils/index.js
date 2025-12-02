@@ -31,6 +31,7 @@ export const constructRails = (rails, page = '') => {
   return rails
     .filter((rail) => !!rail)
     .map((rail, index) => {
+      console.log(rail);
       const items = rail.items;
       const itemsPerRow = rail.itemsPerRow;
 
@@ -69,10 +70,6 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     ...rest
   } = rail;
 
-  const containerDimensions =
-    railType === RAIL_TYPES.LIVETV
-      ? { h: 100, w: 100 }
-      : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
   const flexItem =
     ((railType === RAIL_TYPES.EPGS && !railTitle) || (page !== ROUTES.HOME && railTitle)) &&
     page !== ROUTES.SEARCH
@@ -108,6 +105,14 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     }
   }
 
+  const containerDimensions =
+    railType === RAIL_TYPES.LIVETV
+      ? { h: 100, w: 100 }
+      : {
+          h: CARD_SIZES[cardType]?.height || 500,
+          w: RAIL_WIDTHS[railType] || 1500,
+        };
+
   return {
     type: HorizontalContainer,
     ...rest,
@@ -116,7 +121,8 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     index,
     props: {
       h: CARD_SIZES[cardType]?.height,
-      w: containerDimensions.w,
+      w: CARD_SIZES[cardType]?.width * items.length,
+      railWidth: RAIL_WIDTHS[railType] || 1500,
       railTitle: railTitle,
       cardType: cardType,
       ...((railType === RAIL_TYPES.EPGS ||

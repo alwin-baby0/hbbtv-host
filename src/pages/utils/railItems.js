@@ -17,8 +17,10 @@ import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 import BannerRailItem from '../../components/RailItems/BannerRailItem';
 import { DetailService, EPGService } from '../../Services';
 import ContinueWatchingRailItem from '../../components/RailItems/ContinueWatchingRailItem';
+import ViewMoreRailItem from '../../components/RailItems/ViewMoreRailItem';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
+  console.log(railType);
   switch (railType) {
     case RAIL_TYPES.MOVIE:
     case RAIL_TYPES.SERIE:
@@ -54,7 +56,7 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
 
 const constructSimpleRailItems = (railItems, railItemsOptions) => {
   return railItems.map((railItem, index) => ({
-    type: PosterRailItem,
+    type: railItem.type !== RAIL_TYPES.VIEW_MORE ? PosterRailItem : ViewMoreRailItem,
     collision: true,
     w: 270,
     flexItem: {
@@ -65,8 +67,10 @@ const constructSimpleRailItems = (railItems, railItemsOptions) => {
     },
     ...railItemsOptions,
     props: {
-      itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getPortraitPoster(IMAGE_SIZES.S).src,
+      ...(railItem.type !== RAIL_TYPES.VIEW_MORE && {
+        itemTitle: railItem.title ? railItem.title : '',
+        imageSrc: railItem.getPortraitPoster(IMAGE_SIZES.S).src,
+      }),
       itemType: railItem.type,
       index: index,
       callback: () => {

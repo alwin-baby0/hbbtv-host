@@ -225,22 +225,22 @@ export default class Home extends Lightning.Component {
           this.fireAncestors('$appClose');
         }
 
-        async $horizontalContainerIndexChange(index) {
-          const currentItem = this._Column.Items.children[this._Column._focusedIndex];
-          if (currentItem.Items.children.length - 1 === index) {
-            const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
-            if (newRails && newRails?.items?.length > 0) {
-              const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
-              parsedItems.map(
-                (item) =>
-                  (item.props.index =
-                    item.props.index +
-                    this._Column.Items.children[this._Column._focusedIndex].Items.children.length)
-              );
-              currentItem._appendItems(parsedItems);
-            }
-          }
-        }
+        // async $horizontalContainerIndexChange(index) {
+        //   const currentItem = this._Column.Items.children[this._Column._focusedIndex];
+        //   if (currentItem.Items.children.length - 1 === index) {
+        //     const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
+        //     if (newRails && newRails?.items?.length > 0) {
+        //       const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
+        //       parsedItems.map(
+        //         (item) =>
+        //           (item.props.index =
+        //             item.props.index +
+        //             this._Column.Items.children[this._Column._focusedIndex].Items.children.length)
+        //       );
+        //       currentItem._appendItems(parsedItems);
+        //     }
+        //   }
+        // }
 
         async $verticalContainerIndexChange(index) {
           if (index > 0) {

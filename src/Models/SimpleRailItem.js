@@ -4,9 +4,7 @@ import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
 
 class SimpleRailItem {
   constructor(data) {
-    console.log('asdf data: ', data);
     const { id, title, type, summary, images, meta } = data;
-    console.log(type);
 
     this.id = id;
     this.title = title;
@@ -31,7 +29,6 @@ class SimpleRailItem {
         this.url = `${ROUTES.SERIES_DETAILS}/${this.series_id}`;
         this.seriesId = data.series_id;
       case RAIL_TYPES.EPISODE:
-        // this.url = data.content?.src;
         this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}`;
         this.duration = meta?.duration.seconds;
         this.seasonId = data.season_id;

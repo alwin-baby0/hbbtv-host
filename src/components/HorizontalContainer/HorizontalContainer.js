@@ -64,6 +64,7 @@ export default class HorizontalContainer extends Lightning.Component {
   set props(props) {
     const { items, railTitle, ...rest } = props;
     this._props = { ...this._props, ...rest };
+    console.log(rest);
 
     const { cardType, targetIndex, wrap } = rest;
 
@@ -92,7 +93,7 @@ export default class HorizontalContainer extends Lightning.Component {
     }
 
     this.patch({
-      flex: { wrap },
+      flex: { wrap: wrap },
       w: this._props.w,
     });
 
@@ -153,11 +154,13 @@ export default class HorizontalContainer extends Lightning.Component {
         isChildLive = startTime < currentTime && currentTime < endTime;
       }
 
+      const railWidth = this._props.railWidth;
       const containerFinalWidth = this.finalW;
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
+      console.log(railWidth, elementX, elementW);
 
-      if (isChildLive && elementW > containerFinalWidth) {
+      if (isChildLive && elementW > railWidth) {
         return;
       } else if (elementX < -this._scrollPosition) {
         // paddingOffset is used to offset first item in each
@@ -168,9 +171,10 @@ export default class HorizontalContainer extends Lightning.Component {
           ? -50
           : -10;
         this._scrollPosition = -elementX - paddingOffset;
-      } else if (elementX + elementW > containerFinalWidth - this._scrollPosition) {
-        this._scrollPosition = -(elementX + elementW - containerFinalWidth + 20);
+      } else if (elementX + elementW > railWidth - this._scrollPosition) {
+        this._scrollPosition = -(elementX + elementW - railWidth + 20);
       }
+      console.log(this.finalW, this._scrollPosition);
 
       this.Items.smooth = { x: this._scrollPosition };
     }

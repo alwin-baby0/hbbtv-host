@@ -14,7 +14,7 @@ class HomePageService extends FetchingService {
   #stripes = [];
   #pointer = 2;
   stripesFetched = 0;
-  #currentRailLimit = 7; // Početni limit je 6
+  #currentRailLimit = 12; // Početni limit je 6
   #heroSectionPage = 1; // Page counter for Hero Section
   #isLastFetchEmpty = false; // Initialize to false
   #banner = [];

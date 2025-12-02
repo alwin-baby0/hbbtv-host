@@ -295,6 +295,7 @@ export const CATEGORY_TYPES = {
 };
 
 export const RAIL_TYPES = {
+  VIEW_MORE: 'view-more',
   PLAYLIST: 'playlist',
   MOVIE: 'movie',
   SPORT: 'sport',
