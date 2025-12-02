@@ -294,7 +294,7 @@ export default class SingleMovie extends Lightning.Component {
     return this.tag('BackButton');
   }
 
-  _buildButtonConfiguration(movie, movieTrailerUrl, last_position) {
+  _buildButtonConfiguration(movie, movieTrailerUrl, last_position, favorited) {
     const buttons = [
       {
         icon: IMG_PATH.PLAY_BTN,
@@ -336,7 +336,7 @@ export default class SingleMovie extends Lightning.Component {
 
       // Add favorite button
       filteredButtons.push({
-        icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
+        icon: favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
         buttonName: 'FAVORITE',
         buttonLabel: '',
         width: 100,
@@ -361,7 +361,8 @@ export default class SingleMovie extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { movie, movieId, movieTrailerId, movieTrailerUrl } = this._props;
+    const { movie, movieId, movieTrailerId, movieTrailerUrl, favorited, last_position } =
+      this._props;
     const {
       title,
       description,
@@ -370,16 +371,15 @@ export default class SingleMovie extends Lightning.Component {
       genre,
       summary,
       cast,
-      last_position,
       rating,
       durationString,
       year,
       country,
       imdbScore,
+      videoUrl,
     } = movie;
 
     const imdbScoreLabeled = `IMDB ${imdbScore}`;
-    console.log('asdf data MOVIE: ', durationString, year, country, imdbScoreLabeled);
 
     const titleLength = title.length;
 
@@ -492,7 +492,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: castText,
                   },
                 },
-                visible: cast,
+                visible: cast.length,
               },
             },
           },
@@ -501,7 +501,12 @@ export default class SingleMovie extends Lightning.Component {
     });
 
     // Build button configuration based on movie data and user state
-    const buttonConfigs = this._buildButtonConfiguration(movie, movieTrailerUrl, last_position);
+    const buttonConfigs = this._buildButtonConfiguration(
+      movie,
+      movieTrailerUrl,
+      last_position,
+      favorited
+    );
 
     const rows = this._arrangeButtonsInRowsDependingOnLanguage(buttonConfigs);
 
@@ -536,10 +541,10 @@ export default class SingleMovie extends Lightning.Component {
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
                       Router.navigate(ROUTES.PLAYER, {
-                        videoUrl: result[0]?.content?.src ?? movie[item.stream],
+                        videoUrl: result?.entry[0]?.files.url ?? videoUrl,
                         duration: duration,
                         videoId: movieId,
-                        ssai: result[0].extensions?.ssai ?? movie.ssai,
+                        ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
                       });
                     }
                   );
@@ -549,13 +554,17 @@ export default class SingleMovie extends Lightning.Component {
                     videoId: movieTrailerId,
                   });
                 } else if (item.buttonName === 'CONTINUE WATCHING') {
-                  Router.navigate(ROUTES.PLAYER, {
-                    videoUrl: movie.url,
-                    duration: duration,
-                    videoId: movieId,
-                    continueTime: last_position,
-                    ssai: movie.ssai,
-                  });
+                  DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
+                    ({ data: result }) => {
+                      Router.navigate(ROUTES.PLAYER, {
+                        videoUrl: result?.entry[0]?.files.url ?? videoUrl,
+                        duration: duration,
+                        videoId: movieId,
+                        continueTime: last_position,
+                        ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
+                      });
+                    }
+                  );
                 }
               },
             },
@@ -608,14 +617,13 @@ export default class SingleMovie extends Lightning.Component {
 
   async addToFavorite() {
     try {
-      const { movie, movieTrailerUrl } = this._props;
-      const { last_position } = this._props.movie;
-      if (movie.is_favorite) {
+      const { movie, movieTrailerUrl, favorited, last_position } = this._props;
+      if (favorited) {
         await UserService.removeFromFavorites(movie.id);
       } else {
         await UserService.addToFavorites(movie.id, 'video');
       }
-      this._props.movie.is_favorite = !this._props.movie.is_favorite;
+      this._props.favorited = !this._props.favorited;
 
       const { is_favorite } = this._props.movie;
 
@@ -624,7 +632,7 @@ export default class SingleMovie extends Lightning.Component {
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
           buttonIcon: Utils.asset(
-            this._props.movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE
+            this._props.favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE
           ),
           buttonLabel: '',
           width: 100,

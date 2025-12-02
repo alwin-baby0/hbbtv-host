@@ -1,10 +1,13 @@
-import { DetailService } from '../../../Services';
+import { LOCAL_STORAGE_KEYS } from '../../../constants/globalConstants';
+import { DetailService, UserService } from '../../../Services';
 
 export default async function (page, { movieId, cmpShown }) {
   const movie = await DetailService.getMovie(movieId);
 
   let movieTrailerId = '';
   let movieTrailerUrl = '';
+  let favorited = false;
+  let last_position = 0;
 
   if (movie.trailer) {
     const movieTrailer = await fetch(
@@ -17,5 +20,21 @@ export default async function (page, { movieId, cmpShown }) {
     movieTrailerUrl = res.entry[0].content.src;
   }
 
-  page.props = { movie, movieId, movieTrailerId, movieTrailerUrl, cmpShown };
+  if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
+    const resFav = await UserService.getFavorites();
+    const resProgress = await UserService.getProgress(movieId);
+
+    last_position = resProgress?.data.progress[0]?.position;
+    favorited = resFav?.data?.favorites?.some((element) => element.video_id === movieId);
+  }
+
+  page.props = {
+    movie,
+    movieId,
+    movieTrailerId,
+    movieTrailerUrl,
+    cmpShown,
+    favorited,
+    last_position,
+  };
 }

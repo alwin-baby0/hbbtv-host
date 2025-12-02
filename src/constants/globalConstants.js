@@ -339,7 +339,7 @@ export const API_URLS = {
   GET_SEASON: 'getSeason',
   GET_SPORTS: 'sports',
   GET_SPORT_EVENTS: 'getSportEvents',
-  GET_SPORT_EVENT: 'getSportEvent',
+  GET_SPORT_EVENT: 'getEvent',
   GET_PAGE_TABS: 'pages',
   GET_PAGE: 'getPage',
   GET_SEARCH: 'search',
@@ -349,7 +349,7 @@ export const API_URLS = {
   GET_EPG_GENRES: 'epg_genres',
   GET_EPG_CHANNELS: 'channels',
   GET_EPG_PROGRAM: 'getEPG',
-  GET_AD_CUES: 'getAdcues',
+  GET_AD_CUES: 'getAdCues',
   GET_COLLECTION: 'getCollection',
   GET_CMP: 'getCMP',
   GET_DEVICE_CODE: 'oauth/device/code',
@@ -362,6 +362,10 @@ export const API_URLS = {
   GET_USER_RECENTLY_WATCHED: 'oauth/recently-watched',
   ADD_USER_RECENTLY_WATCHED: 'oauth/recently-watched',
   REMOVE_USER_RECENTLY_WATCHED: 'oauth/recently-watched',
+  GET_PROGRESS: 'oauth/progress',
+  ADD_PROGRESS: 'oauth/progress',
+  GET_SERIES_PROGRESS: 'oauth/series-progress',
+  ADD_SERIES_PROGRESS: 'oauth/series-progress',
   GET_SETTINGS: 'getSettings',
 };
 

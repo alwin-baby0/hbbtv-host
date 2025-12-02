@@ -3,7 +3,7 @@ import { t } from '../Services';
 
 class GalleryItem {
   constructor(data) {
-    const { id, title, content, files, summary, type, meta, images } = data;
+    const { id, title, files, summary, type, meta, images, schedule, streams, date, time } = data;
 
     this.id = id;
 
@@ -11,75 +11,36 @@ class GalleryItem {
     this.summary = summary;
     this.trailerSrc = ''; // this is not returned by backend
     this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
-
     this.type = type;
+    this.videoType = type;
+    this.videoUrl = files?.[1]?.url || files?.[0]?.url || null;
     this.trailerUrl = files && files[0].url;
-
-    this.dateRange = meta.date_range?.timestamp[0];
-
-    if (content) {
-      this.url = content.src;
-      this.videoType = content.type;
-    }
-
-    /* if (files.ssai) {
-      this.ssai = files.ssai;
-    } */
-
-    /* if (files.last_played_episode) {
-      this.url = files.last_played_episode.hls;
-      this.position = files.last_played_episode.position;
-      this.lastPlayedId = files.last_played_episode.video_id;
-    } */
+    this.eventDate = date;
+    this.eventTime = time;
 
     if (meta) {
-      /* const {
-        button_text,
-        description,
-        subtitle,
-        first_episode_mp4,
-        venue,
-        is_favorite,
-        last_position,
-        trailer,
-        rating,
-      } = files; */
-
       const { cast, director, genre, ratings, duration, year, country, imdb } = meta;
 
-      /* if (!this.url) {
-        this.url = first_episode_mp4;
-      } */
-
-      // if (!this.summary || this.summary === '') {
-      //   const { date, time, venue } = files;
-      //   this.summary = '';
-      //   if (date) {
-      //     this.summary += `${files.date} - `;
-      //   }
-      //   if (time) {
-      //     this.summary += `${files.time} | `;
-      //   }
-      //   if (venue) {
-      //     this.summary += `${files.venue}`;
-      //   }
-      // }
-
-      // this.description = description;
       this.duration = duration?.seconds;
       this.genre = genre;
       this.director = director;
-      // this.subtitle = subtitle;
       this.cast = cast;
-      // this.venue = venue;
-      // this.is_favorite = is_favorite;
-      // this.last_position = last_position;
-      // this.trailer = trailer;
       this.rating = ratings?.fsk;
       this.durationString = duration?.string;
       this.year = year;
       this.country = country;
       this.imdbScore = imdb?.score;
+    }
+
+    if (schedule) {
+      const { start_time, end_time } = schedule;
+      this.startTime = new Date(start_time).getTime();
+      this.endTime = new Date(end_time).getTime();
+    }
+
+    if (streams) {
+      const streamUrl = streams?.[0]?.m3u8 || streams?.[1]?.m3u8 || null;
+      this.streamUrl = streamUrl;
     }
 
     this.thumbnails = [];
