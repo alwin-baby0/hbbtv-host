@@ -49,7 +49,6 @@ export default class EPGRailItems extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     this._props.lastId = props.id;
-    console.log(this._props);
 
     const currentTime = new Date();
     const startTime = new Date(props.startTime);

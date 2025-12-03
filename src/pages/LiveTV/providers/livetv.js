@@ -19,7 +19,6 @@ const fetchChannels = async (page) => {
 
     page._EPGData._clear();
 
-    console.log(EPGService.channelsItems);
     const channelsAll = EPGService.channelsItems
       .map((channelInfo, index) => {
         if (!channelInfo) {
@@ -27,14 +26,10 @@ const fetchChannels = async (page) => {
           return null;
         }
 
-        console.log(channelInfo);
         const matchingEpg = EPGService.epgs.find((epgInfo) => {
-          console.log(epgInfo);
           return Number(epgInfo.channelId) === channelInfo.id;
         });
-        console.log(matchingEpg);
         const rails = constructRails(matchingEpg);
-        console.log(rails);
 
         page._EPGData._appendItems(rails);
         return {
@@ -50,7 +45,6 @@ const fetchChannels = async (page) => {
         };
       })
       .filter((channel) => channel !== null);
-    console.log(channelsAll);
 
     page._Categories.props = {
       items: categoryRails,

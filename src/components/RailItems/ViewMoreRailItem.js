@@ -18,8 +18,6 @@ export default class ViewMoreRailItem extends FocusableItem {
   static _template() {
     return {
       ...super._template(),
-      w: CARD_SIZES.POSTER.width,
-      h: CARD_SIZES.POSTER.container_height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -53,22 +51,50 @@ export default class ViewMoreRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { radius } = this._props;
+    const { radius, orientation, cardType } = this._props;
 
     this.setProps({
-      width: CARD_SIZES.POSTER.image_width,
-      height: CARD_SIZES.POSTER.image_height,
+      width: orientation
+        ? orientation === 'landscape'
+          ? CARD_SIZES[cardType].landscape_image_width
+          : CARD_SIZES[cardType].poster_image_width
+        : CARD_SIZES[cardType].image_width,
+      height: orientation
+        ? orientation === 'landscape'
+          ? CARD_SIZES[cardType].landscape_image_height
+          : CARD_SIZES[cardType].poster_image_height
+        : CARD_SIZES[cardType].image_height,
     });
 
-    this._Wrapper.patch({
-      Border: {
-        PosterImage: {
-          props: {
-            width: CARD_SIZES.POSTER.image_width,
-            height: CARD_SIZES.POSTER.image_height,
-            imageSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
-            placeholderSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
-            radius: radius,
+    this.patch({
+      w: orientation
+        ? orientation === 'landscape'
+          ? CARD_SIZES[cardType].landscape_width
+          : CARD_SIZES[cardType].poster_width
+        : CARD_SIZES[cardType].width,
+      h: orientation
+        ? orientation === 'landscape'
+          ? CARD_SIZES[cardType].landscape_container_height
+          : CARD_SIZES[cardType].poster_container_height
+        : CARD_SIZES[cardType].container_height,
+      Wrapper: {
+        Border: {
+          PosterImage: {
+            props: {
+              width: orientation
+                ? orientation === 'landscape'
+                  ? CARD_SIZES[cardType].landscape_image_width
+                  : CARD_SIZES[cardType].poster_image_width
+                : CARD_SIZES[cardType].image_width,
+              height: orientation
+                ? orientation === 'landscape'
+                  ? CARD_SIZES[cardType].landscape_image_height
+                  : CARD_SIZES[cardType].poster_image_height
+                : CARD_SIZES[cardType].image_height,
+              imageSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
+              placeholderSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
+              radius: radius,
+            },
           },
         },
       },

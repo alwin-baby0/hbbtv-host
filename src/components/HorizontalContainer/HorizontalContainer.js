@@ -64,7 +64,6 @@ export default class HorizontalContainer extends Lightning.Component {
   set props(props) {
     const { items, railTitle, ...rest } = props;
     this._props = { ...this._props, ...rest };
-    console.log(rest);
 
     const { cardType, targetIndex, wrap } = rest;
 
@@ -155,10 +154,8 @@ export default class HorizontalContainer extends Lightning.Component {
       }
 
       const railWidth = this._props.railWidth ? this._props.railWidth : this.finalW;
-      const containerFinalWidth = this.finalW;
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
-      console.log(this._props.railWidth, elementX, elementW);
 
       if (isChildLive && elementW > railWidth) {
         return;
@@ -174,7 +171,6 @@ export default class HorizontalContainer extends Lightning.Component {
       } else if (elementX + elementW > railWidth - this._scrollPosition) {
         this._scrollPosition = -(elementX + elementW - railWidth + 20);
       }
-      console.log(this.finalW, this._scrollPosition);
 
       this.Items.smooth = { x: this._scrollPosition };
     }

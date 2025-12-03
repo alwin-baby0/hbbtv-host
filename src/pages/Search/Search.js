@@ -283,7 +283,6 @@ export default class Search extends Lightning.Component {
   }
 
   async $changedVODGenre(data) {
-    console.log(data);
     const rows = [];
     for (let i = 0, j = data.items.length; i < j; i += 4) {
       rows.push({

@@ -4,12 +4,13 @@ import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
 
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, summary, images, meta } = data;
+    const { id, title, type, summary, images, meta, orientation } = data;
 
     this.id = id;
     this.title = title;
     this.type = type.value ? type.value : type;
     this.summary = summary;
+    this.orientation = orientation;
 
     switch (this.type) {
       case RAIL_TYPES.MOVIE:

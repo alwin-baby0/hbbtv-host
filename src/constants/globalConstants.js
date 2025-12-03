@@ -473,11 +473,16 @@ export const ROUTES = {
 
 export const CARD_SIZES = {
   POSTER: {
-    width: 273,
-    height: 390,
-    container_height: 360,
-    image_width: 273,
-    image_height: 375,
+    poster_width: 273,
+    poster_height: 390,
+    poster_container_height: 360,
+    landscape_width: 385,
+    landscape_height: 215,
+    landscape_container_height: 185,
+    landscape_image_width: 385,
+    landscape_image_height: 200,
+    poster_image_width: 273,
+    poster_image_height: 375,
   },
   LANDSCAPE: {
     width: 425,

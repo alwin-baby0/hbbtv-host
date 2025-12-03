@@ -31,7 +31,6 @@ export const constructRails = (rails, page = '') => {
   return rails
     .filter((rail) => !!rail)
     .map((rail, index) => {
-      console.log(rail);
       const items = rail.items;
       const itemsPerRow = rail.itemsPerRow;
 
@@ -113,8 +112,6 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
           w: RAIL_WIDTHS[railType] || 1500,
         };
 
-  console.log((CARD_SIZES[cardType]?.width + 20) * items.length, RAIL_WIDTHS[railType]);
-
   return {
     type: HorizontalContainer,
     ...rest,
@@ -122,8 +119,20 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     collision: true,
     index,
     props: {
-      h: CARD_SIZES[cardType]?.height,
-      w: (CARD_SIZES[cardType]?.width + 20) * items.length,
+      h:
+        items && items.length && items[0].orientation
+          ? items[0].orientation === 'landscape'
+            ? CARD_SIZES[cardType]?.landscape_height
+            : CARD_SIZES[cardType]?.poster_height
+          : CARD_SIZES[cardType]?.height,
+      w:
+        ((items && items.length && items[0].orientation
+          ? items[0].orientation === 'landscape'
+            ? CARD_SIZES[cardType]?.landscape_width
+            : CARD_SIZES[cardType]?.poster_width
+          : CARD_SIZES[cardType]?.width) +
+          20) *
+        items.length,
       railWidth: RAIL_WIDTHS[railType] || 1500,
       railTitle: railTitle,
       cardType: cardType,
@@ -133,7 +142,8 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
       items: railItemConstructor(
         items.length === 0 ? [{ type: Empty }] : items,
         railType,
-        railItemsOptions
+        railItemsOptions,
+        cardType
       ),
       flexItem: flexItem,
       paddingLeft,

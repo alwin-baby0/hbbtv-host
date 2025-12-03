@@ -66,7 +66,6 @@ export default class VodPreview extends Lightning.Component {
 
   _active() {
     window.addEventListener('changeContent', (event) => {
-      console.log('Event accepted');
       this.changeContent(event.detail.category, event.detail.type);
     });
   }
