@@ -16,22 +16,38 @@ import {
   LOCAL_STORAGE_KEYS,
 } from '../../constants/globalConstants';
 
-export const VODS_PER_ROW = 6;
+export const VODS_PER_ROW = 12;
 export const VOD_ROWS_PER_FETCH = 3;
 
 class VodService extends FetchingService {
-  #emptyState = {
+  #emptyStateMovies = {
     contentStripe: undefined,
-    vodStripes: undefined,
-    pointer: 1,
+    vodStripes: [],
+    pointer: 2,
+    stripesFetched: 0,
+    hasMore: true,
+  };
+
+  #emptyStateSeries = {
+    contentStripe: undefined,
+    vodStripes: [],
+    pointer: 2,
+    stripesFetched: 0,
+    hasMore: true,
+  };
+
+  #emptyStateSport = {
+    contentStripe: undefined,
+    vodStripes: [],
+    pointer: 2,
     stripesFetched: 0,
     hasMore: true,
   };
 
   #initState = {
-    [VOD_PREVIEW_TYPES.MOVIES]: { ...this.#emptyState },
-    [VOD_PREVIEW_TYPES.SERIES]: { ...this.#emptyState },
-    [VOD_PREVIEW_TYPES.SPORTS]: { ...this.#emptyState },
+    [VOD_PREVIEW_TYPES.MOVIES]: { ...this.#emptyStateMovies },
+    [VOD_PREVIEW_TYPES.SERIES]: { ...this.#emptyStateSeries },
+    [VOD_PREVIEW_TYPES.SPORTS]: { ...this.#emptyStateSport },
   };
 
   // type of vod to preview
@@ -86,33 +102,37 @@ class VodService extends FetchingService {
       );
     }
 
-    // fetch initial vod stripes (movies series sports)
-    if (!currentState.vodStripes) {
-      const stripeData = await this.#getVods({
-        page: currentState.pointer,
-        limit: VOD_ROWS_PER_FETCH * VODS_PER_ROW,
-      });
-      currentState.pointer++;
-
-      if (stripeData) {
-        let eventData = {};
-        if (this.#vodType === VOD_PREVIEW_TYPES.SPORTS) {
-          eventData = await this.#getSportsEvents();
-          currentState.sportEvents = [eventData];
+    if (!currentState.vodStripes.length) {
+      while (currentState.stripesFetched < 3 && currentState.pointer < 25) {
+        const promises = [];
+        for (let i = 0; i <= 2 - currentState.stripesFetched; i++) {
+          promises.push(this.#getVods({ row: currentState.pointer, page: 1, limit: VODS_PER_ROW }));
+          currentState.pointer++;
         }
 
-        currentState.stripesFetched += stripeData.items.length / VODS_PER_ROW;
-        currentState.vodStripes = Object.keys(eventData).length
-          ? [eventData, stripeData]
-          : [stripeData];
+        const newStripes = await Promise.allSettled(promises);
 
-        // if we get less items then requested, its the last page
-        if (stripeData.items.length < VOD_ROWS_PER_FETCH * VODS_PER_ROW) {
-          currentState.hasMore = false;
+        if (newStripes) {
+          newStripes.forEach(({ value: stripeData }, index) => {
+            if (stripeData) {
+              currentState.stripesFetched++;
+              stripeData.hasMore = stripeData.items.length === VODS_PER_ROW;
+
+              stripeData.stripeId = currentState.pointer - newStripes.length + index;
+              stripeData.page = 1;
+              currentState.vodStripes.push(stripeData);
+            }
+          });
+
+          let eventData = {};
+          if (this.#vodType === VOD_PREVIEW_TYPES.SPORTS) {
+            eventData = await this.#getSportsEvents();
+            currentState.sportEvents = [eventData.items];
+          }
+
+          eventData?.items?.length && (currentState.vodStripes = [eventData]);
+          currentState.vodStripes.push(...newStripes);
         }
-      } else {
-        // if we dont get any data, previous page was the last
-        currentState.hasMore = false;
       }
     }
 
@@ -164,25 +184,51 @@ class VodService extends FetchingService {
   async fetchMoreStripes(index) {
     const currentState = this.#getCurrentState();
 
-    let newStripes;
+    // let newStripes;
 
-    if (index >= currentState.stripesFetched - 2 && !this.loading && currentState.hasMore) {
-      newStripes = await this.#getVods({
-        page: currentState.pointer,
-        limit: VOD_ROWS_PER_FETCH * VODS_PER_ROW,
+    // if (index >= currentState.stripesFetched - 2 && !this.loading && currentState.hasMore) {
+    //   newStripes = await this.#getVods({
+    //     page: currentState.pointer,
+    //     limit: VOD_ROWS_PER_FETCH * VODS_PER_ROW,
+    //   });
+    //   currentState.pointer++;
+
+    //   if (newStripes) {
+    //     currentState.stripesFetched += newStripes.items.length / VODS_PER_ROW;
+    //     currentState.vodStripes.push(newStripes);
+    //     if (newStripes.items.length < VOD_ROWS_PER_FETCH * VODS_PER_ROW) {
+    //       currentState.hasMore = false;
+    //     }
+    //   } else {
+    //     currentState.hasMore = false;
+    //   }
+    // }
+
+    // return newStripes;
+    let counter = 0;
+    const newStripes = [];
+
+    while (counter < 2 && currentState.pointer < 25) {
+      const stripeData = await this.#getVods({
+        row: currentState.pointer,
+        page: 1,
+        limit: VODS_PER_ROW,
       });
       currentState.pointer++;
 
-      if (newStripes) {
-        currentState.stripesFetched += newStripes.items.length / VODS_PER_ROW;
-        currentState.vodStripes.push(newStripes);
-        if (newStripes.items.length < VOD_ROWS_PER_FETCH * VODS_PER_ROW) {
-          currentState.hasMore = false;
-        }
-      } else {
-        currentState.hasMore = false;
+      if (stripeData?.items.length > 0) {
+        currentState.stripesFetched++;
+        counter++;
+        // each stripe has unique id
+        stripeData.stripeId = currentState.pointer;
+        // each stripe page number so we can fetch more after
+        stripeData.page = 1;
+        stripeData.hasMore = stripeData.items.length === currentState.currentRailLimit;
+        newStripes.push(stripeData);
       }
     }
+
+    currentState.vodStripes.push(...newStripes);
 
     return newStripes;
   }

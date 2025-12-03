@@ -6,6 +6,7 @@ import { ViewMoreRailItem } from './ViewMore';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
+  console.log(data);
   const railItems = data.entry?.items?.map(
     (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
   );
@@ -39,27 +40,38 @@ export const parseHomePageHeroSection = ({ data }) => {
 // VodPreview
 // Movies
 export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
-  const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item, RAIL_TYPES.MOVIE));
+  console.log(data);
+  const railItems = data.entry?.items?.map(
+    (item) =>
+      new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.MOVIE)
+  );
   if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.MOVIE,
-    railTitle: data.railTitle,
+    railTitle: data.entry.name,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
+    railId: data.entry.id,
     itemsPerRow,
   };
 };
 
 // Series
 export const parseSeriesPageData = ({ data }) => {
-  const railItems = data.entries?.map((item) => new SimpleRailItem(item, RAIL_TYPES.SERIE));
+  console.log(data);
+  const railItems = data.entry.items?.map(
+    (item) =>
+      new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.SERIE)
+  );
   if (!railItems || railItems?.length === 0) return;
 
   return {
     railType: RAIL_TYPES.SERIE,
+    railTitle: data.entry.name,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
+    railId: data.entry.id,
     itemsPerRow: VODS_PER_ROW,
   };
 };
@@ -97,7 +109,11 @@ export const parseSportsPageData = ({ data }) => {
   const railItems = data.entry?.items?.map(
     (item) =>
       new SimpleRailItem(
-        { ...item, type: { value: item.type ? item.type : RAIL_TYPES.SPORT } },
+        {
+          ...item,
+          type: { value: item.type ? item.type : RAIL_TYPES.SPORT },
+          orientation: data.entry.poster_format,
+        },
         RAIL_TYPES.SPORT
       )
   );
@@ -107,9 +123,10 @@ export const parseSportsPageData = ({ data }) => {
 
   return {
     railType: RAIL_TYPES.SPORT,
-    railTitle: title,
+    railTitle: data.entry.name,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
+    railId: data.entry.id,
     itemsPerRow: VODS_PER_ROW,
   };
 };

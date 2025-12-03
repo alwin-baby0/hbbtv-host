@@ -75,7 +75,8 @@ export default class VodPreview extends Lightning.Component {
       VodService.vodType = this._props.vodType;
       await VodService.initialFetch();
 
-      const vodStripes = constructRails(VodService.vodStripes);
+      const stripes = VodService.vodStripes.map((stripe) => stripe.value);
+      const vodStripes = constructRails(stripes);
 
       this._Column.props = {
         items: Array.isArray(vodStripes)
@@ -99,6 +100,7 @@ export default class VodPreview extends Lightning.Component {
 
     const ROW_SIZE = 6;
     const { items } = await SearchService.getSearch(category, type);
+    console.log(type);
     this._Column._clear();
     let rows = [];
     let grid;
@@ -107,6 +109,7 @@ export default class VodPreview extends Lightning.Component {
         rows.push({ items: items.slice(i, i + ROW_SIZE) });
       }
       grid = rows.map((row) => {
+        console.log(row);
         return {
           type: HorizontalContainer,
           collision: true,
@@ -127,7 +130,7 @@ export default class VodPreview extends Lightning.Component {
                 itemTitle: item.title,
                 imageSrc: item.getPortraitPoster(IMAGE_SIZES.S).src,
                 callback: () => {
-                  Router.navigate(`${searchType}-details/${item.id}`);
+                  Router.navigate(`${item.url}`);
                 },
                 index,
               },
@@ -333,20 +336,20 @@ export default class VodPreview extends Lightning.Component {
         $enter() {
           this.correctContainerSize();
 
-          // this._HeroSection.patch({
-          //   props: {
-          //     bgY: 0,
-          //   },
-          // });
+          this._HeroSection.patch({
+            props: {
+              bgY: 0,
+            },
+          });
         }
 
-        // $exit() {
-        // this._HeroSection.patch({
-        //   props: {
-        //     bgY: -150,
-        //   },
-        // });
-        // }
+        $exit() {
+          this._HeroSection.patch({
+            props: {
+              bgY: -150,
+            },
+          });
+        }
 
         correctContainerSize() {
           if (this._Column._focusedIndex === 0) {
@@ -403,8 +406,8 @@ export default class VodPreview extends Lightning.Component {
           if (fetchMoreStripes) {
             const newStripes = await fetchMoreStripes(index);
             if (newStripes) {
-              const rails = constructRails(newStripes).reduce((acc, rail) => {
-                acc.push(...rail);
+              const rails = constructRails(newStripes, ROUTES.VOD).reduce((acc, rail) => {
+                acc.push(rail);
                 return acc;
               }, []);
               rails && this._Column._appendItems(rails);

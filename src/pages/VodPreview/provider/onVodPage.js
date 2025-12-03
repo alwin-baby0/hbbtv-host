@@ -1,5 +1,5 @@
 import { constructRails } from '../../utils';
-import { VOD_PREVIEW_TYPES, CONTENT_TYPE } from '../../../constants/globalConstants';
+import { VOD_PREVIEW_TYPES, CONTENT_TYPE, ROUTES } from '../../../constants/globalConstants';
 import { VodService } from '../../../Services';
 
 export default async function (page, { vodType }) {
@@ -7,7 +7,9 @@ export default async function (page, { vodType }) {
 
   await VodService.initialFetch();
 
-  const vodStripes = constructRails(VodService.vodStripes);
+  const stripes = VodService.vodStripes.map((stripe) => (stripe.value ? stripe.value : stripe));
+  console.log(stripes);
+  const vodStripes = constructRails(stripes, ROUTES.VOD);
 
   page.props = {
     items: Array.isArray(vodStripes)

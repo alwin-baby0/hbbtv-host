@@ -70,7 +70,8 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
   } = rail;
 
   const flexItem =
-    ((railType === RAIL_TYPES.EPGS && !railTitle) || (page !== ROUTES.HOME && railTitle)) &&
+    ((railType === RAIL_TYPES.EPGS && !railTitle) ||
+      (page !== ROUTES.HOME && page !== ROUTES.VOD && railTitle)) &&
     page !== ROUTES.SEARCH
       ? {}
       : {
