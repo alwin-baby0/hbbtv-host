@@ -49,7 +49,7 @@ class UserService extends FetchingService {
         Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      data: {
+      params: {
         content_id: videoID,
       },
     });
