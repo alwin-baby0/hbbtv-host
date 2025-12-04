@@ -6,6 +6,7 @@ import {
   CATEGORY_TYPES,
   ROUTES,
   IMAGE_SIZES,
+  CARD_TYPES,
 } from '../../constants/globalConstants';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
@@ -333,7 +334,7 @@ const constructContinueWatchingRailItems = (
   enableProgressBar = false
 ) => {
   return railItems.map((railItem, index) => ({
-    type: ContinueWatchingRailItem,
+    type: railItem.type !== RAIL_TYPES.VIEW_MORE ? ContinueWatchingRailItem : ViewMoreRailItem,
     collision: true,
     flexItem: {
       marginLeft: 10,
@@ -343,11 +344,14 @@ const constructContinueWatchingRailItems = (
     },
     ...railItemsOptions,
     props: {
-      itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
+      ...(railItem.type !== RAIL_TYPES.VIEW_MORE && {
+        itemTitle: railItem.title ? railItem.title : '',
+        imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
+      }),
+      ...(railItem.type === RAIL_TYPES.VIEW_MORE && { cardType: CARD_TYPES.CONTINUE_WATCHING }),
       itemType: railItem.type,
       index: index,
-      enableProgressBar,
+      ...(railItem.type !== RAIL_TYPES.VIEW_MORE && { enableProgressBar }),
       callback: () => {
         Router.navigate(railItem.url);
       },

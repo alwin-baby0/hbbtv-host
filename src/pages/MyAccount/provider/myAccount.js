@@ -1,4 +1,4 @@
-import { t, AuthorizationService, UserService } from '../../../Services';
+import { t, AuthorizationService, UserService, VODS_PER_ROW } from '../../../Services';
 import { LOCAL_STORAGE_KEYS, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
 import { parseVodUserContentData } from '../../../Models';
 
@@ -31,6 +31,7 @@ export default async function (page) {
   const favorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? await UserService.getFavorites()
     : undefined;
+  console.log(favorites);
 
   const parsedFavorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? parseVodUserContentData({
@@ -41,7 +42,9 @@ export default async function (page) {
         },
         itemsPerRow:
           favorites.data.favorites && favorites.data.favorites.length
-            ? favorites.data.favorites.length
+            ? favorites.data.favorites.length > 12
+              ? VODS_PER_ROW
+              : favorites.data.favorites.length
             : 0,
       })
     : undefined;

@@ -184,27 +184,6 @@ class VodService extends FetchingService {
   async fetchMoreStripes(index) {
     const currentState = this.#getCurrentState();
 
-    // let newStripes;
-
-    // if (index >= currentState.stripesFetched - 2 && !this.loading && currentState.hasMore) {
-    //   newStripes = await this.#getVods({
-    //     page: currentState.pointer,
-    //     limit: VOD_ROWS_PER_FETCH * VODS_PER_ROW,
-    //   });
-    //   currentState.pointer++;
-
-    //   if (newStripes) {
-    //     currentState.stripesFetched += newStripes.items.length / VODS_PER_ROW;
-    //     currentState.vodStripes.push(newStripes);
-    //     if (newStripes.items.length < VOD_ROWS_PER_FETCH * VODS_PER_ROW) {
-    //       currentState.hasMore = false;
-    //     }
-    //   } else {
-    //     currentState.hasMore = false;
-    //   }
-    // }
-
-    // return newStripes;
     let counter = 0;
     const newStripes = [];
 

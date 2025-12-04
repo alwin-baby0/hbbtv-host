@@ -433,7 +433,12 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          this._setState('UserRecentlyWatched');
+          const { recentlyWatched } = this._props;
+
+          !recentlyWatched?.data?.recently_watched ||
+          recentlyWatched?.data?.recently_watched?.length === 0
+            ? Router.focusWidget(ROUTES.MENU_WIDGET)
+            : this._setState('UserRecentlyWatched');
         }
 
         _handleDown() {

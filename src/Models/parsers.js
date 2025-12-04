@@ -11,9 +11,10 @@ export const parseHomePageRailData = ({ data }) => {
     (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
   );
   if (!railItems || railItems.length === 0) return;
-  railItems.push(
-    new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
-  );
+  data.entry.has_more &&
+    railItems.push(
+      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+    );
 
   return {
     railType: railItems[0].type,
@@ -39,13 +40,16 @@ export const parseHomePageHeroSection = ({ data }) => {
 
 // VodPreview
 // Movies
-export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
-  console.log(data);
+export const parseVodMoviesPageData = ({ data }) => {
   const railItems = data.entry?.items?.map(
     (item) =>
       new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.MOVIE)
   );
   if (!railItems || railItems?.length === 0) return;
+  data.entry.has_more &&
+    railItems.push(
+      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+    );
 
   return {
     railType: RAIL_TYPES.MOVIE,
@@ -53,7 +57,6 @@ export const parseVodMoviesPageData = ({ data, itemsPerRow = VODS_PER_ROW }) => 
     cardType: CARD_TYPES.POSTER,
     items: railItems,
     railId: data.entry.id,
-    itemsPerRow,
   };
 };
 
@@ -65,6 +68,10 @@ export const parseSeriesPageData = ({ data }) => {
       new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.SERIE)
   );
   if (!railItems || railItems?.length === 0) return;
+  data.entry.has_more &&
+    railItems.push(
+      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+    );
 
   return {
     railType: RAIL_TYPES.SERIE,
@@ -72,7 +79,6 @@ export const parseSeriesPageData = ({ data }) => {
     cardType: CARD_TYPES.POSTER,
     items: railItems,
     railId: data.entry.id,
-    itemsPerRow: VODS_PER_ROW,
   };
 };
 
@@ -106,6 +112,7 @@ export const parseSeasonTabs = ({ data }, vodType) => {
 
 // Sports
 export const parseSportsPageData = ({ data }) => {
+  console.log(data);
   const railItems = data.entry?.items?.map(
     (item) =>
       new SimpleRailItem(
@@ -118,8 +125,10 @@ export const parseSportsPageData = ({ data }) => {
       )
   );
   if (!railItems || railItems?.length === 0) return;
-
-  const title = t(TRANSLATIONS.SPORTS);
+  data.entry.has_more &&
+    railItems.push(
+      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+    );
 
   return {
     railType: RAIL_TYPES.SPORT,
@@ -127,7 +136,6 @@ export const parseSportsPageData = ({ data }) => {
     cardType: CARD_TYPES.POSTER,
     items: railItems,
     railId: data.entry.id,
-    itemsPerRow: VODS_PER_ROW,
   };
 };
 
@@ -189,8 +197,14 @@ export const parseCollectionData = ({ data }) => {
 };
 
 export const parseVodUserContentData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
+  console.log(data);
   const railItems = data.entry?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems?.length === 0) return;
+  railItems &&
+    railItems.length > VODS_PER_ROW &&
+    railItems.push(
+      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+    );
 
   return {
     railType: data.railType,
