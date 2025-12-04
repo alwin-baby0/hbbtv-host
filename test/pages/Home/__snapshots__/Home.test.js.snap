@@ -2274,7 +2274,7 @@ exports[`Home Page renders the Home page with full data (HeroSection and Rails) 
                   "texture": {
                     "fontFace": "Montserrat-SemiBold",
                     "fontSize": 59,
-                    "lineHeight": 34,
+                    "maxLines": 2,
                     "precision": 0.6666666666666666,
                     "type": "TextTexture",
                     "w": 900,
