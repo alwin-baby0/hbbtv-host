@@ -822,6 +822,10 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('Cast');
   }
 
+  _active() {
+    setTimeout(this._setState('GalleryButton'));
+  }
+
   _firstActive() {
     setTimeout(this._setState('GalleryButton'));
   }
