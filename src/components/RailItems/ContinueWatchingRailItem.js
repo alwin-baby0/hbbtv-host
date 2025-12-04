@@ -63,6 +63,19 @@ export default class ContinueWatchingRailItem extends FocusableItem {
             backgroundBarColor: colors.unfocus,
           },
         },
+        Title: {
+          h: 45,
+          w: 273,
+          text: {
+            text: 'Title',
+            fontFace: 'Montserrat-Regular',
+            fontSize: 18,
+            lineHeight: 22,
+            maxLines: 1,
+            wordWrapWidth: 273,
+            maxLinesSuffix: '...',
+          },
+        },
       },
     };
   }
@@ -79,9 +92,13 @@ export default class ContinueWatchingRailItem extends FocusableItem {
     return this.tag('PlayButton');
   }
 
+  get Title() {
+    return this.tag('Title');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, placeholderSrc, enableProgressBar } = this._props;
+    const { imageSrc, radius, placeholderSrc, enableProgressBar, itemTitle } = this._props;
 
     this.setProps({
       width: 385,
@@ -91,13 +108,24 @@ export default class ContinueWatchingRailItem extends FocusableItem {
     this._PlayButton.visible = enableProgressBar;
     this._ProgressBar.visible = enableProgressBar;
 
-    this._LandscapeImage.patch({
-      props: {
-        width: CARD_SIZES.CONTINUE_WATCHING.image_width,
-        height: CARD_SIZES.CONTINUE_WATCHING.image_height,
-        imageSrc: imageSrc,
-        placeholderSrc: placeholderSrc,
-        radius: radius,
+    this.patch({
+      Wrapper: {
+        Border: {
+          LandscapeImage: {
+            props: {
+              width: CARD_SIZES.CONTINUE_WATCHING.image_width,
+              height: CARD_SIZES.CONTINUE_WATCHING.image_height,
+              imageSrc: imageSrc,
+              placeholderSrc: placeholderSrc,
+              radius: radius,
+            },
+          },
+        },
+        Title: {
+          text: {
+            text: itemTitle,
+          },
+        },
       },
     });
   }

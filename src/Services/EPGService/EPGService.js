@@ -36,7 +36,6 @@ class EPGService extends FetchingService {
     this.genreItems = [];
 
     const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
-    // const getGenres = await this.#getContent();
     const getGenres = parseVodCategories(
       {
         items: settings.genres.types.channels.map((item) => {

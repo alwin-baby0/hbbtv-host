@@ -68,7 +68,6 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     railItemsOptions,
     ...rest
   } = rail;
-  console.log(rail);
 
   const flexItem =
     ((railType === RAIL_TYPES.EPGS && !railTitle) ||

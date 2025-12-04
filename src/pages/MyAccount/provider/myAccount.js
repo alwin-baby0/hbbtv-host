@@ -31,7 +31,6 @@ export default async function (page) {
   const favorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? await UserService.getFavorites()
     : undefined;
-  console.log(favorites);
 
   const parsedFavorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? parseVodUserContentData({

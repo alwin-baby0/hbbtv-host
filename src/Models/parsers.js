@@ -6,7 +6,6 @@ import { ViewMoreRailItem } from './ViewMore';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
-  console.log(data);
   const railItems = data.entry?.items?.map(
     (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
   );
@@ -62,7 +61,6 @@ export const parseVodMoviesPageData = ({ data }) => {
 
 // Series
 export const parseSeriesPageData = ({ data }) => {
-  console.log(data);
   const railItems = data.entry.items?.map(
     (item) =>
       new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.SERIE)
@@ -112,7 +110,6 @@ export const parseSeasonTabs = ({ data }, vodType) => {
 
 // Sports
 export const parseSportsPageData = ({ data }) => {
-  console.log(data);
   const railItems = data.entry?.items?.map(
     (item) =>
       new SimpleRailItem(
@@ -197,7 +194,6 @@ export const parseCollectionData = ({ data }) => {
 };
 
 export const parseVodUserContentData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
-  console.log(data);
   const railItems = data.entry?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems?.length === 0) return;
   railItems &&

@@ -50,7 +50,6 @@ class AuthorizationService extends FetchingService {
       method: API_METHODS.POST,
       params: {
         client_id: process.env.APP_CMP_CLIENT_ID,
-        // client_secret: process.env.APP_CMP_CLIENT_SECRET,
       },
     });
   };

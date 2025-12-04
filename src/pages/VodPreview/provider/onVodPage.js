@@ -8,7 +8,6 @@ export default async function (page, { vodType }) {
   await VodService.initialFetch();
 
   const stripes = VodService.vodStripes.map((stripe) => (stripe.value ? stripe.value : stripe));
-  console.log(stripes);
   const vodStripes = constructRails(stripes, ROUTES.VOD);
 
   page.props = {

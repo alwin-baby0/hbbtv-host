@@ -100,7 +100,6 @@ export default class VodPreview extends Lightning.Component {
 
     const ROW_SIZE = 6;
     const { items } = await SearchService.getSearch(category, type);
-    console.log(type);
     this._Column._clear();
     let rows = [];
     let grid;
@@ -109,7 +108,6 @@ export default class VodPreview extends Lightning.Component {
         rows.push({ items: items.slice(i, i + ROW_SIZE) });
       }
       grid = rows.map((row) => {
-        console.log(row);
         return {
           type: HorizontalContainer,
           collision: true,
