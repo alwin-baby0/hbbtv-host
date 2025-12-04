@@ -225,8 +225,8 @@ export default class GalleryItem extends Lightning.Component {
           text: {
             text: '',
             fontSize: 59,
-            lineHeight: 34,
             fontFace: 'Montserrat-SemiBold',
+            maxLines: 2,
           },
         },
         Description: {
@@ -641,9 +641,7 @@ export default class GalleryItem extends Lightning.Component {
       },
       Info: {
         Title: {
-          h: titleLength > 26 ? 130 : 90,
           text: {
-            lineHeight: titleLength > 26 ? 58 : 34,
             text: title,
           },
         },
