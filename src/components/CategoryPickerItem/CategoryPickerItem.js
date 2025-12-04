@@ -25,7 +25,7 @@ export default class CategoryPickerItem extends FocusableItem {
           textAlign: 'center',
           textColor: Colors(colors.white).get(),
           textOverflow: 'ellipsis',
-          wordWrapWidth: 180,
+          wordWrapWidth: 190,
           wordWrap: false,
         },
       },
@@ -45,6 +45,8 @@ export default class CategoryPickerItem extends FocusableItem {
 
     const { itemInfo, w, h, strokeWidth, radius } = this._props;
     const { title, data } = itemInfo;
+
+    console.log('asdf label: ', data.localised.toUpperCase());
     this.setProps({
       x: -2,
       y: -1,

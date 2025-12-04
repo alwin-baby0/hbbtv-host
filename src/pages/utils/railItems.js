@@ -299,7 +299,7 @@ const constructCategoryItems = (railItems, railItemsOptions, cardType) => {
       props: {
         itemInfo: railItem,
         callback: railItem.navigateToLink,
-        w: 195,
+        w: 215,
         h: 55,
         radius: 10,
         strokeWidth: 2,
