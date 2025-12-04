@@ -22,6 +22,8 @@ const createPlayer = (options) => {
       enableWorker: false,
       maxBufferLength: 30,
       backBufferLength: 30,
+      startLevel: 4,
+      maxInitialBitrate: 15000000,
       ...options,
     });
   }
