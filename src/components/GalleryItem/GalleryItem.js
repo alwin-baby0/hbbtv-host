@@ -411,6 +411,8 @@ export default class GalleryItem extends Lightning.Component {
       firstEpisodeVideoId,
       firstEpisodeUrl,
       firstEpisodeTitle,
+      firstEpisodeEpisodeNumber,
+      firstEpisodeSeasonNumber,
       fallbackImage,
       isDeeplinkEpisode,
       seriesId,
@@ -443,6 +445,8 @@ export default class GalleryItem extends Lightning.Component {
       eventDate,
       eventTime,
     } = galleryItem;
+
+    console.log('asdf LABEL: ', buttonLabel);
 
     const titleLength = title.length;
 
@@ -692,6 +696,8 @@ export default class GalleryItem extends Lightning.Component {
                   videoUrl: result?.entry[0]?.files?.url ?? firstEpisodeUrl,
                   episodeTitle: firstEpisodeTitle,
                   videoId: firstEpisodeVideoId,
+                  episodeNumber: firstEpisodeEpisodeNumber,
+                  seasonNumber: firstEpisodeSeasonNumber,
                   duration: duration,
                   videoType: VIDEO_TYPES.SERIES,
                   seriesID: seriesId,

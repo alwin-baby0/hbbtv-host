@@ -134,12 +134,16 @@ export default class SingleSeries extends Lightning.Component {
       firstEpisodeVideoId,
       firstEpisodeUrl,
       firstEpisodeTitle,
+      firstEpisodeEpisodeNumber,
+      firstEpisodeSeasonNumber,
       isDeeplinkEpisode,
       position,
       seriesId,
       lastPlayedId,
       lastPlayedUrl,
       lastPlayedTitle,
+      lastPlayedEpisodeNumber,
+      lastPlayedSeasonNumber,
       ssai,
       ssaiLastEp,
     } = this._props;
@@ -153,6 +157,8 @@ export default class SingleSeries extends Lightning.Component {
         firstEpisodeVideoId: firstEpisodeVideoId,
         firstEpisodeUrl: firstEpisodeUrl,
         firstEpisodeTitle: firstEpisodeTitle,
+        firstEpisodeEpisodeNumber,
+        firstEpisodeSeasonNumber,
         isDeeplinkEpisode: isDeeplinkEpisode,
         seriesId: seriesId,
         ssai,
@@ -163,7 +169,9 @@ export default class SingleSeries extends Lightning.Component {
           props: {
             width: 430,
             height: 78,
-            buttonLabel: t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase(),
+            buttonLabel: `${t(
+              TRANSLATIONS.WATCH_FIRST_EPISODE
+            )?.toUpperCase()} S${firstEpisodeSeasonNumber} E${firstEpisodeEpisodeNumber}`,
           },
         },
       },
@@ -186,7 +194,9 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 props: {
                   buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
-                  buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
+                  buttonLabel: `${t(
+                    TRANSLATIONS.CONTINUE_WATCHING
+                  )?.toUpperCase()} S${lastPlayedSeasonNumber} E${lastPlayedEpisodeNumber}`,
                   width: 440,
                   height: 78,
                   position,
@@ -195,14 +205,16 @@ export default class SingleSeries extends Lightning.Component {
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
                         Router.navigate(ROUTES.PLAYER, {
-                          videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
+                          videoUrl: result?.entry[0]?.files?.url ?? lastPlayedUrl,
                           duration: duration,
                           videoType: VIDEO_TYPES.SERIES,
                           seriesID: seriesId,
                           videoId: lastPlayedId,
+                          episodeNumber: lastPlayedEpisodeNumber,
+                          seasonNumber: lastPlayedSeasonNumber,
                           continueTime: position,
                           episodeTitle: lastPlayedTitle,
-                          ssai: result[0].extensions?.ssai ?? ssaiLastEp,
+                          ssai: result?.entry[0]?.extensions?.ssai ?? ssaiLastEp,
                         });
                       }
                     );

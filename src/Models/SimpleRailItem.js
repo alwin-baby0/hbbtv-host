@@ -46,10 +46,12 @@ class SimpleRailItem {
     }
 
     if (meta) {
-      const { duration, year } = meta;
+      const { duration, year, series } = meta;
 
       this.durationString = duration?.string;
       this.year = year;
+      this.seasonNumber = series?.season || null;
+      this.episodeNumber = series?.episode || null;
     }
 
     this.thumbnails = [];

@@ -6,6 +6,12 @@ export default async function (page, { seriesId, cmpShown }) {
   let galleryItemSingleEp;
   let galleryItemLastPlayedEp;
   let ssaiLastEp;
+  let position = 0;
+  let lastPlayedEpisodeNumber;
+  let lastPlayedSeasonNumber;
+  let lastPlayedEpisodeUrl;
+  let lastPlayedEpisodeTitle;
+  let lastPlayedSeriesId;
 
   const hash = window.location.hash;
   const queryString = hash.split('?')[1];
@@ -16,6 +22,7 @@ export default async function (page, { seriesId, cmpShown }) {
   }
 
   const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(seriesId);
+  console.log('asdf galITEM SERIJA: ', galleryItem);
 
   const updatedSeasons = seasons.map((season) => {
     return {
@@ -33,29 +40,17 @@ export default async function (page, { seriesId, cmpShown }) {
 
   if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
     const resFav = await UserService.getFavorites();
-    /* const resProgress = await UserService.getSeriesProgress(seriesId);
+    const resProgress = await UserService.getSeriesProgress(seriesId);
+    position = resProgress.data?.position;
+    lastPlayedEpisodeNumber = resProgress.data?.episode_id;
+    lastPlayedSeasonNumber = resProgress.data?.season_id;
+    lastPlayedEpisodeTitle = resProgress.data?.title || '';
+    lastPlayedEpisodeUrl = resProgress.data?.url || galleryItem.url || '';
+    lastPlayedSeriesId = resProgress.data?.video_id;
 
-    console.log('asdf series resPROG: ', resProgress); */
+    console.log('asdf series resPROG: ', resProgress);
 
     favorited = resFav?.data?.favorites?.some((element) => element.video_id === seriesId);
-  }
-  const firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
-  const firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;
-  const firstEpisodeTitle = seasons ? updatedSeasons[0].items[0].title : undefined;
-
-  const lastPlayedEpisode = seasons
-    ? updatedSeasons.map((season) => {
-        const newSeason = season.items.filter(
-          (episode) => episode.id === galleryItem.lastPlayedId
-        )[0];
-
-        return newSeason;
-      })[0]
-    : undefined;
-
-  if (galleryItem?.lastPlayedId) {
-    galleryItemLastPlayedEp = await DetailService.getMovie(galleryItem?.lastPlayedId);
-    ssaiLastEp = galleryItemLastPlayedEp?.ssai;
   }
 
   let ssai;
@@ -71,13 +66,17 @@ export default async function (page, { seriesId, cmpShown }) {
     galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
     favorited,
     duration: seasons.duration,
-    position: galleryItem.position,
-    lastPlayedId: galleryItem.lastPlayedId,
-    lastPlayedUrl: lastPlayedEpisode ? lastPlayedEpisode.url : galleryItem.url,
-    lastPlayedTitle: lastPlayedEpisode ? lastPlayedEpisode.title : undefined,
-    firstEpisodeVideoId: seasons ? firstEpisodeId : undefined,
-    firstEpisodeUrl: firstEpisodeUrl,
-    firstEpisodeTitle: firstEpisodeTitle,
+    position: position,
+    lastPlayedId: lastPlayedSeriesId,
+    lastPlayedUrl: lastPlayedEpisodeUrl,
+    lastPlayedTitle: lastPlayedEpisodeTitle || undefined,
+    lastPlayedEpisodeNumber: lastPlayedEpisodeNumber,
+    lastPlayedSeasonNumber: lastPlayedSeasonNumber,
+    firstEpisodeVideoId: galleryItem.firstEpisodeId,
+    firstEpisodeUrl: galleryItem.firstEpisodeUrl,
+    firstEpisodeTitle: galleryItem.firstEpisodeTitle,
+    firstEpisodeEpisodeNumber: galleryItem.firstEpisodeEpisodeNumber,
+    firstEpisodeSeasonNumber: galleryItem.firstEpisodeSeasonNumber,
     seriesId: galleryItem.id,
     isDeeplinkEpisode: pathname.isDeeplinkEpisode,
     ssai: galleryItem.ssai,

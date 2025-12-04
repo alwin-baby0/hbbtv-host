@@ -901,6 +901,13 @@ export default class Player extends Lightning.Component {
             VideoPlayer.currentTime,
             this._props.seriesID
           );
+          UserService.addSeriesProgress(
+            this._props.videoId,
+            this._props.seriesID,
+            this._props.episodeNumber,
+            this._props.seasonNumber,
+            VideoPlayer.currentTime
+          );
         } else {
           UserService.addRecentlyWatched(
             this._props.videoId,

@@ -161,7 +161,7 @@ class UserService extends FetchingService {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     return await this._request({
-      url: `/${API_URLS.ADD_SERIES_PROGRESS}`,
+      url: `/${API_URLS.GET_SERIES_PROGRESS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
@@ -170,6 +170,28 @@ class UserService extends FetchingService {
       },
       params: {
         series_id: seriesID,
+      },
+    });
+  };
+
+  addSeriesProgress = async (videoID, seriesID, episodeNumber, seasonNumber, position) => {
+    console.log('asdf PROGDATA: ', videoID, seriesID, episodeNumber, seasonNumber, position);
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
+
+    return await this._request({
+      url: `/${API_URLS.ADD_SERIES_PROGRESS}`,
+      apiVersion: V2,
+      method: API_METHODS.POST,
+      headers: {
+        Authorization: `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      data: {
+        series_id: seriesID,
+        last_episode: episodeNumber,
+        last_season: seasonNumber,
+        video_id: videoID,
+        position: position,
       },
     });
   };

@@ -19,7 +19,7 @@ class GalleryItem {
     this.eventTime = time;
 
     if (meta) {
-      const { cast, director, genre, ratings, duration, year, country, imdb } = meta;
+      const { cast, director, genre, ratings, duration, year, country, imdb, first_episode } = meta;
 
       this.duration = duration?.seconds;
       this.genre = genre;
@@ -30,6 +30,14 @@ class GalleryItem {
       this.year = year;
       this.country = country;
       this.imdbScore = imdb?.score;
+
+      if (first_episode) {
+        this.firstEpisodeId = first_episode?.id;
+        this.firstEpisodeUrl = first_episode?.files[0]?.url;
+        this.firstEpisodeTitle = first_episode?.title;
+        this.firstEpisodeSeasonNumber = first_episode?.meta?.series?.season;
+        this.firstEpisodeEpisodeNumber = first_episode?.meta?.series?.episode;
+      }
     }
 
     if (schedule) {
