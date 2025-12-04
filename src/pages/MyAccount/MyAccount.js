@@ -407,7 +407,9 @@ export default class MyAccount extends Lightning.Component {
             ? !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
               ? Router.focusWidget(ROUTES.MENU_WIDGET)
               : this._setState('UserFavorites')
-            : this._setState('UserRecentlyWatched');
+            : !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
+            ? this._setState('UserRecentlyWatched')
+            : this._setState('UserFavorites');
         }
       },
 

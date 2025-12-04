@@ -66,6 +66,7 @@ export default class ContinueWatchingRailItem extends FocusableItem {
         Title: {
           h: 45,
           w: 273,
+          y: -20,
           text: {
             text: 'Title',
             fontFace: 'Montserrat-Regular',
