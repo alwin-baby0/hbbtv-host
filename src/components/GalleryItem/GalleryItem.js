@@ -108,7 +108,7 @@ export default class GalleryItem extends Lightning.Component {
             marginBottom: 20,
           },
           Summary: {
-            w: 400,
+            w: 450,
             h: 29,
             text: {
               fontSize: 24,
@@ -503,19 +503,11 @@ export default class GalleryItem extends Lightning.Component {
     });
 
     if (videoType !== 'event') {
-      galleryItem.summary &&
-        this._Summary?.patch({
-          text: {
-            text: factLine,
-          },
-        });
-      galleryItem.subtitle &&
-        this._Subtitle?.patch({
-          text: {
-            text: subtitle,
-          },
-        });
-
+      this._Summary?.patch({
+        text: {
+          text: factLine,
+        },
+      });
       this._Info.patch({
         Date: undefined,
         Venue: undefined,
