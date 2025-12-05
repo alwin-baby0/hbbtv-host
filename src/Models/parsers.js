@@ -181,12 +181,13 @@ export const parseSeasonData = ({ data }, seriesId, seasonId) => {
 
 // Collectin Page
 export const parseCollectionData = ({ data }) => {
-  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  console.log(data);
+  const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems.length === 0) return;
 
   return {
-    railType: RAIL_TYPES.COLLECTION,
-    railTitle: data.title,
+    railType: data.entry.type,
+    railTitle: data.entry.label,
     cardType: CARD_TYPES.COLLECTION,
     items: railItems,
     itemsPerRow: 4,
