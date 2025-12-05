@@ -465,7 +465,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: genreText,
                   },
                 },
-                visible: genre.length,
+                visible: genre?.length,
               },
               Director: {
                 Title: {
@@ -491,7 +491,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: castText,
                   },
                 },
-                visible: cast.length,
+                visible: cast?.length,
               },
             },
           },

@@ -552,7 +552,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: genreText,
               },
             },
-            visible: genre.length,
+            visible: genre?.length,
           },
           Director: {
             Title: {
@@ -578,7 +578,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: castText,
               },
             },
-            visible: cast,
+            visible: cast?.length,
           },
         },
       });
