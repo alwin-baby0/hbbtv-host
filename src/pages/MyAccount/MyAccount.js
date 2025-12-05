@@ -1,5 +1,5 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import { AuthorizationService, UserService, t } from '../../Services';
+import { AuthorizationService, UserService, VODS_PER_ROW, t } from '../../Services';
 import qrcode from 'qrcode';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
@@ -195,7 +195,9 @@ export default class MyAccount extends Lightning.Component {
           },
           itemsPerRow:
             favorites.data.favorites && favorites.data.favorites.length
-              ? favorites.data.favorites.length
+              ? favorites.data.favorites.length < VODS_PER_ROW
+                ? favorites.data.favorites.length
+                : VODS_PER_ROW
               : 0,
         })
       : undefined;
@@ -208,6 +210,10 @@ export default class MyAccount extends Lightning.Component {
 
     const { recentlyWatched, favorites, parsedFavorites, parsedMovies, verificationUri } =
       this._props;
+
+    this._Content.patch({
+      QRContainer: undefined,
+    });
 
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       const qrCode = verificationUri;
@@ -338,8 +344,11 @@ export default class MyAccount extends Lightning.Component {
           },
           LogoutButton: {
             zIndex: 4,
-            y: 350,
             type: LogoutButton,
+            ...(favorites?.data?.favorites &&
+              favorites?.data?.favorites?.length !== 0 && {
+                y: 350,
+              }),
             collision: true,
             h: 65,
             props: {
@@ -425,7 +434,11 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleDown() {
-          this._setState('UserFavorites');
+          const { favorites } = this._props;
+
+          !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
+            ? this._setState('LogoutButton')
+            : this._setState('UserFavorites');
         }
       },
 

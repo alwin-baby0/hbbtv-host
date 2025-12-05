@@ -72,5 +72,6 @@
   "close":"close",
   "no_favorites": "Your favorite list is empty",
   "no_continue_watching": "No titles for continue watching",
-  "help_info_label": "Info"
+  "help_info_label": "Info",
+  "view_all": "View all"
 }

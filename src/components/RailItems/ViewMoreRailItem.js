@@ -1,9 +1,10 @@
 import { Router, Utils, Colors } from '@lightningjs/sdk';
 
 import FocusableItem from '../FocusableItem/FocusableItem';
-import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
+import { CARD_SIZES, IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
 import Image from '../Image/Image';
 import colors from '../../../reskin/colors.json';
+import { t } from '../../Services';
 
 export default class ViewMoreRailItem extends FocusableItem {
   _props = {
@@ -23,18 +24,25 @@ export default class ViewMoreRailItem extends FocusableItem {
         Border: {
           flex: { justifyContent: 'center', alignItems: 'center' },
           PosterImage: {
+            flex: { justifyContent: 'center', alignItems: 'center' },
+            Logo: {
+              y: -20,
+              h: 80,
+              w: 80,
+              src: Utils.asset(IMG_PATH.SHOW_MORE_ICON),
+              Title: {
+                y: 85,
+                h: 45,
+                w: 273,
+                x: -10,
+                text: {
+                  fontFace: 'Montserrat-Regular',
+                  fontSize: 24,
+                  lineHeight: 22,
+                },
+              },
+            },
             type: Image,
-          },
-        },
-        Title: {
-          y: 15,
-          h: 45,
-          w: 273,
-          text: {
-            text: 'View More',
-            fontFace: 'Montserrat-Regular',
-            fontSize: 18,
-            lineHeight: 22,
           },
         },
       },
@@ -80,6 +88,13 @@ export default class ViewMoreRailItem extends FocusableItem {
       Wrapper: {
         Border: {
           PosterImage: {
+            Logo: {
+              Title: {
+                text: {
+                  text: t(TRANSLATIONS.VIEW_MORE),
+                },
+              },
+            },
             props: {
               width: orientation
                 ? orientation === 'landscape'
@@ -91,7 +106,11 @@ export default class ViewMoreRailItem extends FocusableItem {
                   ? CARD_SIZES[cardType].landscape_image_height
                   : CARD_SIZES[cardType].poster_image_height
                 : CARD_SIZES[cardType].image_height,
-              imageSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
+              imageSrc: Utils.asset(
+                orientation === 'landscape'
+                  ? IMG_PATH.SHOW_MORE_LANDSCAPE
+                  : IMG_PATH.SHOW_MORE_PORTRAIT
+              ),
               placeholderSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
               radius: radius,
             },

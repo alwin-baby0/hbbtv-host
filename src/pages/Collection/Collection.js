@@ -8,9 +8,24 @@ export default class Collection extends Lightning.Component {
 
   static _template() {
     return {
+      Background: {
+        src: Utils.asset(IMG_PATH.BACKGROUND_COLLECTION_PAGE),
+        y: 0,
+        x: 350,
+        w: 1570,
+        h: 883,
+        zIndex: 1,
+      },
+      Overlay: {
+        src: Utils.asset(IMG_PATH.GRADIENT_SVG),
+        zIndex: 2,
+      },
       Wrapper: {
+        y: 0,
+        x: 0,
         w: 1920,
         h: 1080,
+        zIndex: 3,
         BackButton: {
           collision: true,
           type: BackBtn,

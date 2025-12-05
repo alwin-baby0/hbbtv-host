@@ -372,6 +372,7 @@ export const API_URLS = {
 };
 
 export const TRANSLATIONS = {
+  VIEW_MORE: 'view_all',
   AGE_RATING: 'age_rating',
   GENRE: 'genre',
   CAST: 'cast',
@@ -419,7 +420,11 @@ export const IMG_PATH = {
   AD_ICON: 'icons/ad-icon.png',
   BACKGROUND: 'images/background.jpg',
   BACKGROUND_SEARCH_PAGE: 'images/abstract-wavy-background2.png',
+  BACKGROUND_COLLECTION_PAGE: 'images/abstract-wavy-background.jpg',
   BACKGROUND_SUPPORT_PAGES: 'images/abstract-wavy-background3.png',
+  SHOW_MORE_LANDSCAPE: 'images/show-more-landscape.png',
+  SHOW_MORE_PORTRAIT: 'images/show-more-portrait.png',
+  SHOW_MORE_ICON: 'icons/show-more-icon.png',
   BACKSPACE: 'backspace.png',
   BACK_BTN: 'icons/backbtn.png',
   EMPTY_RAIL_PH: 'images/rail-placeholder-empty.png',

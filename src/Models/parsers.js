@@ -195,20 +195,35 @@ export const parseCollectionData = ({ data }) => {
 };
 
 export const parseVodUserContentData = ({ data, itemsPerRow = VODS_PER_ROW }) => {
-  const railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  let railItems = data.entry?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems?.length === 0) return;
-  railItems &&
-    railItems.length > VODS_PER_ROW &&
+  if (railItems && railItems.length > VODS_PER_ROW) {
+    railItems = railItems.slice(0, VODS_PER_ROW - 1);
     railItems.push(
-      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+      new ViewMoreRailItem({ id: RAIL_TYPES.FAVORITES, orientation: data.entry.poster_format })
     );
+  }
 
   return {
     railType: data.railType,
     railTitle: data.railTitle,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
-    itemsPerRow,
+    itemsPerRow: railItems && data.entry.length > VODS_PER_ROW ? VODS_PER_ROW + 1 : itemsPerRow,
+  };
+};
+
+export const parseVodUserContentDataCollectionPage = ({ data }) => {
+  console.log(data);
+  let railItems = data.entry?.map((item) => new SimpleRailItem(item));
+  if (!railItems || railItems?.length === 0) return;
+
+  return {
+    railType: data.railType,
+    railTitle: data.railTitle,
+    cardType: CARD_TYPES.COLLECTION,
+    items: railItems,
+    itemsPerRow: 4,
   };
 };
 
