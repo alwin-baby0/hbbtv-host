@@ -130,20 +130,19 @@ export default class SingleMovie extends Lightning.Component {
               style: {
                 itemSpacing: 100,
               },
-              y: 42,
+              y: 62,
               props: {
                 enableScroll: false,
               },
             },
             Metadata: {
               flex: { direction: 'column' },
-              y: 210,
+              y: 130,
               AgeRating: {
                 w: 700,
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -154,9 +153,9 @@ export default class SingleMovie extends Lightning.Component {
                   },
                 },
                 TextValue: {
-                  w: 700,
+                  w: 750,
                   h: 90,
-                  flexItem: { marginLeft: 18 },
+                  flexItem: { marginLeft: 10 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -171,7 +170,6 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -182,9 +180,9 @@ export default class SingleMovie extends Lightning.Component {
                   },
                 },
                 TextValue: {
-                  w: 700,
+                  w: 750,
                   h: 90,
-                  flexItem: { marginLeft: 18 },
+                  flexItem: { marginLeft: 10 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -200,7 +198,6 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -213,6 +210,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
+                  flexItem: { marginLeft: 10 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -229,7 +227,6 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -242,7 +239,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
-                  flexItem: { marginLeft: -10 },
+                  flexItem: { marginLeft: 10 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -384,15 +381,16 @@ export default class SingleMovie extends Lightning.Component {
 
     const factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
 
-    // const splitDirector = director ? director.split(':') : '';
-    // const splitCast = cast ? cast.split(':') : '';
-
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
     const tGenre = t(TRANSLATIONS.GENRE) + ':';
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
     const castText = cast ? cast.join(', ') : '';
-    const dirText = director;
+    const dirText = director
+      ? Array.isArray(director)
+        ? director.join(', ')
+        : director
+      : undefined;
     const genreText = genre ? genre.join(', ') : '';
 
     const badgeText = t(TRANSLATIONS.MOVIES);
@@ -454,6 +452,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: rating,
                   },
                 },
+                visible: rating,
               },
               Genre: {
                 Title: {
@@ -466,6 +465,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: genreText,
                   },
                 },
+                visible: genre.length,
               },
               Director: {
                 Title: {

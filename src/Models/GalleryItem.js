@@ -22,14 +22,14 @@ class GalleryItem {
       const { cast, director, genre, ratings, duration, year, country, imdb, first_episode } = meta;
 
       this.duration = duration?.seconds;
-      this.genre = genre;
-      this.director = director;
-      this.cast = cast;
-      this.rating = ratings?.fsk;
-      this.durationString = duration?.string;
-      this.year = year;
-      this.country = country;
-      this.imdbScore = imdb?.score;
+      this.genre = genre || first_episode?.meta?.genre;
+      this.director = director || first_episode?.meta?.director;
+      this.cast = cast || first_episode?.meta?.cast;
+      this.rating = ratings?.fsk || first_episode?.meta?.rating?.fsk;
+      this.durationString = duration?.string || first_episode?.meta?.duration?.string;
+      this.year = year || first_episode?.meta?.year;
+      this.country = country || first_episode?.meta?.country;
+      this.imdbScore = imdb?.score || first_episode?.meta?.imdb?.score;
 
       if (first_episode) {
         this.firstEpisodeId = first_episode?.id;

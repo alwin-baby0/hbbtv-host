@@ -108,12 +108,12 @@ export default class GalleryItem extends Lightning.Component {
             marginBottom: 20,
           },
           Summary: {
-            w: 165,
+            w: 400,
             h: 29,
             text: {
               fontSize: 24,
               lineHeight: 30,
-              fontFace: 'Montserrat-SemiBold',
+              fontFace: 'Montserrat-Regular',
             },
           },
           Subtitle: {
@@ -237,7 +237,7 @@ export default class GalleryItem extends Lightning.Component {
           w: 900,
           h: 150,
           text: {
-            wordWrapWidth: 500,
+            wordWrapWidth: 900,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
@@ -292,7 +292,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -303,8 +302,9 @@ export default class GalleryItem extends Lightning.Component {
               },
             },
             TextValue: {
-              w: 700,
+              w: 750,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -319,7 +319,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -330,8 +329,9 @@ export default class GalleryItem extends Lightning.Component {
               },
             },
             TextValue: {
-              w: 700,
+              w: 750,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -346,7 +346,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -359,6 +358,7 @@ export default class GalleryItem extends Lightning.Component {
             TextValue: {
               w: 700,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -375,7 +375,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -388,6 +387,7 @@ export default class GalleryItem extends Lightning.Component {
             TextValue: {
               w: 700,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -454,20 +454,22 @@ export default class GalleryItem extends Lightning.Component {
     let factLine;
 
     if (videoType !== 'event') {
-      factLine = '';
+      factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
     } else {
       factLine = eventDate && eventTime ? [eventDate, eventTime].join(' | ') : '';
     }
-
-    const splitDirector = director ? director.split(':') : '';
-    const splitCast = cast ? cast.split(':') : '';
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
     const tGenre = t(TRANSLATIONS.GENRE) + ':';
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const castText = splitCast && splitCast[1];
-    const dirText = splitDirector && splitDirector[1];
+    const castText = cast ? cast.join(', ') : '';
+    const dirText = director
+      ? Array.isArray(director)
+        ? director.join(', ')
+        : director
+      : undefined;
+    const genreText = genre ? genre.join(', ') : '';
 
     if (videoType === 'event') {
       const targetTimestamp = startTime;
@@ -547,10 +549,10 @@ export default class GalleryItem extends Lightning.Component {
             },
             TextValue: {
               text: {
-                text: genre,
+                text: genreText,
               },
             },
-            visible: genre,
+            visible: genre.length,
           },
           Director: {
             Title: {
@@ -563,7 +565,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: dirText,
               },
             },
-            visible: splitDirector[1] ? true : false,
+            visible: director,
           },
           Cast: {
             Title: {
@@ -576,7 +578,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: castText,
               },
             },
-            visible: splitCast[1] ? true : false,
+            visible: cast,
           },
         },
       });
@@ -665,6 +667,7 @@ export default class GalleryItem extends Lightning.Component {
         Description: {
           text: {
             text: summary,
+            wordWrapWidth: bgY !== 0 ? 500 : 900, //500 is for hero only
           },
         },
       },

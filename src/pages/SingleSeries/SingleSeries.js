@@ -167,7 +167,7 @@ export default class SingleSeries extends Lightning.Component {
       Info: {
         GalleryButton: {
           props: {
-            width: 430,
+            width: 465,
             height: 78,
             buttonLabel: `${t(
               TRANSLATIONS.WATCH_FIRST_EPISODE
@@ -191,13 +191,14 @@ export default class SingleSeries extends Lightning.Component {
                 alpha: 1,
                 flexItem: {
                   marginRight: 15,
+                  marginLeft: 35,
                 },
                 props: {
                   buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
                   buttonLabel: `${t(
                     TRANSLATIONS.CONTINUE_WATCHING
                   )?.toUpperCase()} S${lastPlayedSeasonNumber} E${lastPlayedEpisodeNumber}`,
-                  width: 440,
+                  width: 450,
                   height: 78,
                   position,
                   duration,
@@ -223,6 +224,7 @@ export default class SingleSeries extends Lightning.Component {
               },
               FavoriteButton: {
                 y: 0,
+                x: 0,
                 flexItem: {
                   marginTop: 10,
                 },
@@ -255,6 +257,7 @@ export default class SingleSeries extends Lightning.Component {
               },
               FavoriteButton: {
                 y: 10,
+                x: 35,
                 flexItem: {
                   marginTop: 10,
                 },
