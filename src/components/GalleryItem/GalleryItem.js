@@ -557,7 +557,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: dirText,
               },
             },
-            visible: director,
+            visible: dirText,
           },
           Cast: {
             Title: {
