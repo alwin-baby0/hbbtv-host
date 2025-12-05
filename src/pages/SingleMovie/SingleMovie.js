@@ -83,7 +83,7 @@ export default class SingleMovie extends Lightning.Component {
               },
             },
             FactLine: {
-              w: 400,
+              w: 550,
               h: 29,
               text: {
                 fontSize: 24,

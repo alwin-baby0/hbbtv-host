@@ -108,7 +108,7 @@ export default class GalleryItem extends Lightning.Component {
             marginBottom: 20,
           },
           Summary: {
-            w: 450,
+            w: 550,
             h: 29,
             text: {
               fontSize: 24,

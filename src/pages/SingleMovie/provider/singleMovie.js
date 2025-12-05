@@ -24,7 +24,7 @@ export default async function (page, { movieId, cmpShown }) {
     const resFav = await UserService.getFavorites();
     const resProgress = await UserService.getProgress(movieId);
 
-    last_position = resProgress?.data.progress[0]?.position;
+    last_position = resProgress?.data?.progress?.position;
     favorited = resFav?.data?.favorites?.some((element) => element.video_id === movieId);
   }
 

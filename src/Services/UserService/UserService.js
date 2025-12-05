@@ -132,7 +132,7 @@ class UserService extends FetchingService {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       params: {
-        content_id: videoID,
+        video_id: videoID,
       },
     });
   };
