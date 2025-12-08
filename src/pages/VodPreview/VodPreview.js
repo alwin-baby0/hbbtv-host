@@ -14,6 +14,7 @@ import {
 import { SearchService, VodService } from '../../Services';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import { checkCMP } from '../../utils/index';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -68,6 +69,23 @@ export default class VodPreview extends Lightning.Component {
   //     this.changeContent(event.detail.category, event.detail.type);
   //   });
   // }
+
+  async _onChanged() {
+    const { cmpShown, vodType } = this._props;
+    console.warn(this._props);
+    const returnUrl = `${ROUTES.VOD}/${vodType}`;
+
+    const canProceed = await checkCMP({
+      cmpShown,
+      url: returnUrl,
+    });
+
+    if (!canProceed) {
+      return;
+    }
+
+    this._setState('VodContentContainer');
+  }
 
   async changeContent(category, type, categoryMessage) {
     if (category.toUpperCase() === 'ALL') {
