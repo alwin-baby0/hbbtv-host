@@ -71,8 +71,6 @@ class AuthorizationService extends FetchingService {
   };
 
   #getToken = async (authorizationCode) => {
-    const timestamp = new Date().getTime();
-
     return await this._request({
       url: `/${API_URLS.GET_TOKEN}`,
       apiVersion: auth,
@@ -89,15 +87,23 @@ class AuthorizationService extends FetchingService {
     });
   };
 
-  revokeToken = async (token) => {
+  refreshToken = async () => {
+    const refreshToken = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+    ).refresh_token;
+
     return await this._request({
-      url: `/${API_URLS.REVOKE_TOKEN}`,
+      url: `/${API_URLS.GET_TOKEN}`,
       apiVersion: auth,
       method: API_METHODS.POST,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
       data: {
         client_id: process.env.APP_CMP_CLIENT_ID,
         client_secret: process.env.APP_CMP_CLIENT_SECRET,
-        token: token,
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
       },
     });
   };

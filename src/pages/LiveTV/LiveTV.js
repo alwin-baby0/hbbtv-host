@@ -59,9 +59,6 @@ export default class LiveTV extends Lightning.Component {
             x: 10,
             type: HorizontalContainer,
             clipping: true,
-            props: {
-              w: 1615,
-            },
           },
           EPGData: {
             clipping: true,
@@ -263,11 +260,13 @@ export default class LiveTV extends Lightning.Component {
 
     this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
       const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
+      let marginOffset = 0;
       const hourss = result.timeArray.map((hour, index) => {
         let marginLeft = 0;
         if (index === 0) {
           marginLeft = -calculatedPixels;
         }
+        marginOffset += marginLeft;
         return {
           type: EPGTimeSlot,
           w: 250,
@@ -281,6 +280,7 @@ export default class LiveTV extends Lightning.Component {
       });
 
       this._TimeSlot.props = {
+        w: hourss.length * 250 + marginOffset,
         items: hourss,
       };
 

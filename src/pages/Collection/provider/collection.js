@@ -1,4 +1,9 @@
-import { CARD_TYPES, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
+import {
+  CARD_TYPES,
+  LOCAL_STORAGE_KEYS,
+  RAIL_TYPES,
+  TRANSLATIONS,
+} from '../../../constants/globalConstants';
 import { parseVodUserContentDataCollectionPage } from '../../../Models';
 import { CollectionService, t, UserService, SearchService } from '../../../Services';
 import { constructRails } from '../../utils';
@@ -35,8 +40,8 @@ export default async function (page, { collectionId, category }) {
       break;
     case RAIL_TYPES.CATEGORY:
       category
-        ? localStorage.setItem('Category', JSON.stringify(category))
-        : (category = JSON.parse(localStorage.getItem('Category')));
+        ? localStorage.setItem(LOCAL_STORAGE_KEYS.CATEGORY, JSON.stringify(category))
+        : (category = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.CATEGORY)));
       const searchedItems = await SearchService.getSearch(
         category.category,
         category.type,

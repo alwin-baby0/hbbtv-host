@@ -62,6 +62,7 @@ export const LOCAL_STORAGE_KEYS = {
   SELECTED_SUBTITLES_CHANNEL: 'selectedSubtitlesForChannel',
   RECENT_SEARCH: 'recentSearch',
   SETTINGS: 'settings',
+  COLLECTION_CATEGORY: 'category',
 };
 
 export const CATEGORY_TYPES = {
@@ -141,7 +142,6 @@ export const API_URLS = {
   GET_DEVICE_CODE: 'oauth/device/code',
   GET_DEVICE_STATUS: 'oauth/status',
   GET_TOKEN: 'oauth/token',
-  REVOKE_TOKEN: 'revoke.php',
   GET_USER_FAVORITES: 'oauth/favorites',
   ADD_USER_FAVORITES: 'oauth/favorites',
   REMOVE_USER_FAVORITES: 'oauth/favorites',

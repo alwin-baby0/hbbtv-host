@@ -1,4 +1,5 @@
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { AuthorizationService } from '../AuthorizationService';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 
@@ -17,6 +18,16 @@ class UserService extends FetchingService {
         page,
         limit,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -35,6 +46,16 @@ class UserService extends FetchingService {
         content_id: videoID,
         content_type: vodType,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -52,6 +73,16 @@ class UserService extends FetchingService {
       params: {
         content_id: videoID,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -72,6 +103,16 @@ class UserService extends FetchingService {
         page,
         limit,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -96,6 +137,16 @@ class UserService extends FetchingService {
         position: vodPosition,
         ...(seriesID && { series_id: seriesID }),
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -116,6 +167,16 @@ class UserService extends FetchingService {
       data: {
         video_id: videoID,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -134,6 +195,16 @@ class UserService extends FetchingService {
       params: {
         video_id: videoID,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -154,6 +225,16 @@ class UserService extends FetchingService {
         position,
         duration,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -171,6 +252,16 @@ class UserService extends FetchingService {
       params: {
         series_id: seriesID,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 
@@ -193,6 +284,16 @@ class UserService extends FetchingService {
         video_id: videoID,
         position: position,
       },
+    }).catch((err) => {
+      if (err.data.code === 401) {
+        const userData = AuthorizationService.refreshToken();
+        if (userData?.data?.code === 401) {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+        } else {
+          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        }
+        window.location.reload();
+      }
     });
   };
 }

@@ -16,7 +16,7 @@ export default class LogoutButton extends Lightning.Component {
           marginBottom: 20,
         },
         texture: Lightning.Tools.getRoundRect(
-          260,
+          370,
           75,
           12,
           4,
@@ -25,13 +25,13 @@ export default class LogoutButton extends Lightning.Component {
         ),
         Column: {
           h: 65,
-          w: 250,
+          w: 360,
           x: 8,
           rect: true,
           shader: { type: Lightning.shaders.RoundedRectangle, radius: 12 },
           Text: {
             y: 5,
-            w: 250,
+            w: 360,
             text: {
               color: Colors(colors.white).get(),
               fontFace: 'Montserrat-Bold',
@@ -78,7 +78,7 @@ export default class LogoutButton extends Lightning.Component {
 
   _focus() {
     this._FocusBorder.patch({
-      texture: Lightning.Tools.getRoundRect(260, 75, 12, 4, Colors(colors.focus).get(), false),
+      texture: Lightning.Tools.getRoundRect(370, 75, 12, 4, Colors(colors.focus).get(), false),
       Column: {
         color: Colors(colors.focus).get(),
       },
@@ -88,7 +88,7 @@ export default class LogoutButton extends Lightning.Component {
   _unfocus() {
     this._FocusBorder.patch({
       texture: Lightning.Tools.getRoundRect(
-        260,
+        370,
         75,
         12,
         4,
