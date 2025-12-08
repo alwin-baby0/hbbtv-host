@@ -19,10 +19,10 @@ export async function checkCMP({ cmpShown, url, id }) {
   }
 
   await CMPService.initialFetch();
-  const expireTs = CMPService.cmpData?.consent?.expire?.timestamp;
+  const expireTs = CMPService.cmpData?.consent?.expire.timestamp;
   const nowTs = Math.floor(Date.now() / 1000);
 
-  if (!expireTs || expireTs === 0 || nowTs > expireTs) {
+  if (expireTs === 0 || nowTs > expireTs) {
     const params = { url };
 
     if (id) {
