@@ -30,9 +30,10 @@ export default async function (page, { movieId, url }) {
           if (value.callback_url) {
             const chosenValue = btnIndex === 0 ? 1 : 0;
             await CMPService.selectCMPChoice(serialNumber, chosenValue);
-
             if (url && movieId) {
               Router.navigate(`${url}/${movieId}`, { cmpShown: true });
+            } else if (url) {
+              Router.navigate(`${url}`, { cmpShown: true });
             } else {
               Router.navigate(ROUTES.HOME, false);
             }
