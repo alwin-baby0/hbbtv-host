@@ -144,6 +144,7 @@ export default class SingleSeries extends Lightning.Component {
       lastPlayedTitle,
       lastPlayedEpisodeNumber,
       lastPlayedSeasonNumber,
+      lastPlayedEpisodeDuration,
       ssai,
       ssaiLastEp,
     } = this._props;
@@ -201,13 +202,13 @@ export default class SingleSeries extends Lightning.Component {
                   width: 450,
                   height: 78,
                   position,
-                  duration,
+                  duration: lastPlayedEpisodeDuration,
                   callback: () => {
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
                         Router.navigate(ROUTES.PLAYER, {
                           videoUrl: result?.entry[0]?.files?.url ?? lastPlayedUrl,
-                          duration: duration,
+                          duration: lastPlayedEpisodeDuration,
                           videoType: VIDEO_TYPES.SERIES,
                           seriesID: seriesId,
                           videoId: lastPlayedId,

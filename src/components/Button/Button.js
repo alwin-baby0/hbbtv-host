@@ -136,7 +136,7 @@ export default class Button extends FocusableItem {
       },
     });
 
-    if (position && this.progressW) {
+    if (position && duration && this.progressW) {
       this.patch({
         Progress: {
           w: this.progressW,
