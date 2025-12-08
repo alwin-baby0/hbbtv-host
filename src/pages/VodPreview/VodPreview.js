@@ -14,7 +14,7 @@ import {
 import { SearchService, VodService } from '../../Services';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
-import { checkCMP } from '../../utils/cmpHelper';
+import { checkCMP } from '../../utils/index';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
