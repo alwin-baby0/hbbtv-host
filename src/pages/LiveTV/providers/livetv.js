@@ -58,7 +58,11 @@ const fetchChannels = async (page) => {
   }
 };
 
-export default async function (page) {
+export default async function (page, { cmpShown } = {}) {
   await fetchChannels(page);
   page._EPGData.setInitialOffset();
+  page.props = {
+    ...(page.props || {}),
+    cmpShown,
+  };
 }

@@ -9,13 +9,10 @@ import {
   ROUTES,
   VOD_PREVIEW_TYPES,
   CONTENT_TYPE,
-  IMAGE_SIZES,
   RAIL_TYPES,
 } from '../../constants/globalConstants';
-import { SearchService, VodService } from '../../Services';
-import PosterRailItem from '../../components/RailItems/PosterRailItem';
-import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { railItemConstructor } from '../utils/railItems';
+import { checkCMP } from '../../utils/index';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -57,6 +54,23 @@ export default class VodPreview extends Lightning.Component {
         },
       },
     };
+  }
+
+  async _onChanged() {
+    const { cmpShown, vodType } = this._props;
+    console.warn(this._props);
+    const returnUrl = `${ROUTES.VOD}/${vodType}`;
+
+    const canProceed = await checkCMP({
+      cmpShown,
+      url: returnUrl,
+    });
+
+    if (!canProceed) {
+      return;
+    }
+
+    this._setState('VodContentContainer');
   }
 
   get _HeroSection() {

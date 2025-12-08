@@ -2,7 +2,7 @@ import { constructRails } from '../../utils';
 import { VOD_PREVIEW_TYPES, CONTENT_TYPE, ROUTES } from '../../../constants/globalConstants';
 import { VodService } from '../../../Services';
 
-export default async function (page, { vodType }) {
+export default async function (page, { vodType, cmpShown }) {
   VodService.vodType = vodType;
 
   await VodService.initialFetch();
@@ -30,5 +30,6 @@ export default async function (page, { vodType }) {
     fetchMoreStripes: (index) => VodService.fetchMoreStripes(index),
     sliderData: VodService.heroSectionItems,
     fetchMoreHeroStripes: () => VodService.fetchMoreItemsForHeroSection(),
+    cmpShown,
   };
 }

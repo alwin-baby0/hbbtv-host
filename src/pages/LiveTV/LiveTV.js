@@ -12,7 +12,7 @@ import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-
+import { checkCMP } from '../../utils/index';
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -253,8 +253,18 @@ export default class LiveTV extends Lightning.Component {
     );
   }
 
-  _active() {
+  async _active() {
+    const { cmpShown } = this._props;
+
+    const canProceed = await checkCMP({
+      cmpShown,
+      url: ROUTES.LIVE,
+    });
+
+    if (!canProceed) return;
+
     this.fireAncestors('$setNavbarVisibility', true);
+
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 
