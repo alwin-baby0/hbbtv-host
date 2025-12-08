@@ -1,39 +1,55 @@
-import { RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
+import { CARD_TYPES, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
 import { parseVodUserContentDataCollectionPage } from '../../../Models';
-import { CollectionService, t, UserService } from '../../../Services';
+import { CollectionService, t, UserService, SearchService } from '../../../Services';
 import { constructRails } from '../../utils';
 
-export default async function (page, { collectionId }) {
-  let railsData;
-  if (collectionId === RAIL_TYPES.FAVORITES) {
-    const favorites = await UserService.getFavorites();
-    console.log(favorites);
-    railsData = constructRails(
-      parseVodUserContentDataCollectionPage({
-        data: {
-          railTitle: t(TRANSLATIONS.FAVORITES),
-          railType: RAIL_TYPES.COLLECTION,
-          entry: favorites.data.favorites,
-        },
-      })
-    );
-  } else if (collectionId === RAIL_TYPES.CONTINUE_WATCHING) {
-    const recentlyWatched = await UserService.getRecentlyWatched();
-    railsData = constructRails(
-      parseVodUserContentDataCollectionPage({
-        data: {
-          railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
-          railType: RAIL_TYPES.COLLECTION,
-          entry: recentlyWatched.data.recently_watched,
-        },
-      })
-    );
-  } else {
-    await CollectionService.initialFetch(collectionId);
-    railsData = constructRails(CollectionService.collectionItem);
-  }
+export default async function (page, { collectionId, category }) {
+  const event = new CustomEvent('verticalIndexReset');
+  window.dispatchEvent(event);
 
-  console.log(railsData);
+  let railsData;
+  switch (collectionId) {
+    case RAIL_TYPES.FAVORITES:
+      const favorites = await UserService.getFavorites();
+      railsData = constructRails(
+        parseVodUserContentDataCollectionPage({
+          data: {
+            railTitle: t(TRANSLATIONS.FAVORITES),
+            railType: RAIL_TYPES.COLLECTION,
+            entry: favorites.data.favorites,
+          },
+        })
+      );
+      break;
+    case RAIL_TYPES.CONTINUE_WATCHING:
+      const recentlyWatched = await UserService.getRecentlyWatched();
+      railsData = constructRails(
+        parseVodUserContentDataCollectionPage({
+          data: {
+            railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
+            railType: RAIL_TYPES.COLLECTION,
+            entry: recentlyWatched.data.recently_watched,
+          },
+        })
+      );
+      break;
+    case RAIL_TYPES.CATEGORY:
+      category
+        ? localStorage.setItem('Category', JSON.stringify(category))
+        : (category = JSON.parse(localStorage.getItem('Category')));
+      const searchedItems = await SearchService.getSearch(
+        category.category,
+        category.type,
+        CARD_TYPES.COLLECTION,
+        4,
+        RAIL_TYPES.COLLECTION
+      );
+      railsData = constructRails(searchedItems);
+      break;
+    default:
+      await CollectionService.initialFetch(collectionId);
+      railsData = constructRails(CollectionService.collectionItem);
+  }
 
   page._Column.props = {
     items: [],

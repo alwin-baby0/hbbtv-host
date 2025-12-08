@@ -41,6 +41,7 @@ export const constructRails = (rails, page = '') => {
 
         return chunkedItems.map((chunkedRailItem) => {
           const newRail = { ...rail };
+          console.log(globalVerticalIndex);
           newRail.railTitle = globalVerticalIndex === 0 ? rail.railTitle : '';
           newRail.items = chunkedRailItem;
 

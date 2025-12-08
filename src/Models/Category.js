@@ -1,5 +1,5 @@
 import { Router } from '@lightningjs/sdk';
-import { CATEGORY_TYPES, ROUTES } from '../constants/globalConstants';
+import { CATEGORY_TYPES, RAIL_TYPES, ROUTES } from '../constants/globalConstants';
 
 class Category {
   constructor(data) {
@@ -13,10 +13,8 @@ class Category {
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
-        const event = new CustomEvent('changeContent', {
-          detail: { category: this.data.localised, type: this.data.type }, // pass whatever value you need here
-        });
-        window.dispatchEvent(event);
+        const category = { category: this.data.localised, type: this.data.type };
+        Router.navigate(`${ROUTES.COLLECTION}/${RAIL_TYPES.CATEGORY}`, { category });
         break;
       }
       case CATEGORY_TYPES.SERIES: {

@@ -4,7 +4,13 @@ import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 
 export default class SearchService extends FetchingService {
-  getSearch = async (keywords, category) =>
+  getSearch = async (
+    keywords,
+    category,
+    cardType,
+    itemsPerRow = undefined,
+    railType = RAIL_TYPES.MOVIE
+  ) =>
     this._request({
       url: `/${API_URLS.GET_SEARCH}`,
       apiVersion: V2,
@@ -16,17 +22,18 @@ export default class SearchService extends FetchingService {
         orderBy: 'name:desc',
         category,
       },
-    }).then(this.#parseSearchPageData);
+    }).then((response) => this.#parseSearchPageData(response, cardType, itemsPerRow, railType));
 
-  #parseSearchPageData({ data }) {
+  #parseSearchPageData({ data }, cardType = CARD_TYPES.POSTER, itemsPerRow, railType) {
     const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
     if (!railItems) return;
 
     return {
-      railType: RAIL_TYPES.MOVIE,
-      railTitle: data.title,
-      cardType: CARD_TYPES.POSTER,
+      railType: railType,
+      railTitle: data.entry.query,
+      cardType: cardType,
       items: railItems,
+      ...(itemsPerRow && { itemsPerRow }),
     };
   }
 }

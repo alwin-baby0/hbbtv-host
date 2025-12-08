@@ -181,7 +181,6 @@ export const parseSeasonData = ({ data }, seriesId, seasonId) => {
 
 // Collectin Page
 export const parseCollectionData = ({ data }) => {
-  console.log(data);
   const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems.length === 0) return;
 
@@ -214,7 +213,6 @@ export const parseVodUserContentData = ({ data, itemsPerRow = VODS_PER_ROW }) =>
 };
 
 export const parseVodUserContentDataCollectionPage = ({ data }) => {
-  console.log(data);
   let railItems = data.entry?.map((item) => new SimpleRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
