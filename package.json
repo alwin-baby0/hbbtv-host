@@ -3,16 +3,6 @@
   "version": "0.0.0",
   "description": "",
   "main": "src/index.js",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "./src/**/*.js": [
-      "npm run lint"
-    ]
-  },
   "scripts": {
     "cypress": "cypress open",
     "lint": "npx prettier --check \"./src/*/*.js\"",

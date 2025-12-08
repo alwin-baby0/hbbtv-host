@@ -24,10 +24,7 @@ export default async function (page, { vodType }) {
     content: {
       contentType:
         vodType === VOD_PREVIEW_TYPES.SPORTS ? CONTENT_TYPE.EVENTS : CONTENT_TYPE.CATEGORIES,
-      items:
-        vodType !== VOD_PREVIEW_TYPES.SPORTS
-          ? constructRails(VodService.contentStripes)
-          : constructRails(VodService.contentStripes),
+      items: constructRails(VodService.contentStripes),
     },
     vodType,
     fetchMoreStripes: (index) => VodService.fetchMoreStripes(index),

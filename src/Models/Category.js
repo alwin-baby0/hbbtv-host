@@ -1,5 +1,5 @@
 import { Router } from '@lightningjs/sdk';
-import { CATEGORY_TYPES, FILTER_TYPES, ROUTES } from '../constants/globalConstants';
+import { CATEGORY_TYPES, ROUTES } from '../constants/globalConstants';
 
 class Category {
   constructor(data) {
