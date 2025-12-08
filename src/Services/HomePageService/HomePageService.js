@@ -18,6 +18,7 @@ class HomePageService extends FetchingService {
   #heroSectionPage = 1; // Page counter for Hero Section
   #isLastFetchEmpty = false; // Initialize to false
   #banner = [];
+  #page = 1;
 
   /**
    * Fetches initial stripes for Home page
@@ -57,6 +58,8 @@ class HomePageService extends FetchingService {
         }
       });
     }
+
+    this.#page = 1;
   }
 
   /**
@@ -67,7 +70,17 @@ class HomePageService extends FetchingService {
     const newStripes = [];
 
     while (counter < 2 && this.#pointer < 25) {
-      const stripeData = await this.#getHomePage(this.#pointer, 1, this.#currentRailLimit);
+      const stripeData = await this.#getHomePage(this.#pointer, this.#page, this.#currentRailLimit);
+
+      if (!stripeData) {
+        return;
+      }
+
+      if (stripeData.error) {
+        this.#page++;
+        this.#pointer = 1;
+        return;
+      }
       this.#pointer++;
 
       if (stripeData?.items.length > 0) {
@@ -142,6 +155,7 @@ class HomePageService extends FetchingService {
     this.stripesFetched = 0;
     this.#currentRailLimit = 7; // Reset limit to initial value
     this.#banner = [];
+    this.#page = 1;
   }
 
   /**
@@ -203,7 +217,9 @@ class HomePageService extends FetchingService {
         page,
         limit,
       },
-    }).then(parseHomePageRailData);
+    })
+      .then(parseHomePageRailData)
+      .catch((err) => err.data);
 }
 
 const homePageService = new HomePageService();

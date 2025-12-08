@@ -26,6 +26,7 @@ class VodService extends FetchingService {
     pointer: 2,
     stripesFetched: 0,
     hasMore: true,
+    page: 1,
   };
 
   #emptyStateSeries = {
@@ -34,6 +35,7 @@ class VodService extends FetchingService {
     pointer: 2,
     stripesFetched: 0,
     hasMore: true,
+    page: 1,
   };
 
   #emptyStateSport = {
@@ -42,6 +44,7 @@ class VodService extends FetchingService {
     pointer: 2,
     stripesFetched: 0,
     hasMore: true,
+    page: 1,
   };
 
   #initState = {
@@ -106,7 +109,13 @@ class VodService extends FetchingService {
       while (currentState.stripesFetched < 3 && currentState.pointer < 25) {
         const promises = [];
         for (let i = 0; i <= 2 - currentState.stripesFetched; i++) {
-          promises.push(this.#getVods({ row: currentState.pointer, page: 1, limit: VODS_PER_ROW }));
+          promises.push(
+            this.#getVods({
+              row: currentState.pointer,
+              page: currentState.page,
+              limit: VODS_PER_ROW,
+            })
+          );
           currentState.pointer++;
         }
 
@@ -119,7 +128,7 @@ class VodService extends FetchingService {
               stripeData.hasMore = stripeData.items.length === VODS_PER_ROW;
 
               stripeData.stripeId = currentState.pointer - newStripes.length + index;
-              stripeData.page = 1;
+              stripeData.page = currentState.page;
               currentState.vodStripes.push(stripeData);
             }
           });
@@ -181,7 +190,7 @@ class VodService extends FetchingService {
   /**
    * Fetches more movie stripes for Vod Page page
    */
-  async fetchMoreStripes(index) {
+  async fetchMoreStripes() {
     const currentState = this.#getCurrentState();
 
     let counter = 0;
@@ -190,9 +199,19 @@ class VodService extends FetchingService {
     while (counter < 2 && currentState.pointer < 25) {
       const stripeData = await this.#getVods({
         row: currentState.pointer,
-        page: 1,
+        page: currentState.page,
         limit: VODS_PER_ROW,
       });
+
+      if (!stripeData) {
+        return;
+      }
+
+      if (stripeData.error) {
+        currentState.page++;
+        currentState.pointer = 1;
+      }
+
       currentState.pointer++;
 
       if (stripeData?.items.length > 0) {
@@ -201,7 +220,7 @@ class VodService extends FetchingService {
         // each stripe has unique id
         stripeData.stripeId = currentState.pointer;
         // each stripe page number so we can fetch more after
-        stripeData.page = 1;
+        stripeData.page = currentState.page;
         stripeData.hasMore = stripeData.items.length === currentState.currentRailLimit;
         newStripes.push(stripeData);
       }
@@ -282,7 +301,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
-    }).then(parseVodMoviesPageData);
+    })
+      .then(parseVodMoviesPageData)
+      .catch((err) => err.data);
 
   #getMoviesHeroSection = async (params) =>
     await this._request({
@@ -298,7 +319,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
-    }).then(parseSeriesPageData);
+    })
+      .then(parseSeriesPageData)
+      .catch((err) => err.data);
 
   #getSeriesHeroSection = async (params) =>
     await this._request({
@@ -314,7 +337,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
-    }).then(parseSportsPageData);
+    })
+      .then(parseSportsPageData)
+      .catch((err) => err.data);
   };
 
   #getSportHeroSection = async (params) =>
