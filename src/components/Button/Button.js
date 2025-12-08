@@ -76,8 +76,12 @@ export default class Button extends FocusableItem {
       strokeColor: Colors(colors.focus).get(),
     });
 
-    const progressPercent = Math.round((position / duration) * 100);
-    this.progressW = Math.min((width * progressPercent) / 100, width);
+    if (position && duration) {
+      const progressPercent = Math.round((position / duration) * 100);
+      this.progressW = Math.min((width * progressPercent) / 100, width);
+    } else {
+      this.progressW = 0;
+    }
 
     const colorBorder = borderColor ? borderColor : colors.unfocus;
 
@@ -136,7 +140,7 @@ export default class Button extends FocusableItem {
       },
     });
 
-    if (position && this.progressW) {
+    if (position && duration && this.progressW) {
       this.patch({
         Progress: {
           w: this.progressW,

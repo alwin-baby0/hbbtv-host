@@ -12,6 +12,7 @@ export default async function (page, { seriesId, cmpShown }) {
   let lastPlayedEpisodeUrl;
   let lastPlayedEpisodeTitle;
   let lastPlayedSeriesId;
+  let lastPlayedEpisodeDuration;
 
   const hash = window.location.hash;
   const queryString = hash.split('?')[1];
@@ -47,6 +48,7 @@ export default async function (page, { seriesId, cmpShown }) {
     lastPlayedEpisodeTitle = resProgress.data?.title || '';
     lastPlayedEpisodeUrl = resProgress.data?.url || galleryItem.url || '';
     lastPlayedSeriesId = resProgress.data?.video_id;
+    lastPlayedEpisodeDuration = resProgress.data?.duration || 0;
 
     console.log('asdf series resPROG: ', resProgress);
 
@@ -72,6 +74,7 @@ export default async function (page, { seriesId, cmpShown }) {
     lastPlayedTitle: lastPlayedEpisodeTitle || undefined,
     lastPlayedEpisodeNumber: lastPlayedEpisodeNumber,
     lastPlayedSeasonNumber: lastPlayedSeasonNumber,
+    lastPlayedEpisodeDuration: lastPlayedEpisodeDuration,
     firstEpisodeVideoId: galleryItem.firstEpisodeId,
     firstEpisodeUrl: galleryItem.firstEpisodeUrl,
     firstEpisodeTitle: galleryItem.firstEpisodeTitle,
