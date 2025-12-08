@@ -446,8 +446,6 @@ export default class GalleryItem extends Lightning.Component {
       eventTime,
     } = galleryItem;
 
-    console.log('asdf LABEL: ', buttonLabel);
-
     const titleLength = title.length;
 
     const imdbScoreLabeled = `IMDB ${imdbScore}`;

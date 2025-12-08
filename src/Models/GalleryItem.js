@@ -3,7 +3,20 @@ import { t } from '../Services';
 
 class GalleryItem {
   constructor(data) {
-    const { id, title, files, summary, type, meta, images, schedule, streams, date, time } = data;
+    const {
+      id,
+      title,
+      files,
+      summary,
+      type,
+      meta,
+      images,
+      schedule,
+      streams,
+      date,
+      time,
+      playlists,
+    } = data;
 
     this.id = id;
 
@@ -17,6 +30,7 @@ class GalleryItem {
     this.trailerUrl = files && files[0].url;
     this.eventDate = date;
     this.eventTime = time;
+    this.playlists = playlists || null;
 
     if (meta) {
       const { cast, director, genre, ratings, duration, year, country, imdb, first_episode } = meta;

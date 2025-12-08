@@ -45,7 +45,7 @@ export const parseVodMoviesPageData = ({ data }) => {
       new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.MOVIE)
   );
   if (!railItems || railItems?.length === 0) return;
-  data.entry.has_more &&
+  data.entry?.has_more &&
     railItems.push(
       new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
     );
@@ -235,5 +235,23 @@ export const parseBannerData = ({ data }) => {
     cardType: CARD_TYPES.BANNER,
     items: railItems,
     itemsPerRow: 4,
+  };
+};
+
+//Playlists
+export const parseVodMoviesPlaylists = (data) => {
+  const railItems = data.items?.map(
+    (item) => new SimpleRailItem({ ...item, orientation: 'portrait' }, RAIL_TYPES.MOVIE)
+  );
+  if (!railItems || railItems?.length === 0) return;
+  data.entry?.has_more &&
+    railItems.push(new ViewMoreRailItem({ id: data.entry.id, orientation: 'portrait' }));
+
+  return {
+    railType: RAIL_TYPES.MOVIE,
+    railTitle: data?.name || data?.label,
+    cardType: CARD_TYPES.POSTER,
+    items: railItems,
+    railId: null,
   };
 };
