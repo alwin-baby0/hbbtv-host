@@ -20,13 +20,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -48,13 +50,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -75,13 +79,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -105,13 +111,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -139,13 +147,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -169,13 +179,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -196,13 +208,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -225,13 +239,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -252,13 +268,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };
@@ -283,13 +301,15 @@ class UserService extends FetchingService {
       },
     }).catch((err) => {
       if (err.status === 401) {
-        const userData = AuthorizationService.refreshToken();
-        if (userData?.status === 401) {
-          localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-        } else {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-        }
-        window.location.reload();
+        AuthorizationService.refreshToken()
+          .then(({ data }) => {
+            console.log(data);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+          })
+          .catch(() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+            // window.location.reload();
+          });
       }
     });
   };

@@ -109,60 +109,6 @@ export default class MyAccount extends Lightning.Component {
     this._props.recentlyWPage = 1;
   }
 
-  async $horizontalContainerIndexChange(index, refName) {
-    if (refName === 'RecentlyWatched') {
-      if (
-        index === this._UserRecentlyWatched._RecentlyWatched.Items.children.length - 1 &&
-        this._props.hasMoreRcw
-      ) {
-        this._props.recentlyWPage++;
-        const rcw = await UserService.getRecentlyWatched(this._props.recentlyWPage);
-
-        if (!rcw.data.recently_watched || rcw.data.recently_watched.length < 8) {
-          this._props.hasMoreRcw = false;
-        }
-
-        const parsedMovies = parseVodUserContentData({
-          data: {
-            entry: rcw.data.recently_watched,
-            railType: RAIL_TYPES.CONTINUE_WATCHING,
-          },
-          itemsPerRow: 4,
-        });
-
-        const rails = constructRails(parsedMovies);
-
-        this._UserRecentlyWatched._RecentlyWatched._appendItems(rails);
-      }
-    }
-
-    if (refName === 'Favorites') {
-      if (
-        index === this._UserFavorites._Favorites.Items.children.length - 1 &&
-        this._props.hasMoreFav
-      ) {
-        this._props.favoritesPage++;
-        const favorites = await UserService.getFavorites(this._props.favoritesPage);
-
-        if (!favorites.data.favorites || favorites.data.favorites.length < 8) {
-          this._props.hasMoreFav = false;
-        }
-
-        const parsedMovies = parseVodUserContentData({
-          data: {
-            entry: favorites.data.favorites,
-            railType: RAIL_TYPES.FAVORITES,
-          },
-          itemsPerRow: 4,
-        });
-
-        const rails = constructRails(parsedMovies);
-
-        this._UserFavorites._Favorites._appendItems(rails);
-      }
-    }
-  }
-
   async retrieveContentOnLogin() {
     const recentlyWatched = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
       ? await UserService.getRecentlyWatched()

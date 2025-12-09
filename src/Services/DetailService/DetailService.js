@@ -98,7 +98,7 @@ class DetailService extends FetchingService {
       method: API_METHODS.GET,
       params: {
         video_id: videoId,
-        series_id: seriesId,
+        ...(seriesId && { series_id: seriesId }),
         video_url: videoUrl,
       },
     });

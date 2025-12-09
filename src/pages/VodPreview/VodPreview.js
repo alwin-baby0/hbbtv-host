@@ -58,7 +58,6 @@ export default class VodPreview extends Lightning.Component {
 
   async _onChanged() {
     const { cmpShown, vodType } = this._props;
-    console.warn(this._props);
     const returnUrl = `${ROUTES.VOD}/${vodType}`;
 
     const canProceed = await checkCMP({

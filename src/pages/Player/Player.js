@@ -1002,7 +1002,7 @@ export default class Player extends Lightning.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 90, 90),
       });
     }
   }
