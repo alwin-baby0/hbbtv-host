@@ -6,6 +6,7 @@ import { CMPService } from '../../Services';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
 import { t } from '../../Services';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import QRCode from '../../components/QRCode/QRCode';
 
 export default class Settings extends Lightning.Component {
   static _template() {
@@ -148,28 +149,16 @@ export default class Settings extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
 
-    const buttonsResult = CMPService.cmpData?.buttons;
     const cmpTitle = CMPService.cmpData?.title;
     const cmpDescription = CMPService.cmpData?.description;
+    const options = CMPService.cmpData?.buttons.customize.options;
 
-    const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
+    const qrCodes = options.map((qrCode) => {
       return {
-        type: CMPButton,
-        collision: true,
-        flexItem: {
-          marginBottom: 18,
-        },
+        type: QRCode,
+        w: 770,
         props: {
-          label: value.label,
-          callback: async () => {
-            if (value.callback_url) {
-              const chosenValue = btnIndex === 0 ? 1 : 0;
-              await CMPService.selectCMPChoice(this._props.serialNumber, chosenValue);
-              Router.navigate(ROUTES.HOME);
-            } else {
-              Router.navigate(ROUTES.CMP_CUSTOMIZE, { options: value.options });
-            }
-          },
+          qrCode,
         },
       };
     });
@@ -239,15 +228,14 @@ export default class Settings extends Lightning.Component {
               textAlign: 'left',
             },
           },
-          Buttons: {
+          QRCodes: {
             w: 1050,
             h: 400,
-            y: 20,
-            type: VerticalContainer,
-            collision: true,
+            type: HorizontalContainer,
             props: {
-              items: buttons,
-              parentState: 'CMPContainer',
+              w: 1050,
+              h: 400,
+              items: qrCodes,
             },
           },
         },
@@ -274,16 +262,6 @@ export default class Settings extends Lightning.Component {
 
   static _states() {
     return [
-      class CMPContainer extends this {
-        _getFocused() {
-          return this.CMPButtons;
-        }
-
-        _handleUp() {
-          this._setState('Languages');
-        }
-      },
-
       class Languages extends this {
         _getFocused() {
           return this._LanguagesRowContainer;
@@ -293,10 +271,6 @@ export default class Settings extends Lightning.Component {
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
-        }
-
-        _handleDown() {
-          this._setState('CMPContainer');
         }
       },
     ];

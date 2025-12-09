@@ -181,7 +181,6 @@ class UserService extends FetchingService {
   };
 
   getProgress = async (videoID) => {
-    console.log('asdf ID getPROG: ', videoID);
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     return await this._request({
@@ -209,7 +208,6 @@ class UserService extends FetchingService {
   };
 
   addProgress = async (videoID, position, duration) => {
-    console.log('asdf ADD PROG: ', videoID, position, duration);
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     return await this._request({
@@ -266,7 +264,6 @@ class UserService extends FetchingService {
   };
 
   addSeriesProgress = async (videoID, seriesID, episodeNumber, seasonNumber, position) => {
-    console.log('asdf PROGDATA: ', videoID, seriesID, episodeNumber, seasonNumber, position);
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     return await this._request({

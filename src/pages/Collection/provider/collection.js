@@ -61,8 +61,6 @@ export default async function (page, { collectionId, category }) {
     parentState: 'Column',
   };
 
-  // const rails = constructRails(CollectionService.collectionItem);
-
   page._Column.props = {
     items: railsData,
     parentState: 'Column',

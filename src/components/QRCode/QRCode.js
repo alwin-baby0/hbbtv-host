@@ -5,11 +5,10 @@ export default class QRCode extends Lightning.Component {
     return {
       Wrapper: {
         w: 280,
-        y: 75,
         flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
         QRImage: {
-          w: 140,
-          h: 140,
+          w: 200,
+          h: 200,
         },
         Title: {
           w: 280,

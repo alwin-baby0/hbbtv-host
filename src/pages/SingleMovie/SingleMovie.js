@@ -760,7 +760,6 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         $enter() {
-          console.log('asdf UPAD ENTER');
           this.patch({
             Content: {
               Image: {
@@ -783,7 +782,6 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         $exit() {
-          console.log('asdf upad u exit');
           this.patch({
             Content: {
               Image: {
