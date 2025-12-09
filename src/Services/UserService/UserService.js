@@ -19,9 +19,9 @@ class UserService extends FetchingService {
         limit,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -47,9 +47,9 @@ class UserService extends FetchingService {
         content_type: vodType,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -74,9 +74,9 @@ class UserService extends FetchingService {
         content_id: videoID,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -104,9 +104,9 @@ class UserService extends FetchingService {
         limit,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -138,9 +138,9 @@ class UserService extends FetchingService {
         ...(seriesID && { series_id: seriesID }),
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -168,9 +168,9 @@ class UserService extends FetchingService {
         video_id: videoID,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -195,9 +195,9 @@ class UserService extends FetchingService {
         video_id: videoID,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -224,9 +224,9 @@ class UserService extends FetchingService {
         duration,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -251,9 +251,9 @@ class UserService extends FetchingService {
         series_id: seriesID,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
@@ -282,9 +282,9 @@ class UserService extends FetchingService {
         position: position,
       },
     }).catch((err) => {
-      if (err.data.code === 401) {
+      if (err.status === 401) {
         const userData = AuthorizationService.refreshToken();
-        if (userData?.data?.code === 401) {
+        if (userData?.status === 401) {
           localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
         } else {
           localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
