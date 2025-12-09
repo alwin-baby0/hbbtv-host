@@ -167,7 +167,6 @@ export const TRANSLATIONS = {
   CONTINUE_WATCHING: 'continue_watching',
   COOKIE_PREFERENCES: 'cookie_preferences',
   EXIT: 'exit_label',
-  FAVORITE: 'favorite',
   FAVORITES: 'favorites',
   LANGUAGES: 'languages',
   LOGGED_IN_MSG: 'logged_in_message',

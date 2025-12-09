@@ -69,8 +69,6 @@ export default class VodPreview extends Lightning.Component {
     if (!canProceed) {
       return;
     }
-
-    this._setState('Hero');
   }
 
   get _HeroSection() {
