@@ -252,6 +252,20 @@ export default class SingleMovie extends Lightning.Component {
             },
           },
         },
+        PlaylistWrapper: {
+          collision: true,
+          x: 110,
+          y: 915,
+          h: 600,
+          w: 1770,
+          clipping: true,
+          Column: {
+            collision: true,
+            h: 600,
+            w: 1770,
+            type: VerticalContainer,
+          },
+        },
       },
     };
   }
@@ -288,6 +302,12 @@ export default class SingleMovie extends Lightning.Component {
   }
   get _BackButton() {
     return this.tag('BackButton');
+  }
+  get _PlaylistWrapper() {
+    return this.tag('PlaylistWrapper');
+  }
+  get _Column() {
+    return this.tag('PlaylistWrapper.Column');
   }
 
   _buildButtonConfiguration(movie, movieTrailerUrl, last_position, favorited) {
@@ -357,8 +377,15 @@ export default class SingleMovie extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { movie, movieId, movieTrailerId, movieTrailerUrl, favorited, last_position } =
-      this._props;
+    const {
+      movie,
+      movieId,
+      movieTrailerId,
+      movieTrailerUrl,
+      favorited,
+      last_position,
+      playlistVODS,
+    } = this._props;
     const {
       title,
       description,
@@ -374,6 +401,8 @@ export default class SingleMovie extends Lightning.Component {
       imdbScore,
       videoUrl,
     } = movie;
+
+    this._Column.props = { items: playlistVODS, parentState: 'PlaylistWrapper' };
 
     const imdbScoreLabeled = `IMDB ${imdbScore}`;
 
@@ -571,6 +600,8 @@ export default class SingleMovie extends Lightning.Component {
         },
       })),
     };
+
+    this._setState('Buttons');
   }
 
   async _active() {
@@ -656,6 +687,26 @@ export default class SingleMovie extends Lightning.Component {
     return [
       class Buttons extends this {
         _getFocused() {
+          this.patch({
+            Content: {
+              Image: {
+                y: 0,
+              },
+              BackButton: {
+                y: 30,
+              },
+              Card: {
+                y: 120,
+              },
+              CardInfo: {
+                y: 250,
+              },
+              PlaylistWrapper: {
+                y: 915,
+              },
+            },
+          });
+
           return this._Buttons;
         }
 
@@ -665,6 +716,10 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleUp() {
           this._setState('BackButton');
+        }
+
+        _handleDown() {
+          this._setState('PlaylistWrapper');
         }
       },
       class ContinueBtn extends this {
@@ -692,6 +747,62 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleRight() {
           this._setState('Buttons');
+        }
+      },
+
+      class PlaylistWrapper extends this {
+        _getFocused() {
+          return this._Column;
+        }
+
+        _handleUp() {
+          this._setState('Buttons');
+        }
+
+        $enter() {
+          console.log('asdf UPAD ENTER');
+          this.patch({
+            Content: {
+              Image: {
+                y: -340,
+              },
+              BackButton: {
+                y: -180,
+              },
+              Card: {
+                y: -340,
+              },
+              CardInfo: {
+                y: -240,
+              },
+              PlaylistWrapper: {
+                y: 500,
+              },
+            },
+          });
+        }
+
+        $exit() {
+          console.log('asdf upad u exit');
+          this.patch({
+            Content: {
+              Image: {
+                y: 0,
+              },
+              BackButton: {
+                y: 30,
+              },
+              Card: {
+                y: 120,
+              },
+              CardInfo: {
+                y: 250,
+              },
+              PlaylistWrapper: {
+                y: 915,
+              },
+            },
+          });
         }
       },
     ];
