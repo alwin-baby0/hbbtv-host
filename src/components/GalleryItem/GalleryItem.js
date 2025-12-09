@@ -467,7 +467,7 @@ export default class GalleryItem extends Lightning.Component {
         ? director.join(', ')
         : director
       : undefined;
-    const genreText = genre ? genre.join(', ') : '';
+    const genreText = genre ? (Array.isArray(genre) ? genre.join(', ') : genre) : undefined;
 
     if (videoType === 'event') {
       const targetTimestamp = startTime;

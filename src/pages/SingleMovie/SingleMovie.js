@@ -420,7 +420,7 @@ export default class SingleMovie extends Lightning.Component {
         ? director.join(', ')
         : director
       : undefined;
-    const genreText = genre ? genre.join(', ') : '';
+    const genreText = genre ? (Array.isArray(genre) ? genre.join(', ') : genre) : undefined;
 
     const badgeText = t(TRANSLATIONS.MOVIES);
 
