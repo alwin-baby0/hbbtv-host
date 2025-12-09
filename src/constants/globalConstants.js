@@ -249,13 +249,11 @@ export const ROUTES = {
   HELP: 'help',
   PLAYER: 'player',
   CMP: 'cmp',
-  CMP_CUSTOMIZE: 'cmp-customize',
   SETTINGS: 'settings',
   COLLECTION: 'collection-details',
   VOD: 'vod',
   MOVIE_DETAILS: 'movie-details',
   SERIES_DETAILS: 'series-details',
-  FILTER_PAGE: 'filterPage',
   SPORTS_DETAIL: 'sports-details',
   EVENT_DETAILS: 'event-details',
 };

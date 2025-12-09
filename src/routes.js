@@ -119,9 +119,5 @@ export default {
       component: CMP,
       on: cmp,
     },
-    {
-      path: ROUTES.CMP_CUSTOMIZE,
-      component: CMPCustomize,
-    },
   ],
 };
