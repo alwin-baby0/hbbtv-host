@@ -23,7 +23,6 @@ export default async function (page, { seriesId, cmpShown }) {
   }
 
   const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(seriesId);
-  console.log('asdf galITEM SERIJA: ', galleryItem);
 
   const updatedSeasons = seasons.map((season) => {
     return {
@@ -49,8 +48,6 @@ export default async function (page, { seriesId, cmpShown }) {
     lastPlayedEpisodeUrl = resProgress.data?.url || galleryItem.url || '';
     lastPlayedSeriesId = resProgress.data?.video_id;
     lastPlayedEpisodeDuration = resProgress.data?.duration || 0;
-
-    console.log('asdf series resPROG: ', resProgress);
 
     favorited = resFav?.data?.favorites?.some((element) => element.video_id === seriesId);
   }

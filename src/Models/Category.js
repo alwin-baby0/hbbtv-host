@@ -25,7 +25,7 @@ class Category {
       }
       case CATEGORY_TYPES.CHANNELS: {
         this.changeGenre = this.data;
-        Router.navigate(`${ROUTES.LIVE}/:${this.id}?`);
+        Router.navigate(`${ROUTES.LIVE}/:${this.id}`);
         break;
       }
       case CATEGORY_TYPES.SEASON_TABS: {
