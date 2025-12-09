@@ -163,7 +163,7 @@ const constructHeroRailItems = (railItems, railItemsOptions, cardType) => {
             }
             case CATEGORY_TYPES.TRAILER: {
               Router.navigate(ROUTES.PLAYER, {
-                videoUrl: railItem.url,
+                videoUrl: railItem.trailerUrl,
                 duration: railItem.duration,
               });
               break;

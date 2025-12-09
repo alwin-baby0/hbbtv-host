@@ -11,8 +11,6 @@ import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globa
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {
-    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
-
     const timestamp = new Date().getTime();
 
     return await this._request({
