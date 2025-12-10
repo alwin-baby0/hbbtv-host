@@ -216,8 +216,13 @@ export default class SingleLiveEvent extends Lightning.Component {
       },
       class HeroSection extends this {
         _getFocused() {
-          this._SeriesWrapper.patch({
-            y: 0,
+          this.patch({
+            BackButton: {
+              y: 30,
+            },
+            SeriesWrapper: {
+              y: 0,
+            },
           });
           return this._HeroSection;
         }
@@ -267,6 +272,9 @@ export default class SingleLiveEvent extends Lightning.Component {
             });
           } else {
             this.patch({
+              BackButton: {
+                y: -180,
+              },
               SeriesWrapper: {
                 y: -140,
                 h: 1080,
