@@ -302,9 +302,6 @@ export default class MyAccount extends Lightning.Component {
               fontSize: 40,
               width: 250,
               callback: async () => {
-                AuthorizationService.revokeToken(
-                  localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA).access_token
-                );
                 localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
                 AuthorizationService.clearPollingInterval();
                 window.location.reload();

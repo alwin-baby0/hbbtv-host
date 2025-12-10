@@ -346,6 +346,9 @@ const constructContinueWatchingRailItems = (
     },
     ...railItemsOptions,
     props: {
+      duration: railItem.duration,
+      position: railItem.position,
+      progress: railItem.progress,
       ...(railItem.type !== RAIL_TYPES.VIEW_MORE && {
         itemTitle: railItem.title ? railItem.title : '',
         imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,

@@ -22,7 +22,6 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
@@ -52,12 +51,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });
@@ -81,12 +79,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });
@@ -113,12 +110,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });
@@ -149,12 +145,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });
@@ -181,12 +176,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });
@@ -210,12 +204,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });
@@ -241,12 +234,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });
@@ -270,12 +262,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });
@@ -303,12 +294,11 @@ class UserService extends FetchingService {
       if (err.status === 401) {
         AuthorizationService.refreshToken()
           .then(({ data }) => {
-            console.log(data);
             localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
           })
           .catch(() => {
             localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
+            window.location.reload();
           });
       }
     });

@@ -55,12 +55,14 @@ export default class ContinueWatchingRailItem extends FocusableItem {
           visible: false,
           props: {
             width: CARD_SIZES.CONTINUE_WATCHING.width - 40,
+            height: 7,
             flexItem: {
               marginLeft: 20,
               marginRight: 20,
             },
-            progressColor: Colors(colors.focus).get(),
+            progressColor: colors.focus,
             backgroundBarColor: colors.unfocus,
+            alpha: 0.6,
           },
         },
         Title: {
@@ -99,7 +101,8 @@ export default class ContinueWatchingRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, placeholderSrc, enableProgressBar, itemTitle } = this._props;
+    const { imageSrc, radius, placeholderSrc, enableProgressBar, itemTitle, duration, position } =
+      this._props;
 
     this.setProps({
       width: 385,
@@ -108,6 +111,7 @@ export default class ContinueWatchingRailItem extends FocusableItem {
 
     this._PlayButton.visible = enableProgressBar;
     this._ProgressBar.visible = enableProgressBar;
+    enableProgressBar && this._ProgressBar.progress(position / duration);
 
     this.patch({
       Wrapper: {

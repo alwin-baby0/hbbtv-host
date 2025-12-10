@@ -41,7 +41,6 @@ export const constructRails = (rails) => {
 
         return chunkedItems.map((chunkedRailItem) => {
           const newRail = { ...rail };
-          console.log(globalVerticalIndex);
           newRail.railTitle = globalVerticalIndex === 0 ? rail.railTitle : '';
           newRail.items = chunkedRailItem;
 
@@ -109,7 +108,7 @@ export const cronstructSingleLineRail = (rail, index) => {
     type: HorizontalContainer,
     ...rest,
     ...containerDimensions,
-    ...(index === 0 && { collision: true }),
+    ...((railType === RAIL_TYPES.EPGS || index === 0) && { collision: true }),
     index,
     props: {
       h:
@@ -128,6 +127,7 @@ export const cronstructSingleLineRail = (rail, index) => {
         items.length,
       railWidth: RAIL_WIDTHS[railType] || 1500,
       railTitle: railTitle,
+      railType,
       cardType: cardType,
       ...((railType === RAIL_TYPES.EPGS ||
         railType === RAIL_TYPES.CONTINUE_WATCHING ||

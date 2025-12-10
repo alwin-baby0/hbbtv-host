@@ -63,6 +63,7 @@ export const LOCAL_STORAGE_KEYS = {
   RECENT_SEARCH: 'recentSearch',
   SETTINGS: 'settings',
   COLLECTION_CATEGORY: 'category',
+  DEVICE_CODE: 'deviceCode',
 };
 
 export const CATEGORY_TYPES = {

@@ -1,6 +1,6 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
-import { CARD_TYPES } from '../../constants/globalConstants';
+import { CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
 
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
@@ -183,6 +183,8 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   setCollision(collision) {
+    if (this._props.railType === RAIL_TYPES.EPGS) return;
+
     this.patch({
       collision,
     });
