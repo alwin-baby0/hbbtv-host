@@ -1,5 +1,5 @@
 import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
-import { parseVodMoviesPlaylists } from '../../../Models';
+import { parseVodPlaylists } from '../../../Models';
 import { DetailService, UserService } from '../../../Services';
 import { constructRails } from '../../utils';
 
@@ -27,12 +27,12 @@ export default async function (page, { movieId, cmpShown }) {
     const resProgress = await UserService.getProgress(movieId);
 
     last_position = resProgress?.data?.progress?.position;
-    favorited = resFav?.data?.favorites?.some((element) => element.video_id === movieId);
+    favorited = resFav?.data?.favorites?.some((element) => element.id === movieId);
   }
 
   let movieVODS;
   if (movie?.playlists) {
-    const parsedMovies = movie.playlists.map((playlist) => parseVodMoviesPlaylists(playlist));
+    const parsedMovies = movie.playlists.map((playlist) => parseVodPlaylists(playlist));
     movieVODS = constructRails(parsedMovies, ROUTES.VOD);
   }
 

@@ -239,13 +239,22 @@ export const parseBannerData = ({ data }) => {
 };
 
 //Playlists
-export const parseVodMoviesPlaylists = (data) => {
+export const parseVodPlaylists = (data) => {
   const railItems = data.items?.map(
-    (item) => new SimpleRailItem({ ...item, orientation: 'portrait' }, RAIL_TYPES.MOVIE)
+    (item) =>
+      new SimpleRailItem(
+        { ...item, orientation: data?.entry?.poster_format || 'portrait' },
+        RAIL_TYPES.MOVIE
+      )
   );
   if (!railItems || railItems?.length === 0) return;
   data.entry?.has_more &&
-    railItems.push(new ViewMoreRailItem({ id: data.entry.id, orientation: 'portrait' }));
+    railItems.push(
+      new ViewMoreRailItem({
+        id: data.entry.id,
+        orientation: data?.entry?.poster_format || 'portrait',
+      })
+    );
 
   return {
     railType: RAIL_TYPES.MOVIE,

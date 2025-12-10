@@ -590,37 +590,42 @@ export default class GalleryItem extends Lightning.Component {
             },
           },
         },
-        Countdown: {
-          visible: this.remaining > 0,
-          Days: {
-            Number: {
-              text: {
-                text: this._days,
+      });
+      setTimeout(() => {
+        //this patch is delayed on purpose, without it countdown is not properly displayed
+        this._Info.patch({
+          Countdown: {
+            visible: this.remaining > 0,
+            Days: {
+              Number: {
+                text: {
+                  text: this._days,
+                },
+              },
+            },
+            Hours: {
+              Number: {
+                text: {
+                  text: this._hours,
+                },
+              },
+            },
+            Mins: {
+              Number: {
+                text: {
+                  text: this._minutes,
+                },
+              },
+            },
+            Sec: {
+              Number: {
+                text: {
+                  text: this._seconds,
+                },
               },
             },
           },
-          Hours: {
-            Number: {
-              text: {
-                text: this._hours,
-              },
-            },
-          },
-          Mins: {
-            Number: {
-              text: {
-                text: this._minutes,
-              },
-            },
-          },
-          Sec: {
-            Number: {
-              text: {
-                text: this._seconds,
-              },
-            },
-          },
-        },
+        });
       });
     }
 
@@ -725,6 +730,7 @@ export default class GalleryItem extends Lightning.Component {
 
     this._Info.patch({
       Countdown: {
+        visible: totalSeconds > 0,
         Days: {
           Number: {
             text: {
