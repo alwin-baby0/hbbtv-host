@@ -11,7 +11,6 @@ import {
   IMG_PATH,
 } from '../../constants/globalConstants';
 import { parseVodUserContentData } from '../../Models';
-import { constructRails } from '../utils';
 import LogoutButton from '../../components/Buttons/LogoutButton/LogoutButton';
 
 const states = ['LogoutButton', 'UserRecentlyWatched', 'UserFavorites'];

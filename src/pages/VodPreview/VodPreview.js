@@ -44,7 +44,6 @@ export default class VodPreview extends Lightning.Component {
         y: 980,
         w: 1760,
         h: 670,
-        clipping: true,
         Column: {
           y: 980,
           h: 795,

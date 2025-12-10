@@ -44,9 +44,9 @@ export const railItemConstructor = (railItems, railType, railItemsOptions, cardT
     case RAIL_TYPES.BANNER:
       return constructBannerRailItems(railItems, railItemsOptions, cardType);
     case RAIL_TYPES.CONTINUE_WATCHING:
-      return constructContinueWatchingRailItems(railItems, railItemsOptions, cardType, true);
+      return constructContinueWatchingRailItems(railItems, railItemsOptions, true);
     case RAIL_TYPES.FAVORITES:
-      return constructContinueWatchingRailItems(railItems, railItemsOptions, cardType);
+      return constructContinueWatchingRailItems(railItems, railItemsOptions);
     default: {
       console.warn('unknown rail type:', railType, ', defaulting to simple rail items');
       return constructSimpleRailItems(railItems, railItemsOptions, cardType);
@@ -193,7 +193,7 @@ const constructHeroRailItems = (railItems, railItemsOptions, cardType) => {
   });
 };
 
-const constructEpisodeRailItems = (railItems, railItemsOptions, cardType) => {
+const constructEpisodeRailItems = (railItems, railItemsOptions) => {
   return railItems.map((railItem, index) => ({
     type: LandscapeRailItem,
     collision: true,

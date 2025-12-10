@@ -68,10 +68,9 @@ export default class HorizontalContainer extends Lightning.Component {
     const { cardType, targetIndex, wrap } = rest;
 
     if (railTitle && railTitle !== '') {
-      const { h, flexItem } = rest;
+      const { h } = rest;
       this.patch({
         h: h + 95,
-        ...(flexItem && { flexItem: flexItem }),
         Title: {
           x: 9,
           y: 10,
@@ -177,7 +176,16 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _getFocused() {
+    this.patch({
+      collision: true,
+    });
     return this.Items?.children?.[this._focusedIndex];
+  }
+
+  setCollision(collision) {
+    this.patch({
+      collision,
+    });
   }
 
   _handleDown() {

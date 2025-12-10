@@ -22,10 +22,10 @@ const RAIL_WIDTHS = {
 
 let globalVerticalIndex = 0;
 
-export const constructRails = (rails, page = '') => {
+export const constructRails = (rails) => {
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
-    return constructRails([rails], page);
+    return constructRails([rails]);
   }
 
   return rails
@@ -48,10 +48,10 @@ export const constructRails = (rails, page = '') => {
           const currentIndex = globalVerticalIndex;
           globalVerticalIndex += 1;
 
-          return cronstructSingleLineRail(newRail, currentIndex, page);
+          return cronstructSingleLineRail(newRail, currentIndex);
         });
       }
-      return cronstructSingleLineRail(rail, index, page); //-1 is placeholder value if items are not chunked
+      return cronstructSingleLineRail(rail, index); //-1 is placeholder value if items are not chunked
     });
 };
 
@@ -60,7 +60,7 @@ const verticalIndexReset = () => {
   globalVerticalIndex = 0;
 };
 
-export const cronstructSingleLineRail = (rail, index, page = '') => {
+export const cronstructSingleLineRail = (rail, index) => {
   const {
     items,
     railType,
@@ -69,15 +69,6 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     railItemsOptions,
     ...rest
   } = rail;
-
-  const flexItem =
-    ((railType === RAIL_TYPES.EPGS && !railTitle) ||
-      (page !== ROUTES.HOME && page !== ROUTES.VOD && railTitle)) &&
-    page !== ROUTES.SEARCH
-      ? {}
-      : {
-          marginBottom: railTitle && page !== ROUTES.SEARCH ? 40 : page === ROUTES.SEARCH ? 30 : 60,
-        };
 
   let paddingLeft = 0;
   let targetIndex = null;
@@ -118,7 +109,7 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     type: HorizontalContainer,
     ...rest,
     ...containerDimensions,
-    collision: true,
+    ...(index === 0 && { collision: true }),
     index,
     props: {
       h:
@@ -147,7 +138,6 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
         railItemsOptions,
         cardType
       ),
-      flexItem: flexItem,
       paddingLeft,
       targetIndex: targetIndex,
       index: index,

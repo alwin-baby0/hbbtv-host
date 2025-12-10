@@ -103,6 +103,12 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _getFocused() {
+    this._focusedIndex > 0 && this.Items?.children?.[this._focusedIndex - 1].setCollision(false);
+    this._focusedIndex < this.Items?.children?.length - 1 &&
+      this.Items?.children?.[this._focusedIndex + 1].setCollision(false);
+
+    this.Items?.children?.[this._focusedIndex].setCollision(true);
+
     return this.Items?.children?.[this._focusedIndex];
   }
 
@@ -287,6 +293,12 @@ export default class VerticalContainer extends Lightning.Component {
     }
 
     if (this._focusedIndex !== index) {
+      newIndex > 0 && this.Items?.children?.[newIndex - 1].setCollision(false);
+      newIndex < this.Items?.children?.length - 1 &&
+        this.Items?.children?.[newIndex + 1].setCollision(false);
+
+      this.Items?.children?.[newIndex].setCollision(true);
+
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex = index;
     }
@@ -309,6 +321,12 @@ export default class VerticalContainer extends Lightning.Component {
    * @param {number} newIndex
    */
   _handleCarryFocus(oldIndex, newIndex, closestElementFunction = getClosestElementIndex) {
+    newIndex > 0 && this.Items?.children?.[newIndex - 1].setCollision(false);
+    newIndex < this.Items?.children?.length - 1 &&
+      this.Items?.children?.[newIndex + 1].setCollision(false);
+
+    this.Items?.children?.[newIndex].setCollision(true);
+
     if (this._props.carryRowPosition && this.Items.children.length > 1) {
       const nextContainer = this.Items.children[newIndex];
       if (nextContainer.Items) {
