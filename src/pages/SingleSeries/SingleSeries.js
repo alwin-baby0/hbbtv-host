@@ -147,6 +147,7 @@ export default class SingleSeries extends Lightning.Component {
       lastPlayedEpisodeDuration,
       ssai,
       ssaiLastEp,
+      playlistVODS,
     } = this._props;
     const { id } = galleryItem;
 
@@ -341,7 +342,7 @@ export default class SingleSeries extends Lightning.Component {
   switchSeason(seasonId) {
     let targetSeason = this._props.allSeasons.find((season) => season.seasonId === seasonId);
     this._Column.props = {
-      items: constructRails(targetSeason),
+      items: [...constructRails(targetSeason), ...this._props.playlistVODS],
       parentState: 'Items',
     };
   }
@@ -423,6 +424,9 @@ export default class SingleSeries extends Lightning.Component {
             this.patch({
               SeriesWrapper: {
                 y: -650,
+              },
+              SeasonsBar: {
+                y: -200,
               },
               Wrapper: {
                 y: 0,

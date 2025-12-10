@@ -239,7 +239,7 @@ export const parseBannerData = ({ data }) => {
 };
 
 //Playlists
-export const parseVodMoviesPlaylists = (data) => {
+export const parseVodPlaylists = (data) => {
   const railItems = data.items?.map(
     (item) => new SimpleRailItem({ ...item, orientation: 'portrait' }, RAIL_TYPES.MOVIE)
   );

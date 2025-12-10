@@ -1,4 +1,5 @@
-import { LOCAL_STORAGE_KEYS } from '../../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
+import { parseVodPlaylists } from '../../../Models';
 import { DetailService, UserService } from '../../../Services';
 import { constructRails } from '../../utils';
 
@@ -60,6 +61,12 @@ export default async function (page, { seriesId, cmpShown }) {
     ssai = seasons ? seasons[0].items[0].ssai : undefined;
   }
 
+  let seriesVODS;
+  if (galleryItem?.playlists) {
+    const parsedVODS = galleryItem.playlists.map((playlist) => parseVodPlaylists(playlist));
+    seriesVODS = constructRails(parsedVODS, ROUTES.VOD);
+  }
+
   page.props = {
     sectionTitle: seasons[0]?.sectionTitle,
     galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
@@ -83,6 +90,7 @@ export default async function (page, { seriesId, cmpShown }) {
     ssaiLastEp: ssaiLastEp,
     cmpShown,
     allSeasons: updatedSeasons,
+    playlistVODS: seriesVODS,
   };
 
   const seasonsRail = constructRails(seasonTabsParsed);
@@ -93,7 +101,7 @@ export default async function (page, { seriesId, cmpShown }) {
   };
 
   page._Column.props = {
-    items: constructRails(updatedSeasons[0]),
+    items: [...constructRails(updatedSeasons[0]), ...seriesVODS],
     parentState: 'Items',
   };
 }
