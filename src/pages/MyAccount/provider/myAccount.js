@@ -10,7 +10,7 @@ export default async function (page) {
     ? await AuthorizationService.getDeviceCode()
     : {};
 
-  localStorage.setItem(LOCAL_STORAGE_KEYS.DEVICE_CODE, response.data.device_code);
+  response?.data && localStorage.setItem(LOCAL_STORAGE_KEYS.DEVICE_CODE, response.data.device_code);
 
   const recentlyWatched = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? await UserService.getRecentlyWatched()
