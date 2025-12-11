@@ -223,10 +223,10 @@ export default class LiveTVPreview extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { title, summary, extensions, channelImage } = this._props;
+    const { title, summary, channelImage } = this._props;
 
-    const startTime = this._logTimeInHHMM(new Date(extensions.start_time));
-    const endTime = this._logTimeInHHMM(new Date(extensions.end_time));
+    const startTime = this._logTimeInHHMM(new Date(this._props.startTime));
+    const endTime = this._logTimeInHHMM(new Date(this._props.endTime));
 
     const currentTime = this._logTimeInHHMM(new Date()); // Current local time
     const elapsedPercentage = this.calculateElapsedPercentage(startTime, endTime, currentTime);
