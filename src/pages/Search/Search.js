@@ -269,7 +269,7 @@ export default class Search extends Lightning.Component {
     });
 
     if (inputValue.length > 2) {
-      SearchService.getSearch(inputValue, '').then((data) => {
+      SearchService.getSearch(inputValue).then((data) => {
         if (data?.items) {
           data.items && this.$changedVODGenre({ ...data, railTitle: `Search for: ${inputValue}` });
         }

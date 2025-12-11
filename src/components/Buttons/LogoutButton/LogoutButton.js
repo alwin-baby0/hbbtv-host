@@ -90,7 +90,6 @@ export default class LogoutButton extends Lightning.Component {
   }
 
   _focus() {
-    console.log('here');
     setTimeout(
       () =>
         this._FocusBorder.patch({

@@ -332,3 +332,13 @@ export const VOD_PREVIEW_TYPES = {
   SERIES: 'series',
   SPORTS: 'sports',
 };
+
+export const SEARCH_TYPES = {
+  ALL: 'all',
+  MOVIE: 'movie',
+  SERIES: 'series',
+  CHANNEL: 'channel',
+  EVENT: 'event',
+  SEASON: 'season',
+  CAST: 'cast',
+};

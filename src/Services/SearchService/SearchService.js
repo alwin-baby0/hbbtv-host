@@ -1,15 +1,22 @@
 import { SimpleRailItem } from '../../Models';
-import { API_URLS, RAIL_TYPES, CARD_TYPES, API_METHODS } from '../../constants/globalConstants';
+import {
+  API_URLS,
+  RAIL_TYPES,
+  CARD_TYPES,
+  API_METHODS,
+  SEARCH_TYPES,
+} from '../../constants/globalConstants';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 
 export default class SearchService extends FetchingService {
   getSearch = async (
     keywords,
-    category,
+    category = '',
     cardType,
     itemsPerRow = undefined,
-    railType = RAIL_TYPES.MOVIE
+    railType = RAIL_TYPES.MOVIE,
+    type = SEARCH_TYPES.ALL
   ) =>
     this._request({
       url: `/${API_URLS.GET_SEARCH}`,
@@ -21,6 +28,7 @@ export default class SearchService extends FetchingService {
         page: 1,
         orderBy: 'name:desc',
         category,
+        type,
       },
     }).then((response) => this.#parseSearchPageData(response, cardType, itemsPerRow, railType));
 

@@ -35,6 +35,7 @@ export default class VodContentContainer extends Lightning.Component {
     const { contentType, items } = props;
 
     this._Categories.props = { parentState: this._props.parentState };
+    this._LiveEvents.props = { parentState: this._props.parentState };
 
     this._props.contentType = contentType;
 
