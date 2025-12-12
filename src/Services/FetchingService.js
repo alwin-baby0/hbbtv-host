@@ -9,10 +9,12 @@ const API_BASE_URLS = {
 };
 
 const API_BASE_URL = process.env.APP_BASE_URL;
+const BACKUP_API_URL = process.env.APP_BASE_URL_2;
 
 export default class FetchingService {
   // we create static instance of axios to be unique throught the project
   static axiosInstance = null;
+
   static init() {
     if (FetchingService.axiosInstance) return;
     FetchingService.axiosInstance = axios.create({
@@ -42,10 +44,43 @@ export default class FetchingService {
    */
   async _request({ apiVersion, url, ...options }) {
     this.#loading = true;
-    return FetchingService.axiosInstance({
-      url: /* API_BASE_URLS[apiVersion] */ API_BASE_URL + url,
-      ...options,
-    })
+
+    const attempt = async (fullUrl) => {
+      let lastErr;
+
+      for (let i = 0; i < 3; i++) {
+        try {
+          return await FetchingService.axiosInstance({
+            url: fullUrl,
+            ...options,
+          });
+        } catch (err) {
+          const status = err?.response?.status;
+          lastErr = err;
+
+          // Retry only if status starts with 5
+          if (!status || String(status)[0] !== '5') {
+            throw err;
+          }
+        }
+      }
+
+      // After failing 3 times, return last error
+      throw lastErr;
+    };
+
+    const primaryUrl = API_BASE_URL + url;
+    const backupUrl = BACKUP_API_URL + url;
+
+    return attempt(primaryUrl)
+      .catch(async (err) => {
+        // Only retry with backup if the failure was a 5xx
+        const status = err?.response?.status;
+        if (status && String(status)[0] === '5') {
+          return attempt(backupUrl);
+        }
+        throw err;
+      })
       .then(this.#onSuccess)
       .catch(this.#onError);
   }
