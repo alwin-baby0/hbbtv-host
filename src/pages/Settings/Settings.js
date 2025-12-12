@@ -231,6 +231,9 @@ export default class Settings extends Lightning.Component {
           QRCodes: {
             w: 1050,
             h: 400,
+            flexItem: {
+              marginTop: 20,
+            },
             type: HorizontalContainer,
             props: {
               w: 1050,
