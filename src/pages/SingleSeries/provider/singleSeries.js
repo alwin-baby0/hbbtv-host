@@ -42,13 +42,13 @@ export default async function (page, { seriesId, cmpShown }) {
   if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
     const resFav = await UserService.getFavorites();
     const resProgress = await UserService.getSeriesProgress(seriesId);
-    position = resProgress.data?.position;
-    lastPlayedEpisodeNumber = resProgress.data?.episode_id;
-    lastPlayedSeasonNumber = resProgress.data?.season_id;
-    lastPlayedEpisodeTitle = resProgress.data?.title || '';
-    lastPlayedEpisodeUrl = resProgress.data?.url || galleryItem.url || '';
-    lastPlayedSeriesId = resProgress.data?.video_id;
-    lastPlayedEpisodeDuration = resProgress.data?.duration || 0;
+    position = resProgress.data?.progress?.position;
+    lastPlayedEpisodeNumber = resProgress.data?.progress?.episode_id;
+    lastPlayedSeasonNumber = resProgress.data?.progress?.season_id;
+    lastPlayedEpisodeTitle = resProgress.data?.last_episode?.title || '';
+    lastPlayedEpisodeUrl = resProgress.data?.last_episode?.files?.[0]?.url || galleryItem.url || '';
+    lastPlayedSeriesId = resProgress.data?.progress?.video_id;
+    lastPlayedEpisodeDuration = resProgress.data?.last_episode?.duration || 0;
 
     favorited = resFav?.data?.favorites?.some((element) => element.video_id === seriesId);
   }
