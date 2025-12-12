@@ -12,7 +12,7 @@ export default class QRCode extends Lightning.Component {
         },
         Title: {
           w: 280,
-          y: 35,
+          y: 20,
           flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
           text: {
             fontFace: 'Montserrat-SemiBold',
