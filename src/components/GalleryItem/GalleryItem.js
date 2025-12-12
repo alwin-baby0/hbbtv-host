@@ -80,7 +80,7 @@ export default class GalleryItem extends Lightning.Component {
         },
         Date: {
           visible: false,
-          w: 750,
+          w: 400,
           h: 40,
           y: -47,
           x: 230,
@@ -89,7 +89,7 @@ export default class GalleryItem extends Lightning.Component {
           shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
           Text: {
             h: 30,
-            w: 750,
+            w: 400,
             y: 5,
             text: {
               fontSize: 24,
