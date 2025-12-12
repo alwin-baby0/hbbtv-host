@@ -1,4 +1,5 @@
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { refreshTokenOnOauth } from '../../utils';
 import { AuthorizationService } from '../AuthorizationService';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
@@ -7,7 +8,7 @@ class UserService extends FetchingService {
   getFavorites = async (page, limit = 8) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.GET_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.GET,
@@ -18,24 +19,19 @@ class UserService extends FetchingService {
         page,
         limit,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            // window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   addToFavorites = async (videoID, vodType) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.ADD_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.POST,
@@ -47,24 +43,19 @@ class UserService extends FetchingService {
         content_id: videoID,
         content_type: vodType,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   removeFromFavorites = async (videoID) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.REMOVE_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.DELETE,
@@ -75,18 +66,13 @@ class UserService extends FetchingService {
       params: {
         content_id: videoID,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   getRecentlyWatched = async (page, limit = 8) => {
@@ -94,7 +80,7 @@ class UserService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.GET_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.GET,
@@ -106,18 +92,13 @@ class UserService extends FetchingService {
         page,
         limit,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   addRecentlyWatched = async (videoID, vodType, vodPosition, seriesID) => {
@@ -127,7 +108,7 @@ class UserService extends FetchingService {
       vodPosition++;
     }
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.ADD_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.POST,
@@ -141,18 +122,13 @@ class UserService extends FetchingService {
         position: vodPosition,
         ...(seriesID && { series_id: seriesID }),
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   deleteRecentlyWatched = async (videoID) => {
@@ -160,7 +136,7 @@ class UserService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.REMOVE_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.DELETE,
@@ -172,24 +148,19 @@ class UserService extends FetchingService {
       data: {
         video_id: videoID,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   getProgress = async (videoID) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.GET_PROGRESS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
@@ -200,24 +171,19 @@ class UserService extends FetchingService {
       params: {
         video_id: videoID,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   addProgress = async (videoID, position, duration) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.ADD_PROGRESS}`,
       apiVersion: V2,
       method: API_METHODS.POST,
@@ -230,24 +196,19 @@ class UserService extends FetchingService {
         position,
         duration,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   getSeriesProgress = async (seriesID) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.GET_SERIES_PROGRESS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
@@ -258,24 +219,19 @@ class UserService extends FetchingService {
       params: {
         series_id: seriesID,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   addSeriesProgress = async (videoID, seriesID, episodeNumber, seasonNumber, position) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.ADD_SERIES_PROGRESS}`,
       apiVersion: V2,
       method: API_METHODS.POST,
@@ -290,18 +246,13 @@ class UserService extends FetchingService {
         video_id: videoID,
         position: position,
       },
-    }).catch((err) => {
-      if (err.status === 401) {
-        AuthorizationService.refreshToken()
-          .then(({ data }) => {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
-          })
-          .catch(() => {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
-            window.location.reload();
-          });
-      }
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 }
 

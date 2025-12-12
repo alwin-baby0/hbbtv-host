@@ -136,7 +136,7 @@ export default class VodPreview extends Lightning.Component {
     switch (contentType) {
       case CONTENT_TYPE.EVENTS:
       case CONTENT_TYPE.CATEGORIES:
-        return 200;
+        return this._props.vodType === VOD_PREVIEW_TYPES.SPORTS ? 150 : 200;
       case CONTENT_TYPE.EMPTY:
       default:
         return 80;
@@ -171,10 +171,7 @@ export default class VodPreview extends Lightning.Component {
               y: 820,
             },
             VodContainer: {
-              y: 1080,
-              Column: {
-                y: 50,
-              },
+              y: this._props.vodType === VOD_PREVIEW_TYPES.SPORTS ? 980 : 1080,
             },
           });
         }
@@ -231,9 +228,6 @@ export default class VodPreview extends Lightning.Component {
             VodContainer: {
               y: this.calculateContentOffset(this._VodContentContainer.contentType),
               h: 1920,
-              Column: {
-                y: 50,
-              },
             },
           });
         }

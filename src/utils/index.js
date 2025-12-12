@@ -33,3 +33,14 @@ export async function checkCMP({ cmpShown, url, id }) {
   }
   return true;
 }
+
+export async function refreshTokenOnOauth() {
+  const refreshResponse = await AuthorizationService.refreshToken();
+
+  if (!refreshResponse) {
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+  } else {
+    localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));
+  }
+  window.location.reload();
+}
