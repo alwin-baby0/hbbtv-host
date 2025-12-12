@@ -33,7 +33,18 @@ class GalleryItem {
     this.playlists = playlists || null;
 
     if (meta) {
-      const { cast, director, genre, ratings, duration, year, country, imdb, first_episode } = meta;
+      const {
+        cast,
+        director,
+        genre,
+        ratings,
+        duration,
+        year,
+        country,
+        imdb,
+        first_episode,
+        badges,
+      } = meta;
 
       this.duration = duration?.seconds;
       this.genre = genre || first_episode?.meta?.genre;
@@ -44,6 +55,7 @@ class GalleryItem {
       this.year = year || first_episode?.meta?.year;
       this.country = country || first_episode?.meta?.country;
       this.imdbScore = imdb?.score || first_episode?.meta?.imdb?.score;
+      this.badgeText = badges[0].label;
 
       if (first_episode) {
         this.firstEpisodeId = first_episode?.id;

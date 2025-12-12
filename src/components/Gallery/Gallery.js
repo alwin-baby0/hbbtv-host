@@ -96,7 +96,7 @@ export default class Gallery extends Lightning.Component {
     this._sliderIndex = index;
     this._HeroSection.patch({
       props: {
-        badgeText: sliderData.items[index].type.value,
+        badgeText: sliderData.items[index].badgeText,
         galleryItem: sliderData.items[index],
         infoY: 160,
         bgY: bgY,
