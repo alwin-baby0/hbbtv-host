@@ -87,7 +87,11 @@ export default class HorizontalContainer extends Lightning.Component {
         },
       });
     } else {
-      this.patch({ ...rest, h: rest.h + 50, Items: { h: rest.h } });
+      this.patch({
+        ...rest,
+        h: this._props.cardType !== CARD_TYPES.EPG_CARD_ITEM ? rest.h + 50 : rest.h,
+        Items: { h: rest.h },
+      });
     }
 
     this.patch({

@@ -33,7 +33,9 @@ export default class SearchService extends FetchingService {
     }).then((response) => this.#parseSearchPageData(response, cardType, itemsPerRow, railType));
 
   #parseSearchPageData({ data }, cardType = CARD_TYPES.POSTER, itemsPerRow, railType) {
-    const railItems = data.entry?.items?.map((item) => new SimpleRailItem(item));
+    const railItems = data.entry?.items?.map(
+      (item) => new SimpleRailItem({ ...item, orientation: 'portrait' })
+    );
     if (!railItems) return;
 
     return {
