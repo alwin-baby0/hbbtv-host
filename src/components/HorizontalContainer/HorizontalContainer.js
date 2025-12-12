@@ -87,7 +87,7 @@ export default class HorizontalContainer extends Lightning.Component {
         },
       });
     } else {
-      this.patch({ ...rest, Items: { h: rest.h } });
+      this.patch({ ...rest, h: rest.h + 50, Items: { h: rest.h } });
     }
 
     this.patch({

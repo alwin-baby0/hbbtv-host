@@ -11,7 +11,7 @@ export default class PageItem extends Lightning.Component {
           alignItems: 'center',
         },
         texture: Lightning.Tools.getRoundRect(
-          401,
+          461,
           74,
           15,
           2,
@@ -22,13 +22,13 @@ export default class PageItem extends Lightning.Component {
         Column: {
           collision: true,
           flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-          w: 390,
+          w: 450,
           h: 62,
           color: Colors(colors.white).alpha(0).get(),
           rect: true,
           shader: { type: Lightning.shaders.RoundedRectangle, radius: 15 },
           Text: {
-            w: 360,
+            w: 450,
             h: 45,
             text: {
               textAlign: 'center',
@@ -106,7 +106,7 @@ export default class PageItem extends Lightning.Component {
     });
 
     this._FocusBorder.patch({
-      texture: Lightning.Tools.getRoundRect(401, 74, 15, 2, Colors(colors.focus).get(), false),
+      texture: Lightning.Tools.getRoundRect(461, 74, 15, 2, Colors(colors.focus).get(), false),
     });
     this._focused = true;
   }
@@ -121,7 +121,7 @@ export default class PageItem extends Lightning.Component {
 
     this._FocusBorder.patch({
       texture: Lightning.Tools.getRoundRect(
-        401,
+        461,
         74,
         15,
         2,

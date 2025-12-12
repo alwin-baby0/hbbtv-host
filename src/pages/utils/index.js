@@ -100,7 +100,12 @@ export const cronstructSingleLineRail = (rail, index) => {
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
       : {
-          h: CARD_SIZES[cardType]?.height || 500,
+          h:
+            items && items.length && items[0].orientation
+              ? items[0].orientation === 'landscape'
+                ? CARD_SIZES[cardType]?.landscape_height
+                : CARD_SIZES[cardType]?.poster_height
+              : CARD_SIZES[cardType]?.height || 500,
           w: RAIL_WIDTHS[railType] || 1500,
         };
 
