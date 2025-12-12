@@ -400,6 +400,7 @@ export default class SingleMovie extends Lightning.Component {
       country,
       imdbScore,
       videoUrl,
+      badgeText,
     } = movie;
 
     this._Column.props = { items: playlistVODS, parentState: 'PlaylistWrapper' };
@@ -422,7 +423,7 @@ export default class SingleMovie extends Lightning.Component {
       : undefined;
     const genreText = genre ? (Array.isArray(genre) ? genre.join(', ') : genre) : undefined;
 
-    const badgeText = t(TRANSLATIONS.MOVIES);
+    const badgeTextString = badgeText || capitalizeFirstLetter(t(TRANSLATIONS.MOVIES));
 
     this.patch({
       Content: {
@@ -446,7 +447,7 @@ export default class SingleMovie extends Lightning.Component {
               ),
               Text: {
                 text: {
-                  text: capitalizeFirstLetter(badgeText),
+                  text: badgeTextString,
                 },
               },
             },

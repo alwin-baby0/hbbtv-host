@@ -80,6 +80,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         yPos: 100,
         parentState: 'HeroSection',
         startTime,
+        badgeText: galleryItem.badgeText,
       },
     });
 
