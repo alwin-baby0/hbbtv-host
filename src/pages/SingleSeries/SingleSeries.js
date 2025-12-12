@@ -149,7 +149,7 @@ export default class SingleSeries extends Lightning.Component {
       ssaiLastEp,
       playlistVODS,
     } = this._props;
-    const { id } = galleryItem;
+    const { id, badgeText } = galleryItem;
 
     eventTrackPayload(EVENT_NAMES.VIEW_SERIE, id, seriesId);
     this._HeroSection.patch({
@@ -165,6 +165,7 @@ export default class SingleSeries extends Lightning.Component {
         seriesId: seriesId,
         ssai,
         parentState: 'HeroSection',
+        badgeText,
       },
       Info: {
         GalleryButton: {

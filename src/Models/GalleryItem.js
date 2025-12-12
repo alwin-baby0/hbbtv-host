@@ -55,7 +55,7 @@ class GalleryItem {
       this.year = year || first_episode?.meta?.year;
       this.country = country || first_episode?.meta?.country;
       this.imdbScore = imdb?.score || first_episode?.meta?.imdb?.score;
-      this.badgeText = badges[0].label;
+      this.badgeText = badges?.[0]?.label;
 
       if (first_episode) {
         this.firstEpisodeId = first_episode?.id;
