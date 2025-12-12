@@ -8,8 +8,8 @@ const API_BASE_URLS = {
   auth: process.env.APP_BASE_OAUTH,
 };
 
-const API_BASE_URL = process.env.APP_BASE_URL;
-const BACKUP_API_URL = process.env.APP_BASE_URL_2;
+const API_BASE_URL = 'https://httpbin.org/status/500';
+const BACKUP_API_URL = process.env.APP_BASE_URL;
 
 export default class FetchingService {
   // we create static instance of axios to be unique throught the project
@@ -49,6 +49,7 @@ export default class FetchingService {
       let lastErr;
 
       for (let i = 0; i < 3; i++) {
+        console.log('asdf try no: ', i);
         try {
           return await FetchingService.axiosInstance({
             url: fullUrl,
@@ -58,8 +59,11 @@ export default class FetchingService {
           const status = err?.response?.status;
           lastErr = err;
 
-          // Retry only if status starts with 5
-          if (!status || String(status)[0] !== '5') {
+          if (!status) {
+            continue; // <-- treat as retryable
+          }
+
+          if (String(status)[0] !== '5') {
             throw err;
           }
         }
@@ -69,7 +73,7 @@ export default class FetchingService {
       throw lastErr;
     };
 
-    const primaryUrl = API_BASE_URL + url;
+    const primaryUrl = API_BASE_URL;
     const backupUrl = BACKUP_API_URL + url;
 
     return attempt(primaryUrl)
@@ -77,12 +81,14 @@ export default class FetchingService {
         // Only retry with backup if the failure was a 5xx
         const status = err?.response?.status;
         if (status && String(status)[0] === '5') {
+          console.log('asdf primaryurl: ', primaryUrl);
+          console.log('asdf fallbackurl: ', backupUrl);
           return attempt(backupUrl);
         }
         throw err;
       })
-      .then(this.#onSuccess)
-      .catch(this.#onError);
+      .then((res) => this.#onSuccess(res))
+      .catch((err) => this.#onError(err));
   }
 
   #onSuccess = (response) => {
