@@ -14,6 +14,8 @@ const BACKUP_API_URL = process.env.APP_BASE_URL;
 export default class FetchingService {
   // we create static instance of axios to be unique throught the project
   static axiosInstance = null;
+  static activeBaseUrl = API_BASE_URL;
+  static baseUrlResolved = false;
 
   static init() {
     if (FetchingService.axiosInstance) return;
@@ -49,7 +51,7 @@ export default class FetchingService {
       let lastErr;
 
       for (let i = 0; i < 3; i++) {
-        console.log('asdf try no: ', i);
+        console.log('asdf try no:', i, fullUrl);
         try {
           return await FetchingService.axiosInstance({
             url: fullUrl,
@@ -59,36 +61,44 @@ export default class FetchingService {
           const status = err?.response?.status;
           lastErr = err;
 
-          if (!status) {
-            continue; // <-- treat as retryable
-          }
-
-          if (String(status)[0] !== '5') {
-            throw err;
-          }
+          if (!status) continue; // network error → retry
+          if (String(status)[0] !== '5') throw err; // non-5xx → stop
         }
       }
 
-      // After failing 3 times, return last error
       throw lastErr;
     };
 
-    const primaryUrl = API_BASE_URL;
-    const backupUrl = BACKUP_API_URL + url;
+    try {
+      //Decide about api url initially
+      if (!FetchingService.baseUrlResolved) {
+        try {
+          const res = await attempt(API_BASE_URL);
+          FetchingService.activeBaseUrl = API_BASE_URL;
+          FetchingService.baseUrlResolved = true;
+          return this.#onSuccess(res);
+        } catch (err) {
+          const status = err?.response?.status;
 
-    return attempt(primaryUrl)
-      .catch(async (err) => {
-        // Only retry with backup if the failure was a 5xx
-        const status = err?.response?.status;
-        if (status && String(status)[0] === '5') {
-          console.log('asdf primaryurl: ', primaryUrl);
-          console.log('asdf fallbackurl: ', backupUrl);
-          return attempt(backupUrl);
+          if (status && String(status)[0] === '5') {
+            console.warn('Primary API failed, switching to fallback');
+            FetchingService.activeBaseUrl = BACKUP_API_URL;
+            FetchingService.baseUrlResolved = true;
+
+            const res = await attempt(BACKUP_API_URL + url);
+            return this.#onSuccess(res);
+          }
+
+          throw err;
         }
-        throw err;
-      })
-      .then((res) => this.#onSuccess(res))
-      .catch((err) => this.#onError(err));
+      }
+
+      //Regular flow
+      const res = await attempt(FetchingService.activeBaseUrl + url);
+      return this.#onSuccess(res);
+    } catch (err) {
+      return this.#onError(err);
+    }
   }
 
   #onSuccess = (response) => {
