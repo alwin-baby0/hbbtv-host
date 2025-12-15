@@ -49,7 +49,7 @@ class EPGService extends FetchingService {
     );
     this.genreItems = getGenres;
 
-    const channels = await this.#getGenresCategory('all');
+    const channels = await this.#getGenresCategory();
 
     if (channels?.length > 0) {
       this.channelsItems = channels;
@@ -218,7 +218,7 @@ class EPGService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
-        include: include,
+        tags: include,
         exclude: 'channel',
       },
     }).then(this.#parseLiveChannelsData);
