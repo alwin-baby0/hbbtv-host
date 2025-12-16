@@ -1,5 +1,5 @@
 import { Router } from '@lightningjs/sdk';
-import { CMPService } from '../Services';
+import { CMPService, AuthorizationService } from '../Services';
 import { ROUTES } from '../constants/globalConstants';
 
 export function clamp(number, min, max) {
