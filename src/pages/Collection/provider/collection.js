@@ -50,7 +50,8 @@ export default async function (page, { collectionId, category }) {
         CARD_TYPES.COLLECTION,
         4,
         RAIL_TYPES.COLLECTION,
-        category.type !== SEARCH_TYPES.SPORTS ? category.type : SEARCH_TYPES.SERIES
+        category.type !== SEARCH_TYPES.SPORTS ? category.type : SEARCH_TYPES.SERIES,
+        category.categoryTitle
       );
 
       railsData = constructRails(searchedItems);

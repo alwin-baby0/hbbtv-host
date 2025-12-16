@@ -13,17 +13,29 @@ class Category {
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
-        const category = { category: this.data.localised, type: SEARCH_TYPES.MOVIE };
+        const category = {
+          category: this.data.value,
+          type: SEARCH_TYPES.MOVIE,
+          categoryTitle: this.data.localised,
+        };
         Router.navigate(`${ROUTES.COLLECTION}/${RAIL_TYPES.CATEGORY}`, { category });
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        const category = { category: this.data.localised, type: SEARCH_TYPES.SERIES };
+        const category = {
+          category: this.data.value,
+          type: SEARCH_TYPES.SERIES,
+          categoryTitle: this.data.localised,
+        };
         Router.navigate(`${ROUTES.COLLECTION}/${RAIL_TYPES.CATEGORY}`, { category });
         break;
       }
       case CATEGORY_TYPES.SPORTS: {
-        const category = { category: this.data.localised, type: SEARCH_TYPES.SPORTS };
+        const category = {
+          category: this.data.value,
+          type: SEARCH_TYPES.SPORTS,
+          categoryTitle: this.data.localised,
+        };
         Router.navigate(`${ROUTES.COLLECTION}/${RAIL_TYPES.CATEGORY}`, { category });
         break;
       }
