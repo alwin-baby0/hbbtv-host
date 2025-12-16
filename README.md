@@ -1,4 +1,4 @@
-# **WedoTV** - <small>_LightingJS_ 📺</small>
+# **WedoTV** - Smart TV OTT Application 📺
 
 The application follows a modern OTT platform concept similar to leading streaming services, offering structured content rails for movies, series, sports, and Live TV. 
 
@@ -43,7 +43,7 @@ It includes dynamic content browsing, personalized navigation flows, and a full-
 * `node_modules/` folder exist in the project root
 * No fatal errors in the terminal
 * Warnings are acceptable unless explicitly stated otherwise in the project
-    #### If installation fails, check:
+#### If installation fails, check:
 * Node version
 * Internet connection/proxy
 * npm registry settings (`npm config get registry`)
@@ -52,52 +52,52 @@ It includes dynamic content browsing, personalized navigation flows, and a full-
 The project requires environment configuration before it can run.
 * Create `.env` file in the root folder of the project
 * Open `.env` file and set required values _(consult with a dev colleague)_
-* ### ⚠️ IMPORTANT :  _`.env` files must NEVER be committed to any repository._
-    ### _These files contain sensitive data such as API keys, secrets, tokens, and credentials._
-    ### Before doing anything else in the project, make sure that your `.env` file is **ADDED** to the **`.gitignore`** file
-     ```
+### ⚠️ IMPORTANT :  _`.env` files must NEVER be committed to any repository._
+### _These files contain sensitive data such as API keys, secrets, tokens, and credentials._
+### Before doing anything else in the project, make sure that your `.env` file is **ADDED** to the **`.gitignore`** file
+
     # .gitignore
 
     .env
     .env.local
     .env.production 
-    ```
+
 ## 2. Start/build and all neccecery commands
 To start application in general first you need to peek at `package.json`, and search `script`'s. These script we'll use for development/build/test etc.
 
-*  ## Start
-    U terminalu:
+## Start
+  In terminal:
 
-    ```
+  ```
     npm start
-    ```
-    Preview in browser on : 
-      * Local >`http://localhost:3000/`
-      * Network > `http://192.168.50.57:3000/`
-    ### ⚠️ IMPORTANT!
-    If you see an error like:
-    ```
-    EADDRINUSE: address already in use :::3000
-    ```
-    …it means another process is already running on port 3000.
-
-    You need to find it and kill it.
-
-    Open terminal (CMD/Powershell) and run:
-    ```
-    netstat -ano | findstr :3000
-    ```
-    You'll get something like :
-    ```
-    TCP    0.0.0.0:3000    0.0.0.0:0    LISTENING    12345
-    ```
-    The last number is the PID (process ID).
-    ```
-    taskkill /PID 12345 /F
-    ```
-    Replace `12345` with the actual PID from your output.
+   ```
+  Preview in browser on : 
+  #### Local >`http://localhost:3000/` 👈🏻
+  #### Network > `http://192.168.50.57:3000/` 👈🏻
+  ### ⚠️ IMPORTANT!
+  
+#### If you see an error like:
     
-    After that you can start your application again. ✔️
+    EADDRINUSE: address already in use :::3000
+    
+…it means another process is already running on port 3000.
+ **You need to find it and kill it.**
+
+Open terminal (CMD/Powershell) and run:
+  
+    netstat -ano | findstr :3000
+    
+ You'll get something like :
+    
+    TCP    0.0.0.0:3000    0.0.0.0:0    LISTENING    12345
+    
+The last number is the PID (process ID).
+    
+    taskkill /PID 12345 /F
+    
+Replace `12345` with the actual PID from your output.
+    
+After that you can start your application again. ✅
 
 *  ## Test
     Open terminal (CMD/Powershell) and run:
@@ -134,10 +134,9 @@ To start application in general first you need to peek at `package.json`, and se
     Contains build artifacts and platform-specific configuration files and example outputs (used for packaging and platform builds).
 
 ## 3. Architecture summary
-  ### 3.1. High-level flow:
+### 3.1. High-level flow:
   * **Boot** (`src/index.js`) — initialize device info, key mappings, services, analytics hooks, and launch the Lightning app.
   * **App** (`src/App.js`) — extends Router.App, defines main template, global widgets (Navbar, Dialog, Loading), background, fonts.+
-
   * **Router** (`src/routes.js`) — route table mapping paths to page components and page data providers.
   * **Pages** (`src/pages/*`) — per-route UI, using components and Services to fetch and show data.
   * **Services** (`src/Services/*`) — centralised data fetching, parsing and business logic (FetchingService, VODService, EPGService, HomePageService, etc.).
