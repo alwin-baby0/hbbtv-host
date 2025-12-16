@@ -65,18 +65,19 @@ The project requires environment configuration before it can run.
 ## 2. Start/build and all neccecery commands
 To start application in general first you need to peek at `package.json`, and search `script`'s. These script we'll use for development/build/test etc.
 
-## Start
+*  ## Start
   In terminal:
 
   ```
     npm start
    ```
   Preview in browser on : 
-  #### Local >`http://localhost:3000/` 👈🏻
-  #### Network > `http://192.168.50.57:3000/` 👈🏻
-  ### ⚠️ IMPORTANT!
+
+  Local >`http://localhost:3000/` 👈🏻
+  Network > `http://192.168.50.57:3000/` 👈🏻
+  ## ⚠️ IMPORTANT!
   
-#### If you see an error like:
+  If you see an error like:
     
     EADDRINUSE: address already in use :::3000
     
@@ -105,7 +106,7 @@ After that you can start your application again. ✅
     ```
     npm run test -- -u
     ```
-* ## Build
+*  ## Build
    Open terminal (CMD/Powershell) and run:
     
     ```
@@ -163,29 +164,29 @@ After that you can start your application again. ✅
     * `index.js`, `App.js` & `routes.js` - They have already been explained, some of first files that are initialized.
 
 ## 4. Technologies and libraries
-* Core frontend & UI
-  * `LightingJS` core, sdk, ui-components etc.
-* Build & tooling
-  * `Vite` and `@vitejs/plugin-legacy` - dev server, build tool, and legacy browser support for builds.
-  * `Babel` - test transform, preset-env for node in tests.
-  * `npm` - package manager and script runner.
-* Playback & Media
-  * `hls.js` - JS library which implements an HTTP Live Streaming client.
-  * `shaka-player` - DASH/advanced playback support.
-  * `srt-parser-2` — parse SRT captions.
-  * `webvtt-parser` — parse WebVTT captions.
-* Networking & utilities
-  * `axios` - HTTP client used in FetchingService and others services.
-  * `qrcode` - generate QR codes
-  * Font-related / icons: `@fortawesome` packages for icons
-* Testing & mocks
-  * `jest` — test runner
-  * `jest-environment-jsdom` — DOM environment for tests
-  * `jest-fetch-mock` — mock fetch
-  * `jest-webgl`-canvas-mock — mock for WebGL/canvas used by Lightning
-  * `babel-jest` — transform JS for tests
-* Lighting formating / pre-commit
-  * prettier, eslint, eslint-config-prettier, husky, lint-staged
+  * Core frontend & UI
+    * `LightingJS` core, sdk, ui-components etc.
+  * Build & tooling
+    * `Vite` and `@vitejs/plugin-legacy` - dev server, build tool, and legacy browser support for builds.
+    * `Babel` - test transform, preset-env for node in tests.
+    * `npm` - package manager and script runner.
+  * Playback & Media
+    * `hls.js` - JS library which implements an HTTP Live Streaming client.
+    * `shaka-player` - DASH/advanced playback support.
+    * `srt-parser-2` — parse SRT captions.
+    * `webvtt-parser` — parse WebVTT captions.
+  * Networking & utilities
+    * `axios` - HTTP client used in FetchingService and others services.
+    * `qrcode` - generate QR codes
+    * Font-related / icons: `@fortawesome` packages for icons
+  * Testing & mocks
+    * `jest` — test runner
+    * `jest-environment-jsdom` — DOM environment for tests
+    * `jest-fetch-mock` — mock fetch
+    * `jest-webgl`-canvas-mock — mock for WebGL/canvas used by Lightning
+    * `babel-jest` — transform JS for tests
+  * Lighting formating / pre-commit
+    * prettier, eslint, eslint-config-prettier, husky, lint-staged
 ## 5. Practical notes/ where to find in repo 
 ### 5.1. Where to find ?
 
