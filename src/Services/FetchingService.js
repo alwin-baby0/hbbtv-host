@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { createApiCtx } from './utils';
-import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
+import { refreshTokenOnOauth } from '../utils';
 
 const API_BASE_URLS = {
   v1: process.env.APP_BASE_URL,
@@ -64,13 +64,15 @@ export default class FetchingService {
         console.error('Status:', error.response.status);
         console.error('Data:', error.response.data);
         console.error('Headers:', error.response.headers);
+
+        error.response.status === 401 && refreshTokenOnOauth();
       } else {
         // Something else happened while setting up the request
         // triggered the error
         console.error('Error Message:', error.message);
       }
 
-      return Promise.reject(error.response || error.message);
+      return error.response || error.message;
     }
   };
 }
