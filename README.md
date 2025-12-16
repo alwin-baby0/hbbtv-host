@@ -65,74 +65,70 @@ The project requires environment configuration before it can run.
 ## 2. Start/build and all neccecery commands
 To start application in general first you need to peek at `package.json`, and search `script`'s. These script we'll use for development/build/test etc.
 
-*  ## Start
-  In terminal:
-
+### 2.1. Start
+#### In terminal:
   ```
     npm start
    ```
-  Preview in browser on : 
+#### Preview in browser on : 
 
-  Local >`http://localhost:3000/` 👈🏻
-  Network > `http://192.168.50.57:3000/` 👈🏻
-  ## ⚠️ IMPORTANT!
+#### Local >`http://localhost:3000/` 👈🏻
+#### Network > `http://192.168.50.57:3000/` 👈🏻
+## ⚠️ IMPORTANT!
   
-  If you see an error like:
+#### If you see an error like:
     
     EADDRINUSE: address already in use :::3000
     
-…it means another process is already running on port 3000.
+#### …it means another process is already running on port 3000.
  **You need to find it and kill it.**
 
-Open terminal (CMD/Powershell) and run:
+#### Open terminal (CMD/Powershell) and run:
   
     netstat -ano | findstr :3000
     
- You'll get something like :
+#### You'll get something like :
     
     TCP    0.0.0.0:3000    0.0.0.0:0    LISTENING    12345
     
-The last number is the PID (process ID).
+#### The last number is the PID (process ID).
     
     taskkill /PID 12345 /F
     
-Replace `12345` with the actual PID from your output.
+#### Replace `12345` with the actual PID from your output.
     
-After that you can start your application again. ✅
+#### After that you can start your application again. ✅
 
-*  ## Test
-    Open terminal (CMD/Powershell) and run:
+### 2.2. Test
+#### Open terminal (CMD/Powershell) and run:
     
-    ```
     npm run test -- -u
-    ```
-*  ## Build
-   Open terminal (CMD/Powershell) and run:
     
-    ```
+### 2.3. Build
+#### Open terminal (CMD/Powershell) and run:
+    
     npm run build
-    ```
-    ### ⚠️ IMPORTANT
-    There are build commands specifically for certain devices, which you can see in `package.json`
+### ⚠️ IMPORTANT
+#### There are build commands specifically for certain devices, which you can see in `package.json`
 
-    ```json
-    # package.json
+  ```json
+  # package.json
 
 
-    {
-      script: [
-        // Platform-specific production builds (Hisense, Titan, Netgem, etc.) 👇🏻👇🏻👇🏻
-        "build-lg": "vite build --mode production-webos",
-        "build-hisense": "vite build --mode production-hisense",
-        "build-titan": "vite build --mode production-titan",
-        "build-netgem": "vite build --mode production-netgem",
-        // ...
-      ]
-    }
-    ```
-    Corresponding config files are located in the **`/build`** directory in the root of the project. 
+  {
+    script: [
+      // Platform-specific production builds (Hisense, Titan, Netgem, etc.) 👇🏻👇🏻👇🏻
+      "build-lg": "vite build --mode production-webos",
+      "build-hisense": "vite build --mode production-hisense",
+      "build-titan": "vite build --mode production-titan",
+      "build-netgem": "vite build --mode production-netgem",
+      // ...
+    ]
+  }
+  ```
+#### Corresponding config files are located in the **`/build`** directory in the root of the project. 
     
-    Contains build artifacts and platform-specific configuration files and example outputs (used for packaging and platform builds).
+#### Contains build artifacts and platform-specific configuration files and example outputs (used for packaging and platform builds).
 
 ## 3. Architecture summary
 ### 3.1. High-level flow:
