@@ -25,7 +25,7 @@ export default class CategoryPickerItem extends FocusableItem {
           textAlign: 'center',
           textColor: Colors(colors.white).get(),
           textOverflow: 'ellipsis',
-          wordWrapWidth: 190,
+          wordWrapWidth: 220,
           wordWrap: false,
         },
       },
