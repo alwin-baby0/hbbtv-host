@@ -8,13 +8,13 @@ export const liveTV = {
   timestamp: 0,
 };
 
-const fetchChannels = async (page, { channelId }) => {
+const fetchChannels = async (page, channelId) => {
   if (
     liveTV.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
     Router.getActiveHash() !== ROUTES.PLAYER
   ) {
     liveTV.timestamp = new Date().getTime();
-    await EPGService.initialFetch();
+    await EPGService.initialFetch(channelId);
     const categoryRails = constructRails(EPGService.genreItems);
 
     page._EPGData._clear();
@@ -58,8 +58,8 @@ const fetchChannels = async (page, { channelId }) => {
   }
 };
 
-export default async function (page, { cmpShown } = {}) {
-  await fetchChannels(page);
+export default async function (page, { cmpShown, channelId } = {}) {
+  await fetchChannels(page, channelId);
   page._EPGData.setInitialOffset();
   page.props = {
     ...(page.props || {}),

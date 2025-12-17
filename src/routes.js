@@ -72,7 +72,7 @@ export default {
       on: singleLiveEvent,
     },
     {
-      path: `ROUTES.LIVE/:channelId?`,
+      path: `${ROUTES.LIVE}/:channelId?`,
       component: LiveTV,
       widgets: [ROUTES.MENU_WIDGET],
       on: livetv,
