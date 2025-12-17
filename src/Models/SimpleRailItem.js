@@ -33,15 +33,15 @@ class SimpleRailItem {
         this.url = `${ROUTES.EVENT_DETAILS}/${this.id}`;
         break;
       case RAIL_TYPES.SEASON:
-        this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}`;
+        this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}/${id}`;
         this.seriesId = data.series_id;
       case RAIL_TYPES.EPISODE:
-        this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}`;
+        this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}/${data.season_id}`;
         this.seasonId = data.season_id;
         this.seriesId = data.series_id;
         break;
       case RAIL_TYPES.CHANNEL:
-        this.url = `${ROUTES.LIVE}`;
+        this.url = `${ROUTES.LIVE}/${this.id}`;
         break;
       case RAIL_TYPES.PLAYLIST:
         this.url = `${ROUTES.COLLECTION}/${this.id}`;

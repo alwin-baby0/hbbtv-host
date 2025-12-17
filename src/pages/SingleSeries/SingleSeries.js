@@ -130,7 +130,6 @@ export default class SingleSeries extends Lightning.Component {
     const {
       galleryItem,
       favorited,
-      duration,
       firstEpisodeVideoId,
       firstEpisodeUrl,
       firstEpisodeTitle,
@@ -147,7 +146,8 @@ export default class SingleSeries extends Lightning.Component {
       lastPlayedEpisodeDuration,
       ssai,
       ssaiLastEp,
-      playlistVODS,
+      focusSeasonId,
+      focusEpisodeId,
     } = this._props;
     const { id, badgeText } = galleryItem;
 
@@ -281,7 +281,13 @@ export default class SingleSeries extends Lightning.Component {
         );
       }
     }
-    this._setState('HeroSection');
+
+    console.log(focusSeasonId);
+    if (focusSeasonId) {
+      this._setState('Items');
+    } else {
+      this._setState('HeroSection');
+    }
     window.addEventListener('switchS', (event) => {
       this.switchSeason(event.detail.seasonId);
     });

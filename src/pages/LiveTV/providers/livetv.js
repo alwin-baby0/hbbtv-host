@@ -8,7 +8,7 @@ export const liveTV = {
   timestamp: 0,
 };
 
-const fetchChannels = async (page) => {
+const fetchChannels = async (page, { channelId }) => {
   if (
     liveTV.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
     Router.getActiveHash() !== ROUTES.PLAYER

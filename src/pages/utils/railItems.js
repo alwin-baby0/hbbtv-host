@@ -78,7 +78,9 @@ const constructSimpleRailItems = (railItems, railItemsOptions, cardType) => {
       itemType: railItem.type,
       index: index,
       callback: () => {
-        Router.navigate(railItem.url);
+        railItem.type === RAIL_TYPES.EPISODE
+          ? Router.navigate(railItem.url, { episodeId: railItem.id })
+          : Router.navigate(railItem.url);
       },
       orientation: railItem.orientation,
     },
