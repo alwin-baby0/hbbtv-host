@@ -6,6 +6,7 @@ import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import { DetailService, t } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
+import { Lifecycle } from '@firebolt-js/sdk';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -257,11 +258,17 @@ export default class App extends Router.App {
         },
         {
           label: t(TRANSLATIONS.YES_EXIT),
-          action: () => {
+          action: async () => {
             const device = getDeviceType();
             // Router navigation for "Yes, exit now"
             switch (device) {
               case 'metrological':
+                let success = await Lifecycle.close('userExit');
+                console.log(success);
+                Lifecycle.listen('unloading', async () => {
+                  let results = await Lifecycle.finished();
+                  console.log(results);
+                });
                 this.application.closeApp();
                 break;
               case 'tizen':
