@@ -14,7 +14,9 @@ import {
   VOD_PREVIEW_TYPES,
   IMAGE_SIZES,
   LOCAL_STORAGE_KEYS,
+  TRANSLATIONS,
 } from '../../constants/globalConstants';
+import { t } from '../LanguageService';
 
 export const VODS_PER_ROW = 12;
 export const VOD_ROWS_PER_FETCH = 3;
@@ -92,6 +94,11 @@ class VodService extends FetchingService {
     // get content (categories or sport events)
     if (!currentState.contentStripe) {
       const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+      settings.genres.types[this.#vodType].unshift('all');
+      console.log(t(TRANSLATIONS.ALL_GENRE));
+      settings.genres.localized['all'] = t(TRANSLATIONS.ALL_GENRE);
+      console.log(settings.genres.types[this.#vodType]);
+      console.log(settings.genres.localized);
       currentState.contentStripe = parseVodCategories(
         {
           items: settings.genres.types[this.#vodType].map((item) => {

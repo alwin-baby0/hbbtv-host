@@ -10,6 +10,8 @@ export default async function (page, { vodType, cmpShown }) {
   const stripes = VodService.vodStripes.map((stripe) => (stripe.value ? stripe.value : stripe));
   const vodStripes = constructRails(stripes, ROUTES.VOD);
 
+  console.log(VodService.contentStripes);
+
   page.props = {
     items: Array.isArray(vodStripes)
       ? vodStripes.reduce((acc, rail) => {

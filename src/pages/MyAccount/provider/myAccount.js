@@ -5,7 +5,6 @@ import { parseVodUserContentData } from '../../../Models';
 export default async function (page) {
   AuthorizationService.clearPollingInterval();
 
-  !localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
   const response = !localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? await AuthorizationService.getDeviceCode()
     : {};

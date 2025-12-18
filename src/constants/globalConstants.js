@@ -157,6 +157,7 @@ export const API_URLS = {
 };
 
 export const TRANSLATIONS = {
+  ALL_GENRE: 'all_genre',
   VIEW_MORE: 'view_all',
   AGE_RATING: 'age_rating',
   GENRE: 'genre',
