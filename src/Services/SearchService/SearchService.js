@@ -16,7 +16,8 @@ export default class SearchService extends FetchingService {
     cardType,
     itemsPerRow = undefined,
     railType = RAIL_TYPES.MOVIE,
-    type = SEARCH_TYPES.ALL
+    type = SEARCH_TYPES.ALL,
+    railTitle = ''
   ) =>
     this._request({
       url: `/${API_URLS.GET_SEARCH}`,
@@ -30,9 +31,11 @@ export default class SearchService extends FetchingService {
         category,
         type,
       },
-    }).then((response) => this.#parseSearchPageData(response, cardType, itemsPerRow, railType));
+    }).then((response) =>
+      this.#parseSearchPageData(response, cardType, itemsPerRow, railType, railTitle)
+    );
 
-  #parseSearchPageData({ data }, cardType = CARD_TYPES.POSTER, itemsPerRow, railType) {
+  #parseSearchPageData({ data }, cardType = CARD_TYPES.POSTER, itemsPerRow, railType, railTitle) {
     const railItems = data.entry?.items?.map(
       (item) => new SimpleRailItem({ ...item, orientation: 'portrait' })
     );
@@ -40,7 +43,7 @@ export default class SearchService extends FetchingService {
 
     return {
       railType: railType,
-      railTitle: data.entry.query,
+      railTitle: railTitle ? railTitle : data.entry.query,
       cardType: cardType,
       items: railItems,
       ...(itemsPerRow && { itemsPerRow }),

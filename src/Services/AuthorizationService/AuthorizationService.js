@@ -92,20 +92,19 @@ class AuthorizationService extends FetchingService {
       localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ).refresh_token;
 
-    const deviceCode = localStorage.getItem(LOCAL_STORAGE_KEYS.DEVICE_CODE);
+    const deviceCode = await this.getDeviceCode();
 
     return await this._request({
       url: `/${API_URLS.GET_TOKEN}`,
       apiVersion: auth,
       method: API_METHODS.POST,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
       data: {
-        client_id: process.env.APP_CMP_CLIENT_ID,
-        client_secret: process.env.APP_CMP_CLIENT_SECRET,
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
+        client_id: process.env.APP_CMP_CLIENT_ID,
         device_code: deviceCode,
       },
     });

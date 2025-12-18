@@ -40,7 +40,7 @@ export default class VerticalContainer extends Lightning.Component {
    * @param {{ items: any[]; carryRowPosition: boolean; }} props
    */
   set props(props) {
-    let { items, railTitle, ...rest } = props;
+    let { items, railTitle, seasonIndex, episodeIndex, ...rest } = props;
     this._props = { ...this._props, ...rest };
 
     if (railTitle && railTitle !== '') {
@@ -100,6 +100,12 @@ export default class VerticalContainer extends Lightning.Component {
         Items: { h: 0, visible: false },
       });
     }
+
+    if (seasonIndex) {
+      this._focusedIndex = 0;
+      if (episodeIndex && episodeIndex !== -1)
+        this.Items.children[this._focusedIndex]._focusedIndex = episodeIndex;
+    }
   }
 
   _getFocused() {
@@ -113,6 +119,7 @@ export default class VerticalContainer extends Lightning.Component {
     typeof this.Items?.children?.[this._focusedIndex].setCollision === 'function' &&
       this.Items?.children?.[this._focusedIndex].setCollision(true);
 
+    this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
     return this.Items?.children?.[this._focusedIndex];
   }
 

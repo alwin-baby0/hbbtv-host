@@ -6,7 +6,8 @@ class ViewMoreRailItem {
     this.id = id;
     this.orientation = orientation;
     this.type = RAIL_TYPES.VIEW_MORE;
-    this.url = `${ROUTES.COLLECTION}/${this.id}`;
+    this.url =
+      item.type === RAIL_TYPES.CHANNEL ? `${ROUTES.LIVE}` : `${ROUTES.COLLECTION}/${this.id}`;
   }
 }
 

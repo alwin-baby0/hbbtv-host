@@ -26,7 +26,7 @@ class EPGService extends FetchingService {
   endTime = -Infinity;
   loading = false;
 
-  async initialFetch() {
+  async initialFetch(channelId) {
     // Reset state variables to ensure a fresh start
     this.channelsItems = null;
     this.filteredChannelsItems = null; // Reset filtered channels
@@ -49,7 +49,15 @@ class EPGService extends FetchingService {
     );
     this.genreItems = getGenres;
 
-    const channels = await this.#getGenresCategory('all');
+    let channels;
+    if (channelId) {
+      const firstChannel = (await this.#getGenresCategory('', '', channelId))[0];
+
+      channels = await this.#getGenresCategory('', `${channelId}`);
+      channels.unshift(firstChannel);
+    } else {
+      channels = await this.#getGenresCategory();
+    }
 
     if (channels?.length > 0) {
       this.channelsItems = channels;
@@ -212,14 +220,15 @@ class EPGService extends FetchingService {
       },
     }).then((result) => parseVodCategories(result, ROUTES.LIVE));
 
-  #getGenresCategory = async (include) =>
+  #getGenresCategory = async (include, exclude, channel_id) =>
     await this._request({
       url: `/${API_URLS.GET_EPG_CHANNELS}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
-        include: include,
-        exclude: 'channel',
+        ...(include && { tags: include }),
+        ...(exclude && { exclude }),
+        ...(channel_id && { channel_id }),
       },
     }).then(this.#parseLiveChannelsData);
 

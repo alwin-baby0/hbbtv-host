@@ -51,7 +51,7 @@ export default {
       on: singleMovie,
     },
     {
-      path: `${ROUTES.SERIES_DETAILS}/:seriesId`,
+      path: `${ROUTES.SERIES_DETAILS}/:seriesId/:seasonId?`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -59,7 +59,7 @@ export default {
       },
     },
     {
-      path: `${ROUTES.SPORTS_DETAIL}/:seriesId`,
+      path: `${ROUTES.SPORTS_DETAIL}/:seriesId/:seasonId?`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -72,7 +72,7 @@ export default {
       on: singleLiveEvent,
     },
     {
-      path: ROUTES.LIVE,
+      path: `${ROUTES.LIVE}/:channelId?`,
       component: LiveTV,
       widgets: [ROUTES.MENU_WIDGET],
       on: livetv,

@@ -78,7 +78,9 @@ const constructSimpleRailItems = (railItems, railItemsOptions, cardType) => {
       itemType: railItem.type,
       index: index,
       callback: () => {
-        Router.navigate(railItem.url);
+        railItem.type === RAIL_TYPES.EPISODE
+          ? Router.navigate(railItem.url, { episodeId: railItem.id })
+          : Router.navigate(railItem.url);
       },
       orientation: railItem.orientation,
     },
@@ -299,7 +301,7 @@ const constructCategoryItems = (railItems, railItemsOptions, cardType) => {
       props: {
         itemInfo: railItem,
         callback: railItem.navigateToLink,
-        w: 215,
+        w: 240,
         h: 55,
         radius: 10,
         strokeWidth: 2,

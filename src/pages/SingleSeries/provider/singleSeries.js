@@ -3,7 +3,7 @@ import { parseVodPlaylists } from '../../../Models';
 import { DetailService, UserService } from '../../../Services';
 import { constructRails } from '../../utils';
 
-export default async function (page, { seriesId, cmpShown }) {
+export default async function (page, { seriesId, seasonId, episodeId, cmpShown }) {
   let galleryItemSingleEp;
   let galleryItemLastPlayedEp;
   let ssaiLastEp;
@@ -36,6 +36,24 @@ export default async function (page, { seriesId, cmpShown }) {
       }),
     };
   });
+
+  const seasonNumber = seasonId
+    ? seasons.indexOf(
+        seasons.filter((season) => {
+          if (season.seasonId === seasonId) return true;
+        })[0]
+      )
+    : undefined;
+  console.log(seasonNumber);
+
+  const episodeNumber =
+    seasonNumber && episodeId
+      ? seasons[seasonNumber].items.indexOf(
+          seasons[seasonNumber].items.filter((episode) => {
+            if (episode.id === episodeId) return true;
+          })[0]
+        )
+      : undefined;
 
   let favorited = false;
 
@@ -91,6 +109,8 @@ export default async function (page, { seriesId, cmpShown }) {
     cmpShown,
     allSeasons: updatedSeasons,
     playlistVODS: seriesVODS,
+    focusSeasonId: seasonNumber,
+    focusEpisodeId: episodeNumber,
   };
 
   const seasonsRail = constructRails(seasonTabsParsed);
@@ -98,10 +118,13 @@ export default async function (page, { seriesId, cmpShown }) {
   page._SeasonsBar.props = {
     items: seasonsRail,
     parentState: 'SeasonBar',
+    seasonIndex: seasonNumber,
   };
 
   page._Column.props = {
     items: [...constructRails(updatedSeasons[0]), ...seriesVODS],
     parentState: 'Items',
+    seasonIndex: seasonNumber,
+    episodeIndex: episodeNumber,
   };
 }

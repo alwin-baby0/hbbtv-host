@@ -1,6 +1,6 @@
 import { Router } from '@lightningjs/sdk';
-import { CMPService } from '../Services';
-import { ROUTES } from '../constants/globalConstants';
+import { CMPService, AuthorizationService } from '../Services';
+import { ROUTES, LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
 
 export function clamp(number, min, max) {
   return Math.max(min, Math.min(number, max));
@@ -37,7 +37,7 @@ export async function checkCMP({ cmpShown, url, id }) {
 export async function refreshTokenOnOauth() {
   const refreshResponse = await AuthorizationService.refreshToken();
 
-  if (!refreshResponse) {
+  if (refreshResponse?.data?.error || !refreshResponse || typeof refreshResponse === 'string') {
     localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
   } else {
     localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(data));

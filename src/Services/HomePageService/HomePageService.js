@@ -20,6 +20,10 @@ class HomePageService extends FetchingService {
   #banner = [];
   #page = 1;
 
+  get currentRailLimit() {
+    return this.#currentRailLimit;
+  }
+
   /**
    * Fetches initial stripes for Home page
    */
@@ -153,7 +157,7 @@ class HomePageService extends FetchingService {
     this.#stripes = [];
     this.#pointer = 2;
     this.stripesFetched = 0;
-    this.#currentRailLimit = 7; // Reset limit to initial value
+    this.#currentRailLimit = 12; // Reset limit to initial value
     this.#banner = [];
     this.#page = 1;
   }

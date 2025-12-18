@@ -6,17 +6,22 @@ import { ViewMoreRailItem } from './ViewMore';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
+  console.log(data);
   const railItems = data.entry?.items?.map(
     (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
   );
   if (!railItems || railItems.length === 0) return;
   data.entry.has_more &&
     railItems.push(
-      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+      new ViewMoreRailItem({
+        id: data.entry.id,
+        orientation: data.entry.poster_format,
+        type: railItems[0].type,
+      })
     );
 
   return {
-    railType: railItems[0].type,
+    railType: data.railType ? data.railType : railItems[0].type,
     railTitle: data.entry.name,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
@@ -47,7 +52,11 @@ export const parseVodMoviesPageData = ({ data }) => {
   if (!railItems || railItems?.length === 0) return;
   data.entry?.has_more &&
     railItems.push(
-      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+      new ViewMoreRailItem({
+        id: data.entry.id,
+        orientation: data.entry.poster_format,
+        type: railItems[0].type,
+      })
     );
 
   return {
@@ -68,7 +77,11 @@ export const parseSeriesPageData = ({ data }) => {
   if (!railItems || railItems?.length === 0) return;
   data.entry.has_more &&
     railItems.push(
-      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+      new ViewMoreRailItem({
+        id: data.entry.id,
+        orientation: data.entry.poster_format,
+        type: railItems[0].type,
+      })
     );
 
   return {
@@ -124,7 +137,11 @@ export const parseSportsPageData = ({ data }) => {
   if (!railItems || railItems?.length === 0) return;
   data.entry.has_more &&
     railItems.push(
-      new ViewMoreRailItem({ id: data.entry.id, orientation: data.entry.poster_format })
+      new ViewMoreRailItem({
+        id: data.entry.id,
+        orientation: data.entry.poster_format,
+        type: railItems[0].type,
+      })
     );
 
   return {
@@ -253,6 +270,7 @@ export const parseVodPlaylists = (data) => {
       new ViewMoreRailItem({
         id: data.entry.id,
         orientation: data?.entry?.poster_format || 'portrait',
+        type: railItems[0].type,
       })
     );
 
