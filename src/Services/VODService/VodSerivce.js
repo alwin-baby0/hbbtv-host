@@ -95,10 +95,7 @@ class VodService extends FetchingService {
     if (!currentState.contentStripe) {
       const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
       settings.genres.types[this.#vodType].unshift('all');
-      console.log(t(TRANSLATIONS.ALL_GENRE));
       settings.genres.localized['all'] = t(TRANSLATIONS.ALL_GENRE);
-      console.log(settings.genres.types[this.#vodType]);
-      console.log(settings.genres.localized);
       currentState.contentStripe = parseVodCategories(
         {
           items: settings.genres.types[this.#vodType].map((item) => {

@@ -6,7 +6,6 @@ import { ViewMoreRailItem } from './ViewMore';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
-  console.log(data);
   const railItems = data.entry?.items?.map(
     (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
   );

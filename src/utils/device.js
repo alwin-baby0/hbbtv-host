@@ -60,7 +60,7 @@ const getHisenseInfo = () => {
 const getWebOSInfo = async () => {
   // Requires next scripts to be added in index.html
   // <script src="./webOSTVjs-1.2.10/webOSTV-dev.js" charset="UTF-8"></script>
-  // <script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>;
+  // <script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>
   if (!webOS) {
     console.error('webOS scripts not loaded');
     return getWebInfo();
