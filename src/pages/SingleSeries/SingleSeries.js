@@ -147,7 +147,6 @@ export default class SingleSeries extends Lightning.Component {
       ssai,
       ssaiLastEp,
       focusSeasonId,
-      focusEpisodeId,
     } = this._props;
     const { id, badgeText } = galleryItem;
 
@@ -282,7 +281,6 @@ export default class SingleSeries extends Lightning.Component {
       }
     }
 
-    console.log(focusSeasonId);
     if (focusSeasonId) {
       this._setState('Items');
     } else {
@@ -417,13 +415,6 @@ export default class SingleSeries extends Lightning.Component {
 
         $enter() {
           this.$verticalContainerIndexChange();
-        }
-
-        $exit() {
-          /* this._Wrapper.patch({
-            y: 915,
-            h: 600,
-          }); */
         }
 
         $verticalContainerIndexChange(index) {

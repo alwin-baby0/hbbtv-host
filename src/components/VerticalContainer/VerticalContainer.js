@@ -119,6 +119,7 @@ export default class VerticalContainer extends Lightning.Component {
     typeof this.Items?.children?.[this._focusedIndex].setCollision === 'function' &&
       this.Items?.children?.[this._focusedIndex].setCollision(true);
 
+    this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
     return this.Items?.children?.[this._focusedIndex];
   }
 
