@@ -12,6 +12,7 @@ class GalleryItem {
       meta,
       images,
       schedule,
+      list_schedule,
       streams,
       date,
       time,
@@ -70,6 +71,10 @@ class GalleryItem {
       const { start_time, end_time } = schedule;
       this.startTime = new Date(start_time).getTime();
       this.endTime = new Date(end_time).getTime();
+    }
+
+    if (list_schedule) {
+      this.list_schedule = list_schedule;
     }
 
     if (streams) {

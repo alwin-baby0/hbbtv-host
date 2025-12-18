@@ -58,18 +58,83 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   set props(props) {
-    const startTime = props.galleryItem.startTime;
-    const endTime = props.galleryItem.endTime;
-    /* const startTime = 1764840639000;
-    const endTime = 1764999639000; */
-    const currentDate = new Date().getTime();
+    this._props = { ...this._props, ...props };
+    this._render();
+  }
+
+  _render() {
+    const currentTime = new Date().getTime(); //in ms
+    let listSchedule = this._props.galleryItem.list_schedule;
+    /* let listSchedule = [
+      // 🔴 Past event 1
+      {
+        start: {
+          iso8601: '2025-12-10T19:00:00Z',
+          timestamp: 1765345200,
+        },
+        end: {
+          iso8601: '2025-12-10T21:30:00Z',
+          timestamp: 1765354200,
+        },
+      },
+
+      // 🔴 Past event 2
+      {
+        start: {
+          iso8601: '2025-12-14T16:00:00Z',
+          timestamp: 1765728000,
+        },
+        end: {
+          iso8601: '2025-12-14T18:00:00Z',
+          timestamp: 1765735200,
+        },
+      },
+
+      // 🟢 Future event 1
+      {
+        start: {
+          iso8601: '2025-12-19T20:00:00Z',
+          timestamp: 1766065760,
+        },
+        end: {
+          iso8601: '2025-12-19T22:00:00Z',
+          timestamp: 1766065775,
+        },
+      },
+
+      // 🟢 Future event 2
+      {
+        start: {
+          iso8601: '2025-12-20T18:30:00Z',
+          timestamp: 1766255400,
+        },
+        end: {
+          iso8601: '2025-12-20T20:00:00Z',
+          timestamp: 1766260800,
+        },
+      },
+
+      // 🟢 Future event 3
+      {
+        start: {
+          iso8601: '2025-12-25T14:00:00Z',
+          timestamp: 1766671200,
+        },
+        end: {
+          iso8601: '2025-12-25T16:30:00Z',
+          timestamp: 1766680200,
+        },
+      },
+    ]; */
+    let upcomingSchedule = listSchedule.filter((event) => event.end.timestamp * 1000 > currentTime);
+    const startTime = upcomingSchedule?.[0]?.start?.timestamp * 1000;
+    const endTime = upcomingSchedule?.[0]?.end?.timestamp * 1000;
 
     this._Column.props = {
       items: [],
       parentState: 'Items',
     };
 
-    this._props = { ...this._props, ...props };
     const { galleryItem, fallbackImage } = this._props;
 
     this._HeroSection.patch({
@@ -80,13 +145,17 @@ export default class SingleLiveEvent extends Lightning.Component {
         yPos: 100,
         parentState: 'HeroSection',
         startTime,
+        endTime,
         badgeText: galleryItem.badgeText,
       },
     });
 
     //Hide Button
-    if (currentDate >= startTime && currentDate <= endTime) {
+    if (currentTime >= startTime && currentTime <= endTime) {
       this._HeroSection.patch({
+        props: {
+          enabled: true,
+        },
         Info: {
           GalleryButton: {
             type: Button,
@@ -98,6 +167,7 @@ export default class SingleLiveEvent extends Lightning.Component {
               buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
               width: 400,
               height: 78,
+              enabled: true,
             },
             visible: true,
           },
@@ -124,6 +194,11 @@ export default class SingleLiveEvent extends Lightning.Component {
         },
       });
     }
+  }
+
+  $updateEvent(eventState) {
+    console.log('asdf upad', eventState);
+    this._render();
   }
 
   async _active() {
