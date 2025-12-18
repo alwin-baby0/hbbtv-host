@@ -73,7 +73,7 @@ export default class FetchingService {
       //Decide about api url initially
       if (!FetchingService.baseUrlResolved) {
         try {
-          const res = await attempt(API_BASE_URL);
+          const res = await attempt(API_BASE_URL + url); //for testing remove +url since dummy api doesn't support that
           FetchingService.activeBaseUrl = API_BASE_URL;
           FetchingService.baseUrlResolved = true;
           return this.#onSuccess(res);
