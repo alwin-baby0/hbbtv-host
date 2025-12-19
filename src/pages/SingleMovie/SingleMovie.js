@@ -2,7 +2,7 @@ import { Lightning, Router, Utils, Colors } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
 import { CMPService, DetailService, t, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
-import { eventTrackPayload } from '../../utils/device';
+import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
   EVENT_NAMES,
   IMG_PATH,
@@ -638,12 +638,14 @@ export default class SingleMovie extends Lightning.Component {
         },
       });
     } catch (e) {
-      Metrics.error(
-        Metrics.ErrorType.MEDIA,
-        '400',
-        'Failed to update favorite status of VOD',
-        true
-      );
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(
+          Metrics.ErrorType.MEDIA,
+          '400',
+          'Failed to update favorite status of VOD',
+          true
+        );
       //skip
       console.log('error', e);
     }

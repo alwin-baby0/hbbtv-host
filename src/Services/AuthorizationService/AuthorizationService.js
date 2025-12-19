@@ -7,9 +7,11 @@ import {
 } from '../../constants/globalConstants';
 import FetchingService from '../FetchingService';
 import { auth } from '../utils';
+import { getDeviceType } from '../../utils/device';
 
 class AuthorizationService extends FetchingService {
   async setDeviceCodeStatusInterval(deviceCode) {
+    const deviceType = getDeviceType();
     try {
       if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
         this._intervalId = setInterval(async () => {
@@ -33,18 +35,20 @@ class AuthorizationService extends FetchingService {
               window.dispatchEvent(event);
             }
           } catch (statusError) {
-            Metrics.error(
-              Metrics.ErrorType.RESTRICTION,
-              '400',
-              'Error fetching device code status',
-              true
-            );
+            deviceType === 'metrological' &&
+              Metrics.error(
+                Metrics.ErrorType.RESTRICTION,
+                '400',
+                'Error fetching device code status',
+                true
+              );
             console.error('Error fetching device code status:', statusError);
           }
         }, 5000);
       }
     } catch (error) {
-      Metrics.error(Metrics.ErrorType.RESTRICTION, '400', 'Error fetching device code', true);
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.RESTRICTION, '400', 'Error fetching device code', true);
       console.error('Error fetching device code:', error);
       this.clearPollingInterval(this._intervalId);
     }

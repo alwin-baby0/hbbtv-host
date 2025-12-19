@@ -492,12 +492,14 @@ export const eventTrackPayload = (event, id, seriesID) => {
       console.error('event tracking object not attched', error);
     }
   } catch (error) {
-    Metrics.error(
-      Metrics.ErrorType.MEDIA,
-      error.response ? error.response.status.toString() : '500',
-      'Script not loaded',
-      false
-    );
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(
+        Metrics.ErrorType.MEDIA,
+        error.response ? error.response.status.toString() : '500',
+        'Script not loaded',
+        false
+      );
     console.error('Script not loaded?', error);
   }
 };

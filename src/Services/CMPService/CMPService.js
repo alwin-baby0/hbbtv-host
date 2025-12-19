@@ -1,6 +1,6 @@
 import { Metrics } from '@firebolt-js/sdk';
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
-import { getDeviceInfo } from '../../utils/device';
+import { getDeviceInfo, getDeviceType } from '../../utils/device';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 
@@ -18,7 +18,9 @@ class CMPService extends FetchingService {
       }
     } catch (error) {
       console.error('Error fetching CMP data:', error);
-      Metrics.error(Metrics.ErrorType.RESTRICTION, '400', 'Error fetching CMP data', false);
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.RESTRICTION, '400', 'Error fetching CMP data', false);
     }
   }
 

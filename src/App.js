@@ -231,7 +231,9 @@ export default class App extends Router.App {
       ],
     });
     wasOffline = true;
-    Metrics.error(Metrics.ErrorType.NETWORK, 'Offline', 'Bad network connection', true);
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(Metrics.ErrorType.NETWORK, 'Offline', 'Bad network connection', true);
   }
 
   checkNetworkStatusOnline(isOnline) {

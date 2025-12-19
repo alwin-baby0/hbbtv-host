@@ -104,7 +104,8 @@ sequence([
       console.log(build);
     } catch (error) {
       console.error('Failed to start the app', error);
-      Metrics.error(Metrics.ErrorType.OTHER, '', 'Failed to start the app', true);
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.OTHER, '', 'Failed to start the app', true);
     }
   },
 ]);

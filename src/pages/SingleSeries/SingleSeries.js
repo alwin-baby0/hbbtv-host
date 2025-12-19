@@ -3,7 +3,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import { CMPService, DetailService, t, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
-import { eventTrackPayload } from '../../utils/device';
+import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
   EVENT_NAMES,
   IMG_PATH,
@@ -109,12 +109,14 @@ export default class SingleSeries extends Lightning.Component {
         },
       });
     } catch (e) {
-      Metrics.error(
-        Metrics.ErrorType.MEDIA,
-        '400',
-        'Failed to update favorite status of VOD',
-        true
-      );
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(
+          Metrics.ErrorType.MEDIA,
+          '400',
+          'Failed to update favorite status of VOD',
+          true
+        );
       console.log('error', e);
     }
   }

@@ -2,6 +2,7 @@
 // Home, Search, Movies, Series, Sports screens rails
 import { Metrics } from '@firebolt-js/sdk';
 import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
+import { getDeviceType } from '../utils/device';
 
 class SimpleRailItem {
   constructor(data) {
@@ -89,7 +90,9 @@ class SimpleRailItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
-        Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
         // skip
       }
     });
