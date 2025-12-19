@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { createApiCtx } from './utils';
 import { refreshTokenOnOauth } from '../utils';
+import { Metrics } from '@firebolt-js/sdk';
+import { getDeviceType } from '../utils/device';
 
 const API_BASE_URLS = {
   v1: process.env.APP_BASE_URL,
@@ -57,6 +59,14 @@ export default class FetchingService {
 
   #onError = (error) => {
     this.#loading = false;
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(
+        Metrics.ErrorType.MEDIA,
+        error.response ? error.response.status.toString() : '500',
+        error.response ? error.response.data : error.message,
+        true
+      );
     if (process.env.NODE_ENV === 'development') {
       if (error.response) {
         // Request was made but server responded with something

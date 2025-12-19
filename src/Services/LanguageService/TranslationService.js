@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { createApiCtx } from '../utils';
 import { LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { Metrics } from '@firebolt-js/sdk';
+import { getDeviceType } from '../../utils/device';
 
 const lngCode =
   localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) ||
@@ -29,6 +31,14 @@ export default class TranslationService {
         localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(data));
       })
       .catch((error) => {
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(
+            Metrics.ErrorType.MEDIA,
+            error.response ? error.response.status.toString() : '404',
+            'No translations found',
+            false
+          );
         const trExist = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS);
         console.log('Translation error:', error);
         if (trExist) {

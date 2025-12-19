@@ -1,5 +1,7 @@
+import { Metrics } from '@firebolt-js/sdk';
 import { TRANSLATIONS } from '../constants/globalConstants';
 import { t } from '../Services';
+import { getDeviceType } from '../utils/device';
 
 class GalleryItem {
   constructor(data) {
@@ -122,6 +124,9 @@ class GalleryItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
         // skip
       }
     });

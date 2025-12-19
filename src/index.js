@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 import { Launch } from '@lightningjs/sdk';
+import { Lifecycle, Parameters, Metrics } from '@firebolt-js/sdk';
 import App from './App.js';
 import Settings from '../settings.json';
 import {
@@ -85,7 +86,7 @@ sequence([
     const settings = await SettingsService.getSettings();
     localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify(settings.data));
   },
-  () => {
+  async () => {
     try {
       const app = Launch(App, appSettings, platformSettings);
       document.body.appendChild(app.stage.getCanvas());
@@ -95,9 +96,20 @@ sequence([
       );
 
       TranslationService.setTranslations();
+      const result = deviceType === 'metrological' ? Lifecycle.ready() : {};
+      console.log(result);
       eventTrackPayload(EVENT_NAMES.LAUNCH_APP);
+
+      let init = deviceType === 'metrological' ? await Parameters.initialization() : {};
+      console.log(init);
+
+      let build =
+        deviceType === 'metrological' ? await Metrics.appInfo(process.env.APP_VERSION) : {};
+      console.log(build);
     } catch (error) {
       console.error('Failed to start the app', error);
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.OTHER, '', 'Failed to start the app', true);
     }
   },
 ]);

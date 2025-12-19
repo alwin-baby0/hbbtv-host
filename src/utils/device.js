@@ -1,3 +1,4 @@
+import { Metrics } from '@firebolt-js/sdk';
 import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
 
 let deviceInfo = {};
@@ -494,6 +495,14 @@ export const eventTrackPayload = (event, id, seriesID) => {
       console.error('event tracking object not attched', error);
     }
   } catch (error) {
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(
+        Metrics.ErrorType.MEDIA,
+        error.response ? error.response.status.toString() : '500',
+        'Script not loaded',
+        false
+      );
     console.error('Script not loaded?', error);
   }
 };

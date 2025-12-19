@@ -23,6 +23,7 @@ import {
   TRANSLATIONS,
   VIDEO_TYPES,
 } from '../../constants/globalConstants';
+import { Lifecycle } from '@firebolt-js/sdk';
 
 const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
 
@@ -306,6 +307,10 @@ export default class Player extends Lightning.Component {
   }
 
   set params({ videoType, videoUrl, ssai, ...rest }) {
+    Lifecycle.listen('inactive', () => {
+      this._handleBack();
+    });
+
     this._Subtitles.patch({
       Title: {
         text: t(TRANSLATIONS.SUBTITLES),
