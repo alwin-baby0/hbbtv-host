@@ -1,6 +1,8 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
+import { Metrics } from '@firebolt-js/sdk';
+import { getDeviceType } from '../../utils/device';
 
 export default class CategoryPickerItem extends FocusableItem {
   _props = {
@@ -95,6 +97,9 @@ export default class CategoryPickerItem extends FocusableItem {
       this.fireAncestors('$updateChannels', this._props);
       callback();
     } catch (error) {
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error fetching category type', true);
       console.error('Error fetching category type:', error);
     }
   }
@@ -151,6 +156,9 @@ export default class CategoryPickerItem extends FocusableItem {
       this.fireAncestors('$updateChannels', this._props);
       callback();
     } catch (error) {
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error fetching category type', true);
       console.error('Error fetching category type:', error);
     }
   }

@@ -1,5 +1,7 @@
+import { Metrics } from '@firebolt-js/sdk';
 import { IMG_PATH } from '../../constants/globalConstants';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
+import { getDeviceType } from '../../utils/device';
 
 export const playerButtonsVOD = [
   {
@@ -114,6 +116,9 @@ export const isVideoURLValid = async (url) => {
     const result = await fetch(url);
     return result.ok;
   } catch (e) {
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Invalid video url', true);
     return false;
   }
 };
