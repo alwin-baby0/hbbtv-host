@@ -1,5 +1,6 @@
 // This class is used as generic class for:
 // Home, Search, Movies, Series, Sports screens rails
+import { Metrics } from '@firebolt-js/sdk';
 import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
 
 class LiveChannelsRailItem {
@@ -74,6 +75,7 @@ class LiveChannelsRailItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
+        Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
         // skip
       }
     });

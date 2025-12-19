@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Launch, Metrics } from '@lightningjs/sdk';
-import { Lifecycle, Parameters } from '@firebolt-js/sdk';
+import { Launch } from '@lightningjs/sdk';
+import { Lifecycle, Parameters, Metrics } from '@firebolt-js/sdk';
 import App from './App.js';
 import Settings from '../settings.json';
 import {
@@ -96,13 +96,15 @@ sequence([
       console.log(result);
       eventTrackPayload(EVENT_NAMES.LAUNCH_APP);
 
-      let init = await Parameters.initialization();
+      let init = deviceType === 'metrological' ? await Parameters.initialization() : {};
       console.log(init);
 
-      let build = await Metrics.appInfo(process.env.APP_VERSION);
+      let build =
+        deviceType === 'metrological' ? await Metrics.appInfo(process.env.APP_VERSION) : {};
       console.log(build);
     } catch (error) {
       console.error('Failed to start the app', error);
+      Metrics.error(Metrics.ErrorType.OTHER, '', 'Failed to start the app', true);
     }
   },
 ]);

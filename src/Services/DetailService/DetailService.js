@@ -3,6 +3,7 @@ import { parseDetailsData, parseSeasonData, parseVodCategories } from '../../Mod
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { Metrics } from '@firebolt-js/sdk';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {
@@ -62,6 +63,7 @@ class DetailService extends FetchingService {
         return [];
       })
       .catch((error) => {
+        Metrics.error(Metrics.ErrorType.MEDIA, '404', 'Error fetching seasons', true);
         console.error('Error fetching season tabs:', error);
         return [];
       });
@@ -87,6 +89,7 @@ class DetailService extends FetchingService {
         seasonTabsParsed: this.seasonTabsParsed,
       };
     } catch (error) {
+      Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error fetching seasons', true);
       console.error('Error fetching seasons:', error);
       throw error;
     }

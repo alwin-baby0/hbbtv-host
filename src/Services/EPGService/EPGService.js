@@ -9,6 +9,7 @@ import {
   CARD_TYPES,
   API_METHODS,
 } from '../../constants/globalConstants';
+import { Metrics } from '@firebolt-js/sdk';
 
 export const EPG_ROWS_PER_FETCH = 10;
 class EPGService extends FetchingService {
@@ -125,6 +126,7 @@ class EPGService extends FetchingService {
         try {
           return this.#getEPG(channelId);
         } catch (error) {
+          Metrics.error(Metrics.ErrorType.MEDIA, '404', 'Failed to get EPG for channel', false);
           console.error(`Failed to get EPG for channelId ${channelId}`, error);
           return null;
         }

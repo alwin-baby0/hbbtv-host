@@ -15,6 +15,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import colors from '../../../reskin/colors.json';
 import { capitalizeFirstLetter } from '../../utils';
+import { Metrics } from '@firebolt-js/sdk';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
 
@@ -637,6 +638,12 @@ export default class SingleMovie extends Lightning.Component {
         },
       });
     } catch (e) {
+      Metrics.error(
+        Metrics.ErrorType.MEDIA,
+        '400',
+        'Failed to update favorite status of VOD',
+        true
+      );
       //skip
       console.log('error', e);
     }

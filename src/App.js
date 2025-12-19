@@ -6,7 +6,7 @@ import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import { DetailService, t } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
-import { Lifecycle } from '@firebolt-js/sdk';
+import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -231,6 +231,7 @@ export default class App extends Router.App {
       ],
     });
     wasOffline = true;
+    Metrics.error(Metrics.ErrorType.NETWORK, 'Offline', 'Bad network connection', true);
   }
 
   checkNetworkStatusOnline(isOnline) {

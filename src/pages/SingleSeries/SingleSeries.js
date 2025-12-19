@@ -15,6 +15,7 @@ import {
 } from '../../constants/globalConstants';
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import { constructRails } from '../utils';
+import { Metrics } from '@firebolt-js/sdk';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
 
@@ -108,6 +109,12 @@ export default class SingleSeries extends Lightning.Component {
         },
       });
     } catch (e) {
+      Metrics.error(
+        Metrics.ErrorType.MEDIA,
+        '400',
+        'Failed to update favorite status of VOD',
+        true
+      );
       console.log('error', e);
     }
   }

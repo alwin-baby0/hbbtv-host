@@ -2,6 +2,7 @@ import { Lightning } from '@lightningjs/sdk';
 import { VideoPlayer } from '@lightningjs/sdk';
 import { loader, unloader } from '../../../components/Player/HLS';
 import { EPGService } from '../../../Services';
+import { Metrics } from '@firebolt-js/sdk';
 
 export default class LiveTVPlayer extends Lightning.Component {
   static _template() {
@@ -62,6 +63,12 @@ export default class LiveTVPlayer extends Lightning.Component {
         }
       })
       .catch((error) => {
+        Metrics.error(
+          Metrics.ErrorType.MEDIA,
+          error.response ? error.response?.status.toString() : '400',
+          'Error fetching channel',
+          false
+        );
         console.error('Error occurred:', error);
       });
   }
