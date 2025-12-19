@@ -1,3 +1,4 @@
+import { Metrics } from '@firebolt-js/sdk';
 import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
 
 let deviceInfo = {};
@@ -60,7 +61,7 @@ const getHisenseInfo = () => {
 const getWebOSInfo = async () => {
   // Requires next scripts to be added in index.html
   // <script src="./webOSTVjs-1.2.10/webOSTV-dev.js" charset="UTF-8"></script>
-  // <script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>;
+  // <script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>
   if (!webOS) {
     console.error('webOS scripts not loaded');
     return getWebInfo();
@@ -494,6 +495,14 @@ export const eventTrackPayload = (event, id, seriesID) => {
       console.error('event tracking object not attched', error);
     }
   } catch (error) {
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(
+        Metrics.ErrorType.MEDIA,
+        error.response ? error.response.status.toString() : '500',
+        'Script not loaded',
+        false
+      );
     console.error('Script not loaded?', error);
   }
 };

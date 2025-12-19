@@ -8,6 +8,8 @@ import {
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { Metrics } from '@firebolt-js/sdk';
+import { getDeviceType } from '../../utils/device';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {
@@ -59,6 +61,9 @@ class DetailService extends FetchingService {
         return [];
       })
       .catch((error) => {
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(Metrics.ErrorType.MEDIA, '404', 'Error fetching seasons', true);
         console.error('Error fetching season tabs:', error);
         return [];
       });
@@ -84,6 +89,9 @@ class DetailService extends FetchingService {
         seasonTabsParsed: this.seasonTabsParsed,
       };
     } catch (error) {
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error fetching seasons', true);
       console.error('Error fetching seasons:', error);
       throw error;
     }

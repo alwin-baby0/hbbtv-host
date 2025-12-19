@@ -44,7 +44,6 @@ export default async function (page, { seriesId, seasonId, episodeId, cmpShown }
         })[0]
       )
     : undefined;
-  console.log(seasonNumber);
 
   const episodeNumber =
     seasonNumber && episodeId
@@ -86,7 +85,7 @@ export default async function (page, { seriesId, seasonId, episodeId, cmpShown }
   }
 
   page.props = {
-    sectionTitle: seasons[0]?.sectionTitle,
+    sectionTitle: seasons[seasonId ? seasonId : 0]?.sectionTitle,
     galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
     favorited,
     duration: seasons.duration,
@@ -122,7 +121,7 @@ export default async function (page, { seriesId, seasonId, episodeId, cmpShown }
   };
 
   page._Column.props = {
-    items: [...constructRails(updatedSeasons[0]), ...seriesVODS],
+    items: [...constructRails(updatedSeasons[seasonId ? seasonNumber : 0]), ...seriesVODS],
     parentState: 'Items',
     seasonIndex: seasonNumber,
     episodeIndex: episodeNumber,

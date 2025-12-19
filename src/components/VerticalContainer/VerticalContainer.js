@@ -1,6 +1,6 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { getClosestElementIndex } from '../../utils/focus';
-import { CARD_TYPES } from '../../constants/globalConstants';
+import { CARD_SIZES, CARD_TYPES } from '../../constants/globalConstants';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
@@ -182,7 +182,11 @@ export default class VerticalContainer extends Lightning.Component {
     if (this._focusedIndex < this.Items.children.length - 1) {
       if (this.Items.children[this._focusedIndex + 1]._props?.cardType === CARD_TYPES.BANNER) {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 2);
-        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 2);
+        this._reCalibrateScroll(
+          this._focusedIndex,
+          this._focusedIndex + 2,
+          CARD_SIZES.BANNER.height
+        );
         this._focusedIndex += 2;
         this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
       } else {
@@ -201,7 +205,11 @@ export default class VerticalContainer extends Lightning.Component {
     if (this._focusedIndex > 0) {
       if (this.Items.children[this._focusedIndex - 1]._props?.cardType === CARD_TYPES.BANNER) {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 2);
-        this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 2);
+        this._reCalibrateScroll(
+          this._focusedIndex,
+          this._focusedIndex - 2,
+          CARD_SIZES.BANNER.height
+        );
         this._focusedIndex -= 2;
         this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
       } else {
@@ -259,7 +267,7 @@ export default class VerticalContainer extends Lightning.Component {
    * @param {number} oldIndex
    * @param {number} newIndex
    */
-  _reCalibrateScroll(oldIndex, newIndex) {
+  _reCalibrateScroll(oldIndex, newIndex, offset = null) {
     const { enableScroll } = this._props;
     if (!enableScroll) return;
 
@@ -283,8 +291,12 @@ export default class VerticalContainer extends Lightning.Component {
       const multiplier = oldIndex - newIndex;
       this._scrollPosition +=
         newIndex > oldIndex
-          ? multiplier * prevFocus.finalH - margin
-          : multiplier * prevFocus.finalH + margin;
+          ? !offset
+            ? multiplier * prevFocus.finalH - margin
+            : -prevFocus.finalH - margin - offset
+          : !offset
+          ? multiplier * prevFocus.finalH + margin
+          : prevFocus.finalH + margin + offset;
 
       this.Items.patch({
         y: Math.min(this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition, 0),

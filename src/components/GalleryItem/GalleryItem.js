@@ -23,7 +23,7 @@ export default class GalleryItem extends Lightning.Component {
   _hours = 0;
   _minutes = 0;
   _seconds = 0;
-  remaining = 0;
+  remainingUntilStart = 0;
 
   static _template() {
     return {
@@ -419,6 +419,7 @@ export default class GalleryItem extends Lightning.Component {
       ssai,
       badgeText,
       startTime,
+      endTime,
       infoY,
       bgY,
       badgeY,
@@ -444,6 +445,7 @@ export default class GalleryItem extends Lightning.Component {
       imdbScore,
       eventDate,
       eventTime,
+      streamUrl,
     } = galleryItem;
 
     const titleLength = title.length;
@@ -471,9 +473,12 @@ export default class GalleryItem extends Lightning.Component {
 
     if (videoType === 'event') {
       const targetTimestamp = startTime;
-      this.remaining = targetTimestamp - Date.now();
+      const endTimestamp = endTime;
+      const eventEndsIn = endTimestamp - Date.now();
+      this.remainingUntilStart = targetTimestamp - Date.now();
+      const shouldCallUpdateInitially = this.remainingUntilStart > 0;
 
-      const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+      const totalSeconds = Math.max(0, Math.floor(this.remainingUntilStart / 1000));
 
       this._days = Math.floor(totalSeconds / (24 * 60 * 60));
       this._hours = Math.floor((totalSeconds % (24 * 60 * 60)) / 3600);
@@ -482,13 +487,28 @@ export default class GalleryItem extends Lightning.Component {
 
       if (!this._countDownInterval) {
         this._countDownInterval = setInterval(() => {
-          this.remaining -= 1000;
-          if (this.remaining <= 0) {
-            this.remaining = 0;
+          this.remainingUntilStart -= 1000;
+          if (this.remainingUntilStart <= 0) {
+            this.remainingUntilStart = 0;
             clearInterval(this._countDownInterval);
+            this._countDownInterval = null;
+            if (shouldCallUpdateInitially) {
+              this.fireAncestors('$updateEvent', 'remaining = 0');
+            }
           }
           this.updateUI();
         }, 1000);
+      }
+
+      if (this._endAlarm) {
+        clearTimeout(this._endAlarm);
+        this._endAlarm = null;
+      }
+      if (eventEndsIn > 0 && !this._endAlarm) {
+        this._endAlarm = setTimeout(() => {
+          this._endAlarm = null;
+          this.fireAncestors('$updateEvent', 'event ended');
+        }, eventEndsIn);
       }
     }
 
@@ -595,7 +615,7 @@ export default class GalleryItem extends Lightning.Component {
         //this patch is delayed on purpose, without it countdown is not properly displayed
         this._Info.patch({
           Countdown: {
-            visible: this.remaining > 0,
+            visible: this.remainingUntilStart > 0,
             Days: {
               Number: {
                 text: {
@@ -688,6 +708,13 @@ export default class GalleryItem extends Lightning.Component {
               });
               return;
             }
+            if (streamUrl) {
+              Router.navigate(ROUTES.PLAYER, {
+                videoUrl: streamUrl,
+                shouldSaveProgress: false,
+              });
+              return;
+            }
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
                 Router.navigate(ROUTES.PLAYER, {
@@ -720,7 +747,7 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   updateUI() {
-    const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+    const totalSeconds = Math.max(0, Math.floor(this.remainingUntilStart / 1000));
     const days = Math.floor(totalSeconds / 86400);
     const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);

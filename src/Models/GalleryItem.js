@@ -1,5 +1,7 @@
+import { Metrics } from '@firebolt-js/sdk';
 import { TRANSLATIONS } from '../constants/globalConstants';
 import { t } from '../Services';
+import { getDeviceType } from '../utils/device';
 
 class GalleryItem {
   constructor(data) {
@@ -12,6 +14,7 @@ class GalleryItem {
       meta,
       images,
       schedule,
+      list_schedule,
       streams,
       date,
       time,
@@ -72,6 +75,10 @@ class GalleryItem {
       this.endTime = new Date(end_time).getTime();
     }
 
+    if (list_schedule) {
+      this.list_schedule = list_schedule;
+    }
+
     if (streams) {
       const streamUrl = streams?.[0]?.m3u8 || streams?.[1]?.m3u8 || null;
       this.streamUrl = streamUrl;
@@ -117,6 +124,9 @@ class GalleryItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
         // skip
       }
     });

@@ -119,6 +119,7 @@ export default class Button extends Lightning.Component {
       Icon: {
         texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
         color: this._isFocused ? Colors(colors.white).get() : Colors(colors.black).get(),
+        visible: this._props.enabled,
       },
       Label: {
         Text: {
@@ -178,7 +179,7 @@ export default class Button extends Lightning.Component {
           height + 14,
           radius,
           2,
-          Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get(),
+          Colors(colors.focus).get(),
           false,
           0
         ),
