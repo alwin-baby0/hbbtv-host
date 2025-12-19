@@ -33,6 +33,7 @@ export default class Player extends Lightning.Component {
     currentAd: null,
     skipTo: 0,
     ads: [],
+    shouldSaveProgress: true,
   };
 
   _cumulativeTime = 0;
@@ -892,7 +893,8 @@ export default class Player extends Lightning.Component {
   }
 
   handleBackHelper() {
-    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
+    const { shouldSaveProgress } = this._props;
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA) && shouldSaveProgress) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._props.seriesID) {
           UserService.addRecentlyWatched(
