@@ -711,6 +711,7 @@ export default class GalleryItem extends Lightning.Component {
             if (streamUrl) {
               Router.navigate(ROUTES.PLAYER, {
                 videoUrl: streamUrl,
+                shouldSaveProgress: false,
               });
               return;
             }

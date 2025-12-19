@@ -219,6 +219,7 @@ export default class EPGRailItems extends Lightning.Component {
         videoUrl: this._props.src,
         duration: 0,
         videoType: VIDEO_TYPES.STREAM_NOW,
+        shouldSaveProgress: false,
       });
     }, 500);
   }
