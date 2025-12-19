@@ -133,7 +133,7 @@ export const cronstructSingleLineRail = (rail, index) => {
       railWidth: RAIL_WIDTHS[railType] || 1500,
       railTitle: railTitle,
       railType,
-      cardType: cardType,
+      cardType: items[0].type === RAIL_TYPES.BANNER ? CARD_TYPES.BANNER : cardType,
       ...((railType === RAIL_TYPES.EPGS ||
         railType === RAIL_TYPES.CONTINUE_WATCHING ||
         railType === RAIL_TYPES.FAVORITES) && { wrap: true }),

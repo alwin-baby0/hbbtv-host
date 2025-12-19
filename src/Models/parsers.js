@@ -6,9 +6,13 @@ import { ViewMoreRailItem } from './ViewMore';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
-  const railItems = data.entry?.items?.map(
-    (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
-  );
+  const railItems =
+    data.entry &&
+    (data.entry.items
+      ? data.entry?.items.map(
+          (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
+        )
+      : [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]);
   if (!railItems || railItems.length === 0) return;
   data.entry.has_more &&
     railItems.push(
@@ -44,10 +48,14 @@ export const parseHomePageHeroSection = ({ data }) => {
 // VodPreview
 // Movies
 export const parseVodMoviesPageData = ({ data }) => {
-  const railItems = data.entry?.items?.map(
-    (item) =>
-      new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.MOVIE)
-  );
+  const railItems =
+    data.entry &&
+    (data.entry.items
+      ? data.entry.items.map(
+          (item) =>
+            new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.MOVIE)
+        )
+      : [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]);
   if (!railItems || railItems?.length === 0) return;
   data.entry?.has_more &&
     railItems.push(
@@ -59,9 +67,9 @@ export const parseVodMoviesPageData = ({ data }) => {
     );
 
   return {
-    railType: RAIL_TYPES.MOVIE,
+    railType: railItems[0].type === RAIL_TYPES.BANNER ? RAIL_TYPES.BANNER : RAIL_TYPES.MOVIE,
     railTitle: data.entry.name,
-    cardType: CARD_TYPES.POSTER,
+    cardType: railItems[0].type === RAIL_TYPES.BANNER ? CARD_TYPES.BANNER : CARD_TYPES.POSTER,
     items: railItems,
     railId: data.entry.id,
   };
@@ -69,10 +77,14 @@ export const parseVodMoviesPageData = ({ data }) => {
 
 // Series
 export const parseSeriesPageData = ({ data }) => {
-  const railItems = data.entry.items?.map(
-    (item) =>
-      new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.SERIE)
-  );
+  const railItems =
+    data.entry &&
+    (data.entry.items
+      ? data.entry.items.map(
+          (item) =>
+            new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.SERIE)
+        )
+      : [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]);
   if (!railItems || railItems?.length === 0) return;
   data.entry.has_more &&
     railItems.push(
@@ -84,9 +96,9 @@ export const parseSeriesPageData = ({ data }) => {
     );
 
   return {
-    railType: RAIL_TYPES.SERIE,
+    railType: railItems[0].type === RAIL_TYPES.BANNER ? RAIL_TYPES.BANNER : RAIL_TYPES.SERIE,
     railTitle: data.entry.name,
-    cardType: CARD_TYPES.POSTER,
+    cardType: railItems[0].type === RAIL_TYPES.BANNER ? CARD_TYPES.BANNER : CARD_TYPES.POSTER,
     items: railItems,
     railId: data.entry.id,
   };
@@ -122,17 +134,21 @@ export const parseSeasonTabs = ({ data }, vodType) => {
 
 // Sports
 export const parseSportsPageData = ({ data }) => {
-  const railItems = data.entry?.items?.map(
-    (item) =>
-      new SimpleRailItem(
-        {
-          ...item,
-          type: { value: item.type ? item.type : RAIL_TYPES.SPORT },
-          orientation: data.entry.poster_format,
-        },
-        RAIL_TYPES.SPORT
-      )
-  );
+  const railItems =
+    data.entry &&
+    (data.entry.items
+      ? data.entry.items.map(
+          (item) =>
+            new SimpleRailItem(
+              {
+                ...item,
+                type: { value: item.type ? item.type : RAIL_TYPES.SPORT },
+                orientation: data.entry.poster_format,
+              },
+              RAIL_TYPES.SPORT
+            )
+        )
+      : [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]);
   if (!railItems || railItems?.length === 0) return;
   data.entry.has_more &&
     railItems.push(
@@ -144,9 +160,9 @@ export const parseSportsPageData = ({ data }) => {
     );
 
   return {
-    railType: RAIL_TYPES.SPORT,
+    railType: railItems[0].type === RAIL_TYPES.BANNER ? RAIL_TYPES.BANNER : RAIL_TYPES.SPORT,
     railTitle: data.entry.name,
-    cardType: CARD_TYPES.POSTER,
+    cardType: railItems[0].type === RAIL_TYPES.BANNER ? CARD_TYPES.BANNER : CARD_TYPES.POSTER,
     items: railItems,
     railId: data.entry.id,
   };

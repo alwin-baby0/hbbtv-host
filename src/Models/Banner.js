@@ -1,13 +1,11 @@
 class Banner {
   constructor(data) {
-    const { creatives } = data;
+    console.log(data);
+    const { type, images } = data;
+    this.type = type;
 
     // Extracting URLs for ctv_ related images
-    this.ctvPosters = {
-      720: creatives.ctv_720p.banner,
-      1080: creatives.ctv_1080p.banner,
-      2160: creatives.ctv_2160p.banner,
-    };
+    this.ctvPosters = { ...images.banner };
   }
 
   // Method to get a CTV poster by resolution
