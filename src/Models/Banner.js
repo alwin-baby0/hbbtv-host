@@ -1,6 +1,5 @@
 class Banner {
   constructor(data) {
-    console.log(data);
     const { type, images } = data;
     this.type = type;
 

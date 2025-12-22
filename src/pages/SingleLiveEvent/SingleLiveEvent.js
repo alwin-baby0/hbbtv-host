@@ -197,7 +197,6 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   $updateEvent(eventState) {
-    console.log('asdf upad', eventState);
     this._render();
   }
 
