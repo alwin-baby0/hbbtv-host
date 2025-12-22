@@ -389,7 +389,7 @@ const getWebInfo = () => {
 
 /**
  *
- * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" | "foxxum" | "metrological" | "netgem" | "ocillion" | "sunrise" | "xperi" } deviceType
+ * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" | "foxxum" | "metrological" | "netgem" | "ocilion" | "sunrise" | "xperi" } deviceType
  * @returns { Promise<{ serialNumber: string, model: string, brand: string, os: string, osVersion: string, macAddress: string }> }
  */
 const setUpDeviceInfo = async (deviceType) => {
@@ -411,7 +411,7 @@ const setUpDeviceInfo = async (deviceType) => {
       return getNetrangeInfo();
     case 'xperi':
       return getXperiInfo();
-    case 'ocillion':
+    case 'ocilion':
       return getOcilionInfo();
     case 'foxxum':
       return getFoxxumInfo();
