@@ -111,7 +111,7 @@ class AuthorizationService extends FetchingService {
       apiVersion: auth,
       method: API_METHODS.POST,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       data: {
         grant_type: 'refresh_token',
