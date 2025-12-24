@@ -1,5 +1,6 @@
 import { VideoPlayer } from '@lightningjs/sdk';
 import Hls from 'hls.js';
+import { getDeviceType } from '../../utils/device';
 
 export let player = null;
 
@@ -8,6 +9,9 @@ const adUrlPattern = /\/break_\d+\.ts$/i;
 
 function handleUnrecoverableError(player, errorEvent) {
   if (VideoPlayer._consumer) {
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(Metrics.ErrorType.NETWORK, 'Player error', 'Error in the player', true);
     VideoPlayer._consumer.fire('$videoPlayerError', errorEvent, VideoPlayer.currentTime);
     VideoPlayer._consumer.fire('$videoPlayerEvent', 'Error', errorEvent, VideoPlayer.currentTime);
   }

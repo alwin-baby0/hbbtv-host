@@ -7,7 +7,7 @@ import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
 import { t, UserService } from '../../Services';
-import { eventTrackPayload } from '../../utils/device';
+import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
   convertCueTimeToSeconds,
   formatTimeHMS,
@@ -1154,6 +1154,9 @@ export default class Player extends Lightning.Component {
 
   $videoPlayerError(e) {
     console.error('Error in the player: ', e);
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(Metrics.ErrorType.NETWORK, 'Player error', 'Error in the player', true);
     if (e.event.code === 20) return;
     this._ErrorMessage.patch({
       Message: {
