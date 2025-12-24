@@ -1,6 +1,7 @@
 import { VideoPlayer } from '@lightningjs/sdk';
 import Hls from 'hls.js';
 import { getDeviceType } from '../../utils/device';
+import { Metrics } from '@firebolt-js/sdk';
 
 export let player = null;
 

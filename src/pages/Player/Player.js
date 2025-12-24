@@ -23,7 +23,7 @@ import {
   TRANSLATIONS,
   VIDEO_TYPES,
 } from '../../constants/globalConstants';
-import { Lifecycle } from '@firebolt-js/sdk';
+import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 
 const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
 
