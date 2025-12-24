@@ -19,7 +19,8 @@
     "build-tizen": "vite build --mode production-tizen",
     "build-xperi": "vite build --mode production-xperi",
     "build-foxxum": "vite build --mode production-foxxum",
-    "build-metrological": "lng dist"
+    "build-ocilion": "vite build --mode production-ocilion",
+    "build-metrological": "vite build --mode production-metrological"
   },
   "author": "",
   "license": "Apache-2.0",

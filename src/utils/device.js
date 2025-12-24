@@ -354,6 +354,35 @@ const getNetrangeInfo = () => {
   };
 };
 
+const parseOcilionUserAgent = (uaString = '') => {
+  const defaultInfo = {
+    brand: 'Ocilion',
+    model: 'unknown',
+    os: 'unknown',
+    osVersion: 'unknown',
+    macAddress: 'unknown',
+  };
+
+  if (!uaString) return defaultInfo;
+
+  const os = /Linux/i.test(uaString) ? 'Linux' : defaultInfo.os;
+  const chromeMatch = uaString.match(/Chrome\/([0-9.]+)/i);
+  const wpeMatch = uaString.match(/WPE\/([0-9.]+)/i);
+  const webkitMatch = uaString.match(/AppleWebKit\/([0-9.]+)/i);
+
+  const osVersion =
+    (chromeMatch?.[1] && `Chrome/${chromeMatch[1]}`) ||
+    (wpeMatch?.[1] && `WPE/${wpeMatch[1]}`) ||
+    (webkitMatch?.[1] && `AppleWebKit/${webkitMatch[1]}`) ||
+    defaultInfo.osVersion;
+
+  return {
+    ...defaultInfo,
+    os,
+    osVersion,
+  };
+};
+
 const getOcilionInfo = () => {
   let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.OCILION_DEVICE_ID);
 
@@ -362,13 +391,17 @@ const getOcilionInfo = () => {
     localStorage.setItem(LOCAL_STORAGE_KEYS.OCILION_DEVICE_ID, serialNumber);
   }
 
+  const ua = navigator.userAgent || '';
+
+  const parsed = parseOcilionUserAgent(ua);
+
   return {
-    serialNumber: serialNumber,
-    model: 'model-unknown',
-    brand: 'Ocilion',
-    os: 'Ocilion',
-    osVersion: 'unknown',
-    macAddress: 'unknown',
+    serialNumber,
+    model: parsed.model,
+    brand: parsed.brand,
+    os: parsed.os,
+    osVersion: parsed.osVersion,
+    macAddress: parsed.macAddress,
   };
 };
 
@@ -392,7 +425,7 @@ const getWebInfo = () => {
 
 /**
  *
- * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" | "foxxum" | "metrological" | "netgem" | "ocillion" | "sunrise" | "xperi" } deviceType
+ * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" | "foxxum" | "metrological" | "netgem" | "ocilion" | "sunrise" | "xperi" } deviceType
  * @returns { Promise<{ serialNumber: string, model: string, brand: string, os: string, osVersion: string, macAddress: string }> }
  */
 const setUpDeviceInfo = async (deviceType) => {
@@ -414,7 +447,7 @@ const setUpDeviceInfo = async (deviceType) => {
       return getNetrangeInfo();
     case 'xperi':
       return getXperiInfo();
-    case 'ocillion':
+    case 'ocilion':
       return getOcilionInfo();
     case 'foxxum':
       return getFoxxumInfo();
