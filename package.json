@@ -30,7 +30,8 @@
     "build-xperi": "vite build --mode production-xperi",
     "build-foxxum": "vite build --mode production-foxxum",
     "build-ocilion": "vite build --mode production-ocilion",
-    "build-metrological": "vite build --mode production-metrological"
+    "build-metrological": "vite build --mode production-metrological",
+    "build-sunrise": "vite build --mode production-sunrise"
   },
   "author": "",
   "license": "Apache-2.0",
