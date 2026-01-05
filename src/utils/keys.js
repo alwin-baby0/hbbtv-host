@@ -72,7 +72,7 @@ export const setupKeys = (deviceType) => {
         179: 'MediaPlayPause',
         412: 'MediaRewind',
         417: 'MediaFastForward',
-        415: 'MediaPlay',
+        13: 'MediaPlay',
         19: 'MediaPause',
         413: 'MediaStop',
       };
