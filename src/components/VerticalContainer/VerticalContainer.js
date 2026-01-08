@@ -1,6 +1,6 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { getClosestElementIndex } from '../../utils/focus';
-import { CARD_SIZES, CARD_TYPES } from '../../constants/globalConstants';
+import { CARD_SIZES, CARD_TYPES, ROUTES } from '../../constants/globalConstants';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
@@ -42,6 +42,7 @@ export default class VerticalContainer extends Lightning.Component {
   set props(props) {
     let { items, railTitle, seasonIndex, episodeIndex, ...rest } = props;
     this._props = { ...this._props, ...rest };
+    console.log(this._props);
 
     if (railTitle && railTitle !== '') {
       const { h } = rest;
@@ -62,6 +63,7 @@ export default class VerticalContainer extends Lightning.Component {
     } else {
       this.patch({
         Title: undefined,
+        ...(this._props.h && { h: this._props.h }),
       });
     }
 
@@ -91,7 +93,7 @@ export default class VerticalContainer extends Lightning.Component {
       }
 
       this._focusedIndex = items && items.length > 0 ? 0 : -1;
-      this._scrollPosition = this.ref === 'VODSection' ? 250 : 0;
+      this._scrollPosition = 0;
     }
 
     if ((!items || !items.length) && this.ref !== 'EPGData') {
@@ -106,19 +108,11 @@ export default class VerticalContainer extends Lightning.Component {
       if (episodeIndex && episodeIndex !== -1)
         this.Items.children[this._focusedIndex]._focusedIndex = episodeIndex;
     }
+
+    console.log(this.Items.finalH);
   }
 
   _getFocused() {
-    this._focusedIndex > 0 &&
-      typeof this.Items?.children?.[this._focusedIndex - 1].setCollision === 'function' &&
-      this.Items?.children?.[this._focusedIndex - 1].setCollision(false);
-    this._focusedIndex < this.Items?.children?.length - 1 &&
-      typeof this.Items?.children?.[this._focusedIndex + 1].setCollision === 'function' &&
-      this.Items?.children?.[this._focusedIndex + 1].setCollision(false);
-
-    typeof this.Items?.children?.[this._focusedIndex].setCollision === 'function' &&
-      this.Items?.children?.[this._focusedIndex].setCollision(true);
-
     this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
     return this.Items?.children?.[this._focusedIndex];
   }
@@ -257,51 +251,38 @@ export default class VerticalContainer extends Lightning.Component {
     this._props.items = [];
     this.Items.childList.clear();
     this._focusedIndex = 0;
-    this._scrollPosition = this.ref === 'VODSection' ? 250 : 0;
+    this._scrollPosition = 0;
     this.Items.y = 0;
     this.stage.update();
   }
 
-  /**
-   * move items container to the side if there are more items off the screen
-   * @param {number} oldIndex
-   * @param {number} newIndex
-   */
-  _reCalibrateScroll(oldIndex, newIndex, offset = null) {
+  _reCalibrateScroll(oldIndex, newIndex) {
     const { enableScroll } = this._props;
     if (!enableScroll) return;
 
     this.stage.update();
 
     const currentFocus = this.Items.children[newIndex];
-    const prevFocus = this.Items.children[oldIndex];
 
     if (!currentFocus) {
       return;
     }
 
-    if (newIndex === 0) {
-      this._scrollPosition = this.ref === 'VODSection' ? 250 : 0;
-      this.Items.patch({ y: 0 });
-    } else {
-      const margin =
-        prevFocus._props.flexItem && prevFocus._props.flexItem.marginBottom
-          ? prevFocus._props.flexItem.marginBottom
-          : 0;
-      const multiplier = oldIndex - newIndex;
-      this._scrollPosition +=
-        newIndex > oldIndex
-          ? !offset
-            ? multiplier * prevFocus.finalH - margin
-            : -prevFocus.finalH - margin - offset
-          : !offset
-          ? multiplier * prevFocus.finalH + margin
-          : prevFocus.finalH + margin + offset;
+    const containerHeight = this.finalH;
+    const elementY = currentFocus.finalY;
+    const elementH = currentFocus.finalH;
 
-      this.Items.patch({
-        y: Math.min(this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition, 0),
-      });
+    if (elementY < -this._scrollPosition) {
+      // paddingOffset is used to offset first item in each
+      // column from the start of the container in EPG-s
+      const paddingOffset = newIndex !== 0 ? -50 : 0;
+      this._scrollPosition = -elementY - paddingOffset;
+    } else if (elementY + elementH > containerHeight - this._scrollPosition) {
+      const offset =
+        this._props.page === ROUTES.HOME ? 120 : this._props.page === ROUTES.LIVE ? 135 : 20;
+      this._scrollPosition = -(elementY + elementH - containerHeight + offset);
     }
+    this.Items.smooth = { y: this._scrollPosition };
 
     this.Items.children[oldIndex]?._unfocus();
     this.Items.children[newIndex]?._focus();
@@ -316,21 +297,11 @@ export default class VerticalContainer extends Lightning.Component {
     }
 
     if (this._focusedIndex !== index) {
-      newIndex > 0 &&
-        typeof this.Items?.children?.[newIndex - 1].setCollision === 'function' &&
-        this.Items?.children?.[newIndex - 1].setCollision(false);
-      newIndex < this.Items?.children?.length - 1 &&
-        typeof this.Items?.children?.[newIndex + 1].setCollision === 'function' &&
-        this.Items?.children?.[newIndex + 1].setCollision(false);
-
-      typeof this.Items?.children?.[newIndex].setCollision === 'function' &&
-        this.Items?.children?.[newIndex].setCollision(true);
-
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex = index;
     }
     if (index === 0) {
-      this._scrollPosition = this.ref === 'VODSection' ? 250 : 0;
+      this._scrollPosition = 0;
       this.Items.patch({ y: 0 });
     }
     this.fireAncestors('$verticalContainerIndexChange', index);
@@ -348,16 +319,6 @@ export default class VerticalContainer extends Lightning.Component {
    * @param {number} newIndex
    */
   _handleCarryFocus(oldIndex, newIndex, closestElementFunction = getClosestElementIndex) {
-    newIndex > 0 &&
-      typeof this.Items?.children?.[newIndex - 1].setCollision === 'function' &&
-      this.Items?.children?.[newIndex - 1].setCollision(false);
-    newIndex < this.Items?.children?.length - 1 &&
-      typeof this.Items?.children?.[newIndex + 1].setCollision === 'function' &&
-      this.Items?.children?.[newIndex + 1].setCollision(false);
-
-    typeof this.Items?.children?.[newIndex].setCollision === 'function' &&
-      this.Items?.children?.[newIndex].setCollision(true);
-
     if (this._props.carryRowPosition && this.Items.children.length > 1) {
       const nextContainer = this.Items.children[newIndex];
       if (nextContainer.Items) {

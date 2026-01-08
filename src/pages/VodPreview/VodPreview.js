@@ -37,6 +37,7 @@ export default class VodPreview extends Lightning.Component {
       VodContentContainer: {
         type: VodContentContainer,
         zIndex: 2,
+        y: 820,
       },
       VodContainer: {
         zIndex: 2,
@@ -45,7 +46,6 @@ export default class VodPreview extends Lightning.Component {
         w: 1760,
         h: 670,
         Column: {
-          y: 980,
           h: 795,
           w: 1740,
           collision: true,
@@ -119,7 +119,16 @@ export default class VodPreview extends Lightning.Component {
       }
 
       this._VodContentContainer.props = { ...content, parentState: 'VodContentContainer' };
-      this._Column.props = { items, parentState: 'VodContainer' };
+      this._Column.props = {
+        items,
+        parentState: 'VodContainer',
+        page:
+          this._props.vodType === VOD_PREVIEW_TYPES.MOVIES
+            ? ROUTES.MOVIES
+            : this._props.vodType === VOD_PREVIEW_TYPES.SERIES
+            ? ROUTES.SERIES
+            : ROUTES.SPORTS,
+      };
       this._setState('Hero');
     }
   }
@@ -134,9 +143,8 @@ export default class VodPreview extends Lightning.Component {
 
   calculateContentOffset(contentType) {
     switch (contentType) {
-      case CONTENT_TYPE.EVENTS:
       case CONTENT_TYPE.CATEGORIES:
-        return this._props.vodType === VOD_PREVIEW_TYPES.SPORTS ? 150 : 200;
+        return 200;
       case CONTENT_TYPE.EMPTY:
       default:
         return 80;
@@ -171,7 +179,10 @@ export default class VodPreview extends Lightning.Component {
               y: 820,
             },
             VodContainer: {
-              y: this._props.vodType === VOD_PREVIEW_TYPES.SPORTS ? 980 : 1080,
+              y: 1080,
+              Column: {
+                y: 20,
+              },
             },
           });
         }
@@ -205,7 +216,14 @@ export default class VodPreview extends Lightning.Component {
           this._VodContainer.patch({
             y: this.calculateContentOffset(this._VodContentContainer.contentType),
             h: 1920,
+            Column: {
+              y: 20,
+            },
           });
+          this._props.vodType === VOD_PREVIEW_TYPES.SPORTS &&
+            this._VodContentContainer.patch({
+              y: 0,
+            });
         }
 
         $enter() {
@@ -228,6 +246,9 @@ export default class VodPreview extends Lightning.Component {
             VodContainer: {
               y: this.calculateContentOffset(this._VodContentContainer.contentType),
               h: 1920,
+              Column: {
+                y: 20,
+              },
             },
           });
         }
@@ -267,6 +288,7 @@ export default class VodPreview extends Lightning.Component {
 
         correctContainerSize() {
           if (this._Column._focusedIndex === 0) {
+            console.log('here');
             this.patch({
               VodContentContainer: {
                 y: 0,
@@ -274,6 +296,9 @@ export default class VodPreview extends Lightning.Component {
               VodContainer: {
                 y: this.calculateContentOffset(this._VodContentContainer.contentType),
                 h: 1920,
+                Column: {
+                  y: 20,
+                },
               },
             });
 
@@ -287,6 +312,9 @@ export default class VodPreview extends Lightning.Component {
               VodContainer: {
                 y: 0,
                 h: 1080,
+                Column: {
+                  y: 150,
+                },
               },
             });
 

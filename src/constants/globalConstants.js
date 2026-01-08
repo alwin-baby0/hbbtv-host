@@ -324,7 +324,6 @@ export const CARD_SIZES = {
 
 export const CONTENT_TYPE = {
   CATEGORIES: '_Categories',
-  EVENTS: '_LiveEvents',
   EMPTY: 'empty',
 };
 

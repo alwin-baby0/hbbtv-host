@@ -111,6 +111,7 @@ export const cronstructSingleLineRail = (rail, index) => {
 
   return {
     type: HorizontalContainer,
+    ...(railType !== RAIL_TYPES.BANNER && { collision: true }),
     ...rest,
     ...containerDimensions,
     ...((railType === RAIL_TYPES.EPGS || index === 0) && { collision: true }),
