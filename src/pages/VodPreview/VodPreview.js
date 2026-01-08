@@ -288,7 +288,6 @@ export default class VodPreview extends Lightning.Component {
 
         correctContainerSize() {
           if (this._Column._focusedIndex === 0) {
-            console.log('here');
             this.patch({
               VodContentContainer: {
                 y: 0,

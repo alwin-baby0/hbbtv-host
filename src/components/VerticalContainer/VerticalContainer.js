@@ -42,7 +42,6 @@ export default class VerticalContainer extends Lightning.Component {
   set props(props) {
     let { items, railTitle, seasonIndex, episodeIndex, ...rest } = props;
     this._props = { ...this._props, ...rest };
-    console.log(this._props);
 
     if (railTitle && railTitle !== '') {
       const { h } = rest;
@@ -108,8 +107,6 @@ export default class VerticalContainer extends Lightning.Component {
       if (episodeIndex && episodeIndex !== -1)
         this.Items.children[this._focusedIndex]._focusedIndex = episodeIndex;
     }
-
-    console.log(this.Items.finalH);
   }
 
   _getFocused() {
