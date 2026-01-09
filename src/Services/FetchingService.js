@@ -2,7 +2,8 @@ import axios from 'axios';
 import { createApiCtx } from './utils';
 import { refreshTokenOnOauth } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
-import { getDeviceType } from '../utils/device';
+import { getDeviceInfo, getDeviceType } from '../utils/device';
+import logger from '../utils/logger';
 
 const API_BASE_URLS = {
   v1: process.env.APP_BASE_URL,
@@ -49,7 +50,7 @@ export default class FetchingService {
       ...options,
     })
       .then(this.#onSuccess)
-      .catch(this.#onError);
+      .catch((error) => this.#onError(error, url));
   }
 
   #onSuccess = (response) => {
@@ -57,7 +58,7 @@ export default class FetchingService {
     return response;
   };
 
-  #onError = (error) => {
+  #onError = (error, url) => {
     this.#loading = false;
     const deviceType = getDeviceType();
     deviceType === 'metrological' &&
@@ -81,6 +82,14 @@ export default class FetchingService {
         // triggered the error
         console.error('Error Message:', error.message);
       }
+
+      const deviceInfo = getDeviceInfo();
+      logger.error(error.message ? error.message : 'API call failed', {
+        id: url,
+        error,
+        deviceId: deviceInfo.serialNumber,
+        device: deviceInfo,
+      });
 
       return error.response || error.message;
     }
