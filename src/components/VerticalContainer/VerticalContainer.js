@@ -276,7 +276,7 @@ export default class VerticalContainer extends Lightning.Component {
       this._scrollPosition = -elementY - paddingOffset;
     } else if (elementY + elementH > containerHeight - this._scrollPosition) {
       const offset =
-        this._props.page === ROUTES.HOME ? 120 : this._props.page === ROUTES.LIVE ? 135 : 20;
+        this._props.page === ROUTES.HOME ? 120 : this._props.page === ROUTES.LIVE ? 170 : 20;
       this._scrollPosition = -(elementY + elementH - containerHeight + offset);
     }
     this.Items.smooth = { y: this._scrollPosition };
