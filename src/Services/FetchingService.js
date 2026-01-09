@@ -68,30 +68,29 @@ export default class FetchingService {
         error.response ? error.response.data : error.message,
         true
       );
-    if (process.env.NODE_ENV === 'development') {
-      if (error.response) {
-        // Request was made but server responded with something
-        // other than 2xx
-        console.error('Status:', error.response.status);
-        console.error('Data:', error.response.data);
-        console.error('Headers:', error.response.headers);
 
-        error.response.status === 401 && refreshTokenOnOauth();
-      } else {
-        // Something else happened while setting up the request
-        // triggered the error
-        console.error('Error Message:', error.message);
-      }
+    if (error.response) {
+      // Request was made but server responded with something
+      // other than 2xx
+      console.error('Status:', error.response.status);
+      console.error('Data:', error.response.data);
+      console.error('Headers:', error.response.headers);
 
-      const deviceInfo = getDeviceInfo();
-      logger.error(error.message ? error.message : 'API call failed', {
-        id: url,
-        error,
-        deviceId: deviceInfo.serialNumber,
-        device: deviceInfo,
-      });
-
-      return error.response || error.message;
+      error.response.status === 401 && refreshTokenOnOauth();
+    } else {
+      // Something else happened while setting up the request
+      // triggered the error
+      console.error('Error Message:', error.message);
     }
+
+    const deviceInfo = getDeviceInfo();
+    logger.error(error.message ? error.message : 'API call failed', {
+      id: url,
+      error,
+      deviceId: deviceInfo.serialNumber,
+      device: deviceInfo,
+    });
+
+    return error.response || error.message;
   };
 }
