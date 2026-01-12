@@ -31,6 +31,7 @@ import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
 import { SettingsService, TranslationService } from './Services/index.js';
 import { EVENT_NAMES, LOCAL_STORAGE_KEYS } from './constants/globalConstants.js';
+import logger from './utils/logger.js';
 
 /**
  * This file should serve as a place to add for example polyfills, initiate
@@ -108,6 +109,13 @@ sequence([
       console.log(build);
     } catch (error) {
       console.error('Failed to start the app', error);
+      const deviceInfo = getDeviceInfo();
+      logger.error(error.message ? error.message : 'Failed to start the app', {
+        id: 'Failed to start the app',
+        error,
+        deviceId: deviceInfo.serialNumber,
+        device: deviceInfo,
+      });
       deviceType === 'metrological' &&
         Metrics.error(Metrics.ErrorType.OTHER, '', 'Failed to start the app', true);
     }
