@@ -90,14 +90,14 @@ export default class Search extends Lightning.Component {
       VODWrapper: {
         zIndex: 3,
         x: 600,
-        y: 160,
+        y: 100,
         w: 1760,
         h: 1080,
         clipping: true,
         visible: true,
         VODSection: {
           x: 20,
-          y: 0,
+          y: 20,
           w: 1760,
           h: 1080,
           type: VerticalContainer,
@@ -106,6 +106,7 @@ export default class Search extends Lightning.Component {
           props: {
             parentState: 'VODSection',
             enableScroll: false,
+            page: ROUTES.SEARCH,
           },
         },
       },
@@ -302,6 +303,7 @@ export default class Search extends Lightning.Component {
         props: {
           items: search.items,
           enableScroll: rows.length > 2,
+          h: 960,
         },
         text: {
           text: '',
@@ -479,7 +481,7 @@ export default class Search extends Lightning.Component {
           }
         }
 
-        $verticalContainerIndexChange(index) {
+        $verticalContainerIndexChange() {
           this.correctContainerSize();
         }
       },

@@ -67,7 +67,7 @@ export default class Home extends Lightning.Component {
     const { sliderData, railData } = this._props;
 
     const rails = constructRails(railData, ROUTES.HOME);
-    this._Column.props = { items: rails, parentState: 'Items' };
+    this._Column.props = { items: rails, parentState: 'Items', page: ROUTES.HOME };
 
     if (sliderData) {
       this._HeroSection.patch({
@@ -135,6 +135,9 @@ export default class Home extends Lightning.Component {
 
           this._Wrapper.patch({
             y: 980,
+            Column: {
+              y: 0,
+            },
           });
 
           this._HeroSection.patch({
@@ -181,6 +184,9 @@ export default class Home extends Lightning.Component {
             },
             Wrapper: {
               y: 0,
+              Column: {
+                y: 20,
+              },
             },
           });
 
@@ -199,6 +205,9 @@ export default class Home extends Lightning.Component {
             },
             Wrapper: {
               y: 900,
+              Column: {
+                y: 0,
+              },
             },
           });
 
@@ -233,6 +242,9 @@ export default class Home extends Lightning.Component {
               },
               Wrapper: {
                 y: 0,
+                Column: {
+                  y: 20,
+                },
               },
             });
           } else {
@@ -243,6 +255,9 @@ export default class Home extends Lightning.Component {
               },
               Wrapper: {
                 y: 0,
+                Column: {
+                  y: 20,
+                },
               },
             });
           }
