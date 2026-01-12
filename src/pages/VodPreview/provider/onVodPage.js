@@ -22,8 +22,7 @@ export default async function (page, { vodType, cmpShown }) {
         }, [])
       : vodStripes,
     content: {
-      contentType:
-        vodType === VOD_PREVIEW_TYPES.SPORTS ? CONTENT_TYPE.EVENTS : CONTENT_TYPE.CATEGORIES,
+      contentType: CONTENT_TYPE.CATEGORIES,
       items: constructRails(VodService.contentStripes),
     },
     vodType,
