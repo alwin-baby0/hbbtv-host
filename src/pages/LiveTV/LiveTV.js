@@ -70,6 +70,7 @@ export default class LiveTV extends Lightning.Component {
             props: {
               w: 1615,
               parentState: 'EPGS',
+              page: ROUTES.LIVE,
             },
           },
           Flag: {

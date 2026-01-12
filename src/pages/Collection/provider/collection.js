@@ -64,10 +64,12 @@ export default async function (page, { collectionId, category }) {
   page._Column.props = {
     items: [],
     parentState: 'Column',
+    h: 830,
   };
 
   page._Column.props = {
     items: railsData,
     parentState: 'Column',
+    h: 830,
   };
 }
