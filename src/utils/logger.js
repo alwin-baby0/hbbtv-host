@@ -1,4 +1,7 @@
-import winston from 'winston';
+import * as winston from 'winston';
+
+console.log(winston);
+console.log(winston.transports);
 
 export default logger = winston.createLogger({
   level: 'info',
@@ -8,7 +11,7 @@ export default logger = winston.createLogger({
     platform: process.env.APP_PLATFORM,
   },
   transports: [
-    new winston.transport.Http({
+    new winston.transports.Http({
       host: process.env.APP_BASE_URL,
       path: '/logs',
       ssl: true,
