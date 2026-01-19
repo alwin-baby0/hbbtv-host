@@ -67,7 +67,7 @@ export default async function (page, { seriesId, seasonId, episodeId, cmpShown }
     lastPlayedSeriesId = resProgress.data?.progress?.video_id;
     lastPlayedEpisodeDuration = resProgress.data?.last_episode?.duration || 0;
 
-    favorited = resFav?.data?.favorites?.some((element) => element.video_id === seriesId);
+    favorited = resFav?.data?.favorites?.some((element) => element?.id === seriesId);
   }
 
   let ssai;
