@@ -82,10 +82,11 @@ export const setupKeys = (deviceType) => {
         461: 'Back',
         17: 'Back',
         463: 'MediaPlayPause',
+        13: 'MediaPlayPause',
         412: 'MediaRewind',
         417: 'MediaFastForward',
-        463: 'MediaPlay',
-        463: 'MediaPause',
+        415: 'MediaPlay',
+        19: 'MediaPause',
         413: 'MediaStop',
       };
     case 'sunrise':
