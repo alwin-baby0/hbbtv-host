@@ -42,6 +42,18 @@ const getHisenseInfo = () => {
     ? window.Hisense_GetDeviceInfo()
     : getWebInfo();
 
+  let serialNumber = hisenseDeviceInfo.uuid
+    ? hisenseDeviceInfo.uuid.substring(12)
+    : hisenseDeviceInfo.serialNumber;
+  serialNumber = serialNumber
+    ? serialNumber
+    : localStorage.getItem(LOCAL_STORAGE_KEYS.HISENSE_DEVICE_ID);
+
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem(LOCAL_STORAGE_KEYS.HISENSE_DEVICE_ID, serialNumber);
+  }
+
   return {
     serialNumber: hisenseDeviceInfo.uuid
       ? hisenseDeviceInfo.uuid.substring(12)
