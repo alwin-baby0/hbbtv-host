@@ -1,6 +1,5 @@
 import { defineConfig, loadEnv } from 'vite';
 import legacy from '@vitejs/plugin-legacy';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default ({ mode }) => {
   const outDir = 'build';
