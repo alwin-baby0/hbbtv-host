@@ -101,6 +101,9 @@ class DetailService extends FetchingService {
     this._request({
       url: `/${API_URLS.GET_AD_CUES}`,
       apiVersion: V2,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
       method: API_METHODS.GET,
       params: {
         video_id: videoId,
