@@ -1,8 +1,9 @@
 import { Metrics } from '@firebolt-js/sdk';
-import { TRANSLATIONS } from '../constants/globalConstants';
+import { LOG_LEVEL, TRANSLATIONS } from '../constants/globalConstants';
 import { t } from '../Services';
 import { getDeviceInfo, getDeviceType } from '../utils/device';
-import logger from '../utils/logger';
+import { error } from 'winston';
+import { LoggingService } from '../Services/index.js';
 
 class GalleryItem {
   constructor(data) {
@@ -126,11 +127,9 @@ class GalleryItem {
         image.src = urlObj.toString();
       } catch {
         const deviceInfo = getDeviceInfo();
-        logger.error(error.message ? error.message : 'Error parsing image', {
-          id: url,
+        LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+          message: 'Error parsing image',
           error,
-          deviceId: deviceInfo.serialNumber,
-          device: deviceInfo,
         });
         const deviceType = getDeviceType();
         deviceType === 'metrological' &&

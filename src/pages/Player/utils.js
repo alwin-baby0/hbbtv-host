@@ -1,8 +1,8 @@
 import { Metrics } from '@firebolt-js/sdk';
-import { IMG_PATH } from '../../constants/globalConstants';
+import { IMG_PATH, LOG_LEVEL } from '../../constants/globalConstants';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import { getDeviceInfo, getDeviceType } from '../../utils/device';
-import logger from '../../utils/logger';
+import { LoggingService } from '../../Services/index.js';
 
 export const playerButtonsVOD = [
   {
@@ -118,11 +118,9 @@ export const isVideoURLValid = async (url) => {
     return result.ok;
   } catch (e) {
     const deviceInfo = getDeviceInfo();
-    logger.error(error.message ? error.message : 'Invalid video url', {
-      id: url,
+    LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+      message: 'Invalid video url',
       error,
-      deviceId: deviceInfo.serialNumber,
-      device: deviceInfo,
     });
     const deviceType = getDeviceType();
     deviceType === 'metrological' &&

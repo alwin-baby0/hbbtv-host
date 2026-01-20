@@ -155,7 +155,13 @@ export const API_URLS = {
   ADD_SERIES_PROGRESS: 'oauth/series-progress',
   GET_SETTINGS: 'getSettings',
 };
-
+export const LOG_LEVEL = {
+  ERROR: 'error',
+  WARNING: 'warning',
+  INFO: 'info',
+  DEBUG: 'debug',
+  CRITICAL: 'critical',
+};
 export const TRANSLATIONS = {
   ALL_GENRE: 'all_genre',
   VIEW_MORE: 'view_all',

@@ -1,9 +1,9 @@
 // This class is used as generic class for:
 // Home, Search, Movies, Series, Sports screens rails
 import { Metrics } from '@firebolt-js/sdk';
-import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
+import { ROUTES, RAIL_TYPES, LOG_LEVEL } from '../constants/globalConstants';
 import { getDeviceInfo, getDeviceType } from '../utils/device';
-import logger from '../utils/logger';
+import { LoggingService } from '../Services/index.js';
 
 class LiveChannelsRailItem {
   constructor(data) {
@@ -78,11 +78,9 @@ class LiveChannelsRailItem {
         image.src = urlObj.toString();
       } catch {
         const deviceInfo = getDeviceInfo();
-        logger.error(error.message ? error.message : 'Error parsing image', {
-          id: url,
+        LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+          message: 'Error parsing image',
           error,
-          deviceId: deviceInfo.serialNumber,
-          device: deviceInfo,
         });
         const deviceType = getDeviceType();
         deviceType === 'metrological' &&

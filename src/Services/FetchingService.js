@@ -3,7 +3,8 @@ import { createApiCtx } from './utils';
 import { refreshTokenOnOauth } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
 import { getDeviceInfo, getDeviceType } from '../utils/device';
-import logger from '../utils/logger';
+import { LOG_LEVEL } from '../constants/globalConstants';
+import { LoggingService } from './LoggingService/index.js';
 
 const API_BASE_URLS = {
   v1: process.env.APP_BASE_URL,
@@ -84,11 +85,10 @@ export default class FetchingService {
     }
 
     const deviceInfo = getDeviceInfo();
-    logger.error(error.message ? error.message : 'API call failed', {
-      id: url,
+
+    LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+      message: 'API call failed',
       error,
-      deviceId: deviceInfo.serialNumber,
-      device: deviceInfo,
     });
 
     return error.response || error.message;

@@ -1,6 +1,5 @@
 import { Metrics } from '@firebolt-js/sdk';
-import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
-import logger from './logger';
+import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../constants/globalConstants';
 
 let deviceInfo = {};
 
@@ -530,11 +529,10 @@ export const eventTrackPayload = (event, id, seriesID) => {
     }
   } catch (error) {
     const deviceInfo = getDeviceInfo();
-    logger.error(error.message ? error.message : 'w4track script not loaded', {
-      id: 'w4track script not loaded',
+
+    LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+      message: 'w4track script not loaded',
       error,
-      deviceId: deviceInfo.serialNumber,
-      device: deviceInfo,
     });
     const deviceType = getDeviceType();
     deviceType === 'metrological' &&
