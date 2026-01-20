@@ -109,7 +109,10 @@ sequence([
     } catch (error) {
       console.error('Failed to start the app', error);
       const deviceInfo = getDeviceInfo();
-      LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, 'Failed to start the app', error);
+      LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+        message: 'Failed to start the app',
+        error,
+      });
       deviceType === 'metrological' &&
         Metrics.error(Metrics.ErrorType.OTHER, '', 'Failed to start the app', true);
     }
