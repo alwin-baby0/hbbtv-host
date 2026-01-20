@@ -32,7 +32,6 @@ export default ({ mode }) => {
       renderModernChunks: false,
       targets: ['Chrome >= 53', 'not dead'],
     }),
-    nodePolyfills(),
   ];
 
   return defineConfig({
