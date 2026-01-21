@@ -2,7 +2,6 @@ import { Metrics } from '@firebolt-js/sdk';
 import { LOG_LEVEL, TRANSLATIONS } from '../constants/globalConstants';
 import { t } from '../Services';
 import { getDeviceInfo, getDeviceType } from '../utils/device';
-import { error } from 'winston';
 import { LoggingService } from '../Services/index.js';
 
 class GalleryItem {
