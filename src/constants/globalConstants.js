@@ -55,6 +55,7 @@ export const LOCAL_STORAGE_KEYS = {
   XPERI_DEVICE_ID: 'xperiDeviceID',
   NETRANGE_DEVICE_ID: 'netrangeDeviceID',
   OCILION_DEVICE_ID: 'ocilionDeviceID',
+  HISENSE_DEVICE_ID: 'hisenseDeviceID',
   WEB_DEVICE_INFO: 'webDeviceID',
   LANGUAGE_CODE: 'languageCode',
   LANGUAGE_TRANSLATIONS: 'languageTr',

@@ -64,7 +64,6 @@
     "jest-webgl-canvas-mock": "^0.2.3",
     "lint-staged": "^12.1.2",
     "prettier": "^2.2.1",
-    "vite": "^6.2.0",
-    "vite-plugin-node-polyfills": "^0.24.0"
+    "vite": "^6.2.0"
   }
 }
