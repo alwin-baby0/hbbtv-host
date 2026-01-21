@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { createApiCtx } from '../utils';
-import { LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../../constants/globalConstants';
 import { Metrics } from '@firebolt-js/sdk';
-import { getDeviceType } from '../../utils/device';
+import { getDeviceInfo, getDeviceType } from '../../utils/device';
+import { LoggingService } from '../LoggingService/index.js';
 
 const lngCode =
   localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) ||
@@ -31,6 +32,11 @@ export default class TranslationService {
         localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(data));
       })
       .catch((error) => {
+        const deviceInfo = getDeviceInfo();
+        LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+          message: 'API call failed',
+          error,
+        });
         const deviceType = getDeviceType();
         deviceType === 'metrological' &&
           Metrics.error(

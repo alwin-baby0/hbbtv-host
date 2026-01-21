@@ -9,3 +9,4 @@ export * from './SettingsService';
 export * from './SearchService';
 export * from './AuthorizationService';
 export * from './UserService';
+export * from './LoggingService';

@@ -1,5 +1,5 @@
 import { Metrics } from '@firebolt-js/sdk';
-import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../constants/globalConstants';
 
 let deviceInfo = {};
 
@@ -540,6 +540,12 @@ export const eventTrackPayload = (event, id, seriesID) => {
       console.error('event tracking object not attched', error);
     }
   } catch (error) {
+    const deviceInfo = getDeviceInfo();
+
+    LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+      message: 'w4track script not loaded',
+      error,
+    });
     const deviceType = getDeviceType();
     deviceType === 'metrological' &&
       Metrics.error(
