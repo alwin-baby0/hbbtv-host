@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_KEY = ''; // čekamo Toma
+const token = process.env.LOGGING_API_TOKEN;
 
 export default class LoggingService {
   async postLog(level, deviceInfo, responseBody) {
@@ -19,7 +19,7 @@ export default class LoggingService {
       },
       {
         headers: {
-          Authorization: `Bearer ${API_KEY}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       }
