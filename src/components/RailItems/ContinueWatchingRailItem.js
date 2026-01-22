@@ -127,6 +127,7 @@ export default class ContinueWatchingRailItem extends FocusableItem {
           },
         },
         Title: {
+          ...(!enableProgressBar && { y: 20 }),
           text: {
             text: itemTitle,
           },
