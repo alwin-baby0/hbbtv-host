@@ -55,9 +55,7 @@ const getHisenseInfo = () => {
   }
 
   return {
-    serialNumber: hisenseDeviceInfo.uuid
-      ? hisenseDeviceInfo.uuid.substring(12)
-      : hisenseDeviceInfo.serialNumber,
+    serialNumber: serialNumber,
     model: hisenseDeviceInfo.model_name ? hisenseDeviceInfo.model_name : hisenseDeviceInfo.model,
     brand: hisenseDeviceInfo.brand,
     os: 'VIDAA',
