@@ -27,15 +27,19 @@ const extractPhilipsModel = () => {
   }
 };
 
-const getTizenInfo = () => ({
+const getTizenInfo = () => {
   //Requires <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script> for older tizen OS versions
-  serialNumber: webapis.productinfo.getDuid(),
-  model: webapis.productinfo.getModel(),
-  brand: 'samsung',
-  os: 'Tizen',
-  osVersion: webapis.tvinfo.getVersion(),
-  macAddress: webapis.network.getMac(),
-});
+  console.log('WEBAPIS:', webapis);
+  console.log('WEBAPIS TIFA:', webapis.adinfo.getTIFA());
+  return {
+    serialNumber: webapis.adinfo.getTIFA(),
+    model: webapis.productinfo.getModel(),
+    brand: 'samsung',
+    os: 'Tizen',
+    osVersion: webapis.tvinfo.getVersion(),
+    macAddress: webapis.network.getMac(),
+  };
+};
 
 const getHisenseInfo = () => {
   const hisenseDeviceInfo = window.Hisense_GetDeviceInfo
