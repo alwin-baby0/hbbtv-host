@@ -228,6 +228,7 @@ export const CARD_TYPES = {
   CATEGORY: 'CATEGORY',
   COLLECTION: 'COLLECTION',
   BANNER: 'BANNER',
+  LANDSCAPE: 'LANDSCAPE',
 };
 
 export const API_METHODS = {
@@ -486,7 +487,7 @@ export const CARD_SIZES = {
   },
   CATEGORY: {
     height: 75,
-    width: 1740,
+    width: 1920,
   },
   EPG_CARD_ITEM: {
     height: 105,
