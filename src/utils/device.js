@@ -29,8 +29,6 @@ const extractPhilipsModel = () => {
 
 const getTizenInfo = () => {
   //Requires <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script> for older tizen OS versions
-  console.log('WEBAPIS:', webapis);
-  console.log('WEBAPIS TIFA:', webapis.adinfo.getTIFA());
   return {
     serialNumber: webapis.adinfo.getTIFA(),
     model: webapis.productinfo.getModel(),
