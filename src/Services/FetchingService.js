@@ -2,7 +2,9 @@ import axios from 'axios';
 import { createApiCtx } from './utils';
 import { refreshTokenOnOauth } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
-import { getDeviceType } from '../utils/device';
+import { getDeviceInfo, getDeviceType } from '../utils/device';
+import { LOG_LEVEL } from '../constants/globalConstants';
+import { LoggingService } from './LoggingService/index.js';
 
 const API_BASE_URLS = {
   v1: process.env.APP_BASE_URL,
@@ -108,7 +110,7 @@ export default class FetchingService {
     return response;
   };
 
-  #onError = (error) => {
+  #onError = (error, url) => {
     this.#loading = false;
     const deviceType = getDeviceType();
     deviceType === 'metrological' &&
@@ -118,22 +120,28 @@ export default class FetchingService {
         error.response ? error.response.data : error.message,
         true
       );
-    if (process.env.NODE_ENV === 'development') {
-      if (error.response) {
-        // Request was made but server responded with something
-        // other than 2xx
-        console.error('Status:', error.response.status);
-        console.error('Data:', error.response.data);
-        console.error('Headers:', error.response.headers);
 
-        error.response.status === 401 && refreshTokenOnOauth();
-      } else {
-        // Something else happened while setting up the request
-        // triggered the error
-        console.error('Error Message:', error.message);
-      }
+    if (error.response) {
+      // Request was made but server responded with something
+      // other than 2xx
+      console.error('Status:', error.response.status);
+      console.error('Data:', error.response.data);
+      console.error('Headers:', error.response.headers);
 
-      return error.response || error.message;
+      error.response.status === 401 && refreshTokenOnOauth();
+    } else {
+      // Something else happened while setting up the request
+      // triggered the error
+      console.error('Error Message:', error.message);
     }
+
+    const deviceInfo = getDeviceInfo();
+
+    LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+      message: 'API call failed',
+      error,
+    });
+
+    return error.response || error.message;
   };
 }

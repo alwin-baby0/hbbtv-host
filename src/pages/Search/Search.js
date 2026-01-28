@@ -313,6 +313,7 @@ export default class Search extends Lightning.Component {
       this._VODSection.patch({
         text: {
           text: t(TRANSLATIONS.NO_RESULTS),
+          h: 100,
         },
         props: {
           items: [],
