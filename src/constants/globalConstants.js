@@ -487,7 +487,7 @@ export const CARD_SIZES = {
   },
   CATEGORY: {
     height: 75,
-    width: 1920,
+    width: 1740,
   },
   EPG_CARD_ITEM: {
     height: 105,
