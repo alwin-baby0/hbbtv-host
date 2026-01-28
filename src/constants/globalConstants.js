@@ -228,6 +228,7 @@ export const CARD_TYPES = {
   CATEGORY: 'CATEGORY',
   COLLECTION: 'COLLECTION',
   BANNER: 'BANNER',
+  LANDSCAPE: 'LANDSCAPE',
 };
 
 export const API_METHODS = {

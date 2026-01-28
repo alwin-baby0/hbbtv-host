@@ -72,7 +72,10 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
   const containerDimensions =
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
-      : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
+      : {
+          h: CARD_SIZES[cardType]?.height || 500,
+          w: (CARD_SIZES[cardType].width + 20) * items.length,
+        };
   const flexItem =
     ((railType === RAIL_TYPES.EPGS && !railTitle) || (page !== ROUTES.HOME && railTitle)) &&
     page !== ROUTES.SEARCH
@@ -115,6 +118,7 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     collision: true,
     index,
     props: {
+      railWidth: RAIL_WIDTHS[railType],
       h: CARD_SIZES[cardType]?.height,
       w: containerDimensions.w,
       railTitle: railTitle,
