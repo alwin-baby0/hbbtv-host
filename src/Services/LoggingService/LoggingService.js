@@ -1,5 +1,4 @@
 import axios from 'axios';
-const token = process.env.LOGGING_API_TOKEN;
 
 export default class LoggingService {
   async postLog(level, deviceInfo, responseBody) {
@@ -19,7 +18,7 @@ export default class LoggingService {
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${process.env.APP_LOGGING_API_TOKEN}`,
           'Content-Type': 'application/json',
         },
       }

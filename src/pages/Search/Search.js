@@ -311,8 +311,10 @@ export default class Search extends Lightning.Component {
       });
     } else {
       this._VODSection.patch({
+        y: 65,
         text: {
           text: t(TRANSLATIONS.NO_RESULTS),
+          h: 100,
         },
         props: {
           items: [],
