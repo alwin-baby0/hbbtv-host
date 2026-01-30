@@ -6,14 +6,8 @@ import { getDeviceInfo, getDeviceType } from '../utils/device';
 import { LOG_LEVEL } from '../constants/globalConstants';
 import { LoggingService } from './LoggingService/index.js';
 
-const API_BASE_URLS = {
-  v1: process.env.APP_BASE_URL,
-  v2: process.env.APP_BASE_URL_2,
-  auth: process.env.APP_BASE_OAUTH,
-};
-
-const API_BASE_URL = 'https://httpbin.org/status/500';
-const BACKUP_API_URL = process.env.APP_BASE_URL;
+const API_BASE_URL = process.env.APP_BASE_URL;
+const BACKUP_API_URL = process.env.APP_BACKUP_URL;
 
 export default class FetchingService {
   // we create static instance of axios to be unique throught the project
