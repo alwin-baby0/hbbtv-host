@@ -8,7 +8,7 @@ import {
 } from '../../constants/globalConstants';
 import FetchingService from '../FetchingService';
 import { auth } from '../utils';
-import { getDeviceType } from '../../utils/device';
+import { getDeviceType, getDeviceInfo } from '../../utils/device';
 import axios from 'axios';
 
 class AuthorizationService extends FetchingService {
@@ -155,6 +155,7 @@ class AuthorizationService extends FetchingService {
       localStorage.setItem('authDeviceCode', data.device_code);
       expiresIn = data.expires_in * 1000;
     } catch (err) {
+      const deviceInfo = getDeviceInfo();
       LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
         message: 'Error scheduling device code refresh',
         error: err,
