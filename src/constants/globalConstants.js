@@ -155,6 +155,7 @@ export const API_URLS = {
   GET_SERIES_PROGRESS: 'oauth/series-progress',
   ADD_SERIES_PROGRESS: 'oauth/series-progress',
   GET_SETTINGS: 'getSettings',
+  LOGGING: 'api/log',
 };
 export const LOG_LEVEL = {
   ERROR: 'error',

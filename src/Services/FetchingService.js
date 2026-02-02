@@ -17,6 +17,9 @@ export default class FetchingService {
 
   static init() {
     if (FetchingService.axiosInstance) return;
+
+    const authDeviceCode = localStorage.getItem('authDeviceCode');
+
     FetchingService.axiosInstance = axios.create({
       headers: {
         Authorization: `Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563`,

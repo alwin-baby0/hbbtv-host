@@ -1,9 +1,9 @@
 import axios from 'axios';
-
+import { API_URLS } from '../../constants/globalConstants';
 export default class LoggingService {
   async postLog(level, deviceInfo, responseBody) {
     await axios.post(
-      `https://log.wedotv.dev/api/log/${level}`,
+      `${process.env.APP_LOGGING_URL}/${API_URLS.LOGGING}/${level}`,
       {
         app_bundle: process.env.APP_BUNDLE,
         app_version: process.env.APP_VERSION,
