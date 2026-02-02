@@ -90,7 +90,7 @@ sequence([
   async () => {
     const settings = await SettingsService.getSettings();
     localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify(settings.data));
-    await AuthorizationService.scheduleDeviceCodeRefresh();
+    await AuthorizationService.scheduleDeviceAuthorizationCodeRefresh();
   },
   async () => {
     try {

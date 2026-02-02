@@ -126,7 +126,7 @@ class AuthorizationService extends FetchingService {
 
   refreshTimeoutId = null;
 
-  async scheduleDeviceCodeRefresh() {
+  async scheduleDeviceAuthorizationCodeRefresh() {
     const BUFFER = 1000; // 29min 59sec
     let expiresIn = 10000;
 
@@ -139,10 +139,10 @@ class AuthorizationService extends FetchingService {
     try {
       const res = await axios.post(
         `${process.env.APP_BASE_URL}/${API_URLS.GET_DEVICE_CODE}`,
-        new URLSearchParams({
+        {
           client_id: process.env.APP_CMP_CLIENT_ID,
           scope: 'read',
-        }),
+        },
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
