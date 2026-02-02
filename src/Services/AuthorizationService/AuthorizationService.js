@@ -125,6 +125,7 @@ class AuthorizationService extends FetchingService {
   };
 
   refreshTimeoutId = null;
+
   async scheduleDeviceCodeRefresh() {
     const BUFFER = 1000; // 29min 59sec
     let expiresIn = 10000;
@@ -132,26 +133,25 @@ class AuthorizationService extends FetchingService {
     if (this.refreshTimeoutId) {
       clearTimeout(this.refreshTimeoutId);
     }
-    let data;
-    try {
-      try {
-        const res = await axios.post(
-          `${process.env.APP_BASE_URL}/${API_URLS.GET_DEVICE_CODE}`,
-          new URLSearchParams({
-            client_id: process.env.APP_CMP_CLIENT_ID,
-            scope: 'read',
-          }),
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }
-        );
 
-        data = res.data;
-      } catch (err) {
-        throw err;
-      }
+    let data;
+
+    try {
+      const res = await axios.post(
+        `${process.env.APP_BASE_URL}/${API_URLS.GET_DEVICE_CODE}`,
+        new URLSearchParams({
+          client_id: process.env.APP_CMP_CLIENT_ID,
+          scope: 'read',
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+
+      data = res.data;
+
       localStorage.setItem('authDeviceCode', data.device_code);
       expiresIn = data.expires_in * 1000;
     } catch (err) {
