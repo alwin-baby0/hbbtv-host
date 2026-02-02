@@ -14,6 +14,7 @@ export const CARD_TYPES = {
   BANNER: 'BANNER',
   LANDSCAPE: 'LANDSCAPE',
   CONTINUE_WATCHING: 'CONTINUE_WATCHING',
+  SPORTS: 'SPORTS',
 };
 
 export const API_METHODS = {
@@ -294,7 +295,7 @@ export const CARD_SIZES = {
   },
   SPORTS: {
     width: 350,
-    height: 370,
+    height: 390,
   },
   CATEGORY: {
     height: 75,
