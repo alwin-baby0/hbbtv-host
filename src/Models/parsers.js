@@ -178,11 +178,11 @@ export const parseSportsEventsData = ({ data }) => {
   return {
     railType: RAIL_TYPES.SPORT_LIVE,
     railTitle: title,
-    cardType: CARD_TYPES.POSTER,
+    cardType: CARD_TYPES.SPORTS,
     items: railItems,
     h: 400,
     railItemsOptions: {
-      h: 370,
+      h: 390,
     },
   };
 };
