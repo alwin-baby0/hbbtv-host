@@ -132,9 +132,7 @@ class AuthorizationService extends FetchingService {
     if (this.refreshTimeoutId) {
       clearTimeout(this.refreshTimeoutId);
     }
-
     let data;
-
     try {
       try {
         const res = await axios.post(
@@ -154,9 +152,7 @@ class AuthorizationService extends FetchingService {
       } catch (err) {
         throw err;
       }
-
       localStorage.setItem('authDeviceCode', data.device_code);
-
       expiresIn = data.expires_in * 1000;
     } catch (err) {
       LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
@@ -164,7 +160,6 @@ class AuthorizationService extends FetchingService {
         error: err,
       });
     }
-
     // next refresh
     this.refreshTimeoutId = setTimeout(() => this.scheduleDeviceCodeRefresh(), expiresIn - BUFFER);
   }
