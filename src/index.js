@@ -29,7 +29,12 @@ import {
 } from './utils/device.js';
 import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
-import { SettingsService, TranslationService, LoggingService } from './Services/index.js';
+import {
+  SettingsService,
+  TranslationService,
+  LoggingService,
+  AuthorizationService,
+} from './Services/index.js';
 import { EVENT_NAMES, LOCAL_STORAGE_KEYS, LOG_LEVEL } from './constants/globalConstants.js';
 
 /**
@@ -85,6 +90,7 @@ sequence([
   async () => {
     const settings = await SettingsService.getSettings();
     localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify(settings.data));
+    await AuthorizationService.scheduleDeviceAuthorizationCodeRefresh();
   },
   async () => {
     try {
