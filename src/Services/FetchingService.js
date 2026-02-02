@@ -52,7 +52,6 @@ export default class FetchingService {
       let lastErr;
 
       for (let i = 0; i < 3; i++) {
-        console.log('asdf try no:', i, fullUrl);
         try {
           return await FetchingService.axiosInstance({
             url: fullUrl,
