@@ -9,7 +9,6 @@ import {
 import FetchingService from '../FetchingService';
 import { auth } from '../utils';
 import { getDeviceType, getDeviceInfo } from '../../utils/device';
-import axios from 'axios';
 
 class AuthorizationService extends FetchingService {
   async setDeviceCodeStatusInterval(deviceCode) {
