@@ -66,6 +66,7 @@ export const LOCAL_STORAGE_KEYS = {
   SETTINGS: 'settings',
   COLLECTION_CATEGORY: 'category',
   DEVICE_CODE: 'deviceCode',
+  AUTH_DEVICE_CODE: 'authDeviceCode',
 };
 
 export const CATEGORY_TYPES = {

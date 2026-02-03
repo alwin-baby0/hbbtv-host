@@ -9,7 +9,6 @@ import {
 import FetchingService from '../FetchingService';
 import { auth } from '../utils';
 import { getDeviceType, getDeviceInfo } from '../../utils/device';
-import axios from 'axios';
 
 class AuthorizationService extends FetchingService {
   async setDeviceCodeStatusInterval(deviceCode) {
@@ -64,6 +63,10 @@ class AuthorizationService extends FetchingService {
       method: API_METHODS.POST,
       params: {
         client_id: process.env.APP_CMP_CLIENT_ID,
+        scope: 'read',
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       headers: {
         'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
@@ -134,39 +137,17 @@ class AuthorizationService extends FetchingService {
 
   async scheduleDeviceAuthorizationCodeRefresh() {
     const BUFFER = 1000; // 29min 59sec
-    let expiresIn = 10000;
 
     if (this.refreshTimeoutId) {
       clearTimeout(this.refreshTimeoutId);
     }
 
-    let data;
+    const data = (await this.getDeviceCode()).data;
+    console.log(data);
 
-    try {
-      const res = await axios.post(
-        `${process.env.APP_BASE_URL}/${API_URLS.GET_DEVICE_CODE}`,
-        {
-          client_id: process.env.APP_CMP_CLIENT_ID,
-          scope: 'read',
-        },
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      );
+    localStorage.setItem(LOCAL_STORAGE_KEYS.AUTH_DEVICE_CODE, data.device_code);
+    const expiresIn = data.expires_in * 1000;
 
-      data = res.data;
-
-      localStorage.setItem('authDeviceCode', data.device_code);
-      expiresIn = data.expires_in * 1000;
-    } catch (err) {
-      const deviceInfo = getDeviceInfo();
-      LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
-        message: 'Error scheduling device code refresh',
-        error: err,
-      });
-    }
     // next refresh
     this.refreshTimeoutId = setTimeout(() => this.scheduleDeviceCodeRefresh(), expiresIn - BUFFER);
   }
