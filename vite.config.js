@@ -41,6 +41,7 @@ export default ({ mode }) => {
       host: true,
       port: 3000,
       strictPort: true,
+      allowedHosts: ['.ngrok-free.dev'],
     },
     build: {
       outDir,

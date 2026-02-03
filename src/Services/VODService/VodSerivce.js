@@ -305,6 +305,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     })
       .then(parseVodMoviesPageData)
       .catch((err) => err.data);
@@ -315,6 +318,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     }).then(parseHomePageHeroSection);
 
   #getSeries = async (params) =>
@@ -323,6 +329,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     })
       .then(parseSeriesPageData)
       .catch((err) => err.data);
@@ -333,6 +342,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     }).then(parseHomePageHeroSection);
 
   #getSports = async (params) => {
@@ -341,6 +353,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     })
       .then(parseSportsPageData)
       .catch((err) => err.data);
@@ -352,6 +367,9 @@ class VodService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       params,
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     }).then(parseHomePageHeroSection);
 
   #getSportsEvents = async (type = 'video', language = 'en') =>
@@ -365,6 +383,9 @@ class VodService extends FetchingService {
         page: 1,
         row: 2,
         limit: VODS_PER_ROW,
+      },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
       },
     }).then(parseSportsEventsData);
 }

@@ -54,7 +54,7 @@ export default class FetchingService {
             ...options,
             headers: {
               ...(options && options.headers ? options.headers : {}),
-              Authorization: `Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563`,
+              Authorization: `Bearer ${authDeviceCode}`,
             },
           });
         } catch (err) {

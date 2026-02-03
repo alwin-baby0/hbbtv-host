@@ -209,6 +209,9 @@ class HomePageService extends FetchingService {
         page: page, // Use the passed page parameter
         limit: 6,
       },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     }).then(parseHomePageHeroSection);
 
   #getHomePage = async (row, page, limit) =>
@@ -220,6 +223,9 @@ class HomePageService extends FetchingService {
         row,
         page,
         limit,
+      },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
       },
     })
       .then(parseHomePageRailData)
