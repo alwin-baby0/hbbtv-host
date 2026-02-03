@@ -41,6 +41,9 @@ class CMPService extends FetchingService {
         language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || 'en',
         device_id: deviceCode,
       },
+      headers: {
+        Authorization: 'Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563',
+      },
     });
     return response;
   };
@@ -54,6 +57,9 @@ class CMPService extends FetchingService {
         language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || 'en',
         choice: choicePick,
         device_id: deviceCode,
+      },
+      headers: {
+        Authorization: 'Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563',
       },
     });
   };

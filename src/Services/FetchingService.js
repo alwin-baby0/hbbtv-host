@@ -20,12 +20,7 @@ export default class FetchingService {
   static init() {
     if (FetchingService.axiosInstance) return;
 
-    const authDeviceCode = localStorage.getItem('authDeviceCode');
-
     FetchingService.axiosInstance = axios.create({
-      headers: {
-        Authorization: `Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563`,
-      },
       params: {
         ctx: createApiCtx(),
       },
@@ -49,9 +44,18 @@ export default class FetchingService {
    */
   async _request({ apiVersion, url, ...options }) {
     this.#loading = true;
+
+    const authDeviceCode = localStorage.getItem('authDeviceCode');
+    console.log(authDeviceCode);
+    // bc6b83671bd80d6a26dd7607c912c1e705f8d563
+
     return FetchingService.axiosInstance({
       url: /* API_BASE_URLS[apiVersion] */ API_BASE_URL + url,
       ...options,
+      headers: {
+        Authorization: `Bearer ${authDeviceCode}`,
+        ...(options && options.headers ? options.headers : {}),
+      },
     })
       .then(this.#onSuccess)
       .catch((error) => this.#onError(error, url));

@@ -223,6 +223,9 @@ class EPGService extends FetchingService {
         type: `channel`,
         exclude: 'movies,channel',
       },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     }).then((result) => parseVodCategories(result, ROUTES.LIVE));
 
   #getGenresCategory = async (include, exclude, channel_id) =>
@@ -234,6 +237,9 @@ class EPGService extends FetchingService {
         ...(include && { tags: include }),
         ...(exclude && { exclude }),
         ...(channel_id && { channel_id }),
+      },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
       },
     }).then(this.#parseLiveChannelsData);
 
@@ -253,6 +259,9 @@ class EPGService extends FetchingService {
       method: API_METHODS.GET,
       params: {
         channel_id: `${channelId}`,
+      },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
       },
     }).then(this.#parseSingleEPGChannel);
 
@@ -275,6 +284,9 @@ class EPGService extends FetchingService {
       method: API_METHODS.GET,
       params: {
         channel_id: channelId,
+      },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
       },
     }).then((response) => this.#parseLiveEPGData(response, url));
 

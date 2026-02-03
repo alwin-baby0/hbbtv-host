@@ -19,6 +19,9 @@ class DetailService extends FetchingService {
       url: `/${API_URLS.GET_MOVIE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
       params: {
         _: timestamp,
         id: movieId,
@@ -41,6 +44,9 @@ class DetailService extends FetchingService {
         _: timestamp,
         id: seriesId,
       },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+      },
     }).then(parseDetailsData);
 
     const seasonTabs = await this._request({
@@ -50,6 +56,9 @@ class DetailService extends FetchingService {
       params: {
         _: timestamp,
         series_id: seriesId,
+      },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
       },
     })
       .then(({ data }) => {
@@ -77,6 +86,9 @@ class DetailService extends FetchingService {
           _: timestamp,
           season_id: id,
         },
+        headers: {
+          'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        },
       }).then((data) => parseSeasonData(data, seriesId, id))
     );
 
@@ -103,6 +115,7 @@ class DetailService extends FetchingService {
       apiVersion: V2,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
       },
       method: API_METHODS.GET,
       params: {
@@ -123,6 +136,9 @@ class DetailService extends FetchingService {
       method: API_METHODS.GET,
       params: {
         id: eventId,
+      },
+      headers: {
+        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
       },
     }).then(parseDetailsData);
 }

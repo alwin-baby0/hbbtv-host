@@ -88,9 +88,9 @@ sequence([
   async () =>
     loadJS(`${process.env.APP_BASE_WATCH4}/track.js?api_key=${process.env.APP_WATCH4_API_KEY}`),
   async () => {
+    await AuthorizationService.scheduleDeviceAuthorizationCodeRefresh();
     const settings = await SettingsService.getSettings();
     localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify(settings.data));
-    await AuthorizationService.scheduleDeviceAuthorizationCodeRefresh();
   },
   async () => {
     try {
