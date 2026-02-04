@@ -1,6 +1,6 @@
-import { IMAGE_SIZES, ROUTES, VOD_PREVIEW_TYPES } from '../../../constants/globalConstants';
+import { ROUTES } from '../../../constants/globalConstants';
 import { parseVodPlaylists } from '../../../Models';
-import { VodService, DetailService } from '../../../Services';
+import { DetailService } from '../../../Services';
 import { constructRails } from '../../utils';
 
 export default async function (page, { eventId }) {

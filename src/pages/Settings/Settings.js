@@ -1,7 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
-import CMPButton from '../../components/Buttons/CMPButton/CMPButton';
 import { CMPService } from '../../Services';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
 import { t } from '../../Services';
@@ -112,14 +111,6 @@ export default class Settings extends Lightning.Component {
 
   get _Content() {
     return this.tag('Content');
-  }
-
-  get _CMPData() {
-    return this.tag('Content.CMPContainer.CMPData');
-  }
-
-  get CMPButtons() {
-    return this.tag('Content.CMPContainer.CMPData.Buttons');
   }
 
   _arrangeLngBtns(languages) {

@@ -83,10 +83,6 @@ export default class ContinueWatchingRailItem extends FocusableItem {
     };
   }
 
-  get _LandscapeImage() {
-    return this.tag('LandscapeImage');
-  }
-
   get _ProgressBar() {
     return this.tag('ProgressBar');
   }

@@ -155,28 +155,12 @@ export default class Search extends Lightning.Component {
     return this.tag('VODSection');
   }
 
-  get _Content() {
-    return this.tag('InputWrapper');
-  }
-
-  get _Spinner() {
-    return this.tag('Spinner');
-  }
-
   get _Input() {
     return this.tag('Input');
   }
 
   get _Keyboard() {
     return this.tag('Keyboard');
-  }
-
-  get _SearchLabel() {
-    return this.tag('SearchLabel');
-  }
-
-  get _SearchQueries() {
-    return this.tag('SearchQueries');
   }
 
   get _Queries() {

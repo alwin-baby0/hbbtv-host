@@ -93,22 +93,6 @@ export default class SportsEventsRailItem extends FocusableItem {
     };
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
-  get _DescriptionWrapper() {
-    return this.tag('DescriptionWrapper');
-  }
-
-  get _DateTime() {
-    return this.tag('DateTime');
-  }
-
-  get _EventImage() {
-    return this.tag('EventImage');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
     const {

@@ -64,6 +64,7 @@ class CMPService extends FetchingService {
     });
   };
 }
+
 const cmpService = new CMPService();
 
 export { cmpService as CMPService };

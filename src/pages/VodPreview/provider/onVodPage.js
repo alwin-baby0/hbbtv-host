@@ -1,5 +1,5 @@
 import { constructRails } from '../../utils';
-import { VOD_PREVIEW_TYPES, CONTENT_TYPE, ROUTES } from '../../../constants/globalConstants';
+import { CONTENT_TYPE, ROUTES } from '../../../constants/globalConstants';
 import { VodService } from '../../../Services';
 
 export default async function (page, { vodType, cmpShown }) {

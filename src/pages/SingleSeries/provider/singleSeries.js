@@ -5,7 +5,6 @@ import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId, seasonId, episodeId, cmpShown }) {
   let galleryItemSingleEp;
-  let galleryItemLastPlayedEp;
   let ssaiLastEp;
   let position = 0;
   let lastPlayedEpisodeNumber;
@@ -69,8 +68,6 @@ export default async function (page, { seriesId, seasonId, episodeId, cmpShown }
 
     favorited = resFav?.data?.favorites?.some((element) => element?.id === seriesId);
   }
-
-  let ssai;
 
   if (galleryItemSingleEp) {
     ssai = galleryItemSingleEp.ssai || undefined;

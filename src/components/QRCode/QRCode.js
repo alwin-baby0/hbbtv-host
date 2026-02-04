@@ -29,14 +29,6 @@ export default class QRCode extends Lightning.Component {
     return this.tag('Wrapper');
   }
 
-  get _QRImage() {
-    return this.tag('QRImage');
-  }
-
-  get _Title() {
-    return this.tag('Title');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
 

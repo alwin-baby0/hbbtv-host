@@ -51,10 +51,6 @@ export default class App extends Router.App {
     };
   }
 
-  get _Column() {
-    return this.tag('Widgets');
-  }
-
   get _Menu() {
     return this.tag('Widgets.Menu');
   }

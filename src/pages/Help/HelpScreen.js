@@ -108,10 +108,6 @@ export default class HelpScreen extends Lightning.Component {
     return this.tag('Row');
   }
 
-  get _LoadingIndicator() {
-    return this.tag('LoadingIndicator');
-  }
-
   get _ScrollWrapper() {
     return this.tag('ScrollWrapper');
   }

@@ -1,6 +1,5 @@
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import { refreshTokenOnOauth } from '../../utils';
-import { AuthorizationService } from '../AuthorizationService';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 

@@ -406,7 +406,6 @@ export default class GalleryItem extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
-      height,
       enabled,
       firstEpisodeVideoId,
       firstEpisodeUrl,
@@ -428,13 +427,10 @@ export default class GalleryItem extends Lightning.Component {
     const {
       title,
       summary,
-      description,
       buttonLabel,
       url,
       duration,
       videoType,
-      venue,
-      subtitle,
       director,
       cast,
       genre,
@@ -447,8 +443,6 @@ export default class GalleryItem extends Lightning.Component {
       eventTime,
       streamUrl,
     } = galleryItem;
-
-    const titleLength = title.length;
 
     const imdbScoreLabeled = `IMDB ${imdbScore}`;
     let factLine;
@@ -790,28 +784,12 @@ export default class GalleryItem extends Lightning.Component {
     });
   }
 
-  get _GradientOverlay() {
-    return this.tag('GradientOverlay');
-  }
-
   get _Info() {
     return this.tag('Info');
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
   get _Summary() {
     return this.tag('Summary');
-  }
-
-  get _Subtitle() {
-    return this.tag('Subtitle');
-  }
-
-  get _Description() {
-    return this.tag('Description');
   }
 
   get _GalleryButton() {
@@ -828,24 +806,6 @@ export default class GalleryItem extends Lightning.Component {
 
   get _BackgroundImage() {
     return this.tag('BackgroundImage');
-  }
-
-  get _SummSub() {
-    return this.tag('SummSub');
-  }
-
-  get _AgeRating() {
-    return this.tag('AgeRating');
-  }
-  get _Genre() {
-    return this.tag('Genre');
-  }
-
-  get _Director() {
-    return this.tag('Director');
-  }
-  get _Cast() {
-    return this.tag('Cast');
   }
 
   _active() {

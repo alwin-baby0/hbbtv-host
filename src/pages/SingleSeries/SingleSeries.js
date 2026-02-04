@@ -306,20 +306,12 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('HeroSection');
   }
 
-  get _SeriesWrapper() {
-    return this.tag('SeriesWrapper');
-  }
-
   get _Column() {
     return this.tag('Column');
   }
 
   get _BackButton() {
     return this.tag('BackButton');
-  }
-
-  get _Wrapper() {
-    return this.tag('Wrapper');
   }
 
   get _SeasonsBar() {

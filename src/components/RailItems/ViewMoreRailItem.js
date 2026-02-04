@@ -49,14 +49,6 @@ export default class ViewMoreRailItem extends FocusableItem {
     };
   }
 
-  get _Wrapper() {
-    return this.tag('Wrapper');
-  }
-
-  get _PosterImage() {
-    return this.tag('PosterImage');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
     const { radius, orientation, cardType } = this._props;

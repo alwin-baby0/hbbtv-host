@@ -54,7 +54,9 @@ export default class FetchingService {
             ...options,
             headers: {
               ...(options && options.headers ? options.headers : {}),
-              Authorization: `Bearer ${authDeviceCode}`,
+              ...(options && options.headers && options.headers.Authorization
+                ? {}
+                : { Authorization: `Bearer ${authDeviceCode}` }),
             },
           });
         } catch (err) {

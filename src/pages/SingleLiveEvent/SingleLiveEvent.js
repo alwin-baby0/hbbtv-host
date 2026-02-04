@@ -65,67 +65,7 @@ export default class SingleLiveEvent extends Lightning.Component {
   _render() {
     const currentTime = new Date().getTime(); //in ms
     let listSchedule = this._props.galleryItem.list_schedule;
-    /* let listSchedule = [
-      // 🔴 Past event 1
-      {
-        start: {
-          iso8601: '2025-12-10T19:00:00Z',
-          timestamp: 1765345200,
-        },
-        end: {
-          iso8601: '2025-12-10T21:30:00Z',
-          timestamp: 1765354200,
-        },
-      },
 
-      // 🔴 Past event 2
-      {
-        start: {
-          iso8601: '2025-12-14T16:00:00Z',
-          timestamp: 1765728000,
-        },
-        end: {
-          iso8601: '2025-12-14T18:00:00Z',
-          timestamp: 1765735200,
-        },
-      },
-
-      // 🟢 Future event 1
-      {
-        start: {
-          iso8601: '2025-12-19T20:00:00Z',
-          timestamp: 1766065760,
-        },
-        end: {
-          iso8601: '2025-12-19T22:00:00Z',
-          timestamp: 1766065775,
-        },
-      },
-
-      // 🟢 Future event 2
-      {
-        start: {
-          iso8601: '2025-12-20T18:30:00Z',
-          timestamp: 1766255400,
-        },
-        end: {
-          iso8601: '2025-12-20T20:00:00Z',
-          timestamp: 1766260800,
-        },
-      },
-
-      // 🟢 Future event 3
-      {
-        start: {
-          iso8601: '2025-12-25T14:00:00Z',
-          timestamp: 1766671200,
-        },
-        end: {
-          iso8601: '2025-12-25T16:30:00Z',
-          timestamp: 1766680200,
-        },
-      },
-    ]; */
     let upcomingSchedule = listSchedule.filter((event) => event.end.timestamp * 1000 > currentTime);
     const startTime = upcomingSchedule?.[0]?.start?.timestamp * 1000;
     const endTime = upcomingSchedule?.[0]?.end?.timestamp * 1000;
@@ -196,7 +136,7 @@ export default class SingleLiveEvent extends Lightning.Component {
     }
   }
 
-  $updateEvent(eventState) {
+  $updateEvent() {
     this._render();
   }
 
@@ -226,10 +166,6 @@ export default class SingleLiveEvent extends Lightning.Component {
 
   get _HeroSection() {
     return this.tag('HeroSection');
-  }
-
-  get _HeroSectionInfo() {
-    return this.tag('HeroSection.Info');
   }
 
   get _SeriesWrapper() {

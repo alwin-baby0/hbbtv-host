@@ -34,14 +34,6 @@ export default class CategoryPickerItem extends FocusableItem {
     };
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
-  get _ButtonItem() {
-    return this.tag('ButtonItem');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
 

@@ -4,7 +4,6 @@ import {
   API_URLS,
   CUSTOM_EVENT_NAMES,
   LOCAL_STORAGE_KEYS,
-  LOG_LEVEL,
 } from '../../constants/globalConstants';
 import FetchingService from '../FetchingService';
 import { auth } from '../utils';

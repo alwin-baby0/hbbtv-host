@@ -1,10 +1,4 @@
-import { GalleryItem } from '../../Models';
-import {
-  parseDetailsData,
-  parseSeasonData,
-  parseVodCategories,
-  parseSeasonTabs,
-} from '../../Models/parsers';
+import { parseDetailsData, parseSeasonData, parseSeasonTabs } from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';

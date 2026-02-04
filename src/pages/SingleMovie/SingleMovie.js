@@ -271,47 +271,23 @@ export default class SingleMovie extends Lightning.Component {
     };
   }
 
-  get _AgeRating() {
-    return this.tag('AgeRating');
-  }
-  get _Genre() {
-    return this.tag('Genre');
-  }
-  get _FactLine() {
-    return this.tag('FactLine');
-  }
-  get _Image() {
-    return this.tag('Image');
-  }
-  get _Title() {
-    return this.tag('Title');
-  }
-  get _Description() {
-    return this.tag('Description');
-  }
-  get _Director() {
-    return this.tag('Director');
-  }
-  get _Cast() {
-    return this.tag('Cast');
-  }
   get _Buttons() {
     return this.tag('Buttons');
   }
+
   get _ContinueButton() {
     return this.tag('ContinueButton');
   }
+
   get _BackButton() {
     return this.tag('BackButton');
   }
-  get _PlaylistWrapper() {
-    return this.tag('PlaylistWrapper');
-  }
+
   get _Column() {
     return this.tag('PlaylistWrapper.Column');
   }
 
-  _buildButtonConfiguration(movie, movieTrailerUrl, last_position, favorited) {
+  _buildButtonConfiguration(movieTrailerUrl, last_position, favorited) {
     const buttons = [
       {
         icon: IMG_PATH.PLAY_BTN,
@@ -365,7 +341,6 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   _arrangeButtonsInRowsDependingOnLanguage(buttons) {
-    const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
     const itemsPerRow = 4;
 
     const rows = [];
@@ -387,9 +362,9 @@ export default class SingleMovie extends Lightning.Component {
       last_position,
       playlistVODS,
     } = this._props;
+
     const {
       title,
-      description,
       duration,
       director,
       genre,
@@ -407,8 +382,6 @@ export default class SingleMovie extends Lightning.Component {
     this._Column.props = { items: playlistVODS, parentState: 'PlaylistWrapper' };
 
     const imdbScoreLabeled = `IMDB ${imdbScore}`;
-
-    const titleLength = title.length;
 
     const factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
 

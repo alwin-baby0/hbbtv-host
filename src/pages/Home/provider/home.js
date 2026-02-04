@@ -1,5 +1,5 @@
 import { LOCAL_STORAGE_KEYS, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
-import { parseHomePageRailData, parseVodUserContentData } from '../../../Models';
+import { parseHomePageRailData } from '../../../Models';
 import { HomePageService, t, UserService } from '../../../Services';
 
 async function checkImageVisibility(imageUrl) {

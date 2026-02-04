@@ -1,4 +1,4 @@
-import { Colors, Utils, Lightning } from '@lightningjs/sdk';
+import { Colors, Lightning } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
 import { t } from '../../Services';
 import { TRANSLATIONS } from '../../constants/globalConstants';
@@ -54,10 +54,6 @@ export default class InputField extends Lightning.Component {
 
   get _Input() {
     return this.tag('Input');
-  }
-
-  get _InputWrapper() {
-    return this.tag('InputWrapper');
   }
 
   _changePlaceholder() {

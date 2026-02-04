@@ -90,30 +90,10 @@ export default class LandscapeRailItem extends FocusableItem {
     return this.tag('Wrapper');
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
-  get _Description() {
-    return this.tag('Description');
-  }
-
-  get _LandscapeImage() {
-    return this.tag('LandscapeImage');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
-    const {
-      imageSrc,
-      radius,
-      itemTitle,
-      itemDescription,
-      placeholderSrc,
-      itemSummary,
-      durationString,
-      year,
-    } = this._props;
+    const { imageSrc, radius, itemTitle, placeholderSrc, itemSummary, durationString, year } =
+      this._props;
 
     const durYear = [durationString, year].join(`${durationString && year ? ' | ' : ''}`);
 

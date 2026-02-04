@@ -58,10 +58,6 @@ export default class LogoutButton extends Lightning.Component {
     return this.tag('Text');
   }
 
-  get _Column() {
-    return this.tag('Column');
-  }
-
   get _FocusBorder() {
     return this.tag('FocusBorder');
   }

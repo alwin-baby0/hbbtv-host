@@ -14,10 +14,6 @@ export default class ProgressBar extends Lightning.Component {
     };
   }
 
-  get _BackgroundBar() {
-    return this.tag('BackgroundBar');
-  }
-
   get _Progress() {
     return this.tag('Progress');
   }

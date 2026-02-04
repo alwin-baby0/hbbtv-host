@@ -1,6 +1,5 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import FocusableItem from '../FocusableItem/FocusableItem';
 
 export default class Button extends Lightning.Component {
   _isFocused = false;
@@ -150,10 +149,6 @@ export default class Button extends Lightning.Component {
 
   get _Label() {
     return this.tag('Label');
-  }
-
-  get _Border() {
-    return this.tag('Border');
   }
 
   _focus() {

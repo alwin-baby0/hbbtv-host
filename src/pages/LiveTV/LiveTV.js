@@ -448,16 +448,6 @@ export default class LiveTV extends Lightning.Component {
   get _Column() {
     return this.tag('Column');
   }
-  get _Flag() {
-    return this.tag('EPGChannels.Flag');
-  }
-  get ProgressBar() {
-    return this.tag('EPGChannels.ProgressScroll.Progress');
-  }
-
-  get _Wrapper() {
-    return this.tag('Wrapper');
-  }
 
   get _Categories() {
     return this.tag('Categories');

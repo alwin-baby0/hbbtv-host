@@ -5,6 +5,7 @@ export default class SubtitlesButtons extends Lightning.Component {
   _props = {
     languageInfo: {},
   };
+
   constructor(props) {
     super(props);
     this._selected = false;

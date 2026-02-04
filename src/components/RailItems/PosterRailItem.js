@@ -46,16 +46,8 @@ export default class PosterRailItem extends FocusableItem {
     };
   }
 
-  get _Wrapper() {
-    return this.tag('Wrapper');
-  }
-
   get _Title() {
     return this.tag('Title');
-  }
-
-  get _PosterImage() {
-    return this.tag('PosterImage');
   }
 
   set props(props) {

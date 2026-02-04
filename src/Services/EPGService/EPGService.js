@@ -14,6 +14,7 @@ import { Metrics } from '@firebolt-js/sdk';
 import { getDeviceType } from '../../utils/device';
 
 export const EPG_ROWS_PER_FETCH = 10;
+
 class EPGService extends FetchingService {
   channelsItems;
   filteredChannelsItems; // New filtered channels array
@@ -38,6 +39,7 @@ class EPGService extends FetchingService {
     this.genreItems = [];
 
     const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+
     const getGenres = parseVodCategories(
       {
         items: settings.genres.types.channels.map((item) => {
@@ -49,9 +51,11 @@ class EPGService extends FetchingService {
       },
       ROUTES.LIVE
     );
+
     this.genreItems = getGenres;
 
     let channels;
+
     if (channelId) {
       const firstChannel = (await this.#getGenresCategory('', '', channelId))[0];
 
@@ -210,24 +214,6 @@ class EPGService extends FetchingService {
     return this.stripesFetched < this.channelsItems.length;
   }
 
-  #getContent = async () => {
-    return await this.#getGenres();
-  };
-
-  #getGenres = async () =>
-    await this._request({
-      url: `/${API_URLS.GET_EPG_GENRES}`,
-      apiVersion: V2,
-      method: API_METHODS.GET,
-      params: {
-        type: `channel`,
-        exclude: 'movies,channel',
-      },
-      headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
-      },
-    }).then((result) => parseVodCategories(result, ROUTES.LIVE));
-
   #getGenresCategory = async (include, exclude, channel_id) =>
     await this._request({
       url: `/${API_URLS.GET_EPG_CHANNELS}`,
@@ -331,5 +317,7 @@ class EPGService extends FetchingService {
     return this.allChannels;
   }
 }
+
 const epgService = new EPGService();
+
 export { epgService as EPGService };

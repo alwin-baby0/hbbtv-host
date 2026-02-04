@@ -36,10 +36,6 @@ export default class BannerRailItem extends FocusableItem {
     };
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
   get _PosterImage() {
     return this.tag('PosterImage');
   }
