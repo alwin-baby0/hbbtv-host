@@ -653,6 +653,7 @@ export default class Player extends Lightning.Component {
                             y: 15,
                             x: -10,
                             color: Colors(colors.adProgress).get(),
+                            hover: false,
                           },
                         },
                       },
@@ -1349,13 +1350,18 @@ export default class Player extends Lightning.Component {
         }
 
         _captureEnter(e) {
-          this.$exitVideo(e);
+          if (this._getState() === 'AdBackButton') this.$exitVideo(e);
+          return false;
         }
 
         _handleRight() {
           if (this._props.currentAd.skipping_allowed) {
             this._setState('SkipButton');
           }
+        }
+
+        _handleUnhover() {
+          return true;
         }
       },
 

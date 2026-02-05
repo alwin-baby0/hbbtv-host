@@ -160,7 +160,13 @@ export default class PlayerButtons extends Lightning.Component {
     if (this._props.isLive) {
       return true;
     }
+
     const { buttonInfo } = this._props;
+
+    if (!buttonInfo.hover) {
+      return true;
+    }
+
     this.fireAncestors('$setState', 'Controls');
     if (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') {
       this.fireAncestors('$horizontalPosterIndexChange', 1);
