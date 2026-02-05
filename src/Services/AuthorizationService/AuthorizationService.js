@@ -68,7 +68,7 @@ class AuthorizationService extends FetchingService {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     });
   };
@@ -80,7 +80,7 @@ class AuthorizationService extends FetchingService {
       method: API_METHODS.GET,
       headers: {
         'Content-Type': 'application/json',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
         client_id: process.env.APP_CMP_CLIENT_ID,
@@ -97,7 +97,7 @@ class AuthorizationService extends FetchingService {
       method: API_METHODS.POST,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
         client_id: process.env.APP_CMP_CLIENT_ID,
@@ -121,7 +121,7 @@ class AuthorizationService extends FetchingService {
       method: API_METHODS.POST,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
         grant_type: 'refresh_token',

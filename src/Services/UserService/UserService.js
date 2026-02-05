@@ -13,7 +13,7 @@ class UserService extends FetchingService {
       method: API_METHODS.GET,
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
         page,
@@ -38,7 +38,7 @@ class UserService extends FetchingService {
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
         content_id: videoID,
@@ -63,7 +63,7 @@ class UserService extends FetchingService {
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
         content_id: videoID,
@@ -88,7 +88,7 @@ class UserService extends FetchingService {
       method: API_METHODS.GET,
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
         cachebuster: timestamp,
@@ -118,7 +118,7 @@ class UserService extends FetchingService {
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
         content_id: videoID,
@@ -148,7 +148,7 @@ class UserService extends FetchingService {
         'X-nocache': timestamp,
         'X-Authorization': `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
         video_id: videoID,
@@ -172,7 +172,7 @@ class UserService extends FetchingService {
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
         video_id: videoID,
@@ -196,7 +196,7 @@ class UserService extends FetchingService {
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
         video_id: videoID,
@@ -222,7 +222,7 @@ class UserService extends FetchingService {
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
         series_id: seriesID,
@@ -246,7 +246,7 @@ class UserService extends FetchingService {
       headers: {
         Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/json',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
         series_id: seriesID,

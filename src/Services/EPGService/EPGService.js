@@ -225,7 +225,7 @@ class EPGService extends FetchingService {
         ...(channel_id && { channel_id }),
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     }).then(this.#parseLiveChannelsData);
 
@@ -247,7 +247,7 @@ class EPGService extends FetchingService {
         channel_id: `${channelId}`,
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     }).then(this.#parseSingleEPGChannel);
 
@@ -272,7 +272,7 @@ class EPGService extends FetchingService {
         channel_id: channelId,
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     }).then((response) => this.#parseLiveEPGData(response, url));
 

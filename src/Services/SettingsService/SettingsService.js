@@ -9,7 +9,7 @@ export default class SettingsService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     });
   };
@@ -23,7 +23,7 @@ export default class SettingsService extends FetchingService {
         page_id: pageId,
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     });
   };
@@ -34,7 +34,7 @@ export default class SettingsService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     });
   };

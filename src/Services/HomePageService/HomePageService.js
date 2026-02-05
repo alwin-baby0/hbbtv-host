@@ -210,7 +210,7 @@ class HomePageService extends FetchingService {
         limit: 6,
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     }).then(parseHomePageHeroSection);
 
@@ -225,7 +225,7 @@ class HomePageService extends FetchingService {
         limit,
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     })
       .then(parseHomePageRailData)

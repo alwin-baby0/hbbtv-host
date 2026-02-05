@@ -14,7 +14,7 @@ class DetailService extends FetchingService {
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
         _: timestamp,
@@ -39,7 +39,7 @@ class DetailService extends FetchingService {
         id: seriesId,
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     }).then(parseDetailsData);
 
@@ -52,7 +52,7 @@ class DetailService extends FetchingService {
         series_id: seriesId,
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     })
       .then(({ data }) => {
@@ -81,7 +81,7 @@ class DetailService extends FetchingService {
           season_id: id,
         },
         headers: {
-          'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+          'X-API-Live-Key': process.env.APP_LIVE_KEY,
         },
       }).then((data) => parseSeasonData(data, seriesId, id))
     );
@@ -109,7 +109,7 @@ class DetailService extends FetchingService {
       apiVersion: V2,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       method: API_METHODS.GET,
       params: {
@@ -132,7 +132,7 @@ class DetailService extends FetchingService {
         id: eventId,
       },
       headers: {
-        'X-API-Live-Key': 'live_samsung_e8262140d6f64be7178597b99e53bd617f9035e26ca143a1',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     }).then(parseDetailsData);
 }
