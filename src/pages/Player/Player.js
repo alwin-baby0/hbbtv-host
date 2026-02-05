@@ -286,6 +286,10 @@ export default class Player extends Lightning.Component {
     return this.tag('WrapperAd');
   }
 
+  get _AdBackButton() {
+    return this.tag('WrapperAd.BackButton');
+  }
+
   get _SubtitlesLanguages() {
     return this.tag('Subtitles.Languages');
   }
@@ -636,6 +640,24 @@ export default class Player extends Lightning.Component {
                           },
                         },
                       },
+                      BackButton: {
+                        type: PlayerButtons,
+                        collision: true,
+                        props: {
+                          buttonInfo: {
+                            label: 'back',
+                            icon: IMG_PATH.BACK_BTN_PLAYER,
+                            onLiveContent: true,
+                            position: 60,
+                            width: 45,
+                            height: 45,
+                            y: 15,
+                            x: -10,
+                            color: Colors(colors.adProgress).get(),
+                            hover: false,
+                          },
+                        },
+                      },
                     },
                   },
                 });
@@ -763,6 +785,7 @@ export default class Player extends Lightning.Component {
     this._props.isAdVisible = true;
     if (!ad.skipping_allowed) {
       console.log('Skipping not allowed for this ad.');
+      this._setState('AdBackButton');
       // Additional logic to disable skipping
     } else {
       this._setState('SkipButton');
@@ -956,17 +979,13 @@ export default class Player extends Lightning.Component {
   $exitVideoFromBackClick() {
     this._showWrapper();
 
-    if (this._Wrapper.visible) {
-      this.handleBackHelper();
-    }
+    this.handleBackHelper();
 
     this.closeVideoPlayer();
   }
 
   $exitVideo(e) {
-    if (this._Wrapper.visible) {
-      this._handleBack(e);
-    }
+    this._handleBack(e);
   }
 
   $playVideo() {
@@ -1345,6 +1364,31 @@ export default class Player extends Lightning.Component {
 
         _handleEnter() {
           VideoPlayer.seek(this._props.skipTo);
+        }
+
+        _handleLeft() {
+          this._setState('AdBackButton');
+        }
+      },
+
+      class AdBackButton extends this {
+        _getFocused() {
+          return this._AdBackButton;
+        }
+
+        _captureEnter(e) {
+          if (this._getState() === 'AdBackButton') this.$exitVideo(e);
+          return false;
+        }
+
+        _handleRight() {
+          if (this._props.currentAd.skipping_allowed) {
+            this._setState('SkipButton');
+          }
+        }
+
+        _handleUnhover() {
+          return true;
         }
       },
 

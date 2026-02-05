@@ -35,19 +35,25 @@ export default class PlayerButtons extends Lightning.Component {
 
   _enable() {
     const { buttonInfo } = this._props;
-    const width = buttonInfo.label === 'pause' ? 90 : 66;
-    const height = buttonInfo.label === 'pause' ? 90 : 66;
+    const width = buttonInfo.width ? buttonInfo.width : buttonInfo.label === 'pause' ? 90 : 66;
+    const height = buttonInfo.height ? buttonInfo.height : buttonInfo.label === 'pause' ? 90 : 66;
     this._Icon.patch({
+      ...(buttonInfo.y && { y: buttonInfo.y }),
+      ...(buttonInfo.x && { x: buttonInfo.x }),
+      ...(buttonInfo.color && { color: buttonInfo.color }),
       texture: Lightning.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
     });
   }
 
   _active() {
     const { buttonInfo } = this._props;
-    const width = buttonInfo.label === 'pause' ? 90 : 66;
-    const height = buttonInfo.label === 'pause' ? 90 : 66;
+    const width = buttonInfo.width ? buttonInfo.width : buttonInfo.label === 'pause' ? 90 : 66;
+    const height = buttonInfo.height ? buttonInfo.height : buttonInfo.label === 'pause' ? 90 : 66;
     if (buttonInfo.label === 'pause') {
       this._Icon.patch({
+        ...(buttonInfo.y && { y: buttonInfo.y }),
+        ...(buttonInfo.x && { x: buttonInfo.x }),
+        ...(buttonInfo.color && { color: buttonInfo.color }),
         texture: Lightning.Tools.getSvgTexture(
           VideoPlayer.playing
             ? Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER)
@@ -119,8 +125,9 @@ export default class PlayerButtons extends Lightning.Component {
   }
 
   _focus() {
+    const { buttonInfo } = this._props;
     this._Icon.patch({
-      color: Colors(colors.focus).alpha(1).get(),
+      color: buttonInfo.color ? buttonInfo.color : Colors(colors.focus).alpha(1).get(),
     });
   }
 
@@ -149,7 +156,13 @@ export default class PlayerButtons extends Lightning.Component {
     if (this._props.isLive) {
       return true;
     }
+
     const { buttonInfo } = this._props;
+
+    if (!buttonInfo.hover) {
+      return true;
+    }
+
     this.fireAncestors('$setState', 'Controls');
     if (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') {
       this.fireAncestors('$horizontalPosterIndexChange', 1);
