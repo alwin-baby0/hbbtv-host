@@ -550,15 +550,13 @@ export default class Player extends Lightning.Component {
       // Iterate over each slot in the `slots` array
       ssai_params.slots.forEach((slot) => {
         // Iterate over each pod in the current slot
-        slot.pods.forEach((pod) => {
+        slot.pods.forEach((pod, podIndex) => {
           // Iterate over each ad in the current pod
           pod.ads.forEach((ad, index) => {
             const from = convertCueTimeToSeconds(ad.cue.from);
             const to = convertCueTimeToSeconds(ad.cue.to);
-            if (
-              currentTime - this._cumulativeTime >= from &&
-              currentTime - this._cumulativeTime < to
-            ) {
+            const time = podIndex === 0 ? currentTime : currentTime - this._cumulativeTime;
+            if (time >= from && time < to) {
               if (this._props.currentAd !== ad) {
                 const lastAd = pod.ads[pod.ads.length - 1];
                 const lastAdTo = convertCueTimeToSeconds(lastAd.cue.to);
@@ -717,7 +715,7 @@ export default class Player extends Lightning.Component {
             }
 
             // Provera da li je trenutna reklama završena
-            if (currentTime - this._cumulativeTime >= to && this._props.currentAd === ad) {
+            if (time >= to && this._props.currentAd === ad) {
               this._handleAdEnd(ad);
 
               //check if the current ad is the last ad in the pod
