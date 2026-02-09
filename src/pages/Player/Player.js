@@ -37,6 +37,7 @@ export default class Player extends Lightning.Component {
   };
 
   _cumulativeTime = 0;
+  _adTimeCumulated = -1;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
@@ -540,9 +541,7 @@ export default class Player extends Lightning.Component {
   }
 
   _checkAdCuePoints() {
-    this._cumulativeTime = 0;
     const currentTime = VideoPlayer.currentTime;
-
     const ssai_params = this._props.ads;
 
     // Check if `ssai` has a `slots` array
@@ -712,6 +711,14 @@ export default class Player extends Lightning.Component {
                 this._handleAdPlayback(ad);
                 this._props.currentAd = ad; // Postavi trenutnu reklamu kao aktivnu
               }
+
+              if (this._adTimeCumulated !== index) {
+                this._cumulativeTime += to - from;
+                this._adTimeCumulated++;
+                if (index === pod.ads.length - 1) {
+                  this._adTimeCumulated = -1;
+                }
+              }
             }
 
             // Provera da li je trenutna reklama završena
@@ -729,8 +736,6 @@ export default class Player extends Lightning.Component {
               }
               this._props.currentAd = null; // Oslobodi trenutnu reklamu
             }
-
-            this._cumulativeTime += to - from;
           });
         });
       });
@@ -901,6 +906,8 @@ export default class Player extends Lightning.Component {
   }
 
   closeVideoPlayer() {
+    this._cumulativeTime = 0;
+    this._adTimeCumulated = -1;
     clearTimeout(this._debounceVideoStart);
     clearTimeout(this._debounceVideoPause);
     VideoPlayer.clear();

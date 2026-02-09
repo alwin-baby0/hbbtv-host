@@ -105,18 +105,31 @@ const getWebOSInfo = async () => {
     });
   });
 
-  const deviceSerialNumberAndOsVersion = new Promise((resolve, reject) => {
+  const deviceOsVersion = new Promise((resolve, reject) => {
     webOS.service.request('luna://com.webos.service.tv.systemproperty', {
       method: 'getSystemInfo',
-      parameters: { keys: ['serialNumber', 'firmwareVersion'] },
+      parameters: { keys: ['firmwareVersion'] },
       onSuccess: (response) => {
-        resolve({ serialNumber: response.serialNumber, osVersion: response.firmwareVersion });
+        resolve({ osVersion: response.firmwareVersion });
       },
       onFailure: (error) => {
-        console.warn(
-          'Failed to get SerialNumberAndOsVersion: [' + error.errorCode + ']: ' + error.errorText
-        );
-        reject({ serialNumber: null, osVersion: null });
+        console.warn('Failed to get OsVersion: [' + error.errorCode + ']: ' + error.errorText);
+        reject({ osVersion: null });
+      },
+    });
+  });
+
+  const deviceSerialNumber = new Promise((resolve, reject) => {
+    webOS.service.request('luna://com.webos.service.sm', {
+      method: 'deviceid/getIDs',
+      parameters: { idType: ['LGUDID'] },
+      onSuccess: (response) => {
+        console.log('Advertising ID:', response.idList[0].idValue);
+        resolve({ serialNumber: response.idList[0].idValue });
+      },
+      onFailure: function (error) {
+        console.warn('Failed to get Advertising ID:', error);
+        reject({ serialNumber: null });
       },
     });
   });
@@ -124,8 +137,11 @@ const getWebOSInfo = async () => {
   const response = await Promise.all([
     deviceModelAndBrand,
     deviceMacAdress,
-    deviceSerialNumberAndOsVersion,
+    deviceOsVersion,
+    deviceSerialNumber,
   ]);
+
+  console.log(response);
 
   return response.reduce((acc, info) => ({ ...acc, ...info }), {});
 };
