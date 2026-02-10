@@ -144,7 +144,7 @@ export default class VodPreview extends Lightning.Component {
                 itemTitle: item.title,
                 imageSrc: item.getPortraitPoster(IMAGE_SIZES.S).src,
                 callback: () => {
-                  Router.navigate(`${searchType}-details/${item.id}`);
+                  Router.navigate(`${type}-details/${item.id}`);
                 },
                 index,
               },
