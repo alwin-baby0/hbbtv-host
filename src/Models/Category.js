@@ -17,7 +17,7 @@ class Category {
         const event = new CustomEvent('changeContent', {
           detail: {
             category: this.data.id,
-            type: this.data.type,
+            type: 'movie',
             categoryMessage: this.data.title,
           }, // pass whatever value you need here
         });

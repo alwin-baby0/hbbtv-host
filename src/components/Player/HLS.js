@@ -25,10 +25,13 @@ const createPlayer = (options) => {
       debug: false,
       liveBackBufferLength: 30,
       enableWorker: false,
-      maxBufferLength: 30,
+      maxBufferLength: 10,
+      maxMaxBufferLength: 20,
       backBufferLength: 30,
       startLevel: 4,
       maxInitialBitrate: 15000000,
+      enableDateRangeMetadataCues: true,
+      enableID3MetadataCues: true,
       ...options,
     });
   }
