@@ -37,6 +37,7 @@ export default class Player extends Lightning.Component {
   };
 
   _cumulativeTime = 0;
+  _podTime = 0;
   _adTimeCumulated = -1;
   _podTimeCumulated = -1;
   _currentlySelectedItem = null;
@@ -552,11 +553,12 @@ export default class Player extends Lightning.Component {
         // Iterate over each pod in the current slot
         slot.pods.forEach((pod, podIndex) => {
           this._podTimeCumulated = podIndex - 1;
+          podIndex === slot.pods.length - 1 && (this._podTime = this._cumulativeTime);
           // Iterate over each ad in the current pod
           pod.ads.forEach((ad, index) => {
             const from = convertCueTimeToSeconds(ad.cue.from);
             const to = convertCueTimeToSeconds(ad.cue.to);
-            const time = podIndex === 0 ? currentTime : currentTime - this._cumulativeTime;
+            const time = podIndex === 0 ? currentTime : currentTime - this._podTime;
             if (time >= from && time < to) {
               if (this._props.currentAd !== ad) {
                 const lastAd = pod.ads[pod.ads.length - 1];
@@ -717,6 +719,10 @@ export default class Player extends Lightning.Component {
               if (this._adTimeCumulated + this._podTimeCumulated !== index + podIndex - 1) {
                 this._cumulativeTime += to - from;
                 this._adTimeCumulated = index;
+
+                // if (index === pod.ads.length - 1) {
+                //   this._podTime = this._cumulativeTime;
+                // }
               }
             }
 
@@ -734,6 +740,10 @@ export default class Player extends Lightning.Component {
                 this._handleSlotEnd();
               }
               this._props.currentAd = null; // Oslobodi trenutnu reklamu
+
+              if (index === pod.ads.length - 1) {
+                podIndex === 0 && (this._podTime = this._cumulativeTime);
+              }
             }
           });
           this._podTimeCumulated = podIndex;
@@ -908,6 +918,7 @@ export default class Player extends Lightning.Component {
 
   closeVideoPlayer() {
     this._cumulativeTime = 0;
+    this._podTime = 0;
     this._adTimeCumulated = -1;
     clearTimeout(this._debounceVideoStart);
     clearTimeout(this._debounceVideoPause);
@@ -1035,11 +1046,11 @@ export default class Player extends Lightning.Component {
     const currentTime = Math.max(
       0,
       Math.min(
-        VideoPlayer.currentTime + this._videoSkipTimeSum - this._props.skipTo,
-        VideoPlayer.duration - this._props.skipTo
+        VideoPlayer.currentTime + this._videoSkipTimeSum - this._cumulativeTime,
+        VideoPlayer.duration - this._cumulativeTime
       )
     );
-    const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
+    const progress = currentTime / (VideoPlayer.duration - this._cumulativeTime);
 
     if (isLive) {
       this._ProgressBar.progress(1);
