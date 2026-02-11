@@ -38,6 +38,7 @@ export default class Player extends Lightning.Component {
 
   _cumulativeTime = 0;
   _adTimeCumulated = -1;
+  _podTimeCumulated = -1;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
@@ -550,6 +551,7 @@ export default class Player extends Lightning.Component {
       ssai_params.slots.forEach((slot) => {
         // Iterate over each pod in the current slot
         slot.pods.forEach((pod, podIndex) => {
+          this._podTimeCumulated = podIndex - 1;
           // Iterate over each ad in the current pod
           pod.ads.forEach((ad, index) => {
             const from = convertCueTimeToSeconds(ad.cue.from);
@@ -712,12 +714,9 @@ export default class Player extends Lightning.Component {
                 this._props.currentAd = ad; // Postavi trenutnu reklamu kao aktivnu
               }
 
-              if (this._adTimeCumulated !== index) {
+              if (this._adTimeCumulated + this._podTimeCumulated !== index + podIndex - 1) {
                 this._cumulativeTime += to - from;
-                this._adTimeCumulated++;
-                if (index === pod.ads.length - 1) {
-                  this._adTimeCumulated = -1;
-                }
+                this._adTimeCumulated = index;
               }
             }
 
@@ -737,7 +736,9 @@ export default class Player extends Lightning.Component {
               this._props.currentAd = null; // Oslobodi trenutnu reklamu
             }
           });
+          this._podTimeCumulated = podIndex;
         });
+        this._podTimeCumulated = -1;
       });
     } else {
       console.error('Invalid ssai structure or missing slots.');
