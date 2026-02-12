@@ -553,11 +553,13 @@ export default class Player extends Lightning.Component {
         // Iterate over each pod in the current slot
         slot.pods.forEach((pod, podIndex) => {
           this._podTimeCumulated = podIndex - 1;
-          podIndex === slot.pods.length - 1 && (this._podTime = this._cumulativeTime);
           // Iterate over each ad in the current pod
           pod.ads.forEach((ad, index) => {
             const from = convertCueTimeToSeconds(ad.cue.from);
             const to = convertCueTimeToSeconds(ad.cue.to);
+            if (podIndex === slot.pods.length - 1 && currentTime - this._cumulativeTime > from) {
+              this._podTime = this._cumulativeTime;
+            }
             const time = podIndex === 0 ? currentTime : currentTime - this._podTime;
             if (time >= from && time < to) {
               if (this._props.currentAd !== ad) {
@@ -741,8 +743,8 @@ export default class Player extends Lightning.Component {
               }
               this._props.currentAd = null; // Oslobodi trenutnu reklamu
 
-              if (index === pod.ads.length - 1) {
-                podIndex === 0 && (this._podTime = this._cumulativeTime);
+              if (podIndex === 0) {
+                this._podTime = this._cumulativeTime;
               }
             }
           });

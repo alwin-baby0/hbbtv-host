@@ -30,8 +30,6 @@ const createPlayer = (options) => {
       backBufferLength: 30,
       startLevel: 4,
       maxInitialBitrate: 15000000,
-      enableDateRangeMetadataCues: true,
-      enableID3MetadataCues: true,
       ...options,
     });
   }
