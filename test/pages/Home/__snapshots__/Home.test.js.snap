@@ -2786,7 +2786,7 @@ exports[`Home Page renders the Home page with full data (HeroSection and Rails) 
                   "tag": [Function],
                   "type": "HorizontalContainer",
                   "visible": true,
-                  "w": 1760,
+                  "w": 293,
                   "x": 0,
                   "y": 0,
                   "zIndex": 0,
