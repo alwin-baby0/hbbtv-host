@@ -369,11 +369,11 @@ const getNetrangeInfo = () => {
 
   return {
     serialNumber: serialNumber,
-    model: parsed.model,
-    brand: parsed.brand,
-    os: parsed.os,
-    osVersion: parsed.osVersion,
-    macAddress: parsed.macAddress,
+    model: parsed && parsed.model ? parsed.model : 'Netrange',
+    brand: parsed && parsed.brand ? parsed.brand : 'Netrange',
+    os: parsed && parsed.os ? parsed.os : 'Netrange OS',
+    osVersion: parsed && parsed.osVersion ? parsed.osVersion : 'unknown',
+    macAddress: parsed && parsed.macAddress ? parsed.macAddress : 'unknown',
   };
 };
 
