@@ -1,5 +1,6 @@
 import { Metrics } from '@firebolt-js/sdk';
 import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../constants/globalConstants';
+import { getTitanSDK } from '@titan-os/sdk';
 
 let deviceInfo = {};
 
@@ -151,13 +152,16 @@ const getWebOSInfo = async () => {
   return response.reduce((acc, info) => ({ ...acc, ...info }), {});
 };
 
-const getTitanInfo = () => {
-  if (DeviceInfo) {
+const getTitanInfo = async () => {
+  const titanSDK = getTitanSDK();
+  const deviceInf = await titanSDK.deviceInfo.getDeviceInfo();
+
+  if (deviceInf) {
     const {
       Capability: { os },
       Channel: { brand },
-      Product: { firmwareVersion },
-    } = DeviceInfo; // Requires titanos device-info-sdk script, can be found at https://docs.titanos.tv/deviceinfoapi
+      Product: { firmwareVersion, mac },
+    } = deviceInf;
 
     let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.TITAN_DEVICE_ID);
 
@@ -172,7 +176,7 @@ const getTitanInfo = () => {
       brand: brand,
       os: os,
       osVersion: firmwareVersion,
-      macAddress: null,
+      macAddress: mac,
     };
   } else {
     return getWebInfo();

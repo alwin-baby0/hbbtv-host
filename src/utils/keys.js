@@ -67,12 +67,13 @@ export const setupKeys = (deviceType) => {
     case 'titan':
       return {
         8: 'Back',
+        13: 'Enter',
         33: 'ChannelUp',
         34: 'ChannelDown',
         179: 'MediaPlayPause',
         412: 'MediaRewind',
         417: 'MediaFastForward',
-        13: 'MediaPlay',
+        415: 'MediaPlay',
         19: 'MediaPause',
         413: 'MediaStop',
       };
