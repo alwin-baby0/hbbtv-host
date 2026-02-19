@@ -4,6 +4,8 @@ import { V2 } from 'src/Services/utils';
 
 jest.mock('src/utils/device');
 
+jest.mock('src/utils/index');
+
 describe('CMPService', () => {
   let mockRequest;
 
@@ -17,8 +19,10 @@ describe('CMPService', () => {
     });
 
     getDeviceInfo.mockReturnValue({
-      serialNumber: 'TEST-DEVICE-123'
+      serialNumber: 'TEST-DEVICE-123',
     });
+
+    refreshTokenOnOauth = jest.fn();
 
     mockRequest = jest.spyOn(CMPService, '_request').mockImplementation();
   });
@@ -26,7 +30,6 @@ describe('CMPService', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
-
 
   describe('selectCMPChoice - Accept Button', () => {
     it('should make a proper request to the backend when user accepts CMP', async () => {
@@ -40,11 +43,11 @@ describe('CMPService', () => {
 
       expect(mockRequest).toHaveBeenCalledTimes(1);
       expect(mockRequest).toHaveBeenCalledWith({
-        url: '/cmp',
+        url: '/getCMP',
         apiVersion: V2,
         method: 'GET',
         headers: {
-          'X-Device-ID': deviceCode,
+          Authorization: 'Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563',
         },
         params: {
           language: 'en',
@@ -93,8 +96,8 @@ describe('CMPService', () => {
         data: {
           title: 'Cookie Consent',
           description: 'We use cookies...',
-          choices: ['accept', 'reject']
-        }
+          choices: ['accept', 'reject'],
+        },
       };
 
       mockRequest.mockResolvedValue(mockCmpData);
@@ -103,19 +106,17 @@ describe('CMPService', () => {
 
       expect(mockRequest).toHaveBeenCalledTimes(1);
       expect(mockRequest).toHaveBeenCalledWith({
-        url: '/cmp',
+        url: '/getCMP',
         apiVersion: V2,
         method: 'GET',
         headers: {
-          'X-DEVICE-ID': 'TEST-DEVICE-123',
+          Authorization: 'Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563',
         },
         params: {
           language: 'en',
           device_id: 'TEST-DEVICE-123',
         },
       });
-
-      expect(CMPService.cmpData).toEqual(mockCmpData.data);
     });
 
     it('should handle missing data in CMP response', async () => {

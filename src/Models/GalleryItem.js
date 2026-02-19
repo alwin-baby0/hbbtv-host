@@ -31,7 +31,7 @@ class GalleryItem {
     this.type = type;
     this.videoType = type;
     this.videoUrl = files?.[1]?.url || files?.[0]?.url || null;
-    this.trailerUrl = files && files[0].url;
+    this.trailerUrl = files && files[0].url ? files[0].url : null;
     this.eventDate = date;
     this.eventTime = time;
     this.playlists = playlists || null;
