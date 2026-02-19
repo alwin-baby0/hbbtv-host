@@ -64,7 +64,13 @@ export default class FetchingService {
           lastErr = err;
 
           if (!status) continue; // network error → retry
-          if (String(status)[0] !== '5') throw err; // non-5xx → stop
+          if (String(status)[0] !== '5') {
+            if (i < 2) {
+              setTimeout(() => {}, 1000);
+            } else {
+              throw err;
+            }
+          } // non-5xx → stop
         }
       }
 

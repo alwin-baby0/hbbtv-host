@@ -170,7 +170,8 @@ const constructHeroRailItems = (railItems, railItemsOptions, cardType) => {
               });
               break;
             }
-            case CATEGORY_TYPES.COLLECTION: {
+            case CATEGORY_TYPES.COLLECTION:
+            case CATEGORY_TYPES.PLAYLIST: {
               Router.navigate(`${ROUTES.COLLECTION}/${railItem.id}`);
               break;
             }
