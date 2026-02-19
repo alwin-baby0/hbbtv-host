@@ -134,7 +134,6 @@ export const API_URLS = {
   GET_PAGE_TABS: 'getPages',
   GET_PAGE: 'getPage',
   GET_SEARCH: 'search',
-  GET_LANGUAGES: 'languageByCountry',
   GET_HOME_PAGE: 'start',
   GET_BANNER: 'ads',
   GET_EPG_GENRES: 'epg_genres',

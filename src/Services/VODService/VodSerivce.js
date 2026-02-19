@@ -16,7 +16,7 @@ import {
   LOCAL_STORAGE_KEYS,
   TRANSLATIONS,
 } from '../../constants/globalConstants';
-import { t } from '../LanguageService';
+import { t } from '../TranslationService';
 
 export const VODS_PER_ROW = 12;
 export const VOD_ROWS_PER_FETCH = 3;

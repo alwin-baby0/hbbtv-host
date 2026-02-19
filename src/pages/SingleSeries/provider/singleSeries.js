@@ -69,12 +69,6 @@ export default async function (page, { seriesId, seasonId, episodeId, cmpShown }
     favorited = resFav?.data?.favorites?.some((element) => element?.id === seriesId);
   }
 
-  if (galleryItemSingleEp) {
-    ssai = galleryItemSingleEp.ssai || undefined;
-  } else {
-    ssai = seasons ? seasons[0].items[0].ssai : undefined;
-  }
-
   let seriesVODS;
   if (galleryItem?.playlists) {
     const parsedVODS = galleryItem.playlists.map((playlist) => parseVodPlaylists(playlist));

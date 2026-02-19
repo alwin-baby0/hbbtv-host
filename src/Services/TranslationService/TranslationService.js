@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { createApiCtx } from '../utils';
-import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../../constants/globalConstants';
+import { createApiCtx } from '../utils/index.js';
+import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../../constants/globalConstants.js';
 import { Metrics } from '@firebolt-js/sdk';
-import { getDeviceInfo, getDeviceType } from '../../utils/device';
+import { getDeviceInfo, getDeviceType } from '../../utils/device.js';
 import { LoggingService } from '../LoggingService/index.js';
 import FetchingService from '../FetchingService.js';
 
