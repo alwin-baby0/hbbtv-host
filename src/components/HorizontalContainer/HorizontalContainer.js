@@ -1,6 +1,6 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
-import { CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
+import { CARD_SIZES, CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
 
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
@@ -52,7 +52,17 @@ export default class HorizontalContainer extends Lightning.Component {
       this._props.items.push(item);
       this.Items.childList.a(item);
     });
-    this.stage.update();
+
+    if (items[0].type.name === 'HeroRailItem') {
+      this._props.w = (CARD_SIZES.HERO?.width + 20) * this._props.items.length;
+
+      this.patch({
+        w: this._props.w,
+      });
+      this._props.railWidth = 1760;
+    }
+
+    setTimeout(() => this.stage.update(), 200);
   }
 
   _setFocusedIndex(newIndex) {
