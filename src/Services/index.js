@@ -10,3 +10,4 @@ export * from './SearchService';
 export * from './CountryService';
 export * from './AuthorizationService';
 export * from './UserService';
+export * from './DidomiService';

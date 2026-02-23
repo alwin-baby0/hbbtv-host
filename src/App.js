@@ -4,7 +4,7 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { DetailService, t } from './Services';
+import { DetailService, t, DidomiService } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 
@@ -87,6 +87,34 @@ export default class App extends Router.App {
     window.addEventListener('offline', () => this.handleOffline());
 
     this.checkNetworkStatusOnline(navigator.onLine);
+  }
+
+  async _init() {
+    await DidomiService.init();
+    const userNotice = window.Didomi.getConfig();
+    if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
+
+    const analyticsAllowed = DidomiService.hasConsentForPurpose('analytics');
+
+    if (analyticsAllowed) {
+      this.startAnalytics();
+    }
+
+    DidomiService.onConsentChanged(() => {
+      this.handleConsentUpdate();
+    });
+  }
+
+  startAnalytics() {
+    console.log('Analytics started');
+  }
+
+  handleConsentUpdate() {
+    if (DidomiService.hasConsentForPurpose('analytics')) {
+      this.startAnalytics();
+    } else {
+      console.log('Analytics disabled');
+    }
   }
 
   async getMovie(id) {
