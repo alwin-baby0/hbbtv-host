@@ -52,14 +52,6 @@ export default class CollectionRailItem extends FocusableItem {
     return this.tag('Wrapper');
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
-  get _PosterImage() {
-    return this.tag('PosterImage');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
     const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;

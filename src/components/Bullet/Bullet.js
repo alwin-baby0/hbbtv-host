@@ -32,8 +32,6 @@ export default class Bullet extends HeroRailItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-
-    const { item, index } = this._props;
   }
 
   _focus() {

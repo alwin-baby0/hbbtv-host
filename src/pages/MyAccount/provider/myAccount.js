@@ -1,16 +1,15 @@
-import { LanguageService, t, AuthorizationService, UserService } from '../../../Services';
+import { t, AuthorizationService, UserService, VODS_PER_ROW } from '../../../Services';
 import { LOCAL_STORAGE_KEYS, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
 import { parseVodUserContentData } from '../../../Models';
 
 export default async function (page) {
   AuthorizationService.clearPollingInterval();
 
-  const languages = await LanguageService.getLanguages();
-
-  !localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
   const response = !localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? await AuthorizationService.getDeviceCode()
     : {};
+
+  response?.data && localStorage.setItem(LOCAL_STORAGE_KEYS.DEVICE_CODE, response.data.device_code);
 
   const recentlyWatched = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? await UserService.getRecentlyWatched()
@@ -43,20 +42,21 @@ export default async function (page) {
         },
         itemsPerRow:
           favorites.data.favorites && favorites.data.favorites.length
-            ? favorites.data.favorites.length
+            ? favorites.data.favorites.length > 12
+              ? VODS_PER_ROW
+              : favorites.data.favorites.length
             : 0,
       })
     : undefined;
 
   const deviceCode = response && response.data ? response.data.device_code : '';
-  const verificationUri = response && response.data ? response.data.verification_uri : '';
+  const verificationUri = response && response.data ? response.data.verification_uri_complete : '';
 
   if (!localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
     await AuthorizationService.setDeviceCodeStatusInterval(deviceCode);
   }
 
   page.props = {
-    languagesData: languages.data,
     deviceCode,
     verificationUri,
     recentlyWatched,

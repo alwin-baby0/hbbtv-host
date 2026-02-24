@@ -30,7 +30,7 @@ export default class UserRecentlyWatched extends Lightning.Component {
         items: constructRails(this._props.items),
         parentState: this._props.parentState,
         railTitle: this._props.railTitle,
-        h: !this._props.items || !this._props.items.length ? 0 : 320,
+        h: !this._props.items || !this._props.items.length ? 320 : 0,
       },
     });
   }

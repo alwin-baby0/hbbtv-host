@@ -1,5 +1,4 @@
-import { GalleryItem } from '../../Models';
-import { parseDetailsData, parseSeasonData, parseVodCategories } from '../../Models/parsers';
+import { parseDetailsData, parseSeasonData, parseSeasonTabs } from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
@@ -8,17 +7,15 @@ import { getDeviceType } from '../../utils/device';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {
-    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
-
     const timestamp = new Date().getTime();
-
-    const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
 
     return await this._request({
       url: `/${API_URLS.GET_MOVIE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
-      headers: headers,
+      headers: {
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
       params: {
         _: timestamp,
         id: movieId,
@@ -33,16 +30,16 @@ class DetailService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
-    const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
-
     const galleryItem = await this._request({
       url: `/${API_URLS.GET_SERIE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
-      headers: headers,
       params: {
         _: timestamp,
         id: seriesId,
+      },
+      headers: {
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     }).then(parseDetailsData);
 
@@ -54,11 +51,14 @@ class DetailService extends FetchingService {
         _: timestamp,
         series_id: seriesId,
       },
+      headers: {
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
     })
       .then(({ data }) => {
         if (data && data.entry) {
-          this.seasonTabsParsed = parseVodCategories({ data }, 'seasonTabs');
-          return data.entry.map((tab) => ({ id: tab.id, title: tab.title }));
+          this.seasonTabsParsed = parseSeasonTabs({ data }, 'seasonTabs');
+          return data.entry.items.map((tab) => ({ id: tab.id, title: tab.name }));
         }
 
         return [];
@@ -79,6 +79,9 @@ class DetailService extends FetchingService {
         params: {
           _: timestamp,
           season_id: id,
+        },
+        headers: {
+          'X-API-Live-Key': process.env.APP_LIVE_KEY,
         },
       }).then((data) => parseSeasonData(data, seriesId, id))
     );
@@ -106,11 +109,12 @@ class DetailService extends FetchingService {
       apiVersion: V2,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       method: API_METHODS.GET,
       params: {
         video_id: videoId,
-        series_id: seriesId,
+        ...(seriesId && { series_id: seriesId }),
         video_url: videoUrl,
       },
     });
@@ -127,7 +131,10 @@ class DetailService extends FetchingService {
       params: {
         id: eventId,
       },
-    }).then(({ data }) => new GalleryItem(data?.entry[0]));
+      headers: {
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
+    }).then(parseDetailsData);
 }
 
 const detailService = new DetailService();

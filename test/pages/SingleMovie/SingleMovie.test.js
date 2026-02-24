@@ -73,33 +73,151 @@ describe('SingleMovie Page', () => {
       const mockMovieId = '12345';
       const mockMovieData = {
         id: mockMovieId,
-        title: 'Test Movie',
-        summary: '2024',
-        type: { value: 'movie' },
-        extensions: {
-          preview_playback: 'https://test.com/trailer.mp4',
-          description: 'Test description',
-          duration: '7200',
-          director: 'Director:John Doe',
-          genre: 'Action',
-          subtitle: '120 min',
-          cast: 'Cast:Jane Doe, John Smith',
-          rating: 'PG-13',
-          is_favorite: false,
-          trailer: null,
+        type: 'movie',
+        title: '2:13',
+        duration: {
+          seconds: 5711,
+          string: '95 minutes',
         },
-        media_group: [
+        summary:
+          'A profiler gets back to work after some time off for mental health reasons and dives right into a terrifying case involving a serial killer who leaves creepy skin masks on the victims. He’s got to track down this killer while also dealing with his own childhood traumas. It’s a thrilling story that really grips you.',
+        playlists: [
           {
-            media_item: [
-              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
-              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            label: 'Related Movies',
+            type: 'feed',
+            items: [
+              {
+                id: '34364',
+                title: '2:13',
+                type: 'movie',
+                url_handler: 'two-thirteen',
+                date_created: '2026-01-16 15:53:47',
+                images: {
+                  thumbnail: {
+                    180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+                    270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+                    360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+                    480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+                    576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+                    720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+                  },
+                  poster: {
+                    180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+                    270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+                    360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+                    480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+                    576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+                    720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+                  },
+                  landscape: {
+                    180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+                    270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+                    360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+                    480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+                    576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+                    720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+                  },
+                },
+              },
             ],
           },
         ],
-        content: {
-          src: 'https://test.com/video.mp4',
-          type: 'video/mp4',
+        meta: {
+          director: 'Charles Adelman',
+          cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
+          ratings: {
+            bbfc: '18',
+            ci: '18',
+            cnc: '18',
+            fsk: 'FSK18',
+            mpaa: 'R',
+            tcs: '+18',
+            tv: 'TV-MA',
+            uk: '18',
+          },
+          year: 2009,
+          country: 'United States',
+          imdb: {
+            id: 'tt1002561',
+            score: 4.8,
+          },
+          genre: ['Horror', 'Mystery', 'Thriller'],
+          keywords: [
+            'wedotv',
+            'lg:apl',
+            'apldeal2025',
+            'movie',
+            'english',
+            'fast',
+            'titan',
+            'horror',
+            'mystery',
+            'thriller',
+            '213',
+            'twothirteen',
+          ],
+          subtitle_languages: ['English'],
+          badges: [
+            {
+              label: 'Movie',
+              style: 'white',
+            },
+          ],
+          language: 'English',
+          duration: {
+            seconds: 5711,
+            string: '95 minutes',
+          },
+          scenes: {
+            credits: {
+              start: 5591,
+              end: 5711,
+            },
+          },
         },
+        images: {
+          thumbnail: {
+            180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+            270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+            360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+            480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+            576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+            720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+            1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+          },
+          poster: {
+            180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+            270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+            360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+            480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+            576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+            720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+            1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+          },
+          landscape: {
+            180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+            270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+            360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+            480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+            576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+            720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+            1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+          },
+        },
+        files: [
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/pGIJhTddTq.mp4',
+            type: 'video/mp4',
+          },
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
+            type: 'application/vnd.apple.mpegurl',
+          },
+        ],
+        date_created: '2025-08-07 09:32:18',
       };
 
       const galleryItem = new GalleryItem(mockMovieData);
@@ -130,33 +248,151 @@ describe('SingleMovie Page', () => {
       for (const movieId of movieIds) {
         const mockMovieData = {
           id: movieId,
-          title: `Movie ${movieId}`,
-          summary: '2024',
-          type: { value: 'movie' },
-          extensions: {
-            preview_playback: 'https://test.com/trailer.mp4',
-            description: 'Test description',
-            duration: '7200',
-            director: 'Director:John Doe',
-            genre: 'Action',
-            subtitle: '120 min',
-            cast: 'Cast:Jane Doe',
-            rating: 'PG-13',
-            is_favorite: false,
-            trailer: null,
+          type: 'movie',
+          title: '2:13',
+          duration: {
+            seconds: 5711,
+            string: '95 minutes',
           },
-          media_group: [
+          summary:
+            'A profiler gets back to work after some time off for mental health reasons and dives right into a terrifying case involving a serial killer who leaves creepy skin masks on the victims. He’s got to track down this killer while also dealing with his own childhood traumas. It’s a thrilling story that really grips you.',
+          playlists: [
             {
-              media_item: [
-                { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
-                { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+              label: 'Related Movies',
+              type: 'feed',
+              items: [
+                {
+                  id: '34364',
+                  title: '2:13',
+                  type: 'movie',
+                  url_handler: 'two-thirteen',
+                  date_created: '2026-01-16 15:53:47',
+                  images: {
+                    thumbnail: {
+                      180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+                      270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+                      360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+                      480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+                      576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+                      720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+                      1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+                    },
+                    poster: {
+                      180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+                      270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+                      360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+                      480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+                      576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+                      720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+                      1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+                    },
+                    landscape: {
+                      180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+                      270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+                      360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+                      480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+                      576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+                      720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+                      1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+                    },
+                  },
+                },
               ],
             },
           ],
-          content: {
-            src: 'https://test.com/video.mp4',
-            type: 'video/mp4',
+          meta: {
+            director: 'Charles Adelman',
+            cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
+            ratings: {
+              bbfc: '18',
+              ci: '18',
+              cnc: '18',
+              fsk: 'FSK18',
+              mpaa: 'R',
+              tcs: '+18',
+              tv: 'TV-MA',
+              uk: '18',
+            },
+            year: 2009,
+            country: 'United States',
+            imdb: {
+              id: 'tt1002561',
+              score: 4.8,
+            },
+            genre: ['Horror', 'Mystery', 'Thriller'],
+            keywords: [
+              'wedotv',
+              'lg:apl',
+              'apldeal2025',
+              'movie',
+              'english',
+              'fast',
+              'titan',
+              'horror',
+              'mystery',
+              'thriller',
+              '213',
+              'twothirteen',
+            ],
+            subtitle_languages: ['English'],
+            badges: [
+              {
+                label: 'Movie',
+                style: 'white',
+              },
+            ],
+            language: 'English',
+            duration: {
+              seconds: 5711,
+              string: '95 minutes',
+            },
+            scenes: {
+              credits: {
+                start: 5591,
+                end: 5711,
+              },
+            },
           },
+          images: {
+            thumbnail: {
+              180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+              270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+              360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+              480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+              576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+              720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+              1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+            },
+            poster: {
+              180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+              270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+              360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+              480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+              576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+              720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+              1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+            },
+            landscape: {
+              180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+              270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+              360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+              480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+              576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+              720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+              1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+            },
+          },
+          files: [
+            {
+              url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/pGIJhTddTq.mp4',
+              type: 'video/mp4',
+            },
+            {
+              url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
+              type: 'application/vnd.apple.mpegurl',
+            },
+          ],
+          date_created: '2025-08-07 09:32:18',
         };
 
         const galleryItem = new GalleryItem(mockMovieData);
@@ -183,33 +419,151 @@ describe('SingleMovie Page', () => {
       const mockMovieId = 'test-movie-123';
       const mockMovieData = {
         id: mockMovieId,
-        title: 'Test Movie',
-        summary: '2024',
-        type: { value: 'movie' },
-        extensions: {
-          preview_playback: 'https://test.com/trailer.mp4',
-          description: 'Test description',
-          duration: '7200',
-          director: 'Director:John Doe',
-          genre: 'Action',
-          subtitle: '120 min',
-          cast: 'Cast:Jane Doe',
-          rating: 'PG-13',
-          is_favorite: false,
-          trailer: null,
+        type: 'movie',
+        title: '2:13',
+        duration: {
+          seconds: 5711,
+          string: '95 minutes',
         },
-        media_group: [
+        summary:
+          'A profiler gets back to work after some time off for mental health reasons and dives right into a terrifying case involving a serial killer who leaves creepy skin masks on the victims. He’s got to track down this killer while also dealing with his own childhood traumas. It’s a thrilling story that really grips you.',
+        playlists: [
           {
-            media_item: [
-              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
-              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            label: 'Related Movies',
+            type: 'feed',
+            items: [
+              {
+                id: '34364',
+                title: '2:13',
+                type: 'movie',
+                url_handler: 'two-thirteen',
+                date_created: '2026-01-16 15:53:47',
+                images: {
+                  thumbnail: {
+                    180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+                    270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+                    360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+                    480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+                    576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+                    720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+                  },
+                  poster: {
+                    180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+                    270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+                    360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+                    480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+                    576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+                    720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+                  },
+                  landscape: {
+                    180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+                    270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+                    360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+                    480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+                    576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+                    720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+                  },
+                },
+              },
             ],
           },
         ],
-        content: {
-          src: 'https://test.com/video.mp4',
-          type: 'video/mp4',
+        meta: {
+          director: 'Charles Adelman',
+          cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
+          ratings: {
+            bbfc: '18',
+            ci: '18',
+            cnc: '18',
+            fsk: 'FSK18',
+            mpaa: 'R',
+            tcs: '+18',
+            tv: 'TV-MA',
+            uk: '18',
+          },
+          year: 2009,
+          country: 'United States',
+          imdb: {
+            id: 'tt1002561',
+            score: 4.8,
+          },
+          genre: ['Horror', 'Mystery', 'Thriller'],
+          keywords: [
+            'wedotv',
+            'lg:apl',
+            'apldeal2025',
+            'movie',
+            'english',
+            'fast',
+            'titan',
+            'horror',
+            'mystery',
+            'thriller',
+            '213',
+            'twothirteen',
+          ],
+          subtitle_languages: ['English'],
+          badges: [
+            {
+              label: 'Movie',
+              style: 'white',
+            },
+          ],
+          language: 'English',
+          duration: {
+            seconds: 5711,
+            string: '95 minutes',
+          },
+          scenes: {
+            credits: {
+              start: 5591,
+              end: 5711,
+            },
+          },
         },
+        images: {
+          thumbnail: {
+            180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+            270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+            360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+            480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+            576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+            720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+            1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+          },
+          poster: {
+            180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+            270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+            360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+            480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+            576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+            720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+            1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+          },
+          landscape: {
+            180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+            270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+            360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+            480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+            576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+            720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+            1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+          },
+        },
+        files: [
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/pGIJhTddTq.mp4',
+            type: 'video/mp4',
+          },
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
+            type: 'application/vnd.apple.mpegurl',
+          },
+        ],
+        date_created: '2025-08-07 09:32:18',
       };
 
       const galleryItem = new GalleryItem(mockMovieData);
@@ -239,34 +593,156 @@ describe('SingleMovie Page', () => {
     it('shows WATCH NOW button when movie has no trailer', () => {
       const mockMovieData = {
         id: 'movie-no-trailer',
-        title: 'Movie Without Trailer',
-        summary: '2024',
-        type: { value: 'movie' },
-        extensions: {
-          preview_playback: 'https://test.com/trailer.mp4',
-          description: 'Test description',
-          duration: '7200',
-          genre: 'Action',
-          is_favorite: false,
+        type: 'movie',
+        title: '2:13',
+        duration: {
+          seconds: 5711,
+          string: '95 minutes',
         },
-        media_group: [
+        summary:
+          'A profiler gets back to work after some time off for mental health reasons and dives right into a terrifying case involving a serial killer who leaves creepy skin masks on the victims. He’s got to track down this killer while also dealing with his own childhood traumas. It’s a thrilling story that really grips you.',
+        playlists: [
           {
-            media_item: [
-              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
-              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            label: 'Related Movies',
+            type: 'feed',
+            items: [
+              {
+                id: '34364',
+                title: '2:13',
+                type: 'movie',
+                url_handler: 'two-thirteen',
+                date_created: '2026-01-16 15:53:47',
+                images: {
+                  thumbnail: {
+                    180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+                    270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+                    360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+                    480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+                    576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+                    720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+                  },
+                  poster: {
+                    180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+                    270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+                    360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+                    480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+                    576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+                    720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+                  },
+                  landscape: {
+                    180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+                    270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+                    360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+                    480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+                    576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+                    720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+                  },
+                },
+              },
             ],
           },
         ],
-        content: {
-          src: 'https://test.com/video.mp4',
-          type: 'video/mp4',
+        meta: {
+          director: 'Charles Adelman',
+          cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
+          ratings: {
+            bbfc: '18',
+            ci: '18',
+            cnc: '18',
+            fsk: 'FSK18',
+            mpaa: 'R',
+            tcs: '+18',
+            tv: 'TV-MA',
+            uk: '18',
+          },
+          year: 2009,
+          country: 'United States',
+          imdb: {
+            id: 'tt1002561',
+            score: 4.8,
+          },
+          genre: ['Horror', 'Mystery', 'Thriller'],
+          keywords: [
+            'wedotv',
+            'lg:apl',
+            'apldeal2025',
+            'movie',
+            'english',
+            'fast',
+            'titan',
+            'horror',
+            'mystery',
+            'thriller',
+            '213',
+            'twothirteen',
+          ],
+          subtitle_languages: ['English'],
+          badges: [
+            {
+              label: 'Movie',
+              style: 'white',
+            },
+          ],
+          language: 'English',
+          duration: {
+            seconds: 5711,
+            string: '95 minutes',
+          },
+          scenes: {
+            credits: {
+              start: 5591,
+              end: 5711,
+            },
+          },
         },
+        images: {
+          thumbnail: {
+            180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+            270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+            360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+            480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+            576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+            720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+            1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+          },
+          poster: {
+            180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+            270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+            360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+            480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+            576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+            720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+            1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+          },
+          landscape: {
+            180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+            270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+            360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+            480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+            576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+            720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+            1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+          },
+        },
+        files: [
+          {
+            type: 'video/mp4',
+          },
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
+            type: 'application/vnd.apple.mpegurl',
+          },
+        ],
+        date_created: '2025-08-07 09:32:18',
       };
 
       const galleryItem = new GalleryItem(mockMovieData);
 
       // Build button configuration with no trailer URL
-      const buttons = page._buildButtonConfiguration(galleryItem, '', null);
+      const buttons = page._buildButtonConfiguration(galleryItem.trailerUrl, null, '');
 
       // Should only have WATCH NOW button (no trailer, not logged in)
       expect(buttons).toHaveLength(1);
@@ -276,38 +752,157 @@ describe('SingleMovie Page', () => {
     it('shows both WATCH NOW and TRAILER buttons when trailer exists', () => {
       const mockMovieData = {
         id: 'movie-with-trailer',
-        title: 'Movie With Trailer',
-        summary: '2024',
-        type: { value: 'movie' },
-        extensions: {
-          preview_playback: 'https://test.com/trailer.mp4',
-          description: 'Test description',
-          duration: '7200',
-          genre: 'Action',
-          is_favorite: false,
+        type: 'movie',
+        title: '2:13',
+        duration: {
+          seconds: 5711,
+          string: '95 minutes',
         },
-        media_group: [
+        summary:
+          'A profiler gets back to work after some time off for mental health reasons and dives right into a terrifying case involving a serial killer who leaves creepy skin masks on the victims. He’s got to track down this killer while also dealing with his own childhood traumas. It’s a thrilling story that really grips you.',
+        playlists: [
           {
-            media_item: [
-              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
-              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            label: 'Related Movies',
+            type: 'feed',
+            items: [
+              {
+                id: '34364',
+                title: '2:13',
+                type: 'movie',
+                url_handler: 'two-thirteen',
+                date_created: '2026-01-16 15:53:47',
+                images: {
+                  thumbnail: {
+                    180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+                    270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+                    360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+                    480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+                    576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+                    720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+                  },
+                  poster: {
+                    180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+                    270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+                    360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+                    480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+                    576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+                    720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+                  },
+                  landscape: {
+                    180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+                    270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+                    360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+                    480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+                    576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+                    720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+                  },
+                },
+              },
             ],
           },
         ],
-        content: {
-          src: 'https://test.com/video.mp4',
-          type: 'video/mp4',
+        meta: {
+          director: 'Charles Adelman',
+          cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
+          ratings: {
+            bbfc: '18',
+            ci: '18',
+            cnc: '18',
+            fsk: 'FSK18',
+            mpaa: 'R',
+            tcs: '+18',
+            tv: 'TV-MA',
+            uk: '18',
+          },
+          year: 2009,
+          country: 'United States',
+          imdb: {
+            id: 'tt1002561',
+            score: 4.8,
+          },
+          genre: ['Horror', 'Mystery', 'Thriller'],
+          keywords: [
+            'wedotv',
+            'lg:apl',
+            'apldeal2025',
+            'movie',
+            'english',
+            'fast',
+            'titan',
+            'horror',
+            'mystery',
+            'thriller',
+            '213',
+            'twothirteen',
+          ],
+          subtitle_languages: ['English'],
+          badges: [
+            {
+              label: 'Movie',
+              style: 'white',
+            },
+          ],
+          language: 'English',
+          duration: {
+            seconds: 5711,
+            string: '95 minutes',
+          },
+          scenes: {
+            credits: {
+              start: 5591,
+              end: 5711,
+            },
+          },
         },
+        images: {
+          thumbnail: {
+            180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+            270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+            360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+            480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+            576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+            720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+            1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+          },
+          poster: {
+            180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+            270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+            360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+            480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+            576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+            720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+            1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+          },
+          landscape: {
+            180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+            270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+            360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+            480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+            576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+            720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+            1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+          },
+        },
+        files: [
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/pGIJhTddTq.mp4',
+            type: 'video/mp4',
+          },
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
+            type: 'application/vnd.apple.mpegurl',
+          },
+        ],
+        date_created: '2025-08-07 09:32:18',
       };
 
       const galleryItem = new GalleryItem(mockMovieData);
 
       // Build button configuration with trailer URL
-      const buttons = page._buildButtonConfiguration(
-        galleryItem,
-        'https://test.com/trailer.mp4',
-        null
-      );
+      const buttons = page._buildButtonConfiguration(galleryItem.trailerUrl, null, '');
 
       // Should have both WATCH NOW and TRAILER buttons (not logged in)
       expect(buttons).toHaveLength(2);
@@ -318,41 +913,163 @@ describe('SingleMovie Page', () => {
     it('shows FAVORITE button only when user is logged in', () => {
       const mockMovieData = {
         id: 'movie-logged-in',
-        title: 'Movie Logged In',
-        summary: '2024',
-        type: { value: 'movie' },
-        extensions: {
-          preview_playback: 'https://test.com/trailer.mp4',
-          description: 'Test description',
-          duration: '7200',
-          genre: 'Action',
-          is_favorite: false,
+        type: 'movie',
+        title: '2:13',
+        duration: {
+          seconds: 5711,
+          string: '95 minutes',
         },
-        media_group: [
+        summary:
+          'A profiler gets back to work after some time off for mental health reasons and dives right into a terrifying case involving a serial killer who leaves creepy skin masks on the victims. He’s got to track down this killer while also dealing with his own childhood traumas. It’s a thrilling story that really grips you.',
+        playlists: [
           {
-            media_item: [
-              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
-              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            label: 'Related Movies',
+            type: 'feed',
+            items: [
+              {
+                id: '34364',
+                title: '2:13',
+                type: 'movie',
+                url_handler: 'two-thirteen',
+                date_created: '2026-01-16 15:53:47',
+                images: {
+                  thumbnail: {
+                    180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+                    270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+                    360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+                    480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+                    576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+                    720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+                  },
+                  poster: {
+                    180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+                    270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+                    360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+                    480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+                    576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+                    720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+                  },
+                  landscape: {
+                    180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+                    270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+                    360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+                    480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+                    576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+                    720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+                  },
+                },
+              },
             ],
           },
         ],
-        content: {
-          src: 'https://test.com/video.mp4',
-          type: 'video/mp4',
+        meta: {
+          director: 'Charles Adelman',
+          cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
+          ratings: {
+            bbfc: '18',
+            ci: '18',
+            cnc: '18',
+            fsk: 'FSK18',
+            mpaa: 'R',
+            tcs: '+18',
+            tv: 'TV-MA',
+            uk: '18',
+          },
+          year: 2009,
+          country: 'United States',
+          imdb: {
+            id: 'tt1002561',
+            score: 4.8,
+          },
+          genre: ['Horror', 'Mystery', 'Thriller'],
+          keywords: [
+            'wedotv',
+            'lg:apl',
+            'apldeal2025',
+            'movie',
+            'english',
+            'fast',
+            'titan',
+            'horror',
+            'mystery',
+            'thriller',
+            '213',
+            'twothirteen',
+          ],
+          subtitle_languages: ['English'],
+          badges: [
+            {
+              label: 'Movie',
+              style: 'white',
+            },
+          ],
+          language: 'English',
+          duration: {
+            seconds: 5711,
+            string: '95 minutes',
+          },
+          scenes: {
+            credits: {
+              start: 5591,
+              end: 5711,
+            },
+          },
         },
+        images: {
+          thumbnail: {
+            180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+            270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+            360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+            480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+            576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+            720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+            1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+          },
+          poster: {
+            180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+            270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+            360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+            480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+            576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+            720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+            1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+          },
+          landscape: {
+            180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+            270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+            360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+            480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+            576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+            720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+            1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+          },
+        },
+        files: [
+          {
+            type: 'video/mp4',
+          },
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
+            type: 'application/vnd.apple.mpegurl',
+          },
+        ],
+        date_created: '2025-08-07 09:32:18',
       };
 
       const galleryItem = new GalleryItem(mockMovieData);
 
       // Test without user data - no favorite button
-      const buttonsNotLoggedIn = page._buildButtonConfiguration(galleryItem, '', null);
+      const buttonsNotLoggedIn = page._buildButtonConfiguration(galleryItem.trailerUrl, null, '');
       expect(buttonsNotLoggedIn.some((btn) => btn.buttonName === 'FAVORITE')).toBe(false);
 
       // Set user data in localStorage (use correct key: 'userData')
       localStorage.setItem('userData', JSON.stringify({ userId: '123' }));
 
       // Test with user data - favorite button should appear
-      const buttonsLoggedIn = page._buildButtonConfiguration(galleryItem, '', null);
+      const buttonsLoggedIn = page._buildButtonConfiguration(galleryItem.trailerUrl, null, '');
       expect(buttonsLoggedIn.some((btn) => btn.buttonName === 'FAVORITE')).toBe(true);
       expect(buttonsLoggedIn).toHaveLength(2); // WATCH NOW + FAVORITE
     });
@@ -360,44 +1077,165 @@ describe('SingleMovie Page', () => {
     it('shows CONTINUE WATCHING button only when user is logged in AND has last_position', () => {
       const mockMovieData = {
         id: 'movie-with-progress',
-        title: 'Movie With Progress',
-        summary: '2024',
-        type: { value: 'movie' },
-        extensions: {
-          preview_playback: 'https://test.com/trailer.mp4',
-          description: 'Test description',
-          duration: '7200',
-          genre: 'Action',
-          is_favorite: false,
-          last_position: 1200,
+        type: 'movie',
+        title: '2:13',
+        duration: {
+          seconds: 5711,
+          string: '95 minutes',
         },
-        media_group: [
+        summary:
+          'A profiler gets back to work after some time off for mental health reasons and dives right into a terrifying case involving a serial killer who leaves creepy skin masks on the victims. He’s got to track down this killer while also dealing with his own childhood traumas. It’s a thrilling story that really grips you.',
+        playlists: [
           {
-            media_item: [
-              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
-              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            label: 'Related Movies',
+            type: 'feed',
+            items: [
+              {
+                id: '34364',
+                title: '2:13',
+                type: 'movie',
+                url_handler: 'two-thirteen',
+                date_created: '2026-01-16 15:53:47',
+                images: {
+                  thumbnail: {
+                    180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+                    270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+                    360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+                    480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+                    576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+                    720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+                  },
+                  poster: {
+                    180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+                    270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+                    360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+                    480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+                    576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+                    720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+                  },
+                  landscape: {
+                    180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+                    270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+                    360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+                    480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+                    576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+                    720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+                  },
+                },
+              },
             ],
           },
         ],
-        content: {
-          src: 'https://test.com/video.mp4',
-          type: 'video/mp4',
+        meta: {
+          director: 'Charles Adelman',
+          cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
+          ratings: {
+            bbfc: '18',
+            ci: '18',
+            cnc: '18',
+            fsk: 'FSK18',
+            mpaa: 'R',
+            tcs: '+18',
+            tv: 'TV-MA',
+            uk: '18',
+          },
+          year: 2009,
+          country: 'United States',
+          imdb: {
+            id: 'tt1002561',
+            score: 4.8,
+          },
+          genre: ['Horror', 'Mystery', 'Thriller'],
+          keywords: [
+            'wedotv',
+            'lg:apl',
+            'apldeal2025',
+            'movie',
+            'english',
+            'fast',
+            'titan',
+            'horror',
+            'mystery',
+            'thriller',
+            '213',
+            'twothirteen',
+          ],
+          subtitle_languages: ['English'],
+          badges: [
+            {
+              label: 'Movie',
+              style: 'white',
+            },
+          ],
+          language: 'English',
+          duration: {
+            seconds: 5711,
+            string: '95 minutes',
+          },
+          scenes: {
+            credits: {
+              start: 5591,
+              end: 5711,
+            },
+          },
         },
+        images: {
+          thumbnail: {
+            180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+            270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+            360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+            480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+            576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+            720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+            1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+          },
+          poster: {
+            180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+            270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+            360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+            480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+            576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+            720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+            1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+          },
+          landscape: {
+            180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+            270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+            360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+            480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+            576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+            720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+            1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+          },
+        },
+        files: [
+          {
+            type: 'video/mp4',
+          },
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
+            type: 'application/vnd.apple.mpegurl',
+          },
+        ],
+        date_created: '2025-08-07 09:32:18',
       };
 
       const galleryItem = new GalleryItem(mockMovieData);
 
       // Test 1: Not logged in, has last_position - no continue watching button
-      const buttonsNotLoggedIn = page._buildButtonConfiguration(galleryItem, '', 1200);
+      const buttonsNotLoggedIn = page._buildButtonConfiguration(galleryItem.trailerUrl, 1200, '');
       expect(buttonsNotLoggedIn.some((btn) => btn.buttonName === 'CONTINUE WATCHING')).toBe(false);
 
       // Test 2: Logged in but no last_position - no continue watching button
       localStorage.setItem('userData', JSON.stringify({ userId: '123' }));
-      const buttonsNoProgress = page._buildButtonConfiguration(galleryItem, '', null);
+      const buttonsNoProgress = page._buildButtonConfiguration(galleryItem.trailerUrl, null, null);
       expect(buttonsNoProgress.some((btn) => btn.buttonName === 'CONTINUE WATCHING')).toBe(false);
 
       // Test 3: Logged in AND has last_position - continue watching button appears
-      const buttonsWithProgress = page._buildButtonConfiguration(galleryItem, '', 1200);
+      const buttonsWithProgress = page._buildButtonConfiguration(galleryItem.trailerUrl, 1200, '');
       expect(buttonsWithProgress.some((btn) => btn.buttonName === 'CONTINUE WATCHING')).toBe(true);
       expect(buttonsWithProgress).toHaveLength(3); // WATCH NOW + FAVORITE + CONTINUE WATCHING
     });
@@ -408,46 +1246,165 @@ describe('SingleMovie Page', () => {
       // Test with is_favorite = false
       const mockMovieNotFavorited = {
         id: 'movie-not-fav',
-        title: 'Movie Not Favorited',
-        summary: '2024',
-        type: { value: 'movie' },
-        extensions: {
-          preview_playback: 'https://test.com/trailer.mp4',
-          description: 'Test description',
-          duration: '7200',
-          genre: 'Action',
-          is_favorite: false,
+        type: 'movie',
+        title: '2:13',
+        duration: {
+          seconds: 5711,
+          string: '95 minutes',
         },
-        media_group: [
+        summary:
+          'A profiler gets back to work after some time off for mental health reasons and dives right into a terrifying case involving a serial killer who leaves creepy skin masks on the victims. He’s got to track down this killer while also dealing with his own childhood traumas. It’s a thrilling story that really grips you.',
+        playlists: [
           {
-            media_item: [
-              { key: 'thumbnail_480', src: 'https://test.com/thumb.jpg' },
-              { key: 'poster_landscape_1080', src: 'https://test.com/landscape.jpg' },
+            label: 'Related Movies',
+            type: 'feed',
+            items: [
+              {
+                id: '34364',
+                title: '2:13',
+                type: 'movie',
+                url_handler: 'two-thirteen',
+                date_created: '2026-01-16 15:53:47',
+                images: {
+                  thumbnail: {
+                    180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+                    270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+                    360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+                    480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+                    576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+                    720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+                  },
+                  poster: {
+                    180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+                    270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+                    360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+                    480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+                    576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+                    720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+                  },
+                  landscape: {
+                    180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+                    270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+                    360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+                    480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+                    576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+                    720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+                    1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+                  },
+                },
+              },
             ],
           },
         ],
-        content: {
-          src: 'https://test.com/video.mp4',
-          type: 'video/mp4',
+        meta: {
+          director: 'Charles Adelman',
+          cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
+          ratings: {
+            bbfc: '18',
+            ci: '18',
+            cnc: '18',
+            fsk: 'FSK18',
+            mpaa: 'R',
+            tcs: '+18',
+            tv: 'TV-MA',
+            uk: '18',
+          },
+          year: 2009,
+          country: 'United States',
+          imdb: {
+            id: 'tt1002561',
+            score: 4.8,
+          },
+          genre: ['Horror', 'Mystery', 'Thriller'],
+          keywords: [
+            'wedotv',
+            'lg:apl',
+            'apldeal2025',
+            'movie',
+            'english',
+            'fast',
+            'titan',
+            'horror',
+            'mystery',
+            'thriller',
+            '213',
+            'twothirteen',
+          ],
+          subtitle_languages: ['English'],
+          badges: [
+            {
+              label: 'Movie',
+              style: 'white',
+            },
+          ],
+          language: 'English',
+          duration: {
+            seconds: 5711,
+            string: '95 minutes',
+          },
+          scenes: {
+            credits: {
+              start: 5591,
+              end: 5711,
+            },
+          },
         },
+        images: {
+          thumbnail: {
+            180: 'https://cdn-images.wedo.tv/180/1/2036093-thumb.png',
+            270: 'https://cdn-images.wedo.tv/270/1/2036093-thumb.png',
+            360: 'https://cdn-images.wedo.tv/360/1/2036093-thumb.png',
+            480: 'https://cdn-images.wedo.tv/480/1/2036093-thumb.png',
+            576: 'https://cdn-images.wedo.tv/576/1/2036093-thumb.png',
+            720: 'https://cdn-images.wedo.tv/720/1/2036093-thumb.png',
+            1080: 'https://cdn-images.wedo.tv/1080/1/2036093-thumb.png',
+          },
+          poster: {
+            180: 'https://cdn-images.wedo.tv/180/2/2036093-portrait.png',
+            270: 'https://cdn-images.wedo.tv/270/2/2036093-portrait.png',
+            360: 'https://cdn-images.wedo.tv/360/2/2036093-portrait.png',
+            480: 'https://cdn-images.wedo.tv/480/2/2036093-portrait.png',
+            576: 'https://cdn-images.wedo.tv/576/2/2036093-portrait.png',
+            720: 'https://cdn-images.wedo.tv/720/2/2036093-portrait.png',
+            1080: 'https://cdn-images.wedo.tv/1080/2/2036093-portrait.png',
+          },
+          landscape: {
+            180: 'https://cdn-images.wedo.tv/180/3/2036093-landscape.png',
+            270: 'https://cdn-images.wedo.tv/270/3/2036093-landscape.png',
+            360: 'https://cdn-images.wedo.tv/360/3/2036093-landscape.png',
+            480: 'https://cdn-images.wedo.tv/480/3/2036093-landscape.png',
+            576: 'https://cdn-images.wedo.tv/576/3/2036093-landscape.png',
+            720: 'https://cdn-images.wedo.tv/720/3/2036093-landscape.png',
+            1080: 'https://cdn-images.wedo.tv/1080/3/2036093-landscape.png',
+          },
+        },
+        files: [
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/pGIJhTddTq.mp4',
+            type: 'video/mp4',
+          },
+          {
+            url: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
+            type: 'application/vnd.apple.mpegurl',
+          },
+        ],
+        date_created: '2025-08-07 09:32:18',
       };
 
       const galleryItemNotFav = new GalleryItem(mockMovieNotFavorited);
-      const buttonsNotFav = page._buildButtonConfiguration(galleryItemNotFav, '', null);
+      const buttonsNotFav = page._buildButtonConfiguration(galleryItemNotFav.trailerUrl, null, '');
       const favoriteBtn = buttonsNotFav.find((btn) => btn.buttonName === 'FAVORITE');
       expect(favoriteBtn.icon).toBe('icons/heart.png');
 
       // Test with is_favorite = true
       const mockMovieFavorited = {
         ...mockMovieNotFavorited,
-        extensions: {
-          ...mockMovieNotFavorited.extensions,
-          is_favorite: true,
-        },
       };
 
       const galleryItemFav = new GalleryItem(mockMovieFavorited);
-      const buttonsFav = page._buildButtonConfiguration(galleryItemFav, '', null);
+      const buttonsFav = page._buildButtonConfiguration(galleryItemFav.trailerUrl, null, true);
       const favoriteBtnFilled = buttonsFav.find((btn) => btn.buttonName === 'FAVORITE');
       expect(favoriteBtnFilled.icon).toBe('icons/heart-filled.png');
     });

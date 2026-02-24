@@ -34,6 +34,7 @@ export default class Player extends Lightning.Component {
     currentAd: null,
     skipTo: 0,
     ads: [],
+    shouldSaveProgress: true,
   };
 
   _cumulativeTime = 0;
@@ -939,7 +940,8 @@ export default class Player extends Lightning.Component {
   }
 
   handleBackHelper() {
-    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
+    const { shouldSaveProgress } = this._props;
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA) && shouldSaveProgress) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._props.seriesID) {
           UserService.addRecentlyWatched(
@@ -948,11 +950,23 @@ export default class Player extends Lightning.Component {
             VideoPlayer.currentTime,
             this._props.seriesID
           );
+          UserService.addSeriesProgress(
+            this._props.videoId,
+            this._props.seriesID,
+            this._props.episodeNumber,
+            this._props.seasonNumber,
+            VideoPlayer.currentTime
+          );
         } else {
           UserService.addRecentlyWatched(
             this._props.videoId,
             VIDEO_TYPES.VIDEO,
             VideoPlayer.currentTime
+          );
+          UserService.addProgress(
+            this._props.videoId,
+            VideoPlayer.currentTime,
+            VideoPlayer.duration
           );
         }
       }
@@ -1037,7 +1051,7 @@ export default class Player extends Lightning.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 90, 90),
       });
     }
   }
@@ -1149,6 +1163,19 @@ export default class Player extends Lightning.Component {
 
   $videoPlayerEnded() {
     UserService.deleteRecentlyWatched(this._props.videoId);
+
+    if (this._props.seriesID) {
+      UserService.addSeriesProgress(
+        this._props.videoId,
+        this._props.seriesID,
+        this._props.episodeNumber,
+        this._props.seasonNumber,
+        0
+      );
+    } else {
+      UserService.addProgress(this._props.videoId, 0, VideoPlayer.duration);
+    }
+
     this.closeVideoPlayer();
 
     eventTrackPayload(EVENT_NAMES.VIDEO_END, this._props.videoId);

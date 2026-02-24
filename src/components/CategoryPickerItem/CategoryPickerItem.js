@@ -27,26 +27,19 @@ export default class CategoryPickerItem extends FocusableItem {
           textAlign: 'center',
           textColor: Colors(colors.white).get(),
           textOverflow: 'ellipsis',
-          wordWrapWidth: 180,
+          wordWrapWidth: 220,
           wordWrap: false,
         },
       },
     };
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
-  get _ButtonItem() {
-    return this.tag('ButtonItem');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
 
     const { itemInfo, w, h, strokeWidth, radius } = this._props;
-    const { title } = itemInfo;
+    const { title, data } = itemInfo;
+
     this.setProps({
       x: -2,
       y: -1,
@@ -76,7 +69,7 @@ export default class CategoryPickerItem extends FocusableItem {
         ),
       },
       Title: {
-        text: { text: title.toUpperCase() },
+        text: { text: title ? title.toUpperCase() : data.localised.toUpperCase() },
       },
     });
   }

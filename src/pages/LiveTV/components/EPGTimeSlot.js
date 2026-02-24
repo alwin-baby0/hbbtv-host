@@ -10,7 +10,6 @@ export default class EPGTimeSlot extends Lightning.Component {
       Text: {
         x: -18,
         text: {
-          text: 'HH',
           fontSize: 18,
           fontFace: 'Montserrat-Regular',
         },
@@ -25,7 +24,7 @@ export default class EPGTimeSlot extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     this._Text.patch({
-      text: props.startTime,
+      text: { text: props.startTime },
     });
   }
 

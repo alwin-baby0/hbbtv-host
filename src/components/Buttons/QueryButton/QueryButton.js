@@ -1,4 +1,4 @@
-import { Colors, Img, Lightning, Utils } from '@lightningjs/sdk';
+import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
 
 export default class QueryButton extends Lightning.Component {

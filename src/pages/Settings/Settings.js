@@ -1,10 +1,11 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
-import CMPButton from '../../components/Buttons/CMPButton/CMPButton';
 import { CMPService } from '../../Services';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
 import { t } from '../../Services';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import QRCode from '../../components/QRCode/QRCode';
 
 export default class Settings extends Lightning.Component {
   static _template() {
@@ -42,13 +43,13 @@ export default class Settings extends Lightning.Component {
             rect: true,
             color: Colors('#ffffff').alpha(0.5).get(),
           },
-          Languages: {
+          LanguagesRowContainer: {
+            type: HorizontalContainer,
             y: 50,
             x: 550,
-            type: VerticalContainer,
             collision: true,
-            w: 1050,
             h: 300,
+            w: 1050,
           },
         },
         CMPContainer: {
@@ -104,80 +105,87 @@ export default class Settings extends Lightning.Component {
     return this.tag('Version');
   }
 
-  get _Languages() {
-    return this.tag('Content.LanguagesContainer.Languages');
+  get _LanguagesRowContainer() {
+    return this.tag('Content.LanguagesContainer.LanguagesRowContainer');
   }
 
   get _Content() {
     return this.tag('Content');
   }
 
-  get _CMPData() {
-    return this.tag('Content.CMPContainer.CMPData');
+  _arrangeLngBtns(languages) {
+    const itemsPerCol = 4;
+    const cols = [];
+
+    const langArray = Object.entries(languages).map(([key, value]) => ({
+      key,
+      value,
+    }));
+
+    for (let i = 0; i < langArray.length; i += itemsPerCol) {
+      cols.push({ items: langArray.slice(i, i + itemsPerCol) });
+    }
+
+    return cols;
   }
 
-  get CMPButtons() {
-    return this.tag('Content.CMPContainer.CMPData.Buttons');
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   set props(props) {
     this._props = { ...this._props, ...props };
 
-    const buttonsResult = CMPService.cmpData?.buttons;
     const cmpTitle = CMPService.cmpData?.title;
     const cmpDescription = CMPService.cmpData?.description;
+    const options = CMPService.cmpData?.buttons.customize.options;
 
-    const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
+    const qrCodes = options.map((qrCode) => {
       return {
-        type: CMPButton,
-        collision: true,
-        flexItem: {
-          marginBottom: 18,
-        },
+        type: QRCode,
+        w: 770,
         props: {
-          label: value.label,
-          callback: async () => {
-            if (value.callback_url) {
-              const chosenValue = btnIndex === 0 ? 1 : 0;
-              await CMPService.selectCMPChoice(this._props.serialNumber, chosenValue);
-              Router.navigate(ROUTES.HOME);
-            } else {
-              Router.navigate(ROUTES.CMP_CUSTOMIZE, { options: value.options });
-            }
-          },
+          qrCode,
         },
       };
     });
 
-    const { languages } = this._props.languagesData;
-    const languagesArr = languages.split(',');
-    const languageItems = languagesArr.map((language, index) => ({
-      type: LanguageButton,
-      props: {
-        languageInfo: language,
-        languageIndex: index,
-      },
-      w: 300,
-      h: 65,
-    }));
+    const languages = this._props.languagesData;
+    const cols = this._arrangeLngBtns(languages);
+
+    this._LanguagesRowContainer.props = {
+      parentState: 'Languages',
+      items: cols.map((col) => ({
+        type: VerticalContainer,
+        collision: true,
+        h: 500,
+        w: 300,
+        flexItem: {
+          marginRight: 20,
+        },
+        props: {
+          parentState: 'Languages',
+          disableScroll: true,
+          items: col.items.map((item, index) => ({
+            type: LanguageButton,
+            collision: true,
+            props: {
+              languageInfo: item.value,
+              languageIndex: index,
+              languageCode: item.key,
+            },
+            w: 300,
+            h: 65,
+          })),
+        },
+      })),
+    };
 
     this._Content.patch({
-      LanguagesContainer: {
-        Languages: {
-          zIndex: 3,
-          type: VerticalContainer,
-          collision: true,
-          w: 1050,
-          h: 300,
-          props: {
-            items: languageItems,
-            enableScroll: false,
-            w: 1050,
-            h: 300,
-            parentState: 'Languages',
-          },
-        },
-      },
       CMPContainer: {
         collision: true,
         CMPData: {
@@ -211,15 +219,17 @@ export default class Settings extends Lightning.Component {
               textAlign: 'left',
             },
           },
-          Buttons: {
+          QRCodes: {
             w: 1050,
             h: 400,
-            y: 20,
-            type: VerticalContainer,
-            collision: true,
+            flexItem: {
+              marginTop: 20,
+            },
+            type: HorizontalContainer,
             props: {
-              items: buttons,
-              parentState: 'CMPContainer',
+              w: 1050,
+              h: 400,
+              items: qrCodes,
             },
           },
         },
@@ -250,23 +260,9 @@ export default class Settings extends Lightning.Component {
 
   static _states() {
     return [
-      class CMPContainer extends this {
-        _getFocused() {
-          return this.CMPButtons;
-        }
-
-        _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
-          }
-
-          this._setState('Languages');
-        }
-      },
-
       class Languages extends this {
         _getFocused() {
-          return this._Languages;
+          return this._LanguagesRowContainer;
         }
 
         _handleUp() {
@@ -277,14 +273,6 @@ export default class Settings extends Lightning.Component {
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
-        }
-
-        _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
-          }
-
-          this._setState('CMPContainer');
         }
       },
     ];

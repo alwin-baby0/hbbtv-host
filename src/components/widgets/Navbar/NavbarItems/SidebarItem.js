@@ -11,6 +11,7 @@ export default class SidebarItem extends Lightning.Component {
     h: 60,
     iconW: 60,
     radius: 16,
+    isFocused: false,
   };
 
   static _template() {
@@ -29,8 +30,8 @@ export default class SidebarItem extends Lightning.Component {
       Icon: {
         mountX: 0.5,
         mountY: 0.5,
-        x: (h) => 74 / 2,
-        y: (h) => 74 / 2,
+        x: () => 74 / 2,
+        y: () => 74 / 2,
         w: 40,
         h: 41,
         zIndex: 2,
@@ -93,12 +94,15 @@ export default class SidebarItem extends Lightning.Component {
   }
 
   _applyColors(selected) {
+    if (this._props.isFocused) return;
+
     const textColor = selected ? Colors(colors.focus).get() : Colors(colors.unfocus).get();
     this._Title.text.textColor = textColor;
     this._Icon.color = textColor;
   }
 
   _focus() {
+    this._props.isFocused = true;
     const { w, borderGap, iconW, radius } = this._props;
 
     const { icon } = this._props.data || {};
@@ -123,6 +127,7 @@ export default class SidebarItem extends Lightning.Component {
   }
 
   _unfocus() {
+    this._props.isFocused = false;
     this._FocusFill.color = null;
 
     this._OuterStroke.patch({

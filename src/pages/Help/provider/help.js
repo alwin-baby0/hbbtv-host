@@ -11,10 +11,12 @@ function splitTextIntoChunks(text, chunkSize) {
 
 export default async function (page) {
   const { data } = await SettingsService.getPages();
+  data.entry[2].title === 'Cookie Policy' && data.entry.splice(2, 1);
+
   const texts = (
-    await Promise.all(data.entry.map((pageInfo, index) => SettingsService.getSinglePage(index + 1)))
+    await Promise.all(data.entry.map((page) => SettingsService.getSinglePage(page.id)))
   ).map((text) => {
-    const plainText = text.data.entry[0].extensions.content_plain;
+    const plainText = text.data.entry.content_plain;
     let decodedText = '';
 
     if (typeof plainText === 'string') {
@@ -31,7 +33,7 @@ export default async function (page) {
   const items = data.entry.map((pageInfo, index) => ({
     type: HelpButton,
     pageInfoData: pageInfo,
-    w: 410,
+    w: 450,
     h: 100,
     pageIndex: index,
   }));

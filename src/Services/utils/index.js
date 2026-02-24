@@ -34,7 +34,6 @@ export function createApiCtx() {
       deviceId: deviceInfo.serialNumber || 'no-id-defined',
       deviceModel: deviceInfo.model || 'no-model-defined',
       deviceMake: deviceInfo.brand || 'no-make-defined',
-      language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || selectedLanguage,
     })
   );
 }

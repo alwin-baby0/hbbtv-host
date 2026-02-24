@@ -67,7 +67,7 @@ export default class Home extends Lightning.Component {
     const { sliderData, railData } = this._props;
 
     const rails = constructRails(railData, ROUTES.HOME);
-    this._Column.props = { items: rails, parentState: 'Items' };
+    this._Column.props = { items: rails, parentState: 'Items', page: ROUTES.HOME };
 
     if (sliderData) {
       this._HeroSection.patch({
@@ -139,6 +139,9 @@ export default class Home extends Lightning.Component {
 
           this._Wrapper.patch({
             y: 980,
+            Column: {
+              y: 0,
+            },
           });
 
           this._HeroSection.patch({
@@ -197,6 +200,9 @@ export default class Home extends Lightning.Component {
             },
             Wrapper: {
               y: 0,
+              Column: {
+                y: 20,
+              },
             },
           });
 
@@ -215,6 +221,9 @@ export default class Home extends Lightning.Component {
             },
             Wrapper: {
               y: 900,
+              Column: {
+                y: 0,
+              },
             },
           });
 
@@ -249,23 +258,6 @@ export default class Home extends Lightning.Component {
           this.fireAncestors('$appClose');
         }
 
-        async $horizontalContainerIndexChange(index) {
-          const currentItem = this._Column.Items.children[this._Column._focusedIndex];
-          if (currentItem.Items.children.length - 1 === index) {
-            const newRails = await HomePageService.fetchMoreItemsForStripeId(currentItem.stripeId);
-            if (newRails && newRails?.items?.length > 0) {
-              const parsedItems = railItemConstructor(newRails.items, newRails.railType, {});
-              parsedItems.map(
-                (item) =>
-                  (item.props.index =
-                    item.props.index +
-                    this._Column.Items.children[this._Column._focusedIndex].Items.children.length)
-              );
-              currentItem._appendItems(parsedItems);
-            }
-          }
-        }
-
         async $verticalContainerIndexChange(index) {
           if (index > 0) {
             this.patch({
@@ -274,6 +266,9 @@ export default class Home extends Lightning.Component {
               },
               Wrapper: {
                 y: 0,
+                Column: {
+                  y: 20,
+                },
               },
             });
           } else {
@@ -284,6 +279,9 @@ export default class Home extends Lightning.Component {
               },
               Wrapper: {
                 y: 0,
+                Column: {
+                  y: 20,
+                },
               },
             });
           }

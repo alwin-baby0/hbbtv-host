@@ -1,6 +1,5 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import CategoryPicker from '../CategoryPicker/CategoryPicker';
-import VerticalContainer from '../VerticalContainer/VerticalContainer';
 import { CONTENT_TYPE } from '../../constants/globalConstants';
 
 export default class VodContentContainer extends Lightning.Component {
@@ -18,14 +17,6 @@ export default class VodContentContainer extends Lightning.Component {
           x: 90,
           y: 150,
         },
-      },
-      LiveEvents: {
-        type: VerticalContainer,
-        collision: true,
-        x: 90,
-        y: 150,
-        h: 500,
-        w: 1920,
       },
     };
   }
@@ -81,8 +72,6 @@ export default class VodContentContainer extends Lightning.Component {
     switch (this._props.contentType) {
       case CONTENT_TYPE.CATEGORIES:
         return this._Categories;
-      case CONTENT_TYPE.EVENTS:
-        return this._LiveEvents;
       case CONTENT_TYPE.EMPTY:
       default:
         return null;
@@ -95,9 +84,5 @@ export default class VodContentContainer extends Lightning.Component {
 
   get _Categories() {
     return this.tag('Categories');
-  }
-
-  get _LiveEvents() {
-    return this.tag('LiveEvents');
   }
 }

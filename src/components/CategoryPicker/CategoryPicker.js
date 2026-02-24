@@ -25,7 +25,7 @@ export default class CategoryPicker extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { x, y, items, parentState } = this._props;
+    const { x, y, items, parentState, seasonIndex } = this._props;
 
     this.patch({
       x: x,
@@ -45,6 +45,10 @@ export default class CategoryPicker extends Lightning.Component {
         props: { ...(items && items[0].props), parentState },
       },
     });
+
+    if (seasonIndex && seasonIndex !== -1) {
+      this._CaterogyItems._focusedIndex = seasonIndex;
+    }
   }
 
   _getFocused() {

@@ -1,8 +1,10 @@
 import axios from 'axios';
-import { createApiCtx } from '../utils';
-import { LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { createApiCtx } from '../utils/index.js';
+import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../../constants/globalConstants.js';
 import { Metrics } from '@firebolt-js/sdk';
-import { getDeviceType } from '../../utils/device';
+import { getDeviceInfo, getDeviceType } from '../../utils/device.js';
+import { LoggingService } from '../LoggingService/index.js';
+import FetchingService from '../FetchingService.js';
 
 const lngCode =
   localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) ||
@@ -17,7 +19,7 @@ export default class TranslationService {
     const lng = lngCode.split('-')[0];
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, lng.split('-')[0]);
 
-    const translations = await axios(`${process.env.APP_BASE_URL_2}/lang/${lng || 'en'}/app`, {
+    const translations = await axios(`${FetchingService.activeBaseUrl}/lang/${lng || 'en'}/app`, {
       params: { ctx: createApiCtx() },
     });
 
@@ -31,6 +33,11 @@ export default class TranslationService {
         localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(data));
       })
       .catch((error) => {
+        const deviceInfo = getDeviceInfo();
+        LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+          message: 'API call failed',
+          error,
+        });
         const deviceType = getDeviceType();
         deviceType === 'metrological' &&
           Metrics.error(

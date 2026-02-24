@@ -65,7 +65,7 @@ export default class SportsEventsRailItem extends FocusableItem {
             text: '',
             fontFace: 'Montserrat-Bold',
             fontSize: 20,
-            lineHeight: 16,
+            lineHeight: 24,
             wordWrapWidth: 270,
             maxLines: 2,
             maxLinesSuffix: '...',
@@ -79,7 +79,7 @@ export default class SportsEventsRailItem extends FocusableItem {
           text: {
             fontFace: 'Montserrat-Regular',
             fontSize: 16,
-            lineHeight: 16,
+            lineHeight: 20,
             wordWrapWidth: 300,
             maxLines: 4,
             maxLinesSuffix: '...',
@@ -91,22 +91,6 @@ export default class SportsEventsRailItem extends FocusableItem {
         radius: 9,
       },
     };
-  }
-
-  get _Title() {
-    return this.tag('Title');
-  }
-
-  get _DescriptionWrapper() {
-    return this.tag('DescriptionWrapper');
-  }
-
-  get _DateTime() {
-    return this.tag('DateTime');
-  }
-
-  get _EventImage() {
-    return this.tag('EventImage');
   }
 
   set props(props) {

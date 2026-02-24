@@ -23,7 +23,7 @@ export default class GalleryItem extends Lightning.Component {
   _hours = 0;
   _minutes = 0;
   _seconds = 0;
-  remaining = 0;
+  remainingUntilStart = 0;
 
   static _template() {
     return {
@@ -80,7 +80,7 @@ export default class GalleryItem extends Lightning.Component {
         },
         Date: {
           visible: false,
-          w: 750,
+          w: 400,
           h: 40,
           y: -47,
           x: 230,
@@ -89,7 +89,7 @@ export default class GalleryItem extends Lightning.Component {
           shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
           Text: {
             h: 30,
-            w: 750,
+            w: 400,
             y: 5,
             text: {
               fontSize: 24,
@@ -108,12 +108,12 @@ export default class GalleryItem extends Lightning.Component {
             marginBottom: 20,
           },
           Summary: {
-            w: 165,
+            w: 550,
             h: 29,
             text: {
               fontSize: 24,
               lineHeight: 30,
-              fontFace: 'Montserrat-SemiBold',
+              fontFace: 'Montserrat-Regular',
             },
           },
           Subtitle: {
@@ -237,7 +237,7 @@ export default class GalleryItem extends Lightning.Component {
           w: 900,
           h: 150,
           text: {
-            wordWrapWidth: 500,
+            wordWrapWidth: 900,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
@@ -292,7 +292,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -303,8 +302,9 @@ export default class GalleryItem extends Lightning.Component {
               },
             },
             TextValue: {
-              w: 700,
+              w: 750,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -319,7 +319,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -330,8 +329,9 @@ export default class GalleryItem extends Lightning.Component {
               },
             },
             TextValue: {
-              w: 700,
+              w: 750,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -346,7 +346,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -359,6 +358,7 @@ export default class GalleryItem extends Lightning.Component {
             TextValue: {
               w: 700,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -375,7 +375,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -388,6 +387,7 @@ export default class GalleryItem extends Lightning.Component {
             TextValue: {
               w: 700,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -406,17 +406,19 @@ export default class GalleryItem extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
-      height,
       enabled,
       firstEpisodeVideoId,
       firstEpisodeUrl,
       firstEpisodeTitle,
+      firstEpisodeEpisodeNumber,
+      firstEpisodeSeasonNumber,
       fallbackImage,
       isDeeplinkEpisode,
       seriesId,
       ssai,
       badgeText,
-      startDate,
+      startTime,
+      endTime,
       infoY,
       bgY,
       badgeY,
@@ -425,38 +427,52 @@ export default class GalleryItem extends Lightning.Component {
     const {
       title,
       summary,
-      description,
       buttonLabel,
       url,
       duration,
       videoType,
-      venue,
-      subtitle,
       director,
       cast,
       genre,
       rating,
+      durationString,
+      year,
+      country,
+      imdbScore,
+      eventDate,
+      eventTime,
+      streamUrl,
     } = galleryItem;
 
-    const titleLength = title.length;
+    const imdbScoreLabeled = `IMDB ${imdbScore}`;
+    let factLine;
 
-    const splitDirector = director && director.split(':');
-    const splitCast = cast && cast.split(':');
+    if (videoType !== 'event') {
+      factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
+    } else {
+      factLine = eventDate && eventTime ? [eventDate, eventTime].join(' | ') : '';
+    }
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
     const tGenre = t(TRANSLATIONS.GENRE) + ':';
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const castText = splitCast && splitCast[1];
-    const dirText = splitDirector && splitDirector[1];
+    const castText = cast ? cast.join(', ') : '';
+    const dirText = director
+      ? Array.isArray(director)
+        ? director.join(', ')
+        : director
+      : undefined;
+    const genreText = genre ? (Array.isArray(genre) ? genre.join(', ') : genre) : undefined;
 
-    if (videoType === 'application/x-mpegURL') {
-      const targetTimestamp = startDate;
-      this.remaining = targetTimestamp - Date.now();
+    if (videoType === 'event') {
+      const targetTimestamp = startTime;
+      const endTimestamp = endTime;
+      const eventEndsIn = endTimestamp - Date.now();
+      this.remainingUntilStart = targetTimestamp - Date.now();
+      const shouldCallUpdateInitially = this.remainingUntilStart > 0;
 
-      console.log('asdf start, remain', startDate, this.remaining);
-
-      const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+      const totalSeconds = Math.max(0, Math.floor(this.remainingUntilStart / 1000));
 
       this._days = Math.floor(totalSeconds / (24 * 60 * 60));
       this._hours = Math.floor((totalSeconds % (24 * 60 * 60)) / 3600);
@@ -465,13 +481,28 @@ export default class GalleryItem extends Lightning.Component {
 
       if (!this._countDownInterval) {
         this._countDownInterval = setInterval(() => {
-          this.remaining -= 1000;
-          if (this.remaining <= 0) {
-            this.remaining = 0;
+          this.remainingUntilStart -= 1000;
+          if (this.remainingUntilStart <= 0) {
+            this.remainingUntilStart = 0;
             clearInterval(this._countDownInterval);
+            this._countDownInterval = null;
+            if (shouldCallUpdateInitially) {
+              this.fireAncestors('$updateEvent', 'remaining = 0');
+            }
           }
           this.updateUI();
         }, 1000);
+      }
+
+      if (this._endAlarm) {
+        clearTimeout(this._endAlarm);
+        this._endAlarm = null;
+      }
+      if (eventEndsIn > 0 && !this._endAlarm) {
+        this._endAlarm = setTimeout(() => {
+          this._endAlarm = null;
+          this.fireAncestors('$updateEvent', 'event ended');
+        }, eventEndsIn);
       }
     }
 
@@ -483,20 +514,12 @@ export default class GalleryItem extends Lightning.Component {
       },
     });
 
-    if (videoType !== 'application/x-mpegURL') {
-      galleryItem.summary &&
-        this._Summary?.patch({
-          text: {
-            text: summary,
-          },
-        });
-      galleryItem.subtitle &&
-        this._Subtitle?.patch({
-          text: {
-            text: subtitle,
-          },
-        });
-
+    if (videoType !== 'event') {
+      this._Summary?.patch({
+        text: {
+          text: factLine,
+        },
+      });
       this._Info.patch({
         Date: undefined,
         Venue: undefined,
@@ -530,10 +553,10 @@ export default class GalleryItem extends Lightning.Component {
             },
             TextValue: {
               text: {
-                text: genre,
+                text: genreText,
               },
             },
-            visible: genre,
+            visible: genre?.length,
           },
           Director: {
             Title: {
@@ -546,7 +569,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: dirText,
               },
             },
-            visible: splitDirector[1] ? true : false,
+            visible: dirText,
           },
           Cast: {
             Title: {
@@ -559,7 +582,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: castText,
               },
             },
-            visible: splitCast[1] ? true : false,
+            visible: cast?.length,
           },
         },
       });
@@ -577,41 +600,46 @@ export default class GalleryItem extends Lightning.Component {
           visible: true,
           Text: {
             text: {
-              text: summary,
+              text: factLine,
             },
           },
         },
-        Countdown: {
-          visible: this.remaining > 0,
-          Days: {
-            Number: {
-              text: {
-                text: this._days,
+      });
+      setTimeout(() => {
+        //this patch is delayed on purpose, without it countdown is not properly displayed
+        this._Info.patch({
+          Countdown: {
+            visible: this.remainingUntilStart > 0,
+            Days: {
+              Number: {
+                text: {
+                  text: this._days,
+                },
+              },
+            },
+            Hours: {
+              Number: {
+                text: {
+                  text: this._hours,
+                },
+              },
+            },
+            Mins: {
+              Number: {
+                text: {
+                  text: this._minutes,
+                },
+              },
+            },
+            Sec: {
+              Number: {
+                text: {
+                  text: this._seconds,
+                },
               },
             },
           },
-          Hours: {
-            Number: {
-              text: {
-                text: this._hours,
-              },
-            },
-          },
-          Mins: {
-            Number: {
-              text: {
-                text: this._minutes,
-              },
-            },
-          },
-          Sec: {
-            Number: {
-              text: {
-                text: this._seconds,
-              },
-            },
-          },
-        },
+        });
       });
     }
 
@@ -647,7 +675,8 @@ export default class GalleryItem extends Lightning.Component {
         },
         Description: {
           text: {
-            text: description,
+            text: summary,
+            wordWrapWidth: bgY !== 0 ? 500 : 900, //500 is for hero only
           },
         },
       },
@@ -673,16 +702,25 @@ export default class GalleryItem extends Lightning.Component {
               });
               return;
             }
+            if (streamUrl) {
+              Router.navigate(ROUTES.PLAYER, {
+                videoUrl: streamUrl,
+                shouldSaveProgress: false,
+              });
+              return;
+            }
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
                 Router.navigate(ROUTES.PLAYER, {
-                  videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
+                  videoUrl: result?.entry[0]?.files?.url ?? firstEpisodeUrl,
                   episodeTitle: firstEpisodeTitle,
                   videoId: firstEpisodeVideoId,
+                  episodeNumber: firstEpisodeEpisodeNumber,
+                  seasonNumber: firstEpisodeSeasonNumber,
                   duration: duration,
                   videoType: VIDEO_TYPES.SERIES,
                   seriesID: seriesId,
-                  ssai: result[0].extensions?.ssai ?? ssai,
+                  ssai: result?.entry[0]?.extensions?.ssai ?? ssai,
                 });
               }
             );
@@ -703,7 +741,7 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   updateUI() {
-    const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+    const totalSeconds = Math.max(0, Math.floor(this.remainingUntilStart / 1000));
     const days = Math.floor(totalSeconds / 86400);
     const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -713,6 +751,7 @@ export default class GalleryItem extends Lightning.Component {
 
     this._Info.patch({
       Countdown: {
+        visible: totalSeconds > 0,
         Days: {
           Number: {
             text: {
@@ -745,28 +784,12 @@ export default class GalleryItem extends Lightning.Component {
     });
   }
 
-  get _GradientOverlay() {
-    return this.tag('GradientOverlay');
-  }
-
   get _Info() {
     return this.tag('Info');
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
   get _Summary() {
     return this.tag('Summary');
-  }
-
-  get _Subtitle() {
-    return this.tag('Subtitle');
-  }
-
-  get _Description() {
-    return this.tag('Description');
   }
 
   get _GalleryButton() {
@@ -785,22 +808,8 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('BackgroundImage');
   }
 
-  get _SummSub() {
-    return this.tag('SummSub');
-  }
-
-  get _AgeRating() {
-    return this.tag('AgeRating');
-  }
-  get _Genre() {
-    return this.tag('Genre');
-  }
-
-  get _Director() {
-    return this.tag('Director');
-  }
-  get _Cast() {
-    return this.tag('Cast');
+  _active() {
+    setTimeout(this._setState('GalleryButton'));
   }
 
   _firstActive() {

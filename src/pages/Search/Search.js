@@ -90,14 +90,14 @@ export default class Search extends Lightning.Component {
       VODWrapper: {
         zIndex: 3,
         x: 600,
-        y: 160,
+        y: 100,
         w: 1760,
         h: 1080,
         clipping: true,
         visible: true,
         VODSection: {
           x: 20,
-          y: 0,
+          y: 20,
           w: 1760,
           h: 1080,
           type: VerticalContainer,
@@ -106,6 +106,7 @@ export default class Search extends Lightning.Component {
           props: {
             parentState: 'VODSection',
             enableScroll: false,
+            page: ROUTES.SEARCH,
           },
         },
       },
@@ -154,28 +155,12 @@ export default class Search extends Lightning.Component {
     return this.tag('VODSection');
   }
 
-  get _Content() {
-    return this.tag('InputWrapper');
-  }
-
-  get _Spinner() {
-    return this.tag('Spinner');
-  }
-
   get _Input() {
     return this.tag('Input');
   }
 
   get _Keyboard() {
     return this.tag('Keyboard');
-  }
-
-  get _SearchLabel() {
-    return this.tag('SearchLabel');
-  }
-
-  get _SearchQueries() {
-    return this.tag('SearchQueries');
   }
 
   get _Queries() {
@@ -273,9 +258,9 @@ export default class Search extends Lightning.Component {
     });
 
     if (inputValue.length > 2) {
-      SearchService.getSearch(inputValue, '').then((data) => {
+      SearchService.getSearch(inputValue).then((data) => {
         if (data?.items) {
-          data.items && this.$changedVODGenre(data);
+          data.items && this.$changedVODGenre({ ...data, railTitle: `Search for: ${inputValue}` });
         }
       });
 
@@ -306,6 +291,7 @@ export default class Search extends Lightning.Component {
         props: {
           items: search.items,
           enableScroll: rows.length > 2,
+          h: 960,
         },
         text: {
           text: '',
@@ -313,8 +299,10 @@ export default class Search extends Lightning.Component {
       });
     } else {
       this._VODSection.patch({
+        y: 65,
         text: {
           text: t(TRANSLATIONS.NO_RESULTS),
+          h: 100,
         },
         props: {
           items: [],
@@ -459,7 +447,7 @@ export default class Search extends Lightning.Component {
           this._extended = this._VODSection._focusedIndex > 0;
           this.patch({
             VODWrapper: {
-              h: 1920,
+              h: 1080,
             },
           });
         }
@@ -477,6 +465,9 @@ export default class Search extends Lightning.Component {
               },
               VODSection: {
                 h: 795,
+                props: {
+                  y: 125,
+                },
               },
             });
           }
@@ -490,7 +481,7 @@ export default class Search extends Lightning.Component {
           }
         }
 
-        $verticalContainerIndexChange(index) {
+        $verticalContainerIndexChange() {
           this.correctContainerSize();
         }
       },

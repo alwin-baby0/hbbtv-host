@@ -1,4 +1,4 @@
-import { Colors, Utils, Img } from '@lightningjs/sdk';
+import { Colors, Utils } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
 
 export default class Key extends Lightning.Component {

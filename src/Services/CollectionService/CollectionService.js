@@ -32,6 +32,9 @@ class CollectionService extends FetchingService {
       params: {
         id: collectionId,
       },
+      headers: {
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
     }).then(parseCollectionData);
 }
 

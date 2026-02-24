@@ -1,11 +1,11 @@
 import { Router } from '@lightningjs/sdk';
-import { CATEGORY_TYPES, FILTER_TYPES, ROUTES } from '../constants/globalConstants';
+import { CATEGORY_TYPES, RAIL_TYPES, ROUTES, SEARCH_TYPES } from '../constants/globalConstants';
 
 class Category {
   constructor(data) {
-    const { id, title, type } = data;
+    const { id, title, type, name } = data;
     this.id = id;
-    this.title = title;
+    this.title = title || name;
     this.type = type;
     this.data = data;
   }
@@ -13,26 +13,30 @@ class Category {
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
-        console.log(this.data);
-        const event = new CustomEvent('changeContent', {
-          detail: {
-            category: this.data.id,
-            type: 'movie',
-            categoryMessage: this.data.title,
-          }, // pass whatever value you need here
-        });
-        window.dispatchEvent(event);
+        const category = {
+          category: this.data.value,
+          type: SEARCH_TYPES.MOVIE,
+          categoryTitle: this.data.localised,
+        };
+        Router.navigate(`${ROUTES.COLLECTION}/${RAIL_TYPES.CATEGORY}`, { category });
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        const event = new CustomEvent('changeContent', {
-          detail: {
-            category: this.data.id,
-            type: this.data.type,
-            categoryMessage: this.data.title,
-          }, // pass whatever value you need here
-        });
-        window.dispatchEvent(event);
+        const category = {
+          category: this.data.value,
+          type: SEARCH_TYPES.SERIES,
+          categoryTitle: this.data.localised,
+        };
+        Router.navigate(`${ROUTES.COLLECTION}/${RAIL_TYPES.CATEGORY}`, { category });
+        break;
+      }
+      case CATEGORY_TYPES.SPORTS: {
+        const category = {
+          category: this.data.value,
+          type: SEARCH_TYPES.SPORTS,
+          categoryTitle: this.data.localised,
+        };
+        Router.navigate(`${ROUTES.COLLECTION}/${RAIL_TYPES.CATEGORY}`, { category });
         break;
       }
       case CATEGORY_TYPES.LIVE_TV: {
@@ -41,7 +45,7 @@ class Category {
       }
       case CATEGORY_TYPES.CHANNELS: {
         this.changeGenre = this.data;
-        Router.navigate(`${ROUTES.LIVE}/:${this.id}?`);
+        Router.navigate(`${ROUTES.LIVE}/:${this.id}`);
         break;
       }
       case CATEGORY_TYPES.SEASON_TABS: {

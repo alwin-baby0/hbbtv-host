@@ -29,8 +29,13 @@ import {
 } from './utils/device.js';
 import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
-import { TranslationService } from './Services/index.js';
-import { EVENT_NAMES } from './constants/globalConstants.js';
+import {
+  SettingsService,
+  TranslationService,
+  LoggingService,
+  AuthorizationService,
+} from './Services/index.js';
+import { EVENT_NAMES, LOCAL_STORAGE_KEYS, LOG_LEVEL } from './constants/globalConstants.js';
 
 /**
  * This file should serve as a place to add for example polyfills, initiate
@@ -83,6 +88,11 @@ sequence([
   async () =>
     loadJS(`${process.env.APP_BASE_WATCH4}/track.js?api_key=${process.env.APP_WATCH4_API_KEY}`),
   async () => {
+    await AuthorizationService.scheduleDeviceAuthorizationCodeRefresh();
+    const settings = await SettingsService.getSettings();
+    localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify(settings.data));
+  },
+  async () => {
     try {
       const app = Launch(App, appSettings, platformSettings);
       document.body.appendChild(app.stage.getCanvas());
@@ -104,6 +114,11 @@ sequence([
       console.log(build);
     } catch (error) {
       console.error('Failed to start the app', error);
+      const deviceInfo = getDeviceInfo();
+      LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+        message: 'Failed to start the app',
+        error,
+      });
       deviceType === 'metrological' &&
         Metrics.error(Metrics.ErrorType.OTHER, '', 'Failed to start the app', true);
     }

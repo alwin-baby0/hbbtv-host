@@ -7,7 +7,7 @@ import {
 } from '../../constants/globalConstants';
 import FetchingService from '../FetchingService';
 import { auth } from '../utils';
-import { getDeviceType } from '../../utils/device';
+import { getDeviceType, getDeviceInfo } from '../../utils/device';
 
 class AuthorizationService extends FetchingService {
   async setDeviceCodeStatusInterval(deviceCode) {
@@ -19,17 +19,14 @@ class AuthorizationService extends FetchingService {
             const statusResponse = await this.#getDeviceCodeStatus(deviceCode);
             console.log('statusResponse', statusResponse.data);
 
-            if (statusResponse.data.status === 'approved') {
+            if (statusResponse.data.status === 'authorized') {
               this.clearPollingInterval(this._intervalId);
               console.log('Device code status condition met, stopping the interval.');
               console.log('status:', statusResponse.data.status);
-              console.log('autorization code:', statusResponse.data.authorization_code);
+              console.log('autorization code:', statusResponse.data.pin);
               const timestamp = Math.floor(Date.now() / 1000);
 
-              const tokenData = await this.#getToken(
-                statusResponse.data.authorization_code,
-                timestamp
-              );
+              const tokenData = await this.#getToken(deviceCode, timestamp);
               localStorage.setItem(LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(tokenData.data));
               const event = new CustomEvent(CUSTOM_EVENT_NAMES.USER_LOG_IN);
               window.dispatchEvent(event);
@@ -62,10 +59,16 @@ class AuthorizationService extends FetchingService {
     return await this._request({
       url: `/${API_URLS.GET_DEVICE_CODE}`,
       apiVersion: auth,
-      method: API_METHODS.GET,
+      method: API_METHODS.POST,
       params: {
         client_id: process.env.APP_CMP_CLIENT_ID,
-        client_secret: process.env.APP_CMP_CLIENT_SECRET,
+        scope: 'read',
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      headers: {
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     });
   };
@@ -74,47 +77,79 @@ class AuthorizationService extends FetchingService {
     return await this._request({
       url: `/${API_URLS.GET_DEVICE_STATUS}`,
       apiVersion: auth,
-      method: API_METHODS.POST,
+      method: API_METHODS.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
       params: {
         client_id: process.env.APP_CMP_CLIENT_ID,
-        client_secret: process.env.APP_CMP_CLIENT_SECRET,
+        grant_type: `urn:ietf:params:oauth:grant-type:device_code`,
         device_code: deviceCode,
       },
     });
   };
 
   #getToken = async (authorizationCode) => {
-    const timestamp = new Date().getTime();
+    return await this._request({
+      url: `/${API_URLS.GET_TOKEN}`,
+      apiVersion: auth,
+      method: API_METHODS.POST,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
+      data: {
+        client_id: process.env.APP_CMP_CLIENT_ID,
+        client_secret: process.env.APP_CMP_CLIENT_SECRET,
+        grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
+        device_code: authorizationCode,
+      },
+    });
+  };
+
+  refreshToken = async () => {
+    const refreshToken = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
+    ).refresh_token;
+
+    const deviceCode = await this.getDeviceCode();
 
     return await this._request({
       url: `/${API_URLS.GET_TOKEN}`,
       apiVersion: auth,
       method: API_METHODS.POST,
       headers: {
-        'X-nocache': timestamp,
         'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
         client_id: process.env.APP_CMP_CLIENT_ID,
-        client_secret: process.env.APP_CMP_CLIENT_SECRET,
-        grant_type: 'authorization_code',
-        code: authorizationCode,
+        device_code: deviceCode,
       },
     });
   };
 
-  revokeToken = async (token) => {
-    return await this._request({
-      url: `/${API_URLS.REVOKE_TOKEN}`,
-      apiVersion: auth,
-      method: API_METHODS.POST,
-      data: {
-        client_id: process.env.APP_CMP_CLIENT_ID,
-        client_secret: process.env.APP_CMP_CLIENT_SECRET,
-        token: token,
-      },
-    });
-  };
+  refreshTimeoutId = null;
+
+  async scheduleDeviceAuthorizationCodeRefresh() {
+    const BUFFER = 1000; // 29min 59sec
+
+    if (this.refreshTimeoutId) {
+      clearTimeout(this.refreshTimeoutId);
+    }
+
+    const data = (await this.getDeviceCode()).data;
+    console.log(data);
+
+    localStorage.setItem(LOCAL_STORAGE_KEYS.AUTH_DEVICE_CODE, data.device_code);
+    const expiresIn = data.expires_in * 1000;
+
+    // next refresh
+    this.refreshTimeoutId = setTimeout(() => this.scheduleDeviceCodeRefresh(), expiresIn - BUFFER);
+  }
 }
 
 const authorizationService = new AuthorizationService();

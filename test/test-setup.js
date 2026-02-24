@@ -8,7 +8,7 @@ import basePathWithSubpath from 'test/mocks/basePathWithSubpath.json';
 fetchMock.enableMocks();
 
 // Mock TranslationService to avoid top-level await issues
-jest.mock('src/Services/LanguageService/TranslationService', () => {
+jest.mock('src/Services/TranslationService/TranslationService', () => {
   const mockTranslations = {};
 
   return {
@@ -38,15 +38,15 @@ jest.mock('@lightningjs/sdk', () => ({
     open: jest.fn(),
     play: jest.fn(),
     clear: jest.fn(),
-  }
+  },
 }));
 
 const RESPONSES = {
   basicEndpoint: JSON.stringify(basicEndpoint),
   basePathWithSubpath: JSON.stringify(basePathWithSubpath),
-}
+};
 
-fetch.mockResponse(req => {
+fetch.mockResponse((req) => {
   if (req.url.match(/basicEndpoint/)) {
     return Promise.resolve(RESPONSES.basicEndpoint);
   }
@@ -55,5 +55,5 @@ fetch.mockResponse(req => {
     return Promise.resolve(RESPONSES.basePathWithSubpath);
   }
 
-  return Promise.reject("{}");
+  return Promise.reject('{}');
 });

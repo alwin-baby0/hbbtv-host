@@ -22,7 +22,6 @@ import Collection from './pages/Collection/Collection';
 import collection from './pages/Collection/provider/collection';
 import CMP from './pages/CMP/CMP';
 import cmp from './pages/CMP/provider/cmp';
-import CMPCustomize from './pages/CMP/components/CMPCustomize';
 import Settings from './pages/Settings/Settings';
 import settings from './pages/Settings/provider/settings';
 import { ROUTES } from './constants/globalConstants';
@@ -52,7 +51,7 @@ export default {
       on: singleMovie,
     },
     {
-      path: `${ROUTES.SERIES_DETAILS}/:seriesId`,
+      path: `${ROUTES.SERIES_DETAILS}/:seriesId/:seasonId?`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -60,7 +59,7 @@ export default {
       },
     },
     {
-      path: `${ROUTES.SPORTS_DETAIL}/:seriesId`,
+      path: `${ROUTES.SPORTS_DETAIL}/:seriesId/:seasonId?`,
       component: SingleSeries,
       on: singleSeries,
       options: {
@@ -73,7 +72,7 @@ export default {
       on: singleLiveEvent,
     },
     {
-      path: ROUTES.LIVE,
+      path: `${ROUTES.LIVE}/:channelId?`,
       component: LiveTV,
       widgets: [ROUTES.MENU_WIDGET],
       on: livetv,
@@ -118,10 +117,6 @@ export default {
       path: ROUTES.CMP,
       component: CMP,
       on: cmp,
-    },
-    {
-      path: ROUTES.CMP_CUSTOMIZE,
-      component: CMPCustomize,
     },
   ],
 };

@@ -29,10 +29,6 @@ export default class PlayerButtons extends Lightning.Component {
     this._props = { ...this._props, ...props };
   }
 
-  get _Button() {
-    return this.tag('Button');
-  }
-
   get _Icon() {
     return this.tag('Icon');
   }
@@ -180,7 +176,7 @@ export default class PlayerButtons extends Lightning.Component {
   }
 
   _handleClick() {
-    const { buttonInfo, isStopped } = this._props;
+    const { buttonInfo } = this._props;
     if (buttonInfo.label === 'back') {
       this._handleBackFromPlayer();
     } else {

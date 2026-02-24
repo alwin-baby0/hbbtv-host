@@ -13,36 +13,45 @@ export default class LogoutButton extends Lightning.Component {
         collision: true,
         flex: { direction: 'row', alignItems: 'center' },
         flexItem: {
-          marginBottom: 20,
+          marginBottom: 30,
+          marginTop: 30,
+          marginLeft: 50,
+          marginRight: 50,
         },
-        texture: Lightning.Tools.getRoundRect(
-          260,
-          75,
-          12,
-          4,
-          Colors('#000000').alpha(0).get(),
-          false
-        ),
+        w: (w) => w + 16,
+        h: 80,
+        shader: { type: Lightning.shaders.RoundedRectangle, radius: 12 },
         Column: {
+          flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
           h: 65,
-          w: 250,
+          w: (w) => w,
           x: 8,
           rect: true,
           shader: { type: Lightning.shaders.RoundedRectangle, radius: 12 },
           Text: {
-            y: 5,
-            w: 250,
             text: {
               color: Colors(colors.white).get(),
               fontFace: 'Montserrat-Bold',
               textAlign: 'center',
-              lineHeight: 65,
               verticalAlign: 'center',
             },
           },
         },
       },
     };
+  }
+
+  _active() {
+    setTimeout(() => {
+      this.stage.once('frameStart', () => {
+        this._FocusBorder.patch({
+          w: this._Text.finalW + 116,
+          Column: {
+            w: this._Text.finalW + 100,
+          },
+        });
+      });
+    });
   }
 
   get _Text() {
@@ -81,28 +90,41 @@ export default class LogoutButton extends Lightning.Component {
   }
 
   _focus() {
-    this._FocusBorder.patch({
-      texture: Lightning.Tools.getRoundRect(260, 75, 12, 4, Colors(colors.focus).get(), false),
-      Column: {
-        color: Colors(colors.focus).get(),
-      },
-    });
+    setTimeout(
+      () =>
+        this._FocusBorder.patch({
+          texture: Lightning.Tools.getRoundRect(
+            this._Text.finalW + 116,
+            80,
+            12,
+            4,
+            Colors(colors.focus).get(),
+            false
+          ),
+          Column: {
+            color: Colors(colors.focus).get(),
+          },
+        }),
+      200
+    );
   }
 
   _unfocus() {
-    this._FocusBorder.patch({
-      texture: Lightning.Tools.getRoundRect(
-        260,
-        75,
-        12,
-        4,
-        Colors(colors.background).alpha(0).get(),
-        false
-      ),
-      Column: {
-        color: Colors(colors.unfocusedLanguage).alpha(0).get(),
-      },
-    });
+    setTimeout(() =>
+      this._FocusBorder.patch({
+        texture: Lightning.Tools.getRoundRect(
+          this._Text.finalW + 116,
+          80,
+          12,
+          4,
+          Colors(colors.background).alpha(0).get(),
+          false
+        ),
+        Column: {
+          color: Colors(colors.unfocusedLanguage).alpha(0).get(),
+        },
+      })
+    );
   }
 
   _handleHover() {

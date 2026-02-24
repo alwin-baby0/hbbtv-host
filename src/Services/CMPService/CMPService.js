@@ -12,7 +12,7 @@ class CMPService extends FetchingService {
       const cmpResults = await this.#getCMP(deviceCode);
       this.#cmpData = cmpResults;
       if (cmpResults && cmpResults.data) {
-        this.#cmpData = cmpResults.data;
+        this.#cmpData = cmpResults.data.entry;
       } else {
         console.error('No data found in CMP results');
       }
@@ -37,12 +37,12 @@ class CMPService extends FetchingService {
       url: `/${API_URLS.GET_CMP}`,
       apiVersion: V2,
       method: API_METHODS.GET,
-      headers: {
-        'X-DEVICE-ID': deviceCode,
-      },
       params: {
         language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || 'en',
         device_id: deviceCode,
+      },
+      headers: {
+        Authorization: 'Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563',
       },
     });
     return response;
@@ -53,17 +53,18 @@ class CMPService extends FetchingService {
       url: `/${API_URLS.GET_CMP}`,
       apiVersion: V2,
       method: API_METHODS.GET,
-      headers: {
-        'X-Device-ID': deviceCode,
-      },
       params: {
         language: localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE) || 'en',
         choice: choicePick,
         device_id: deviceCode,
       },
+      headers: {
+        Authorization: 'Bearer bc6b83671bd80d6a26dd7607c912c1e705f8d563',
+      },
     });
   };
 }
+
 const cmpService = new CMPService();
 
 export { cmpService as CMPService };

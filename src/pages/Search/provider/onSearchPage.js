@@ -18,6 +18,8 @@ export default async function (page) {
 
     await HomePageService.initialFetch();
 
+    HomePageService.stripes[0].items.pop();
+    HomePageService.stripes[0].items.forEach((item) => (item.orientation = 'portrait'));
     page.$changedVODGenre(HomePageService.stripes[0]);
     page._Input._Placeholder.patch({
       visible: true,
