@@ -151,6 +151,10 @@ export default class CategoryPickerItem extends FocusableItem {
   }
 
   async _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const { callback } = this._props;
     try {
       this.fireAncestors('$updateChannels', this._props);

@@ -92,7 +92,8 @@ export default class App extends Router.App {
   async _init() {
     await DidomiService.init();
     const userNotice = window.Didomi.getConfig();
-    if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
+    // if (userNotice.notice.daysBeforeShowingAgain <= 0)
+    window.Didomi.notice.show();
 
     const analyticsAllowed = DidomiService.hasConsentForPurpose('analytics');
 

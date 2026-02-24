@@ -7,7 +7,7 @@ class DidomiService {
   init() {
     return new Promise((resolve) => {
       const check = setInterval(() => {
-        console.log(window);
+        console.log(window.Didomi);
         if (window.Didomi) {
           clearInterval(check);
           this.isReady = true;

@@ -85,6 +85,10 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   async _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageInfo);
     const translations = await this.#getLanguageTranslations(this._props.languageInfo);
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));

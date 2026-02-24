@@ -93,6 +93,10 @@ export default class Key extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     this.fireAncestors('$onSoftKey', { key: this._data.key });
   }
 

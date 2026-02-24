@@ -244,6 +244,10 @@ export default class VodPreview extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -316,6 +320,10 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
@@ -356,6 +364,10 @@ export default class VodPreview extends Lightning.Component {
         // }
 
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._Column.Items.children.length > 0) {
             this._setState('VodContainer');
           }
@@ -418,6 +430,10 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (
             this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY &&
             !Router.isNavigating()

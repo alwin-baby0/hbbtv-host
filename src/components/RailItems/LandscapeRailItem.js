@@ -151,6 +151,9 @@ export default class LandscapeRailItem extends FocusableItem {
   }
 
   _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
     const { callback } = this._props;
     callback();
   }

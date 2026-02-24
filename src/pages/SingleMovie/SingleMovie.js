@@ -596,6 +596,10 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -667,10 +671,18 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('BackButton');
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('BackButton');
         }
       },
@@ -680,10 +692,18 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Buttons');
         }
 
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('BackButton');
         }
       },
@@ -694,10 +714,18 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Buttons');
         }
 
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Buttons');
         }
       },

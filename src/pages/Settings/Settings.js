@@ -232,6 +232,10 @@ export default class Settings extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -252,6 +256,10 @@ export default class Settings extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Languages');
         }
       },
@@ -262,12 +270,20 @@ export default class Settings extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('CMPContainer');
         }
       },

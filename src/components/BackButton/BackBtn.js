@@ -37,6 +37,10 @@ export default class BackBtn extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const router = Router.getHistory().filter(
       (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );

@@ -51,6 +51,10 @@ export default class QueryButton extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     this.fireAncestors('$searchRecent', this.title);
   }
 

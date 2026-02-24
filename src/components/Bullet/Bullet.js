@@ -49,6 +49,10 @@ export default class Bullet extends HeroRailItem {
   }
 
   _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const { item } = this._props;
 
     switch (item.type.value) {

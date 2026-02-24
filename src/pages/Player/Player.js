@@ -960,6 +960,10 @@ export default class Player extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -1216,6 +1220,10 @@ export default class Player extends Lightning.Component {
 
   // COMANDS
   _handleMediaPlayPause() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const { pausedItemId } = this._props;
 
     // Check the current playing state before toggling
@@ -1242,6 +1250,10 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaRewind() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const wasPlaying = VideoPlayer.playing;
 
     this.$hideSbutitles();
@@ -1253,6 +1265,10 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaFastForward() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const wasPlaying = VideoPlayer.playing;
 
     this.$hideSbutitles();
@@ -1264,14 +1280,26 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaPlay() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     this.$playVideo();
   }
 
   _handleMediaPause() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     this.$pauseVideo();
   }
 
   _handleMediaStop() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     this.$hideSbutitles();
     Router.back();
     VideoPlayer.close();
@@ -1282,6 +1310,10 @@ export default class Player extends Lightning.Component {
   }
 
   _captureKey({ keyCode }) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const keyName = window.keyCodes[keyCode];
 
     const isMediaKey =
@@ -1322,11 +1354,19 @@ export default class Player extends Lightning.Component {
           return this._Controls;
         }
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._props.isLive) return;
 
           this._setState('Back');
         }
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._props.isLive) return;
 
           // this._setState('SubtitlesButton');
@@ -1337,14 +1377,26 @@ export default class Player extends Lightning.Component {
           return this._SubtitlesLanguages;
         }
         _handleBack() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this.$hideSbutitles();
         }
 
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           return false;
         }
 
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           return false;
         }
       },
@@ -1355,10 +1407,18 @@ export default class Player extends Lightning.Component {
         }
 
         _handleEnter() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           VideoPlayer.seek(this._props.skipTo);
         }
 
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('AdBackButton');
         }
       },
@@ -1369,17 +1429,29 @@ export default class Player extends Lightning.Component {
         }
 
         _captureEnter(e) {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._getState() === 'AdBackButton') this.$exitVideo(e);
           return false;
         }
 
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._props.currentAd.skipping_allowed) {
             this._setState('SkipButton');
           }
         }
 
         _handleUnhover() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           return true;
         }
       },
@@ -1390,6 +1462,10 @@ export default class Player extends Lightning.Component {
         }
 
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Controls');
         }
       },
@@ -1400,6 +1476,10 @@ export default class Player extends Lightning.Component {
         }
 
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Controls');
         }
       },

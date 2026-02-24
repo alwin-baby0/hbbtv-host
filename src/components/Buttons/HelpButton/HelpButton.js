@@ -75,6 +75,10 @@ export default class PageItem extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     let pageId = this._pageInfoData.id;
     this.fireAncestors('$changeDescription', pageId);
     this.fireAncestors('$setFocus', this._pageIndex);

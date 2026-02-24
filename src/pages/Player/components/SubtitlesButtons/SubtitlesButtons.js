@@ -69,6 +69,10 @@ export default class SubtitlesButtons extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const { index } = this._props;
     this.fireAncestors('$updateSubtitle', index);
     if (this._selected) {

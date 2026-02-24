@@ -305,6 +305,10 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -362,10 +366,18 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('SeasonBar');
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('BackButton');
         }
       },
@@ -375,6 +387,10 @@ export default class SingleSeries extends Lightning.Component {
           return this._BackButton;
         }
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('HeroSection');
         }
       },
@@ -384,9 +400,17 @@ export default class SingleSeries extends Lightning.Component {
           return this._SeasonsBar;
         }
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('HeroSection');
         }
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._Column.Items.children.length > 0) {
             this._setState('Items');
           } else {
@@ -448,6 +472,10 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('SeasonBar');
         }
       },

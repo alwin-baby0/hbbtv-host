@@ -70,6 +70,10 @@ export default class PlayerButtons extends Lightning.Component {
   }
 
   _handleEnter(e) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const { buttonInfo, isStopped } = this._props;
     this.fireAncestors('$changeFocusOnControl', true);
     switch (buttonInfo.label) {

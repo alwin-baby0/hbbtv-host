@@ -138,6 +138,10 @@ export default class SidebarItem extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     this.fja();
     this.fireAncestors('$changePage', this._props.index);
     (this._props.data.route !== 'account' ||

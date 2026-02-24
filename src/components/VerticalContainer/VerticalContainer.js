@@ -134,6 +134,10 @@ export default class VerticalContainer extends Lightning.Component {
   }, 50);
 
   _handleScroll(event) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (this.hasFocus()) {
       if (event.deltaY > 0) {
         const { items } = this._props;
@@ -153,6 +157,10 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleDown() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const { items } = this._props;
     if (items && items[0].channelId) {
       return this.handleDownEPG();
@@ -200,6 +208,10 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleUp() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     return this.handleUp();
   }
 

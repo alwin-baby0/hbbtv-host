@@ -122,6 +122,10 @@ export default class Gallery extends Lightning.Component {
   }
 
   _handleScroll(event) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (event.deltaY > 0) {
       this.fireAncestors('$setStateOnScroll', this._props.scrollDownState);
     }

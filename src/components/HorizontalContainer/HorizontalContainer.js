@@ -189,6 +189,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleRight() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
       this.Items.children[this._focusedIndex]._unfocus();
@@ -207,6 +211,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (this._focusedIndex > 0) {
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex -= 1;

@@ -96,6 +96,10 @@ export default class Home extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -143,6 +147,10 @@ export default class Home extends Lightning.Component {
         }
 
         _handleBack(e) {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (Router.isNavigating()) {
             return;
           }
@@ -151,12 +159,20 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Items');
         }
 
@@ -214,10 +230,18 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Hero');
         }
 
         _handleBack(e) {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (Router.isNavigating()) {
             return;
           }

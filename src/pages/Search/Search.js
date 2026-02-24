@@ -183,6 +183,10 @@ export default class Search extends Lightning.Component {
   }
 
   _handleKey(key) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (this.numberKeys.includes(key.key)) {
       this.$onSoftKey(key);
     }
@@ -374,6 +378,10 @@ export default class Search extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -392,12 +400,20 @@ export default class Search extends Lightning.Component {
         _extended = true;
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Keyboard');
         }
 
@@ -485,6 +501,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
@@ -495,6 +515,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._VODSection.Items.children.length > 0 && this._VodWrapper.visible) {
             this._setState('VODSection');
           } else {
@@ -503,6 +527,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Queries');
         }
       },
@@ -513,10 +541,18 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Keyboard');
         }
 
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._VODSection.Items.children.length > 0 && this._VodWrapper.visible) {
             this._setState('VODSection');
           } else {

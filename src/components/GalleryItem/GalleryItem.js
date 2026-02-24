@@ -849,6 +849,10 @@ export default class GalleryItem extends Lightning.Component {
           return this._GalleryButton;
         }
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
           } else if (this._FavoriteButton.alpha > 0) {
@@ -864,12 +868,20 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._FavoriteButton.alpha > 0) {
             this._setState('FavoriteButton');
           } else return false;
         }
 
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('GalleryButton');
         }
 
@@ -885,6 +897,10 @@ export default class GalleryItem extends Lightning.Component {
           return false;
         }
         _handleLeft() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
           } else {

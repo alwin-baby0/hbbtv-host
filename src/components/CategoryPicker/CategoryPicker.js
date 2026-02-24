@@ -52,6 +52,10 @@ export default class CategoryPicker extends Lightning.Component {
   }
 
   _handleScroll(event) {
+    if (window.Didomi && window.Didomi.notice.isVisible()) {
+      return true;
+    }
+
     if (event.deltaY < 0) {
       this.fireAncestors('$setStateOnScroll', 'Hero');
     }
