@@ -895,6 +895,10 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           return false;
         }
       },
@@ -903,6 +907,10 @@ export default class GalleryItem extends Lightning.Component {
           return this._FavoriteButton;
         }
         _handleRight() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           return false;
         }
         _handleLeft() {

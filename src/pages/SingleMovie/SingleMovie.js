@@ -712,6 +712,10 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('PlaylistWrapper');
         }
       },
@@ -765,6 +769,10 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.Didomi.notice.isVisible()) {
+            return true;
+          }
+
           this._setState('Buttons');
         }
 

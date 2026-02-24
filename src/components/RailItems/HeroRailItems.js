@@ -91,7 +91,9 @@ export default class HeroRailItem extends FocusableItem {
   }
 
   _handleEnter() {
+    console.log('here');
     if (window.Didomi && window.Didomi.notice.isVisible()) {
+      console.log('here2');
       return true;
     }
     const { callback } = this._props;
