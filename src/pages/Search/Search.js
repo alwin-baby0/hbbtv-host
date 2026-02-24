@@ -316,10 +316,6 @@ export default class Search extends Lightning.Component {
     });
   }
 
-  _firstEnable() {
-    this._setState('Keyboard');
-  }
-
   $getInput() {
     return this._Input._Input;
   }
@@ -355,6 +351,8 @@ export default class Search extends Lightning.Component {
         });
       }
     }
+
+    this._setState('Keyboard');
   }
 
   _handleHover() {
@@ -475,11 +473,6 @@ export default class Search extends Lightning.Component {
       class Keyboard extends this {
         _getFocused() {
           return this._Keyboard;
-        }
-
-        _handleBack(e) {
-          e.preventDefault();
-          this._setState('Input');
         }
 
         _handleUp() {
