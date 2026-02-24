@@ -64,13 +64,11 @@ export default class FetchingService {
           lastErr = err;
 
           if (!status) continue; // network error → retry
-          if (String(status)[0] !== '5') {
-            if (i < 2) {
-              setTimeout(() => {}, 1000);
-            } else {
-              throw err;
-            }
-          } // non-5xx → stop
+          if (i < 2) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          } else {
+            throw err;
+          }
         }
       }
 
@@ -88,7 +86,8 @@ export default class FetchingService {
         } catch (err) {
           const status = err?.response?.status;
 
-          if (status && String(status)[0] === '5') {
+          // if (status && String(status)[0] === '5') {
+          if (!status) {
             console.warn('Primary API failed, switching to fallback');
             FetchingService.activeBaseUrl = BACKUP_API_URL;
             FetchingService.baseUrlResolved = true;
