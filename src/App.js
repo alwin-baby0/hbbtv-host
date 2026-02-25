@@ -88,8 +88,7 @@ export default class App extends Router.App {
   async _init() {
     await DidomiService.init();
     const userNotice = window.Didomi.getConfig();
-    // if (userNotice.notice.daysBeforeShowingAgain <= 0)
-    window.Didomi.notice.show();
+    if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
 
     const analyticsAllowed = DidomiService.hasConsentForPurpose('analytics');
 
@@ -100,13 +99,18 @@ export default class App extends Router.App {
     DidomiService.onConsentChanged(() => {
       this.handleConsentUpdate();
     });
+
+    window.didomiOnReady.push(async () => {
+      const userConsent = (await window.Didomi.getCurrentUserStatus()).consent_string;
+      localStorage.setItem('userConsentString', userConsent);
+    });
   }
 
   startAnalytics() {
     console.log('Analytics started');
   }
 
-  handleConsentUpdate() {
+  async handleConsentUpdate() {
     if (DidomiService.hasConsentForPurpose('analytics')) {
       this.startAnalytics();
     } else {
