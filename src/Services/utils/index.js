@@ -20,6 +20,8 @@ export function createApiCtx() {
   const selectedLanguage =
     navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
   const deviceInfo = getDeviceInfo();
+  const userConsent = JSON.parse(localStorage.getItem('userConsentString'));
+  const didomiConfig = JSON.parse(localStorage.getItem('didomiConfig'));
 
   return btoa(
     JSON.stringify({
@@ -34,6 +36,12 @@ export function createApiCtx() {
       deviceId: deviceInfo.serialNumber || 'no-id-defined',
       deviceModel: deviceInfo.model || 'no-model-defined',
       deviceMake: deviceInfo.brand || 'no-make-defined',
+      tcf: {
+        gdprApplies: window.didomiState.didomiGDPRApplies ? true : false,
+        tcfString: userConsent.consent_string,
+        cmpSdkId: didomiConfig.id,
+        cmpSdkVersion: didomiConfig.version,
+      },
     })
   );
 }

@@ -34,6 +34,7 @@ import {
   TranslationService,
   LoggingService,
   AuthorizationService,
+  DidomiService,
 } from './Services/index.js';
 import { EVENT_NAMES, LOCAL_STORAGE_KEYS, LOG_LEVEL } from './constants/globalConstants.js';
 
@@ -75,6 +76,21 @@ sequence([
     window.keyCodes = appSettings.keys;
   },
   async () => await initDeviceInfo(deviceType),
+  async () => {
+    await DidomiService.init();
+    const userNotice = window.Didomi.getConfig();
+    if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
+
+    window.didomiOnReady.push(async () => {
+      const userConsent = await window.Didomi.getCurrentUserStatus();
+      console.log(userConsent);
+      localStorage.setItem('userConsentString', JSON.stringify(userConsent));
+
+      const didomiConfig = window.Didomi.getConfig();
+      console.log(didomiConfig);
+      localStorage.setItem('didomiConfig', JSON.stringify(didomiConfig));
+    });
+  },
   () => FetchingService.init(),
   async () => {
     if (process.env.APP_USE_GA === 'true') {
