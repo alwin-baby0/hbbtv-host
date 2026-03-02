@@ -86,9 +86,8 @@ sequence([
       console.log(userConsent);
       localStorage.setItem('userConsentString', JSON.stringify(userConsent));
 
-      const didomiConfig = window.Didomi.getConfig();
-      console.log(didomiConfig);
-      localStorage.setItem('didomiConfig', JSON.stringify(didomiConfig));
+      console.log(userNotice);
+      localStorage.setItem('didomiConfig', JSON.stringify(userNotice));
     });
   },
   () => FetchingService.init(),

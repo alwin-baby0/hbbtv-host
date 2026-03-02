@@ -1,7 +1,7 @@
 class EPGRailItem {
   constructor(data) {
-    const { id, title, meta, description, start_timestamp, end_timestamp, url } = data;
-    const { type } = meta;
+    const { id, title, meta, description, start_timestamp, end_timestamp, url, type } = data;
+    // const { type } = meta;
     this.id = id;
     this.title = title;
     this.type = type;

@@ -1,5 +1,5 @@
 import { Router } from '@lightningjs/sdk';
-import { CMPService, AuthorizationService } from '../Services';
+import { CMPService, AuthorizationService, DidomiService } from '../Services';
 import { ROUTES, LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
 
 export function clamp(number, min, max) {
@@ -13,24 +13,21 @@ export function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export async function checkCMP({ cmpShown, url, id }) {
-  if (cmpShown) {
-    return true;
-  }
+export async function checkCMP() {
+  await DidomiService.init();
+  const userNotice = window.Didomi.getConfig();
 
-  await CMPService.initialFetch();
-  const expireTs = CMPService.cmpData?.consent?.expire.timestamp;
-  const nowTs = Math.floor(Date.now() / 1000);
+  if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
 
-  if (expireTs === 0 || nowTs > expireTs) {
-    const params = { url };
+  window.didomiOnReady.push(async () => {
+    const userConsent = await window.Didomi.getCurrentUserStatus();
+    console.log(userConsent);
+    localStorage.setItem('userConsentString', JSON.stringify(userConsent));
 
-    if (id) {
-      params.movieId = id;
-    }
-    Router.navigate(ROUTES.CMP, params, false);
-    return false;
-  }
+    console.log(userNotice);
+    localStorage.setItem('didomiConfig', JSON.stringify(userNotice));
+  });
+
   return true;
 }
 

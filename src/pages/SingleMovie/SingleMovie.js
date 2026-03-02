@@ -14,7 +14,7 @@ import {
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import colors from '../../../reskin/colors.json';
-import { capitalizeFirstLetter } from '../../utils';
+import { capitalizeFirstLetter, checkCMP } from '../../utils';
 import { Metrics } from '@firebolt-js/sdk';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
@@ -580,19 +580,7 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   async _active() {
-    if (!this._props.cmpShown) {
-      await CMPService.initialFetch();
-      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
-      const currentTimeInMS = Math.floor(Date.now() / 1000);
-
-      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(
-          ROUTES.CMP,
-          { movieId: this._props.movieId, url: ROUTES.MOVIE_DETAILS },
-          false
-        );
-      }
-    }
+    checkCMP();
 
     const { movieId } = this._props;
 
@@ -605,7 +593,7 @@ export default class SingleMovie extends Lightning.Component {
 
   _handleBack(e) {
     if (window.Didomi && window.Didomi.notice.isVisible()) {
-      return true;
+      return;
     }
 
     if (Router.isNavigating()) {
@@ -697,7 +685,7 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleLeft() {
           if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
+            return;
           }
 
           this._setState('BackButton');
@@ -705,7 +693,7 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleUp() {
           if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
+            return;
           }
 
           this._setState('BackButton');
@@ -713,7 +701,7 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleDown() {
           if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
+            return;
           }
 
           this._setState('PlaylistWrapper');
@@ -726,7 +714,7 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleUp() {
           if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
+            return;
           }
 
           this._setState('Buttons');
@@ -734,7 +722,7 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleLeft() {
           if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
+            return;
           }
 
           this._setState('BackButton');
@@ -748,7 +736,7 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleDown() {
           if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
+            return;
           }
 
           this._setState('Buttons');
@@ -756,7 +744,7 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleRight() {
           if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
+            return;
           }
 
           this._setState('Buttons');
@@ -770,7 +758,7 @@ export default class SingleMovie extends Lightning.Component {
 
         _handleUp() {
           if (window.Didomi && window.Didomi.notice.isVisible()) {
-            return true;
+            return;
           }
 
           this._setState('Buttons');

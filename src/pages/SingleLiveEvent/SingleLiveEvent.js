@@ -6,6 +6,7 @@ import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { CMPService, t } from '../../Services';
 import { EVENT_NAMES, IMG_PATH, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+import { checkCMP } from '../../utils';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
 
@@ -141,19 +142,7 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   async _active() {
-    if (!this._props.cmpShown) {
-      await CMPService.initialFetch();
-      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
-      const currentTimeInMS = Math.floor(Date.now() / 1000);
-
-      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(
-          ROUTES.CMP,
-          { movieId: this._props.galleryItem.id, url: ROUTES.EVENT_DETAILS },
-          false
-        );
-      }
-    }
+    checkCMP();
 
     const { galleryItem } = this._props;
 

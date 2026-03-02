@@ -2,6 +2,7 @@ import { Lightning, Utils } from '@lightningjs/sdk';
 import BackBtn from '../../components/BackButton/BackBtn';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { IMG_PATH } from '../../constants/globalConstants';
+import { checkCMP } from '../../utils';
 
 export default class Collection extends Lightning.Component {
   _props = {};
@@ -61,6 +62,8 @@ export default class Collection extends Lightning.Component {
   }
 
   _active() {
+    checkCMP();
+
     this._setState('Column');
   }
 

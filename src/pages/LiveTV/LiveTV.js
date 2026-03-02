@@ -298,7 +298,7 @@ export default class LiveTV extends Lightning.Component {
       this._EPGData.setInitialOffset();
     });
 
-    this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
+    this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 1000);
   }
 
   _inactive() {
@@ -335,6 +335,8 @@ export default class LiveTV extends Lightning.Component {
             console.warn(`No channelInfo for index ${index}`);
             return null;
           }
+
+          console.log(EPGService.epgs);
 
           const matchingEpg = EPGService.epgs.find((epgInfo) => {
             return epgInfo.channelId === channelInfo.id;
