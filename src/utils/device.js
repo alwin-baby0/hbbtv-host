@@ -466,7 +466,7 @@ const setUpDeviceInfo = async (deviceType) => {
     case 'ocilion':
       return getOcilionInfo();
     case 'foxxum':
-      return await getFoxxumInfo();
+      return getFoxxumInfo();
     case 'sunrise':
       return getSunriseInfo();
     case 'metrological':
