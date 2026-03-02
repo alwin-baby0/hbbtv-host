@@ -197,25 +197,13 @@ const getNetgemInfo = () => {
 };
 
 const getFoxxumInfo = () => {
-  return new Promise((resolve) => {
-    if (typeof window.onDeviceInfoReady !== 'function') {
-      console.warn('DeviceInfo SDK is not loaded.');
-
-      return resolve({
-        serialNumber: 'unknown',
-        model: 'unknown',
-        brand: 'unknown',
-        os: 'unknown',
-        osVersion: 'unknown',
-        macAddress: 'unknown',
-      });
-    }
-
+  // <script src="https://cache.zeasn.tv/webstatic/homepage_web/deviceinfo/zeasn_deviceInfo_sdk.js" type="text/javascript"></script>
+  let infoDevice = new Promise((resolve) => {
     window.onDeviceInfoReady((DeviceInfo) => {
       console.log('DeviceInfo JSON:', JSON.stringify(DeviceInfo, null, 2));
 
       resolve({
-        serialNumber: DeviceInfo?.Product?.deviceId ?? 'unknown',
+        serialNumber: DeviceInfo?.Product?.deviceID ?? 'unknown',
         model: DeviceInfo?.Product?.platform ?? 'unknown',
         brand: DeviceInfo?.Channel?.brand ?? 'unknown',
         os: DeviceInfo?.Capability?.os ?? 'unknown',
@@ -224,6 +212,11 @@ const getFoxxumInfo = () => {
       });
     });
   });
+  if (!serialNumber) {
+    serialNumber = generateRandomUUID();
+    localStorage.setItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID, serialNumber);
+  }
+  return infoDevice;
 };
 
 const getSunriseInfo = () => {
