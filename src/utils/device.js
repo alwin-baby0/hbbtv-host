@@ -197,44 +197,42 @@ const getNetgemInfo = () => {
 };
 
 const getFoxxumInfo = () => {
-  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID);
-
-  if (!serialNumber) {
-    serialNumber = generateRandomUUID();
-    localStorage.setItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID, serialNumber);
-  }
-
-  const userAgent = navigator.userAgent;
-  const regex = /Model\/([^()]+)/;
-  const match = userAgent.match(regex);
-
-  let brand, model, os, osVersion;
-
-  if (match) {
-    const matchParts = match[1].split(' ');
-
-    const brandDetails = matchParts[0].split('-');
-    brand = brandDetails[0];
-    model = brandDetails[1];
-
-    const osDetails = matchParts[1].split('/');
-    os = osDetails[0];
-    osVersion = osDetails[1];
-  } else {
-    brand = 'Foxxum';
-    model = 'unknown-model';
-    os = 'unknown';
-    osVersion = 'unknown';
-  }
-
-  return {
-    serialNumber: serialNumber,
-    model: model,
-    brand: brand,
-    os: os,
-    osVersion: osVersion,
-    macAddress: 'unknown',
-  };
+  window.onDeviceInfoReady?.(function (DeviceInfo) {
+    console.log('DeviceInfo RAW:', DeviceInfo);
+    console.log('DeviceInfo JSON:', JSON.stringify(DeviceInfo, null, 2));
+    window.__DeviceInfo = DeviceInfo;
+  });
+  // let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID);
+  // if (!serialNumber) {
+  //   serialNumber = generateRandomUUID();
+  //   localStorage.setItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID, serialNumber);
+  // }
+  // const userAgent = navigator.userAgent;
+  // const regex = /Model\/([^()]+)/;
+  // const match = userAgent.match(regex);
+  // let brand, model, os, osVersion;
+  // if (match) {
+  //   const matchParts = match[1].split(' ');
+  //   const brandDetails = matchParts[0].split('-');
+  //   brand = brandDetails[0];
+  //   model = brandDetails[1];
+  //   const osDetails = matchParts[1].split('/');
+  //   os = osDetails[0];
+  //   osVersion = osDetails[1];
+  // } else {
+  //   brand = 'Foxxum';
+  //   model = 'unknown-model';
+  //   os = 'unknown';
+  //   osVersion = 'unknown';
+  // }
+  // return {
+  //   serialNumber: serialNumber,
+  //   model: model,
+  //   brand: brand,
+  //   os: os,
+  //   osVersion: osVersion,
+  //   macAddress: 'unknown',
+  // };
 };
 
 const getSunriseInfo = () => {
