@@ -197,42 +197,33 @@ const getNetgemInfo = () => {
 };
 
 const getFoxxumInfo = () => {
-  window.onDeviceInfoReady?.(function (DeviceInfo) {
-    console.log('DeviceInfo RAW:', DeviceInfo);
-    console.log('DeviceInfo JSON:', JSON.stringify(DeviceInfo, null, 2));
-    window.__DeviceInfo = DeviceInfo;
+  return new Promise((resolve) => {
+    if (typeof window.onDeviceInfoReady !== 'function') {
+      console.warn('DeviceInfo SDK is not loaded.');
+
+      return resolve({
+        serialNumber: 'unknown',
+        model: 'unknown',
+        brand: 'unknown',
+        os: 'unknown',
+        osVersion: 'unknown',
+        macAddress: 'unknown',
+      });
+    }
+
+    window.onDeviceInfoReady((DeviceInfo) => {
+      console.log('DeviceInfo JSON:', JSON.stringify(DeviceInfo, null, 2));
+
+      resolve({
+        serialNumber: DeviceInfo?.Product?.deviceId ?? 'unknown',
+        model: DeviceInfo?.Product?.platform ?? 'unknown',
+        brand: DeviceInfo?.Channel?.brand ?? 'unknown',
+        os: DeviceInfo?.Capability?.os ?? 'unknown',
+        osVersion: DeviceInfo?.Product?.firmwareVersion ?? 'unknown',
+        macAddress: 'unknown',
+      });
+    });
   });
-  // let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID);
-  // if (!serialNumber) {
-  //   serialNumber = generateRandomUUID();
-  //   localStorage.setItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID, serialNumber);
-  // }
-  // const userAgent = navigator.userAgent;
-  // const regex = /Model\/([^()]+)/;
-  // const match = userAgent.match(regex);
-  // let brand, model, os, osVersion;
-  // if (match) {
-  //   const matchParts = match[1].split(' ');
-  //   const brandDetails = matchParts[0].split('-');
-  //   brand = brandDetails[0];
-  //   model = brandDetails[1];
-  //   const osDetails = matchParts[1].split('/');
-  //   os = osDetails[0];
-  //   osVersion = osDetails[1];
-  // } else {
-  //   brand = 'Foxxum';
-  //   model = 'unknown-model';
-  //   os = 'unknown';
-  //   osVersion = 'unknown';
-  // }
-  // return {
-  //   serialNumber: serialNumber,
-  //   model: model,
-  //   brand: brand,
-  //   os: os,
-  //   osVersion: osVersion,
-  //   macAddress: 'unknown',
-  // };
 };
 
 const getSunriseInfo = () => {
@@ -475,7 +466,7 @@ const setUpDeviceInfo = async (deviceType) => {
     case 'ocilion':
       return getOcilionInfo();
     case 'foxxum':
-      return getFoxxumInfo();
+      return await getFoxxumInfo();
     case 'sunrise':
       return getSunriseInfo();
     case 'metrological':
