@@ -250,8 +250,8 @@ class UserService extends FetchingService {
       },
       data: {
         series_id: seriesID,
-        last_episode: episodeNumber,
-        last_season: seasonNumber,
+        episode_id: episodeNumber,
+        season_id: seasonNumber,
         video_id: videoID,
         position: position,
       },
