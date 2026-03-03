@@ -197,46 +197,33 @@ const getNetgemInfo = () => {
 };
 
 const getFoxxumInfo = () => {
-  let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID);
+  // <script src="https://cache.zeasn.tv/webstatic/homepage_web/deviceinfo/zeasn_deviceInfo_sdk.js" type="text/javascript"></script>
+  const infoDevice = new Promise((resolve) => {
+    window.onDeviceInfoReady((DeviceInfo) => {
+      let serialNumber = DeviceInfo?.Product?.deviceID;
 
-  if (!serialNumber) {
-    serialNumber = generateRandomUUID();
-    localStorage.setItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID, serialNumber);
-  }
+      if (!serialNumber) {
+        serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID);
 
-  const userAgent = navigator.userAgent;
-  const regex = /Model\/([^()]+)/;
-  const match = userAgent.match(regex);
+        if (!serialNumber) {
+          serialNumber = generateRandomUUID();
+          localStorage.setItem(LOCAL_STORAGE_KEYS.FOXXUM_DEVICE_ID, serialNumber);
+        }
+      }
 
-  let brand, model, os, osVersion;
+      resolve({
+        serialNumber,
+        model: DeviceInfo?.Product?.platform ?? 'unknown',
+        brand: DeviceInfo?.Channel?.brand ?? 'unknown',
+        os: DeviceInfo?.Capability?.os ?? 'unknown',
+        osVersion: DeviceInfo?.Product?.firmwareVersion ?? 'unknown',
+        macAddress: 'unknown',
+      });
+    });
+  });
 
-  if (match) {
-    const matchParts = match[1].split(' ');
-
-    const brandDetails = matchParts[0].split('-');
-    brand = brandDetails[0];
-    model = brandDetails[1];
-
-    const osDetails = matchParts[1].split('/');
-    os = osDetails[0];
-    osVersion = osDetails[1];
-  } else {
-    brand = 'Foxxum';
-    model = 'unknown-model';
-    os = 'unknown';
-    osVersion = 'unknown';
-  }
-
-  return {
-    serialNumber: serialNumber,
-    model: model,
-    brand: brand,
-    os: os,
-    osVersion: osVersion,
-    macAddress: 'unknown',
-  };
+  return infoDevice;
 };
-
 const getSunriseInfo = () => {
   let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.SUNRISE_DEVICE_ID);
 
