@@ -3,6 +3,7 @@ import colors from '../../../../reskin/colors.json';
 import { createApiCtx } from '../../../Services/utils';
 import axios from 'axios';
 import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
+import { didomiVisible } from '../../../App';
 
 export default class LanguageButton extends Lightning.Component {
   _props = {
@@ -65,7 +66,7 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   async _handleEnter() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 

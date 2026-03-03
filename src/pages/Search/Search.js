@@ -16,6 +16,7 @@ import {
   IMG_PATH,
 } from '../../constants/globalConstants';
 import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
+import { didomiVisible } from '../../App';
 
 const search = {
   items: [],
@@ -168,7 +169,7 @@ export default class Search extends Lightning.Component {
   }
 
   _handleKey(key) {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -366,7 +367,7 @@ export default class Search extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -388,7 +389,7 @@ export default class Search extends Lightning.Component {
         _extended = true;
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -398,7 +399,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -492,7 +493,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -506,7 +507,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -518,7 +519,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -532,7 +533,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -540,7 +541,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

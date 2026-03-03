@@ -1,6 +1,7 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { getClosestElementIndex } from '../../utils/focus';
 import { CARD_SIZES, CARD_TYPES, ROUTES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
@@ -142,7 +143,7 @@ export default class VerticalContainer extends Lightning.Component {
   }, 50);
 
   _handleScroll(event) {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -165,7 +166,7 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleDown() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -224,7 +225,7 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleUp() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 

@@ -12,6 +12,7 @@ import {
 } from '../../constants/globalConstants';
 import { parseVodUserContentData } from '../../Models';
 import LogoutButton from '../../components/Buttons/LogoutButton/LogoutButton';
+import { didomiVisible } from '../../App';
 
 const states = ['LogoutButton', 'UserRecentlyWatched', 'UserFavorites'];
 
@@ -331,7 +332,7 @@ export default class MyAccount extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -355,7 +356,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -378,7 +379,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -388,7 +389,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -406,7 +407,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -419,7 +420,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

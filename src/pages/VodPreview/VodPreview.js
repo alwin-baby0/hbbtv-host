@@ -13,6 +13,7 @@ import {
 } from '../../constants/globalConstants';
 import { railItemConstructor } from '../utils/railItems';
 import { checkCMP } from '../../utils/index';
+import { didomiVisible } from '../../App';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -156,7 +157,7 @@ export default class VodPreview extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -192,7 +193,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -202,7 +203,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -270,7 +271,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -278,7 +279,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -350,7 +351,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

@@ -7,6 +7,7 @@ import { eventTrackPayload } from '../../utils/device';
 import { CMPService, t } from '../../Services';
 import { EVENT_NAMES, IMG_PATH, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
 import { checkCMP } from '../../utils';
+import { didomiVisible } from '../../App';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
 
@@ -170,7 +171,7 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   _handleBack(e) {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -211,7 +212,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -219,7 +220,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -240,7 +241,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -248,7 +249,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -307,7 +308,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

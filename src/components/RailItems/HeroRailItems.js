@@ -4,6 +4,7 @@ import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import { didomiVisible } from '../../App';
 
 export default class HeroRailItem extends FocusableItem {
   _props = {
@@ -91,9 +92,7 @@ export default class HeroRailItem extends FocusableItem {
   }
 
   _handleEnter() {
-    console.log('here');
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
-      console.log('here2');
+    if (window.Didomi && didomiVisible) {
       return true;
     }
     const { callback } = this._props;

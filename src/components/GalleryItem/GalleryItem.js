@@ -10,6 +10,7 @@ import {
   VIDEO_TYPES,
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -858,7 +859,7 @@ export default class GalleryItem extends Lightning.Component {
           return this._GalleryButton;
         }
         _handleRight() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -877,7 +878,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -887,7 +888,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -895,7 +896,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -907,14 +908,14 @@ export default class GalleryItem extends Lightning.Component {
           return this._FavoriteButton;
         }
         _handleRight() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
           return false;
         }
         _handleLeft() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

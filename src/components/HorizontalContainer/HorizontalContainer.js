@@ -1,6 +1,7 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
 import { CARD_SIZES, CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
@@ -213,7 +214,7 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleRight() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -235,7 +236,7 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 

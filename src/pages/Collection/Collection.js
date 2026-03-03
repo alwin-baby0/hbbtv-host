@@ -3,6 +3,7 @@ import BackBtn from '../../components/BackButton/BackBtn';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { IMG_PATH } from '../../constants/globalConstants';
 import { checkCMP } from '../../utils';
+import { didomiVisible } from '../../App';
 
 export default class Collection extends Lightning.Component {
   _props = {};
@@ -87,7 +88,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -95,7 +96,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -109,7 +110,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -117,7 +118,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

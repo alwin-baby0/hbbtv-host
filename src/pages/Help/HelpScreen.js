@@ -5,6 +5,7 @@ import LoadingScreenComponent from '../../components/LoadingScreenComponent/Load
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
 import { t } from '../../Services';
+import { didomiVisible } from '../../App';
 
 const states = ['HelpItems', 'ScrollWrapper'];
 
@@ -117,7 +118,7 @@ export default class HelpScreen extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -167,7 +168,7 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -177,7 +178,7 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -190,7 +191,7 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

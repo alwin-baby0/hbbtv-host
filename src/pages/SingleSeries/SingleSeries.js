@@ -17,6 +17,7 @@ import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import { constructRails } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
 import { checkCMP } from '../../utils';
+import { didomiVisible } from '../../App';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
 
@@ -308,7 +309,7 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   _handleBack(e) {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return;
     }
 
@@ -369,7 +370,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return;
           }
 
@@ -377,7 +378,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return;
           }
 
@@ -390,7 +391,7 @@ export default class SingleSeries extends Lightning.Component {
           return this._BackButton;
         }
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return;
           }
 
@@ -403,14 +404,14 @@ export default class SingleSeries extends Lightning.Component {
           return this._SeasonsBar;
         }
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return;
           }
 
           this._setState('HeroSection');
         }
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return;
           }
 
@@ -471,7 +472,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return;
           }
 

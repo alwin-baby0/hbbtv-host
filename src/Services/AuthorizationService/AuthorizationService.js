@@ -142,7 +142,6 @@ class AuthorizationService extends FetchingService {
     }
 
     const data = (await this.getDeviceCode()).data;
-    console.log(data);
 
     localStorage.setItem(LOCAL_STORAGE_KEYS.AUTH_DEVICE_CODE, data.device_code);
     const expiresIn = data.expires_in * 1000;

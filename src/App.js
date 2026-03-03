@@ -9,8 +9,12 @@ import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 
 let wasOffline = false; // Variable to track previous internet status
+export let didomiVisible = false;
 
 export default class App extends Router.App {
+  enteredApp = 0;
+  settingsDidomi = false;
+
   static _template() {
     return {
       ...super._template(),
@@ -86,10 +90,6 @@ export default class App extends Router.App {
   }
 
   async _init() {
-    // await DidomiService.init();
-    // const userNotice = window.Didomi.getConfig();
-    // if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
-
     const analyticsAllowed = DidomiService.hasConsentForPurpose('analytics');
 
     if (analyticsAllowed) {
@@ -99,16 +99,34 @@ export default class App extends Router.App {
     DidomiService.onConsentChanged(() => {
       this.handleConsentUpdate();
     });
+  }
 
-    // window.didomiOnReady.push(async () => {
-    //   const userConsent = await window.Didomi.getCurrentUserStatus();
-    //   console.log(userConsent);
-    //   localStorage.setItem('userConsentString', JSON.stringify(userConsent));
+  _captureEnter() {
+    if (this.settingsDidomi) {
+      return false;
+    }
 
-    //   const didomiConfig = window.Didomi.getConfig();
-    //   console.log(didomiConfig);
-    //   localStorage.setItem('didomiConfig', JSON.stringify(didomiConfig));
-    // });
+    console.log(didomiVisible, this.enteredApp);
+    if (this.enteredApp === 1) {
+      didomiVisible = false;
+      this.enteredApp = 0;
+      return false;
+    }
+
+    if (didomiVisible && this.enteredApp === 0) {
+      this.enteredApp = 1;
+      return true;
+    }
+
+    return false;
+  }
+
+  $didomiVisible(didomiVisibility) {
+    didomiVisible = didomiVisibility;
+  }
+
+  $settingsDidomi(value) {
+    this.settingsDidomi = value;
   }
 
   startAnalytics() {

@@ -13,6 +13,7 @@ import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
 import { checkCMP } from '../../utils/index';
+import { didomiVisible } from '../../App';
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -310,7 +311,7 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -335,8 +336,6 @@ export default class LiveTV extends Lightning.Component {
             console.warn(`No channelInfo for index ${index}`);
             return null;
           }
-
-          console.log(EPGService.epgs);
 
           const matchingEpg = EPGService.epgs.find((epgInfo) => {
             return epgInfo.channelId === channelInfo.id;
@@ -497,7 +496,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -506,7 +505,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -533,7 +532,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -543,7 +542,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -558,7 +557,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

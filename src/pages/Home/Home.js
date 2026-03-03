@@ -5,6 +5,7 @@ import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
 import { ROUTES, RAIL_TYPES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -96,7 +97,7 @@ export default class Home extends Lightning.Component {
   }
 
   _handleBack(e) {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
@@ -150,7 +151,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleBack(e) {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -162,7 +163,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -172,7 +173,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -239,7 +240,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 
@@ -247,7 +248,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleBack(e) {
-          if (window.Didomi && window.Didomi.notice.isVisible()) {
+          if (window.Didomi && didomiVisible) {
             return true;
           }
 

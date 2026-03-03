@@ -1,5 +1,6 @@
 import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
+import { didomiVisible } from '../../../App';
 
 export default class QueryButton extends Lightning.Component {
   static _template() {
@@ -51,7 +52,7 @@ export default class QueryButton extends Lightning.Component {
   }
 
   _handleEnter() {
-    if (window.Didomi && window.Didomi.notice.isVisible()) {
+    if (window.Didomi && didomiVisible) {
       return true;
     }
 
