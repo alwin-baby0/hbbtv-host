@@ -1,6 +1,5 @@
-import { Router } from '@lightningjs/sdk';
-import { CMPService, AuthorizationService, DidomiService } from '../Services';
-import { ROUTES, LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
+import { AuthorizationService, DidomiService } from '../Services';
+import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
 import { didomiVisible } from '../App';
 
 export function clamp(number, min, max) {
