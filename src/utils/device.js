@@ -200,8 +200,6 @@ const getFoxxumInfo = () => {
   // <script src="https://cache.zeasn.tv/webstatic/homepage_web/deviceinfo/zeasn_deviceInfo_sdk.js" type="text/javascript"></script>
   const infoDevice = new Promise((resolve) => {
     window.onDeviceInfoReady((DeviceInfo) => {
-      console.log('DeviceInfo JSON:', JSON.stringify(DeviceInfo, null, 2));
-
       let serialNumber = DeviceInfo?.Product?.deviceID;
 
       if (!serialNumber) {
