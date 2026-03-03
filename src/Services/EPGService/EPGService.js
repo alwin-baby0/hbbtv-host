@@ -31,7 +31,7 @@ class EPGService extends FetchingService {
 
   async initialFetch(channelId) {
     // Reset state variables to ensure a fresh start
-    this.channelsItems = null;
+    // this.channelsItems = null;
     this.filteredChannelsItems = null; // Reset filtered channels
     this.epgs = [];
     this.pointer = 1;
@@ -80,6 +80,7 @@ class EPGService extends FetchingService {
             ...result,
             channelIcon: this.channelsItems[index].icon,
             channelTitle: this.channelsItems[index].title,
+            src: this.channelsItems[index].url,
           };
         })
       );
@@ -96,6 +97,7 @@ class EPGService extends FetchingService {
             ...result,
             channelIcon: this.channelsItems[index].icon,
             channelTitle: this.channelsItems[index].title,
+            src: this.channelsItems[index].url,
           };
         })
       );
@@ -233,7 +235,7 @@ class EPGService extends FetchingService {
     return data.entry.items.map((channel) => ({
       id: channel.id,
       title: channel.title,
-      icon: channel.images[0]?.applicaster_logo,
+      icon: channel.images[0]?.logo,
       url: channel.files[0].url,
     }));
   }

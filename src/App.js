@@ -106,7 +106,6 @@ export default class App extends Router.App {
       return false;
     }
 
-    console.log(didomiVisible, this.enteredApp);
     if (this.enteredApp === 1) {
       didomiVisible = false;
       this.enteredApp = 0;
