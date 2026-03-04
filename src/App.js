@@ -11,6 +11,10 @@ import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 let wasOffline = false; // Variable to track previous internet status
 export let didomiVisible = false;
 
+export const setDidomiVisible = (value) => {
+  didomiVisible = value;
+};
+
 export default class App extends Router.App {
   enteredApp = 0;
   settingsDidomi = false;
@@ -102,6 +106,7 @@ export default class App extends Router.App {
   }
 
   _captureEnter() {
+    console.log('here');
     if (this.settingsDidomi) {
       return false;
     }

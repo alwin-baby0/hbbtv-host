@@ -1,6 +1,7 @@
 import { AuthorizationService, DidomiService } from '../Services';
 import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
-import { didomiVisible } from '../App';
+import { setDidomiVisible } from '../App';
+import { Router } from '@lightningjs/sdk';
 
 export function clamp(number, min, max) {
   return Math.max(min, Math.min(number, max));
@@ -17,9 +18,13 @@ export async function checkCMP() {
   await DidomiService.init();
   const userNotice = window.Didomi.getConfig();
 
+  if (Router.getHistory().length) {
+    return;
+  }
+
   if (userNotice.notice.daysBeforeShowingAgain <= 0) {
     await window.Didomi.notice.show();
-    didomiVisible = true;
+    setDidomiVisible(true);
   }
 
   window.didomiOnReady.push(async () => {
