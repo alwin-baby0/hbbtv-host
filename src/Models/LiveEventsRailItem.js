@@ -26,7 +26,7 @@ class LiveEventsRailItem extends SimpleRailItem {
   }
 
   getLandscapePoster() {
-    return this.landscapePosters[0];
+    return this.landscapePosters[2];
   }
 }
 

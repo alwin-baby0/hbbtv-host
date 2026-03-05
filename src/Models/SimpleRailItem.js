@@ -138,14 +138,14 @@ class SimpleRailItem {
   getLandscapePoster(size) {
     const poster = this.landscapePosters.find((poster) => poster.key.includes(size));
     return poster
-      ? this.landscapePosters[0]
+      ? this.landscapePosters[2]
       : { key: 'applicaster_logo', src: this.channelImages.applicaster_logo };
   }
 
   getPortraitPoster(size) {
     const poster = this.portraitPosters.find((poster) => poster.key.includes(size));
     return poster
-      ? this.portraitPosters[0]
+      ? this.portraitPosters[2]
       : { key: 'applicaster_logo', src: this.channelImages.applicaster_logo };
   }
 }
