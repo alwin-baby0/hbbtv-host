@@ -97,12 +97,12 @@ class LiveChannelsRailItem {
 
   getLandscapePoster(size) {
     const poster = this.landscapePosters.find((poster) => poster.key.includes(size));
-    return poster ?? this.landscapePosters[0];
+    return poster ?? this.landscapePosters[2];
   }
 
   getPortraitPoster(size) {
     const poster = this.portraitPosters.find((poster) => poster.key.includes(size));
-    return poster ?? this.portraitPosters[0];
+    return poster ?? this.portraitPosters[2];
   }
 }
 
