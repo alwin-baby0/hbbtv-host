@@ -67,5 +67,6 @@ export { translationService as TranslationService };
  * @param { keyof typeof defTr } key
  */
 export function t(key) {
-  return translationsVar && translationsVar[key] ? translationsVar[key] : defTr[key];
+  const translations = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS)).translation;
+  return translations && translations[key] ? translations[key] : defTr[key];
 }

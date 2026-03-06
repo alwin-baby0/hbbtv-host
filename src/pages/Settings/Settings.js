@@ -214,7 +214,7 @@ export default class Settings extends Lightning.Component {
             props: {
               width: 300,
               height: 95,
-              buttonLabel: 'Customize Preferences',
+              buttonLabel: t(TRANSLATIONS.COOKIE_PREFERENCES),
               callback: async () => {
                 await window.Didomi.notice.show();
 

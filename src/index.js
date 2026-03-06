@@ -116,7 +116,7 @@ sequence([
         Object.entries(getDeviceInfo()).map(([key, value]) => `| ${key}: ${value} |`)
       );
 
-      TranslationService.setTranslations();
+      // TranslationService.setTranslations();
       const result = deviceType === 'metrological' ? Lifecycle.ready() : {};
       console.log(result);
       eventTrackPayload(EVENT_NAMES.LAUNCH_APP);
