@@ -1,6 +1,5 @@
 import { TestRenderer } from '@lightningjs/ui-components-test-utils';
 import Home from 'src/pages/Home/Home';
-import homeProvider from 'src/pages/Home/provider/home';
 import { GalleryItem } from 'src/Models/GalleryItem';
 
 describe('Home Page', () => {

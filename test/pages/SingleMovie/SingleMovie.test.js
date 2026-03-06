@@ -35,6 +35,7 @@ jest.mock('src/Services/CMPService/CMPService', () => ({
 jest.mock('src/utils/index', () => {
   return {
     checkCMP: jest.fn(() => {}),
+    t: jest.fn((key) => key),
   };
 });
 
