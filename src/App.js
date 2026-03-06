@@ -107,7 +107,6 @@ export default class App extends Router.App {
   }
 
   _captureEnter() {
-    console.log('here');
     if (this.settingsDidomi) {
       return false;
     }

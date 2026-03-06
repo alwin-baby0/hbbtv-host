@@ -14,6 +14,7 @@ import {
 import { railItemConstructor } from '../utils/railItems';
 import { checkCMP } from '../../utils/index';
 import { didomiVisible } from '../../App';
+import { VodService } from '../../Services';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -369,7 +370,8 @@ export default class VodPreview extends Lightning.Component {
           const { fetchMoreStripes } = this._props;
 
           this.correctContainerSize();
-          if (fetchMoreStripes) {
+
+          if (fetchMoreStripes && VodService.stripesFetched - 1 === index) {
             const newStripes = await fetchMoreStripes(index);
             if (newStripes) {
               const rails = constructRails(newStripes, ROUTES.VOD).reduce((acc, rail) => {

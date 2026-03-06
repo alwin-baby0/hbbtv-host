@@ -15,6 +15,7 @@ import {
   IMAGE_SIZES,
   LOCAL_STORAGE_KEYS,
   TRANSLATIONS,
+  RAIL_TYPES,
 } from '../../constants/globalConstants';
 import { t } from '../../utils';
 
@@ -110,42 +111,39 @@ class VodService extends FetchingService {
     }
 
     if (!currentState.vodStripes.length) {
-      while (currentState.stripesFetched < 3 && currentState.pointer < 25) {
-        const promises = [];
-        for (let i = 0; i <= 2 - currentState.stripesFetched; i++) {
-          promises.push(
-            this.#getVods({
-              row: currentState.pointer,
-              page: currentState.page,
-              limit: VODS_PER_ROW,
-            })
-          );
-          currentState.pointer++;
-        }
+      const promises = [];
+      for (let i = 0; i <= 2 - currentState.stripesFetched; i++) {
+        promises.push(
+          this.#getVods({
+            row: currentState.pointer,
+            page: currentState.page,
+            limit: VODS_PER_ROW,
+          })
+        );
+        currentState.pointer++;
+      }
 
-        const newStripes = await Promise.allSettled(promises);
+      const newStripes = await Promise.allSettled(promises);
 
-        if (newStripes) {
-          newStripes.forEach(({ value: stripeData }, index) => {
-            if (stripeData) {
-              currentState.stripesFetched++;
-              stripeData.hasMore = stripeData.items.length === VODS_PER_ROW;
+      if (newStripes) {
+        newStripes.forEach(({ value: stripeData }, index) => {
+          if (stripeData) {
+            if (stripeData.railType !== RAIL_TYPES.BANNER) currentState.stripesFetched++;
+            stripeData.hasMore = stripeData.items.length === VODS_PER_ROW;
 
-              stripeData.stripeId = currentState.pointer - newStripes.length + index;
-              stripeData.page = currentState.page;
-              currentState.vodStripes.push(stripeData);
-            }
-          });
-
-          let eventData = {};
-          if (this.#vodType === VOD_PREVIEW_TYPES.SPORTS) {
-            eventData = await this.#getSportsEvents();
-            currentState.sportEvents = [eventData.items];
+            stripeData.stripeId = currentState.pointer - newStripes.length + index;
+            stripeData.page = currentState.page;
+            currentState.vodStripes.push(stripeData);
           }
+        });
 
-          eventData?.items?.length && (currentState.vodStripes = [eventData]);
-          currentState.vodStripes.push(...newStripes);
+        let eventData = {};
+        if (this.#vodType === VOD_PREVIEW_TYPES.SPORTS) {
+          eventData = await this.#getSportsEvents();
+          currentState.sportEvents = [eventData.items];
         }
+
+        eventData?.items?.length && (currentState.vodStripes = [eventData]);
       }
     }
 
@@ -219,7 +217,7 @@ class VodService extends FetchingService {
       currentState.pointer++;
 
       if (stripeData?.items.length > 0) {
-        currentState.stripesFetched++;
+        if (stripeData.railType !== RAIL_TYPES.BANNER) currentState.stripesFetched++;
         counter++;
         // each stripe has unique id
         stripeData.stripeId = currentState.pointer;
@@ -266,6 +264,10 @@ class VodService extends FetchingService {
    */
   get contentStripes() {
     return this.#getCurrentState().contentStripe;
+  }
+
+  get stripesFetched() {
+    return this.#getCurrentState().stripesFetched;
   }
 
   get sportEvents() {
