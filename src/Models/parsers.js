@@ -1,8 +1,9 @@
 import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
-import { t, VODS_PER_ROW } from '../Services';
+import { VODS_PER_ROW } from '../Services';
 import { RAIL_TYPES, TRANSLATIONS, CARD_TYPES } from '../constants/globalConstants';
 import { Banner } from './Banner';
 import { ViewMoreRailItem } from './ViewMore';
+import { t } from '../utils';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {

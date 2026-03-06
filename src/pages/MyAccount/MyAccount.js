@@ -1,5 +1,5 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import { AuthorizationService, UserService, VODS_PER_ROW, t } from '../../Services';
+import { AuthorizationService, UserService, VODS_PER_ROW } from '../../Services';
 import qrcode from 'qrcode';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
@@ -13,6 +13,7 @@ import {
 import { parseVodUserContentData } from '../../Models';
 import LogoutButton from '../../components/Buttons/LogoutButton/LogoutButton';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['LogoutButton', 'UserRecentlyWatched', 'UserFavorites'];
 

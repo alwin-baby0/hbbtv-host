@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import { CMPService, DetailService, t, UserService } from '../../Services';
+import { DetailService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
@@ -18,6 +18,7 @@ import { constructRails } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
 import { checkCMP } from '../../utils';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
 

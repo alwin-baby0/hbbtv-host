@@ -6,7 +6,7 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { t, UserService } from '../../Services';
+import { UserService } from '../../Services';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
   convertCueTimeToSeconds,
@@ -25,6 +25,7 @@ import {
 } from '../../constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
 

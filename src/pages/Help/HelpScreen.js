@@ -4,7 +4,7 @@ import colors from '../../../reskin/colors.json';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
-import { t } from '../../Services';
+import { t } from '../../utils';
 import { didomiVisible } from '../../App';
 
 const states = ['HelpItems', 'ScrollWrapper'];

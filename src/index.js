@@ -31,7 +31,6 @@ import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
 import {
   SettingsService,
-  TranslationService,
   LoggingService,
   AuthorizationService,
   DidomiService,
@@ -116,7 +115,6 @@ sequence([
         Object.entries(getDeviceInfo()).map(([key, value]) => `| ${key}: ${value} |`)
       );
 
-      // TranslationService.setTranslations();
       const result = deviceType === 'metrological' ? Lifecycle.ready() : {};
       console.log(result);
       eventTrackPayload(EVENT_NAMES.LAUNCH_APP);

@@ -3,7 +3,7 @@ import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch'
 import InputField from '../../components/Input/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
-import { HomePageService, SearchService, t } from '../../Services';
+import { HomePageService, SearchService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 import {
@@ -17,6 +17,7 @@ import {
 } from '../../constants/globalConstants';
 import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const search = {
   items: [],

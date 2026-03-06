@@ -4,10 +4,10 @@ import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
-import { CMPService, t } from '../../Services';
 import { EVENT_NAMES, IMG_PATH, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
 import { checkCMP } from '../../utils';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
 

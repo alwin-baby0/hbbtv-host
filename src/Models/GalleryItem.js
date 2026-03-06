@@ -1,6 +1,6 @@
 import { Metrics } from '@firebolt-js/sdk';
 import { LOG_LEVEL, TRANSLATIONS } from '../constants/globalConstants';
-import { t } from '../Services';
+import { t } from '../utils';
 import { getDeviceInfo, getDeviceType } from '../utils/device';
 import { LoggingService } from '../Services/index.js';
 

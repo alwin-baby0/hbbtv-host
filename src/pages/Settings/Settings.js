@@ -3,10 +3,10 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
 // import { CMPService } from '../../Services';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
-import { t } from '../../Services';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import Button from '../../components/Button/Button';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 export default class Settings extends Lightning.Component {
   static _template() {

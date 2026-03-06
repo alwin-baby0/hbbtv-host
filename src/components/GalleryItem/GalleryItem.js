@@ -1,7 +1,7 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import Button from '../Button/Button';
-import { DetailService, t } from '../../Services';
+import { DetailService } from '../../Services';
 import { capitalizeFirstLetter } from '../../utils';
 import {
   IMG_PATH,
@@ -11,6 +11,8 @@ import {
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
+
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,

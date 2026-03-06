@@ -6,8 +6,9 @@ import {
   TRANSLATIONS,
 } from '../../../constants/globalConstants';
 import { parseVodUserContentDataCollectionPage } from '../../../Models';
-import { CollectionService, t, UserService, SearchService } from '../../../Services';
+import { CollectionService, UserService, SearchService } from '../../../Services';
 import { constructRails } from '../../utils';
+import { t } from '../../../utils';
 
 export default async function (page, { collectionId, category }) {
   const event = new CustomEvent('verticalIndexReset');

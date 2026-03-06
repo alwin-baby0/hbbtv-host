@@ -1,6 +1,6 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import { Input } from '@lightningjs/ui-components';
-import { t } from '../../Services';
+import { t } from '../../utils';
 import { TRANSLATIONS } from '../../constants/globalConstants';
 
 export default class InputField extends Lightning.Component {

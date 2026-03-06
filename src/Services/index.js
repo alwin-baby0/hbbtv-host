@@ -4,7 +4,6 @@ export * from './VODService';
 export * from './EPGService';
 export * from './CollectionService';
 export * from './DetailService';
-export * from './TranslationService';
 export * from './SettingsService';
 export * from './SearchService';
 export * from './AuthorizationService';

@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils, Colors } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
-import { DetailService, t, UserService } from '../../Services';
+import { DetailService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
@@ -17,6 +17,7 @@ import colors from '../../../reskin/colors.json';
 import { capitalizeFirstLetter, checkCMP } from '../../utils';
 import { Metrics } from '@firebolt-js/sdk';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
 

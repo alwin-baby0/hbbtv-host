@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
-import { EPGService, t } from '../../Services';
+import { EPGService } from '../../Services';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../utils';
@@ -14,6 +14,8 @@ import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
 import { checkCMP } from '../../utils/index';
 import { didomiVisible } from '../../App';
+import { t } from '../../utils';
+
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,

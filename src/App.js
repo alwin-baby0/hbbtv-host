@@ -4,9 +4,10 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { DetailService, t, DidomiService } from './Services';
+import { DetailService, DidomiService } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
+import { t } from './utils';
 
 let wasOffline = false; // Variable to track previous internet status
 export let didomiVisible = false;
