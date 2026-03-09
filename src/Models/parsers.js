@@ -135,6 +135,10 @@ export const parseSeasonTabs = ({ data }, vodType) => {
 
 // Sports
 export const parseSportsPageData = ({ data }) => {
+  if (data.entry && data.entry.items && data.entry.items[0].type === RAIL_TYPES.EVENT) {
+    return parseSportsEventsData({ data });
+  }
+
   const railItems =
     data.entry &&
     (data.entry.items
@@ -174,11 +178,9 @@ export const parseSportsEventsData = ({ data }) => {
   const railItems = data.entry?.items?.map((item) => new LiveEventsRailItem(item));
   if (!railItems || railItems?.length === 0) return;
 
-  const title = t(TRANSLATIONS.SPORTS_EVENTS);
-
   return {
     railType: RAIL_TYPES.SPORT_LIVE,
-    railTitle: title,
+    railTitle: data.entry.name,
     cardType: CARD_TYPES.SPORTS,
     items: railItems,
     h: 400,

@@ -136,14 +136,6 @@ class VodService extends FetchingService {
             currentState.vodStripes.push(stripeData);
           }
         });
-
-        let eventData = {};
-        if (this.#vodType === VOD_PREVIEW_TYPES.SPORTS) {
-          eventData = await this.#getSportsEvents();
-          currentState.sportEvents = [eventData.items];
-        }
-
-        eventData?.items?.length && (currentState.vodStripes = [eventData]);
       }
     }
 
