@@ -80,14 +80,15 @@ sequence([
     const userNotice = window.Didomi.getConfig();
     if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
 
-    window.didomiOnReady.push(async () => {
-      const userConsent = await window.Didomi.getCurrentUserStatus();
-      console.log(userConsent);
-      localStorage.setItem('userConsentString', JSON.stringify(userConsent));
+    window.didomiOnReady &&
+      window.didomiOnReady.push(async () => {
+        const userConsent = await window.Didomi.getCurrentUserStatus();
+        console.log(userConsent);
+        localStorage.setItem('userConsentString', JSON.stringify(userConsent));
 
-      console.log(userNotice);
-      localStorage.setItem('didomiConfig', JSON.stringify(userNotice));
-    });
+        console.log(userNotice);
+        localStorage.setItem('didomiConfig', JSON.stringify(userNotice));
+      });
   },
   () => FetchingService.init(),
   async () => {

@@ -37,7 +37,7 @@ export function createApiCtx() {
       deviceModel: deviceInfo.model || 'no-model-defined',
       deviceMake: deviceInfo.brand || 'no-make-defined',
       tcf: {
-        gdprApplies: window.didomiState.didomiGDPRApplies ? true : false,
+        gdprApplies: window.didomiState && window.didomiState.didomiGDPRApplies ? true : false,
         tcfString: userConsent.consent_string,
         cmpSdkId: didomiConfig.id,
         cmpSdkVersion: didomiConfig.version,

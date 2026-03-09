@@ -29,12 +29,13 @@ export async function checkCMP() {
     setDidomiVisible(true);
   }
 
-  window.didomiOnReady.push(async () => {
-    const userConsent = await window.Didomi.getCurrentUserStatus();
-    localStorage.setItem('userConsentString', JSON.stringify(userConsent));
+  window.didomiOnReady &&
+    window.didomiOnReady.push(async () => {
+      const userConsent = await window.Didomi.getCurrentUserStatus();
+      localStorage.setItem('userConsentString', JSON.stringify(userConsent));
 
-    localStorage.setItem('didomiConfig', JSON.stringify(userNotice));
-  });
+      localStorage.setItem('didomiConfig', JSON.stringify(userNotice));
+    });
 
   return true;
 }
