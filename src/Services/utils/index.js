@@ -38,9 +38,9 @@ export function createApiCtx() {
       deviceMake: deviceInfo.brand || 'no-make-defined',
       tcf: {
         gdprApplies: window.didomiState && window.didomiState.didomiGDPRApplies ? true : false,
-        tcfString: userConsent.consent_string,
-        cmpSdkId: didomiConfig.id,
-        cmpSdkVersion: didomiConfig.version,
+        tcfString: userConsent && userConsent.consent_string ? userConsent.consent_string : null,
+        cmpSdkId: didomiConfig && didomiConfig.id ? didomiConfig.id : null,
+        cmpSdkVersion: didomiConfig && didomiConfig.version ? didomiConfig.version : null,
       },
     })
   );
