@@ -68,7 +68,7 @@ export default class PageItem extends Lightning.Component {
       },
     });
 
-    this.fireAncestors('$changeDescription', 1);
+    this.fireAncestors('$changeDescription', 0);
   }
 
   _active() {

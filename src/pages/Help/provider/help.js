@@ -11,7 +11,6 @@ function splitTextIntoChunks(text, chunkSize) {
 
 export default async function (page) {
   const { data } = await SettingsService.getPages();
-  data.entry[2].title === 'Cookie Policy' && data.entry.splice(2, 1);
 
   const texts = (
     await Promise.all(data.entry.map((page) => SettingsService.getSinglePage(page.id)))

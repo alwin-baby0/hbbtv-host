@@ -17,8 +17,14 @@ const bundleIndentifierMap = (deviceType) => {
 };
 
 export function createApiCtx() {
-  const selectedLanguage =
-    navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
+  let selectedLanguage = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
+
+  if (!selectedLanguage) {
+    selectedLanguage =
+      navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, selectedLanguage);
+  }
+
   const deviceInfo = getDeviceInfo();
   const userConsent = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_CONSENT));
   const didomiConfig = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG));

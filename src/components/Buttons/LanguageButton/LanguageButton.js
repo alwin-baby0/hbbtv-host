@@ -71,8 +71,6 @@ export default class LanguageButton extends Lightning.Component {
     }
 
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageCode);
-    const translations = await this.#getLanguageTranslations(this._props.languageCode);
-    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
     Router.navigate(ROUTES.HOME);
     window.location.reload();
   }
