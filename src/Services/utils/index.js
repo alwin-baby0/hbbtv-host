@@ -20,8 +20,8 @@ export function createApiCtx() {
   const selectedLanguage =
     navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
   const deviceInfo = getDeviceInfo();
-  const userConsent = JSON.parse(localStorage.getItem('userConsentString'));
-  const didomiConfig = JSON.parse(localStorage.getItem('didomiConfig'));
+  const userConsent = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_CONSENT));
+  const didomiConfig = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG));
 
   return btoa(
     JSON.stringify({

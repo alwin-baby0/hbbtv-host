@@ -84,10 +84,10 @@ sequence([
       window.didomiOnReady.push(async () => {
         const userConsent = await window.Didomi.getCurrentUserStatus();
         console.log(userConsent);
-        localStorage.setItem('userConsentString', JSON.stringify(userConsent));
+        localStorage.setItem(LOCAL_STORAGE_KEYS.USER_CONSENT, JSON.stringify(userConsent));
 
         console.log(userNotice);
-        localStorage.setItem('didomiConfig', JSON.stringify(userNotice));
+        localStorage.setItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG, JSON.stringify(userNotice));
       });
   },
   () => FetchingService.init(),
