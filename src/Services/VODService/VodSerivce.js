@@ -189,14 +189,24 @@ class VodService extends FetchingService {
 
     let counter = 0;
     const newStripes = [];
+    const requests = [];
 
     while (counter < 2 && currentState.pointer < 25) {
-      const stripeData = await this.#getVods({
-        row: currentState.pointer,
-        page: currentState.page,
-        limit: VODS_PER_ROW,
-      });
+      requests.push(
+        this.#getVods({
+          row: currentState.pointer,
+          page: currentState.page,
+          limit: VODS_PER_ROW,
+        })
+      );
 
+      currentState.pointer++;
+      counter++;
+    }
+
+    const results = await Promise.all(requests);
+
+    for (const stripeData of results) {
       if (!stripeData) {
         return;
       }
@@ -204,6 +214,7 @@ class VodService extends FetchingService {
       if (stripeData.error) {
         currentState.page++;
         currentState.pointer = 1;
+        return;
       }
 
       currentState.pointer++;
@@ -213,9 +224,9 @@ class VodService extends FetchingService {
         counter++;
         // each stripe has unique id
         stripeData.stripeId = currentState.pointer;
-        // each stripe page number so we can fetch more after
         stripeData.page = currentState.page;
         stripeData.hasMore = stripeData.items.length === currentState.currentRailLimit;
+
         newStripes.push(stripeData);
       }
     }
