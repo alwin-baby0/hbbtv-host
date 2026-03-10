@@ -29,7 +29,7 @@ class HomePageService extends FetchingService {
    */
   async initialFetch() {
     const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
-    this.#banner = settings.ads.creative.banner;
+    this.#banner = settings?.ads?.creative.banner;
 
     if (!this.#heroSectionItems) {
       //get gallery data
