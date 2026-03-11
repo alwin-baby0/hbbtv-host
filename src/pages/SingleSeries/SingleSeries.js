@@ -147,6 +147,7 @@ export default class SingleSeries extends Lightning.Component {
       ssai,
       ssaiLastEp,
       focusSeasonId,
+      episodeTitle,
     } = this._props;
     const { id, badgeText } = galleryItem;
 
@@ -165,6 +166,7 @@ export default class SingleSeries extends Lightning.Component {
         ssai,
         parentState: 'HeroSection',
         badgeText,
+        episodeTitle,
       },
       Info: {
         GalleryButton: {
@@ -281,11 +283,8 @@ export default class SingleSeries extends Lightning.Component {
       }
     }
 
-    if (focusSeasonId) {
-      this._setState('Items');
-    } else {
-      this._setState('HeroSection');
-    }
+    this._setState('HeroSection');
+
     window.addEventListener('switchS', (event) => {
       this.switchSeason(event.detail.seasonId);
     });
@@ -437,7 +436,7 @@ export default class SingleSeries extends Lightning.Component {
           if (index > 0 && index !== undefined) {
             this.patch({
               SeriesWrapper: {
-                y: -650,
+                y: -800,
               },
               SeasonsBar: {
                 y: -200,

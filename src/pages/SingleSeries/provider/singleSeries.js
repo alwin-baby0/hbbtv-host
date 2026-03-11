@@ -3,7 +3,8 @@ import { parseVodPlaylists } from '../../../Models';
 import { DetailService, UserService } from '../../../Services';
 import { constructRails } from '../../utils';
 
-export default async function (page, { seriesId, seasonId, episodeId, cmpShown }) {
+export default async function (page, { seriesId, seasonId, episodeId, title, cmpShown }) {
+  const episodeTitle = title;
   let galleryItemSingleEp;
   let ssaiLastEp;
   let position = 0;
@@ -101,6 +102,7 @@ export default async function (page, { seriesId, seasonId, episodeId, cmpShown }
     playlistVODS: seriesVODS,
     focusSeasonId: seasonNumber,
     focusEpisodeId: episodeNumber,
+    episodeTitle: episodeTitle,
   };
 
   const seasonsRail = constructRails(seasonTabsParsed);
