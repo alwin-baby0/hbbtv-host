@@ -624,7 +624,7 @@ export default class SingleMovie extends Lightning.Component {
       }
       this._props.favorited = !this._props.favorited;
 
-      const id = movieTrailerUrl && last_position ? 3 : movieTrailerUrl || last_position ? 2 : 1;
+      const id = this._Buttons.Items.children[0].Items.children.length - 1;
 
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
