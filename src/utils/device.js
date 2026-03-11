@@ -147,8 +147,6 @@ const getWebOSInfo = async () => {
     deviceSerialNumber,
   ]);
 
-  console.log(response);
-
   return response.reduce((acc, info) => ({ ...acc, ...info }), {});
 };
 

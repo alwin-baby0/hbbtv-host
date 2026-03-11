@@ -201,6 +201,20 @@ export default class VerticalContainer extends Lightning.Component {
     return true;
   }
 
+  handleUpEPG = this.throttle(() => {
+    const { items } = this._props;
+
+    if (this._focusedIndex > 0) {
+      this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 1);
+      this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 1);
+      this._focusedIndex -= 1;
+      this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+    } else {
+      return false;
+    }
+    return true;
+  }, 50);
+
   handleUp() {
     if (this._focusedIndex > 0) {
       if (this.Items.children[this._focusedIndex - 1]._props?.cardType === CARD_TYPES.BANNER) {
@@ -229,7 +243,16 @@ export default class VerticalContainer extends Lightning.Component {
       return true;
     }
 
-    return this.handleUp();
+    const { items } = this._props;
+    if (items && items[0].channelId) {
+      if (this._focusedIndex > 0) return this.handleUpEPG();
+      else {
+        this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+        return false;
+      }
+    } else {
+      return this.handleUp();
+    }
   }
 
   _appendItems(items) {

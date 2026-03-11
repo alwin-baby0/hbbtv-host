@@ -20,6 +20,8 @@ export default async function (page, { movieId, cmpShown }) {
     movieTrailerId = res.entry[0].id;
 
     movieTrailerUrl = res.entry[0].content.src;
+  } else {
+    movieTrailerUrl = movie.trailerUrl;
   }
 
   if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {

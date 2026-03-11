@@ -568,18 +568,6 @@ export default class LiveTV extends Lightning.Component {
           this._setState('Categories');
           this.focusedState = 'Categories';
         }
-
-        async $verticalContainerIndexChange(index) {
-          if (
-            EPGService.hasMore &&
-            !EPGService.isLoading &&
-            EPGService.stripesFetched - 2 === index
-          ) {
-            const newStripes = await EPGService.fetchMoreEPGs();
-            const rails = constructRails(newStripes);
-            this._EPGData._appendItems(rails);
-          }
-        }
       },
 
       class Categories extends this {
@@ -632,8 +620,8 @@ export default class LiveTV extends Lightning.Component {
             this._EPGData.setInitialOffset(startAt, newStripes.length);
           }
 
-          this._Channels.Items.y = this._EPGData.Items.y;
           this._Channels._focusedIndex = index;
+          this._Channels.Items.smooth = { y: index === 0 ? 0 : this._EPGData.Items.y };
         }
       },
     ];
