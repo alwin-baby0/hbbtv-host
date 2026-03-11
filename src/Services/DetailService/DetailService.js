@@ -25,7 +25,7 @@ class DetailService extends FetchingService {
 
   seasonTabsParsed;
 
-  getSerie = async (seriesId) => {
+  getSerie = async (seriesId, episodeId) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
@@ -37,6 +37,7 @@ class DetailService extends FetchingService {
       params: {
         _: timestamp,
         id: seriesId,
+        episode_id: episodeId,
       },
       headers: {
         'X-API-Live-Key': process.env.APP_LIVE_KEY,

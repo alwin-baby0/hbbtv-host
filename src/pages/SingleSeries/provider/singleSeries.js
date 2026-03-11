@@ -4,7 +4,8 @@ import { DetailService, UserService } from '../../../Services';
 import { constructRails } from '../../utils';
 
 export default async function (page, { seriesId, seasonId, episodeId, title, cmpShown }) {
-  const episodeTitle = title;
+  const episodeTitle = ''; //title was here
+
   let galleryItemSingleEp;
   let ssaiLastEp;
   let position = 0;
@@ -28,7 +29,10 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     galleryItemSingleEp = await DetailService.getMovie(pathname.episodeId);
   }
 
-  const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(seriesId);
+  const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(
+    seriesId,
+    episodeId
+  );
 
   const updatedSeasons = seasons.map((season) => {
     return {
@@ -103,10 +107,10 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     lastPlayedSeasonNumber: lastPlayedSeasonNumber,
     lastPlayedEpisodeDuration: lastPlayedEpisodeDuration,
     firstEpisodeVideoId: galleryItem.firstEpisodeId,
-    firstEpisodeUrl: seasonFirstEpUrl || galleryItem.firstEpisodeUrl,
-    firstEpisodeTitle: seasonFirstEpTitle || galleryItem.firstEpisodeTitle,
-    firstEpisodeEpisodeNumber: galleryItem.firstEpisodeEpisodeNumber,
-    firstEpisodeSeasonNumber: galleryItem.firstEpisodeSeasonNumber,
+    firstEpisodeUrl: galleryItem.videoUrl || seasonFirstEpUrl || galleryItem.firstEpisodeUrl,
+    firstEpisodeTitle: galleryItem.title || seasonFirstEpTitle || galleryItem.firstEpisodeTitle,
+    firstEpisodeEpisodeNumber: galleryItem.episodeNumber || galleryItem.firstEpisodeEpisodeNumber,
+    firstEpisodeSeasonNumber: galleryItem.seasonNumber || galleryItem.firstEpisodeSeasonNumber,
     seriesId: galleryItem.id,
     isDeeplinkEpisode: pathname.isDeeplinkEpisode,
     ssai: galleryItem.ssai,

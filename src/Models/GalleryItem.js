@@ -48,6 +48,7 @@ class GalleryItem {
         imdb,
         first_episode,
         badges,
+        series,
       } = meta;
 
       this.duration = duration?.seconds;
@@ -60,6 +61,8 @@ class GalleryItem {
       this.country = country || first_episode?.meta?.country;
       this.imdbScore = imdb?.score || first_episode?.meta?.imdb?.score;
       this.badgeText = badges?.[0]?.label;
+      this.seasonNumber = series?.season;
+      this.episodeNumber = series?.episode;
 
       if (first_episode) {
         this.firstEpisodeId = first_episode?.id;
