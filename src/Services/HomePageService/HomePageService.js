@@ -70,20 +70,22 @@ class HomePageService extends FetchingService {
    * Fetches more stripes for Home page
    */
   async fetchMoreStripes() {
-    let counter = 0;
+    const rows = [];
     const newStripes = [];
-    const requests = [];
 
-    while (counter < 2 && this.#pointer < 25) {
-      requests.push(this.#getHomePage(this.#pointer, this.#page, this.#currentRailLimit));
-
+    while (rows.length < 2 && this.#pointer < 25) {
+      rows.push(this.#pointer);
       this.#pointer++;
-      counter++;
     }
+
+    const requests = rows.map((row) => this.#getHomePage(row, this.#page, this.#currentRailLimit));
 
     const results = await Promise.all(requests);
 
-    for (const stripeData of results) {
+    for (let i = 0; i < results.length; i++) {
+      const stripeData = results[i];
+      const row = rows[i];
+
       if (!stripeData) {
         return;
       }
@@ -97,7 +99,7 @@ class HomePageService extends FetchingService {
       if (stripeData?.items?.length > 0) {
         this.stripesFetched++;
 
-        stripeData.stripeId = this.#pointer;
+        stripeData.stripeId = row;
         stripeData.page = 1;
         stripeData.hasMore = stripeData.items.length === this.#currentRailLimit;
 
