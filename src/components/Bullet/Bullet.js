@@ -2,6 +2,7 @@ import { Colors, Router, Lightning } from '@lightningjs/sdk';
 import { CATEGORY_TYPES } from '../../Models/Category';
 import HeroRailItem from '../../components/RailItems/HeroRailItems';
 import { ROUTES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class Bullet extends HeroRailItem {
   _props = {};
@@ -47,6 +48,10 @@ export default class Bullet extends HeroRailItem {
   }
 
   _handleEnter() {
+    if (didomiVisible) {
+      return true;
+    }
+
     const { item } = this._props;
 
     switch (item.type.value) {

@@ -7,23 +7,9 @@ import basePathWithSubpath from 'test/mocks/basePathWithSubpath.json';
 
 fetchMock.enableMocks();
 
-// Mock TranslationService to avoid top-level await issues
-jest.mock('src/Services/TranslationService/TranslationService', () => {
-  const mockTranslations = {};
-
-  return {
-    __esModule: true,
-    default: class TranslationService {
-      getLanguageTranslations = jest.fn().mockResolvedValue(mockTranslations);
-      setTranslations = jest.fn().mockResolvedValue(undefined);
-    },
-    TranslationService: {
-      getLanguageTranslations: jest.fn().mockResolvedValue(mockTranslations),
-      setTranslations: jest.fn().mockResolvedValue(undefined),
-    },
-    t: jest.fn((key) => key),
-  };
-});
+jest.mock('src/utils/index', () => ({
+  t: jest.fn(),
+}));
 
 // Mock VideoPlayer from @lightningjs/sdk
 jest.mock('@lightningjs/sdk', () => ({

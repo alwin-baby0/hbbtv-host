@@ -3,6 +3,7 @@ import colors from '../../../../reskin/colors.json';
 import { createApiCtx } from '../../../Services/utils';
 import axios from 'axios';
 import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
+import { didomiVisible } from '../../../App';
 
 export default class LanguageButton extends Lightning.Component {
   _props = {
@@ -65,9 +66,11 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   async _handleEnter() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageCode);
-    const translations = await this.#getLanguageTranslations(this._props.languageCode);
-    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_TRANSLATIONS, JSON.stringify(translations));
     Router.navigate(ROUTES.HOME);
     window.location.reload();
   }

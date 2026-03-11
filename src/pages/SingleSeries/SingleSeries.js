@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import { CMPService, DetailService, t, UserService } from '../../Services';
+import { DetailService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
@@ -16,6 +16,9 @@ import {
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import { constructRails } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
+import { checkCMP } from '../../utils';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
 
@@ -122,19 +125,7 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   async _active() {
-    if (!this._props.cmpShown) {
-      await CMPService.initialFetch();
-      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
-      const currentTimeInMS = Math.floor(Date.now() / 1000);
-
-      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(
-          ROUTES.CMP,
-          { movieId: this._props.seriesId, url: ROUTES.SERIES_DETAILS },
-          false
-        );
-      }
-    }
+    checkCMP();
 
     const {
       galleryItem,
@@ -318,6 +309,10 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && didomiVisible) {
+      return;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -375,10 +370,18 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('SeasonBar');
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('BackButton');
         }
       },
@@ -388,6 +391,10 @@ export default class SingleSeries extends Lightning.Component {
           return this._BackButton;
         }
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('HeroSection');
         }
       },
@@ -397,9 +404,17 @@ export default class SingleSeries extends Lightning.Component {
           return this._SeasonsBar;
         }
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('HeroSection');
         }
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           if (this._Column.Items.children.length > 0) {
             this._setState('Items');
           } else {
@@ -457,6 +472,10 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('SeasonBar');
         }
       },

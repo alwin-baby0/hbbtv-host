@@ -3,7 +3,7 @@ import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch'
 import InputField from '../../components/Input/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
-import { HomePageService, SearchService, t } from '../../Services';
+import { HomePageService, SearchService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 import {
@@ -16,6 +16,8 @@ import {
   IMG_PATH,
 } from '../../constants/globalConstants';
 import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const search = {
   items: [],
@@ -168,6 +170,10 @@ export default class Search extends Lightning.Component {
   }
 
   _handleKey(key) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (this.numberKeys.includes(key.key)) {
       this.$onSoftKey(key);
     }
@@ -362,6 +368,10 @@ export default class Search extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -380,12 +390,20 @@ export default class Search extends Lightning.Component {
         _extended = true;
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Keyboard');
         }
 
@@ -476,6 +494,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
@@ -486,6 +508,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._VODSection.Items.children.length > 0 && this._VodWrapper.visible) {
             this._setState('VODSection');
           } else {
@@ -494,6 +520,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Queries');
         }
       },
@@ -504,10 +534,18 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Keyboard');
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._VODSection.Items.children.length > 0 && this._VodWrapper.visible) {
             this._setState('VODSection');
           } else {

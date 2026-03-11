@@ -1,6 +1,7 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { getClosestElementIndex } from '../../utils/focus';
 import { CARD_SIZES, CARD_TYPES, ROUTES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
@@ -142,6 +143,10 @@ export default class VerticalContainer extends Lightning.Component {
   }, 50);
 
   _handleScroll(event) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (this.hasFocus()) {
       if (event.deltaY > 0) {
         const { items } = this._props;
@@ -161,6 +166,10 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleDown() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const { items } = this._props;
     if (items && items[0].channelId) {
       return this.handleDownEPG();
@@ -216,6 +225,10 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleUp() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     return this.handleUp();
   }
 

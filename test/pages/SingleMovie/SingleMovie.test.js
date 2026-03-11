@@ -32,6 +32,17 @@ jest.mock('src/Services/CMPService/CMPService', () => ({
   },
 }));
 
+jest.mock('src/utils/index', () => {
+  return {
+    checkCMP: jest.fn(() => {}),
+    t: jest.fn((key) => key),
+  };
+});
+
+jest.mock('src/App.js', () => {
+  return {};
+});
+
 // Mock Router
 jest.mock('@lightningjs/sdk', () => ({
   ...jest.requireActual('@lightningjs/sdk'),

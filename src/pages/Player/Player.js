@@ -6,7 +6,7 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { t, UserService } from '../../Services';
+import { UserService } from '../../Services';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
   convertCueTimeToSeconds,
@@ -24,6 +24,8 @@ import {
   VIDEO_TYPES,
 } from '../../constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
 
@@ -974,6 +976,10 @@ export default class Player extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -1243,6 +1249,10 @@ export default class Player extends Lightning.Component {
 
   // COMANDS
   _handleMediaPlayPause() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const { pausedItemId } = this._props;
 
     // Check the current playing state before toggling
@@ -1269,6 +1279,10 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaRewind() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const wasPlaying = VideoPlayer.playing;
 
     this.$hideSbutitles();
@@ -1280,6 +1294,10 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaFastForward() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const wasPlaying = VideoPlayer.playing;
 
     this.$hideSbutitles();
@@ -1291,14 +1309,26 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaPlay() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     this.$playVideo();
   }
 
   _handleMediaPause() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     this.$pauseVideo();
   }
 
   _handleMediaStop() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     this.$hideSbutitles();
     Router.back();
     VideoPlayer.close();
@@ -1309,6 +1339,10 @@ export default class Player extends Lightning.Component {
   }
 
   _captureKey({ keyCode }) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const keyName = window.keyCodes[keyCode];
 
     const isMediaKey =
@@ -1349,11 +1383,19 @@ export default class Player extends Lightning.Component {
           return this._Controls;
         }
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._props.isLive) return;
 
           this._setState('Back');
         }
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._props.isLive) return;
 
           // this._setState('SubtitlesButton');
@@ -1364,14 +1406,26 @@ export default class Player extends Lightning.Component {
           return this._SubtitlesLanguages;
         }
         _handleBack() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this.$hideSbutitles();
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           return false;
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           return false;
         }
       },
@@ -1382,10 +1436,18 @@ export default class Player extends Lightning.Component {
         }
 
         _handleEnter() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           VideoPlayer.seek(this._props.skipTo);
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('AdBackButton');
         }
       },
@@ -1396,17 +1458,29 @@ export default class Player extends Lightning.Component {
         }
 
         _captureEnter(e) {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._getState() === 'AdBackButton') this.$exitVideo(e);
           return false;
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._props.currentAd.skipping_allowed) {
             this._setState('SkipButton');
           }
         }
 
         _handleUnhover() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           return true;
         }
       },
@@ -1417,6 +1491,10 @@ export default class Player extends Lightning.Component {
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Controls');
         }
       },
@@ -1427,6 +1505,10 @@ export default class Player extends Lightning.Component {
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Controls');
         }
       },

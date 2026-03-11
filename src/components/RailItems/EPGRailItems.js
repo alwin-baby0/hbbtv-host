@@ -1,5 +1,6 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { IMG_PATH, VIDEO_TYPES, ROUTES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
@@ -205,6 +206,9 @@ export default class EPGRailItems extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
     if (this.selectEPGTimeout) {
       clearTimeout(this.selectEPGTimeout);
       this.selectEPGTimeout = null;

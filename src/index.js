@@ -31,9 +31,9 @@ import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
 import {
   SettingsService,
-  TranslationService,
   LoggingService,
   AuthorizationService,
+  DidomiService,
 } from './Services/index.js';
 import { EVENT_NAMES, LOCAL_STORAGE_KEYS, LOG_LEVEL } from './constants/globalConstants.js';
 
@@ -75,6 +75,21 @@ sequence([
     window.keyCodes = appSettings.keys;
   },
   async () => await initDeviceInfo(deviceType),
+  async () => {
+    await DidomiService.init();
+    const userNotice = window.Didomi.getConfig();
+    if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
+
+    window.didomiOnReady &&
+      window.didomiOnReady.push(async () => {
+        const userConsent = await window.Didomi.getCurrentUserStatus();
+        console.log(userConsent);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.USER_CONSENT, JSON.stringify(userConsent));
+
+        console.log(userNotice);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG, JSON.stringify(userNotice));
+      });
+  },
   () => FetchingService.init(),
   async () => {
     if (process.env.APP_USE_GA === 'true') {
@@ -101,7 +116,6 @@ sequence([
         Object.entries(getDeviceInfo()).map(([key, value]) => `| ${key}: ${value} |`)
       );
 
-      TranslationService.setTranslations();
       const result = deviceType === 'metrological' ? Lifecycle.ready() : {};
       console.log(result);
       eventTrackPayload(EVENT_NAMES.LAUNCH_APP);

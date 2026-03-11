@@ -1,6 +1,7 @@
 import { LOCAL_STORAGE_KEYS, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
 import { parseHomePageRailData } from '../../../Models';
-import { HomePageService, t, UserService } from '../../../Services';
+import { HomePageService, UserService } from '../../../Services';
+import { t } from '../../../utils';
 
 async function checkImageVisibility(imageUrl) {
   return new Promise((resolve) => {

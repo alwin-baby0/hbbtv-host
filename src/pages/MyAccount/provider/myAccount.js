@@ -1,6 +1,7 @@
-import { t, AuthorizationService, UserService, VODS_PER_ROW } from '../../../Services';
+import { AuthorizationService, UserService, VODS_PER_ROW } from '../../../Services';
 import { LOCAL_STORAGE_KEYS, RAIL_TYPES, TRANSLATIONS } from '../../../constants/globalConstants';
 import { parseVodUserContentData } from '../../../Models';
+import { t } from '../../../utils';
 
 export default async function (page) {
   AuthorizationService.clearPollingInterval();

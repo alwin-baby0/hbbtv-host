@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils, Colors } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
-import { CMPService, DetailService, t, UserService } from '../../Services';
+import { DetailService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
@@ -14,8 +14,10 @@ import {
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import colors from '../../../reskin/colors.json';
-import { capitalizeFirstLetter } from '../../utils';
+import { capitalizeFirstLetter, checkCMP } from '../../utils';
 import { Metrics } from '@firebolt-js/sdk';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
 
@@ -580,19 +582,7 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   async _active() {
-    if (!this._props.cmpShown) {
-      await CMPService.initialFetch();
-      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
-      const currentTimeInMS = Math.floor(Date.now() / 1000);
-
-      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(
-          ROUTES.CMP,
-          { movieId: this._props.movieId, url: ROUTES.MOVIE_DETAILS },
-          false
-        );
-      }
-    }
+    checkCMP();
 
     const { movieId } = this._props;
 
@@ -604,6 +594,10 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && didomiVisible) {
+      return;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -630,7 +624,7 @@ export default class SingleMovie extends Lightning.Component {
       }
       this._props.favorited = !this._props.favorited;
 
-      const id = movieTrailerUrl && last_position ? 3 : movieTrailerUrl || last_position ? 2 : 1;
+      const id = this._Buttons.Items.children[0].Items.children.length - 1;
 
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
@@ -692,14 +686,26 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('BackButton');
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('BackButton');
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('PlaylistWrapper');
         }
       },
@@ -709,10 +715,18 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('Buttons');
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('BackButton');
         }
       },
@@ -723,10 +737,18 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('Buttons');
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('Buttons');
         }
       },
@@ -737,6 +759,10 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('Buttons');
         }
 

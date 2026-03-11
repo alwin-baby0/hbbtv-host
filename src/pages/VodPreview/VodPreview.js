@@ -13,6 +13,8 @@ import {
 } from '../../constants/globalConstants';
 import { railItemConstructor } from '../utils/railItems';
 import { checkCMP } from '../../utils/index';
+import { didomiVisible } from '../../App';
+import { VodService } from '../../Services';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -156,6 +158,10 @@ export default class VodPreview extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -188,12 +194,20 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('VodContentContainer');
         }
 
@@ -258,10 +272,18 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Hero');
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._Column.Items.children.length > 0) {
             this._setState('VodContainer');
           }
@@ -330,6 +352,10 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (
             this._VodContentContainer.contentType === CONTENT_TYPE.EMPTY &&
             !Router.isNavigating()

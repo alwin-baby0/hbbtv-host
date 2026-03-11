@@ -5,6 +5,7 @@ import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
 import { ROUTES, RAIL_TYPES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -96,6 +97,10 @@ export default class Home extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -146,6 +151,10 @@ export default class Home extends Lightning.Component {
         }
 
         _handleBack(e) {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (Router.isNavigating()) {
             return;
           }
@@ -154,12 +163,20 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Items');
         }
 
@@ -223,10 +240,18 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Hero');
         }
 
         _handleBack(e) {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (Router.isNavigating()) {
             return;
           }

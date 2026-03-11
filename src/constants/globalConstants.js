@@ -67,6 +67,8 @@ export const LOCAL_STORAGE_KEYS = {
   COLLECTION_CATEGORY: 'category',
   DEVICE_CODE: 'deviceCode',
   AUTH_DEVICE_CODE: 'authDeviceCode',
+  USER_CONSENT: 'userConsentString',
+  DIDOMI_CONFIG: 'didomiConfig',
 };
 
 export const CATEGORY_TYPES = {

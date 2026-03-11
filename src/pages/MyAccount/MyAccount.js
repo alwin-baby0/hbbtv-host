@@ -1,5 +1,5 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
-import { AuthorizationService, UserService, VODS_PER_ROW, t } from '../../Services';
+import { AuthorizationService, UserService, VODS_PER_ROW } from '../../Services';
 import qrcode from 'qrcode';
 import UserRecentlyWatched from './UserRecentlyWatched';
 import UserFavorites from './UserFavorites';
@@ -12,6 +12,8 @@ import {
 } from '../../constants/globalConstants';
 import { parseVodUserContentData } from '../../Models';
 import LogoutButton from '../../components/Buttons/LogoutButton/LogoutButton';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['LogoutButton', 'UserRecentlyWatched', 'UserFavorites'];
 
@@ -331,6 +333,10 @@ export default class MyAccount extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -351,6 +357,10 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           const { recentlyWatched, favorites } = this._props;
 
           !recentlyWatched?.data?.recently_watched ||
@@ -370,12 +380,20 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           const { favorites } = this._props;
 
           !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
@@ -390,6 +408,10 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           const { recentlyWatched } = this._props;
 
           !recentlyWatched?.data?.recently_watched ||
@@ -399,6 +421,10 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('LogoutButton');
         }
       },

@@ -4,6 +4,7 @@ import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import { IMAGE_SIZES } from '../../constants/globalConstants';
 import { railItemConstructor } from '../../pages/utils/railItems';
 import { loader, unloader } from '../Player/HLS';
+import { didomiVisible } from '../../App';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
@@ -124,6 +125,10 @@ export default class Gallery extends Lightning.Component {
   }
 
   _handleScroll(event) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (event.deltaY > 0) {
       this.fireAncestors('$setStateOnScroll', this._props.scrollDownState);
     }

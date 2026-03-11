@@ -1,6 +1,7 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class BackBtn extends Lightning.Component {
   _props = {
@@ -37,6 +38,10 @@ export default class BackBtn extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (didomiVisible) {
+      return true;
+    }
+
     const router = Router.getHistory().filter(
       (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );

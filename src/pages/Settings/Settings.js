@@ -1,11 +1,12 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
-import { CMPService } from '../../Services';
+// import { CMPService } from '../../Services';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
-import { t } from '../../Services';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
-import QRCode from '../../components/QRCode/QRCode';
+import Button from '../../components/Button/Button';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 export default class Settings extends Lightning.Component {
   static _template() {
@@ -140,19 +141,8 @@ export default class Settings extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
 
-    const cmpTitle = CMPService.cmpData?.title;
-    const cmpDescription = CMPService.cmpData?.description;
-    const options = CMPService.cmpData?.buttons.customize.options;
-
-    const qrCodes = options.map((qrCode) => {
-      return {
-        type: QRCode,
-        w: 770,
-        props: {
-          qrCode,
-        },
-      };
-    });
+    // const cmpTitle = CMPService.cmpData?.title;
+    // const cmpDescription = CMPService.cmpData?.description;
 
     const languages = this._props.languagesData;
     const cols = this._arrangeLngBtns(languages);
@@ -193,43 +183,44 @@ export default class Settings extends Lightning.Component {
           flex: { direction: 'column' },
           w: 1210,
           h: 920,
-          Title: {
-            w: 1000,
-            h: 50,
-            text: {
-              text: cmpTitle,
-              fontSize: 40,
-              fontFace: 'Montserrat-Bold',
-              lineHeight: 50,
-              textAlign: 'left',
-            },
-          },
-          Description: {
-            w: 1200,
-            h: 100,
-            y: 30,
-            flexItem: {
-              marginBottom: 20,
-            },
-            text: {
-              text: cmpDescription,
-              fontSize: 24,
-              fontFace: 'Montserrat-Regular',
-              lineHeight: 30,
-              textAlign: 'left',
-            },
-          },
-          QRCodes: {
-            w: 1050,
-            h: 400,
-            flexItem: {
-              marginTop: 20,
-            },
-            type: HorizontalContainer,
+          // Title: {
+          //   w: 1000,
+          //   h: 50,
+          //   text: {
+          //     text: cmpTitle,
+          //     fontSize: 40,
+          //     fontFace: 'Montserrat-Bold',
+          //     lineHeight: 50,
+          //     textAlign: 'left',
+          //   },
+          // },
+          // Description: {
+          //   w: 1200,
+          //   h: 100,
+          //   y: 30,
+          //   flexItem: {
+          //     marginBottom: 20,
+          //   },
+          //   text: {
+          //     text: cmpDescription,
+          //     fontSize: 24,
+          //     fontFace: 'Montserrat-Regular',
+          //     lineHeight: 30,
+          //     textAlign: 'left',
+          //   },
+          // },
+          ConsentChangeButton: {
+            type: Button,
             props: {
-              w: 1050,
-              h: 400,
-              items: qrCodes,
+              width: 300,
+              height: 95,
+              buttonLabel: t(TRANSLATIONS.COOKIE_PREFERENCES),
+              callback: async () => {
+                await window.Didomi.notice.show();
+
+                this.fireAncestors('$didomiVisible', true);
+                this.fireAncestors('$settingsDidomi', true);
+              },
             },
           },
         },
@@ -242,6 +233,10 @@ export default class Settings extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -262,9 +257,31 @@ export default class Settings extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
+        }
+
+        _handleDown() {
+          this._setState('CMP');
+        }
+      },
+
+      class CMP extends this {
+        _getFocused() {
+          return this.tag('ConsentChangeButton');
+        }
+
+        _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          this._setState('Languages');
         }
       },
     ];

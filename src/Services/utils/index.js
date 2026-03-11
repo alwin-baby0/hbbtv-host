@@ -17,9 +17,17 @@ const bundleIndentifierMap = (deviceType) => {
 };
 
 export function createApiCtx() {
-  const selectedLanguage =
-    navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
+  let selectedLanguage = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
+
+  if (!selectedLanguage) {
+    selectedLanguage =
+      navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, selectedLanguage);
+  }
+
   const deviceInfo = getDeviceInfo();
+  const userConsent = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_CONSENT));
+  const didomiConfig = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG));
 
   return btoa(
     JSON.stringify({
@@ -34,6 +42,12 @@ export function createApiCtx() {
       deviceId: deviceInfo.serialNumber || 'no-id-defined',
       deviceModel: deviceInfo.model || 'no-model-defined',
       deviceMake: deviceInfo.brand || 'no-make-defined',
+      tcf: {
+        gdprApplies: window.didomiState && window.didomiState.didomiGDPRApplies ? true : false,
+        tcfString: userConsent && userConsent.consent_string ? userConsent.consent_string : null,
+        cmpSdkId: didomiConfig && didomiConfig.id ? didomiConfig.id : null,
+        cmpSdkVersion: didomiConfig && didomiConfig.version ? didomiConfig.version : null,
+      },
     })
   );
 }

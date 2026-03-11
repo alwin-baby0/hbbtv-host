@@ -1,6 +1,7 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
 import { CARD_SIZES, CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
@@ -213,6 +214,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleRight() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
       this.Items.children[this._focusedIndex]._unfocus();
@@ -231,6 +236,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (this._focusedIndex > 0) {
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex -= 1;

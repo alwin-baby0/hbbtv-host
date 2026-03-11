@@ -2,6 +2,8 @@ import { Lightning, Utils } from '@lightningjs/sdk';
 import BackBtn from '../../components/BackButton/BackBtn';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { IMG_PATH } from '../../constants/globalConstants';
+import { checkCMP } from '../../utils';
+import { didomiVisible } from '../../App';
 
 export default class Collection extends Lightning.Component {
   _props = {};
@@ -61,6 +63,8 @@ export default class Collection extends Lightning.Component {
   }
 
   _active() {
+    checkCMP();
+
     this._setState('Column');
   }
 
@@ -84,10 +88,18 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Column');
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Column');
         }
       },
@@ -98,10 +110,18 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('BackButton');
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('BackButton');
         }
       },

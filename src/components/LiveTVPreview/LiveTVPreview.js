@@ -2,7 +2,7 @@ import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import LiveTVPlayer from '../../pages/LiveTV/components/LiveTVPlayer';
 import ProgressBar from '../../pages/Player/components/ProgressBar/ProgressBar';
 import colors from '../../../reskin/colors.json';
-import { t } from '../../Services';
+import { t } from '../../utils';
 import { IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
 import { capitalizeFirstLetter } from '../../utils';
 

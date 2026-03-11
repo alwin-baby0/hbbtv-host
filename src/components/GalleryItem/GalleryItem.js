@@ -1,7 +1,7 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import Button from '../Button/Button';
-import { DetailService, t } from '../../Services';
+import { DetailService } from '../../Services';
 import { capitalizeFirstLetter } from '../../utils';
 import {
   IMG_PATH,
@@ -10,6 +10,9 @@ import {
   VIDEO_TYPES,
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
+
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -859,6 +862,10 @@ export default class GalleryItem extends Lightning.Component {
           return this._GalleryButton;
         }
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
           } else if (this._FavoriteButton.alpha > 0) {
@@ -874,16 +881,28 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._FavoriteButton.alpha > 0) {
             this._setState('FavoriteButton');
           } else return false;
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('GalleryButton');
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           return false;
         }
       },
@@ -892,9 +911,17 @@ export default class GalleryItem extends Lightning.Component {
           return this._FavoriteButton;
         }
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           return false;
         }
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
           } else {

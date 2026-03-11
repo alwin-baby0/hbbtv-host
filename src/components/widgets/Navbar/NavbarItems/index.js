@@ -9,7 +9,7 @@ import {
   VOD_PREVIEW_TYPES,
 } from '../../../../constants/globalConstants';
 import SidebarItem from './SidebarItem';
-import { t } from '../../../../Services';
+import { t } from '../../../../utils';
 import HorizontalContainer from '../../../HorizontalContainer/HorizontalContainer';
 
 export default class SidebarItems extends Lightning.Component {
