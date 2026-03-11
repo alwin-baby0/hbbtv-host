@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
+import { IMG_PATH, LOCAL_STORAGE_KEYS, ROUTES } from '../../constants/globalConstants';
 import { didomiVisible } from '../../App';
 
 export default class BackBtn extends Lightning.Component {
@@ -63,6 +63,7 @@ export default class BackBtn extends Lightning.Component {
   }
 
   _handleClick() {
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL);
     if (Router.isNavigating()) {
       return;
     }

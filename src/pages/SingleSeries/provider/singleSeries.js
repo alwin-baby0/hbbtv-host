@@ -6,6 +6,10 @@ import { constructRails } from '../../utils';
 export default async function (page, { seriesId, seasonId, episodeId, title, cmpShown }) {
   const episodeTitle = ''; //title was here
 
+  if (episodeId) {
+    localStorage.setItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL, episodeId);
+  }
+
   let galleryItemSingleEp;
   let ssaiLastEp;
   let position = 0;
@@ -31,7 +35,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
 
   const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(
     seriesId,
-    episodeId
+    localStorage.getItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL)
   );
 
   const updatedSeasons = seasons.map((season) => {
@@ -54,7 +58,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
       )
     : undefined;
 
-  if (seasonId && !episodeId) {
+  if (seasonId && !localStorage.getItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL)) {
     //if there is seasonId and not episodeId, it is type of season
     seasonNumberPlusOne = seasonNumber + 1;
     seasonTitle = galleryItem.title + ` - S${seasonNumberPlusOne}`;

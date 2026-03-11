@@ -313,6 +313,8 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   _handleBack(e) {
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL);
+
     if (window.Didomi && didomiVisible) {
       return;
     }

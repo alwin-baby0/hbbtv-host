@@ -69,6 +69,7 @@ export const LOCAL_STORAGE_KEYS = {
   AUTH_DEVICE_CODE: 'authDeviceCode',
   USER_CONSENT: 'userConsentString',
   DIDOMI_CONFIG: 'didomiConfig',
+  EPISODE_ID_DETAIL: 'episodeIdDetail',
 };
 
 export const CATEGORY_TYPES = {

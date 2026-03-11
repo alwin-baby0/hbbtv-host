@@ -74,6 +74,9 @@ sequence([
     appSettings.keys = setupKeys(deviceType);
     window.keyCodes = appSettings.keys;
   },
+  () => {
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL);
+  },
   async () => await initDeviceInfo(deviceType),
   async () => {
     await DidomiService.init();
