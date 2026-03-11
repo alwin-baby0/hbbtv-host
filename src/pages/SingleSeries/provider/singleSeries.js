@@ -15,6 +15,11 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
   let lastPlayedSeriesId;
   let lastPlayedEpisodeDuration;
 
+  let seasonTitle = '';
+  let seasonNumberPlusOne = '';
+  let seasonFirstEpUrl = null;
+  let seasonFirstEpTitle = '';
+
   const hash = window.location.hash;
   const queryString = hash.split('?')[1];
   const pathname = Object.fromEntries(new URLSearchParams(queryString));
@@ -44,6 +49,15 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
         })[0]
       )
     : undefined;
+
+  if (seasonId && !episodeId) {
+    //if there is seasonId and not episodeId, it is type of season
+    seasonNumberPlusOne = seasonNumber + 1;
+    seasonTitle = galleryItem.title + ` - S${seasonNumberPlusOne}`;
+    const seasonFirstEp = seasons.find((season) => season.seasonId === seasonId);
+    seasonFirstEpUrl = seasonFirstEp?.items?.[0]?.epFromSeasonUrl;
+    seasonFirstEpTitle = seasonFirstEp?.items?.[0]?.title;
+  }
 
   const episodeNumber =
     seasonNumber && episodeId
@@ -89,8 +103,8 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     lastPlayedSeasonNumber: lastPlayedSeasonNumber,
     lastPlayedEpisodeDuration: lastPlayedEpisodeDuration,
     firstEpisodeVideoId: galleryItem.firstEpisodeId,
-    firstEpisodeUrl: galleryItem.firstEpisodeUrl,
-    firstEpisodeTitle: galleryItem.firstEpisodeTitle,
+    firstEpisodeUrl: seasonFirstEpUrl || galleryItem.firstEpisodeUrl,
+    firstEpisodeTitle: seasonFirstEpTitle || galleryItem.firstEpisodeTitle,
     firstEpisodeEpisodeNumber: galleryItem.firstEpisodeEpisodeNumber,
     firstEpisodeSeasonNumber: galleryItem.firstEpisodeSeasonNumber,
     seriesId: galleryItem.id,
@@ -103,6 +117,8 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     focusSeasonId: seasonNumber,
     focusEpisodeId: episodeNumber,
     episodeTitle: episodeTitle,
+    seasonNumber: seasonNumberPlusOne,
+    seasonTitle,
   };
 
   const seasonsRail = constructRails(seasonTabsParsed);

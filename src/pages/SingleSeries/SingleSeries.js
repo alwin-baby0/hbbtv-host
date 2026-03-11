@@ -148,6 +148,8 @@ export default class SingleSeries extends Lightning.Component {
       ssaiLastEp,
       focusSeasonId,
       episodeTitle,
+      seasonTitle,
+      seasonNumber,
     } = this._props;
     const { id, badgeText } = galleryItem;
 
@@ -167,15 +169,17 @@ export default class SingleSeries extends Lightning.Component {
         parentState: 'HeroSection',
         badgeText,
         episodeTitle,
+        seasonTitle,
+        seasonNumber,
       },
       Info: {
         GalleryButton: {
           props: {
             width: 465,
             height: 78,
-            buttonLabel: `${t(
-              TRANSLATIONS.WATCH_FIRST_EPISODE
-            )?.toUpperCase()} S${firstEpisodeSeasonNumber} E${firstEpisodeEpisodeNumber}`,
+            buttonLabel: `${t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase()} S${
+              seasonNumber || firstEpisodeSeasonNumber
+            } E${seasonNumber ? '1' : firstEpisodeEpisodeNumber}`,
           },
         },
       },

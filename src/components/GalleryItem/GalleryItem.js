@@ -426,6 +426,7 @@ export default class GalleryItem extends Lightning.Component {
       bgY,
       badgeY,
       episodeTitle,
+      seasonTitle,
     } = this._props;
 
     const {
@@ -674,7 +675,7 @@ export default class GalleryItem extends Lightning.Component {
       Info: {
         Title: {
           text: {
-            text: episodeTitle || title,
+            text: episodeTitle || seasonTitle || title,
           },
         },
         Description: {

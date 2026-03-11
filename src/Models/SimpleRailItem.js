@@ -7,7 +7,7 @@ import { LoggingService } from '../Services/index.js';
 
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, summary, images, meta, orientation, duration, progress } = data;
+    const { id, title, type, summary, images, meta, orientation, duration, progress, files } = data;
 
     this.id = id;
     this.title = title;
@@ -60,6 +60,10 @@ class SimpleRailItem {
       this.year = year;
       this.seasonNumber = series?.season || null;
       this.episodeNumber = series?.episode || null;
+    }
+
+    if (files) {
+      this.epFromSeasonUrl = files?.[0]?.url;
     }
 
     this.thumbnails = [];
