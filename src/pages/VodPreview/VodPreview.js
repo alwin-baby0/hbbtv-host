@@ -370,8 +370,7 @@ export default class VodPreview extends Lightning.Component {
           const { fetchMoreStripes } = this._props;
 
           this.correctContainerSize();
-
-          if (fetchMoreStripes && VodService.stripesFetched - 1 <= index) {
+          if (fetchMoreStripes) {
             const newStripes = await fetchMoreStripes(index);
             if (newStripes) {
               const rails = constructRails(newStripes, ROUTES.VOD).reduce((acc, rail) => {
