@@ -56,7 +56,7 @@ export default class LiveTVPlayer extends Lightning.Component {
         });
 
         if (matchingEntry) {
-          const src = previousChannel.src;
+          const src = previousChannel?.src;
 
           // Update the channel using the matching entry's src
           if (src) {
