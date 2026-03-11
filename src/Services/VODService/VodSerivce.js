@@ -185,53 +185,53 @@ class VodService extends FetchingService {
    * Fetches more movie stripes for Vod Page page
    */
   async fetchMoreStripes() {
-    const state = this.#getCurrentState();
-    const BATCH_SIZE = 2;
+    const currentState = this.#getCurrentState();
 
-    const rows = [];
+    let counter = 0;
+    const newStripes = [];
+    const requests = [];
 
-    while (rows.length < BATCH_SIZE && state.pointer < 25) {
-      rows.push(state.pointer);
-      state.pointer++;
+    while (counter < 2 && currentState.pointer < 25) {
+      requests.push(
+        this.#getVods({
+          row: currentState.pointer,
+          page: currentState.page,
+          limit: VODS_PER_ROW,
+        })
+      );
+
+      currentState.pointer++;
+      counter++;
     }
-
-    const requests = rows.map((row) =>
-      this.#getVods({
-        row,
-        page: state.page,
-        limit: VODS_PER_ROW,
-      })
-    );
 
     const results = await Promise.all(requests);
 
-    const newStripes = results
-      .map((stripeData, i) => {
-        const row = rows[i];
+    for (const stripeData of results) {
+      if (!stripeData) {
+        return;
+      }
 
-        if (!stripeData || stripeData.error) return null;
+      if (stripeData.error) {
+        currentState.page++;
+        currentState.pointer = 1;
+        return;
+      }
 
-        currentState.pointer++;
+      currentState.pointer++;
 
-        if (stripeData?.items.length > 0) {
-          if (stripeData.railType !== RAIL_TYPES.BANNER) currentState.stripesFetched++;
-          counter++;
-          // each stripe has unique id
-          stripeData.stripeId = currentState.pointer;
-          stripeData.page = currentState.page;
-          stripeData.hasMore = stripeData.items.length === currentState.currentRailLimit;
+      if (stripeData?.items.length > 0) {
+        if (stripeData.railType !== RAIL_TYPES.BANNER) currentState.stripesFetched++;
+        counter++;
+        // each stripe has unique id
+        stripeData.stripeId = currentState.pointer;
+        stripeData.page = currentState.page;
+        stripeData.hasMore = stripeData.items.length === currentState.currentRailLimit;
 
-          return {
-            ...stripeData,
-            stripeId: row + 1,
-            page: state.page,
-            hasMore: stripeData.items.length === state.currentRailLimit,
-          };
-        }
-      })
-      .filter(Boolean);
+        newStripes.push(stripeData);
+      }
+    }
 
-    state.vodStripes.push(...newStripes);
+    currentState.vodStripes.push(...newStripes);
 
     return newStripes;
   }
