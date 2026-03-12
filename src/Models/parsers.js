@@ -211,6 +211,8 @@ export const parseSeasonData = ({ data }, seriesId, seasonId) => {
     railTitle: data.entry?.label,
     itemsPerRow: data.entry.length,
     seasonId,
+    seriesId,
+    page: data.entry.page,
   };
 };
 

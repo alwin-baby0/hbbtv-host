@@ -1,7 +1,7 @@
 import { parseDetailsData, parseSeasonData, parseSeasonTabs } from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
-import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { API_METHODS, API_URLS } from '../../constants/globalConstants';
 import { Metrics } from '@firebolt-js/sdk';
 import { getDeviceType } from '../../utils/device';
 
@@ -26,8 +26,6 @@ class DetailService extends FetchingService {
   seasonTabsParsed;
 
   getSerie = async (seriesId, episodeId) => {
-    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
-
     const timestamp = new Date().getTime();
 
     const galleryItem = await this._request({

@@ -147,6 +147,9 @@ export const cronstructSingleLineRail = (rail, index) => {
       paddingLeft,
       targetIndex: targetIndex,
       index: index,
+      ...(rail.page && { page: rail.page }),
+      ...(rail.seasonId && { seasonId: rail.seasonId }),
+      ...(rail.seriesId && { seriesId: rail.seriesId }),
     },
   };
 };

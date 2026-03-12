@@ -5,9 +5,12 @@ import { DetailService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
+  API_METHODS,
+  API_URLS,
   EVENT_NAMES,
   IMG_PATH,
   LOCAL_STORAGE_KEYS,
+  RAIL_TYPES,
   ROUTES,
   TRANSLATIONS,
   VIDEO_TYPES,
@@ -19,6 +22,9 @@ import { Metrics } from '@firebolt-js/sdk';
 import { checkCMP } from '../../utils';
 import { didomiVisible } from '../../App';
 import { t } from '../../utils';
+import { V2 } from '../../Services/utils';
+import { parseSeasonData } from '../../Models';
+import { railItemConstructor } from '../utils/railItems';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
 
@@ -474,6 +480,32 @@ export default class SingleSeries extends Lightning.Component {
                 },
               },
             });
+          }
+        }
+
+        async $horizontalContainerIndexChange(index, position, page, seasonId, seriesId) {
+          if (index === this._Column.Items.children[0].Items.children.length - 1) {
+            const timestamp = new Date().getTime();
+
+            const newRails = await DetailService._request({
+              url: `/${API_URLS.GET_SEASON}`,
+              apiVersion: V2,
+              method: API_METHODS.GET,
+              params: {
+                _: timestamp,
+                season_id: seasonId,
+                page,
+              },
+              headers: {
+                'X-API-Live-Key': process.env.APP_LIVE_KEY,
+              },
+            }).then((data) => parseSeasonData(data, seriesId, seasonId));
+
+            if (newRails.items) {
+              const railItems = railItemConstructor(newRails.items, RAIL_TYPES.EPISODE);
+
+              this._Column.Items.children[0]._appendItems(railItems);
+            }
           }
         }
 

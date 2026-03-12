@@ -63,13 +63,30 @@ export default class HorizontalContainer extends Lightning.Component {
       this._props.railWidth = 1760;
     }
 
+    if (this._props.page && this._props.seasonId) {
+      this._props.w = (CARD_SIZES.LANDSCAPE?.width + 20) * this._props.items.length;
+
+      this.patch({
+        w: this._props.w,
+      });
+      this._props.railWidth = 1760;
+    }
+
     setTimeout(() => this.stage.update(), 200);
   }
 
   _setFocusedIndex(newIndex) {
     this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
     this._reCalibrateScroll();
-    this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex, this._scrollPosition);
+    this.fireAncestors(
+      '$horizontalContainerIndexChange',
+      this._focusedIndex,
+      this._scrollPosition,
+      this._props.page && this._props.page + 1,
+      this._props.seasonId && this._props.seasonId,
+      this._props.seriesId && this._props.seriesId
+    );
+    this._focusedIndex === this.Items.children.length - 1 && this._props.page++;
   }
 
   set props(props) {
@@ -227,8 +244,11 @@ export default class HorizontalContainer extends Lightning.Component {
       this.fireAncestors(
         '$horizontalContainerIndexChange',
         this._focusedIndex,
-        this._scrollPosition
+        this._scrollPosition,
+        this._props.page && this._props.page + 1,
+        this._props.seasonId && this._props.seasonId
       );
+      this._focusedIndex === this.Items.children.length - 1 && this._props.page++;
     } else {
       return false;
     }
@@ -248,8 +268,11 @@ export default class HorizontalContainer extends Lightning.Component {
       this.fireAncestors(
         '$horizontalContainerIndexChange',
         this._focusedIndex,
-        this._scrollPosition
+        this._scrollPosition,
+        this._props.page && this._props.page + 1,
+        this._props.seasonId && this._props.seasonId
       );
+      this._focusedIndex === this.Items.children.length - 1 && this._props.page++;
     } else {
       return false;
     }
