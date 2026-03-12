@@ -24,14 +24,23 @@ export async function checkCMP() {
     return;
   }
 
-  if (userNotice.notice.daysBeforeShowingAgain <= 0) {
+  let userConsent = await window.Didomi.getCurrentUserStatus();
+
+  let isDeclined = true;
+  Object.keys(userConsent.purposes).forEach((key) => {
+    if (userConsent.purposes[key].enabled) {
+      isDeclined = false;
+    }
+  });
+
+  if (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0) {
     await window.Didomi.notice.show();
     setDidomiVisible(true);
   }
 
   window.didomiOnReady &&
     window.didomiOnReady.push(async () => {
-      const userConsent = await window.Didomi.getCurrentUserStatus();
+      userConsent = await window.Didomi.getCurrentUserStatus();
       localStorage.setItem(LOCAL_STORAGE_KEYS.USER_CONSENT, JSON.stringify(userConsent));
 
       localStorage.setItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG, JSON.stringify(userNotice));
