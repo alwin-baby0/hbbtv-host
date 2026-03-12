@@ -136,21 +136,21 @@ class SimpleRailItem {
     const thumbnail = this.thumbnails.find((thumbnail) => thumbnail.key.includes(size));
     return thumbnail
       ? this.thumbnails[0]
-      : { key: 'applicaster_logo', src: this.channelImages.applicaster_logo };
+      : { key: 'applicaster_logo', src: this.channelImages?.applicaster_logo };
   }
 
   getLandscapePoster(size) {
     const poster = this.landscapePosters.find((poster) => poster.key.includes(size));
     return poster
       ? this.landscapePosters[2]
-      : { key: 'applicaster_logo', src: this.channelImages.applicaster_logo };
+      : { key: 'applicaster_logo', src: this.channelImages?.applicaster_logo };
   }
 
   getPortraitPoster(size) {
     const poster = this.portraitPosters.find((poster) => poster.key.includes(size));
     return poster
       ? this.portraitPosters[2]
-      : { key: 'applicaster_logo', src: this.channelImages.applicaster_logo };
+      : { key: 'applicaster_logo', src: this.channelImages?.applicaster_logo };
   }
 }
 
