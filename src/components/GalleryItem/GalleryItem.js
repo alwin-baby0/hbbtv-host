@@ -458,8 +458,6 @@ export default class GalleryItem extends Lightning.Component {
       factLine = eventDate && eventTime ? [eventDate, eventTime].join(' | ') : '';
     }
 
-    console.log('asdf factline, imdbScore: ', factLine, imdbScore);
-
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
     const tGenre = t(TRANSLATIONS.GENRE) + ':';
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
