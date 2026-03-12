@@ -38,18 +38,6 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     localStorage.getItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL)
   );
 
-  const updatedSeasons = seasons.map((season) => {
-    return {
-      ...season,
-      items: season.items.map((episode) => {
-        const index = episode.title.indexOf(' - S');
-        episode.title = episode.title.substring(index + 3, episode.title.length);
-
-        return episode;
-      }),
-    };
-  });
-
   const seasonNumber = seasonId
     ? seasons.indexOf(
         seasons.filter((season) => {
@@ -120,7 +108,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     ssai: galleryItem.ssai,
     ssaiLastEp: ssaiLastEp,
     cmpShown,
-    allSeasons: updatedSeasons,
+    allSeasons: seasons,
     playlistVODS: seriesVODS,
     focusSeasonId: seasonNumber,
     focusEpisodeId: episodeNumber,
@@ -138,7 +126,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
   };
 
   page._Column.props = {
-    items: [...constructRails(updatedSeasons[seasonId ? seasonNumber : 0]), ...seriesVODS],
+    items: [...constructRails(seasons[seasonId ? seasonNumber : 0]), ...seriesVODS],
     parentState: 'Items',
     seasonIndex: seasonNumber,
     episodeIndex: episodeNumber,
