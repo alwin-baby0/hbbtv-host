@@ -461,7 +461,7 @@ export default class SingleSeries extends Lightning.Component {
                 y: -180,
               },
               SeriesWrapper: {
-                y: -340,
+                y: -390,
               },
               SeasonsBar: {
                 y: 420,
