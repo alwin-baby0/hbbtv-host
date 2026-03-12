@@ -501,7 +501,7 @@ export default class SingleSeries extends Lightning.Component {
               },
             }).then((data) => parseSeasonData(data, seriesId, seasonId));
 
-            if (newRails.items) {
+            if (newRails?.items) {
               const railItems = railItemConstructor(newRails.items, RAIL_TYPES.EPISODE);
 
               this._Column.Items.children[0]._appendItems(railItems);
