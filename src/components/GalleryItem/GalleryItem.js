@@ -111,7 +111,7 @@ export default class GalleryItem extends Lightning.Component {
             marginBottom: 20,
           },
           Summary: {
-            w: 550,
+            w: 650,
             h: 29,
             text: {
               fontSize: 24,
@@ -457,6 +457,8 @@ export default class GalleryItem extends Lightning.Component {
     } else {
       factLine = eventDate && eventTime ? [eventDate, eventTime].join(' | ') : '';
     }
+
+    console.log('asdf factline, imdbScore: ', factLine, imdbScore);
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
     const tGenre = t(TRANSLATIONS.GENRE) + ':';
