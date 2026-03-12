@@ -322,11 +322,9 @@ export default class App extends Router.App {
             // Router navigation for "Yes, exit now"
             switch (device) {
               case 'metrological':
-                let success = await Lifecycle.close('userExit');
-                console.log(success);
+                await Lifecycle.close('userExit');
                 Lifecycle.listen('unloading', async () => {
-                  let results = await Lifecycle.finished();
-                  console.log(results);
+                  await Lifecycle.finished();
                 });
                 this.application.closeApp();
                 break;

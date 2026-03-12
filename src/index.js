@@ -81,15 +81,23 @@ sequence([
   async () => {
     await DidomiService.init();
     const userNotice = window.Didomi.getConfig();
-    if (userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
+
+    let userConsent = await window.Didomi.getCurrentUserStatus();
+
+    let isDeclined = true;
+    Object.keys(userConsent.purposes).forEach((key) => {
+      if (userConsent.purposes[key].enabled) {
+        isDeclined = false;
+      }
+    });
+
+    if (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
 
     window.didomiOnReady &&
       window.didomiOnReady.push(async () => {
-        const userConsent = await window.Didomi.getCurrentUserStatus();
-        console.log(userConsent);
+        userConsent = await window.Didomi.getCurrentUserStatus();
         localStorage.setItem(LOCAL_STORAGE_KEYS.USER_CONSENT, JSON.stringify(userConsent));
 
-        console.log(userNotice);
         localStorage.setItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG, JSON.stringify(userNotice));
       });
   },
@@ -119,16 +127,12 @@ sequence([
         Object.entries(getDeviceInfo()).map(([key, value]) => `| ${key}: ${value} |`)
       );
 
-      const result = deviceType === 'metrological' ? Lifecycle.ready() : {};
-      console.log(result);
+      deviceType === 'metrological' && Lifecycle.ready();
       eventTrackPayload(EVENT_NAMES.LAUNCH_APP);
 
-      let init = deviceType === 'metrological' ? await Parameters.initialization() : {};
-      console.log(init);
+      deviceType === 'metrological' && (await Parameters.initialization());
 
-      let build =
-        deviceType === 'metrological' ? await Metrics.appInfo(process.env.APP_VERSION) : {};
-      console.log(build);
+      deviceType === 'metrological' && (await Metrics.appInfo(process.env.APP_VERSION));
     } catch (error) {
       console.error('Failed to start the app', error);
       const deviceInfo = getDeviceInfo();
