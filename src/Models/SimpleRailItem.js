@@ -71,7 +71,7 @@ class SimpleRailItem {
     this.portraitPosters = [];
     this.channelImages;
 
-    if (images.landscape) {
+    if (images && images.landscape) {
       const landscapeKeysOriginal = Object.keys(images.landscape);
       const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
 
@@ -83,7 +83,7 @@ class SimpleRailItem {
       );
     }
 
-    if (images.thumbnail) {
+    if (images && images.thumbnail) {
       const thumbnailKeysOriginal = Object.keys(images.thumbnail);
       const thumbnailKeys = thumbnailKeysOriginal.map((item) => `thumbnail_${item}`);
 
@@ -92,7 +92,7 @@ class SimpleRailItem {
       );
     }
 
-    if (images.poster) {
+    if (images && images.poster) {
       const portraitKeysOriginal = Object.keys(images.poster);
       const portraitKeys = portraitKeysOriginal.map((item) => `poster_portrait_${item}`);
 
