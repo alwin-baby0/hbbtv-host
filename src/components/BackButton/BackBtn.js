@@ -1,18 +1,27 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
+import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
 
 export default class BackBtn extends Lightning.Component {
+  _props = {
+    parentState: null,
+  };
+
   static _template() {
     return {
       Icon: {
         color: Colors('#ffffff'),
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
       },
     };
   }
 
   get _Icon() {
     return this.tag('Icon');
+  }
+
+  set props(props) {
+    this._props = { ...this._props, ...props };
   }
 
   _focus() {
@@ -29,22 +38,23 @@ export default class BackBtn extends Lightning.Component {
 
   _handleEnter() {
     const router = Router.getHistory().filter(
-      (history) => history.hash != 'splash' && history.hash != 'cmp'
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
     if (router.length) {
       Router.setHistory([...router]);
       Router.back();
     } else {
-      Router.navigate('home');
+      Router.navigate(ROUTES.HOME);
     }
   }
 
   _handleHover() {
     this._focus();
-  }
-
-  _handleUnhover() {
-    this._unfocus();
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
   }
 
   _handleClick() {
@@ -53,13 +63,13 @@ export default class BackBtn extends Lightning.Component {
     }
 
     const router = Router.getHistory().filter(
-      (history) => history.hash != 'splash' && history.hash != 'cmp'
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
     if (router.length) {
       Router.setHistory([...router]);
       Router.back();
     } else {
-      Router.navigate('home');
+      Router.navigate(ROUTES.HOME);
     }
   }
 }

@@ -1,6 +1,7 @@
-import { Colors, Router } from '@lightningjs/sdk';
+import { Colors, Router, Lightning } from '@lightningjs/sdk';
 import { CATEGORY_TYPES } from '../../Models/Category';
 import HeroRailItem from '../../components/RailItems/HeroRailItems';
+import { ROUTES } from '../../constants/globalConstants';
 
 export default class Bullet extends HeroRailItem {
   _props = {};
@@ -37,7 +38,7 @@ export default class Bullet extends HeroRailItem {
 
   _focus() {
     this._Border.patch({
-      texture: lng.Tools.getRoundRect(385, 215, 8, 4, Colors('#D9D9D9').get(), false),
+      texture: Lightning.Tools.getRoundRect(385, 215, 8, 4, Colors('#D9D9D9').get(), false),
     });
   }
 
@@ -52,15 +53,15 @@ export default class Bullet extends HeroRailItem {
 
     switch (item.type.value) {
       case CATEGORY_TYPES.MOVIE: {
-        Router.navigate(`movie-details/${item.id}`);
+        Router.navigate(`${ROUTES.MOVIE_DETAILS}/${item.id}`);
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        Router.navigate(`series-details/${item.id}`);
+        Router.navigate(`${ROUTES.SERIES_DETAILS}/${item.id}`);
         break;
       }
       case CATEGORY_TYPES.EVENTS: {
-        Router.navigate(`event-details/${item.id}`);
+        Router.navigate(`${ROUTES.EVENT_DETAILS}/${item.id}`);
         break;
       }
       case CATEGORY_TYPES.LIVE_TV: {
@@ -68,7 +69,7 @@ export default class Bullet extends HeroRailItem {
       }
       case CATEGORY_TYPES.CHANNELS: {
         this.changeGenre = this.data;
-        Router.navigate(`live/:${this.id}?`);
+        Router.navigate(`${ROUTES.LIVE}/:${this.id}?`);
         break;
       }
       default:

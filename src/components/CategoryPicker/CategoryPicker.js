@@ -1,12 +1,12 @@
-import { Colors, Lightning } from '@lightningjs/sdk';
-import colors from '../../../reskin/colors.json';
+import { Lightning } from '@lightningjs/sdk';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
-import { CARD_SIZES } from '../RailItems/constants';
+import { CARD_SIZES } from '../../constants/globalConstants';
 
 export default class CategoryPicker extends Lightning.Component {
   _props = {
     x: 110,
     y: 150,
+    parentState: null,
   };
 
   static _template() {
@@ -25,32 +25,35 @@ export default class CategoryPicker extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { x, y, items } = this._props;
-
-    this._CaterogyItems.props = { items };
+    const { x, y, items, parentState } = this._props;
 
     this.patch({
       x: x,
       y: y,
       w: CARD_SIZES.CATEGORY.width,
       h: CARD_SIZES.CATEGORY.height,
+      color: null,
       texture: Lightning.Tools.getRoundRect(
         CARD_SIZES.CATEGORY.width,
         CARD_SIZES.CATEGORY.height,
         30,
-        6,
-        Colors(colors.categoryPicker).get(),
-        true,
-        Colors(colors.categoryPicker).get()
+        6
       ),
       CaterogyItems: {
         w: CARD_SIZES.CATEGORY.width,
         h: CARD_SIZES.CATEGORY.height,
+        props: { ...(items && items[0].props), parentState },
       },
     });
   }
 
   _getFocused() {
     return this._CaterogyItems;
+  }
+
+  _handleScroll(event) {
+    if (event.deltaY < 0) {
+      this.fireAncestors('$setStateOnScroll', 'Hero');
+    }
   }
 }

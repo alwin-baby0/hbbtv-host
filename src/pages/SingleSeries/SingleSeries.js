@@ -1,12 +1,31 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import { CMPService, DetailService, t } from '../../Services';
+import { CMPService, DetailService, t, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
-import { eventTrackPayload } from '../../utils/device';
+import { eventTrackPayload, getDeviceType } from '../../utils/device';
+import {
+  EVENT_NAMES,
+  IMG_PATH,
+  LOCAL_STORAGE_KEYS,
+  ROUTES,
+  TRANSLATIONS,
+  VIDEO_TYPES,
+  VOD_PREVIEW_TYPES,
+} from '../../constants/globalConstants';
+import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
+import { constructRails } from '../utils';
+import { Metrics } from '@firebolt-js/sdk';
+
+const states = ['HeroSection', 'BackButton', 'Items'];
 
 export default class SingleSeries extends Lightning.Component {
   _props = {};
+
+  constructor(context) {
+    super(context);
+    this.switchSeason = this.switchSeason.bind(this);
+  }
 
   static _template() {
     return {
@@ -15,30 +34,41 @@ export default class SingleSeries extends Lightning.Component {
       BackButton: {
         type: BackBtn,
         collision: true,
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
         x: 85,
         y: 20,
         zIndex: 100,
+        props: {
+          parentState: 'BackButton',
+        },
       },
       Background: {
         w: 1920,
         h: 1080,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       SeriesWrapper: {
         rect: true,
-        h: 620,
-        w: 1920,
+        h: 883,
+        w: 1570,
         HeroSection: {
           collision: true,
-          h: 620,
+          h: 1080,
           type: GalleryItem,
         },
+      },
+      SeasonsBar: {
+        type: CategoryPicker,
+        props: {
+          x: 110,
+          y: 810,
+        },
+        zIndex: 2,
       },
       Wrapper: {
         collision: true,
         x: 110,
-        y: 715,
+        y: 915,
         h: 600,
         w: 1770,
         clipping: true,
@@ -60,9 +90,9 @@ export default class SingleSeries extends Lightning.Component {
     try {
       const { favorited, seriesId } = this._props;
       if (favorited) {
-        await CMPService.removeFromFavorites(seriesId);
+        await UserService.removeFromFavorites(seriesId);
       } else {
-        await CMPService.addToFavorites(seriesId, 'series');
+        await UserService.addToFavorites(seriesId, VOD_PREVIEW_TYPES.SERIES);
       }
 
       this._props.favorited = !this._props.favorited;
@@ -71,27 +101,38 @@ export default class SingleSeries extends Lightning.Component {
 
       this._HeroSection._FavoriteButton.patch({
         props: {
-          buttonIcon: Utils.asset(newFavorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-          buttonLabel: t('favorite')?.toUpperCase(),
-          width: 360,
+          buttonIcon: Utils.asset(newFavorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
+          buttonLabel: '',
+          width: 100,
+          height: 78,
+          parentState: 'HeroSection',
         },
       });
     } catch (e) {
-      //skip
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(
+          Metrics.ErrorType.MEDIA,
+          '400',
+          'Failed to update favorite status of VOD',
+          true
+        );
       console.log('error', e);
     }
   }
 
   async _active() {
-    const router = Router.getHistory().filter((history) => history.hash != 'splash');
-
-    if (!router.length && !this._props.cmpShown) {
+    if (!this._props.cmpShown) {
       await CMPService.initialFetch();
       const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
       const currentTimeInMS = Math.floor(Date.now() / 1000);
 
       if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate('cmp', { movieId: this._props.seriesId, url: 'series-details' }, false);
+        Router.navigate(
+          ROUTES.CMP,
+          { movieId: this._props.seriesId, url: ROUTES.SERIES_DETAILS },
+          false
+        );
       }
     }
 
@@ -113,23 +154,25 @@ export default class SingleSeries extends Lightning.Component {
     } = this._props;
     const { id } = galleryItem;
 
-    eventTrackPayload('view_serie', id);
+    eventTrackPayload(EVENT_NAMES.VIEW_SERIE, id, seriesId);
     this._HeroSection.patch({
       props: {
         galleryItem: galleryItem,
-        height: 620,
+        height: 1080,
         firstEpisodeVideoId: firstEpisodeVideoId,
         firstEpisodeUrl: firstEpisodeUrl,
         firstEpisodeTitle: firstEpisodeTitle,
         isDeeplinkEpisode: isDeeplinkEpisode,
         seriesId: seriesId,
         ssai,
+        parentState: 'HeroSection',
       },
       Info: {
         GalleryButton: {
           props: {
             width: 430,
-            buttonLabel: t('watch_first_episode')?.toUpperCase(),
+            height: 78,
+            buttonLabel: t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase(),
           },
         },
       },
@@ -138,7 +181,7 @@ export default class SingleSeries extends Lightning.Component {
     const isValidPosition =
       position !== undefined && position !== null && !isNaN(position) && position > 0;
 
-    if (localStorage.getItem('userData')) {
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       if (isValidPosition) {
         this._HeroSection._Info.patch(
           {
@@ -148,19 +191,22 @@ export default class SingleSeries extends Lightning.Component {
               ContinueWatching: {
                 alpha: 1,
                 flexItem: {
-                  marginRight: 10,
+                  marginRight: 15,
                 },
                 props: {
-                  buttonIcon: Utils.asset('icons/home/play.svg'),
-                  buttonLabel: t('continue_watching')?.toUpperCase(),
+                  buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
+                  buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
                   width: 440,
+                  height: 78,
+                  position,
+                  duration,
                   callback: () => {
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
-                        Router.navigate('player', {
+                        Router.navigate(ROUTES.PLAYER, {
                           videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
                           duration: duration,
-                          videoType: 'series',
+                          videoType: VIDEO_TYPES.SERIES,
                           seriesID: seriesId,
                           videoId: lastPlayedId,
                           continueTime: position,
@@ -179,9 +225,10 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 alpha: 1,
                 props: {
-                  buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-                  buttonLabel: t('favorite').toUpperCase(),
-                  width: 360,
+                  buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
+                  buttonLabel: '',
+                  width: 100,
+                  height: 78,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -210,9 +257,10 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 alpha: 1,
                 props: {
-                  buttonIcon: Utils.asset(favorited ? 'icons/heart-filled.svg' : 'icons/heart.svg'),
-                  buttonLabel: t('favorite').toUpperCase(),
-                  width: 360,
+                  buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
+                  buttonLabel: '',
+                  width: 100,
+                  height: 78,
                   callback: () => {
                     this.addToFavorite();
                   },
@@ -225,7 +273,12 @@ export default class SingleSeries extends Lightning.Component {
       }
     }
     this._setState('HeroSection');
+    window.addEventListener('switchS', (event) => {
+      this.switchSeason(event.detail.seasonId);
+    });
   }
+
+  _disable() {}
 
   get _HeroSection() {
     return this.tag('HeroSection');
@@ -247,27 +300,43 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('Wrapper');
   }
 
-  $updateVerticalState(nextState) {
-    this._setState(nextState);
+  get _SeasonsBar() {
+    return this.tag('SeasonsBar');
   }
-
-  _getFocused() {}
 
   _handleBack(e) {
     if (Router.isNavigating()) {
       return;
     }
     e.preventDefault();
-    const router = Router.getHistory().filter(
-      (history) => history.hash != 'splash' && history.hash != 'cmp'
+
+    const routerHistory = Router.getHistory().filter(
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
-    if (router.length) {
-      Router.setHistory([...router]);
+
+    if (routerHistory.length) {
       Router.back();
     } else {
-      Router.navigate('home');
+      Router.navigate(ROUTES.HOME);
     }
+
     this._setState('HeroSection');
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
+  }
+
+  switchSeason(seasonId) {
+    let targetSeason = this._props.allSeasons.find((season) => season.seasonId === seasonId);
+    this._Column.props = {
+      items: constructRails(targetSeason),
+      parentState: 'Items',
+    };
   }
 
   static _states() {
@@ -281,16 +350,19 @@ export default class SingleSeries extends Lightning.Component {
             BackButton: {
               y: 20,
             },
+            SeasonsBar: {
+              y: 810,
+            },
+            Wrapper: {
+              y: 915,
+              h: 600,
+            },
           });
           return this._HeroSection;
         }
 
         _handleDown() {
-          if (this._Column.Items.children.length > 0) {
-            this._setState('Items');
-          } else {
-            return false;
-          }
+          this._setState('SeasonBar');
         }
 
         _handleUp() {
@@ -307,6 +379,22 @@ export default class SingleSeries extends Lightning.Component {
         }
       },
 
+      class SeasonBar extends this {
+        _getFocused() {
+          return this._SeasonsBar;
+        }
+        _handleUp() {
+          this._setState('HeroSection');
+        }
+        _handleDown() {
+          if (this._Column.Items.children.length > 0) {
+            this._setState('Items');
+          } else {
+            return false;
+          }
+        }
+      },
+
       class Items extends this {
         _getFocused() {
           return this._Column;
@@ -317,10 +405,10 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         $exit() {
-          this._Wrapper.patch({
-            y: 715,
+          /* this._Wrapper.patch({
+            y: 915,
             h: 600,
-          });
+          }); */
         }
 
         $verticalContainerIndexChange(index) {
@@ -343,7 +431,10 @@ export default class SingleSeries extends Lightning.Component {
                 y: -180,
               },
               SeriesWrapper: {
-                y: -140,
+                y: -340,
+              },
+              SeasonsBar: {
+                y: 420,
               },
               Wrapper: {
                 y: 500,
@@ -357,7 +448,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleUp() {
-          this._setState('HeroSection');
+          this._setState('SeasonBar');
         }
       },
     ];

@@ -13,8 +13,11 @@ export default async function (page) {
     searchTV.timestamp = new Date().getTime();
     page.tag('VODSection').props = {
       items: [],
+      railTitle: '',
     };
+
     await HomePageService.initialFetch();
+
     page.$changedVODGenre(HomePageService.stripes[0]);
     page._Input._Placeholder.patch({
       visible: true,
@@ -22,4 +25,3 @@ export default async function (page) {
     page._Input.tag('Input').value = '';
   }
 }
-// TODO: move search components into components folder, create service to handle logic behind this page

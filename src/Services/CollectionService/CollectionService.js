@@ -1,6 +1,7 @@
 import { V2 } from '../utils';
 import { parseCollectionData } from '../../Models';
 import FetchingService from '../FetchingService';
+import { API_METHODS, API_URLS } from '../../constants/globalConstants';
 
 class CollectionService extends FetchingService {
   #collectionItem;
@@ -25,9 +26,9 @@ class CollectionService extends FetchingService {
 
   #getColection = async (collectionId) =>
     this._request({
-      url: '/getCollection',
+      url: `/${API_URLS.GET_COLLECTION}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: collectionId,
       },

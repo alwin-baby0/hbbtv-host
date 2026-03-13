@@ -6,9 +6,13 @@ export default async function (page, { collectionId }) {
 
   page._Column.props = {
     items: [],
+    parentState: 'Column',
   };
+
   const rails = constructRails(CollectionService.collectionItem);
+
   page._Column.props = {
     items: rails,
+    parentState: 'Column',
   };
 }

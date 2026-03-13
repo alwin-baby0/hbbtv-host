@@ -2,6 +2,8 @@ import { Lightning } from '@lightningjs/sdk';
 import { VideoPlayer } from '@lightningjs/sdk';
 import { loader, unloader } from '../../../components/Player/HLS';
 import { EPGService } from '../../../Services';
+import { Metrics } from '@firebolt-js/sdk';
+import { getDeviceType } from '../../../utils/device';
 
 export default class LiveTVPlayer extends Lightning.Component {
   static _template() {
@@ -11,7 +13,7 @@ export default class LiveTVPlayer extends Lightning.Component {
   }
 
   _enable() {
-    VideoPlayer.position(105, 1067);
+    VideoPlayer.position(150, 1067);
     VideoPlayer.size(743, 415);
     VideoPlayer.consumer(this);
     VideoPlayer.loader(loader);
@@ -23,11 +25,8 @@ export default class LiveTVPlayer extends Lightning.Component {
     VideoPlayer.consumer(this);
   }
 
-  _active() {
-    this._changeChannel();
-  }
-
   async _active() {
+    this._changeChannel();
     this.fireAncestors('$punchHoleTV');
     VideoPlayer.pause();
   }
@@ -42,12 +41,14 @@ export default class LiveTVPlayer extends Lightning.Component {
   }
 
   _changeChannel(previousChannel) {
-    const channelName = previousChannel.channelId ? previousChannel.channelId : previousChannel.id;
+    const channelName = previousChannel?.channelId
+      ? previousChannel.channelId
+      : previousChannel?.id;
     EPGService.getSingleEPGChannel(channelName)
       .then((singleChannel) => {
         // Get the current time
         const currentTime = new Date();
-        const matchingEntry = singleChannel.items.find((entry) => {
+        const matchingEntry = singleChannel?.items.find((entry) => {
           const startTime = new Date(entry.extensions.start_time);
           const endTime = new Date(entry.extensions.end_time);
 
@@ -63,6 +64,14 @@ export default class LiveTVPlayer extends Lightning.Component {
         }
       })
       .catch((error) => {
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(
+            Metrics.ErrorType.MEDIA,
+            error.response ? error.response?.status.toString() : '400',
+            'Error fetching channel',
+            false
+          );
         console.error('Error occurred:', error);
       });
   }

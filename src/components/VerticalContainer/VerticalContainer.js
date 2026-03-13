@@ -1,5 +1,6 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { getClosestElementIndex } from '../../utils/focus';
+import { CARD_TYPES } from '../../constants/globalConstants';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
@@ -14,9 +15,11 @@ export default class VerticalContainer extends Lightning.Component {
     return {
       Items: {
         w: (w) => w,
+        zIndex: 2,
         flex: {
           direction: 'column',
         },
+        visible: true,
       },
     };
   }
@@ -33,40 +36,52 @@ export default class VerticalContainer extends Lightning.Component {
     this._focusedIndex = val;
   }
 
-  $memberButtonIndexChange(val) {
-    this.Items.children[this._focusedIndex]._unfocus();
-    this._focusedIndex = val;
-  }
-
-  $horizontalContainerPosterIndexChange(val, verticalState) {
-    this.fireAncestors('$verticalContainerIndexChange', val);
-    this.fireAncestors('$updateVerticalState', verticalState);
-    this.Items.children[this._focusedIndex]?._unfocus();
-    this._focusedIndex = val;
-    this.Items.children[this._focusedIndex]?._focus();
-    this._reCalibrateScroll(this._focusedIndex, val); //this fixes the problem when hovering first row from below
-  }
-
-  handleFocusedIndex(val) {
-    //dzoni fja
-    this._handleCarryFocus(this._focusedIndex, val);
-    this._reCalibrateScroll(this._focusedIndex, val);
-    this._focusedIndex = val;
-    this.fireAncestors('$verticalContainerIndexChange', val);
-  }
-
   /**
    * @param {{ items: any[]; carryRowPosition: boolean; }} props
    */
   set props(props) {
-    const { items, ...rest } = props;
+    let { items, railTitle, ...rest } = props;
     this._props = { ...this._props, ...rest };
 
+    if (railTitle && railTitle !== '') {
+      const { h } = rest;
+      this.patch({
+        h: h + 95,
+        Title: {
+          x: 9,
+          y: 10,
+          h: 55,
+          text: {
+            text: railTitle,
+            fontFace: 'Montserrat-Bold',
+            fontSize: 32,
+            lineHeight: 39,
+          },
+        },
+      });
+    } else {
+      this.patch({
+        Title: undefined,
+      });
+    }
+
     if (items !== this._props.items) {
+      items &&
+        items[0]?.type?.name === 'HorizontalContainer' &&
+        (items = items.map((item) => {
+          return {
+            ...item,
+            props: {
+              ...item.props,
+              parentState: this._props.parentState,
+            },
+          };
+        }));
       this._props = { ...this._props, items };
 
       this._focusedIndex = -1;
       this.Items.y = 0;
+      this.Items.visible = true;
 
       this.Items.childList.clear();
       if (items?.length > 0) {
@@ -77,6 +92,13 @@ export default class VerticalContainer extends Lightning.Component {
 
       this._focusedIndex = items && items.length > 0 ? 0 : -1;
       this._scrollPosition = 0;
+    }
+
+    if ((!items || !items.length) && this.ref !== 'EPGData') {
+      this.patch({
+        h: 95,
+        Items: { h: 0, visible: false },
+      });
     }
   }
 
@@ -141,7 +163,7 @@ export default class VerticalContainer extends Lightning.Component {
 
   handleDown() {
     if (this._focusedIndex < this.Items.children.length - 1) {
-      if (this.Items.children[this._focusedIndex + 1]._props?.cardType === 'BANNER') {
+      if (this.Items.children[this._focusedIndex + 1]._props?.cardType === CARD_TYPES.BANNER) {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex + 2);
         this._reCalibrateScroll(this._focusedIndex, this._focusedIndex + 2);
         this._focusedIndex += 2;
@@ -160,7 +182,7 @@ export default class VerticalContainer extends Lightning.Component {
 
   handleUp() {
     if (this._focusedIndex > 0) {
-      if (this.Items.children[this._focusedIndex - 1]._props?.cardType === 'BANNER') {
+      if (this.Items.children[this._focusedIndex - 1]._props?.cardType === CARD_TYPES.BANNER) {
         this._handleCarryFocus(this._focusedIndex, this._focusedIndex - 2);
         this._reCalibrateScroll(this._focusedIndex, this._focusedIndex - 2);
         this._focusedIndex -= 2;
@@ -229,7 +251,9 @@ export default class VerticalContainer extends Lightning.Component {
     const currentFocus = this.Items.children[newIndex];
     const prevFocus = this.Items.children[oldIndex];
 
-    if (!currentFocus) return;
+    if (!currentFocus) {
+      return;
+    }
 
     if (newIndex === 0) {
       this._scrollPosition = 0;
@@ -241,6 +265,30 @@ export default class VerticalContainer extends Lightning.Component {
         y: Math.min(this.finalH / 2 - currentFocus.finalH / 2 + this._scrollPosition, 0),
       });
     }
+
+    this.Items.children[oldIndex]?._unfocus();
+    this.Items.children[newIndex]?._focus();
+  }
+
+  $handleItemHover(index) {
+    const oldIndex = this._focusedIndex;
+    const newIndex = index;
+
+    if (this._focusedIndex !== index) {
+      this.Items.children[this._focusedIndex]?._unfocus();
+      this._focusedIndex = index;
+    }
+    if (index === 0) {
+      this._scrollPosition = 0;
+      this.Items.patch({ y: 0 });
+    }
+    this.fireAncestors('$verticalContainerIndexChange', index);
+    this._reCalibrateScroll(oldIndex, newIndex);
+    this.fireAncestors(
+      '$handleStateHover',
+      this.parent.children.indexOf(this),
+      this._props.parentState
+    );
   }
 
   /**
@@ -260,6 +308,12 @@ export default class VerticalContainer extends Lightning.Component {
           closestElementFunction(nextContainer, previouslyFocusedItem)
         );
       }
+    }
+  }
+
+  _unfocus() {
+    if (this._focusedIndex >= 0 && this._focusedIndex < this.Items.children.length) {
+      this.Items.children[this._focusedIndex]?._unfocus();
     }
   }
 }

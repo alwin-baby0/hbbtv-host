@@ -1,5 +1,9 @@
 // This class is used as generic class for:
 // Home, Search, Movies, Series, Sports screens rails
+import { Metrics } from '@firebolt-js/sdk';
+import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
+import { getDeviceType } from '../utils/device';
+
 class SimpleRailItem {
   constructor(data) {
     const { id, title, type, media_group, summary, extensions } = data;
@@ -20,25 +24,25 @@ class SimpleRailItem {
     }
 
     switch (this.type) {
-      case 'movie':
-      case 'video':
-        this.url = `movie-details/${this.id}`;
+      case RAIL_TYPES.MOVIE:
+      case RAIL_TYPES.VIDEO:
+        this.url = `${ROUTES.MOVIE_DETAILS}/${this.id}`;
         break;
-      case 'sport':
-      case 'serie':
-      case 'series':
+      case RAIL_TYPES.SPORT:
+      case RAIL_TYPES.SERIE:
+      case RAIL_TYPES.SERIES:
         if (this.episodeSeriesID) {
           //case if you are coming from recently watched list
-          this.url = `series-details/${this.episodeSeriesID}`;
+          this.url = `${ROUTES.SERIES_DETAILS}/${this.episodeSeriesID}`;
         } else {
-          this.url = `series-details/${this.id}`;
+          this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
         }
         break;
-      case 'show':
-      case 'event':
-        this.url = `event-details/${this.id}`;
+      case RAIL_TYPES.SHOW:
+      case RAIL_TYPES.EVENT:
+        this.url = `${ROUTES.EVENT_DETAILS}/${this.id}`;
         break;
-      case 'episode':
+      case RAIL_TYPES.EPISODE:
         this.url = data.content?.src;
         this.duration = data.extensions?.duration;
         this.seriesId = data.seriesId;
@@ -86,6 +90,9 @@ class SimpleRailItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
         // skip
       }
     });

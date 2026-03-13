@@ -1,20 +1,23 @@
 import { GalleryItem } from '../../Models';
-import { parseDetailsData, parseSeasonData } from '../../Models/parsers';
+import { parseDetailsData, parseSeasonData, parseVodCategories } from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
+import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { Metrics } from '@firebolt-js/sdk';
+import { getDeviceType } from '../../utils/device';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
     const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
 
     return await this._request({
-      url: `/getMovie`,
+      url: `/${API_URLS.GET_MOVIE}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       headers: headers,
       params: {
         _: timestamp,
@@ -23,17 +26,19 @@ class DetailService extends FetchingService {
     }).then(parseDetailsData);
   };
 
+  seasonTabsParsed;
+
   getSerie = async (seriesId) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const timestamp = new Date().getTime();
 
     const headers = userData ? { 'X-Authorization': `Bearer ${userData.access_token}` } : {}; // Empty headers object if userData is not present
 
     const galleryItem = await this._request({
-      url: '/getSerie',
+      url: `/${API_URLS.GET_SERIE}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       headers: headers,
       params: {
         _: timestamp,
@@ -42,9 +47,9 @@ class DetailService extends FetchingService {
     }).then(parseDetailsData);
 
     const seasonTabs = await this._request({
-      url: '/getSeasonTabs',
+      url: `/${API_URLS.GET_SEASON_TABS}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         _: timestamp,
         series_id: seriesId,
@@ -52,27 +57,30 @@ class DetailService extends FetchingService {
     })
       .then(({ data }) => {
         if (data && data.entry) {
-          return data.entry.map((tab) => tab.id);
+          this.seasonTabsParsed = parseVodCategories({ data }, 'seasonTabs');
+          return data.entry.map((tab) => ({ id: tab.id, title: tab.title }));
         }
-        // Handle case when data or data.entry is undefined
+
         return [];
       })
       .catch((error) => {
-        // Handle the error appropriately
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(Metrics.ErrorType.MEDIA, '404', 'Error fetching seasons', true);
         console.error('Error fetching season tabs:', error);
         return [];
       });
 
-    const seasonsPromises = seasonTabs.map((id) =>
+    const seasonsPromises = seasonTabs.map(({ id }) =>
       this._request({
-        url: '/getSeason',
+        url: `/${API_URLS.GET_SEASON}`,
         apiVersion: V2,
-        method: 'GET',
+        method: API_METHODS.GET,
         params: {
           _: timestamp,
           season_id: id,
         },
-      }).then((data) => parseSeasonData(data, seriesId))
+      }).then((data) => parseSeasonData(data, seriesId, id))
     );
 
     try {
@@ -80,25 +88,32 @@ class DetailService extends FetchingService {
       return {
         galleryItem,
         seasons,
+        seasonTabs,
+        seasonTabsParsed: this.seasonTabsParsed,
       };
     } catch (error) {
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error fetching seasons', true);
       console.error('Error fetching seasons:', error);
-      // Handle or throw the error based on your application's error handling policy
       throw error;
     }
   };
 
   getAdCues = async (videoId, seriesId, videoUrl) =>
     this._request({
-      url: '/getAdcues',
+      url: `/${API_URLS.GET_AD_CUES}`,
       apiVersion: V2,
-      method: 'GET',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      method: API_METHODS.GET,
       params: {
         video_id: videoId,
         series_id: seriesId,
         video_url: videoUrl,
-      }
-    })
+      },
+    });
 
   getSport = async (sportId) => {
     return await this.getSerie(sportId);
@@ -106,9 +121,9 @@ class DetailService extends FetchingService {
 
   getEvent = async (eventId) =>
     this._request({
-      url: '/getSportEvent',
+      url: `/${API_URLS.GET_SPORT_EVENT}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: eventId,
       },

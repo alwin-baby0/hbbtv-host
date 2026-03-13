@@ -1,14 +1,13 @@
-import { Colors, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
+import { Colors, Router, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import { Column } from '@lightningjs/ui-components';
 import { getPlayer, loader, unloader } from '../../components/Player/HLS';
-import lng from '@lightningjs/core';
 import colors from '../../../reskin/colors.json';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
 import SubtitlesButtons from './components/SubtitlesButtons/SubtitlesButtons';
 import ProgressBar from './components/ProgressBar/ProgressBar';
-import { CMPService, t } from '../../Services';
-import { eventTrackPayload } from '../../utils/device';
+import { t, UserService } from '../../Services';
+import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
   convertCueTimeToSeconds,
   formatTimeHMS,
@@ -16,8 +15,19 @@ import {
   playerButtonsLive,
   playerButtonsVOD,
 } from './utils';
+import {
+  EVENT_NAMES,
+  IMG_PATH,
+  LOCAL_STORAGE_KEYS,
+  ROUTES,
+  TRANSLATIONS,
+  VIDEO_TYPES,
+} from '../../constants/globalConstants';
+import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 
-export default class Player extends lng.Component {
+const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];
+
+export default class Player extends Lightning.Component {
   _props = {
     pausedItemId: 1,
     isAdVisible: false,
@@ -27,6 +37,9 @@ export default class Player extends lng.Component {
   };
 
   _cumulativeTime = 0;
+  _podTime = 0;
+  _adTimeCumulated = -1;
+  _podTimeCumulated = -1;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
@@ -50,7 +63,7 @@ export default class Player extends lng.Component {
         y: (y) => y / 2,
         w: 80,
         h: 80,
-        texture: lng.Tools.getSvgTexture(Utils.asset('images/spinner.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.SPINNER), 80, 80),
         mount: 0.5,
         rotation: 0,
       },
@@ -110,6 +123,9 @@ export default class Player extends lng.Component {
             rect: true,
             y: 0,
             color: Colors('#000000').alpha(0).get(),
+            props: {
+              parentState: 'Controls',
+            },
           },
         },
         ProgressBarWrapper: {
@@ -188,6 +204,7 @@ export default class Player extends lng.Component {
           props: {
             w: 600,
             h: 1080,
+            parentState: 'Subtitles',
           },
         },
       },
@@ -201,11 +218,11 @@ export default class Player extends lng.Component {
         Image: {
           w: 890,
           h: 500,
-          texture: lng.Tools.getSvgTexture(Utils.asset('loading-screen.svg'), 890, 500),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.LOADING_SCREEN), 890, 500),
         },
         Message: {
           text: {
-            text: 'There was a problem playing this video, please try again later or contact support at support@wedotv.com.',
+            text: t(TRANSLATIONS.NO_STREAM),
             fontSize: 36,
             wordWrapWidth: 1200,
             textAlign: 'center',
@@ -271,6 +288,10 @@ export default class Player extends lng.Component {
     return this.tag('WrapperAd');
   }
 
+  get _AdBackButton() {
+    return this.tag('WrapperAd.BackButton');
+  }
+
   get _SubtitlesLanguages() {
     return this.tag('Subtitles.Languages');
   }
@@ -292,9 +313,13 @@ export default class Player extends lng.Component {
   }
 
   set params({ videoType, videoUrl, ssai, ...rest }) {
+    Lifecycle.listen('inactive', () => {
+      this._handleBack();
+    });
+
     this._Subtitles.patch({
       Title: {
-        text: t('subtitles'),
+        text: t(TRANSLATIONS.SUBTITLES),
       },
       Languages: {
         items: [
@@ -303,7 +328,7 @@ export default class Player extends lng.Component {
             collision: true,
             props: {
               languageInfo: {
-                name: t('off').toUpperCase(),
+                name: t(TRANSLATIONS.OFF).toUpperCase(),
                 type: 'SUBTITLES',
               },
               index: 0,
@@ -332,7 +357,7 @@ export default class Player extends lng.Component {
       videoUrl,
       ads: ssai,
       pausedItemId: 1,
-      isLive: videoType === 'Stream now' || videoType === 'application/x-mpegURL',
+      isLive: videoType === VIDEO_TYPES.STREAM_NOW || videoType === 'application/x-mpegURL',
     };
   }
 
@@ -400,6 +425,7 @@ export default class Player extends lng.Component {
           w: 1920,
           items: isLive ? playerButtonsLive : playerButtonsVOD,
           targetIndex: 1,
+          parentState: 'Controls',
         },
       });
 
@@ -419,10 +445,11 @@ export default class Player extends lng.Component {
             props: {
               buttonInfo: {
                 label: 'back',
-                icon: `/icons/player/commands/back.svg`,
+                icon: IMG_PATH.BACK_BTN_PLAYER,
                 onLiveContent: true,
                 position: 60,
               },
+              parentState: 'Back',
             },
           },
           // SubtitlesButton: {
@@ -436,6 +463,7 @@ export default class Player extends lng.Component {
           //       onLiveContent: true,
           //       position: 60,
           //     },
+          //     parentState: 'SubtitlesButton'
           //   },
           // },
           SubtitlesButton: undefined,
@@ -515,9 +543,7 @@ export default class Player extends lng.Component {
   }
 
   _checkAdCuePoints() {
-    this._cumulativeTime = 0;
     const currentTime = VideoPlayer.currentTime;
-
     const ssai_params = this._props.ads;
 
     // Check if `ssai` has a `slots` array
@@ -525,15 +551,17 @@ export default class Player extends lng.Component {
       // Iterate over each slot in the `slots` array
       ssai_params.slots.forEach((slot) => {
         // Iterate over each pod in the current slot
-        slot.pods.forEach((pod) => {
+        slot.pods.forEach((pod, podIndex) => {
+          this._podTimeCumulated = podIndex - 1;
           // Iterate over each ad in the current pod
           pod.ads.forEach((ad, index) => {
             const from = convertCueTimeToSeconds(ad.cue.from);
             const to = convertCueTimeToSeconds(ad.cue.to);
-            if (
-              currentTime - this._cumulativeTime >= from &&
-              currentTime - this._cumulativeTime < to
-            ) {
+            if (podIndex === slot.pods.length - 1 && currentTime - this._cumulativeTime > from) {
+              this._podTime = this._cumulativeTime;
+            }
+            const time = podIndex === 0 ? currentTime : currentTime - this._podTime;
+            if (time >= from && time < to) {
               if (this._props.currentAd !== ad) {
                 const lastAd = pod.ads[pod.ads.length - 1];
                 const lastAdTo = convertCueTimeToSeconds(lastAd.cue.to);
@@ -551,7 +579,7 @@ export default class Player extends lng.Component {
                       w: 1920,
                       h: 200,
                       y: 880,
-                      color: 0x66000000, // Semi-transparent black (0x66 is the alpha)
+                      color: 0x66000000,
                     },
                     ProgressBarAd: {
                       type: ProgressBar,
@@ -571,7 +599,11 @@ export default class Player extends lng.Component {
                       h: 65,
                       Icon: {
                         color: Colors(colors.adProgress).get(),
-                        texture: lng.Tools.getSvgTexture(Utils.asset('icons/ad-icon.svg'), 65, 65),
+                        texture: Lightning.Tools.getSvgTexture(
+                          Utils.asset(IMG_PATH.AD_ICON),
+                          65,
+                          65
+                        ),
                       },
                     },
                     AdInfoContainer: {
@@ -610,6 +642,24 @@ export default class Player extends lng.Component {
                           },
                         },
                       },
+                      BackButton: {
+                        type: PlayerButtons,
+                        collision: true,
+                        props: {
+                          buttonInfo: {
+                            label: 'back',
+                            icon: IMG_PATH.BACK_BTN_PLAYER,
+                            onLiveContent: true,
+                            position: 60,
+                            width: 45,
+                            height: 45,
+                            y: 15,
+                            x: -10,
+                            color: Colors(colors.adProgress).get(),
+                            hover: false,
+                          },
+                        },
+                      },
                     },
                   },
                 });
@@ -621,13 +671,14 @@ export default class Player extends lng.Component {
                       props: {
                         w: 200,
                         h: 60,
+                        parentState: 'SkipButton',
                       },
                       x: 1700,
                       y: 915,
                       w: 200,
                       h: 60,
                       rect: true,
-                      texture: lng.Tools.getRoundRect(
+                      texture: Lightning.Tools.getRoundRect(
                         200,
                         60,
                         3,
@@ -666,10 +717,19 @@ export default class Player extends lng.Component {
                 this._handleAdPlayback(ad);
                 this._props.currentAd = ad; // Postavi trenutnu reklamu kao aktivnu
               }
+
+              if (this._adTimeCumulated + this._podTimeCumulated !== index + podIndex - 1) {
+                this._cumulativeTime += to - from;
+                this._adTimeCumulated = index;
+
+                // if (index === pod.ads.length - 1) {
+                //   this._podTime = this._cumulativeTime;
+                // }
+              }
             }
 
             // Provera da li je trenutna reklama završena
-            if (currentTime - this._cumulativeTime >= to && this._props.currentAd === ad) {
+            if (time >= to && this._props.currentAd === ad) {
               this._handleAdEnd(ad);
 
               //check if the current ad is the last ad in the pod
@@ -682,11 +742,15 @@ export default class Player extends lng.Component {
                 this._handleSlotEnd();
               }
               this._props.currentAd = null; // Oslobodi trenutnu reklamu
-            }
 
-            this._cumulativeTime += to - from;
+              if (podIndex === 0) {
+                this._podTime = this._cumulativeTime;
+              }
+            }
           });
+          this._podTimeCumulated = podIndex;
         });
+        this._podTimeCumulated = -1;
       });
     } else {
       console.error('Invalid ssai structure or missing slots.');
@@ -703,17 +767,17 @@ export default class Player extends lng.Component {
   }
 
   _handleSlotEnd() {
-    eventTrackPayload('ad_slot_ended', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_SLOT_ENDED, this._props.videoId);
   }
   _handlePodEnd() {
-    eventTrackPayload('ad_pod_ended', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_POD_ENDED, this._props.videoId);
   }
 
   _handleAdEnd(ad) {
     // Logic to handle when the ad finishes
     console.log('Ad has finished:', ad.impression);
 
-    eventTrackPayload('ad_ended', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_ENDED, this._props.videoId);
     this._props.isAdVisible = false;
     clearInterval(this._progressAdInterval);
     this._adStarted = false;
@@ -727,8 +791,8 @@ export default class Player extends lng.Component {
   }
 
   _handleAdPlayback(ad) {
-    eventTrackPayload('ad_slot_started', this._props.videoId);
-    eventTrackPayload('ad_pod_started', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_SLOT_STARTED, this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.AD_POD_STARTED, this._props.videoId);
 
     this._hideWrapper();
     // Logic to handle ad playback, such as displaying the ad, hiding player controls, etc.
@@ -736,6 +800,7 @@ export default class Player extends lng.Component {
     this._props.isAdVisible = true;
     if (!ad.skipping_allowed) {
       console.log('Skipping not allowed for this ad.');
+      this._setState('AdBackButton');
       // Additional logic to disable skipping
     } else {
       this._setState('SkipButton');
@@ -854,6 +919,9 @@ export default class Player extends lng.Component {
   }
 
   closeVideoPlayer() {
+    this._cumulativeTime = 0;
+    this._podTime = 0;
+    this._adTimeCumulated = -1;
     clearTimeout(this._debounceVideoStart);
     clearTimeout(this._debounceVideoPause);
     VideoPlayer.clear();
@@ -871,17 +939,21 @@ export default class Player extends lng.Component {
   }
 
   handleBackHelper() {
-    if (localStorage.getItem('userData')) {
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
       if (parseFloat(VideoPlayer.duration) > 300) {
         if (this._props.seriesID) {
-          CMPService.addRecentlyWatched(
+          UserService.addRecentlyWatched(
             this._props.videoId,
             'series',
             VideoPlayer.currentTime,
             this._props.seriesID
           );
         } else {
-          CMPService.addRecentlyWatched(this._props.videoId, 'video', VideoPlayer.currentTime);
+          UserService.addRecentlyWatched(
+            this._props.videoId,
+            VIDEO_TYPES.VIDEO,
+            VideoPlayer.currentTime
+          );
         }
       }
     }
@@ -899,7 +971,9 @@ export default class Player extends lng.Component {
     e.preventDefault();
 
     console.log('routerHistory in player back: ', Router.getHistory());
-    const router = Router.getHistory().filter((history) => history.hash != 'splash');
+    const router = Router.getHistory().filter(
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
+    );
     Router.setHistory([...router]);
 
     this.handleBackHelper();
@@ -910,17 +984,13 @@ export default class Player extends lng.Component {
   $exitVideoFromBackClick() {
     this._showWrapper();
 
-    if (this._Wrapper.visible) {
-      this.handleBackHelper();
-    }
+    this.handleBackHelper();
 
     this.closeVideoPlayer();
   }
 
   $exitVideo(e) {
-    if (this._Wrapper.visible) {
-      this._handleBack(e);
-    }
+    this._handleBack(e);
   }
 
   $playVideo() {
@@ -942,7 +1012,7 @@ export default class Player extends lng.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
       });
     }
   }
@@ -953,7 +1023,7 @@ export default class Player extends lng.Component {
 
       clearTimeout(this._debounceVideoPause);
       this._debounceVideoPause = setTimeout(() => {
-        eventTrackPayload('video_pause', this._props.videoId);
+        eventTrackPayload(EVENT_NAMES.VIDEO_PAUSE, this._props.videoId);
       }, 500);
 
       this.$hideSbutitles();
@@ -963,7 +1033,7 @@ export default class Player extends lng.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN), 90, 90),
       });
     }
   }
@@ -978,11 +1048,11 @@ export default class Player extends lng.Component {
     const currentTime = Math.max(
       0,
       Math.min(
-        VideoPlayer.currentTime + this._videoSkipTimeSum - this._props.skipTo,
-        VideoPlayer.duration - this._props.skipTo
+        VideoPlayer.currentTime + this._videoSkipTimeSum - this._cumulativeTime,
+        VideoPlayer.duration - this._cumulativeTime
       )
     );
-    const progress = currentTime / (VideoPlayer.duration - this._props.skipTo);
+    const progress = currentTime / (VideoPlayer.duration - this._cumulativeTime);
 
     if (isLive) {
       this._ProgressBar.progress(1);
@@ -1061,7 +1131,7 @@ export default class Player extends lng.Component {
   $videoPlayerPlaying() {
     clearTimeout(this._debounceVideoStart);
     this._debounceVideoStart = setTimeout(() => {
-      eventTrackPayload('video_start', this._props.videoId, this._props.seriesID);
+      eventTrackPayload(EVENT_NAMES.VIDEO_START, this._props.videoId, this._props.seriesID);
     }, 1000);
   }
 
@@ -1074,10 +1144,10 @@ export default class Player extends lng.Component {
   }
 
   $videoPlayerEnded() {
-    CMPService.deleteRecentlyWatched(this._props.videoId);
+    UserService.deleteRecentlyWatched(this._props.videoId);
     this.closeVideoPlayer();
 
-    eventTrackPayload('video_end', this._props.videoId);
+    eventTrackPayload(EVENT_NAMES.VIDEO_END, this._props.videoId);
   }
 
   $videoPlayerSeeked() {
@@ -1086,7 +1156,7 @@ export default class Player extends lng.Component {
     const { pausedItemId } = this._props;
 
     this._Controls.Items.children[pausedItemId]._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
+      texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
     });
   }
 
@@ -1122,11 +1192,14 @@ export default class Player extends lng.Component {
 
   $videoPlayerError(e) {
     console.error('Error in the player: ', e);
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(Metrics.ErrorType.NETWORK, 'Player error', 'Error in the player', true);
     if (e.event.code === 20) return;
     this._ErrorMessage.patch({
       Message: {
         text: {
-          text: t('no_stream'),
+          text: t(TRANSLATIONS.NO_STREAM),
         },
       },
     });
@@ -1137,6 +1210,7 @@ export default class Player extends lng.Component {
     if (this._getState() === 'Subtitles') {
       return;
     }
+
     this._setState(newState);
   }
 
@@ -1157,25 +1231,36 @@ export default class Player extends lng.Component {
     if (isCurrentlyPlaying) {
       // The video was playing, now it will be paused
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/play.svg'), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 90, 90),
       });
     } else {
       // The video was paused, now it will be playing
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: lng.Tools.getSvgTexture(Utils.asset('/icons/player/commands/pause.svg'), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
       });
     }
   }
 
   _handleMediaRewind() {
+    const wasPlaying = VideoPlayer.playing;
+
     this.$hideSbutitles();
     this._skipVideo(false);
-    VideoPlayer.play();
+
+    if (wasPlaying) {
+      VideoPlayer.play();
+    }
   }
 
   _handleMediaFastForward() {
+    const wasPlaying = VideoPlayer.playing;
+
     this.$hideSbutitles();
     this._skipVideo(true);
+
+    if (wasPlaying) {
+      VideoPlayer.play();
+    }
   }
 
   _handleMediaPlay() {
@@ -1197,11 +1282,37 @@ export default class Player extends lng.Component {
   }
 
   _captureKey({ keyCode }) {
-    const useKeyHandlers = !this._Wrapper.visible;
-    if (this._getState() !== 'Subtitles') this._showWrapper();
+    const keyName = window.keyCodes[keyCode];
 
-    if (window.keyCodes[keyCode] === 'Back' && this._getState() !== 'Subtitles') return false;
-    return useKeyHandlers;
+    const isMediaKey =
+      keyName === 'MediaRewind' ||
+      keyName === 'MediaFastForward' ||
+      keyName === 'MediaPlayPause' ||
+      keyName === 'MediaPlay' ||
+      keyName === 'MediaPause' ||
+      keyName === 'MediaStop';
+
+    if (this._getState() !== 'Subtitles') {
+      this._showWrapper();
+    }
+
+    if (keyName === 'Back' && this._getState() !== 'Subtitles') {
+      return false;
+    }
+
+    if (isMediaKey) {
+      return false;
+    }
+
+    return !this._Wrapper.visible;
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {
@@ -1246,31 +1357,30 @@ export default class Player extends lng.Component {
         _handleEnter() {
           VideoPlayer.seek(this._props.skipTo);
         }
+
+        _handleLeft() {
+          this._setState('AdBackButton');
+        }
       },
 
-      class ProgressBar extends this {
+      class AdBackButton extends this {
         _getFocused() {
-          return this._ProgressBar;
+          return this._AdBackButton;
         }
 
-        _handleEnter() {
-          if (!VideoPlayer.playing) {
-            const { pausedItemId } = this._props;
+        _captureEnter(e) {
+          if (this._getState() === 'AdBackButton') this.$exitVideo(e);
+          return false;
+        }
 
-            VideoPlayer.pause();
-
-            this._Controls.Items.children[pausedItemId]._Icon.patch({
-              texture: lng.Tools.getSvgTexture(
-                Utils.asset('/icons/player/commands/play.svg'),
-                90,
-                90
-              ),
-            });
+        _handleRight() {
+          if (this._props.currentAd.skipping_allowed) {
+            this._setState('SkipButton');
           }
+        }
 
-          if (!this._props.isAdVisible) {
-            this._setState('Controls');
-          }
+        _handleUnhover() {
+          return true;
         }
       },
 

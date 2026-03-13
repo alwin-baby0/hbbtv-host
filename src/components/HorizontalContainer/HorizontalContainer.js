@@ -1,19 +1,21 @@
-// HorizontalContainer.js
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
+import { CARD_TYPES } from '../../constants/globalConstants';
 
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
     items: [],
     paddingLeft: 0,
     disableScroll: false,
+    parentState: null,
+    wrap: false,
   };
   _focusedIndex = -1;
   _scrollPosition = 0;
 
   static _template() {
     return {
-      flex: { direction: 'column', wrap: true },
+      flex: { direction: 'column' },
       Title: {},
       Items: {
         y: 0,
@@ -61,15 +63,15 @@ export default class HorizontalContainer extends Lightning.Component {
 
   set props(props) {
     const { items, railTitle, ...rest } = props;
-
     this._props = { ...this._props, ...rest };
 
-    const { cardType, targetIndex } = rest;
+    const { cardType, targetIndex, wrap } = rest;
 
     if (railTitle && railTitle !== '') {
-      const { h } = rest;
+      const { h, flexItem } = rest;
       this.patch({
         h: h + 95,
+        flexItem: flexItem,
         Title: {
           x: 9,
           y: 10,
@@ -90,6 +92,7 @@ export default class HorizontalContainer extends Lightning.Component {
     }
 
     this.patch({
+      flex: { wrap },
       w: this._props.w,
     });
 
@@ -108,15 +111,14 @@ export default class HorizontalContainer extends Lightning.Component {
       } else {
         this._focusedIndex = items?.length > 0 ? 0 : -1;
       }
-      // todo: change to paddingLeft
-      if (cardType === 'EPG_CARD_ITEM') {
+
+      if (cardType === CARD_TYPES.EPG_CARD_ITEM) {
         this.Items.children[0].patch({
           flex: {
             paddingLeft: this._props.paddingLeft,
           },
         });
 
-        //todo: check
         this._scrollPosition = this._props.paddingLeft + this.w || 0;
       }
     }
@@ -137,7 +139,6 @@ export default class HorizontalContainer extends Lightning.Component {
       if (!currentFocus) return;
 
       let isChildLive = false;
-      let scrollOffsetLive = 0;
       if (
         this.Items.children[this._focusedIndex]._props.extensions &&
         this.Items.children[this._focusedIndex]._props.extensions.end_time
@@ -150,11 +151,9 @@ export default class HorizontalContainer extends Lightning.Component {
           this.Items.children[this._focusedIndex]._props.extensions.end_time
         );
         isChildLive = startTime < currentTime && currentTime < endTime;
-
-        scrollOffsetLive = ((currentTime - startTime) / (1000 * 60)) * 8.33 + 10;
       }
 
-      const containerFinalWidth = this.finalW;
+      const containerFinalWidth = this._props.railWidth ? this._props.railWidth : this.finalW;
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
 
@@ -187,33 +186,6 @@ export default class HorizontalContainer extends Lightning.Component {
 
   _handleUp() {
     return false;
-  }
-
-  _handleHover() {
-    let verticalState;
-
-    const parentContainer = this.parent.parent.ref;
-    const indexForVC = this.parent.children.indexOf(this);
-    const constructorName = this.Items.children[this._focusedIndex]?.constructor.name;
-
-    if (constructorName === 'PosterRailItem' && parentContainer === 'VODSection') {
-      //case for search page
-      verticalState = 'VODSection';
-    }
-    if (constructorName === 'PosterRailItem' && parentContainer !== 'VODSection') {
-      verticalState = 'VodContainer';
-    }
-    if (constructorName === 'SportsEventsRailItem') {
-      verticalState = 'VodContentContainer';
-    }
-    if (constructorName === 'LandscapeRailItem') {
-      verticalState = 'Items';
-    }
-    if (constructorName === 'EPGRailItems') {
-      verticalState = 'EPGS';
-    }
-
-    this.fireAncestors('$horizontalContainerPosterIndexChange', indexForVC, verticalState);
   }
 
   _handleRight() {
@@ -251,11 +223,29 @@ export default class HorizontalContainer extends Lightning.Component {
     return true;
   }
 
+  $handleItemHover(index) {
+    if (this._focusedIndex !== index) {
+      this.Items.children[this._focusedIndex]?._unfocus();
+      this._focusedIndex = index;
+    }
+    this._reCalibrateScroll();
+    this.parent.parent.type &&
+    (this.parent.parent.type.name === 'VerticalContainer' ||
+      this.parent.parent.type.name === 'EPGContainer')
+      ? this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this))
+      : this.fireAncestors(
+          '$handleStateHover',
+          this.parent.children.indexOf(this),
+          this._props.parentState
+        );
+  }
+
   _focus() {
     const { items } = this._props;
     if (this._focusedIndex >= 0 && this._focusedIndex < items.length) {
       this.Items.children[this._focusedIndex]?._focus();
     }
+    this._reCalibrateScroll();
   }
 
   _unfocus() {

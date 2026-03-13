@@ -1,4 +1,3 @@
-
 import { defineConfig, loadEnv } from 'vite';
 import legacy from '@vitejs/plugin-legacy';
 
@@ -30,9 +29,9 @@ export default ({ mode }) => {
   const plugins = [
     legacy({
       renderModernChunks: false,
-      targets: ["Chrome >= 53", "not dead"],
-    })
-  ]
+      targets: ['Chrome >= 53', 'not dead'],
+    }),
+  ];
 
   return defineConfig({
     base: '',

@@ -2,6 +2,7 @@ import { Lightning } from '@lightningjs/sdk';
 import SidebarItems from './NavbarItems';
 
 export let visibility = true;
+
 export default class Navbar extends Lightning.Component {
   static _template() {
     return {
@@ -9,7 +10,7 @@ export default class Navbar extends Lightning.Component {
         type: SidebarItems,
         collision: true,
         x: 40,
-        y: 15,
+        y: 35,
         h: 70,
       },
     };

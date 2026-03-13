@@ -1,4 +1,5 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Utils, Router } from '@lightningjs/sdk';
+import { IMG_PATH } from '../../constants/globalConstants';
 
 export default class LiveChannelRailItem extends Lightning.Component {
   static _template() {
@@ -7,7 +8,7 @@ export default class LiveChannelRailItem extends Lightning.Component {
       w: 180,
       h: 95,
       Backg: {
-        src: Utils.asset('images/Rectangle.png'),
+        src: Utils.asset(IMG_PATH.LIVE_CHANNEL_BG),
         w: 180,
         h: 95,
         zIndex: 100,
@@ -34,5 +35,14 @@ export default class LiveChannelRailItem extends Lightning.Component {
 
   get _Icon() {
     return this.tag('Icon');
+  }
+
+  _handleHover() {
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
+    const { index } = this._props;
+    this.fireAncestors('$handleItemHover', index);
+    this._focus();
   }
 }

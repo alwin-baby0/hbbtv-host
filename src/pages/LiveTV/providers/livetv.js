@@ -1,14 +1,17 @@
 import { EPGService } from '../../../Services';
 import LiveChannelRailItem from '../../../components/RailItems/LiveChannelRailItem';
+import { ROUTES } from '../../../constants/globalConstants';
 import { constructRails } from '../../utils';
 import { Router } from '@lightningjs/sdk';
-const liveTV = {
+
+export const liveTV = {
   timestamp: 0,
 };
+
 const fetchChannels = async (page) => {
   if (
     liveTV.timestamp + 1000 * 60 * 30 <= new Date().getTime() ||
-    Router.getActiveHash() !== 'player'
+    Router.getActiveHash() !== ROUTES.PLAYER
   ) {
     liveTV.timestamp = new Date().getTime();
     await EPGService.initialFetch();
@@ -32,7 +35,7 @@ const fetchChannels = async (page) => {
         return {
           type: LiveChannelRailItem,
           channelInfo: channelInfo,
-          channelEPG: matchingEpg || {}, // No need for || {}, as matchingEpg is already checked
+          channelEPG: matchingEpg,
           w: 190,
           h: 105,
           channelIndex: index,
@@ -45,14 +48,21 @@ const fetchChannels = async (page) => {
 
     page._Categories.props = {
       items: categoryRails,
+      parentState: 'Categories',
     };
 
     page._Channels.props = {
       items: channelsAll,
+      parentState: 'Channels',
     };
   }
 };
-export default async function (page) {
+
+export default async function (page, { cmpShown } = {}) {
   await fetchChannels(page);
   page._EPGData.setInitialOffset();
+  page.props = {
+    ...(page.props || {}),
+    cmpShown,
+  };
 }

@@ -5,6 +5,9 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { CMPService, t } from '../../Services';
+import { EVENT_NAMES, IMG_PATH, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+
+const states = ['BackButton', 'HeroSection', 'Items'];
 
 export default class SingleLiveEvent extends Lightning.Component {
   _props = {};
@@ -15,30 +18,33 @@ export default class SingleLiveEvent extends Lightning.Component {
       BackButton: {
         collision: true,
         type: BackBtn,
-        texture: Lightning.Tools.getSvgTexture(Utils.asset('icons/backbtn.svg'), 80, 80),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.BACK_BTN), 80, 80),
         x: 45,
         y: 30,
         zIndex: 100,
+        props: {
+          parentState: 'BackButton',
+        },
       },
       SeriesWrapper: {
-        Content: {
-          Background: {
-            w: 1920,
-            h: 2080,
-            src: Utils.asset('images/background.jpg'),
-          },
-          HeroSection: {
-            type: GalleryItem,
-          },
+        rect: true,
+        h: 883,
+        w: 1570,
+        HeroSection: {
+          h: 1080,
+          collision: true,
+          type: GalleryItem,
         },
       },
       Wrapper: {
+        collision: true,
         x: 110,
-        y: 715,
+        y: 800,
         h: 600,
         w: 1765,
         clipping: true,
         Column: {
+          collision: true,
           h: 600,
           w: 1700,
           type: VerticalContainer,
@@ -53,12 +59,14 @@ export default class SingleLiveEvent extends Lightning.Component {
 
   set props(props) {
     // Assuming dateRange[0] is the start date and dateRange[1] is the end date
-    const startDate = props.galleryItem.dateRange[0];
-    const endDate = props.galleryItem.dateRange[1];
+    // dateRange is in seconds
+    const startDate = props.galleryItem.dateRange[0] * 1000;
+    const endDate = props.galleryItem.dateRange[1] * 1000;
     const currentDate = new Date().getTime();
 
     this._Column.props = {
       items: [],
+      parentState: 'Items',
     };
 
     this._props = { ...this._props, ...props };
@@ -68,8 +76,10 @@ export default class SingleLiveEvent extends Lightning.Component {
       props: {
         galleryItem: galleryItem,
         fallbackImage,
-        height: 650,
+        height: 883,
         yPos: 100,
+        parentState: 'HeroSection',
+        startDate,
       },
     });
 
@@ -83,10 +93,12 @@ export default class SingleLiveEvent extends Lightning.Component {
               marginTop: 10,
             },
             props: {
-              buttonLabel: t('watch_now')?.toUpperCase(),
-              buttonIcon: Utils.asset('icons/home/play.svg'),
+              buttonLabel: t(TRANSLATIONS.WATCH_NOW)?.toUpperCase(),
+              buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
               width: 400,
+              height: 78,
             },
+            visible: true,
           },
         },
       });
@@ -103,8 +115,9 @@ export default class SingleLiveEvent extends Lightning.Component {
             },
             props: {
               width: 400,
-              buttonLabel: t('coming_soon')?.toUpperCase(),
+              buttonLabel: t(TRANSLATIONS.COMING_SOON)?.toUpperCase(),
               enabled: false,
+              height: 78,
             },
           },
         },
@@ -113,17 +126,15 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   async _active() {
-    const router = Router.getHistory().filter((history) => history.hash != 'splash');
-
-    if (!router.length && !this._props.cmpShown) {
+    if (!this._props.cmpShown) {
       await CMPService.initialFetch();
       const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
       const currentTimeInMS = Math.floor(Date.now() / 1000);
 
       if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
         Router.navigate(
-          'cmp',
-          { movieId: this._props.galleryItem.id, url: 'event-details' },
+          ROUTES.CMP,
+          { movieId: this._props.galleryItem.id, url: ROUTES.EVENT_DETAILS },
           false
         );
       }
@@ -131,7 +142,7 @@ export default class SingleLiveEvent extends Lightning.Component {
 
     const { galleryItem } = this._props;
 
-    eventTrackPayload('view_stream', galleryItem.id);
+    eventTrackPayload(EVENT_NAMES.VIEW_STREAM, galleryItem.id);
   }
 
   _getFocused() {
@@ -163,27 +174,40 @@ export default class SingleLiveEvent extends Lightning.Component {
       return;
     }
     e.preventDefault();
-    const router = Router.getHistory().filter(
-      (history) => history.hash != 'splash' && history.hash != 'cmp'
+
+    const routerHistory = Router.getHistory().filter(
+      (history) => history.hash != ROUTES.SPLASH && history.hash != ROUTES.CMP
     );
-    if (router.length) {
-      Router.setHistory([...router]);
+
+    if (routerHistory.length) {
       Router.back();
     } else {
-      Router.navigate('home');
+      Router.navigate(ROUTES.HOME);
     }
+
     this._setState('HeroSection');
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {
     return [
       class BackButton extends this {
         _getFocused() {
+          this._SeriesWrapper.patch({
+            y: 0,
+          });
           return this._BackButton;
         }
 
         _handleDown() {
-          this._setState('Items');
+          this._setState('HeroSection');
         }
 
         _handleRight() {
@@ -222,7 +246,7 @@ export default class SingleLiveEvent extends Lightning.Component {
 
         $exit() {
           this._Wrapper.patch({
-            y: 715,
+            y: 800,
             h: 600,
           });
         }
@@ -245,13 +269,10 @@ export default class SingleLiveEvent extends Lightning.Component {
             this.patch({
               SeriesWrapper: {
                 y: -140,
+                h: 1080,
               },
               Wrapper: {
-                y: 500,
-                h: 1080,
-                Column: {
-                  h: 1080,
-                },
+                y: 600,
               },
             });
           }

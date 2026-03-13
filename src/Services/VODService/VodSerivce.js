@@ -5,9 +5,15 @@ import {
   parseSportsPageData,
   parseVodCategories,
   parseVodMoviesPageData,
+  parseHomePageHeroSection,
 } from '../../Models/parsers';
-import { VOD_PREVIEW_TYPES } from '../../pages/utils';
 import { V2 } from '../utils';
+import {
+  API_METHODS,
+  API_URLS,
+  VOD_PREVIEW_TYPES,
+  IMAGE_SIZES,
+} from '../../constants/globalConstants';
 
 export const VODS_PER_ROW = 6;
 export const VOD_ROWS_PER_FETCH = 3;
@@ -22,9 +28,9 @@ class VodService extends FetchingService {
   };
 
   #initState = {
-    ['movies']: { ...this.#emptyState },
-    ['series']: { ...this.#emptyState },
-    ['sports']: { ...this.#emptyState },
+    [VOD_PREVIEW_TYPES.MOVIES]: { ...this.#emptyState },
+    [VOD_PREVIEW_TYPES.SERIES]: { ...this.#emptyState },
+    [VOD_PREVIEW_TYPES.SPORTS]: { ...this.#emptyState },
   };
 
   // type of vod to preview
@@ -33,6 +39,9 @@ class VodService extends FetchingService {
   #state = { ...this.#initState };
   // get state for current vod type
   #getCurrentState = () => this.#state[this.#vodType];
+  #heroSectionPage = 1; // Page counter for Hero Section
+  #heroSectionItems;
+  #isLastFetchEmpty = false; // Initialize to false
 
   /**
    * Fetches initial stripes for page
@@ -41,6 +50,16 @@ class VodService extends FetchingService {
     if (!this.#vodType) {
       console.warn('no vod type selected in vod service');
       return;
+    }
+
+    if (!this.#heroSectionItems) {
+      //get gallery data
+      const galleryItems = await this.#getHeroSection();
+      // preload gallry items
+      if (galleryItems?.items) {
+        galleryItems.items.forEach((item) => item.preloadImages(IMAGE_SIZES.S));
+        this.#heroSectionItems = galleryItems;
+      }
     }
 
     const currentState = this.#getCurrentState();
@@ -70,6 +89,55 @@ class VodService extends FetchingService {
         // if we dont get any data, previous page was the last
         currentState.hasMore = false;
       }
+    }
+  }
+
+  #getHeroSection = async (page = 1) => {
+    // const params = {
+    //   row: 1,
+    //   page,
+    //   limit: 6,
+    // };
+
+    // switch (this.#vodType) {
+    //   case VOD_PREVIEW_TYPES.MOVIES:
+    //     return await this.#getMovies(params);
+    //   case VOD_PREVIEW_TYPES.SERIES:
+    //     return await this.#getSeries(params);
+    //   case VOD_PREVIEW_TYPES.SPORTS:
+    //     return await this.#getSports(params);
+    //   default:
+    //     console.warn('wrong vodType getVods');
+    // }
+    return this._request({
+      url: `/${API_URLS.GET_HOME_PAGE}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+      params: {
+        row: 1,
+        page: page, // Use the passed page parameter
+        limit: 6,
+      },
+    }).then(parseHomePageHeroSection);
+  };
+
+  async fetchMoreItemsForHeroSection() {
+    // Add a check for the previous fetch result
+    if (this.#heroSectionItems && !this.#isLastFetchEmpty) {
+      const nextPage = this.#heroSectionPage + 1;
+      const heroSectionData = await this.#getHeroSection(nextPage);
+
+      // Check if heroSectionData is null, undefined, or has no items
+      if (!heroSectionData || !heroSectionData.items || heroSectionData.items.length === 0) {
+        this.#isLastFetchEmpty = true; // Mark the fetch as empty
+        return []; // Return an empty array if no data or no items
+      }
+
+      // If data is valid and items exist, update page, items, and reset empty fetch flag
+      this.#heroSectionPage = nextPage;
+      this.#heroSectionItems.items.push(...heroSectionData.items);
+      this.#isLastFetchEmpty = false; // Reset the flag as fetch was successful
+      return heroSectionData;
     }
   }
 
@@ -107,6 +175,11 @@ class VodService extends FetchingService {
    */
   resetData() {
     this.#state = { ...this.#initState };
+    this.#heroSectionItems = undefined;
+  }
+
+  get heroSectionItems() {
+    return this.#heroSectionItems;
   }
 
   /**
@@ -172,9 +245,9 @@ class VodService extends FetchingService {
 
   #getGenres = async (vodType) =>
     await this._request({
-      url: '/getGenres',
+      url: `/${API_URLS.GET_GENRES}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         category: vodType,
         type: `genres_${vodType}`,
@@ -183,33 +256,41 @@ class VodService extends FetchingService {
 
   #getMovies = async (params) =>
     await this._request({
-      url: '/movies',
+      url: `/${API_URLS.GET_MOVIES}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params,
     }).then(parseVodMoviesPageData);
 
+  #getMoviesHeroSection = async (params) =>
+    await this._request({
+      url: `/${API_URLS.GET_MOVIES}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+      params,
+    }).then(parseHomePageHeroSection);
+
   #getSeries = async (params) =>
     await this._request({
-      url: '/series',
+      url: `/${API_URLS.GET_SERIES}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params,
     }).then(parseSeriesPageData);
 
   #getSports = async (params) =>
     await this._request({
-      url: '/sports',
+      url: `/${API_URLS.GET_SPORTS}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params,
     }).then(parseSportsPageData);
 
   #getSportsEvents = async (type = 'video', language = 'en') =>
     await this._request({
-      url: '/getSportEvents',
+      url: `/${API_URLS.GET_SPORT_EVENTS}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         type,
         language,

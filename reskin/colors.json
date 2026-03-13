@@ -1,7 +1,8 @@
 {
   "background": "#17191A",
   "white": "#ffffff",
-  "focus": "#A61619",
+  "black": "#000000",
+  "focus": "#d01c1f",
   "unfocus": "#FFFFFF",
   "sliderDescription": "#BDBDBD",
   "focusedBullet": "#FFFFFF",
@@ -16,5 +17,7 @@
   "focusDisabled": "#4d4c4c",
   "unfocusDisabled": "#4d4c4c",
   "adProgress": "#ffcc00",
-  "focusEpg": "#E01D21"
+  "focusEpg": "#E01D21",
+  "catPickerItemUnf": "#34353a",
+  "metadata": "#b5b5b4"
 }

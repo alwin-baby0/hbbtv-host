@@ -1,5 +1,5 @@
-import { Colors, Utils } from '@lightningjs/sdk';
-import { CARD_SIZES } from './constants';
+import { Colors, Utils, Router, Lightning } from '@lightningjs/sdk';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
@@ -7,11 +7,15 @@ import Image from '../Image/Image';
 export default class SportsEventsRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder-empty.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.LANDSCAPE_RAIL_PH_EMPTY),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
   };
+
   static _template() {
     return {
       ...super._template(),
@@ -31,7 +35,7 @@ export default class SportsEventsRailItem extends FocusableItem {
         h: 30,
         color: Colors(colors.focus).get(),
         shader: {
-          type: lng.shaders.RoundedRectangle,
+          type: Lightning.shaders.RoundedRectangle,
           radius: [0, 4, 4, 0],
         },
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
@@ -83,7 +87,7 @@ export default class SportsEventsRailItem extends FocusableItem {
         },
       },
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: 9,
       },
     };
@@ -164,13 +168,12 @@ export default class SportsEventsRailItem extends FocusableItem {
   }
 
   _handleHover() {
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     super._focus();
-  }
-
-  _handleUnhover() {
-    super._unfocus();
   }
 
   _handleClick() {

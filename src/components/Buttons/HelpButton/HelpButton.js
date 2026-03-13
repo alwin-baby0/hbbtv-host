@@ -1,28 +1,42 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
-import { Column } from '@lightningjs/ui-components';
 import colors from '../../../../reskin/colors.json';
-import { SettingsService } from '../../../Services';
 
 export default class PageItem extends Lightning.Component {
   static _template() {
     return {
-      Column: {
-        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-        w: 240,
-        h: 65,
-        type: Column,
-        color: Colors(colors.white).get(),
-        rect: true,
-        shader: { type: Lightning.shaders.RoundedRectangle, radius: 6 },
-        Text: {
-          w: 230,
-          h: 25,
-          text: {
-            textAlign: 'center',
-            fontFace: 'Montserrat-Medium',
-            fontSize: 20,
-            lineHeight: 25,
-            letterSpacing: 1.2,
+      FocusBorder: {
+        flex: {
+          direction: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        texture: Lightning.Tools.getRoundRect(
+          401,
+          74,
+          15,
+          2,
+          Colors('#000000').alpha(0).get(),
+          false
+        ),
+        zIndex: 100,
+        Column: {
+          collision: true,
+          flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+          w: 390,
+          h: 62,
+          color: Colors(colors.white).alpha(0).get(),
+          rect: true,
+          shader: { type: Lightning.shaders.RoundedRectangle, radius: 15 },
+          Text: {
+            w: 360,
+            h: 45,
+            text: {
+              textAlign: 'center',
+              fontFace: 'Montserrat-Bold',
+              fontSize: 33,
+              lineHeight: 30,
+              letterSpacing: 1.2,
+            },
           },
         },
       },
@@ -31,6 +45,10 @@ export default class PageItem extends Lightning.Component {
 
   get _Column() {
     return this.tag('Column');
+  }
+
+  get _FocusBorder() {
+    return this.tag('FocusBorder');
   }
 
   set pageInfoData(val) {
@@ -43,15 +61,13 @@ export default class PageItem extends Lightning.Component {
 
   _enable() {
     this._Column.patch({
-      color: Colors(colors.background).get(),
       Text: {
         text: { text: this._pageInfoData.title },
         color: Colors(colors.white).get(),
       },
     });
-    let newPage;
-    newPage = SettingsService.getSinglePage(1);
-    this.fireAncestors('$changeDescription', newPage, 1);
+
+    this.fireAncestors('$changeDescription', 1);
   }
 
   _active() {
@@ -59,60 +75,71 @@ export default class PageItem extends Lightning.Component {
   }
 
   _handleEnter() {
-    let newPage;
-    newPage = SettingsService.getSinglePage(this._pageInfoData.id);
-
     let pageId = this._pageInfoData.id;
-    this.fireAncestors('$changeDescription', newPage, pageId);
+    this.fireAncestors('$changeDescription', pageId);
     this.fireAncestors('$setFocus', this._pageIndex);
   }
 
   _selectButton() {
     this._selected = true;
     this._Column.patch({
-      color: Colors(colors.focus).get(),
+      Text: {
+        color: Colors(this._focused ? colors.white : colors.focus).get(),
+      },
     });
   }
 
   _unselectButton() {
     this._selected = false;
     this._Column.patch({
-      color: Colors(colors.background).get(),
+      Text: {
+        color: Colors(colors.white).get(),
+      },
     });
   }
 
   _focus() {
     this._Column.patch({
       color: Colors(colors.focus).get(),
+      Text: {
+        color: Colors(colors.white).get(),
+      },
     });
+
+    this._FocusBorder.patch({
+      texture: Lightning.Tools.getRoundRect(401, 74, 15, 2, Colors(colors.focus).get(), false),
+    });
+    this._focused = true;
   }
 
   _unfocus() {
-    if (this._selected) {
-      this._Column.patch({
-        color: Colors(colors.focusedHelpButton).get(),
-      });
-    } else {
-      this._Column.patch({
-        color: Colors(colors.unfocusedHelpButton).get(),
-      });
-    }
+    this._Column.patch({
+      color: Colors(colors.unfocusedHelpButton).alpha(0).get(),
+      Text: {
+        color: Colors(this._selected ? colors.focus : colors.white).get(),
+      },
+    });
+
+    this._FocusBorder.patch({
+      texture: Lightning.Tools.getRoundRect(
+        401,
+        74,
+        15,
+        2,
+        Colors(colors.focus).alpha(0).get(),
+        false
+      ),
+    });
   }
 
   _handleHover() {
     this._focus();
-  }
-
-  _handleUnhover() {
-    this._unfocus();
+    this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this));
   }
 
   _handleClick() {
-    let newPage;
-    newPage = getSinglePage(this._pageInfoData.id);
-
     let pageId = this._pageInfoData.id;
-    this.fireAncestors('$changeDescription', newPage, pageId);
+    this.fireAncestors('$changeDescription', pageId);
     this.fireAncestors('$setFocus', this._pageIndex);
   }
 }

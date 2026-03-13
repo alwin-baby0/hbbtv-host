@@ -1,5 +1,7 @@
 import { VideoPlayer } from '@lightningjs/sdk';
 import Hls from 'hls.js';
+import { getDeviceType } from '../../utils/device';
+import { Metrics } from '@firebolt-js/sdk';
 
 export let player = null;
 
@@ -8,6 +10,9 @@ const adUrlPattern = /\/break_\d+\.ts$/i;
 
 function handleUnrecoverableError(player, errorEvent) {
   if (VideoPlayer._consumer) {
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(Metrics.ErrorType.NETWORK, 'Player error', 'Error in the player', true);
     VideoPlayer._consumer.fire('$videoPlayerError', errorEvent, VideoPlayer.currentTime);
     VideoPlayer._consumer.fire('$videoPlayerEvent', 'Error', errorEvent, VideoPlayer.currentTime);
   }
@@ -20,8 +25,11 @@ const createPlayer = (options) => {
       debug: false,
       liveBackBufferLength: 30,
       enableWorker: false,
-      maxBufferLength: 30,
+      maxBufferLength: 10,
+      maxMaxBufferLength: 20,
       backBufferLength: 30,
+      startLevel: 4,
+      maxInitialBitrate: 15000000,
       ...options,
     });
   }
