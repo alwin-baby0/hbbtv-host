@@ -506,12 +506,7 @@ export default class SingleMovie extends Lightning.Component {
     });
 
     // Build button configuration based on movie data and user state
-    const buttonConfigs = this._buildButtonConfiguration(
-      movie,
-      movieTrailerUrl,
-      last_position,
-      favorited
-    );
+    const buttonConfigs = this._buildButtonConfiguration(movieTrailerUrl, last_position, favorited);
 
     const rows = this._arrangeButtonsInRowsDependingOnLanguage(buttonConfigs);
 

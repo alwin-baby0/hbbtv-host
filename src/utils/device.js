@@ -130,7 +130,6 @@ const getWebOSInfo = async () => {
       method: 'deviceid/getIDs',
       parameters: { idType: ['LGUDID'] },
       onSuccess: (response) => {
-        console.log('Advertising ID:', response.idList[0].idValue);
         resolve({ serialNumber: response.idList[0].idValue });
       },
       onFailure: function (error) {

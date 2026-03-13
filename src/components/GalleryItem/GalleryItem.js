@@ -265,9 +265,23 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
           },
         },
-        AuthorizedButtons: {
-          x: 445,
+        TrailerButton: {
+          type: Button,
+          collision: true,
+          x: 485,
           y: -88,
+          props: {
+            width: 250,
+            height: 78,
+          },
+          flexItem: {
+            marginTop: 10,
+          },
+          visible: false,
+        },
+        AuthorizedButtons: {
+          x: 715,
+          y: -176,
           h: 70,
           flex: { direction: 'row' },
           ContinueWatching: {
@@ -289,7 +303,7 @@ export default class GalleryItem extends Lightning.Component {
         },
         Metadata: {
           flex: { direction: 'column' },
-          y: 20,
+          y: -68,
           AgeRating: {
             w: 700,
             h: 30,
@@ -447,6 +461,7 @@ export default class GalleryItem extends Lightning.Component {
       eventDate,
       eventTime,
       streamUrl,
+      trailerUrl,
     } = galleryItem;
 
     const imdbScoreLabeled = `IMDB ${imdbScore}`;
@@ -687,6 +702,29 @@ export default class GalleryItem extends Lightning.Component {
       },
     });
 
+    this._TrailerButton &&
+      (() => {
+        if (trailerUrl) {
+          const callback = () => {
+            Router.navigate(ROUTES.PLAYER, {
+              videoUrl: trailerUrl,
+              shouldSaveProgress: false,
+            });
+          };
+
+          const btnIcon = Utils.asset(IMG_PATH.PLAY_BTN);
+
+          this._TrailerButton.patch({
+            props: {
+              buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
+              callback: callback,
+              buttonIcon: btnIcon,
+            },
+            visible: true,
+          });
+        }
+      })();
+
     this._GalleryButton &&
       (() => {
         // Define the callback based on the enabled prop
@@ -801,6 +839,10 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('GalleryButton');
   }
 
+  get _TrailerButton() {
+    return this.tag('TrailerButton');
+  }
+
   get _ContinueWatching() {
     return this.tag('AuthorizedButtons.ContinueWatching');
   }
@@ -840,16 +882,25 @@ export default class GalleryItem extends Lightning.Component {
     switch (buttonName) {
       case 'GalleryButton':
         this._setState('GalleryButton');
+        this._TrailerButton.unfocus();
+        this._ContinueWatching._unfocus();
+        this._FavoriteButton._unfocus();
+        break;
+      case 'TrailerButton':
+        this._setState('TrailerButton');
+        this._GalleryButton._unfocus();
         this._ContinueWatching._unfocus();
         this._FavoriteButton._unfocus();
         break;
       case 'ContinueWatching':
         this._setState('ContinueWatching');
+        this._TrailerButton.unfocus();
         this._GalleryButton._unfocus();
         this._FavoriteButton._unfocus();
         break;
       case 'FavoriteButton':
         this._setState('FavoriteButton');
+        this._TrailerButton.unfocus();
         this._ContinueWatching._unfocus();
         this._GalleryButton._unfocus();
         break;
@@ -862,6 +913,29 @@ export default class GalleryItem extends Lightning.Component {
         _getFocused() {
           return this._GalleryButton;
         }
+
+        _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._TrailerButton.visible) {
+            this._setState('TrailerButton');
+          } else if (this._ContinueWatching.alpha > 0) {
+            this._setState('ContinueWatching');
+          } else if (this._FavoriteButton.alpha > 0) {
+            this._setState('FavoriteButton');
+          } else {
+            return false;
+          }
+        }
+      },
+
+      class TrailerButton extends this {
+        _getFocused() {
+          return this._TrailerButton;
+        }
+
         _handleRight() {
           if (window.Didomi && didomiVisible) {
             return true;
@@ -874,6 +948,14 @@ export default class GalleryItem extends Lightning.Component {
           } else {
             return false;
           }
+        }
+
+        _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          this._setState('GalleryButton');
         }
       },
       class ContinueWatching extends this {
@@ -896,7 +978,11 @@ export default class GalleryItem extends Lightning.Component {
             return true;
           }
 
-          this._setState('GalleryButton');
+          if (this._TrailerButton.visible) {
+            this._setState('TrailerButton');
+          } else {
+            this._setState('GalleryButton');
+          }
         }
 
         _handleDown() {
@@ -925,6 +1011,8 @@ export default class GalleryItem extends Lightning.Component {
 
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
+          } else if (this._TrailerButton.visible) {
+            this._setState('TrailerButton');
           } else {
             this._setState('GalleryButton');
           }
