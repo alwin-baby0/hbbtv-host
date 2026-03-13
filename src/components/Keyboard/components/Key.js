@@ -9,7 +9,8 @@ export default class Key extends Lightning.Component {
         zIndex: 400,
         collision: true,
         rect: true,
-        color: Colors('#1b1b1b').get(),
+        shader: { type: Lightning.shaders.RoundedRectangle, radius: 6 },
+        color: Colors('#1b1b1b').alpha(0).get(),
         flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
         Title: {},
       },
@@ -39,7 +40,9 @@ export default class Key extends Lightning.Component {
   _enable() {
     if (this._data.icon) {
       this._Title.patch({
-        texture: Img(Utils.asset(`/icons/${this._data.icon}`)).contain(60, 60),
+        h: 60,
+        w: 60,
+        src: Utils.asset(`/icons/${this._data.icon}`),
       });
     } else {
       this._Title.patch({
@@ -53,6 +56,7 @@ export default class Key extends Lightning.Component {
       Key: {
         w: this._data.w,
         h: this._data.h,
+        color: this._rowIndex === 0 ? Colors('#383643').get() : '',
       },
     });
   }
@@ -75,7 +79,7 @@ export default class Key extends Lightning.Component {
       zIndex: 400,
       w: this._data.w,
       h: this._data.h,
-      color: Colors('#1b1b1b').get(),
+      color: this._rowIndex === 0 ? Colors('#383643').get() : '',
       Title: {
         color: Colors('#ffffff').get(),
       },
@@ -86,10 +90,6 @@ export default class Key extends Lightning.Component {
   _handleHover() {
     this.fireAncestors('$setFocusKey', { row: this._rowIndex, index: this._index });
     this._focus();
-  }
-
-  _handleUnhover() {
-    this._unfocus();
   }
 
   _handleEnter() {

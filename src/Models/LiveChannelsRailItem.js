@@ -1,5 +1,9 @@
 // This class is used as generic class for:
 // Home, Search, Movies, Series, Sports screens rails
+import { Metrics } from '@firebolt-js/sdk';
+import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
+import { getDeviceType } from '../utils/device';
+
 class LiveChannelsRailItem {
   constructor(data) {
     const { id, title, type, media_group } = data;
@@ -8,24 +12,24 @@ class LiveChannelsRailItem {
     this.type = type?.value;
 
     switch (this.type) {
-      case 'movie':
-        this.url = `movie-details/${this.id}`;
+      case RAIL_TYPES.MOVIE:
+        this.url = `${ROUTES.MOVIE_DETAILS}/${this.id}`;
         break;
-      case 'sport':
-      case 'serie':
-        this.url = `series-details/${this.id}`;
+      case RAIL_TYPES.SPORT:
+      case RAIL_TYPES.SERIE:
+        this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
         break;
-      case 'show':
-      case 'event':
-        this.url = `event-details/${this.id}`;
+      case RAIL_TYPES.SHOW:
+      case RAIL_TYPES.EVENT:
+        this.url = `${ROUTES.EVENT_DETAILS}/${this.id}`;
         break;
-      case 'episode':
+      case RAIL_TYPES.EPISODE:
         this.url = data.content.src;
         this.duration = data.extensions.duration;
         break;
-      case 'livechannel':
+      case RAIL_TYPES.LIVE_CHANNEL:
         break;
-      case 'epg-channel':
+      case RAIL_TYPES.EPG_CHANNEL:
         break;
       default:
         console.warn('unknown rail item type', this.type);
@@ -72,6 +76,9 @@ class LiveChannelsRailItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
         // skip
       }
     });

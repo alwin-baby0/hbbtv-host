@@ -19,10 +19,13 @@
   "no_further_movies": "No further movies",
   "no_further_series": "No further series",
   "no_results": "No results found",
+  "age_rating": "Age Rating",
+  "genre": "Genre",
   "subtitles": "Subtitles",
   "off": "Off",
   "live": "Live",
   "search": "Search",
+  "no_recent_searches": "No recent searches",
   "cast": "Cast",
   "director": "Director",
   "continue_watching": "Continue watching",
@@ -64,6 +67,10 @@
   "hide": "Hide",
   "search_for": "Search For",
   "cmp_title": "We value your privacy",
+  "cmp_description": "'We use cookies to enhance browsing experience. By clicking “Yes” you consent to our use of cookies. You can customize your consent preferences by clicking “Customize”'",
   "refresh":"refresh",
-  "close":"close"
+  "close":"close",
+  "no_favorites": "Your favorite list is empty",
+  "no_continue_watching": "No titles for continue watching",
+  "help_info_label": "Info"
 }

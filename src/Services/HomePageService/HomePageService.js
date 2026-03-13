@@ -1,12 +1,13 @@
 import FetchingService from '../FetchingService';
 import { SimpleRailItem } from '../../Models';
 import { V2 } from '../utils';
-import { imageSizes } from '../../Models/utils';
 import {
   parseBannerData,
   parseHomePageHeroSection,
   parseHomePageRailData,
 } from '../../Models/parsers';
+import { API_METHODS, API_URLS, IMAGE_SIZES } from '../../constants/globalConstants';
+
 class HomePageService extends FetchingService {
   #heroSectionItems;
   #stripes = [];
@@ -28,7 +29,7 @@ class HomePageService extends FetchingService {
       const galleryItems = await this.#getHomePageHeroSection();
       // preload gallry items
       if (galleryItems?.items) {
-        galleryItems.items.forEach((item) => item.preloadImages(imageSizes.S));
+        galleryItems.items.forEach((item) => item.preloadImages(IMAGE_SIZES.S));
         this.#heroSectionItems = galleryItems;
       }
     }
@@ -180,9 +181,9 @@ class HomePageService extends FetchingService {
 
   #getHomePageHeroSection = async (page = 1) =>
     this._request({
-      url: '/start',
+      url: `/${API_URLS.GET_HOME_PAGE}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         row: 1,
         page: page, // Use the passed page parameter
@@ -192,9 +193,9 @@ class HomePageService extends FetchingService {
 
   #getHomePage = async (row, page, limit) =>
     this._request({
-      url: '/start',
+      url: `/${API_URLS.GET_HOME_PAGE}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         row,
         page,
@@ -204,9 +205,9 @@ class HomePageService extends FetchingService {
 
   #getBanner = async () =>
     this._request({
-      url: '/ads',
+      url: `/${API_URLS.GET_BANNER}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
     }).then(parseBannerData);
 }
 

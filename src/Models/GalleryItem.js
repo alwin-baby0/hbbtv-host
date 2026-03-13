@@ -1,3 +1,8 @@
+import { Metrics } from '@firebolt-js/sdk';
+import { TRANSLATIONS } from '../constants/globalConstants';
+import { t } from '../Services';
+import { getDeviceType } from '../utils/device';
+
 class GalleryItem {
   constructor(data) {
     const { id, title, content, extensions, media_group, summary, type } = data;
@@ -7,7 +12,7 @@ class GalleryItem {
     this.title = title;
     this.summary = summary;
     this.trailerSrc = ''; // this is not returned by backend
-    this.buttonLabel = 'WATCH NOW';
+    this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
     this.type = type;
     this.trailerUrl = extensions.preview_playback;
@@ -43,6 +48,7 @@ class GalleryItem {
         is_favorite,
         last_position,
         trailer,
+        rating,
       } = extensions;
 
       if (button_text && button_text !== '') {
@@ -77,12 +83,13 @@ class GalleryItem {
       this.is_favorite = is_favorite;
       this.last_position = last_position;
       this.trailer = trailer;
+      this.rating = rating;
     }
 
     this.thumbnails = [];
     this.landscapePosters = [];
     this.portraitPosters = [];
-    this.buttonLabel = 'WATCH NOW';
+    this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
     media_group[0]?.media_item?.forEach((item) => {
       switch (true) {
@@ -120,6 +127,9 @@ class GalleryItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
+        const deviceType = getDeviceType();
+        deviceType === 'metrological' &&
+          Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
         // skip
       }
     });

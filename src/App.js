@@ -1,10 +1,12 @@
 import { Colors, Router, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
-import routes from './pages/routes';
+import routes from './routes';
 import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
 import { DetailService, t } from './Services';
+import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
+import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -33,11 +35,11 @@ export default class App extends Router.App {
         w: 1920,
         h: 1080,
         zIndex: -900,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       Widgets: {
         Menu: {
-          zIndex: 2,
+          zIndex: 3,
           type: Navbar,
         },
         Dialog: {
@@ -90,7 +92,7 @@ export default class App extends Router.App {
   async getMovie(id) {
     const movie = await DetailService.getMovie(id);
     if (movie) {
-      Router.navigate('player', {
+      Router.navigate(ROUTES.PLAYER, {
         videoUrl: movie.url,
         duration: movie.duration,
         videoId: id,
@@ -111,18 +113,18 @@ export default class App extends Router.App {
         w: 1920,
         h: 1080,
         zIndex: -900,
-        src: Utils.asset('images/background.jpg'),
+        src: Utils.asset(IMG_PATH.BACKGROUND),
         shader: undefined,
       },
     });
   }
 
   $punchHoleTV(x, y, w, h, radius) {
-    if (!x) {
-      y = 106;
+    if (!x && x !== 0) {
+      y = 152;
       x = 1071;
-      w = 736;
-      h = 412;
+      w = 734;
+      h = 409;
       radius = 20;
     }
     if (this._Background) {
@@ -140,7 +142,7 @@ export default class App extends Router.App {
           w: 1920,
           h: 1080,
           zIndex: -900,
-          src: Utils.asset('images/background.jpg'),
+          src: Utils.asset(IMG_PATH.BACKGROUND),
           shader: {
             type: Lightning.shaders.Hole,
             x: x,
@@ -229,6 +231,9 @@ export default class App extends Router.App {
       ],
     });
     wasOffline = true;
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(Metrics.ErrorType.NETWORK, 'Offline', 'Bad network connection', true);
   }
 
   checkNetworkStatusOnline(isOnline) {
@@ -246,21 +251,27 @@ export default class App extends Router.App {
   $appClose() {
     const dialog = this._Dialog;
     dialog.open({
-      message: t('exit_label'),
+      message: t(TRANSLATIONS.EXIT),
       actions: [
         {
-          label: t('no_resume'),
+          label: t(TRANSLATIONS.NO_RESUME),
           action: () => {
             dialog.close();
           },
         },
         {
-          label: t('yes_exit'),
-          action: () => {
+          label: t(TRANSLATIONS.YES_EXIT),
+          action: async () => {
             const device = getDeviceType();
             // Router navigation for "Yes, exit now"
             switch (device) {
               case 'metrological':
+                let success = await Lifecycle.close('userExit');
+                console.log(success);
+                Lifecycle.listen('unloading', async () => {
+                  let results = await Lifecycle.finished();
+                  console.log(results);
+                });
                 this.application.closeApp();
                 break;
               case 'tizen':

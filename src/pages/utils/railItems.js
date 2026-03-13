@@ -1,17 +1,22 @@
 import { Router } from '@lightningjs/sdk';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
-import { RAIL_TYPES } from '.';
-import { imageSizes } from '../../Models/utils';
+import {
+  RAIL_TYPES,
+  VIDEO_TYPES,
+  CATEGORY_TYPES,
+  ROUTES,
+  IMAGE_SIZES,
+} from '../../constants/globalConstants';
 import LandscapeRailItem from '../../components/RailItems/LandscapeRailItem';
 import PosterRailItem from '../../components/RailItems/PosterRailItem';
 import SportsEventsRailItem from '../../components/RailItems/SportsEventsRailItem';
 import CategoryPickerItem from '../../components/CategoryPickerItem/CategoryPickerItem';
 import EPGRailItems from '../../components/RailItems/EPGRailItems';
 import HeroRailItem from '../../components/RailItems/HeroRailItems';
-import { CATEGORY_TYPES } from '../../Models/Category';
 import CollectionRailItem from '../../components/RailItems/CollectionRailItem';
 import BannerRailItem from '../../components/RailItems/BannerRailItem';
 import { DetailService, EPGService } from '../../Services';
+import ContinueWatchingRailItem from '../../components/RailItems/ContinueWatchingRailItem';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions) => {
   switch (railType) {
@@ -36,6 +41,10 @@ export const railItemConstructor = (railItems, railType, railItemsOptions) => {
       return constructLandscapeRailItems(railItems, railItemsOptions);
     case RAIL_TYPES.BANNER:
       return constructBannerRailItems(railItems, railItemsOptions);
+    case RAIL_TYPES.CONTINUE_WATCHING:
+      return constructContinueWatchingRailItems(railItems, railItemsOptions, true);
+    case RAIL_TYPES.FAVORITES:
+      return constructContinueWatchingRailItems(railItems, railItemsOptions);
     default: {
       console.warn('unknown rail type:', railType, ', defaulting to simple rail items');
       return constructSimpleRailItems(railItems, railItemsOptions);
@@ -57,7 +66,7 @@ const constructSimpleRailItems = (railItems, railItemsOptions) => {
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getPortraitPoster(imageSizes.S).src,
+      imageSrc: railItem.getPortraitPoster(IMAGE_SIZES.S).src,
       itemType: railItem.type,
       index: index,
       callback: () => {
@@ -81,7 +90,7 @@ const constructLandscapeRailItems = (railItems, railItemsOptions) => {
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getLandscapePoster(imageSizes.S).src,
+      imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
       itemType: railItem.type,
       index,
       callback: () => {
@@ -128,44 +137,40 @@ const constructHeroRailItems = (railItems, railItemsOptions) => {
       ...railItemsOptions,
       props: {
         index,
-        imageSrc: railItem.getLandscapePoster(imageSizes.S).src,
+        imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
         callback: async () => {
           switch (railItem.type.value) {
             case CATEGORY_TYPES.MOVIE: {
-              Router.navigate(`movie-details/${railItem.id}`);
+              Router.navigate(`${ROUTES.MOVIE_DETAILS}/${railItem.id}`);
               break;
             }
-            case 'serie': {
-              Router.navigate(`series-details/${railItem.id}`);
-              break;
-            }
-            case CATEGORY_TYPES.EVENTS: {
-              Router.navigate(`event-details/${railItem.id}`);
+            case CATEGORY_TYPES.SERIE: {
+              Router.navigate(`${ROUTES.SERIES_DETAILS}/${railItem.id}`);
               break;
             }
             case CATEGORY_TYPES.EVENT: {
-              Router.navigate(`event-details/${railItem.id}`);
+              Router.navigate(`${ROUTES.EVENT_DETAILS}/${railItem.id}`);
               break;
             }
             case CATEGORY_TYPES.VIDEO: {
-              Router.navigate('player', {
+              Router.navigate(ROUTES.PLAYER, {
                 videoUrl: railItem.url,
                 duration: railItem.duration,
               });
               break;
             }
             case CATEGORY_TYPES.COLLECTION: {
-              Router.navigate(`collection-details/${railItem.id}`);
+              Router.navigate(`${ROUTES.COLLECTION}/${railItem.id}`);
               break;
             }
             case CATEGORY_TYPES.LIVESTREAM: {
               const epgProgram = await EPGService.getSingleEPGChannel(`channel_${railItem.id}`);
               const epgStreamSrc = epgProgram.items[0].content.src;
 
-              Router.navigate('player', {
+              Router.navigate(ROUTES.PLAYER, {
                 videoUrl: epgStreamSrc,
                 duration: 0,
-                videoType: 'Stream now',
+                videoType: VIDEO_TYPES.STREAM_NOW,
               });
               break;
             }
@@ -194,16 +199,16 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       itemTitle: railItem.title,
       itemSummary: railItem.summary,
       itemDescription: railItem.description,
-      imageSrc: railItem.getThumbnailImage(imageSizes.M).src,
+      imageSrc: railItem.getThumbnailImage(IMAGE_SIZES.M).src,
       index,
       callback: () => {
         DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(
           ({ data: result }) => {
-            Router.navigate('player', {
+            Router.navigate(ROUTES.PLAYER, {
               videoUrl: result[0]?.content.src ?? railItem.src,
               videoId: railItem.id,
               duration: railItem.duration,
-              videoType: 'series',
+              videoType: VIDEO_TYPES.SERIES,
               seriesID: railItem.seriesId,
               ssai: result[0].extensions.ssai ?? railItem.ssai,
               episodeTitle: railItem.title,
@@ -272,15 +277,19 @@ const constructCategoryItems = (railItems, railItemsOptions) =>
   railItems.map((railItem, index) => {
     return {
       type: CategoryPickerItem,
+      flexItem: {
+        marginLeft: 7,
+        marginRight: 7,
+      },
       collision: true,
       ...railItemsOptions,
       props: {
         itemInfo: railItem,
         callback: railItem.navigateToLink,
         w: 195,
-        h: 64,
-        radius: 30,
-        strokeWidth: 6,
+        h: 55,
+        radius: 10,
+        strokeWidth: 2,
         index: index,
       },
     };
@@ -303,6 +312,34 @@ const constructBannerRailItems = (railItems, railItemsOptions) => {
       imageSrc: railItem.getCtvPoster(1080),
       itemType: railItem.type,
       callback: () => {},
+    },
+  }));
+};
+
+const constructContinueWatchingRailItems = (
+  railItems,
+  railItemsOptions,
+  enableProgressBar = false
+) => {
+  return railItems.map((railItem, index) => ({
+    type: ContinueWatchingRailItem,
+    collision: true,
+    flexItem: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    ...railItemsOptions,
+    props: {
+      itemTitle: railItem.title ? railItem.title : '',
+      imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
+      itemType: railItem.type,
+      index: index,
+      enableProgressBar,
+      callback: () => {
+        Router.navigate(railItem.url);
+      },
     },
   }));
 };

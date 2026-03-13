@@ -7,14 +7,27 @@ const ROUTES_INDEX = {
   'filterPage/series': 2,
   live: 4,
   search: 5,
-  settings: 6,
-  langsettings: 7,
+  account: 6,
+  settings: 7,
   help: 8,
 };
 
-export function getRouteNavbarIndex(route) {
+export function getRouteNavbarIndex(route, visibleSport) {
+  const indexes = {
+    ...ROUTES_INDEX,
+    ...(!visibleSport && {
+      live: 3,
+      search: 4,
+      account: 5,
+      settings: 6,
+      help: 7,
+    }),
+  };
+
+  !visibleSport && delete indexes['vod/sports'];
+
   if (route) {
-    return ROUTES_INDEX[route] ?? 0;
+    return indexes[route] ?? 0;
   }
   return 0;
 }

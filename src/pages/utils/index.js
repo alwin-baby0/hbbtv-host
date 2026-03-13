@@ -1,30 +1,9 @@
-import { CARD_SIZES } from '../../components/RailItems/constants';
 import { railItemConstructor } from './railItems';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { EPGService } from '../../Services';
 import Empty from '../LiveTV/components/Empty';
+import { CARD_TYPES, RAIL_TYPES, CARD_SIZES, ROUTES } from '../../constants/globalConstants';
 
-export const VOD_PREVIEW_TYPES = {
-  MOVIES: 'movies',
-  SERIES: 'series',
-  SPORTS: 'sports',
-};
-
-export const RAIL_TYPES = {
-  MOVIE: 'movie',
-  SERIE: 'serie',
-  SPORT: 'sport',
-  SPORT_LIVE: 'sport_live',
-  EPISODE: 'episode',
-  SEARCH: 'search',
-  CATEGORY: 'category',
-  LIVETV: 'live',
-  EPGS: 'epg-channel-programs',
-  HERO: 'HeroRails',
-  COLLECTION: 'Collection',
-  USER_CONTENT: 'UserContent',
-  BANNER: 'Banner',
-};
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,
   [RAIL_TYPES.SERIE]: 1760,
@@ -43,15 +22,15 @@ const RAIL_WIDTHS = {
 
 let globalVerticalIndex = 0;
 
-export const constructRails = (rails) => {
+export const constructRails = (rails, page = '') => {
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
-    return constructRails([rails]);
+    return constructRails([rails], page);
   }
 
   return rails
     .filter((rail) => !!rail)
-    .map((rail) => {
+    .map((rail, index) => {
       const items = rail.items;
       const itemsPerRow = rail.itemsPerRow;
 
@@ -68,10 +47,10 @@ export const constructRails = (rails) => {
           const currentIndex = globalVerticalIndex;
           globalVerticalIndex += 1;
 
-          return cronstructSingleLineRail(newRail, currentIndex);
+          return cronstructSingleLineRail(newRail, currentIndex, page);
         });
       }
-      return cronstructSingleLineRail(rail, 0); //-1 is placeholder value if items are not chunked
+      return cronstructSingleLineRail(rail, index, page); //-1 is placeholder value if items are not chunked
     });
 };
 
@@ -80,13 +59,30 @@ const verticalIndexReset = () => {
   globalVerticalIndex = 0;
 };
 
-export const cronstructSingleLineRail = (rail, index) => {
-  const { items, railType, cardType = 'POSTER', railTitle, railItemsOptions, ...rest } = rail;
+export const cronstructSingleLineRail = (rail, index, page = '') => {
+  const {
+    items,
+    railType,
+    cardType = CARD_TYPES.POSTER,
+    railTitle,
+    railItemsOptions,
+    ...rest
+  } = rail;
 
   const containerDimensions =
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
-      : { h: CARD_SIZES[cardType]?.height || 500, w: RAIL_WIDTHS[railType] || 1500 };
+      : {
+          h: CARD_SIZES[cardType]?.height || 500,
+          w: (CARD_SIZES[cardType].width + 20) * items.length,
+        };
+  const flexItem =
+    ((railType === RAIL_TYPES.EPGS && !railTitle) || (page !== ROUTES.HOME && railTitle)) &&
+    page !== ROUTES.SEARCH
+      ? {}
+      : {
+          marginBottom: railTitle && page !== ROUTES.SEARCH ? 40 : page === ROUTES.SEARCH ? 30 : 60,
+        };
 
   let paddingLeft = 0;
   let targetIndex = null;
@@ -114,21 +110,28 @@ export const cronstructSingleLineRail = (rail, index) => {
       console.error('items[0].startTime is undefined or null');
     }
   }
+
   return {
     type: HorizontalContainer,
     ...rest,
     ...containerDimensions,
     collision: true,
+    index,
     props: {
-      h: CARD_SIZES[cardType]?.height, // todo: remove 50
+      railWidth: RAIL_WIDTHS[railType],
+      h: CARD_SIZES[cardType]?.height,
       w: containerDimensions.w,
       railTitle: railTitle,
       cardType: cardType,
+      ...((railType === RAIL_TYPES.EPGS ||
+        railType === RAIL_TYPES.CONTINUE_WATCHING ||
+        railType === RAIL_TYPES.FAVORITES) && { wrap: true }),
       items: railItemConstructor(
         items.length === 0 ? [{ type: Empty }] : items,
         railType,
         railItemsOptions
       ),
+      flexItem: flexItem,
       paddingLeft,
       targetIndex: targetIndex,
       index: index,

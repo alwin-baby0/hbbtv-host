@@ -1,0 +1,45 @@
+image: node:18
+
+definitions:
+  caches:
+    node: node_modules
+
+  steps:
+    - step: &test-step
+        name: Test
+        runs-on:
+          - self.hosted
+          - linux
+        caches:
+          - node
+        script:
+          - npm ci
+          - npm run lint
+          - npm test
+
+    - step: &build-lg-step
+        name: Build LG
+        runs-on:
+          - self.hosted
+          - linux
+        caches:
+          - node
+        script:
+          - npm install -g @webos-tools/cli
+          - source ci/config-webos.sh
+          - ci/build_lg_ci.sh
+        artifacts:
+          - build/**
+
+pipelines:
+  default:
+    - step: *test-step
+
+  branches:
+    development:
+      - step: *test-step
+      - step: *build-lg-step
+
+    main:
+      - step: *test-step
+      - step: *build-lg-step

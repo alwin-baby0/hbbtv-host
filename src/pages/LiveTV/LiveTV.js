@@ -11,11 +11,15 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
+import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+import { checkCMP } from '../../utils/index';
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
   };
   pixelPerHour = 500; // Pixels per hour for EPG time slots
+  channelUpdateInterval = null;
+  focusedState = '';
 
   static _template() {
     return {
@@ -31,24 +35,24 @@ export default class LiveTV extends Lightning.Component {
           type: CategoryPicker,
           props: {
             x: 110,
-            y: 540,
+            y: 580,
+            parentState: 'Categories',
           },
         },
         Channels: {
           clipping: true,
-          y: 705,
+          y: 745,
           w: 180,
           h: 360,
           x: 110,
           type: VerticalContainer,
         },
         EPGChannels: {
-          y: 625,
+          y: 665,
           x: 290,
           w: 1620,
           h: 460,
           clipping: true,
-
           TimeSlot: {
             h: 50,
             w: 1615,
@@ -68,6 +72,7 @@ export default class LiveTV extends Lightning.Component {
             type: EPGContainer,
             props: {
               w: 1615,
+              parentState: 'EPGS',
             },
           },
           Flag: {
@@ -78,13 +83,13 @@ export default class LiveTV extends Lightning.Component {
               rect: true,
               color: Colors(colors.focusEpg).get(),
               shader: {
-                type: lng.shaders.RoundedRectangle,
+                type: Lightning.shaders.RoundedRectangle,
                 radius: 18,
               },
               flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
               Text: {
                 shader: {
-                  type: lng.shaders.RoundedRectangle,
+                  type: Lightning.shaders.RoundedRectangle,
                   radius: 0,
                 },
                 h: 22,
@@ -227,12 +232,13 @@ export default class LiveTV extends Lightning.Component {
     this.fireAncestors('$punchHoleTV');
     this.$updateChannel(EPGService.channelsItems[0]);
     this._setState('Categories');
+    this.focusedState = 'Categories';
 
     this.Now.patch({
-      w: t('now')?.length * 20 + 10,
+      w: t(TRANSLATIONS.NOW)?.length * 20 + 10,
       Text: {
         text: {
-          text: t('now')?.toUpperCase(),
+          text: t(TRANSLATIONS.NOW)?.toUpperCase(),
         },
       },
     });
@@ -250,8 +256,17 @@ export default class LiveTV extends Lightning.Component {
     );
   }
 
-  _active() {
-    eventTrackPayload('browse_channels', 4);
+  async _active() {
+    const { cmpShown } = this._props;
+
+    const canProceed = await checkCMP({
+      cmpShown,
+      url: ROUTES.LIVE,
+    });
+
+    if (!canProceed) return;
+
+    eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
 
     this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
@@ -279,6 +294,12 @@ export default class LiveTV extends Lightning.Component {
 
       this._EPGData.setInitialOffset();
     });
+
+    this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
+  }
+
+  _inactive() {
+    this.fireAncestors('$unpunchHole');
   }
 
   _disable() {
@@ -286,12 +307,66 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _handleBack() {
-    this.fireAncestors('$unpunchHole');
-    return false;
+    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
+    Router.back();
   }
 
   $updateChannel(singleChannel) {
     this._LiveSectionPlayer._changeChannel(singleChannel);
+  }
+
+  async fetchChannels() {
+    if (Router.getActiveHash() !== ROUTES.PLAYER) {
+      await EPGService.initialFetch();
+
+      const focusedIndex = this._EPGData._focusedIndex;
+      this._EPGData._clear();
+
+      const channelsAll = EPGService.channelsItems
+        .map((channelInfo, index) => {
+          if (!channelInfo) {
+            console.warn(`No channelInfo for index ${index}`);
+            return null;
+          }
+
+          const matchingEpg = EPGService.epgs.find((epgInfo) => {
+            return epgInfo.channelId === channelInfo.id;
+          });
+          const rails = constructRails(matchingEpg);
+
+          this._EPGData._appendItems(rails);
+          return {
+            type: LiveChannelRailItem,
+            channelInfo: channelInfo,
+            channelEPG: matchingEpg,
+            w: 190,
+            h: 105,
+            channelIndex: index,
+            props: {
+              icon: channelInfo.icon,
+            },
+          };
+        })
+        .filter((channel) => channel !== null);
+
+      this._Channels.props = {
+        items: channelsAll,
+        parentState: 'Channels',
+      };
+
+      this._EPGData.setInitialOffset();
+      this._EPGData._focusedIndex = focusedIndex;
+      this.focusedState === 'EPGS' &&
+        this._EPGData.Items.children[this._EPGData._focusedIndex]._focus();
+
+      this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
+    }
+  }
+
+  _inactive() {
+    clearInterval(this.channelUpdateInterval);
+    this.channelUpdateInterval = null;
+    this.fireAncestors('$unpunchHole');
   }
 
   async $updateChannels(val) {
@@ -338,7 +413,7 @@ export default class LiveTV extends Lightning.Component {
         return {
           type: LiveChannelRailItem,
           channelInfo: channelInfo,
-          channelEPG: matchingEpg || {}, // No need for || {}, as matchingEpg is already checked
+          channelEPG: matchingEpg,
           w: 190,
           h: 105,
           channelIndex: index,
@@ -351,6 +426,7 @@ export default class LiveTV extends Lightning.Component {
 
     this._Channels.props = {
       items: channels,
+      parentState: 'Channels',
     };
 
     this._EPGData.setInitialOffset();
@@ -402,8 +478,14 @@ export default class LiveTV extends Lightning.Component {
     return this.tag('Column.LiveSection.Player');
   }
 
-  $updateVerticalState(nextState) {
-    this._setState(nextState);
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      this.focusedState = stateName;
+      return;
+    }
+    this._setState(states[index]);
+    this.focusedState = states[index];
   }
 
   static _states() {
@@ -415,10 +497,12 @@ export default class LiveTV extends Lightning.Component {
 
         _handleRight() {
           this._setState('EPGS');
+          this.focusedState = 'EPGS';
         }
 
         _handleUp() {
           this._setState('Categories');
+          this.focusedState = 'Categories';
         }
 
         async $verticalContainerIndexChange(index) {
@@ -441,12 +525,13 @@ export default class LiveTV extends Lightning.Component {
 
         _handleUp() {
           if (!Router.isNavigating()) {
-            Router.focusWidget('menu');
+            Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
           this._setState('EPGS');
+          this.focusedState = 'EPGS';
         }
       },
 
@@ -457,6 +542,7 @@ export default class LiveTV extends Lightning.Component {
 
         _handleUp() {
           this._setState('Categories');
+          this.focusedState = 'Categories';
         }
 
         async $verticalContainerIndexChange(index) {

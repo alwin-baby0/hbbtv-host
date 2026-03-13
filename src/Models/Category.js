@@ -1,18 +1,5 @@
 import { Router } from '@lightningjs/sdk';
-
-export const CATEGORY_TYPES = {
-  MOVIES: 'movies',
-  MOVIE: 'movie',
-  SERIES: 'series',
-  SPORTS: 'sports',
-  LIVE_TV: 'live',
-  CHANNELS: 'channel',
-  SERIE: 'genres_series',
-  VIDEO: 'video',
-  COLLECTION: 'collection',
-  EVENT: 'event',
-  LIVESTREAM: 'livestream',
-};
+import { CATEGORY_TYPES, FILTER_TYPES, ROUTES } from '../constants/globalConstants';
 
 class Category {
   constructor(data) {
@@ -26,11 +13,26 @@ class Category {
   navigateToLink = () => {
     switch (this.type) {
       case CATEGORY_TYPES.MOVIES: {
-        Router.navigate(`filterPage/${this.id}/movie`, this.data);
+        console.log(this.data);
+        const event = new CustomEvent('changeContent', {
+          detail: {
+            category: this.data.id,
+            type: 'movie',
+            categoryMessage: this.data.title,
+          }, // pass whatever value you need here
+        });
+        window.dispatchEvent(event);
         break;
       }
       case CATEGORY_TYPES.SERIES: {
-        Router.navigate(`filterPage/${this.id}/series`, this.data);
+        const event = new CustomEvent('changeContent', {
+          detail: {
+            category: this.data.id,
+            type: this.data.type,
+            categoryMessage: this.data.title,
+          }, // pass whatever value you need here
+        });
+        window.dispatchEvent(event);
         break;
       }
       case CATEGORY_TYPES.LIVE_TV: {
@@ -39,7 +41,14 @@ class Category {
       }
       case CATEGORY_TYPES.CHANNELS: {
         this.changeGenre = this.data;
-        Router.navigate(`live/:${this.id}?`);
+        Router.navigate(`${ROUTES.LIVE}/:${this.id}?`);
+        break;
+      }
+      case CATEGORY_TYPES.SEASON_TABS: {
+        const event = new CustomEvent('switchS', {
+          detail: { seasonId: this.id }, // pass whatever value you need here
+        });
+        window.dispatchEvent(event);
         break;
       }
       default:

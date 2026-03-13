@@ -1,7 +1,10 @@
 import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
+import FocusableItem from '../FocusableItem/FocusableItem';
+import { Metrics } from '@firebolt-js/sdk';
+import { getDeviceType } from '../../utils/device';
 
-export default class CategoryPickerItem extends Lightning.Component {
+export default class CategoryPickerItem extends FocusableItem {
   _props = {
     itemInfo: null,
     callback: () => null,
@@ -9,14 +12,23 @@ export default class CategoryPickerItem extends Lightning.Component {
 
   static _template() {
     return {
-      h: 64,
-      flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+      ...super._template(),
+      Button: {
+        rect: true,
+      },
       Title: {
-        h: 24,
+        mountX: 0.5,
+        mountY: 0.5,
+        x: (w) => w / 2,
+        y: (h) => h / 2 + 2,
         text: {
+          fontFace: 'Montserrat-Bold',
           fontSize: 20,
-          lineHeight: 25,
-          fontFace: 'Montserrat-Medium',
+          textAlign: 'center',
+          textColor: Colors(colors.white).get(),
+          textOverflow: 'ellipsis',
+          wordWrapWidth: 180,
+          wordWrap: false,
         },
       },
     };
@@ -26,50 +38,57 @@ export default class CategoryPickerItem extends Lightning.Component {
     return this.tag('Title');
   }
 
+  get _ButtonItem() {
+    return this.tag('ButtonItem');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { itemInfo, w, h } = this._props;
+
+    const { itemInfo, w, h, strokeWidth, radius } = this._props;
     const { title } = itemInfo;
+    this.setProps({
+      x: -2,
+      y: -1,
+      width: w + 10,
+      height: h + 10,
+      radius: 12,
+      strokeWidth: 2,
+      strokeColor: Colors(colors.focus).get(),
+    });
 
     this.patch({
-      w,
-      h,
-      flexItem: {
-        shrink: false,
+      w: w + 10,
+      h: h + 10,
+      Button: {
+        x: 5,
+        y: 6,
+        w,
+        h,
+        texture: Lightning.Tools.getRoundRect(
+          w,
+          h,
+          radius,
+          strokeWidth,
+          Colors(colors.white).get(),
+          true,
+          Colors(colors.catPickerItemUnf).get()
+        ),
       },
       Title: {
-        h: 24,
-        text: {
-          textAlign: title.length < 15 ? 'center' : 'left',
-          maxLines: title.length > 15 ? 2 : 1,
-          wordWrapWidth: 180,
-          text: title.toUpperCase(),
-          fontSize: 20,
-          lineHeight: 25,
-          textColor: Colors(colors.focus).get(),
-          textOverflow: 'ellipsis',
-          wordWrap: false,
-        },
+        text: { text: title.toUpperCase() },
       },
     });
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index } = this._props;
 
-    const parentName = this.parent.parent.parent.parent.parent.parent.ref;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     this._focus();
-    if (parentName === 'VodContentContainer') {
-      this.fireAncestors('$updateVerticalState', 'VodContentContainer');
-    } else {
-      this.fireAncestors('$updateVerticalState', 'Categories');
-    }
-  }
-
-  _handleUnhover() {
-    this._unfocus();
   }
 
   _handleClick() {
@@ -78,64 +97,55 @@ export default class CategoryPickerItem extends Lightning.Component {
       this.fireAncestors('$updateChannels', this._props);
       callback();
     } catch (error) {
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error fetching category type', true);
       console.error('Error fetching category type:', error);
     }
   }
 
   _focus() {
-    const { w, h, radius, strokeWidth, itemInfo } = this._props;
-    const { title } = itemInfo;
+    const { w, h, radius, strokeWidth } = this._props;
 
+    super._focus();
     this.patch({
-      Title: undefined,
-    });
-    this.patch({
-      texture: Lightning.Tools.getRoundRect(
+      Button: {
+        x: 5,
+        y: 6,
         w,
         h,
-        radius,
-        strokeWidth,
-        Colors(colors.focus).get(),
-        true,
-        Colors(colors.focus).get()
-      ),
-      Title: {
-        h: 24,
-        w: 180,
-        text: {
-          textAlign: title.length < 15 ? 'center' : 'left',
-          maxLines: title.length > 15 ? 2 : 1,
-          wordWrapWidth: 180,
-          text: title.toUpperCase(),
-          fontSize: 20,
-          lineHeight: 25,
-          textColor: Colors(colors.unfocus).get(),
-          textOverflow: 'ellipsis',
-          wordWrap: false,
-        },
+        texture: Lightning.Tools.getRoundRect(
+          w,
+          h,
+          radius,
+          strokeWidth,
+          Colors(colors.focus).get(),
+          true,
+          Colors(colors.focus).get()
+        ),
       },
     });
   }
 
   _unfocus() {
-    const { w, h, itemInfo } = this._props;
-    const { title } = itemInfo;
+    const { w, h, radius, strokeWidth } = this._props;
 
+    super._unfocus();
     this.patch({
-      texture: Lightning.Tools.getRoundRect(w, h),
-      Title: {
-        h: 24,
-        w: 180,
-        text: {
-          textAlign: title.length < 15 ? 'center' : 'left',
-          maxLines: title.length > 15 ? 2 : 1,
-          text: title.toUpperCase(),
-          fontSize: 20,
-          lineHeight: 25,
-          textColor: Colors(colors.focus).get(),
-          textOverflow: 'ellipsis',
-          wordWrap: false,
-        },
+      Button: {
+        x: 5,
+        y: 6,
+        w,
+        h,
+        texture: Lightning.Tools.getRoundRect(
+          w,
+          h,
+          radius,
+          strokeWidth,
+          Colors(colors.white).get(),
+          true,
+          Colors(colors.catPickerItemUnf).get()
+        ),
       },
     });
   }
@@ -146,6 +156,9 @@ export default class CategoryPickerItem extends Lightning.Component {
       this.fireAncestors('$updateChannels', this._props);
       callback();
     } catch (error) {
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error fetching category type', true);
       console.error('Error fetching category type:', error);
     }
   }

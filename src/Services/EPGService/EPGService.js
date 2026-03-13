@@ -2,7 +2,15 @@ import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 import { EPGRailItem } from '../../Models/utils/EPGRailItem';
 import { parseVodCategories } from '../../Models/parsers';
-import { RAIL_TYPES } from '../../pages/utils';
+import {
+  API_URLS,
+  ROUTES,
+  RAIL_TYPES,
+  CARD_TYPES,
+  API_METHODS,
+} from '../../constants/globalConstants';
+import { Metrics } from '@firebolt-js/sdk';
+import { getDeviceType } from '../../utils/device';
 
 export const EPG_ROWS_PER_FETCH = 10;
 class EPGService extends FetchingService {
@@ -31,7 +39,6 @@ class EPGService extends FetchingService {
     const getGenres = await this.#getContent();
     this.genreItems = getGenres;
 
-    // const channels = await this.#getLiveChannels();
     const channels = await this.#getGenresCategory('all');
 
     if (channels?.length > 0) {
@@ -120,8 +127,11 @@ class EPGService extends FetchingService {
         try {
           return this.#getEPG(channelId);
         } catch (error) {
+          const deviceType = getDeviceType();
+          deviceType === 'metrological' &&
+            Metrics.error(Metrics.ErrorType.MEDIA, '404', 'Failed to get EPG for channel', false);
           console.error(`Failed to get EPG for channelId ${channelId}`, error);
-          return null; // Handle the error appropriately
+          return null;
         }
       })
     );
@@ -184,22 +194,22 @@ class EPGService extends FetchingService {
     return await this.#getGenres();
   };
 
-  #getGenres = async (type, exclude) =>
+  #getGenres = async () =>
     await this._request({
-      url: '/epg_genres',
+      url: `/${API_URLS.GET_EPG_GENRES}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         type: `channel`,
         exclude: 'movies,channel',
       },
-    }).then((result) => parseVodCategories(result, 'live'));
+    }).then((result) => parseVodCategories(result, ROUTES.LIVE));
 
-  #getGenresCategory = async (include, exclude) =>
+  #getGenresCategory = async (include) =>
     await this._request({
-      url: '/epg_channels',
+      url: `/${API_URLS.GET_EPG_CHANNELS}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         include: include,
         exclude: 'channel',
@@ -216,9 +226,9 @@ class EPGService extends FetchingService {
 
   getSingleEPGChannel = async (channelId) =>
     await this._request({
-      url: `/epg_program`,
+      url: `/${API_URLS.GET_EPG_PROGRAM}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: `${channelId}`,
       },
@@ -230,7 +240,7 @@ class EPGService extends FetchingService {
 
     return {
       railType: RAIL_TYPES.LIVETV,
-      cardType: 'POSTER',
+      cardType: CARD_TYPES.POSTER,
       items: railItems,
       itemsPerRow: 1,
     };
@@ -238,9 +248,9 @@ class EPGService extends FetchingService {
 
   #getEPG = async (channelId) =>
     this._request({
-      url: '/epg_program',
+      url: `/${API_URLS.GET_EPG_PROGRAM}`,
       apiVersion: V2,
-      method: 'GET',
+      method: API_METHODS.GET,
       params: {
         id: channelId,
       },
@@ -257,7 +267,7 @@ class EPGService extends FetchingService {
     });
     return {
       railType: data.type.value,
-      cardType: 'EPG_CARD_ITEM',
+      cardType: CARD_TYPES.EPG_CARD_ITEM,
       items: channelItem,
       channelId: channelId, // Include channelId in the returned object
     };

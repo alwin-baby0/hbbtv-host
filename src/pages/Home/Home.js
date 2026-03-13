@@ -4,6 +4,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
+import { ROUTES, RAIL_TYPES } from '../../constants/globalConstants';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -15,9 +16,10 @@ export default class Home extends Lightning.Component {
       Background: {},
       HeroSection: {
         x: 0,
-        y: 0,
+        y: 150,
         w: 1920,
-        h: 800,
+        h: 650,
+        collision: true,
         type: Gallery,
       },
       Wrapper: {
@@ -53,6 +55,8 @@ export default class Home extends Lightning.Component {
         this.fireAncestors('$setNavbarVisibility', false);
       });
     }
+
+    Router.setHistory([]);
   }
 
   /**
@@ -62,18 +66,18 @@ export default class Home extends Lightning.Component {
     this._props = { ...this._props, ...props };
     const { sliderData, railData } = this._props;
 
-    const rails = constructRails(railData);
-    this._Column.props = { items: rails };
+    const rails = constructRails(railData, ROUTES.HOME);
+    this._Column.props = { items: rails, parentState: 'Items' };
 
     if (sliderData) {
       this._HeroSection.patch({
         visible: true,
         props: {
           sliderData,
+          parentState: 'Hero',
+          scrollDownState: 'Items',
+          bgY: -150,
         },
-      });
-      this._HeroSection._HeroSection._Info.patch({
-        y: 150,
       });
     } else {
       this._setState('Items');
@@ -96,15 +100,26 @@ export default class Home extends Lightning.Component {
       return;
     }
     e.preventDefault();
+
     this.fireAncestors('$appClose');
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
   }
 
   $setStateOnScroll(nextState) {
     this._setState(nextState);
+  }
+
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   static _states() {
@@ -121,6 +136,10 @@ export default class Home extends Lightning.Component {
           this._Wrapper.patch({
             y: 980,
           });
+
+          this._HeroSection.patch({
+            y: 150,
+          });
         }
 
         _handleBack(e) {
@@ -132,7 +151,9 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
-          Router.focusWidget('Menu');
+          if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleDown() {
@@ -143,7 +164,7 @@ export default class Home extends Lightning.Component {
           if (this._HeroSection._Bullets.Items.children.length - 1 === index) {
             const newRails = await HomePageService.fetchMoreItemsForHeroSection();
             if (newRails && newRails?.items?.length > 0) {
-              const parsedItems = railItemConstructor(newRails.items, 'HeroRails', {});
+              const parsedItems = railItemConstructor(newRails.items, RAIL_TYPES.HERO, {});
               this._HeroSection._Bullets._appendItems(parsedItems);
             }
           }
@@ -153,12 +174,19 @@ export default class Home extends Lightning.Component {
       class Items extends this {
         $enter() {
           this.fireAncestors('$setNavbarVisibility', false);
+
           this.patch({
             HeroSection: {
               y: -980,
             },
             Wrapper: {
               y: 0,
+            },
+          });
+
+          this._HeroSection.patch({
+            props: {
+              bgY: 0,
             },
           });
         }
@@ -171,6 +199,12 @@ export default class Home extends Lightning.Component {
             },
             Wrapper: {
               y: 900,
+            },
+          });
+
+          this._HeroSection.patch({
+            props: {
+              bgY: -150,
             },
           });
         }
@@ -239,7 +273,7 @@ export default class Home extends Lightning.Component {
             HomePageService.stripesFetched - 2 === index - indexNumber
           ) {
             const newStripes = await HomePageService.fetchMoreStripes();
-            const rails = constructRails(newStripes);
+            const rails = constructRails(newStripes, ROUTES.HOME);
             this._Column._appendItems(rails);
           }
         }

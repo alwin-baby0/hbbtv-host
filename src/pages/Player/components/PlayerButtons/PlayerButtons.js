@@ -1,11 +1,12 @@
-import { Colors, Utils, VideoPlayer } from '@lightningjs/sdk';
-import lng from '@lightningjs/core';
+import { Colors, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
+import { IMG_PATH } from '../../../../constants/globalConstants';
 
-export default class PlayerButtons extends lng.Component {
+export default class PlayerButtons extends Lightning.Component {
   _props = {
     buttonInfo: {},
     isStopped: false,
+    isLive: false,
   };
 
   static _template() {
@@ -38,23 +39,29 @@ export default class PlayerButtons extends lng.Component {
 
   _enable() {
     const { buttonInfo } = this._props;
-    const width = buttonInfo.label === 'pause' ? 90 : 66;
-    const height = buttonInfo.label === 'pause' ? 90 : 66;
+    const width = buttonInfo.width ? buttonInfo.width : buttonInfo.label === 'pause' ? 90 : 66;
+    const height = buttonInfo.height ? buttonInfo.height : buttonInfo.label === 'pause' ? 90 : 66;
     this._Icon.patch({
-      texture: lng.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
+      ...(buttonInfo.y && { y: buttonInfo.y }),
+      ...(buttonInfo.x && { x: buttonInfo.x }),
+      ...(buttonInfo.color && { color: buttonInfo.color }),
+      texture: Lightning.Tools.getSvgTexture(Utils.asset(buttonInfo.icon), width, height),
     });
   }
 
   _active() {
     const { buttonInfo } = this._props;
-    const width = buttonInfo.label === 'pause' ? 90 : 66;
-    const height = buttonInfo.label === 'pause' ? 90 : 66;
+    const width = buttonInfo.width ? buttonInfo.width : buttonInfo.label === 'pause' ? 90 : 66;
+    const height = buttonInfo.height ? buttonInfo.height : buttonInfo.label === 'pause' ? 90 : 66;
     if (buttonInfo.label === 'pause') {
       this._Icon.patch({
-        texture: lng.Tools.getSvgTexture(
+        ...(buttonInfo.y && { y: buttonInfo.y }),
+        ...(buttonInfo.x && { x: buttonInfo.x }),
+        ...(buttonInfo.color && { color: buttonInfo.color }),
+        texture: Lightning.Tools.getSvgTexture(
           VideoPlayer.playing
-            ? Utils.asset('/icons/player/commands/pause.svg')
-            : Utils.asset('/icons/player/commands/play.svg'),
+            ? Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER)
+            : Utils.asset(IMG_PATH.PLAY_BTN_PLAYER),
           width,
           height
         ),
@@ -122,8 +129,9 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _focus() {
+    const { buttonInfo } = this._props;
     this._Icon.patch({
-      color: Colors(colors.focus).alpha(1).get(),
+      color: buttonInfo.color ? buttonInfo.color : Colors(colors.focus).alpha(1).get(),
     });
   }
 
@@ -149,7 +157,16 @@ export default class PlayerButtons extends lng.Component {
   }
 
   _handleUnhover() {
+    if (this._props.isLive) {
+      return true;
+    }
+
     const { buttonInfo } = this._props;
+
+    if (!buttonInfo.hover) {
+      return true;
+    }
+
     this.fireAncestors('$setState', 'Controls');
     if (buttonInfo.label === 'backward' || buttonInfo.label === 'forward') {
       this.fireAncestors('$horizontalPosterIndexChange', 1);

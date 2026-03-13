@@ -1,4 +1,7 @@
+import { Metrics } from '@firebolt-js/sdk';
+import { IMG_PATH } from '../../constants/globalConstants';
 import PlayerButtons from './components/PlayerButtons/PlayerButtons';
+import { getDeviceType } from '../../utils/device';
 
 export const playerButtonsVOD = [
   {
@@ -7,7 +10,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'backward',
-        icon: `/icons/player/commands/fast-backward.svg`,
+        icon: IMG_PATH.FAST_BACKWARD_PLAYER,
         onLiveContent: false,
         position: 660,
       },
@@ -19,7 +22,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'pause',
-        icon: `/icons/player/commands/pause.svg`,
+        icon: IMG_PATH.PAUSE_BTN_PLAYER,
         onLiveContent: true,
         position: 690,
       },
@@ -31,7 +34,7 @@ export const playerButtonsVOD = [
     props: {
       buttonInfo: {
         label: 'forward',
-        icon: `/icons/player/commands/fast-forward.svg`,
+        icon: IMG_PATH.FAST_FORWARD_PLAYER,
         onLiveContent: false,
         position: 720,
       },
@@ -46,10 +49,11 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'back',
-        icon: `/icons/player/commands/back.svg`,
+        icon: IMG_PATH.BACK_BTN_PLAYER,
         onLiveContent: true,
         position: 60,
       },
+      isLive: true,
     },
   },
   {
@@ -58,10 +62,11 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'pause',
-        icon: `/icons/player/commands/pause.svg`,
+        icon: IMG_PATH.PAUSE_BTN_PLAYER,
         onLiveContent: true,
         position: 810,
       },
+      isLive: true,
     },
   },
   {
@@ -70,10 +75,11 @@ export const playerButtonsLive = [
     props: {
       buttonInfo: {
         label: 'subtitles',
-        icon: `/icons/player/commands/subtitles.svg`,
+        icon: IMG_PATH.SUBTITLES,
         onLiveContent: true,
         position: 810,
       },
+      isLive: true,
     },
   },
 ];
@@ -110,6 +116,9 @@ export const isVideoURLValid = async (url) => {
     const result = await fetch(url);
     return result.ok;
   } catch (e) {
+    const deviceType = getDeviceType();
+    deviceType === 'metrological' &&
+      Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Invalid video url', true);
     return false;
   }
 };
@@ -129,36 +138,4 @@ export const formatAds = (slots) => {
       };
     });
   });
-};
-
-export const fakeAdsData = {
-  slots: [
-    {
-      slot: 'slot1',
-      total_duration: 10,
-      pods: [
-        {
-          pod: 'pod1',
-          ads: [
-            {
-              impression: 'https://springserve.com/vast/ad1',
-              cue: {
-                from: '00:00:40',
-                to: '00:00:50',
-              },
-              skipping_allowed: true,
-            },
-            {
-              impression: 'https://springserve.com/vast/ad2',
-              cue: {
-                from: '00:00:50',
-                to: '00:01:00',
-              },
-              skipping_allowed: true,
-            },
-          ],
-        },
-      ],
-    },
-  ],
 };

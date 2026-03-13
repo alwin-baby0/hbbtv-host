@@ -1,5 +1,5 @@
-import { Colors, Utils } from '@lightningjs/sdk';
-import { CARD_SIZES } from './constants';
+import { Colors, Utils, Lightning } from '@lightningjs/sdk';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
@@ -7,9 +7,12 @@ import Image from '../Image/Image';
 export default class LandscapeRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder-empty.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.LANDSCAPE_RAIL_PH_EMPTY),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
   };
   static _template() {
@@ -18,21 +21,21 @@ export default class LandscapeRailItem extends FocusableItem {
       color: Colors(colors.landscapeBackground).get(),
       rect: true,
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: 6,
       },
       w: CARD_SIZES.LANDSCAPE.width,
-      h: CARD_SIZES.LANDSCAPE.height + 45,
+      h: CARD_SIZES.LANDSCAPE.container_height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
-          flex: { justifyContent: 'center', alignItems: 'center' },
+          flex: { alignItems: 'center' },
           LandscapeImage: {
             type: Image,
           },
         },
         Title: {
-          h: 50,
+          h: 40,
           flexItem: {
             marginTop: 15,
             marginLeft: 20,
@@ -40,28 +43,43 @@ export default class LandscapeRailItem extends FocusableItem {
           },
           text: {
             fontFace: 'Montserrat-Bold',
-            fontSize: 18,
+            fontSize: 24,
             lineHeight: 25,
-            maxLines: 2,
+            maxLines: 1,
             maxLinesSuffix: '...',
-            wordWrapWidth: 275,
+            wordWrapWidth: 400,
           },
         },
         Description: {
-          h: 160,
-          w: 275,
+          h: 140,
+          w: 415,
           flexItem: {
-            marginTop: 15,
             marginLeft: 20,
             marginRight: 20,
           },
           text: {
             fontFace: 'Montserrat-Regular',
-            fontSize: 16,
-            lineHeight: 20,
-            wordWrapWidth: 275,
-            maxLines: 8,
+            fontSize: 18,
+            lineHeight: 25,
+            wordWrapWidth: 385,
+            maxLines: 5,
             maxLinesSuffix: '...',
+            textColor: Colors('#cccccf').get(),
+          },
+        },
+        Summary: {
+          h: 30,
+          w: 400,
+          flexItem: {
+            marginLeft: 20,
+            marginRight: 20,
+          },
+          text: {
+            fontFace: 'Montserrat-Regular',
+            fontSize: 18,
+            wordWrapWidth: 385,
+            maxLines: 1,
+            textColor: Colors('#868687').get(),
           },
         },
       },
@@ -86,11 +104,12 @@ export default class LandscapeRailItem extends FocusableItem {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle, itemDescription, placeholderSrc } = this._props;
+    const { imageSrc, radius, itemTitle, itemDescription, placeholderSrc, itemSummary } =
+      this._props;
 
     this.setProps({
-      width: 315,
-      height: 455,
+      width: CARD_SIZES.LANDSCAPE.width,
+      height: CARD_SIZES.LANDSCAPE.container_height,
     });
 
     this._Wrapper.patch({
@@ -113,6 +132,11 @@ export default class LandscapeRailItem extends FocusableItem {
       Description: {
         text: {
           text: itemDescription || '',
+        },
+      },
+      Summary: {
+        text: {
+          text: itemSummary || '',
         },
       },
     });
@@ -138,11 +162,7 @@ export default class LandscapeRailItem extends FocusableItem {
 
   _handleHover() {
     const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     super._focus();
-  }
-
-  _handleUnhover() {
-    super._unfocus();
   }
 }

@@ -1,10 +1,17 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
-import { Row } from '@lightningjs/ui-components';
-import { Colors, Router, Utils } from '@lightningjs/sdk';
+import { Router, Utils } from '@lightningjs/sdk';
 import { getRouteNavbarIndex } from '../../../../utils/routesIndex';
-import colors from '../../../../../reskin/colors.json';
+import {
+  IMG_PATH,
+  ROUTES,
+  TRANSLATIONS,
+  VISIBLE_SPORT_COUNTRIES,
+  FILTER_TYPES,
+} from '../../../../constants/globalConstants';
 import SidebarItem from './SidebarItem';
 import { t } from '../../../../Services';
+import { CountryService } from '../../../../Services';
+import HorizontalContainer from '../../../HorizontalContainer/HorizontalContainer';
 
 export default class SidebarItems extends Lightning.Component {
   _selectedMenuItem = 0;
@@ -12,6 +19,7 @@ export default class SidebarItems extends Lightning.Component {
   _index = 0;
   _newIndex = 0;
   _menuItemRoutes = [];
+  _visibleSport = false;
 
   static _template() {
     return {
@@ -21,14 +29,18 @@ export default class SidebarItems extends Lightning.Component {
         Logo: {
           w: 800 / 3.4,
           h: 215 / 3.4,
-          src: Utils.asset('/images/navbar/logo.png'),
+          y: 10,
+          src: Utils.asset(IMG_PATH.LOGO),
         },
         Column: {
-          type: Row,
+          type: HorizontalContainer,
           collision: true,
           x: 300,
           h: 70,
           style: { itemSpacing: 30 },
+          props: {
+            disableScroll: true,
+          },
         },
       },
     };
@@ -38,77 +50,119 @@ export default class SidebarItems extends Lightning.Component {
     return this.tag('Column');
   }
 
-  _active() {
+  async _updateFocus() {
+    const location = await CountryService.getCountry();
+    const visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());
+    const activeHash = Router.getActiveHash();
+
+    if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
+      this._index = getRouteNavbarIndex('filterPage/movie', visibleSport);
+      this._setSelected(this._index);
+      return;
+    } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
+      this._index = getRouteNavbarIndex('filterPage/series', visibleSport);
+      this._setSelected(this._index);
+      return;
+    }
+
+    const newIndex = getRouteNavbarIndex(Router.getActiveHash(), visibleSport);
+    if (newIndex !== this._index) {
+      this._setSelected(newIndex);
+      this._index = newIndex;
+    }
+  }
+
+  async _active() {
+    const location = await CountryService.getCountry();
+    this._visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());
+
     // setTimeout is used to give time for url hash to change before asign the right one
     setTimeout(() => {
-      const activeHash = Router.getActiveHash();
-      // Check if activeHash contains both 'filtered' and 'movies'
-      if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
-        this._index = getRouteNavbarIndex('filterPage/movie');
-        this._setSelected(this._index);
-        return;
-      } else if (activeHash.includes('filterPage') && activeHash.includes('series')) {
-        this._index = getRouteNavbarIndex('filterPage/series');
-        this._setSelected(this._index);
-        return;
-      }
-      this._index = getRouteNavbarIndex(Router.getActiveHash());
+      this._index = getRouteNavbarIndex(Router.getActiveHash(), this._visibleSport);
       this._setSelected(this._index);
     });
 
     const menuItems = [
-      { id: 0, label: t('home'), route: 'home', icon: '' },
-      { id: 1, label: t('movies'), route: 'vod/movies', icon: '' },
-      { id: 2, label: t('series'), route: 'vod/series', icon: '' },
-      { id: 3, label: t('sport'), route: 'vod/sports', icon: '' },
-      { id: 4, label: t('live_tv'), route: 'live', icon: '' },
-      { id: 5, label: 'search', route: 'search', icon: 'images/navbar/search.svg' },
-      { id: 6, label: 'user', route: 'settings', icon: 'images/navbar/user.svg' },
-      { id: 7, label: 'settings', route: 'langsettings', icon: 'images/navbar/settings.svg' },
-      { id: 8, label: 'terms', route: 'help', icon: 'images/navbar/question-mark.svg' },
+      { id: 0, label: t(TRANSLATIONS.HOME), route: ROUTES.HOME, icon: '' },
+      {
+        id: 1,
+        label: t(TRANSLATIONS.MOVIES),
+        route: `${ROUTES.VOD}/${FILTER_TYPES.MOVIES}`,
+        icon: '',
+      },
+      {
+        id: 2,
+        label: t(TRANSLATIONS.SERIES),
+        route: `${ROUTES.VOD}/${FILTER_TYPES.SERIES}`,
+        icon: '',
+      },
     ];
+    this._visibleSport
+      ? menuItems.push(
+          ...[
+            {
+              id: 3,
+              label: t(TRANSLATIONS.SPORT),
+              route: `${ROUTES.VOD}/${FILTER_TYPES.SPORTS}`,
+              icon: '',
+            },
+            { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
+            { id: 5, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
+            { id: 6, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
+            {
+              id: 7,
+              label: 'settings',
+              route: ROUTES.SETTINGS,
+              icon: IMG_PATH.NAVBAR_SETTINGS,
+            },
+            { id: 8, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
+          ]
+        )
+      : menuItems.push(
+          ...[
+            { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
+            { id: 4, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
+            { id: 5, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
+            {
+              id: 6,
+              label: 'settings',
+              route: ROUTES.SETTINGS,
+              icon: IMG_PATH.NAVBAR_SETTINGS,
+            },
+            { id: 7, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
+          ]
+        );
 
     this._menuItemRoutes = menuItems.map((item) => item.route);
 
     this._sidebarLength = menuItems.length;
 
     this._Column.patch({
-      items: menuItems.map((item) => {
-        return {
-          type: SidebarItem,
-          collision: true,
-          w: item.id < 5 ? 150 : 50,
-          h: 70,
-          props: {
-            selected: false,
-            index: item.id,
-            data: item,
-          },
-          extraItemSpacing: item.id === 4 ? 270 : 0,
-          color: Colors(colors.unfocus).get(),
-        };
-      }),
+      props: {
+        items: menuItems.map((item) => {
+          return {
+            type: SidebarItem,
+            collision: true,
+            flexItem: {
+              marginLeft: 5,
+              marginRight: 5,
+            },
+            w: this._visibleSport ? (item.id < 5 ? 170 : 50) : item.id < 4 ? 170 : 50,
+            h: 60,
+            props: {
+              selected: false,
+              index: item.id,
+              data: item,
+              extraItemSpacing: item.route === ROUTES.LIVE ? (this._visibleSport ? 270 : 480) : 20,
+            },
+          };
+        }),
+      },
     });
   }
 
-  _focus() {
-    const activeHash = Router.getActiveHash();
-    // Check if activeHash contains both 'filtered' and 'movies'
-    if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
-      this._index = getRouteNavbarIndex('filterPage/movie');
-      this._setSelected(this._index);
-      return;
-    } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
-      this._index = getRouteNavbarIndex('filterPage/series');
-      this._setSelected(this._index);
-      return;
-    }
-    let focusedId = getRouteNavbarIndex(activeHash);
-    this.$changePage(focusedId);
-  }
-
   _setSelected(index) {
-    this._Column.items.forEach((item, i) => {
+    this._Column.Items.children.forEach((item, i) => {
       item.patch({
         props: {
           selected: i === index,
@@ -127,39 +181,20 @@ export default class SidebarItems extends Lightning.Component {
     }
   }
 
-  $changeHoverFocus(index) {
-    this._newIndex = index;
-    this._Column.children[0].children[this._index]._unfocus();
-    this._index = index;
-  }
-
-  _updateFocus() {
-    const activeHash = Router.getActiveHash();
-    if (activeHash?.includes('filterPage') && activeHash?.includes('movie')) {
-      this._index = getRouteNavbarIndex('filterPage/movie');
-      this._setSelected(this._index);
-      return;
-    } else if (activeHash?.includes('filterPage') && activeHash?.includes('series')) {
-      this._index = getRouteNavbarIndex('filterPage/series');
-      this._setSelected(this._index);
-      return;
-    }
-    const newIndex = getRouteNavbarIndex(Router.getActiveHash());
-    if (newIndex !== this._index) {
-      this._setSelected(newIndex);
-      this._index = newIndex;
-    }
-  }
-
-  $decrementSidebar() {
-    this._newIndex > 0 ? --this._newIndex : this._newIndex;
-  }
-
-  $incrementSidebar() {
-    this._newIndex < this._sidebarLength - 1 ? ++this._newIndex : this._newIndex;
-  }
-
   _getFocused() {
-    return this._Column.items[this._newIndex];
+    return this._Column;
+  }
+
+  _handleHover() {
+    if (!Router.isNavigating()) {
+      Router.focusWidget(ROUTES.MENU_WIDGET);
+    }
+    this._Column._focus();
+  }
+
+  _handleUnhover() {
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
   }
 }

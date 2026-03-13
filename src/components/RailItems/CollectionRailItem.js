@@ -1,14 +1,19 @@
-import { CARD_SIZES } from './constants';
-import { Utils } from '@lightningjs/sdk';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
+
+import { Utils, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
+import colors from '../../../reskin/colors.json';
 import Image from '../Image/Image';
 
 export default class CollectionRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/rail-placeholder-empty.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
   };
 
@@ -16,7 +21,7 @@ export default class CollectionRailItem extends FocusableItem {
     return {
       ...super._template(),
       w: CARD_SIZES.COLLECTION.width,
-      h: CARD_SIZES.COLLECTION.height - 30, // todo: find better solution
+      h: CARD_SIZES.COLLECTION.container_height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -104,11 +109,7 @@ export default class CollectionRailItem extends FocusableItem {
 
   _handleHover() {
     const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     super._focus();
-  }
-
-  _handleUnhover() {
-    super._unfocus();
   }
 }

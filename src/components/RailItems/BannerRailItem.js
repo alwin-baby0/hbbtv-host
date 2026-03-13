@@ -1,14 +1,19 @@
-import { CARD_SIZES } from './constants';
-import { Utils } from '@lightningjs/sdk';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
+
+import { Utils, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import colors from '../../../reskin/colors.json';
 
 export default class BannerRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/rail-placeholder-empty.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.EMPTY_RAIL_PH),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
   };
 
@@ -47,7 +52,7 @@ export default class BannerRailItem extends FocusableItem {
       height: CARD_SIZES.BANNER.image_height,
     });
 
-    const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;
+    const { imageSrc, radius, placeholderSrc } = this._props;
     this._PosterImage.patch({
       props: {
         width: CARD_SIZES.BANNER.image_width,

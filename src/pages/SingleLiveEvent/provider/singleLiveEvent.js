@@ -1,6 +1,6 @@
-import { imageSizes } from '../../../Models/utils';
+import { IMAGE_SIZES, VOD_PREVIEW_TYPES } from '../../../constants/globalConstants';
 import { VodService, DetailService } from '../../../Services';
-import { VOD_PREVIEW_TYPES, constructRails } from '../../utils';
+import { constructRails } from '../../utils';
 
 export default async function (page, { eventId }) {
   const galleryItem = await DetailService.getEvent(eventId);
@@ -9,7 +9,7 @@ export default async function (page, { eventId }) {
   await VodService.initialFetch();
 
   const singleItemCoverBg = VodService.contentStripes.items.find((item) => item.id === eventId);
-  const fallbackImage = singleItemCoverBg?.getLandscapePoster(imageSizes.S)?.src;
+  const fallbackImage = singleItemCoverBg?.getLandscapePoster(IMAGE_SIZES.S)?.src;
 
   page.props = {
     galleryItem,
@@ -18,6 +18,7 @@ export default async function (page, { eventId }) {
 
   page._Column.props = {
     items: constructRails(VodService.contentStripes),
+    parentState: 'Items',
   };
 
   page._setState('HeroSection');

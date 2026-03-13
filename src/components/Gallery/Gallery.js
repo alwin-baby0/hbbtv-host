@@ -1,7 +1,7 @@
 import { Lightning, VideoPlayer } from '@lightningjs/sdk';
 import GalleryItem from '../GalleryItem/GalleryItem';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
-import { imageSizes } from '../../Models/utils';
+import { IMAGE_SIZES } from '../../constants/globalConstants';
 import { railItemConstructor } from '../../pages/utils/railItems';
 import { loader, unloader } from '../Player/HLS';
 
@@ -9,6 +9,7 @@ export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
   _props = {
     sliderData: [],
+    parentState: null,
   };
 
   static _template() {
@@ -23,11 +24,9 @@ export default class Gallery extends Lightning.Component {
       Bullets: {
         type: HorizontalContainer,
         collision: true,
-        y: 820 - 115,
-        x: 75,
-        w: 1760,
-        h: 215,
         props: {
+          y: 820 - 265,
+          x: 75,
           w: 1760,
           h: 215,
         },
@@ -39,11 +38,15 @@ export default class Gallery extends Lightning.Component {
     this._sliderIndex = 0;
     this._Bullets._focusedIndex = 0;
     this._props = { ...this._props, ...props };
-    const { sliderData } = this._props;
+    const { sliderData, parentState } = this._props;
 
     this._Info.patch({
       GalleryButton: undefined,
       Summary: undefined,
+      SummSub: undefined,
+      Metadata: {
+        visible: false,
+      },
     });
 
     const parsedItems = railItemConstructor(sliderData.items, 'HeroRails', {});
@@ -51,6 +54,7 @@ export default class Gallery extends Lightning.Component {
     this._Bullets.patch({
       props: {
         items: parsedItems,
+        parentState,
       },
     });
   }
@@ -68,8 +72,8 @@ export default class Gallery extends Lightning.Component {
   }
 
   _enable() {
-    VideoPlayer.position(-3, 700);
-    VideoPlayer.size(1220, 690);
+    VideoPlayer.position(0, 350);
+    VideoPlayer.size(1570, 883);
     VideoPlayer.consumer(this);
     VideoPlayer.loader(loader);
     VideoPlayer.unloader(unloader);
@@ -88,22 +92,23 @@ export default class Gallery extends Lightning.Component {
   }
 
   $changeGalleryItem(index) {
-    const { sliderData } = this._props;
+    const { sliderData, bgY } = this._props;
     this._sliderIndex = index;
     this._HeroSection.patch({
       props: {
+        badgeText: sliderData.items[index].type.value,
         galleryItem: sliderData.items[index],
-        height: 690,
-        yPos: 215,
+        infoY: 160,
+        bgY: bgY,
+        badgeY: -50,
       },
     });
 
     this._HeroSection._BackgroundImage.patch({
       visible: true,
-      w: 1220,
-      h: 690,
-      x: 700,
-      src: sliderData.items[index].getLandscapePoster(imageSizes.S)?.src,
+      w: 1570,
+      h: 883,
+      src: sliderData.items[index].getLandscapePoster(IMAGE_SIZES.S)?.src,
     });
   }
 
@@ -114,5 +119,11 @@ export default class Gallery extends Lightning.Component {
 
   _getFocused() {
     return this._Bullets;
+  }
+
+  _handleScroll(event) {
+    if (event.deltaY > 0) {
+      this.fireAncestors('$setStateOnScroll', this._props.scrollDownState);
+    }
   }
 }

@@ -4,6 +4,7 @@ import HorizontalContainer from '../../../components/HorizontalContainer/Horizon
 import VerticalContainer from '../../../components/VerticalContainer/VerticalContainer';
 import Button from '../../../components/Button/Button';
 import { t } from '../../../Services';
+import { TRANSLATIONS } from '../../../constants/globalConstants';
 
 const customizeButtons = [
   { id: 0, label: 'refresh' },
@@ -21,7 +22,7 @@ export default class CMPCustomize extends Lightning.Component {
           w: 1000,
           h: 50,
           text: {
-            text: 'We value you privacy',
+            text: t(TRANSLATIONS.CMP_TITLE),
             fontSize: 40,
             fontFace: 'Montserrat-Bold',
             lineHeight: 50,
@@ -73,7 +74,7 @@ export default class CMPCustomize extends Lightning.Component {
     });
 
     this._Titles.patch({
-      text: t('cmp_title'),
+      text: t(TRANSLATIONS.CMP_TITLE),
     });
 
     const buttons = customizeButtons.map((button) => {
@@ -94,6 +95,7 @@ export default class CMPCustomize extends Lightning.Component {
           callback: async () => {
             if (button.label === 'close') {
               Router.back();
+              Router.setHistory([]);
             } else {
               console.log('refresh logic');
             }

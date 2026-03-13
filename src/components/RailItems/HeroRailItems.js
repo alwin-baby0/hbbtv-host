@@ -1,5 +1,6 @@
-import { Colors, Router, Utils } from '@lightningjs/sdk';
-import { CARD_SIZES } from './constants';
+import { Colors, Router, Utils, Lightning } from '@lightningjs/sdk';
+import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
+
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
@@ -7,19 +8,24 @@ import Image from '../Image/Image';
 export default class HeroRailItem extends FocusableItem {
   _props = {
     imageSrc: '',
-    placeholderSrc: Utils.asset('images/landscape-rail-placeholder.png'),
+    placeholderSrc: Utils.asset(IMG_PATH.LANDSCAPE_RAIL_PH),
     radius: 6,
     strokeWidth: 4,
+    x: -2,
+    y: -2,
+    strokeColor: Colors(colors.focus).get(),
     callback: () => null,
     index: 0,
   };
+
   static _template() {
     return {
       ...super._template(),
       color: Colors(colors.landscapeBackground).get(),
       rect: true,
+      zIndex: 3,
       shader: {
-        type: lng.shaders.RoundedRectangle,
+        type: Lightning.shaders.RoundedRectangle,
         radius: 6,
       },
       w: CARD_SIZES.HERO.width,
@@ -47,7 +53,6 @@ export default class HeroRailItem extends FocusableItem {
     this.setProps({
       width: 385,
       height: 215,
-      color: '#D9D9D9',
     });
 
     this._LandscapeImage.patch({
@@ -69,9 +74,9 @@ export default class HeroRailItem extends FocusableItem {
       clearTimeout(this._timeoutId);
     }
     this._timeoutId = setTimeout(() => {
-      this.fireAncestors('$punchHoleTV', 700, 0, 1220, 685, 0);
+      this.fireAncestors('$punchHoleTV', 350, 0, 1570, 883, 0);
       this.fireAncestors('$playTrailer', url);
-    }, 3000);
+    }, 1000);
     this.fireAncestors('$changeGalleryItem', index);
   }
 
@@ -98,7 +103,9 @@ export default class HeroRailItem extends FocusableItem {
   }
 
   _handleHover() {
-    Router.focusPage();
+    if (!Router.isNavigating()) {
+      Router.focusPage();
+    }
     const { index, url } = this._props;
 
     this.fireAncestors('$horizontalPosterIndexChange', index);
@@ -108,27 +115,9 @@ export default class HeroRailItem extends FocusableItem {
       clearTimeout(this._timeoutId);
     }
     this._timeoutId = setTimeout(() => {
-      this.fireAncestors('$punchHoleTV', 700, 0, 1220, 685, 0);
-      this.fireAncestors('$playTrailer', { trailer: url });
-    }, 3000);
-    this.fireAncestors('$nextVideo', index);
-  }
-
-  _handleUnhover() {
-    const { index } = this._props;
-    this.fireAncestors('$horizontalPosterIndexChange', index);
-    super._unfocus();
-    this.fireAncestors('$unpunchHole');
-
-    if (this._timeoutId) {
-      clearTimeout(this._timeoutId);
-    }
-    this.fireAncestors('$stopVideo');
-  }
-
-  _handleScroll(event) {
-    if (event.deltaY > 0) {
-      this.fireAncestors('$setStateOnScroll', 'Items');
-    }
+      this.fireAncestors('$punchHoleTV', 350, 0, 1570, 883, 0);
+      this.fireAncestors('$playTrailer', url);
+    }, 1000);
+    this.fireAncestors('$changeGalleryItem', index);
   }
 }

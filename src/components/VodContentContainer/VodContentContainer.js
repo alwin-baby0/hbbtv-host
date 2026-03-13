@@ -1,17 +1,14 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import CategoryPicker from '../CategoryPicker/CategoryPicker';
 import VerticalContainer from '../VerticalContainer/VerticalContainer';
-
-export const CONTENT_TYPE = {
-  CATEGORIES: '_Categories',
-  EVENTS: '_LiveEvents',
-  EMPTY: 'empty',
-};
+import { CONTENT_TYPE } from '../../constants/globalConstants';
 
 export default class VodContentContainer extends Lightning.Component {
   _props = {
     contentType: CONTENT_TYPE.EMPTY,
+    parentState: null,
   };
+
   static _template() {
     return {
       h: 200,
@@ -34,7 +31,11 @@ export default class VodContentContainer extends Lightning.Component {
   }
 
   set props(props) {
+    this._props.parentState = props.parentState;
     const { contentType, items } = props;
+
+    this._Categories.props = { parentState: this._props.parentState };
+
     this._props.contentType = contentType;
 
     this.#changeContentVisibility(contentType);

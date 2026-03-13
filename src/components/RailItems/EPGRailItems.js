@@ -1,11 +1,13 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
-import lng from '@lightningjs/core';
+import { IMG_PATH, VIDEO_TYPES, ROUTES } from '../../constants/globalConstants';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
     isActive: false,
     lastClickedItemId: 0,
   };
+
+  selectEPGTimeout = null;
 
   static _template() {
     return {
@@ -39,15 +41,7 @@ export default class EPGRailItems extends Lightning.Component {
   _selectButton(id, lastId) {
     this._props.lastClickedItemId = id;
 
-    if (id === lastId) {
-      VideoPlayer.close();
-      this.fireAncestors('$unpunchHole');
-      Router.navigate('player', {
-        videoUrl: this._props.content.src,
-        duration: 0,
-        videoType: 'Stream now',
-      });
-    } else {
+    if (id !== lastId) {
       this.fireAncestors('$updateChannel', this._props);
     }
   }
@@ -76,7 +70,7 @@ export default class EPGRailItems extends Lightning.Component {
     this._epgWidth = width - 5;
 
     const fixedWidth = this._epgWidth > 200 ? this._epgWidth : this._epgWidth;
-    const fixedWidth1 = this._epgWidth > 200 ? this._epgWidth - 20 : this._epgWidth - 50;
+    const fixedWordWrapWidth = this._epgWidth > 200 ? this._epgWidth - 20 : this._epgWidth - 50;
 
     this._Wrapper.patch({
       w: this._epgWidth,
@@ -89,7 +83,7 @@ export default class EPGRailItems extends Lightning.Component {
           },
           text: {
             text: this._props.title,
-            wordWrapWidth: fixedWidth1,
+            wordWrapWidth: fixedWordWrapWidth,
             maxLines: 1,
             fontSize: 20,
             fontFace: 'Montserrat-SemiBold',
@@ -116,13 +110,9 @@ export default class EPGRailItems extends Lightning.Component {
           y: 49,
           w: 20,
           h: 20,
-          texture: Lightning.Tools.getSvgTexture(
-            Utils.asset('icons/livetv/play-button.svg'),
-            20,
-            20
-          ),
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_LIVE), 20, 20),
         },
-        texture: lng.Tools.getRoundRect(
+        texture: Lightning.Tools.getRoundRect(
           this._epgWidth,
           95,
           8,
@@ -136,7 +126,7 @@ export default class EPGRailItems extends Lightning.Component {
       this._props.isActive = false;
       this._Wrapper.patch({
         Icon: undefined,
-        texture: lng.Tools.getRoundRect(
+        texture: Lightning.Tools.getRoundRect(
           this._epgWidth,
           95,
           8,
@@ -151,7 +141,7 @@ export default class EPGRailItems extends Lightning.Component {
 
   _focus() {
     this._Wrapper.patch({
-      texture: lng.Tools.getRoundRect(
+      texture: Lightning.Tools.getRoundRect(
         this._epgWidth,
         95,
         8,
@@ -161,13 +151,22 @@ export default class EPGRailItems extends Lightning.Component {
         Colors('#A61619').get()
       ),
     });
+
+    this.selectEPGTimeout = setTimeout(() => {
+      this.selectEPG();
+    }, 500);
   }
 
   _unfocus() {
+    if (this.selectEPGTimeout) {
+      clearTimeout(this.selectEPGTimeout);
+      this.selectEPGTimeout = null;
+    }
+
     this._lastClickedItemId = null;
     this._props.isActive !== true
       ? this._Wrapper.patch({
-          texture: lng.Tools.getRoundRect(
+          texture: Lightning.Tools.getRoundRect(
             this._epgWidth,
             95,
             8,
@@ -178,7 +177,7 @@ export default class EPGRailItems extends Lightning.Component {
           ),
         })
       : this._Wrapper.patch({
-          texture: lng.Tools.getRoundRect(
+          texture: Lightning.Tools.getRoundRect(
             this._epgWidth,
             95,
             8,
@@ -190,7 +189,7 @@ export default class EPGRailItems extends Lightning.Component {
         });
   }
 
-  _handleEnter() {
+  selectEPG() {
     const currentItemId = this._props.id; // Assume each item has a unique ID in props
 
     // Save the current ID as lastId before calling $selectedEPG
@@ -205,15 +204,30 @@ export default class EPGRailItems extends Lightning.Component {
     this._props.lastId = currentItemId; // Save the current ID as the last ID
   }
 
+  _handleEnter() {
+    if (this.selectEPGTimeout) {
+      clearTimeout(this.selectEPGTimeout);
+      this.selectEPGTimeout = null;
+    }
+
+    VideoPlayer.close();
+
+    setTimeout(() => {
+      this.fireAncestors('$unpunchHole');
+
+      Router.navigate(ROUTES.PLAYER, {
+        videoUrl: this._props.content.src,
+        duration: 0,
+        videoType: VIDEO_TYPES.STREAM_NOW,
+      });
+    }, 500);
+  }
+
   _handleHover() {
     const { index } = this._props;
 
-    this.fireAncestors('$horizontalPosterIndexChange', index);
+    this.fireAncestors('$handleItemHover', index);
     this._focus();
-  }
-
-  _handleUnhover() {
-    this._unfocus();
   }
 
   _handleClick() {
