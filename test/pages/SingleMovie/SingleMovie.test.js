@@ -817,6 +817,7 @@ describe('SingleMovie Page', () => {
         ],
         meta: {
           director: 'Charles Adelman',
+          trailer: 'https://cdn-06.wedo.tv/06/pGIJhTddTq/hls/main.m3u8',
           cast: ['Mark Thompson', 'Mark Pellegrino', 'Teri Polo'],
           ratings: {
             bbfc: '18',
