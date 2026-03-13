@@ -22,6 +22,12 @@ export function createApiCtx() {
   if (!selectedLanguage) {
     selectedLanguage =
       navigator.language.split('-')[0] || navigator.userLanguage.split('-')[0] || 'en';
+
+    const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+    if (!Object.keys(settings.supported_languages).includes(selectedLanguage)) {
+      selectedLanguage = 'en';
+    }
+
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, selectedLanguage);
   }
 
