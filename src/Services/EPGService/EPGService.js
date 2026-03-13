@@ -232,7 +232,6 @@ class EPGService extends FetchingService {
     }).then(this.#parseLiveChannelsData);
 
   #parseLiveChannelsData({ data }) {
-    console.log(data);
     if (data.entry && data.entry.items) {
       return data.entry.items.map((channel) => ({
         id: channel.id,
