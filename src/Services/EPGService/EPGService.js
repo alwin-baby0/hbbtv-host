@@ -232,12 +232,24 @@ class EPGService extends FetchingService {
     }).then(this.#parseLiveChannelsData);
 
   #parseLiveChannelsData({ data }) {
-    return data.entry.items.map((channel) => ({
-      id: channel.id,
-      title: channel.title,
-      icon: channel.images[0]?.logo,
-      url: channel.files[0].url,
-    }));
+    console.log(data);
+    if (data.entry && data.entry.items) {
+      return data.entry.items.map((channel) => ({
+        id: channel.id,
+        title: channel.title,
+        icon: channel.images[0]?.logo,
+        url: channel.files[0].url,
+      }));
+    } else {
+      return [
+        {
+          id: data.entry.id,
+          title: data.entry.title,
+          icon: data.entry.images[0]?.logo,
+          url: data.entry.files[0].url,
+        },
+      ];
+    }
   }
 
   getSingleEPGChannel = async (channelId) =>
