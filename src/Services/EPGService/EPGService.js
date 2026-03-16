@@ -292,7 +292,9 @@ class EPGService extends FetchingService {
   #parseLiveEPGData({ data }, url) {
     const channelId = data.entry.channel_id; // Extract the channel ID from the data
 
-    const channelItem = data.entry?.items?.map((item) => new EPGRailItem({ ...item, url: url }));
+    const channelItem = data.entry?.items?.map(
+      (item) => new EPGRailItem({ ...item, url: url, id: channelId })
+    );
 
     // Add channelId to each EPGRailItem object
     channelItem.forEach((item) => {

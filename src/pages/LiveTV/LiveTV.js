@@ -380,6 +380,7 @@ export default class LiveTV extends Lightning.Component {
       await EPGService.initialFetch();
 
       const focusedIndex = this._EPGData._focusedIndex;
+      const y = this._EPGData.Items.y;
       this._EPGData._clear();
 
       const channelsAll = EPGService.channelsItems
@@ -415,6 +416,8 @@ export default class LiveTV extends Lightning.Component {
       };
 
       this._EPGData.setInitialOffset();
+      this._EPGData.Items.smooth = { y: y };
+      this._Channels.Items.smooth = { y: y };
       this._EPGData._focusedIndex = focusedIndex;
       this.focusedState === 'EPGS' &&
         this._EPGData.Items.children[this._EPGData._focusedIndex]._focus();
@@ -462,7 +465,9 @@ export default class LiveTV extends Lightning.Component {
     };
 
     const filteredChannels = await EPGService.getFilteredChannels();
+
     this._EPGData._clear();
+
     const channels = filteredChannels
       .map((channelInfo, index) => {
         if (!channelInfo) {
