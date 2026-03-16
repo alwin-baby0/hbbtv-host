@@ -2235,7 +2235,7 @@ exports[`Home Page renders the Home page with full data (HeroSection and Rails) 
                   "visible": false,
                   "w": 0,
                   "x": 0,
-                  "y": -68,
+                  "y": -28,
                   "zIndex": 0,
                 },
                 "Title": {

@@ -64,10 +64,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
         )
       : undefined;
 
-  let favorited = false;
-
   if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-    const resFav = await UserService.getFavorites();
     const resProgress = await UserService.getSeriesProgress(seriesId);
     position = resProgress.data?.progress?.position;
     lastPlayedEpisodeNumber = resProgress.data?.progress?.episode_id;
@@ -76,8 +73,6 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     lastPlayedEpisodeUrl = resProgress.data?.last_episode?.files?.[0]?.url || galleryItem.url || '';
     lastPlayedSeriesId = resProgress.data?.progress?.video_id;
     lastPlayedEpisodeDuration = resProgress.data?.last_episode?.duration || 0;
-
-    favorited = resFav?.data?.favorites?.some((element) => element?.id === seriesId);
   }
 
   let seriesVODS;
@@ -89,7 +84,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
   page.props = {
     sectionTitle: seasons[seasonId ? seasonId : 0]?.sectionTitle,
     galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
-    favorited,
+    favorited: galleryItem.favorited,
     duration: seasons.duration,
     position: position,
     lastPlayedId: lastPlayedSeriesId,

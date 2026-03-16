@@ -152,7 +152,6 @@ export default class SingleSeries extends Lightning.Component {
       lastPlayedEpisodeDuration,
       ssai,
       ssaiLastEp,
-      focusSeasonId,
       episodeTitle,
       seasonTitle,
       seasonNumber,

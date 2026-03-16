@@ -8,7 +8,7 @@ export default async function (page, { movieId, cmpShown }) {
 
   let movieTrailerId = '';
   let movieTrailerUrl = '';
-  let favorited = false;
+  let favorited = movie.favorited;
   let last_position = 0;
 
   if (movie.trailer) {
@@ -25,11 +25,11 @@ export default async function (page, { movieId, cmpShown }) {
   }
 
   if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-    const resFav = await UserService.getFavorites();
+    // const resFav = await UserService.getFavorites();
     const resProgress = await UserService.getProgress(movieId);
 
     last_position = resProgress?.data?.progress?.position;
-    favorited = resFav?.data?.favorites?.some((element) => element.id === movieId);
+    // favorited = resFav?.data?.favorites?.some((element) => element.id === movieId);
   }
 
   let movieVODS;

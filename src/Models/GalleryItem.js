@@ -20,6 +20,7 @@ class GalleryItem {
       date,
       time,
       playlists,
+      user,
     } = data;
 
     this.id = id;
@@ -35,6 +36,8 @@ class GalleryItem {
     this.eventDate = date;
     this.eventTime = time;
     this.playlists = playlists || null;
+    this.favorited = user?.isFavorite;
+    this.list_schedule = [];
 
     if (meta) {
       const {

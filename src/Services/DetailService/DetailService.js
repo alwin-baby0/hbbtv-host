@@ -1,19 +1,22 @@
 import { parseDetailsData, parseSeasonData, parseSeasonTabs } from '../../Models/parsers';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
-import { API_METHODS, API_URLS } from '../../constants/globalConstants';
+import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import { Metrics } from '@firebolt-js/sdk';
 import { getDeviceType } from '../../utils/device';
 
 class DetailService extends FetchingService {
   getMovie = async (movieId) => {
     const timestamp = new Date().getTime();
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     return await this._request({
       url: `/${API_URLS.GET_MOVIE}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
+        ...(userData &&
+          userData.access_token && { Authorization: `Bearer ${userData.access_token}` }),
         'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
@@ -27,6 +30,7 @@ class DetailService extends FetchingService {
 
   getSerie = async (seriesId, episodeId) => {
     const timestamp = new Date().getTime();
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
     const galleryItem = await this._request({
       url: `/${API_URLS.GET_SERIE}`,
@@ -38,6 +42,8 @@ class DetailService extends FetchingService {
         episode_id: episodeId,
       },
       headers: {
+        ...(userData &&
+          userData.access_token && { Authorization: `Bearer ${userData.access_token}` }),
         'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
     }).then(parseDetailsData);

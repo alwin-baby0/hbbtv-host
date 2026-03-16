@@ -303,7 +303,7 @@ export default class GalleryItem extends Lightning.Component {
         },
         Metadata: {
           flex: { direction: 'column' },
-          y: -68,
+          y: -28,
           AgeRating: {
             w: 700,
             h: 30,
@@ -722,6 +722,11 @@ export default class GalleryItem extends Lightning.Component {
             },
             visible: true,
           });
+        } else {
+          this._AuthorizedButtons.patch({
+            y: -88,
+            x: 445,
+          });
         }
       })();
 
@@ -841,6 +846,10 @@ export default class GalleryItem extends Lightning.Component {
 
   get _TrailerButton() {
     return this.tag('TrailerButton');
+  }
+
+  get _AuthorizedButtons() {
+    return this.tag('AuthorizedButtons');
   }
 
   get _ContinueWatching() {

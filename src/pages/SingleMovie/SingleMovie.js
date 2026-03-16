@@ -611,11 +611,11 @@ export default class SingleMovie extends Lightning.Component {
 
   async addToFavorite() {
     try {
-      const { movie, movieTrailerUrl, favorited, last_position } = this._props;
+      const { movie, favorited } = this._props;
       if (favorited) {
         await UserService.removeFromFavorites(movie.id);
       } else {
-        await UserService.addToFavorites(movie.id, 'video');
+        await UserService.addToFavorites(movie.id, 'movie');
       }
       this._props.favorited = !this._props.favorited;
 
