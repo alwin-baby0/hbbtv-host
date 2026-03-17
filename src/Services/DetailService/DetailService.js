@@ -114,7 +114,6 @@ class DetailService extends FetchingService {
       apiVersion: V2,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       method: API_METHODS.GET,
       params: {
