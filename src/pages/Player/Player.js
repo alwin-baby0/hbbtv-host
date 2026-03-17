@@ -40,9 +40,9 @@ export default class Player extends Lightning.Component {
   };
 
   _cumulativeTime = 0;
-  _podTime = 0;
+  _slotTime = 0;
   _adTimeCumulated = -1;
-  _podTimeCumulated = -1;
+  _slotTimeCumulated = -1;
   _currentlySelectedItem = null;
   _adStarted = false;
   _currentAdTime = 1;
@@ -552,209 +552,206 @@ export default class Player extends Lightning.Component {
     // Check if `ssai` has a `slots` array
     if (ssai_params && Array.isArray(ssai_params.slots)) {
       // Iterate over each slot in the `slots` array
-      ssai_params.slots.forEach((slot) => {
+      ssai_params.slots.forEach((slot, slotIndex) => {
         // Iterate over each pod in the current slot
-        slot.pods.forEach((pod, podIndex) => {
-          this._podTimeCumulated = podIndex - 1;
-          // Iterate over each ad in the current pod
-          pod.ads.forEach((ad, index) => {
-            const from = convertCueTimeToSeconds(ad.cue.from);
-            const to = convertCueTimeToSeconds(ad.cue.to);
-            if (podIndex === slot.pods.length - 1 && currentTime - this._cumulativeTime > from) {
-              this._podTime = this._cumulativeTime;
-            }
-            const time = podIndex === 0 ? currentTime : currentTime - this._podTime;
-            if (time >= from && time < to) {
-              if (this._props.currentAd !== ad) {
-                const lastAd = pod.ads[pod.ads.length - 1];
-                const lastAdTo = convertCueTimeToSeconds(lastAd.cue.to);
-                const lastAdFrom = convertCueTimeToSeconds(lastAd.cue.from);
-                this._props.skipTo = lastAdTo - lastAdFrom;
+        // slot.pods.forEach((pod, podIndex) => {
+        this._slotTimeCumulated = slotIndex - 1;
+        // Iterate over each ad in the current pod
+        slot.ads.forEach((ad, index) => {
+          const from = convertCueTimeToSeconds(ad.cue.from);
+          const to = convertCueTimeToSeconds(ad.cue.to);
+          if (slotIndex === slot.length - 1 && currentTime - this._cumulativeTime > from) {
+            this._slotTime = this._cumulativeTime;
+          }
+          const time = slotIndex === 0 ? currentTime : currentTime - this._slotTime;
+          if (time >= from && time < to) {
+            if (this._props.currentAd !== ad) {
+              const lastAd = slot.ads[slot.ads.length - 1];
+              const lastAdTo = convertCueTimeToSeconds(lastAd.cue.to);
+              const lastAdFrom = convertCueTimeToSeconds(lastAd.cue.from);
+              this._props.skipTo = lastAdTo - lastAdFrom;
 
-                this.patch({
-                  WrapperAd: {
-                    x: 0,
-                    y: 0,
+              this.patch({
+                WrapperAd: {
+                  x: 0,
+                  y: 0,
+                  w: 1920,
+                  Overlay: {
+                    // Semi-transparent black background to simulate shadow/overlay
+                    rect: true,
                     w: 1920,
-                    Overlay: {
-                      // Semi-transparent black background to simulate shadow/overlay
-                      rect: true,
-                      w: 1920,
-                      h: 200,
-                      y: 880,
-                      color: 0x66000000,
+                    h: 200,
+                    y: 880,
+                    color: 0x66000000,
+                  },
+                  ProgressBarAd: {
+                    type: ProgressBar,
+                    x: 20,
+                    y: 1000,
+                    props: {
+                      width: 1880,
+                      height: 10,
+                      backgroundBarColor: Colors(colors.adProgress).get(),
+                      progressColor: undefined,
                     },
-                    ProgressBarAd: {
-                      type: ProgressBar,
-                      x: 20,
-                      y: 1000,
+                  },
+                  AdIcon: {
+                    x: 1835,
+                    y: 20,
+                    w: 65,
+                    h: 65,
+                    Icon: {
+                      color: Colors(colors.adProgress).get(),
+                      texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.AD_ICON), 65, 65),
+                    },
+                  },
+                  AdInfoContainer: {
+                    x: 20,
+                    y: 930,
+                    w: 300,
+                    h: 35,
+                    flex: { direction: 'row', alignItems: 'center' },
+                    AdNumber: {
+                      w: 140,
+                      Text: {
+                        flex: { justifyContent: 'flex-start', alignItems: 'center' },
+                        h: 35,
+                        w: 140,
+                        text: {
+                          text: 'Ad 1 of 2',
+                          fontSize: 28,
+                          fontFace: 'Montserrat-SemiBold',
+                          textColor: Colors('#ffffff').get(),
+                          shadow: true,
+                        },
+                      },
+                    },
+                    TimerAd: {
+                      w: 140,
+                      Text: {
+                        flex: { justifyContent: 'flex-start', alignItems: 'center' },
+                        h: 35,
+                        w: 140,
+                        text: {
+                          text: '',
+                          fontSize: 28,
+                          fontFace: 'Montserrat-SemiBold',
+                          textColor: Colors('#ffffff').get(),
+                          shadow: true,
+                        },
+                      },
+                    },
+                    BackButton: {
+                      type: PlayerButtons,
+                      collision: true,
                       props: {
-                        width: 1880,
-                        height: 10,
-                        backgroundBarColor: Colors(colors.adProgress).get(),
-                        progressColor: undefined,
-                      },
-                    },
-                    AdIcon: {
-                      x: 1835,
-                      y: 20,
-                      w: 65,
-                      h: 65,
-                      Icon: {
-                        color: Colors(colors.adProgress).get(),
-                        texture: Lightning.Tools.getSvgTexture(
-                          Utils.asset(IMG_PATH.AD_ICON),
-                          65,
-                          65
-                        ),
-                      },
-                    },
-                    AdInfoContainer: {
-                      x: 20,
-                      y: 930,
-                      w: 300,
-                      h: 35,
-                      flex: { direction: 'row', alignItems: 'center' },
-                      AdNumber: {
-                        w: 140,
-                        Text: {
-                          flex: { justifyContent: 'flex-start', alignItems: 'center' },
-                          h: 35,
-                          w: 140,
-                          text: {
-                            text: 'Ad 1 of 2',
-                            fontSize: 28,
-                            fontFace: 'Montserrat-SemiBold',
-                            textColor: Colors('#ffffff').get(),
-                            shadow: true,
-                          },
-                        },
-                      },
-                      TimerAd: {
-                        w: 140,
-                        Text: {
-                          flex: { justifyContent: 'flex-start', alignItems: 'center' },
-                          h: 35,
-                          w: 140,
-                          text: {
-                            text: '',
-                            fontSize: 28,
-                            fontFace: 'Montserrat-SemiBold',
-                            textColor: Colors('#ffffff').get(),
-                            shadow: true,
-                          },
-                        },
-                      },
-                      BackButton: {
-                        type: PlayerButtons,
-                        collision: true,
-                        props: {
-                          buttonInfo: {
-                            label: 'back',
-                            icon: IMG_PATH.BACK_BTN_PLAYER,
-                            onLiveContent: true,
-                            position: 60,
-                            width: 45,
-                            height: 45,
-                            y: 15,
-                            x: -10,
-                            color: Colors(colors.adProgress).get(),
-                            hover: false,
-                          },
+                        buttonInfo: {
+                          label: 'back',
+                          icon: IMG_PATH.BACK_BTN_PLAYER,
+                          onLiveContent: true,
+                          position: 60,
+                          width: 45,
+                          height: 45,
+                          y: 15,
+                          x: -10,
+                          color: Colors(colors.adProgress).get(),
+                          hover: false,
                         },
                       },
                     },
                   },
-                });
+                },
+              });
 
-                if (ad.skipping_allowed) {
-                  this._WrapperAd.patch({
-                    SkipButton: {
-                      type: HorizontalContainer,
-                      props: {
-                        w: 200,
-                        h: 60,
-                        parentState: 'SkipButton',
-                      },
-                      x: 1700,
-                      y: 915,
+              if (ad.skipping_allowed) {
+                this._WrapperAd.patch({
+                  SkipButton: {
+                    type: HorizontalContainer,
+                    props: {
                       w: 200,
                       h: 60,
-                      rect: true,
-                      texture: Lightning.Tools.getRoundRect(
-                        200,
-                        60,
-                        3,
-                        4,
-                        Colors(colors.focus).get(),
-                        true,
-                        Colors(colors.background).get()
-                      ),
-                      flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
-                      Text: {
-                        flexItem: { alignSelf: 'center' },
-                        text: {
-                          text: 'Skip',
-                          fontFace: 'Montserrat-SemiBold',
-                          fontSize: 28,
-                        },
+                      parentState: 'SkipButton',
+                    },
+                    x: 1700,
+                    y: 915,
+                    w: 200,
+                    h: 60,
+                    rect: true,
+                    texture: Lightning.Tools.getRoundRect(
+                      200,
+                      60,
+                      3,
+                      4,
+                      Colors(colors.focus).get(),
+                      true,
+                      Colors(colors.background).get()
+                    ),
+                    flex: { direction: 'row', justifyContent: 'center', alignItems: 'center' },
+                    Text: {
+                      flexItem: { alignSelf: 'center' },
+                      text: {
+                        text: 'Skip',
+                        fontFace: 'Montserrat-SemiBold',
+                        fontSize: 28,
                       },
                     },
-                  });
-                }
-
-                if (!this._adStarted) {
-                  this._adStarted = true;
-
-                  const duration = to - from;
-
-                  this._updateProgressBarAd(duration, index + 1, pod.ads.length);
-
-                  this._progressAdInterval = setInterval(
-                    () => this._updateProgressBarAd(duration + 1, index + 1, pod.ads.length),
-                    100
-                  );
-                }
-
-                // Aktiviraj reklamu
-                this._handleAdPlayback(ad);
-                this._props.currentAd = ad; // Postavi trenutnu reklamu kao aktivnu
+                  },
+                });
               }
 
-              if (this._adTimeCumulated + this._podTimeCumulated !== index + podIndex - 1) {
-                this._cumulativeTime += to - from;
-                this._adTimeCumulated = index;
+              if (!this._adStarted) {
+                this._adStarted = true;
 
-                // if (index === pod.ads.length - 1) {
-                //   this._podTime = this._cumulativeTime;
-                // }
+                const duration = to - from;
+
+                this._updateProgressBarAd(duration, index + 1, slot.ads.length);
+
+                this._progressAdInterval = setInterval(
+                  () => this._updateProgressBarAd(duration + 1, index + 1, slot.ads.length),
+                  100
+                );
               }
+
+              // Aktiviraj reklamu
+              this._handleAdPlayback(ad);
+              this._props.currentAd = ad; // Postavi trenutnu reklamu kao aktivnu
             }
 
-            // Provera da li je trenutna reklama završena
-            if (time >= to && this._props.currentAd === ad) {
-              this._handleAdEnd(ad);
+            if (this._adTimeCumulated + this._slotTimeCumulated !== index + slotIndex - 1) {
+              this._cumulativeTime += to - from;
+              this._adTimeCumulated = index;
 
-              //check if the current ad is the last ad in the pod
-              if (ad === pod.ads[pod.ads.length - 1]) {
-                this._handlePodEnd();
-              }
-
-              //check if the current pod is the last, and if the ad is the last in the pod
-              if (pod === slot.pods[slot.pods.length - 1] && ad === pod.ads[pod.ads.length - 1]) {
-                this._handleSlotEnd();
-              }
-              this._props.currentAd = null; // Oslobodi trenutnu reklamu
-
-              if (podIndex === 0) {
-                this._podTime = this._cumulativeTime;
+              if (index === slot.ads.length - 1) {
+                this._slotTime = this._cumulativeTime;
               }
             }
-          });
-          this._podTimeCumulated = podIndex;
+          }
+
+          // Provera da li je trenutna reklama završena
+          if (time >= to && this._props.currentAd === ad) {
+            this._handleAdEnd(ad);
+
+            //check if the current ad is the last ad in the pod
+            if (ad === slot.ads[slot.ads.length - 1]) {
+              // this._handlePodEnd();
+              this._handleSlotEnd();
+            }
+
+            //check if the current pod is the last, and if the ad is the last in the pod
+            // if (pod === slot.pods[slot.pods.length - 1] && ad === pod.ads[pod.ads.length - 1]) {
+            //   this._handleSlotEnd();
+            // }
+            this._props.currentAd = null; // Oslobodi trenutnu reklamu
+
+            if (slotIndex === 0) {
+              this._slotTime = this._cumulativeTime;
+            }
+          }
         });
-        this._podTimeCumulated = -1;
+        this._slotTimeCumulated = slotIndex;
+        // });
       });
+      this._slotTimeCumulated = -1;
     } else {
       console.error('Invalid ssai structure or missing slots.');
       clearInterval(this._adMonitoringInterval);
@@ -795,7 +792,7 @@ export default class Player extends Lightning.Component {
 
   _handleAdPlayback(ad) {
     eventTrackPayload(EVENT_NAMES.AD_SLOT_STARTED, this._props.videoId);
-    eventTrackPayload(EVENT_NAMES.AD_POD_STARTED, this._props.videoId);
+    // eventTrackPayload(EVENT_NAMES.AD_POD_STARTED, this._props.videoId);
 
     this._hideWrapper();
     // Logic to handle ad playback, such as displaying the ad, hiding player controls, etc.
@@ -858,19 +855,19 @@ export default class Player extends Lightning.Component {
       // Iterate over each slot in the `slots` array
       ssai_params.slots.forEach((slot) => {
         // Iterate over each pod in the current slot
-        slot.pods.forEach((pod) => {
-          // Iterate over each ad in the current pod
-          pod.ads.forEach((ad, index) => {
-            const from = convertCueTimeToSeconds(ad.cue.from);
-            const to = convertCueTimeToSeconds(ad.cue.to);
-            if (seekTime >= from && seekTime < to) {
-              VideoPlayer.seek(from);
-              this._videoSkipTimeSum = 0;
-              VideoPlayer.play();
-              return;
-            }
-          });
+        // slot.pods.forEach((pod) => {
+        // Iterate over each ad in the current pod
+        slot.ads.forEach((ad, index) => {
+          const from = convertCueTimeToSeconds(ad.cue.from);
+          const to = convertCueTimeToSeconds(ad.cue.to);
+          if (seekTime >= from && seekTime < to) {
+            VideoPlayer.seek(from);
+            this._videoSkipTimeSum = 0;
+            VideoPlayer.play();
+            return;
+          }
         });
+        // });
       });
     }
     VideoPlayer.seek(seekTime);
@@ -923,7 +920,7 @@ export default class Player extends Lightning.Component {
 
   closeVideoPlayer() {
     this._cumulativeTime = 0;
-    this._podTime = 0;
+    this._slotTime = 0;
     this._adTimeCumulated = -1;
     clearTimeout(this._debounceVideoStart);
     clearTimeout(this._debounceVideoPause);
