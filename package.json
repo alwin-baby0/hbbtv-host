@@ -50,7 +50,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.12.7",
     "@babel/preset-env": "^7.15.0",
     "@vitejs/plugin-legacy": "^6.0.2",
-    "babel-eslint": "^9.0.0",
+    "babel-eslint": "^10.0.3",
     "babel-loader": "^10.0.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "cross-env": "^7.0.3",
