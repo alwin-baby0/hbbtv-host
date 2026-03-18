@@ -1,4 +1,4 @@
-import { Metrics } from '@firebolt-js/sdk';
+import { Advertising, Device, Metrics } from '@firebolt-js/sdk';
 import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../constants/globalConstants';
 import { getTitanSDK } from '@titan-os/sdk';
 
@@ -249,25 +249,48 @@ const getSunriseInfo = () => {
   };
 };
 
-const getMetrologicalInfo = () => {
+const getMetrologicalInfo = async () => {
   let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.METROLOGICAL_DEVICE_ID);
 
   if (!serialNumber) {
-    serialNumber = generateRandomUUID();
+    try {
+      serialNumber = (await Advertising.advertisingId()).ifa;
+    } catch (e) {
+      console.log(e);
+    }
+
+    !serialNumber && (serialNumber = generateRandomUUID());
     localStorage.setItem(LOCAL_STORAGE_KEYS.METROLOGICAL_DEVICE_ID, serialNumber);
   }
 
-  const userAgent = navigator.userAgent;
-  const userAgentSplit = userAgent.split(' ');
+  console.log(serialNumber);
 
-  const model = userAgentSplit[userAgentSplit.length - 2];
+  let brand, model, os, versionInfo;
+  try {
+    const deviceInfo = await Promise.all([
+      Device.make(),
+      Device.model(),
+      Device.platform(),
+      Device.version(),
+    ]);
+    brand = deviceInfo[0];
+    model = deviceInfo[1];
+    os = deviceInfo[2];
+    versionInfo = deviceInfo[3];
+  } catch (e) {
+    console.log(e);
+  }
+
+  console.log(brand, model, os, versionInfo);
+
+  const osVersion = versionInfo ? versionInfo.os.readable.slice(-5) : 'unknown';
 
   return {
     serialNumber: serialNumber,
-    model: model,
-    brand: 'ComCast',
-    os: 'Entertainment OS',
-    osVersion: 'unknown',
+    model: model ? model : 'unknown',
+    brand: brand ? brand : 'ComCast',
+    os: os ? os : 'Entertainment OS',
+    osVersion: osVersion ? osVersion : 'unknown',
     macAddress: 'unknown',
   };
 };
