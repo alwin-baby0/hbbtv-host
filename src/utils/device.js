@@ -251,7 +251,11 @@ const getMetrologicalInfo = async () => {
   let serialNumber = localStorage.getItem(LOCAL_STORAGE_KEYS.METROLOGICAL_DEVICE_ID);
 
   if (!serialNumber) {
-    serialNumber = (await Advertising.advertisingId()).ifa;
+    try {
+      serialNumber = (await Advertising.advertisingId()).ifa;
+    } catch (e) {
+      console.log(e);
+    }
 
     !serialNumber && (serialNumber = generateRandomUUID());
     localStorage.setItem(LOCAL_STORAGE_KEYS.METROLOGICAL_DEVICE_ID, serialNumber);
