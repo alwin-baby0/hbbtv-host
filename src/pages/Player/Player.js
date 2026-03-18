@@ -553,10 +553,8 @@ export default class Player extends Lightning.Component {
     if (ssai_params && Array.isArray(ssai_params.slots)) {
       // Iterate over each slot in the `slots` array
       ssai_params.slots.forEach((slot, slotIndex) => {
-        // Iterate over each pod in the current slot
-        // slot.pods.forEach((pod, podIndex) => {
         this._slotTimeCumulated = slotIndex - 1;
-        // Iterate over each ad in the current pod
+        // Iterate over each ad in the current slot
         slot.ads.forEach((ad, index) => {
           const from = convertCueTimeToSeconds(ad.cue.from);
           const to = convertCueTimeToSeconds(ad.cue.to);
@@ -564,6 +562,7 @@ export default class Player extends Lightning.Component {
             this._slotTime = this._cumulativeTime;
           }
           const time = slotIndex === 0 ? currentTime : currentTime - this._slotTime;
+          console.log(time, currentTime, this._slotTime);
           if (time >= from && time < to) {
             if (this._props.currentAd !== ad) {
               const lastAd = slot.ads[slot.ads.length - 1];
@@ -720,10 +719,6 @@ export default class Player extends Lightning.Component {
             if (this._adTimeCumulated + this._slotTimeCumulated !== index + slotIndex - 1) {
               this._cumulativeTime += to - from;
               this._adTimeCumulated = index;
-
-              if (index === slot.ads.length - 1) {
-                this._slotTime = this._cumulativeTime;
-              }
             }
           }
 
@@ -733,14 +728,9 @@ export default class Player extends Lightning.Component {
 
             //check if the current ad is the last ad in the pod
             if (ad === slot.ads[slot.ads.length - 1]) {
-              // this._handlePodEnd();
               this._handleSlotEnd();
             }
 
-            //check if the current pod is the last, and if the ad is the last in the pod
-            // if (pod === slot.pods[slot.pods.length - 1] && ad === pod.ads[pod.ads.length - 1]) {
-            //   this._handleSlotEnd();
-            // }
             this._props.currentAd = null; // Oslobodi trenutnu reklamu
 
             if (slotIndex === 0) {
@@ -749,7 +739,6 @@ export default class Player extends Lightning.Component {
           }
         });
         this._slotTimeCumulated = slotIndex;
-        // });
       });
       this._slotTimeCumulated = -1;
     } else {
@@ -792,7 +781,6 @@ export default class Player extends Lightning.Component {
 
   _handleAdPlayback(ad) {
     eventTrackPayload(EVENT_NAMES.AD_SLOT_STARTED, this._props.videoId);
-    // eventTrackPayload(EVENT_NAMES.AD_POD_STARTED, this._props.videoId);
 
     this._hideWrapper();
     // Logic to handle ad playback, such as displaying the ad, hiding player controls, etc.
@@ -854,10 +842,8 @@ export default class Player extends Lightning.Component {
     if (ssai_params && Array.isArray(ssai_params.slots)) {
       // Iterate over each slot in the `slots` array
       ssai_params.slots.forEach((slot) => {
-        // Iterate over each pod in the current slot
-        // slot.pods.forEach((pod) => {
-        // Iterate over each ad in the current pod
-        slot.ads.forEach((ad, index) => {
+        // Iterate over each ad in the current slot
+        slot.ads.forEach((ad) => {
           const from = convertCueTimeToSeconds(ad.cue.from);
           const to = convertCueTimeToSeconds(ad.cue.to);
           if (seekTime >= from && seekTime < to) {
@@ -867,7 +853,6 @@ export default class Player extends Lightning.Component {
             return;
           }
         });
-        // });
       });
     }
     VideoPlayer.seek(seekTime);
