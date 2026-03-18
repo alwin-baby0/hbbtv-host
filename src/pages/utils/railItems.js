@@ -190,7 +190,7 @@ const constructHeroRailItems = (railItems, railItemsOptions, cardType) => {
               console.warn('unknown category type:', railItem.type);
           }
         },
-        url: railItem.trailerUrl,
+        url: railItem.type === RAIL_TYPES.TRAILER ? railItem.trailerUrl : railItem.videoUrl,
       },
     };
   });
