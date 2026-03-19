@@ -80,7 +80,8 @@ class HomePageService extends FetchingService {
 
     const requests = rows.map((row) => this.#getHomePage(row, this.#page, this.#currentRailLimit));
 
-    const results = await Promise.all(requests);
+    let results = await Promise.all(requests);
+    results = results.filter((result) => result);
 
     for (let i = 0; i < results.length; i++) {
       const stripeData = results[i];
@@ -96,7 +97,7 @@ class HomePageService extends FetchingService {
         return;
       }
 
-      if (stripeData?.items?.length > 0) {
+      if (stripeData && stripeData.items && stripeData.items.length > 0) {
         this.stripesFetched++;
 
         stripeData.stripeId = row;

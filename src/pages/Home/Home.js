@@ -287,15 +287,15 @@ export default class Home extends Lightning.Component {
             });
           }
 
-          let hasBanner = !!HomePageService.banner;
-          let indexNumber = hasBanner ? 1 : 0;
-
           if (
             HomePageService.hasMore &&
             !HomePageService.loading &&
-            HomePageService.stripesFetched - 2 === index - indexNumber
+            index === this._Column.Items.children.length - 1
           ) {
             const newStripes = await HomePageService.fetchMoreStripes();
+            if (!newStripes) {
+              return;
+            }
             const rails = constructRails(newStripes, ROUTES.HOME);
             this._Column._appendItems(rails);
           }

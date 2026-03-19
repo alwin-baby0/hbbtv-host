@@ -70,7 +70,13 @@ export default class CategoryPickerItem extends FocusableItem {
         ),
       },
       Title: {
-        text: { text: title ? title.toUpperCase() : data.localised.toUpperCase() },
+        text: {
+          text: title
+            ? title.toUpperCase()
+            : data.localised
+            ? data.localised.toUpperCase()
+            : data.value.toUpperCase(),
+        },
       },
     });
   }
