@@ -8,13 +8,11 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
-import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { checkCMP } from '../../utils/index';
 import { didomiVisible } from '../../App';
-import { t } from '../../utils';
+import { t, clamp, checkCMP } from '../../utils';
 
 export default class LiveTV extends Lightning.Component {
   _props = {
@@ -377,7 +375,12 @@ export default class LiveTV extends Lightning.Component {
 
   async fetchChannels() {
     if (Router.getActiveHash() !== ROUTES.PLAYER) {
-      await EPGService.initialFetch();
+      const channelsEPGS = [];
+      EPGService.channelsItems.forEach((channelsItem) => {
+        channelsEPGS.push(EPGService.getEPG(channelsItem.id, channelsItem.url));
+      });
+
+      const channelsEPGSResults = await Promise.all(channelsEPGS);
 
       const focusedIndex = this._EPGData._focusedIndex;
       const y = this._EPGData.Items.y;
@@ -390,7 +393,7 @@ export default class LiveTV extends Lightning.Component {
             return null;
           }
 
-          const matchingEpg = EPGService.epgs.find((epgInfo) => {
+          const matchingEpg = channelsEPGSResults.find((epgInfo) => {
             return Number(epgInfo.channelId) === channelInfo.id;
           });
           const rails = constructRails(matchingEpg);
@@ -627,6 +630,80 @@ export default class LiveTV extends Lightning.Component {
 
           this._Channels._focusedIndex = index;
           this._Channels.Items.smooth = { y: index === 0 ? 0 : this._EPGData.Items.y };
+
+          if (
+            EPGService.hasMoreChannels &&
+            !EPGService.loading &&
+            this._Channels.Items.children.length - 1 === index
+          ) {
+            const channels = await EPGService.fetchMoreChannels();
+            const channelsEPGS = channels.map((channel) =>
+              EPGService.getEPG(channel.id, channel.url)
+            );
+            const epgResults = await Promise.all(channelsEPGS);
+
+            EPGService.epgs.push(
+              ...epgResults.map((result, index) => {
+                return {
+                  ...result,
+                  channelIcon: EPGService.channelsItems[index].icon,
+                  channelTitle: EPGService.channelsItems[index].title,
+                  src: EPGService.channelsItems[index].url,
+                };
+              })
+            );
+
+            const channelsEPGSAll = channels.map((channel) =>
+              EPGService.getEPG(channel.id, channel.url)
+            );
+            const epgResultsAll = await Promise.all(channelsEPGSAll);
+
+            EPGService.epgsAll.push(
+              ...epgResultsAll.map((result, index) => {
+                return {
+                  ...result,
+                  channelIcon: EPGService.channelsItems[index].icon,
+                  channelTitle: EPGService.channelsItems[index].title,
+                  src: EPGService.channelsItems[index].url,
+                };
+              })
+            );
+
+            EPGService.reCalculateEpgContainer();
+
+            EPGService.pointer++;
+            EPGService.stripesFetched = EPGService.epgs.length;
+
+            const channelsAll = channels
+              .map((channelInfo, index) => {
+                if (!channelInfo) {
+                  console.warn(`No channelInfo for index ${index}`);
+                  return null;
+                }
+
+                const matchingEpg = EPGService.epgs.find((epgInfo) => {
+                  return Number(epgInfo.channelId) === channelInfo.id;
+                });
+                const rails = constructRails(matchingEpg);
+
+                this._EPGData._appendItems(rails);
+                return {
+                  type: LiveChannelRailItem,
+                  channelInfo: channelInfo,
+                  channelEPG: matchingEpg,
+                  w: 190,
+                  h: 105,
+                  channelIndex: index,
+                  props: {
+                    icon: channelInfo.icon,
+                  },
+                };
+              })
+              .filter((channel) => channel !== null);
+            this._Channels._appendItems(channelsAll);
+
+            this._EPGData.setInitialOffset();
+          }
         }
       },
     ];

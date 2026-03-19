@@ -14,7 +14,6 @@ import {
 import { railItemConstructor } from '../utils/railItems';
 import { checkCMP } from '../../utils/index';
 import { didomiVisible } from '../../App';
-import { VodService } from '../../Services';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -131,7 +130,11 @@ export default class VodPreview extends Lightning.Component {
             ? ROUTES.SERIES
             : ROUTES.SPORTS,
       };
-      this._setState('Hero');
+      if (sliderData) {
+        this._setState('Hero');
+      } else {
+        this._setState('VodContentContainer');
+      }
     }
   }
 
@@ -154,7 +157,11 @@ export default class VodPreview extends Lightning.Component {
   }
 
   $setStateOnScroll(nextState) {
-    this._setState(nextState);
+    if (this._props.sliderData) {
+      this._setState(nextState);
+    } else if (!Router.isNavigating()) {
+      Router.focusWidget('Menu');
+    }
   }
 
   _handleBack() {
@@ -276,7 +283,11 @@ export default class VodPreview extends Lightning.Component {
             return true;
           }
 
-          this._setState('Hero');
+          if (this._props.sliderData) {
+            this._setState('Hero');
+          } else if (!Router.isNavigating()) {
+            Router.focusWidget(ROUTES.MENU_WIDGET);
+          }
         }
 
         _handleDown() {

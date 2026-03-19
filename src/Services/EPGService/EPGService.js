@@ -29,6 +29,11 @@ class EPGService extends FetchingService {
   endTime = -Infinity;
   loading = false;
 
+  page = 1;
+  limit = 20;
+  hasMoreChannels = false;
+  type = '';
+
   async initialFetch(channelId) {
     // Reset state variables to ensure a fresh start
     // this.channelsItems = null;
@@ -37,6 +42,7 @@ class EPGService extends FetchingService {
     this.pointer = 1;
     this.stripesFetched = 0;
     this.genreItems = [];
+    this.type = '';
 
     const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
 
@@ -62,14 +68,15 @@ class EPGService extends FetchingService {
       channels = await this.#getGenresCategory('', `${channelId}`);
       channels.unshift(firstChannel);
     } else {
-      channels = await this.#getGenresCategory();
+      channels = await this.#getGenresCategory('', '', '', this.page, this.limit);
+      this.page++;
     }
 
     if (channels?.length > 0) {
       this.channelsItems = channels;
 
       const channelsEPGs = this.channelsItems.slice(0, EPG_ROWS_PER_FETCH).map((channel) => {
-        return this.#getEPG(channel.id, channel.url);
+        return this.getEPG(channel.id, channel.url);
       });
 
       const epgResults = await Promise.all(channelsEPGs);
@@ -86,7 +93,7 @@ class EPGService extends FetchingService {
       );
 
       const channelsEPGsAll = this.channelsItems.slice(0, EPG_ROWS_PER_FETCH).map((channel) => {
-        return this.#getEPG(channel.id);
+        return this.getEPG(channel.id);
       });
 
       const epgResultsAll = await Promise.all(channelsEPGsAll);
@@ -122,7 +129,7 @@ class EPGService extends FetchingService {
     );
 
     const channelEPG = channelsEPGs.map(async (channel) => {
-      return this.#getEPG(channel.id);
+      return this.getEPG(channel.id);
     });
 
     const epgResults = await Promise.all(channelEPG);
@@ -138,10 +145,25 @@ class EPGService extends FetchingService {
     return { results: epgResults };
   }
 
+  async fetchMoreChannels() {
+    const channels = await this.#getGenresCategory(this.type, '', '', this.page, this.limit);
+    this.page++;
+    if (this.channelsItems.some((channelsItem) => channelsItem.id === channels[0].id)) return [];
+
+    this.channelsItems.push(...channels);
+    this.allChannels = this.channelsItems.map((channel) => channel.id);
+    this.filteredChannelsItems = this.channelsItems;
+
+    return channels;
+  }
+
   async fetchCategoryType(type) {
+    this.page = 1;
+    this.type = type;
     this.pointer = 2;
     this.stripesFetched = 5;
-    const fetchedResult = await this.#getGenresCategory(type);
+    const fetchedResult = await this.#getGenresCategory(type, '', '', this.page, this.limit);
+    this.page++;
 
     const channels = fetchedResult.map((channel) => channel.id);
     this.allChannels = channels;
@@ -151,7 +173,7 @@ class EPGService extends FetchingService {
     const channelEPG = await Promise.all(
       firstFiveChannels.map((channelId) => {
         try {
-          return this.#getEPG(channelId);
+          return this.getEPG(channelId);
         } catch (error) {
           const deviceType = getDeviceType();
           deviceType === 'metrological' &&
@@ -216,7 +238,11 @@ class EPGService extends FetchingService {
     return this.stripesFetched < this.channelsItems.length;
   }
 
-  #getGenresCategory = async (include, exclude, channel_id) =>
+  get hasMoreChannels() {
+    return this.hasMoreChannels;
+  }
+
+  #getGenresCategory = async (include, exclude, channel_id, page, limit) =>
     await this._request({
       url: `/${API_URLS.GET_EPG_CHANNELS}`,
       apiVersion: V2,
@@ -225,13 +251,16 @@ class EPGService extends FetchingService {
         ...(include && { tags: include }),
         ...(exclude && { exclude }),
         ...(channel_id && { channel_id }),
+        ...(page && { page }),
+        ...(limit && { limit }),
       },
       headers: {
         'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
-    }).then(this.#parseLiveChannelsData);
+    }).then((response) => this.#parseLiveChannelsData({ data: response.data }));
 
   #parseLiveChannelsData({ data }) {
+    data.entry && (this.hasMoreChannels = data.entry.has_more);
     if (data.entry && data.entry.items) {
       return data.entry.items.map((channel) => ({
         id: channel.id,
@@ -276,7 +305,7 @@ class EPGService extends FetchingService {
     };
   }
 
-  #getEPG = async (channelId, url) =>
+  getEPG = async (channelId, url) =>
     this._request({
       url: `/${API_URLS.GET_EPG_PROGRAM}`,
       apiVersion: V2,
