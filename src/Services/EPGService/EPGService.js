@@ -45,13 +45,14 @@ class EPGService extends FetchingService {
     this.type = '';
 
     const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+    settings.genres.types.channels.unshift('all');
 
     const getGenres = parseVodCategories(
       {
         items: settings.genres.types.channels.map((item) => {
           return {
             value: item,
-            localised: settings.genres.localized[item],
+            localised: item !== 'all' ? settings.genres.localized[item] : settings.translation.all,
           };
         }),
       },

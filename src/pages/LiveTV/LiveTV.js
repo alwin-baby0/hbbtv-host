@@ -440,7 +440,9 @@ export default class LiveTV extends Lightning.Component {
   }
 
   async $updateChannels(val) {
-    await EPGService.fetchCategoryType(val.itemInfo.data.value);
+    await EPGService.fetchCategoryType(
+      val.itemInfo.data.value !== 'all' ? val.itemInfo.data.value : ''
+    );
     const result = await this.createTimeArray(EPGService.startTime, EPGService.endTime);
     const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
     this._TimeSlot.props = {
