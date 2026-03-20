@@ -52,7 +52,12 @@ class EPGService extends FetchingService {
         items: settings.genres.types.channels.map((item) => {
           return {
             value: item,
-            localised: item !== 'all' ? settings.genres.localized[item] : settings.translation.all,
+            localised:
+              item !== 'all'
+                ? settings.genres.localized[item]
+                : settings.translation
+                ? settings.translation.all
+                : 'ALL',
           };
         }),
       },
