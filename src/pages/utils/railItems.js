@@ -19,6 +19,7 @@ import BannerRailItem from '../../components/RailItems/BannerRailItem';
 import { DetailService, EPGService } from '../../Services';
 import ContinueWatchingRailItem from '../../components/RailItems/ContinueWatchingRailItem';
 import ViewMoreRailItem from '../../components/RailItems/ViewMoreRailItem';
+import { formatTimeHMS } from '../Player/utils';
 
 export const railItemConstructor = (railItems, railType, railItemsOptions, cardType) => {
   switch (railType) {
@@ -172,12 +173,12 @@ const constructHeroRailItems = (railItems, railItemsOptions, cardType) => {
             }
             case CATEGORY_TYPES.COLLECTION:
             case CATEGORY_TYPES.PLAYLIST: {
-              Router.navigate(`${ROUTES.COLLECTION}/${railItem.id}`);
+              Router.navigate(`${ROUTES.COLLECTION}/${`channel_${railItem.id}`}`);
               break;
             }
             case CATEGORY_TYPES.LIVESTREAM: {
-              const epgProgram = await EPGService.getSingleEPGChannel(`channel_${railItem.id}`);
-              const epgStreamSrc = epgProgram.items[0].content.src;
+              const epgProgram = await EPGService.getGenresCategory('', '', railItem.id);
+              const epgStreamSrc = epgProgram[0].url;
 
               Router.navigate(ROUTES.PLAYER, {
                 videoUrl: epgStreamSrc,

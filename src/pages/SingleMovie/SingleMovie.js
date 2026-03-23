@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils, Colors } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
-import { DetailService, UserService } from '../../Services';
+import { DetailService, LoggingService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
@@ -10,6 +10,7 @@ import {
   ROUTES,
   TRANSLATIONS,
   IMAGE_SIZES,
+  LOG_LEVEL,
 } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
@@ -640,8 +641,7 @@ export default class SingleMovie extends Lightning.Component {
           'Failed to update favorite status of VOD',
           true
         );
-      //skip
-      console.log('error', e);
+      LoggingService.postLog(LOG_LEVEL.ERROR, e?.response?.status, e?.response);
     }
   }
 

@@ -69,12 +69,12 @@ class EPGService extends FetchingService {
     let channels;
 
     if (channelId) {
-      const firstChannel = (await this.#getGenresCategory('', '', channelId))[0];
+      const firstChannel = (await this.getGenresCategory('', '', channelId))[0];
 
-      channels = await this.#getGenresCategory('', `${channelId}`);
+      channels = await this.getGenresCategory('', `${channelId}`);
       channels.unshift(firstChannel);
     } else {
-      channels = await this.#getGenresCategory('', '', '', this.page, this.limit);
+      channels = await this.getGenresCategory('', '', '', this.page, this.limit);
       this.page++;
     }
 
@@ -152,7 +152,7 @@ class EPGService extends FetchingService {
   }
 
   async fetchMoreChannels() {
-    const channels = await this.#getGenresCategory(this.type, '', '', this.page, this.limit);
+    const channels = await this.getGenresCategory(this.type, '', '', this.page, this.limit);
     this.page++;
     if (this.channelsItems.some((channelsItem) => channelsItem.id === channels[0].id)) return [];
 
@@ -168,7 +168,7 @@ class EPGService extends FetchingService {
     this.type = type;
     this.pointer = 2;
     this.stripesFetched = 5;
-    const fetchedResult = await this.#getGenresCategory(type, '', '', this.page, this.limit);
+    const fetchedResult = await this.getGenresCategory(type, '', '', this.page, this.limit);
     this.page++;
 
     const channels = fetchedResult.map((channel) => channel.id);
@@ -248,7 +248,7 @@ class EPGService extends FetchingService {
     return this.hasMoreChannels;
   }
 
-  #getGenresCategory = async (include, exclude, channel_id, page, limit) =>
+  getGenresCategory = async (include, exclude, channel_id, page, limit) =>
     await this._request({
       url: `/${API_URLS.GET_EPG_CHANNELS}`,
       apiVersion: V2,
@@ -286,13 +286,15 @@ class EPGService extends FetchingService {
     }
   }
 
-  getSingleEPGChannel = async (channelId) =>
+  getSingleEPGChannel = async (channelId, startTime, endTime) =>
     await this._request({
       url: `/${API_URLS.GET_EPG_PROGRAM}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       params: {
         channel_id: `${channelId}`,
+        ...(startTime && { start_time: startTime }),
+        ...(endTime && { end_time: endTime }),
       },
       headers: {
         'X-API-Live-Key': process.env.APP_LIVE_KEY,

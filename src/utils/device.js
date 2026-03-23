@@ -256,14 +256,17 @@ const getMetrologicalInfo = async () => {
     try {
       serialNumber = (await Advertising.advertisingId()).ifa;
     } catch (e) {
-      console.log(e);
+      Metrics.error(
+        Metrics.ErrorType.RESTRICTION,
+        e.status,
+        'Advertising id retrieval failed',
+        false
+      );
     }
 
     !serialNumber && (serialNumber = generateRandomUUID());
     localStorage.setItem(LOCAL_STORAGE_KEYS.METROLOGICAL_DEVICE_ID, serialNumber);
   }
-
-  console.log(serialNumber);
 
   let brand, model, os, versionInfo;
   try {
@@ -278,10 +281,8 @@ const getMetrologicalInfo = async () => {
     os = deviceInfo[2];
     versionInfo = deviceInfo[3];
   } catch (e) {
-    console.log(e);
+    Metrics.error(Metrics.ErrorType.RESTRICTION, e.status, 'Device info retrieval failed', false);
   }
-
-  console.log(brand, model, os, versionInfo);
 
   const osVersion = versionInfo ? versionInfo.os.readable.slice(-5) : 'unknown';
 

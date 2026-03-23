@@ -1,7 +1,7 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import { DetailService, UserService } from '../../Services';
+import { DetailService, LoggingService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
@@ -126,7 +126,7 @@ export default class SingleSeries extends Lightning.Component {
           'Failed to update favorite status of VOD',
           true
         );
-      console.log('error', e);
+      LoggingService.postLog(LOG_LEVEL.ERROR, e?.response?.status, e?.response);
     }
   }
 
