@@ -290,7 +290,7 @@ export default class Home extends Lightning.Component {
           if (
             HomePageService.hasMore &&
             !HomePageService.loading &&
-            index === this._Column.Items.children.length - 1
+            index >= this._Column.Items.children.length - 2
           ) {
             const newStripes = await HomePageService.fetchMoreStripes();
             if (!newStripes) {

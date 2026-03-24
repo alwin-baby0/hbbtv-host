@@ -314,7 +314,7 @@ const constructCategoryItems = (railItems, railItemsOptions, cardType) => {
 };
 
 // Banner
-const constructBannerRailItems = (railItems, railItemsOptions, cardType) => {
+const constructBannerRailItems = (railItems, railItemsOptions) => {
   return railItems.map((railItem) => ({
     type: BannerRailItem,
     w: 1760,

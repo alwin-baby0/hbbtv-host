@@ -10,7 +10,7 @@ class Banner {
   // Method to get a CTV poster by resolution
   getCtvPoster(resolution) {
     const resolutionKey = resolution.toString(); // Ensure the resolution is a string
-    return this.ctvPosters[resolutionKey] ?? null;
+    return this.ctvPosters[resolutionKey] ?? this.ctvPosters.default ?? null;
   }
 }
 

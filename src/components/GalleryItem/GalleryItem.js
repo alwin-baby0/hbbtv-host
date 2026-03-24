@@ -470,7 +470,14 @@ export default class GalleryItem extends Lightning.Component {
     if (videoType !== 'event') {
       factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
     } else {
-      factLine = eventDate && eventTime ? [eventDate, eventTime].join(' | ') : '';
+      factLine =
+        eventDate && eventTime
+          ? [eventDate, eventTime].join(' | ')
+          : eventDate
+          ? eventDate
+          : eventTime
+          ? eventTime
+          : '';
     }
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
@@ -617,7 +624,7 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         Date: {
-          visible: true,
+          visible: factLine ? true : false,
           Text: {
             text: {
               text: factLine,

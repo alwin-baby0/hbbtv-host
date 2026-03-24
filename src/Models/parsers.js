@@ -1,6 +1,6 @@
 import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
 import { VODS_PER_ROW } from '../Services';
-import { RAIL_TYPES, CARD_TYPES } from '../constants/globalConstants';
+import { RAIL_TYPES, CARD_TYPES, CONTENT_TYPE } from '../constants/globalConstants';
 import { Banner } from './Banner';
 import { ViewMoreRailItem } from './ViewMore';
 
@@ -8,11 +8,13 @@ import { ViewMoreRailItem } from './ViewMore';
 export const parseHomePageRailData = ({ data }) => {
   const railItems =
     data.entry &&
-    (data.entry.items
+    (data.entry.items && data.entry.items.length
       ? data.entry?.items.map(
           (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
         )
-      : [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]);
+      : data.contentType === CARD_TYPES.BANNER
+      ? [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]
+      : []);
   if (!railItems || railItems.length === 0) return;
   data.entry.has_more &&
     railItems.push(

@@ -34,7 +34,7 @@ class GalleryItem {
     this.videoUrl = files?.[1]?.url || files?.[0]?.url || null;
     this.trailerUrl = meta && meta.trailer ? meta.trailer : null;
     this.eventDate = date;
-    this.eventTime = time;
+    this.eventTime = time ? time : null;
     this.playlists = playlists || null;
     this.favorited = user?.isFavorite;
     this.list_schedule = [];
@@ -84,6 +84,8 @@ class GalleryItem {
 
     if (list_schedule) {
       this.list_schedule = list_schedule;
+    } else if (schedule) {
+      this.list_schedule = Array.isArray(schedule) ? schedule : [schedule];
     }
 
     if (streams) {
