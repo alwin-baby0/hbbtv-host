@@ -173,7 +173,7 @@ const constructHeroRailItems = (railItems, railItemsOptions, cardType) => {
             }
             case CATEGORY_TYPES.COLLECTION:
             case CATEGORY_TYPES.PLAYLIST: {
-              Router.navigate(`${ROUTES.COLLECTION}/${`channel_${railItem.id}`}`);
+              Router.navigate(`${ROUTES.COLLECTION}/${`${railItem.id}`}`);
               break;
             }
             case CATEGORY_TYPES.LIVESTREAM: {
