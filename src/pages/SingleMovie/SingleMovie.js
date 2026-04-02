@@ -539,6 +539,20 @@ export default class SingleMovie extends Lightning.Component {
                 if (item.buttonName === 'FAVORITE') {
                   this.addToFavorite();
                 } else if (item.buttonName === 'WATCH NOW') {
+                  this._Buttons.Items.children[0].Items.children[0]._props.enabled = false;
+                  const focusingColors = Colors(colors.focusDisabled).get();
+                  const fillColor = Colors(colors.focusDisabled).get();
+                  this._Buttons.Items.children[0].Items.children[0].patch({
+                    texture: Lightning.Tools.getRoundRect(
+                      this._Buttons.Items.children[0].Items.children[0]._props.width,
+                      this._Buttons.Items.children[0].Items.children[0]._props.height,
+                      this._Buttons.Items.children[0].Items.children[0]._props.radius,
+                      this._Buttons.Items.children[0].Items.children[0]._props.strokeWidth,
+                      focusingColors,
+                      true,
+                      fillColor
+                    ),
+                  });
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
                       Router.navigate(ROUTES.PLAYER, {
@@ -555,6 +569,20 @@ export default class SingleMovie extends Lightning.Component {
                     videoId: movieTrailerId,
                   });
                 } else if (item.buttonName === 'CONTINUE WATCHING') {
+                  this._ContinueButton._props.enabled = false;
+                  const focusingColors = Colors(colors.focusDisabled).get();
+                  const fillColor = Colors(colors.focusDisabled).get();
+                  this._ContinueButton.patch({
+                    texture: Lightning.Tools.getRoundRect(
+                      this._ContinueButton._props.width,
+                      this._ContinueButton._props.height,
+                      this._ContinueButton._props.radius,
+                      this._ContinueButton._props.strokeWidth,
+                      focusingColors,
+                      true,
+                      fillColor
+                    ),
+                  });
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
                       Router.navigate(ROUTES.PLAYER, {
