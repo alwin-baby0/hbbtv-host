@@ -764,6 +764,21 @@ export default class GalleryItem extends Lightning.Component {
               });
               return;
             }
+
+            this._GalleryButton._props.enabled = false;
+            const focusingColors = Colors(colors.focusDisabled).get();
+            const fillColor = Colors(colors.focusDisabled).get();
+            this._GalleryButton.patch({
+              texture: Lightning.Tools.getRoundRect(
+                this._GalleryButton._props.width,
+                this._GalleryButton._props.height,
+                this._GalleryButton._props.radius,
+                this._GalleryButton._props.strokeWidth,
+                focusingColors,
+                true,
+                fillColor
+              ),
+            });
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
                 Router.navigate(ROUTES.PLAYER, {

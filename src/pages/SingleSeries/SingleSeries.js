@@ -216,6 +216,20 @@ export default class SingleSeries extends Lightning.Component {
                   position,
                   duration: lastPlayedEpisodeDuration,
                   callback: () => {
+                    this._HeroSection._ContinueWatching._props.enabled = false;
+                    const focusingColors = Colors(colors.focusDisabled).get();
+                    const fillColor = Colors(colors.focusDisabled).get();
+                    this._HeroSection._ContinueWatching.patch({
+                      texture: Lightning.Tools.getRoundRect(
+                        this._HeroSection._ContinueWatching._props.width,
+                        this._HeroSection._ContinueWatching._props.height,
+                        this._HeroSection._ContinueWatching._props.radius,
+                        this._HeroSection._ContinueWatching._props.strokeWidth,
+                        focusingColors,
+                        true,
+                        this._isFocused ? fillColor : undefined
+                      ),
+                    });
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
                         Router.navigate(ROUTES.PLAYER, {
@@ -243,6 +257,7 @@ export default class SingleSeries extends Lightning.Component {
                 },
                 alpha: 1,
                 props: {
+                  enabled: true,
                   buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
                   buttonLabel: '',
                   width: 100,

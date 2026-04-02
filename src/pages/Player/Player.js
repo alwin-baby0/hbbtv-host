@@ -1042,6 +1042,8 @@ export default class Player extends Lightning.Component {
 
   $startStopVideo() {
     this._setState('Controls');
+    clearTimeout(this._hideWrapperTimeout);
+    this._hideWrapperDebounce();
   }
 
   _updateProgressBar() {

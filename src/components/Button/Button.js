@@ -254,6 +254,10 @@ export default class Button extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (!this._props.enabled) {
+      return true;
+    }
+
     this.entered = (this.entered + 1) % 2;
     if (didomiVisible && this.entered === 1) {
       return true;
@@ -275,6 +279,9 @@ export default class Button extends Lightning.Component {
   }
 
   _handleClick() {
+    if (!this._props.enabled) {
+      return true;
+    }
     const { callback } = this._props;
     callback();
   }
