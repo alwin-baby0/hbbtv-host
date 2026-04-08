@@ -2587,7 +2587,7 @@ exports[`Home Page renders the Home page with full data (HeroSection and Rails) 
               "w": 740,
               "x": 110,
               "y": 310,
-              "zIndex": 2,
+              "zIndex": 3,
             },
             "Spinner": {
               "active": true,
