@@ -53,7 +53,7 @@ export default class GalleryItem extends Lightning.Component {
         zIndex: 3,
       },
       Info: {
-        zIndex: 2,
+        zIndex: 3,
         x: 110,
         y: 310,
         w: 740,

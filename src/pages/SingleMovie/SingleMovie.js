@@ -64,7 +64,7 @@ export default class SingleMovie extends Lightning.Component {
           zIndex: 3,
         },
         Card: {
-          zIndex: 2,
+          zIndex: 3,
           x: 90,
           y: 120,
           w: 1000,
@@ -108,7 +108,7 @@ export default class SingleMovie extends Lightning.Component {
           },
         },
         CardInfo: {
-          zIndex: 2,
+          zIndex: 3,
           x: 90,
           y: 250,
           flex: { direction: 'column' },
