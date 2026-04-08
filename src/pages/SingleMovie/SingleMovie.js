@@ -53,6 +53,16 @@ export default class SingleMovie extends Lightning.Component {
           },
           zIndex: 2,
         },
+        Spinner: {
+          w: 120,
+          h: 120,
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.SPINNER), 120, 120),
+          x: 960,
+          y: 400,
+          mount: 0.5,
+          rotation: 0,
+          zIndex: 3,
+        },
         Card: {
           zIndex: 2,
           x: 90,
@@ -290,6 +300,18 @@ export default class SingleMovie extends Lightning.Component {
     return this.tag('PlaylistWrapper.Column');
   }
 
+  get _Card() {
+    return this.tag('Card');
+  }
+
+  get _CardInfo() {
+    return this.tag('CardInfo');
+  }
+
+  get _Spinner() {
+    return this.tag('Spinner');
+  }
+
   _buildButtonConfiguration(movieTrailerUrl, last_position, favorited) {
     const buttons = [
       {
@@ -355,6 +377,9 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   set props(props) {
+    this._Spinner.visible = false;
+    this._Card.visible = true;
+    this._CardInfo.visible = true;
     this._props = { ...this._props, ...props };
     const {
       movie,
@@ -539,20 +564,19 @@ export default class SingleMovie extends Lightning.Component {
                 if (item.buttonName === 'FAVORITE') {
                   this.addToFavorite();
                 } else if (item.buttonName === 'WATCH NOW') {
-                  this._Buttons.Items.children[0].Items.children[0]._props.enabled = false;
-                  const focusingColors = Colors(colors.focusDisabled).get();
-                  const fillColor = Colors(colors.focusDisabled).get();
-                  this._Buttons.Items.children[0].Items.children[0].patch({
-                    texture: Lightning.Tools.getRoundRect(
-                      this._Buttons.Items.children[0].Items.children[0]._props.width,
-                      this._Buttons.Items.children[0].Items.children[0]._props.height,
-                      this._Buttons.Items.children[0].Items.children[0]._props.radius,
-                      this._Buttons.Items.children[0].Items.children[0]._props.strokeWidth,
-                      focusingColors,
-                      true,
-                      fillColor
-                    ),
-                  });
+                  this._Card.visible = false;
+                  this._CardInfo.visible = false;
+                  this._Spinner.visible = true;
+                  this._Spinner
+                    .animation({
+                      duration: 2, // animation duration in seconds
+                      repeat: -1, // repeat indefinitely
+                      actions: [
+                        { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } }, // rotate 360 degrees
+                      ],
+                    })
+                    .start();
+
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
                       Router.navigate(ROUTES.PLAYER, {
@@ -569,20 +593,19 @@ export default class SingleMovie extends Lightning.Component {
                     videoId: movieTrailerId,
                   });
                 } else if (item.buttonName === 'CONTINUE WATCHING') {
-                  this._ContinueButton._props.enabled = false;
-                  const focusingColors = Colors(colors.focusDisabled).get();
-                  const fillColor = Colors(colors.focusDisabled).get();
-                  this._ContinueButton.patch({
-                    texture: Lightning.Tools.getRoundRect(
-                      this._ContinueButton._props.width,
-                      this._ContinueButton._props.height,
-                      this._ContinueButton._props.radius,
-                      this._ContinueButton._props.strokeWidth,
-                      focusingColors,
-                      true,
-                      fillColor
-                    ),
-                  });
+                  this._Card.visible = false;
+                  this._CardInfo.visible = false;
+                  this._Spinner.visible = true;
+                  this._Spinner
+                    .animation({
+                      duration: 2, // animation duration in seconds
+                      repeat: -1, // repeat indefinitely
+                      actions: [
+                        { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } }, // rotate 360 degrees
+                      ],
+                    })
+                    .start();
+
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
                       Router.navigate(ROUTES.PLAYER, {

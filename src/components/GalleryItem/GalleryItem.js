@@ -42,6 +42,16 @@ export default class GalleryItem extends Lightning.Component {
         y: 0,
         w: 1920,
       },
+      Spinner: {
+        w: 120,
+        h: 120,
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.SPINNER), 120, 120),
+        x: 960,
+        y: 400,
+        mount: 0.5,
+        rotation: 0,
+        zIndex: 3,
+      },
       Info: {
         zIndex: 2,
         x: 110,
@@ -420,6 +430,8 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   set props(props) {
+    this._Info.visible = true;
+    this._Spinner.visible = false;
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
@@ -765,20 +777,18 @@ export default class GalleryItem extends Lightning.Component {
               return;
             }
 
-            this._GalleryButton._props.enabled = false;
-            const focusingColors = Colors(colors.focusDisabled).get();
-            const fillColor = Colors(colors.focusDisabled).get();
-            this._GalleryButton.patch({
-              texture: Lightning.Tools.getRoundRect(
-                this._GalleryButton._props.width,
-                this._GalleryButton._props.height,
-                this._GalleryButton._props.radius,
-                this._GalleryButton._props.strokeWidth,
-                focusingColors,
-                true,
-                fillColor
-              ),
-            });
+            this._Info.visible = false;
+            this._Spinner.visible = true;
+            this._Spinner
+              .animation({
+                duration: 2, // animation duration in seconds
+                repeat: -1, // repeat indefinitely
+                actions: [
+                  { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } }, // rotate 360 degrees
+                ],
+              })
+              .start();
+
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
                 Router.navigate(ROUTES.PLAYER, {
@@ -856,6 +866,10 @@ export default class GalleryItem extends Lightning.Component {
 
   get _Info() {
     return this.tag('Info');
+  }
+
+  get _Spinner() {
+    return this.tag('Spinner');
   }
 
   get _Summary() {
