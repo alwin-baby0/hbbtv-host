@@ -140,7 +140,7 @@ export default class VerticalContainer extends Lightning.Component {
       return false;
     }
     return true;
-  }, 50);
+  }, 250);
 
   _handleScroll(event) {
     if (window.Didomi && didomiVisible) {
@@ -213,7 +213,7 @@ export default class VerticalContainer extends Lightning.Component {
       return false;
     }
     return true;
-  }, 50);
+  }, 250);
 
   handleUp() {
     if (this._focusedIndex > 0) {
