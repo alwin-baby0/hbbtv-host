@@ -58,7 +58,7 @@ class HomePageService extends FetchingService {
 
           stripeData.stripeId = this.#pointer - newStripes.length + index;
           stripeData.page = 1;
-          this.#stripes.push(stripeData);
+          stripeData.items.length && this.#stripes.push(stripeData);
         }
       });
     }
