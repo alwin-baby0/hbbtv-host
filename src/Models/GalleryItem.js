@@ -22,6 +22,18 @@ class GalleryItem {
       playlists,
       user,
     } = data;
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let dateFormat = '';
+    if (time) {
+      const zeroDate = new Date(date + 'T' + time + 'Z');
+      dateFormat = Intl.DateTimeFormat('en-US', {
+        timeZone: timeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      }).format(zeroDate);
+    }
 
     this.id = id;
 
@@ -34,7 +46,7 @@ class GalleryItem {
     this.videoUrl = files?.[1]?.url || files?.[0]?.url || null;
     this.trailerUrl = meta && meta.trailer ? meta.trailer : null;
     this.eventDate = date;
-    this.eventTime = time ? time : null;
+    this.eventTime = time ? dateFormat : null;
     this.playlists = playlists || null;
     this.favorited = user?.isFavorite;
     this.list_schedule = [];

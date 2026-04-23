@@ -7,7 +7,20 @@ class LiveEventsRailItem extends SimpleRailItem {
     const { meta, images, date, time } = data;
     const { summary, button_text } = meta;
 
-    this.dateWithTime = time && time !== '00:00:00' ? date + ': ' + time : date;
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let dateFormat = '';
+    if (time) {
+      const zeroDate = new Date(date + 'T' + time + 'Z');
+      dateFormat = Intl.DateTimeFormat('en-US', {
+        timeZone: timeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      }).format(zeroDate);
+    }
+
+    this.dateWithTime = time && time !== '00:00:00' ? date + ': ' + dateFormat : date;
     this.description = summary;
 
     this.buttonText = button_text;

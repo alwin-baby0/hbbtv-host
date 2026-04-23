@@ -23,11 +23,10 @@ export default class Button extends Lightning.Component {
       maxHeight: 88,
       Border: {},
       Icon: {
-        x: 20,
+        x: 60,
         y: (h) => h / 2 - 12,
       },
       Label: {
-        x: 50,
         y: (h) => h / 2 - 12,
         h: 25,
         color: Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
@@ -76,13 +75,10 @@ export default class Button extends Lightning.Component {
 
     const colorBorder = borderColor ? borderColor : colors.unfocus;
 
-    if (buttonIcon === '') {
-      this._Label.patch({
-        w: width,
-        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-        x: 0,
-      });
-    }
+    this._Label.patch({
+      flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+      x: 0,
+    });
 
     if (buttonLabel === '') {
       this._Icon.patch({
@@ -123,6 +119,9 @@ export default class Button extends Lightning.Component {
         visible: this._props.enabled,
       },
       Label: {
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+        x: (w) => w / 2 + iconWidth,
+        mountX: 0.5,
         Text: {
           text: {
             text: buttonLabel,

@@ -237,7 +237,7 @@ export default class GalleryItem extends Lightning.Component {
           wordWrapWidth: 900,
           text: {
             text: '',
-            fontSize: 59,
+            fontSize: 48,
             fontFace: 'Montserrat-SemiBold',
             maxLines: 2,
           },
@@ -247,10 +247,10 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
             marginBottom: 5,
           },
-          w: 900,
+          w: 1100,
           h: 150,
           text: {
-            wordWrapWidth: 900,
+            wordWrapWidth: 1100,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
@@ -710,12 +710,14 @@ export default class GalleryItem extends Lightning.Component {
         Title: {
           text: {
             text: episodeTitle || seasonTitle || title,
+            fontSize: bgY !== 0 ? 59 : 48,
+            wordWrapWidth: bgY !== 0 ? 900 : 1100,
           },
         },
         Description: {
           text: {
             text: summary,
-            wordWrapWidth: bgY !== 0 ? 500 : 900, //500 is for hero only
+            wordWrapWidth: bgY !== 0 ? 500 : 1100, //500 is for hero only
           },
         },
       },
