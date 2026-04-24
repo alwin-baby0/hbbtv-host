@@ -38,6 +38,7 @@ class SimpleRailItem {
       case RAIL_TYPES.SEASON:
         this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}/${id}`;
         this.seriesId = data.series_id;
+        break;
       case RAIL_TYPES.EPISODE:
         this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}/${data.season_id}`;
         this.seasonId = data.season_id;
