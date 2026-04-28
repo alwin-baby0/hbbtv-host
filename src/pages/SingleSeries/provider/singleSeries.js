@@ -93,7 +93,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     lastPlayedEpisodeNumber: lastPlayedEpisodeNumber,
     lastPlayedSeasonNumber: lastPlayedSeasonNumber,
     lastPlayedEpisodeDuration: lastPlayedEpisodeDuration,
-    firstEpisodeVideoId: galleryItem.firstEpisodeId,
+    firstEpisodeVideoId: episodeId ?? galleryItem.firstEpisodeId,
     firstEpisodeUrl: galleryItem.videoUrl || seasonFirstEpUrl || galleryItem.firstEpisodeUrl,
     firstEpisodeTitle: galleryItem.title || seasonFirstEpTitle || galleryItem.firstEpisodeTitle,
     firstEpisodeEpisodeNumber: galleryItem.episodeNumber || galleryItem.firstEpisodeEpisodeNumber,
