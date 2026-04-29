@@ -4,13 +4,22 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { DetailService, t } from './Services';
+import { DetailService, DidomiService } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
+import { t } from './utils';
 
 let wasOffline = false; // Variable to track previous internet status
+export let didomiVisible = false;
+
+export const setDidomiVisible = (value) => {
+  didomiVisible = value;
+};
 
 export default class App extends Router.App {
+  enteredApp = 0;
+  settingsDidomi = false;
+
   static _template() {
     return {
       ...super._template(),
@@ -51,10 +60,6 @@ export default class App extends Router.App {
     };
   }
 
-  get _Column() {
-    return this.tag('Widgets');
-  }
-
   get _Menu() {
     return this.tag('Widgets.Menu');
   }
@@ -87,6 +92,57 @@ export default class App extends Router.App {
     window.addEventListener('offline', () => this.handleOffline());
 
     this.checkNetworkStatusOnline(navigator.onLine);
+  }
+
+  async _init() {
+    const analyticsAllowed = DidomiService.hasConsentForPurpose('analytics');
+
+    if (analyticsAllowed) {
+      this.startAnalytics();
+    }
+
+    DidomiService.onConsentChanged(() => {
+      this.handleConsentUpdate();
+    });
+  }
+
+  _captureEnter() {
+    if (this.settingsDidomi) {
+      return false;
+    }
+
+    if (this.enteredApp === 1) {
+      didomiVisible = false;
+      this.enteredApp = 0;
+      return false;
+    }
+
+    if (didomiVisible && this.enteredApp === 0) {
+      this.enteredApp = 1;
+      return true;
+    }
+
+    return false;
+  }
+
+  $didomiVisible(didomiVisibility) {
+    didomiVisible = didomiVisibility;
+  }
+
+  $settingsDidomi(value) {
+    this.settingsDidomi = value;
+  }
+
+  startAnalytics() {
+    console.log('Analytics started');
+  }
+
+  async handleConsentUpdate() {
+    if (DidomiService.hasConsentForPurpose('analytics')) {
+      this.startAnalytics();
+    } else {
+      console.log('Analytics disabled');
+    }
   }
 
   async getMovie(id) {
@@ -266,11 +322,9 @@ export default class App extends Router.App {
             // Router navigation for "Yes, exit now"
             switch (device) {
               case 'metrological':
-                let success = await Lifecycle.close('userExit');
-                console.log(success);
+                await Lifecycle.close('userExit');
                 Lifecycle.listen('unloading', async () => {
-                  let results = await Lifecycle.finished();
-                  console.log(results);
+                  await Lifecycle.finished();
                 });
                 this.application.closeApp();
                 break;

@@ -1,24 +1,24 @@
 import axios from 'axios';
 import { createApiCtx } from './utils';
+import { refreshTokenOnOauth } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
-import { getDeviceType } from '../utils/device';
+import { getDeviceInfo, getDeviceType } from '../utils/device';
+import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../constants/globalConstants';
+import { LoggingService } from './LoggingService/index.js';
 
-const API_BASE_URLS = {
-  v1: process.env.APP_BASE_URL,
-  v2: process.env.APP_BASE_URL_2,
-  auth: process.env.APP_BASE_OAUTH,
-};
+const API_BASE_URL = process.env.APP_BASE_URL;
+const BACKUP_API_URL = process.env.APP_BACKUP_URL;
 
 export default class FetchingService {
   // we create static instance of axios to be unique throught the project
   static axiosInstance = null;
+  static activeBaseUrl = API_BASE_URL;
+  static baseUrlResolved = false;
+
   static init() {
     if (FetchingService.axiosInstance) return;
+
     FetchingService.axiosInstance = axios.create({
-      headers: {
-        'Cache-Control': 'no-cache, must-revalidate',
-        Pragma: 'no-cache',
-      },
       params: {
         ctx: createApiCtx(),
       },
@@ -34,26 +34,86 @@ export default class FetchingService {
 
   /**
    * Generic function for fetching
-   * @param {V1 | V2 | auth} apiVersion version of the api to use
    * @param {string} url url to the endpoint
    * @param {string} method GET | PUT | DELETE...
    * @param {object} params params to pass to request
    * @returns {Promise<any>} Returns Promise to await the request result
    */
-  async _request({ apiVersion, url, ...options }) {
+  async _request({ url, ...options }) {
     this.#loading = true;
-    return FetchingService.axiosInstance({ url: API_BASE_URLS[apiVersion] + url, ...options })
-      .then(this.#onSuccess)
-      .catch(this.#onError);
+
+    const attempt = async (fullUrl) => {
+      let lastErr;
+
+      for (let i = 0; i < 3; i++) {
+        try {
+          const authDeviceCode = localStorage.getItem(LOCAL_STORAGE_KEYS.AUTH_DEVICE_CODE);
+
+          return await FetchingService.axiosInstance({
+            url: fullUrl,
+            ...options,
+            headers: {
+              ...(options && options.headers ? options.headers : {}),
+              ...(options && options.headers && options.headers.Authorization
+                ? {}
+                : { Authorization: `Bearer ${authDeviceCode}` }),
+            },
+          });
+        } catch (err) {
+          const status = err?.response?.status;
+          lastErr = err;
+
+          if (!status) continue; // network error → retry
+          if (i < 2) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          } else {
+            throw err;
+          }
+        }
+      }
+
+      throw lastErr;
+    };
+
+    try {
+      //Decide about api url initially
+      if (!FetchingService.baseUrlResolved) {
+        try {
+          const res = await attempt(API_BASE_URL + url); //for testing remove +url since dummy api doesn't support that
+          FetchingService.activeBaseUrl = API_BASE_URL;
+          FetchingService.baseUrlResolved = true;
+          return this.#onSuccess(res);
+        } catch (err) {
+          const status = err?.response?.status;
+
+          // if (status && String(status)[0] === '5') {
+          if (!status) {
+            console.warn('Primary API failed, switching to fallback');
+            FetchingService.activeBaseUrl = BACKUP_API_URL;
+            FetchingService.baseUrlResolved = true;
+
+            const res = await attempt(BACKUP_API_URL + url);
+            return this.#onSuccess(res);
+          }
+
+          throw err;
+        }
+      }
+
+      //Regular flow
+      const res = await attempt(FetchingService.activeBaseUrl + url);
+      return this.#onSuccess(res);
+    } catch (err) {
+      return this.#onError(err);
+    }
   }
 
   #onSuccess = (response) => {
-    console.log('here');
     this.#loading = false;
     return response;
   };
 
-  #onError = (error) => {
+  #onError = (error, url) => {
     this.#loading = false;
     const deviceType = getDeviceType();
     deviceType === 'metrological' &&
@@ -63,20 +123,28 @@ export default class FetchingService {
         error.response ? error.response.data : error.message,
         true
       );
-    if (process.env.NODE_ENV === 'development') {
-      if (error.response) {
-        // Request was made but server responded with something
-        // other than 2xx
-        console.error('Status:', error.response.status);
-        console.error('Data:', error.response.data);
-        console.error('Headers:', error.response.headers);
-      } else {
-        // Something else happened while setting up the request
-        // triggered the error
-        console.error('Error Message:', error.message);
-      }
 
-      return Promise.reject(error.response || error.message);
+    if (error.response) {
+      // Request was made but server responded with something
+      // other than 2xx
+      console.error('Status:', error.response.status);
+      console.error('Data:', error.response.data);
+      console.error('Headers:', error.response.headers);
+
+      error.response.status === 401 && refreshTokenOnOauth();
+    } else {
+      // Something else happened while setting up the request
+      // triggered the error
+      console.error('Error Message:', error.message);
     }
+
+    const deviceInfo = getDeviceInfo();
+
+    LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+      message: 'API call failed',
+      error,
+    });
+
+    return error.response || error.message;
   };
 }

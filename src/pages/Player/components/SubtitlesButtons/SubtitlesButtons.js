@@ -1,10 +1,12 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import { LOCAL_STORAGE_KEYS } from '../../../../constants/globalConstants';
+import { didomiVisible } from '../../../../App';
 
 export default class SubtitlesButtons extends Lightning.Component {
   _props = {
     languageInfo: {},
   };
+
   constructor(props) {
     super(props);
     this._selected = false;
@@ -69,6 +71,10 @@ export default class SubtitlesButtons extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const { index } = this._props;
     this.fireAncestors('$updateSubtitle', index);
     if (this._selected) {

@@ -7,23 +7,9 @@ import basePathWithSubpath from 'test/mocks/basePathWithSubpath.json';
 
 fetchMock.enableMocks();
 
-// Mock TranslationService to avoid top-level await issues
-jest.mock('src/Services/LanguageService/TranslationService', () => {
-  const mockTranslations = {};
-
-  return {
-    __esModule: true,
-    default: class TranslationService {
-      getLanguageTranslations = jest.fn().mockResolvedValue(mockTranslations);
-      setTranslations = jest.fn().mockResolvedValue(undefined);
-    },
-    TranslationService: {
-      getLanguageTranslations: jest.fn().mockResolvedValue(mockTranslations),
-      setTranslations: jest.fn().mockResolvedValue(undefined),
-    },
-    t: jest.fn((key) => key),
-  };
-});
+jest.mock('src/utils/index', () => ({
+  t: jest.fn(),
+}));
 
 // Mock VideoPlayer from @lightningjs/sdk
 jest.mock('@lightningjs/sdk', () => ({
@@ -38,15 +24,15 @@ jest.mock('@lightningjs/sdk', () => ({
     open: jest.fn(),
     play: jest.fn(),
     clear: jest.fn(),
-  }
+  },
 }));
 
 const RESPONSES = {
   basicEndpoint: JSON.stringify(basicEndpoint),
   basePathWithSubpath: JSON.stringify(basePathWithSubpath),
-}
+};
 
-fetch.mockResponse(req => {
+fetch.mockResponse((req) => {
   if (req.url.match(/basicEndpoint/)) {
     return Promise.resolve(RESPONSES.basicEndpoint);
   }
@@ -55,5 +41,5 @@ fetch.mockResponse(req => {
     return Promise.resolve(RESPONSES.basePathWithSubpath);
   }
 
-  return Promise.reject("{}");
+  return Promise.reject('{}');
 });

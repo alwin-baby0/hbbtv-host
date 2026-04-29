@@ -1,6 +1,6 @@
 import { Lightning, Router, Utils, Colors } from '@lightningjs/sdk';
 import Button from '../../components/Button/Button';
-import { CMPService, DetailService, t, UserService } from '../../Services';
+import { DetailService, LoggingService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
@@ -10,12 +10,15 @@ import {
   ROUTES,
   TRANSLATIONS,
   IMAGE_SIZES,
+  LOG_LEVEL,
 } from '../../constants/globalConstants';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import colors from '../../../reskin/colors.json';
-import { capitalizeFirstLetter } from '../../utils';
+import { capitalizeFirstLetter, checkCMP } from '../../utils';
 import { Metrics } from '@firebolt-js/sdk';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
 
@@ -50,8 +53,18 @@ export default class SingleMovie extends Lightning.Component {
           },
           zIndex: 2,
         },
+        Spinner: {
+          w: 120,
+          h: 120,
+          texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.SPINNER), 120, 120),
+          x: 960,
+          y: 400,
+          mount: 0.5,
+          rotation: 0,
+          zIndex: 3,
+        },
         Card: {
-          zIndex: 2,
+          zIndex: 3,
           x: 90,
           y: 120,
           w: 1000,
@@ -69,7 +82,7 @@ export default class SingleMovie extends Lightning.Component {
                 justifyContent: 'center',
               },
               flexItem: {
-                marginRight: 40,
+                marginRight: 30,
               },
               Text: {
                 flexItem: {
@@ -83,27 +96,19 @@ export default class SingleMovie extends Lightning.Component {
                 },
               },
             },
-            Summary: {
-              w: 160,
+            FactLine: {
+              w: 550,
               h: 29,
               text: {
                 fontSize: 24,
                 lineHeight: 30,
-                fontFace: 'Montserrat-SemiBold',
-              },
-            },
-            Subtitle: {
-              w: 400,
-              h: 29,
-              text: {
-                fontSize: 24,
-                lineHeight: 30,
+                fontFace: 'Montserrat-Regular',
               },
             },
           },
         },
         CardInfo: {
-          zIndex: 2,
+          zIndex: 3,
           x: 90,
           y: 250,
           flex: { direction: 'column' },
@@ -139,20 +144,19 @@ export default class SingleMovie extends Lightning.Component {
               style: {
                 itemSpacing: 100,
               },
-              y: 42,
+              y: 62,
               props: {
                 enableScroll: false,
               },
             },
             Metadata: {
               flex: { direction: 'column' },
-              y: 210,
+              y: 130,
               AgeRating: {
                 w: 700,
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -163,9 +167,9 @@ export default class SingleMovie extends Lightning.Component {
                   },
                 },
                 TextValue: {
-                  w: 700,
+                  w: 750,
                   h: 90,
-                  flexItem: { marginLeft: 18 },
+                  flexItem: { marginLeft: 10 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -180,7 +184,6 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -191,15 +194,16 @@ export default class SingleMovie extends Lightning.Component {
                   },
                 },
                 TextValue: {
-                  w: 700,
+                  w: 750,
                   h: 90,
-                  flexItem: { marginLeft: 18 },
+                  flexItem: { marginLeft: 10 },
                   text: {
                     text: '',
                     fontSize: 22,
                     lineHeight: 34,
                     fontFace: 'Montserrat-Regular',
                     textColor: Colors(colors.metadata).get(),
+                    maxLines: 1,
                   },
                 },
               },
@@ -208,7 +212,6 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -221,6 +224,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
+                  flexItem: { marginLeft: 10 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -237,7 +241,6 @@ export default class SingleMovie extends Lightning.Component {
                 h: 30,
                 flex: { direction: 'row', alignItems: 'center' },
                 Title: {
-                  w: 180,
                   h: 90,
                   text: {
                     text: '',
@@ -250,7 +253,7 @@ export default class SingleMovie extends Lightning.Component {
                 TextValue: {
                   w: 700,
                   h: 90,
-                  flexItem: { marginLeft: -10 },
+                  flexItem: { marginLeft: 10 },
                   text: {
                     text: '',
                     fontSize: 22,
@@ -263,48 +266,53 @@ export default class SingleMovie extends Lightning.Component {
             },
           },
         },
+        PlaylistWrapper: {
+          collision: true,
+          x: 110,
+          y: 915,
+          h: 600,
+          w: 1770,
+          clipping: true,
+          Column: {
+            collision: true,
+            h: 600,
+            w: 1770,
+            type: VerticalContainer,
+          },
+        },
       },
     };
   }
 
-  get _AgeRating() {
-    return this.tag('AgeRating');
-  }
-  get _Genre() {
-    return this.tag('Genre');
-  }
-  get _Summary() {
-    return this.tag('Summary');
-  }
-  get _Subtitle() {
-    return this.tag('Subtitle');
-  }
-  get _Image() {
-    return this.tag('Image');
-  }
-  get _Title() {
-    return this.tag('Title');
-  }
-  get _Description() {
-    return this.tag('Description');
-  }
-  get _Director() {
-    return this.tag('Director');
-  }
-  get _Cast() {
-    return this.tag('Cast');
-  }
   get _Buttons() {
     return this.tag('Buttons');
   }
+
   get _ContinueButton() {
     return this.tag('ContinueButton');
   }
+
   get _BackButton() {
     return this.tag('BackButton');
   }
 
-  _buildButtonConfiguration(movie, movieTrailerUrl, last_position) {
+  get _Column() {
+    return this.tag('PlaylistWrapper.Column');
+  }
+
+  get _Card() {
+    return this.tag('Card');
+  }
+
+  get _CardInfo() {
+    return this.tag('CardInfo');
+  }
+
+  get _Spinner() {
+    return this.tag('Spinner');
+  }
+
+  _buildButtonConfiguration(movieTrailerUrl, last_position, favorited) {
     const buttons = [
       {
         icon: IMG_PATH.PLAY_BTN,
@@ -346,7 +354,7 @@ export default class SingleMovie extends Lightning.Component {
 
       // Add favorite button
       filteredButtons.push({
-        icon: movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
+        icon: favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE,
         buttonName: 'FAVORITE',
         buttonLabel: '',
         width: 100,
@@ -358,7 +366,6 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   _arrangeButtonsInRowsDependingOnLanguage(buttons) {
-    const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
     const itemsPerRow = 4;
 
     const rows = [];
@@ -370,34 +377,55 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   set props(props) {
+    this._Spinner.visible = false;
+    this._Card.visible = true;
+    this._CardInfo.visible = true;
     this._props = { ...this._props, ...props };
-    const { movie, movieId, movieTrailerId, movieTrailerUrl } = this._props;
+    const {
+      movie,
+      movieId,
+      movieTrailerId,
+      movieTrailerUrl,
+      favorited,
+      last_position,
+      playlistVODS,
+    } = this._props;
+
     const {
       title,
-      description,
       duration,
       director,
       genre,
       summary,
-      subtitle,
       cast,
-      last_position,
       rating,
+      durationString,
+      year,
+      country,
+      imdbScore,
+      videoUrl,
+      badgeText,
     } = movie;
 
-    const titleLength = title.length;
+    this._Column.props = { items: playlistVODS, parentState: 'PlaylistWrapper' };
 
-    const splitDirector = director && director.split(':');
-    const splitCast = cast && cast.split(':');
+    const imdbScoreLabeled = `IMDB ${imdbScore}`;
+
+    const factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
     const tGenre = t(TRANSLATIONS.GENRE) + ':';
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const castText = splitCast && splitCast[1];
-    const dirText = splitDirector && splitDirector[1];
+    const castText = cast ? cast.join(', ') : '';
+    const dirText = director
+      ? Array.isArray(director)
+        ? director.join(', ')
+        : director
+      : undefined;
+    const genreText = genre ? (Array.isArray(genre) ? genre.join(', ') : genre) : undefined;
 
-    const badgeText = t(TRANSLATIONS.MOVIES);
+    const badgeTextString = badgeText || capitalizeFirstLetter(t(TRANSLATIONS.MOVIES));
 
     this.patch({
       Content: {
@@ -421,18 +449,13 @@ export default class SingleMovie extends Lightning.Component {
               ),
               Text: {
                 text: {
-                  text: capitalizeFirstLetter(badgeText),
+                  text: badgeTextString,
                 },
               },
             },
-            Summary: {
+            FactLine: {
               text: {
-                text: summary,
-              },
-            },
-            Subtitle: {
-              text: {
-                text: subtitle,
+                text: factLine,
               },
             },
           },
@@ -446,7 +469,7 @@ export default class SingleMovie extends Lightning.Component {
             },
             Description: {
               text: {
-                text: description,
+                text: summary,
               },
             },
             Metadata: {
@@ -461,6 +484,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: rating,
                   },
                 },
+                visible: rating,
               },
               Genre: {
                 Title: {
@@ -470,9 +494,10 @@ export default class SingleMovie extends Lightning.Component {
                 },
                 TextValue: {
                   text: {
-                    text: genre.charAt(0).toUpperCase() + genre.slice(1),
+                    text: genreText,
                   },
                 },
+                visible: genre?.length,
               },
               Director: {
                 Title: {
@@ -485,7 +510,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: dirText,
                   },
                 },
-                visible: splitDirector[1] ? true : false,
+                visible: director,
               },
               Cast: {
                 Title: {
@@ -498,7 +523,7 @@ export default class SingleMovie extends Lightning.Component {
                     text: castText,
                   },
                 },
-                visible: splitCast[1] ? true : false,
+                visible: cast?.length,
               },
             },
           },
@@ -507,7 +532,7 @@ export default class SingleMovie extends Lightning.Component {
     });
 
     // Build button configuration based on movie data and user state
-    const buttonConfigs = this._buildButtonConfiguration(movie, movieTrailerUrl, last_position);
+    const buttonConfigs = this._buildButtonConfiguration(movieTrailerUrl, last_position, favorited);
 
     const rows = this._arrangeButtonsInRowsDependingOnLanguage(buttonConfigs);
 
@@ -539,13 +564,26 @@ export default class SingleMovie extends Lightning.Component {
                 if (item.buttonName === 'FAVORITE') {
                   this.addToFavorite();
                 } else if (item.buttonName === 'WATCH NOW') {
+                  this._Card.visible = false;
+                  this._CardInfo.visible = false;
+                  this._Spinner.visible = true;
+                  this._Spinner
+                    .animation({
+                      duration: 2, // animation duration in seconds
+                      repeat: -1, // repeat indefinitely
+                      actions: [
+                        { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } }, // rotate 360 degrees
+                      ],
+                    })
+                    .start();
+
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
                       Router.navigate(ROUTES.PLAYER, {
-                        videoUrl: result[0]?.content?.src ?? movie[item.stream],
+                        videoUrl: result?.entry[0]?.files.url ?? videoUrl,
                         duration: duration,
                         videoId: movieId,
-                        ssai: result[0].extensions?.ssai ?? movie.ssai,
+                        ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
                       });
                     }
                   );
@@ -555,13 +593,30 @@ export default class SingleMovie extends Lightning.Component {
                     videoId: movieTrailerId,
                   });
                 } else if (item.buttonName === 'CONTINUE WATCHING') {
-                  Router.navigate(ROUTES.PLAYER, {
-                    videoUrl: movie.url,
-                    duration: duration,
-                    videoId: movieId,
-                    continueTime: last_position,
-                    ssai: movie.ssai,
-                  });
+                  this._Card.visible = false;
+                  this._CardInfo.visible = false;
+                  this._Spinner.visible = true;
+                  this._Spinner
+                    .animation({
+                      duration: 2, // animation duration in seconds
+                      repeat: -1, // repeat indefinitely
+                      actions: [
+                        { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } }, // rotate 360 degrees
+                      ],
+                    })
+                    .start();
+
+                  DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
+                    ({ data: result }) => {
+                      Router.navigate(ROUTES.PLAYER, {
+                        videoUrl: result?.entry[0]?.files.url ?? videoUrl,
+                        duration: duration,
+                        videoId: movieId,
+                        continueTime: last_position,
+                        ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
+                      });
+                    }
+                  );
                 }
               },
             },
@@ -569,22 +624,12 @@ export default class SingleMovie extends Lightning.Component {
         },
       })),
     };
+
+    this._setState('Buttons');
   }
 
   async _active() {
-    if (!this._props.cmpShown) {
-      await CMPService.initialFetch();
-      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
-      const currentTimeInMS = Math.floor(Date.now() / 1000);
-
-      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(
-          ROUTES.CMP,
-          { movieId: this._props.movieId, url: ROUTES.MOVIE_DETAILS },
-          false
-        );
-      }
-    }
+    checkCMP();
 
     const { movieId } = this._props;
 
@@ -596,6 +641,10 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && didomiVisible) {
+      return;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -614,23 +663,20 @@ export default class SingleMovie extends Lightning.Component {
 
   async addToFavorite() {
     try {
-      const { movie, movieTrailerUrl } = this._props;
-      const { last_position } = this._props.movie;
-      if (movie.is_favorite) {
+      const { movie, favorited } = this._props;
+      if (favorited) {
         await UserService.removeFromFavorites(movie.id);
       } else {
-        await UserService.addToFavorites(movie.id, 'video');
+        await UserService.addToFavorites(movie.id, 'movie');
       }
-      this._props.movie.is_favorite = !this._props.movie.is_favorite;
+      this._props.favorited = !this._props.favorited;
 
-      const { is_favorite } = this._props.movie;
-
-      const id = movieTrailerUrl && last_position ? 3 : movieTrailerUrl || last_position ? 2 : 1;
+      const id = this._Buttons.Items.children[0].Items.children.length - 1;
 
       this._Buttons.Items.children[0].Items.children[id].patch({
         props: {
           buttonIcon: Utils.asset(
-            this._props.movie.is_favorite ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE
+            this._props.favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE
           ),
           buttonLabel: '',
           width: 100,
@@ -646,8 +692,7 @@ export default class SingleMovie extends Lightning.Component {
           'Failed to update favorite status of VOD',
           true
         );
-      //skip
-      console.log('error', e);
+      LoggingService.postLog(LOG_LEVEL.ERROR, e?.response?.status, e?.response);
     }
   }
 
@@ -663,15 +708,51 @@ export default class SingleMovie extends Lightning.Component {
     return [
       class Buttons extends this {
         _getFocused() {
+          this.patch({
+            Content: {
+              Image: {
+                y: 0,
+              },
+              BackButton: {
+                y: 30,
+              },
+              Card: {
+                y: 120,
+              },
+              CardInfo: {
+                y: 250,
+              },
+              PlaylistWrapper: {
+                y: 915,
+              },
+            },
+          });
+
           return this._Buttons;
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('BackButton');
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('BackButton');
+        }
+
+        _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
+          this._setState('PlaylistWrapper');
         }
       },
       class ContinueBtn extends this {
@@ -680,10 +761,18 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('Buttons');
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('BackButton');
         }
       },
@@ -694,11 +783,77 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('Buttons');
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('Buttons');
+        }
+      },
+
+      class PlaylistWrapper extends this {
+        _getFocused() {
+          return this._Column;
+        }
+
+        _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
+          this._setState('Buttons');
+        }
+
+        $enter() {
+          this.patch({
+            Content: {
+              Image: {
+                y: -340,
+              },
+              BackButton: {
+                y: -180,
+              },
+              Card: {
+                y: -340,
+              },
+              CardInfo: {
+                y: -240,
+              },
+              PlaylistWrapper: {
+                y: 500,
+              },
+            },
+          });
+        }
+
+        $exit() {
+          this.patch({
+            Content: {
+              Image: {
+                y: 0,
+              },
+              BackButton: {
+                y: 30,
+              },
+              Card: {
+                y: 120,
+              },
+              CardInfo: {
+                y: 250,
+              },
+              PlaylistWrapper: {
+                y: 915,
+              },
+            },
+          });
         }
       },
     ];

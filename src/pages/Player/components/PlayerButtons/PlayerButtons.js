@@ -1,6 +1,7 @@
 import { Colors, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
 import { IMG_PATH } from '../../../../constants/globalConstants';
+import { didomiVisible } from '../../../../App';
 
 export default class PlayerButtons extends Lightning.Component {
   _props = {
@@ -27,10 +28,6 @@ export default class PlayerButtons extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-  }
-
-  get _Button() {
-    return this.tag('Button');
   }
 
   get _Icon() {
@@ -70,6 +67,10 @@ export default class PlayerButtons extends Lightning.Component {
   }
 
   _handleEnter(e) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const { buttonInfo, isStopped } = this._props;
     this.fireAncestors('$changeFocusOnControl', true);
     switch (buttonInfo.label) {
@@ -176,7 +177,7 @@ export default class PlayerButtons extends Lightning.Component {
   }
 
   _handleClick() {
-    const { buttonInfo, isStopped } = this._props;
+    const { buttonInfo } = this._props;
     if (buttonInfo.label === 'back') {
       this._handleBackFromPlayer();
     } else {

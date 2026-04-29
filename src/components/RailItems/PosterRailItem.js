@@ -4,6 +4,7 @@ import { Utils, Router, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
 import colors from '../../../reskin/colors.json';
+import { didomiVisible } from '../../App';
 
 export default class PosterRailItem extends FocusableItem {
   _props = {
@@ -20,8 +21,6 @@ export default class PosterRailItem extends FocusableItem {
   static _template() {
     return {
       ...super._template(),
-      w: CARD_SIZES.POSTER.width,
-      h: CARD_SIZES.POSTER.container_height,
       Wrapper: {
         flex: { direction: 'column' },
         Border: {
@@ -48,42 +47,56 @@ export default class PosterRailItem extends FocusableItem {
     };
   }
 
-  get _Wrapper() {
-    return this.tag('Wrapper');
-  }
-
   get _Title() {
     return this.tag('Title');
   }
 
-  get _PosterImage() {
-    return this.tag('PosterImage');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle, placeholderSrc } = this._props;
+    const { imageSrc, radius, itemTitle, placeholderSrc, orientation } = this._props;
 
     this.setProps({
-      width: CARD_SIZES.POSTER.image_width,
-      height: CARD_SIZES.POSTER.image_height,
+      width:
+        orientation === 'landscape'
+          ? CARD_SIZES.POSTER.landscape_image_width
+          : CARD_SIZES.POSTER.poster_image_width,
+      height:
+        orientation === 'landscape'
+          ? CARD_SIZES.POSTER.landscape_image_height
+          : CARD_SIZES.POSTER.poster_image_height,
     });
 
-    this._Wrapper.patch({
-      Border: {
-        PosterImage: {
-          props: {
-            width: CARD_SIZES.POSTER.image_width,
-            height: CARD_SIZES.POSTER.image_height,
-            imageSrc: imageSrc,
-            placeholderSrc: placeholderSrc,
-            radius: radius,
+    this.patch({
+      w:
+        orientation === 'landscape'
+          ? CARD_SIZES.POSTER.landscape_width
+          : CARD_SIZES.POSTER.poster_width,
+      h:
+        orientation === 'landscape'
+          ? CARD_SIZES.POSTER.landscape_container_height
+          : CARD_SIZES.POSTER.poster_container_height,
+      Wrapper: {
+        Border: {
+          PosterImage: {
+            props: {
+              width:
+                orientation === 'landscape'
+                  ? CARD_SIZES.POSTER.landscape_image_width
+                  : CARD_SIZES.POSTER.poster_image_width,
+              height:
+                orientation === 'landscape'
+                  ? CARD_SIZES.POSTER.landscape_image_height
+                  : CARD_SIZES.POSTER.poster_image_height,
+              imageSrc: imageSrc,
+              placeholderSrc: placeholderSrc,
+              radius: radius,
+            },
           },
         },
-      },
-      Title: {
-        text: {
-          text: itemTitle,
+        Title: {
+          text: {
+            text: itemTitle,
+          },
         },
       },
     });
@@ -98,6 +111,9 @@ export default class PosterRailItem extends FocusableItem {
   }
 
   _handleEnter() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
     const { callback } = this._props;
     callback();
   }

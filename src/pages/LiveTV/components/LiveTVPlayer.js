@@ -49,18 +49,20 @@ export default class LiveTVPlayer extends Lightning.Component {
         // Get the current time
         const currentTime = new Date();
         const matchingEntry = singleChannel?.items.find((entry) => {
-          const startTime = new Date(entry.extensions.start_time);
-          const endTime = new Date(entry.extensions.end_time);
+          const startTime = new Date(entry.startTimeAll.ms);
+          const endTime = new Date(entry.endTimeAll.ms);
 
           return currentTime >= startTime && currentTime <= endTime;
         });
 
         if (matchingEntry) {
-          const src = matchingEntry.content.src;
+          const src = previousChannel?.src;
 
           // Update the channel using the matching entry's src
-          this._updateChannel(src);
-          this.fireAncestors('$updateChannelInfo', matchingEntry, singleChannel);
+          if (src) {
+            this._updateChannel(src);
+            this.fireAncestors('$updateChannelInfo', matchingEntry, singleChannel);
+          }
         }
       })
       .catch((error) => {

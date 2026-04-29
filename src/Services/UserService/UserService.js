@@ -1,4 +1,5 @@
 import { API_METHODS, API_URLS, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { refreshTokenOnOauth } from '../../utils';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 
@@ -6,68 +7,74 @@ class UserService extends FetchingService {
   getFavorites = async (page, limit = 8) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    const timestamp = new Date().getTime();
-
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.GET_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
+        Authorization: `Bearer ${userData.access_token}`,
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
-        cachebuster: timestamp,
         page,
         limit,
       },
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   addToFavorites = async (videoID, vodType) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    const timestamp = new Date().getTime();
-
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.ADD_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.POST,
       headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
-        'X-nocache': timestamp,
+        Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      params: {
-        _: timestamp,
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
-        video_id: videoID,
-        type: vodType,
+        content_id: videoID,
+        content_type: vodType,
       },
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   removeFromFavorites = async (videoID) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    const timestamp = new Date().getTime();
-
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.REMOVE_USER_FAVORITES}`,
       apiVersion: V2,
       method: API_METHODS.DELETE,
       headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
-        'X-nocache': timestamp,
+        Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
-        _: timestamp,
-      },
-      data: {
-        video_id: videoID,
+        content_id: videoID,
       },
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   getRecentlyWatched = async (page, limit = 8) => {
@@ -75,12 +82,13 @@ class UserService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.GET_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.GET,
       headers: {
-        'X-Authorization': `Bearer ${userData.access_token}`,
+        Authorization: `Bearer ${userData.access_token}`,
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       params: {
         cachebuster: timestamp,
@@ -88,33 +96,43 @@ class UserService extends FetchingService {
         limit,
       },
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   addRecentlyWatched = async (videoID, vodType, vodPosition, seriesID) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
-    const timestamp = new Date().getTime();
-
     if (vodPosition === 0) {
       vodPosition++;
     }
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.ADD_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.POST,
       headers: {
-        'X-nocache': timestamp,
-        'X-Authorization': `Bearer ${userData.access_token}`,
+        Authorization: `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
-        video_id: videoID,
+        content_id: videoID,
         type: vodType,
         position: vodPosition,
         ...(seriesID && { series_id: seriesID }),
       },
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 
   deleteRecentlyWatched = async (videoID) => {
@@ -122,7 +140,7 @@ class UserService extends FetchingService {
 
     const timestamp = new Date().getTime();
 
-    return await this._request({
+    const response = await this._request({
       url: `/${API_URLS.REMOVE_USER_RECENTLY_WATCHED}`,
       apiVersion: V2,
       method: API_METHODS.DELETE,
@@ -130,11 +148,120 @@ class UserService extends FetchingService {
         'X-nocache': timestamp,
         'X-Authorization': `Bearer ${userData.access_token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
       },
       data: {
         video_id: videoID,
       },
     });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
+  };
+
+  getProgress = async (videoID) => {
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
+
+    const response = await this._request({
+      url: `/${API_URLS.GET_PROGRESS}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+      headers: {
+        Authorization: `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
+      params: {
+        video_id: videoID,
+      },
+    });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
+  };
+
+  addProgress = async (videoID, position, duration) => {
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
+
+    const response = await this._request({
+      url: `/${API_URLS.ADD_PROGRESS}`,
+      apiVersion: V2,
+      method: API_METHODS.POST,
+      headers: {
+        Authorization: `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
+      data: {
+        video_id: videoID,
+        position,
+        duration,
+      },
+    });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
+  };
+
+  getSeriesProgress = async (seriesID) => {
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
+
+    const response = await this._request({
+      url: `/${API_URLS.GET_SERIES_PROGRESS}`,
+      apiVersion: V2,
+      method: API_METHODS.GET,
+      headers: {
+        Authorization: `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
+      params: {
+        series_id: seriesID,
+      },
+    });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
+  };
+
+  addSeriesProgress = async (videoID, seriesID, episodeNumber, seasonNumber, position) => {
+    const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
+
+    const response = await this._request({
+      url: `/${API_URLS.ADD_SERIES_PROGRESS}`,
+      apiVersion: V2,
+      method: API_METHODS.POST,
+      headers: {
+        Authorization: `Bearer ${userData.access_token}`,
+        'Content-Type': 'application/json',
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
+      data: {
+        series_id: seriesID,
+        episode_id: episodeNumber,
+        season_id: seasonNumber,
+        video_id: videoID,
+        position: position,
+      },
+    });
+
+    if (!response) {
+      await refreshTokenOnOauth();
+    } else {
+      return response;
+    }
   };
 }
 

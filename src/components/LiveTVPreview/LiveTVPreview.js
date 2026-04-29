@@ -2,7 +2,7 @@ import { Colors, Lightning, Utils } from '@lightningjs/sdk';
 import LiveTVPlayer from '../../pages/LiveTV/components/LiveTVPlayer';
 import ProgressBar from '../../pages/Player/components/ProgressBar/ProgressBar';
 import colors from '../../../reskin/colors.json';
-import { t } from '../../Services';
+import { t } from '../../utils';
 import { IMG_PATH, TRANSLATIONS } from '../../constants/globalConstants';
 import { capitalizeFirstLetter } from '../../utils';
 
@@ -223,10 +223,10 @@ export default class LiveTVPreview extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { title, summary, extensions, channelImage } = this._props;
+    const { title, summary, channelImage } = this._props;
 
-    const startTime = this._logTimeInHHMM(new Date(extensions.start_time));
-    const endTime = this._logTimeInHHMM(new Date(extensions.end_time));
+    const startTime = this._logTimeInHHMM(new Date(this._props.startTime));
+    const endTime = this._logTimeInHHMM(new Date(this._props.endTime));
 
     const currentTime = this._logTimeInHHMM(new Date()); // Current local time
     const elapsedPercentage = this.calculateElapsedPercentage(startTime, endTime, currentTime);

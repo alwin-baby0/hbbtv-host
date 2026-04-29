@@ -1,10 +1,12 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
-import CMPButton from '../../components/Buttons/CMPButton/CMPButton';
-import { CMPService } from '../../Services';
+// import { CMPService } from '../../Services';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
-import { t } from '../../Services';
+import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
+import Button from '../../components/Button/Button';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 export default class Settings extends Lightning.Component {
   static _template() {
@@ -42,13 +44,13 @@ export default class Settings extends Lightning.Component {
             rect: true,
             color: Colors('#ffffff').alpha(0.5).get(),
           },
-          Languages: {
+          LanguagesRowContainer: {
+            type: HorizontalContainer,
             y: 50,
             x: 550,
-            type: VerticalContainer,
             collision: true,
-            w: 1050,
             h: 300,
+            w: 1050,
           },
         },
         CMPContainer: {
@@ -104,80 +106,76 @@ export default class Settings extends Lightning.Component {
     return this.tag('Version');
   }
 
-  get _Languages() {
-    return this.tag('Content.LanguagesContainer.Languages');
+  get _LanguagesRowContainer() {
+    return this.tag('Content.LanguagesContainer.LanguagesRowContainer');
   }
 
   get _Content() {
     return this.tag('Content');
   }
 
-  get _CMPData() {
-    return this.tag('Content.CMPContainer.CMPData');
+  _arrangeLngBtns(languages) {
+    const itemsPerCol = 4;
+    const cols = [];
+
+    const langArray = Object.entries(languages).map(([key, value]) => ({
+      key,
+      value,
+    }));
+
+    for (let i = 0; i < langArray.length; i += itemsPerCol) {
+      cols.push({ items: langArray.slice(i, i + itemsPerCol) });
+    }
+
+    return cols;
   }
 
-  get CMPButtons() {
-    return this.tag('Content.CMPContainer.CMPData.Buttons');
+  $handleStateHover(index, stateName = null) {
+    if (stateName) {
+      this._setState(stateName);
+      return;
+    }
+    this._setState(states[index]);
   }
 
   set props(props) {
     this._props = { ...this._props, ...props };
 
-    const buttonsResult = CMPService.cmpData?.buttons;
-    const cmpTitle = CMPService.cmpData?.title;
-    const cmpDescription = CMPService.cmpData?.description;
+    // const cmpTitle = CMPService.cmpData?.title;
+    // const cmpDescription = CMPService.cmpData?.description;
 
-    const buttons = Object.values(buttonsResult).map((value, btnIndex) => {
-      return {
-        type: CMPButton,
+    const languages = this._props.languagesData;
+    const cols = this._arrangeLngBtns(languages);
+
+    this._LanguagesRowContainer.props = {
+      parentState: 'Languages',
+      items: cols.map((col) => ({
+        type: VerticalContainer,
         collision: true,
+        h: 500,
+        w: 300,
         flexItem: {
-          marginBottom: 18,
+          marginRight: 20,
         },
         props: {
-          label: value.label,
-          callback: async () => {
-            if (value.callback_url) {
-              const chosenValue = btnIndex === 0 ? 1 : 0;
-              await CMPService.selectCMPChoice(this._props.serialNumber, chosenValue);
-              Router.navigate(ROUTES.HOME);
-            } else {
-              Router.navigate(ROUTES.CMP_CUSTOMIZE, { options: value.options });
-            }
-          },
+          parentState: 'Languages',
+          disableScroll: true,
+          items: col.items.map((item, index) => ({
+            type: LanguageButton,
+            collision: true,
+            props: {
+              languageInfo: item.value,
+              languageIndex: index,
+              languageCode: item.key,
+            },
+            w: 300,
+            h: 65,
+          })),
         },
-      };
-    });
-
-    const { languages } = this._props.languagesData;
-    const languagesArr = languages.split(',');
-    const languageItems = languagesArr.map((language, index) => ({
-      type: LanguageButton,
-      props: {
-        languageInfo: language,
-        languageIndex: index,
-      },
-      w: 300,
-      h: 65,
-    }));
+      })),
+    };
 
     this._Content.patch({
-      LanguagesContainer: {
-        Languages: {
-          zIndex: 3,
-          type: VerticalContainer,
-          collision: true,
-          w: 1050,
-          h: 300,
-          props: {
-            items: languageItems,
-            enableScroll: false,
-            w: 1050,
-            h: 300,
-            parentState: 'Languages',
-          },
-        },
-      },
       CMPContainer: {
         collision: true,
         CMPData: {
@@ -185,41 +183,44 @@ export default class Settings extends Lightning.Component {
           flex: { direction: 'column' },
           w: 1210,
           h: 920,
-          Title: {
-            w: 1000,
-            h: 50,
-            text: {
-              text: cmpTitle,
-              fontSize: 40,
-              fontFace: 'Montserrat-Bold',
-              lineHeight: 50,
-              textAlign: 'left',
-            },
-          },
-          Description: {
-            w: 1200,
-            h: 100,
-            y: 30,
-            flexItem: {
-              marginBottom: 20,
-            },
-            text: {
-              text: cmpDescription,
-              fontSize: 24,
-              fontFace: 'Montserrat-Regular',
-              lineHeight: 30,
-              textAlign: 'left',
-            },
-          },
-          Buttons: {
-            w: 1050,
-            h: 400,
-            y: 20,
-            type: VerticalContainer,
-            collision: true,
+          // Title: {
+          //   w: 1000,
+          //   h: 50,
+          //   text: {
+          //     text: cmpTitle,
+          //     fontSize: 40,
+          //     fontFace: 'Montserrat-Bold',
+          //     lineHeight: 50,
+          //     textAlign: 'left',
+          //   },
+          // },
+          // Description: {
+          //   w: 1200,
+          //   h: 100,
+          //   y: 30,
+          //   flexItem: {
+          //     marginBottom: 20,
+          //   },
+          //   text: {
+          //     text: cmpDescription,
+          //     fontSize: 24,
+          //     fontFace: 'Montserrat-Regular',
+          //     lineHeight: 30,
+          //     textAlign: 'left',
+          //   },
+          // },
+          ConsentChangeButton: {
+            type: Button,
             props: {
-              items: buttons,
-              parentState: 'CMPContainer',
+              width: 300,
+              height: 95,
+              buttonLabel: t(TRANSLATIONS.COOKIE_PREFERENCES),
+              callback: async () => {
+                await window.Didomi.notice.show();
+
+                this.fireAncestors('$didomiVisible', true);
+                this.fireAncestors('$settingsDidomi', true);
+              },
             },
           },
         },
@@ -232,6 +233,10 @@ export default class Settings extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -246,29 +251,37 @@ export default class Settings extends Lightning.Component {
 
   static _states() {
     return [
-      class CMPContainer extends this {
-        _getFocused() {
-          return this.CMPButtons;
-        }
-
-        _handleUp() {
-          this._setState('Languages');
-        }
-      },
-
       class Languages extends this {
         _getFocused() {
-          return this._Languages;
+          return this._LanguagesRowContainer;
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
-          this._setState('CMPContainer');
+          this._setState('CMP');
+        }
+      },
+
+      class CMP extends this {
+        _getFocused() {
+          return this.tag('ConsentChangeButton');
+        }
+
+        _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          this._setState('Languages');
         }
       },
     ];

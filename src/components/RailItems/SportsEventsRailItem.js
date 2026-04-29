@@ -3,6 +3,7 @@ import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import { didomiVisible } from '../../App';
 
 export default class SportsEventsRailItem extends FocusableItem {
   _props = {
@@ -65,7 +66,7 @@ export default class SportsEventsRailItem extends FocusableItem {
             text: '',
             fontFace: 'Montserrat-Bold',
             fontSize: 20,
-            lineHeight: 16,
+            lineHeight: 24,
             wordWrapWidth: 270,
             maxLines: 2,
             maxLinesSuffix: '...',
@@ -79,7 +80,7 @@ export default class SportsEventsRailItem extends FocusableItem {
           text: {
             fontFace: 'Montserrat-Regular',
             fontSize: 16,
-            lineHeight: 16,
+            lineHeight: 20,
             wordWrapWidth: 300,
             maxLines: 4,
             maxLinesSuffix: '...',
@@ -91,22 +92,6 @@ export default class SportsEventsRailItem extends FocusableItem {
         radius: 9,
       },
     };
-  }
-
-  get _Title() {
-    return this.tag('Title');
-  }
-
-  get _DescriptionWrapper() {
-    return this.tag('DescriptionWrapper');
-  }
-
-  get _DateTime() {
-    return this.tag('DateTime');
-  }
-
-  get _EventImage() {
-    return this.tag('EventImage');
   }
 
   set props(props) {
@@ -163,6 +148,9 @@ export default class SportsEventsRailItem extends FocusableItem {
   }
 
   _handleEnter() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
     const { callback } = this._props;
     callback();
   }

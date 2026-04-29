@@ -22,10 +22,10 @@ const RAIL_WIDTHS = {
 
 let globalVerticalIndex = 0;
 
-export const constructRails = (rails, page = '') => {
+export const constructRails = (rails) => {
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
-    return constructRails([rails], page);
+    return constructRails([rails]);
   }
 
   return rails
@@ -47,10 +47,10 @@ export const constructRails = (rails, page = '') => {
           const currentIndex = globalVerticalIndex;
           globalVerticalIndex += 1;
 
-          return cronstructSingleLineRail(newRail, currentIndex, page);
+          return cronstructSingleLineRail(newRail, currentIndex);
         });
       }
-      return cronstructSingleLineRail(rail, index, page); //-1 is placeholder value if items are not chunked
+      return cronstructSingleLineRail(rail, index); //-1 is placeholder value if items are not chunked
     });
 };
 
@@ -59,7 +59,7 @@ const verticalIndexReset = () => {
   globalVerticalIndex = 0;
 };
 
-export const cronstructSingleLineRail = (rail, index, page = '') => {
+export const cronstructSingleLineRail = (rail, index) => {
   const {
     items,
     railType,
@@ -68,21 +68,6 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     railItemsOptions,
     ...rest
   } = rail;
-
-  const containerDimensions =
-    railType === RAIL_TYPES.LIVETV
-      ? { h: 100, w: 100 }
-      : {
-          h: CARD_SIZES[cardType]?.height || 500,
-          w: (CARD_SIZES[cardType].width + 20) * items.length,
-        };
-  const flexItem =
-    ((railType === RAIL_TYPES.EPGS && !railTitle) || (page !== ROUTES.HOME && railTitle)) &&
-    page !== ROUTES.SEARCH
-      ? {}
-      : {
-          marginBottom: railTitle && page !== ROUTES.SEARCH ? 40 : page === ROUTES.SEARCH ? 30 : 60,
-        };
 
   let paddingLeft = 0;
   let targetIndex = null;
@@ -111,30 +96,60 @@ export const cronstructSingleLineRail = (rail, index, page = '') => {
     }
   }
 
+  const containerDimensions =
+    railType === RAIL_TYPES.LIVETV
+      ? { h: 100, w: 100 }
+      : {
+          h:
+            items && items.length && items[0].orientation
+              ? items[0].orientation === 'landscape'
+                ? CARD_SIZES[cardType]?.landscape_height
+                : CARD_SIZES[cardType]?.poster_height
+              : CARD_SIZES[cardType]?.height || 500,
+          w: RAIL_WIDTHS[railType] || 1500,
+        };
+
   return {
     type: HorizontalContainer,
+    ...(railType !== RAIL_TYPES.BANNER && { collision: true }),
     ...rest,
     ...containerDimensions,
-    collision: true,
+    ...((railType === RAIL_TYPES.EPGS || index === 0) && { collision: true }),
     index,
     props: {
-      railWidth: RAIL_WIDTHS[railType],
-      h: CARD_SIZES[cardType]?.height,
-      w: containerDimensions.w,
+      h:
+        items && items.length && items[0].orientation
+          ? items[0].orientation === 'landscape'
+            ? CARD_SIZES[cardType]?.landscape_height
+            : CARD_SIZES[cardType]?.poster_height
+          : CARD_SIZES[cardType]?.height,
+      w:
+        ((items && items.length && items[0].orientation
+          ? items[0].orientation === 'landscape'
+            ? CARD_SIZES[cardType]?.landscape_width
+            : CARD_SIZES[cardType]?.poster_width
+          : CARD_SIZES[cardType]?.width) +
+          20) *
+        items.length,
+      railWidth: RAIL_WIDTHS[railType] || 1500,
       railTitle: railTitle,
-      cardType: cardType,
+      railType,
+      cardType: items[0].type === RAIL_TYPES.BANNER ? CARD_TYPES.BANNER : cardType,
       ...((railType === RAIL_TYPES.EPGS ||
         railType === RAIL_TYPES.CONTINUE_WATCHING ||
         railType === RAIL_TYPES.FAVORITES) && { wrap: true }),
       items: railItemConstructor(
         items.length === 0 ? [{ type: Empty }] : items,
         railType,
-        railItemsOptions
+        railItemsOptions,
+        cardType
       ),
-      flexItem: flexItem,
       paddingLeft,
       targetIndex: targetIndex,
       index: index,
+      ...(rail.page && { page: rail.page }),
+      ...(rail.seasonId && { seasonId: rail.seasonId }),
+      ...(rail.seriesId && { seriesId: rail.seriesId }),
     },
   };
 };

@@ -1,13 +1,16 @@
 import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import GalleryItem from '../../components/GalleryItem/GalleryItem';
-import { CMPService, DetailService, t, UserService } from '../../Services';
+import { DetailService, LoggingService, UserService } from '../../Services';
 import BackBtn from '../../components/BackButton/BackBtn';
 import { eventTrackPayload, getDeviceType } from '../../utils/device';
 import {
+  API_METHODS,
+  API_URLS,
   EVENT_NAMES,
   IMG_PATH,
   LOCAL_STORAGE_KEYS,
+  RAIL_TYPES,
   ROUTES,
   TRANSLATIONS,
   VIDEO_TYPES,
@@ -16,6 +19,12 @@ import {
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import { constructRails } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
+import { checkCMP } from '../../utils';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
+import { V2 } from '../../Services/utils';
+import { parseSeasonData } from '../../Models';
+import { railItemConstructor } from '../utils/railItems';
 
 const states = ['HeroSection', 'BackButton', 'Items'];
 
@@ -117,42 +126,37 @@ export default class SingleSeries extends Lightning.Component {
           'Failed to update favorite status of VOD',
           true
         );
-      console.log('error', e);
+      LoggingService.postLog(LOG_LEVEL.ERROR, e?.response?.status, e?.response);
     }
   }
 
   async _active() {
-    if (!this._props.cmpShown) {
-      await CMPService.initialFetch();
-      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
-      const currentTimeInMS = Math.floor(Date.now() / 1000);
-
-      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(
-          ROUTES.CMP,
-          { movieId: this._props.seriesId, url: ROUTES.SERIES_DETAILS },
-          false
-        );
-      }
-    }
+    checkCMP();
 
     const {
       galleryItem,
       favorited,
-      duration,
       firstEpisodeVideoId,
       firstEpisodeUrl,
       firstEpisodeTitle,
+      firstEpisodeEpisodeNumber,
+      firstEpisodeSeasonNumber,
       isDeeplinkEpisode,
       position,
       seriesId,
       lastPlayedId,
       lastPlayedUrl,
       lastPlayedTitle,
+      lastPlayedEpisodeNumber,
+      lastPlayedSeasonNumber,
+      lastPlayedEpisodeDuration,
       ssai,
       ssaiLastEp,
+      episodeTitle,
+      seasonTitle,
+      seasonNumber,
     } = this._props;
-    const { id } = galleryItem;
+    const { id, badgeText } = galleryItem;
 
     eventTrackPayload(EVENT_NAMES.VIEW_SERIE, id, seriesId);
     this._HeroSection.patch({
@@ -162,17 +166,25 @@ export default class SingleSeries extends Lightning.Component {
         firstEpisodeVideoId: firstEpisodeVideoId,
         firstEpisodeUrl: firstEpisodeUrl,
         firstEpisodeTitle: firstEpisodeTitle,
+        firstEpisodeEpisodeNumber,
+        firstEpisodeSeasonNumber,
         isDeeplinkEpisode: isDeeplinkEpisode,
         seriesId: seriesId,
         ssai,
         parentState: 'HeroSection',
+        badgeText,
+        episodeTitle,
+        seasonTitle,
+        seasonNumber,
       },
       Info: {
         GalleryButton: {
           props: {
-            width: 430,
+            width: 465,
             height: 78,
-            buttonLabel: t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase(),
+            buttonLabel: `${t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase()} S${
+              seasonNumber || firstEpisodeSeasonNumber
+            } E${seasonNumber ? '1' : firstEpisodeEpisodeNumber}`,
           },
         },
       },
@@ -192,26 +204,43 @@ export default class SingleSeries extends Lightning.Component {
                 alpha: 1,
                 flexItem: {
                   marginRight: 15,
+                  marginLeft: 35,
                 },
                 props: {
                   buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
-                  buttonLabel: t(TRANSLATIONS.CONTINUE_WATCHING)?.toUpperCase(),
-                  width: 440,
+                  buttonLabel: `${t(
+                    TRANSLATIONS.CONTINUE_WATCHING
+                  )?.toUpperCase()} S${lastPlayedSeasonNumber} E${lastPlayedEpisodeNumber}`,
+                  width: 450,
                   height: 78,
                   position,
-                  duration,
+                  duration: lastPlayedEpisodeDuration,
                   callback: () => {
+                    this._HeroSection._Info.visible = false;
+                    this._HeroSection._Spinner.visible = true;
+                    this._HeroSection._Spinner
+                      .animation({
+                        duration: 2, // animation duration in seconds
+                        repeat: -1, // repeat indefinitely
+                        actions: [
+                          { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } }, // rotate 360 degrees
+                        ],
+                      })
+                      .start();
+
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
                         Router.navigate(ROUTES.PLAYER, {
-                          videoUrl: result[0]?.content?.src ?? lastPlayedUrl,
-                          duration: duration,
+                          videoUrl: result?.entry[0]?.files?.url ?? lastPlayedUrl,
+                          duration: lastPlayedEpisodeDuration,
                           videoType: VIDEO_TYPES.SERIES,
                           seriesID: seriesId,
                           videoId: lastPlayedId,
+                          episodeNumber: lastPlayedEpisodeNumber,
+                          seasonNumber: lastPlayedSeasonNumber,
                           continueTime: position,
                           episodeTitle: lastPlayedTitle,
-                          ssai: result[0].extensions?.ssai ?? ssaiLastEp,
+                          ssai: result?.entry[0]?.extensions?.ssai ?? ssaiLastEp,
                         });
                       }
                     );
@@ -220,11 +249,13 @@ export default class SingleSeries extends Lightning.Component {
               },
               FavoriteButton: {
                 y: 0,
+                x: 0,
                 flexItem: {
                   marginTop: 10,
                 },
                 alpha: 1,
                 props: {
+                  enabled: true,
                   buttonIcon: Utils.asset(favorited ? IMG_PATH.FAVORITE_FILL : IMG_PATH.FAVORITE),
                   buttonLabel: '',
                   width: 100,
@@ -252,6 +283,7 @@ export default class SingleSeries extends Lightning.Component {
               },
               FavoriteButton: {
                 y: 10,
+                x: 35,
                 flexItem: {
                   marginTop: 10,
                 },
@@ -272,7 +304,9 @@ export default class SingleSeries extends Lightning.Component {
         );
       }
     }
+
     this._setState('HeroSection');
+
     window.addEventListener('switchS', (event) => {
       this.switchSeason(event.detail.seasonId);
     });
@@ -284,10 +318,6 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('HeroSection');
   }
 
-  get _SeriesWrapper() {
-    return this.tag('SeriesWrapper');
-  }
-
   get _Column() {
     return this.tag('Column');
   }
@@ -296,15 +326,17 @@ export default class SingleSeries extends Lightning.Component {
     return this.tag('BackButton');
   }
 
-  get _Wrapper() {
-    return this.tag('Wrapper');
-  }
-
   get _SeasonsBar() {
     return this.tag('SeasonsBar');
   }
 
   _handleBack(e) {
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL);
+
+    if (window.Didomi && didomiVisible) {
+      return;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -334,7 +366,7 @@ export default class SingleSeries extends Lightning.Component {
   switchSeason(seasonId) {
     let targetSeason = this._props.allSeasons.find((season) => season.seasonId === seasonId);
     this._Column.props = {
-      items: constructRails(targetSeason),
+      items: [...constructRails(targetSeason), ...this._props.playlistVODS],
       parentState: 'Items',
     };
   }
@@ -362,10 +394,18 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('SeasonBar');
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('BackButton');
         }
       },
@@ -375,6 +415,10 @@ export default class SingleSeries extends Lightning.Component {
           return this._BackButton;
         }
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('HeroSection');
         }
       },
@@ -384,9 +428,17 @@ export default class SingleSeries extends Lightning.Component {
           return this._SeasonsBar;
         }
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('HeroSection');
         }
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           if (this._Column.Items.children.length > 0) {
             this._setState('Items');
           } else {
@@ -404,18 +456,14 @@ export default class SingleSeries extends Lightning.Component {
           this.$verticalContainerIndexChange();
         }
 
-        $exit() {
-          /* this._Wrapper.patch({
-            y: 915,
-            h: 600,
-          }); */
-        }
-
         $verticalContainerIndexChange(index) {
           if (index > 0 && index !== undefined) {
             this.patch({
               SeriesWrapper: {
-                y: -650,
+                y: -800,
+              },
+              SeasonsBar: {
+                y: -200,
               },
               Wrapper: {
                 y: 0,
@@ -431,7 +479,7 @@ export default class SingleSeries extends Lightning.Component {
                 y: -180,
               },
               SeriesWrapper: {
-                y: -340,
+                y: -390,
               },
               SeasonsBar: {
                 y: 420,
@@ -447,7 +495,37 @@ export default class SingleSeries extends Lightning.Component {
           }
         }
 
+        async $horizontalContainerIndexChange(index, position, page, seasonId, seriesId) {
+          if (index === this._Column.Items.children[0].Items.children.length - 1) {
+            const timestamp = new Date().getTime();
+
+            const newRails = await DetailService._request({
+              url: `/${API_URLS.GET_SEASON}`,
+              apiVersion: V2,
+              method: API_METHODS.GET,
+              params: {
+                _: timestamp,
+                season_id: seasonId,
+                page,
+              },
+              headers: {
+                'X-API-Live-Key': process.env.APP_LIVE_KEY,
+              },
+            }).then((data) => parseSeasonData(data, seriesId, seasonId));
+
+            if (newRails?.items) {
+              const railItems = railItemConstructor(newRails.items, RAIL_TYPES.EPISODE);
+
+              this._Column.Items.children[0]._appendItems(railItems);
+            }
+          }
+        }
+
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return;
+          }
+
           this._setState('SeasonBar');
         }
       },

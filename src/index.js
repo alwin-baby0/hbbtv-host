@@ -29,8 +29,13 @@ import {
 } from './utils/device.js';
 import { setupKeys } from './utils/keys.js';
 import FetchingService from './Services/FetchingService.js';
-import { TranslationService } from './Services/index.js';
-import { EVENT_NAMES } from './constants/globalConstants.js';
+import {
+  SettingsService,
+  LoggingService,
+  AuthorizationService,
+  DidomiService,
+} from './Services/index.js';
+import { EVENT_NAMES, LOCAL_STORAGE_KEYS, LOG_LEVEL } from './constants/globalConstants.js';
 
 /**
  * This file should serve as a place to add for example polyfills, initiate
@@ -69,7 +74,33 @@ sequence([
     appSettings.keys = setupKeys(deviceType);
     window.keyCodes = appSettings.keys;
   },
+  () => {
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL);
+  },
   async () => await initDeviceInfo(deviceType),
+  async () => {
+    await DidomiService.init();
+    const userNotice = window.Didomi.getConfig();
+
+    let userConsent = await window.Didomi.getCurrentUserStatus();
+
+    let isDeclined = true;
+    Object.keys(userConsent.purposes).forEach((key) => {
+      if (userConsent.purposes[key].enabled) {
+        isDeclined = false;
+      }
+    });
+
+    if (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
+
+    window.didomiOnReady &&
+      window.didomiOnReady.push(async () => {
+        userConsent = await window.Didomi.getCurrentUserStatus();
+        localStorage.setItem(LOCAL_STORAGE_KEYS.USER_CONSENT, JSON.stringify(userConsent));
+
+        localStorage.setItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG, JSON.stringify(userNotice));
+      });
+  },
   () => FetchingService.init(),
   async () => {
     if (process.env.APP_USE_GA === 'true') {
@@ -83,6 +114,11 @@ sequence([
   async () =>
     loadJS(`${process.env.APP_BASE_WATCH4}/track.js?api_key=${process.env.APP_WATCH4_API_KEY}`),
   async () => {
+    await AuthorizationService.scheduleDeviceAuthorizationCodeRefresh();
+    const settings = await SettingsService.getSettings();
+    localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify(settings.data));
+  },
+  async () => {
     try {
       const app = Launch(App, appSettings, platformSettings);
       document.body.appendChild(app.stage.getCanvas());
@@ -91,19 +127,19 @@ sequence([
         Object.entries(getDeviceInfo()).map(([key, value]) => `| ${key}: ${value} |`)
       );
 
-      TranslationService.setTranslations();
-      const result = deviceType === 'metrological' ? Lifecycle.ready() : {};
-      console.log(result);
+      deviceType === 'metrological' && Lifecycle.ready();
       eventTrackPayload(EVENT_NAMES.LAUNCH_APP);
 
-      let init = deviceType === 'metrological' ? await Parameters.initialization() : {};
-      console.log(init);
+      deviceType === 'metrological' && (await Parameters.initialization());
 
-      let build =
-        deviceType === 'metrological' ? await Metrics.appInfo(process.env.APP_VERSION) : {};
-      console.log(build);
+      deviceType === 'metrological' && (await Metrics.appInfo(process.env.APP_VERSION));
     } catch (error) {
       console.error('Failed to start the app', error);
+      const deviceInfo = getDeviceInfo();
+      LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+        message: 'Failed to start the app',
+        error,
+      });
       deviceType === 'metrological' &&
         Metrics.error(Metrics.ErrorType.OTHER, '', 'Failed to start the app', true);
     }

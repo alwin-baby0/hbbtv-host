@@ -1,11 +1,12 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import FocusableItem from '../FocusableItem/FocusableItem';
+import { didomiVisible } from '../../App';
 
-export default class Button extends FocusableItem {
+export default class Button extends Lightning.Component {
   _isFocused = false;
+  entered = 0;
   _props = {
-    width: 285,
+    width: 465,
     height: 78,
     buttonLabel: '',
     buttonIcon: '',
@@ -19,14 +20,13 @@ export default class Button extends FocusableItem {
 
   static _template() {
     return {
-      ...super._template(),
       maxHeight: 88,
+      Border: {},
       Icon: {
-        x: 20,
+        x: 60,
         y: (h) => h / 2 - 12,
       },
       Label: {
-        x: 50,
         y: (h) => h / 2 - 12,
         h: 25,
         color: Colors(this._isFocused ? colors.focus : colors.unfocus).get(),
@@ -66,28 +66,19 @@ export default class Button extends FocusableItem {
       duration,
     } = this._props;
 
-    this.setProps({
-      x: -7,
-      y: -7,
-      width: width + 10,
-      height: height + 10,
-      radius: 8,
-      strokeWidth: 2,
-      strokeColor: Colors(colors.focus).get(),
-    });
-
-    const progressPercent = Math.round((position / duration) * 100);
-    this.progressW = Math.min((width * progressPercent) / 100, width);
+    if (position && duration) {
+      const progressPercent = Math.round((position / duration) * 100);
+      this.progressW = Math.min((width * progressPercent) / 100, width);
+    } else {
+      this.progressW = 0;
+    }
 
     const colorBorder = borderColor ? borderColor : colors.unfocus;
 
-    if (buttonIcon === '') {
-      this._Label.patch({
-        w: width,
-        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-        x: 0,
-      });
-    }
+    this._Label.patch({
+      flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+      x: 0,
+    });
 
     if (buttonLabel === '') {
       this._Icon.patch({
@@ -125,8 +116,12 @@ export default class Button extends FocusableItem {
       Icon: {
         texture: lng.Tools.getSvgTexture(buttonIcon, iconWidth, iconHeight),
         color: this._isFocused ? Colors(colors.white).get() : Colors(colors.black).get(),
+        visible: this._props.enabled,
       },
       Label: {
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+        x: (w) => w / 2 + iconWidth,
+        mountX: 0.5,
         Text: {
           text: {
             text: buttonLabel,
@@ -136,7 +131,7 @@ export default class Button extends FocusableItem {
       },
     });
 
-    if (position && this.progressW) {
+    if (position && duration && this.progressW) {
       this.patch({
         Progress: {
           w: this.progressW,
@@ -158,19 +153,33 @@ export default class Button extends FocusableItem {
   }
 
   _focus() {
-    const { width, height, radius, strokeWidth, position } = this._props;
-    super._focus();
+    const { width, height, radius } = this._props;
     this._isFocused = true;
     this.patch({
       texture: Lightning.Tools.getRoundRect(
         width,
         height,
         radius,
-        strokeWidth,
-        Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get(),
+        0,
+        0,
         true,
         Colors(this._props.enabled ? colors.focus : colors.focusDisabled).get()
       ),
+      Border: {
+        w: width + 14,
+        h: height + 14,
+        x: -7,
+        y: -7,
+        texture: Lightning.Tools.getRoundRect(
+          width + 14,
+          height + 14,
+          radius,
+          2,
+          Colors(colors.focus).get(),
+          false,
+          0
+        ),
+      },
       Icon: {
         color: Colors(colors.white).get(),
       },
@@ -198,20 +207,21 @@ export default class Button extends FocusableItem {
   }
 
   _unfocus() {
-    const { width, height, radius, strokeWidth, borderColor, position } = this._props;
-    super._unfocus();
-    const colorBorder = borderColor ? borderColor : colors.white;
+    const { width, height, radius } = this._props;
     this._isFocused = false;
     this.patch({
       texture: Lightning.Tools.getRoundRect(
         width,
         height,
         radius,
-        strokeWidth,
-        Colors(this._props.enabled ? colorBorder : colors.unfocusDisabled).get(),
+        0,
+        0,
         true,
         Colors(colors.white).get()
       ),
+      Border: {
+        texture: null,
+      },
       Icon: {
         color: Colors(colors.black).get(),
       },
@@ -243,6 +253,20 @@ export default class Button extends FocusableItem {
   }
 
   _handleEnter() {
+    if (!this._props.enabled) {
+      return true;
+    }
+
+    this.entered = (this.entered + 1) % 2;
+    if (didomiVisible && this.entered === 1) {
+      return true;
+    }
+
+    if (didomiVisible && this.entered === 0) {
+      this.fireAncestors('$didomiVisible', false);
+      return;
+    }
+
     const { callback } = this._props;
     callback();
   }
@@ -254,6 +278,9 @@ export default class Button extends FocusableItem {
   }
 
   _handleClick() {
+    if (!this._props.enabled) {
+      return true;
+    }
     const { callback } = this._props;
     callback();
   }

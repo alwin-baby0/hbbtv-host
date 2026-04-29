@@ -1,16 +1,18 @@
 class EPGRailItem {
   constructor(data) {
-    const { id, title, type, summary, extensions, content } = data;
+    const { id, title, meta, description, start_timestamp, end_timestamp, url, type } = data;
+    // const { type } = meta;
     this.id = id;
     this.title = title;
-    this.type = type?.value;
-    this.extensions = extensions;
-    this.startTime = new Date(extensions.start_time).getTime();
-    this.endTime = new Date(extensions.end_time).getTime();
-    this.content = content;
-    this.summary = summary;
+    this.type = type;
+    this.startTimeAll = start_timestamp;
+    this.endTimeAll = end_timestamp;
+    this.startTime = new Date(start_timestamp.ms).getTime();
+    this.endTime = new Date(end_timestamp.ms).getTime();
+    this.src = url;
+    this.summary = description;
 
-    const startTime = extensions.start_time;
+    const startTime = start_timestamp.ms;
     const date = new Date(startTime);
     const hours = date.getHours(); // Local time hours
     const minutes = date.getMinutes(); // Local time minutes

@@ -1,6 +1,6 @@
 import { Colors, Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import LiveTVPreview from '../../components/LiveTVPreview/LiveTVPreview';
-import { EPGService, t } from '../../Services';
+import { EPGService } from '../../Services';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LiveChannelRailItem from '../../components/RailItems/LiveChannelRailItem';
 import { constructRails } from '../utils';
@@ -8,11 +8,12 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import EPGTimeSlot from './components/EPGTimeSlot';
 import EPGContainer from '../../components/EPGContainer/EPGContainer';
-import { clamp } from '../../utils';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { checkCMP } from '../../utils/index';
+import { didomiVisible } from '../../App';
+import { t, clamp, checkCMP } from '../../utils';
+
 export default class LiveTV extends Lightning.Component {
   _props = {
     lastId: 0,
@@ -59,9 +60,6 @@ export default class LiveTV extends Lightning.Component {
             x: 10,
             type: HorizontalContainer,
             clipping: true,
-            props: {
-              w: 1615,
-            },
           },
           EPGData: {
             clipping: true,
@@ -73,6 +71,7 @@ export default class LiveTV extends Lightning.Component {
             props: {
               w: 1615,
               parentState: 'EPGS',
+              page: ROUTES.LIVE,
             },
           },
           Flag: {
@@ -127,6 +126,52 @@ export default class LiveTV extends Lightning.Component {
         },
       },
     };
+  }
+
+  set props(props) {
+    this._props = { ...this._props, ...props };
+
+    this.fireAncestors('$setNavbarVisibility', true);
+
+    eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
+    this.$updateChannel(
+      EPGService.filteredChannelsItems[
+        this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+      ]
+    );
+
+    this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
+      const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
+      let marginOffset = 0;
+      const hourss = result.timeArray.map((hour, index) => {
+        let marginLeft = 0;
+        if (index === 0) {
+          marginLeft = -calculatedPixels;
+        }
+        marginOffset += marginLeft;
+        return {
+          type: EPGTimeSlot,
+          w: 250,
+          h: 50,
+          flexItem: { marginLeft: marginLeft },
+          props: {
+            startTime: hour,
+            xPos: 483,
+          },
+        };
+      });
+
+      this._TimeSlot.props = {
+        w: hourss.length * 250 + marginOffset,
+        items: hourss,
+      };
+
+      this._EPGData.setInitialOffset();
+    });
+
+    if (!this.channelUpdateInterval) {
+      this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
+    }
   }
 
   $updateChannelInfo(matchingEntry, channelInfo, channelImage) {
@@ -230,7 +275,7 @@ export default class LiveTV extends Lightning.Component {
 
   _firstEnable() {
     this.fireAncestors('$punchHoleTV');
-    this.$updateChannel(EPGService.channelsItems[0]);
+    this.$updateChannel({ ...EPGService.channelsItems[0], src: EPGService.channelsItems[0].url });
     this._setState('Categories');
     this.focusedState = 'Categories';
 
@@ -266,16 +311,24 @@ export default class LiveTV extends Lightning.Component {
 
     if (!canProceed) return;
 
+    this.fireAncestors('$setNavbarVisibility', true);
+
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
-    this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
+    this.$updateChannel(
+      EPGService.filteredChannelsItems[
+        this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+      ]
+    );
 
     this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
       const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
+      let marginOffset = 0;
       const hourss = result.timeArray.map((hour, index) => {
         let marginLeft = 0;
         if (index === 0) {
           marginLeft = -calculatedPixels;
         }
+        marginOffset += marginLeft;
         return {
           type: EPGTimeSlot,
           w: 250,
@@ -289,6 +342,7 @@ export default class LiveTV extends Lightning.Component {
       });
 
       this._TimeSlot.props = {
+        w: hourss.length * 250 + marginOffset,
         items: hourss,
       };
 
@@ -307,6 +361,10 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -317,9 +375,15 @@ export default class LiveTV extends Lightning.Component {
 
   async fetchChannels() {
     if (Router.getActiveHash() !== ROUTES.PLAYER) {
-      await EPGService.initialFetch();
+      const channelsEPGS = [];
+      EPGService.channelsItems.forEach((channelsItem) => {
+        channelsEPGS.push(EPGService.getEPG(channelsItem.id, channelsItem.url));
+      });
+
+      const channelsEPGSResults = await Promise.all(channelsEPGS);
 
       const focusedIndex = this._EPGData._focusedIndex;
+      const y = this._EPGData.Items.y;
       this._EPGData._clear();
 
       const channelsAll = EPGService.channelsItems
@@ -329,8 +393,8 @@ export default class LiveTV extends Lightning.Component {
             return null;
           }
 
-          const matchingEpg = EPGService.epgs.find((epgInfo) => {
-            return epgInfo.channelId === channelInfo.id;
+          const matchingEpg = channelsEPGSResults.find((epgInfo) => {
+            return Number(epgInfo.channelId) === channelInfo.id;
           });
           const rails = constructRails(matchingEpg);
 
@@ -355,11 +419,17 @@ export default class LiveTV extends Lightning.Component {
       };
 
       this._EPGData.setInitialOffset();
+      this._EPGData.Items.smooth = { y: y };
+      this._Channels.Items.smooth = { y: y };
       this._EPGData._focusedIndex = focusedIndex;
       this.focusedState === 'EPGS' &&
         this._EPGData.Items.children[this._EPGData._focusedIndex]._focus();
 
-      this.$updateChannel(EPGService.filteredChannelsItems[this._Channels._focusedIndex]);
+      this.$updateChannel(
+        EPGService.filteredChannelsItems[
+          this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+        ]
+      );
     }
   }
 
@@ -370,7 +440,9 @@ export default class LiveTV extends Lightning.Component {
   }
 
   async $updateChannels(val) {
-    await EPGService.fetchCategoryType(val.itemInfo.id);
+    await EPGService.fetchCategoryType(
+      val.itemInfo.data.value !== 'all' ? val.itemInfo.data.value : ''
+    );
     const result = await this.createTimeArray(EPGService.startTime, EPGService.endTime);
     const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
     this._TimeSlot.props = {
@@ -398,7 +470,9 @@ export default class LiveTV extends Lightning.Component {
     };
 
     const filteredChannels = await EPGService.getFilteredChannels();
+
     this._EPGData._clear();
+
     const channels = filteredChannels
       .map((channelInfo, index) => {
         if (!channelInfo) {
@@ -406,7 +480,9 @@ export default class LiveTV extends Lightning.Component {
           return null;
         }
 
-        const matchingEpg = EPGService.epgs.find((epgInfo) => epgInfo.channelId === channelInfo.id);
+        const matchingEpg = EPGService.epgs.find(
+          (epgInfo) => Number(epgInfo.channelId) === channelInfo.id
+        );
 
         const rails = constructRails(matchingEpg);
         this._EPGData._appendItems(rails);
@@ -442,16 +518,6 @@ export default class LiveTV extends Lightning.Component {
 
   get _Column() {
     return this.tag('Column');
-  }
-  get _Flag() {
-    return this.tag('EPGChannels.Flag');
-  }
-  get ProgressBar() {
-    return this.tag('EPGChannels.ProgressScroll.Progress');
-  }
-
-  get _Wrapper() {
-    return this.tag('Wrapper');
   }
 
   get _Categories() {
@@ -496,25 +562,21 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('EPGS');
           this.focusedState = 'EPGS';
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Categories');
           this.focusedState = 'Categories';
-        }
-
-        async $verticalContainerIndexChange(index) {
-          if (
-            EPGService.hasMore &&
-            !EPGService.isLoading &&
-            EPGService.stripesFetched - 2 === index
-          ) {
-            const newStripes = await EPGService.fetchMoreEPGs();
-            const rails = constructRails(newStripes);
-            this._EPGData._appendItems(rails);
-          }
         }
       },
 
@@ -524,12 +586,20 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('EPGS');
           this.focusedState = 'EPGS';
         }
@@ -541,6 +611,10 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Categories');
           this.focusedState = 'Categories';
         }
@@ -556,8 +630,82 @@ export default class LiveTV extends Lightning.Component {
             this._EPGData.setInitialOffset(startAt, newStripes.length);
           }
 
-          this._Channels.Items.y = this._EPGData.Items.y;
           this._Channels._focusedIndex = index;
+          this._Channels.Items.smooth = { y: index === 0 ? 0 : this._EPGData.Items.y };
+
+          if (
+            EPGService.hasMoreChannels &&
+            !EPGService.loading &&
+            this._Channels.Items.children.length - 1 === index
+          ) {
+            const channels = await EPGService.fetchMoreChannels();
+            const channelsEPGS = channels.map((channel) =>
+              EPGService.getEPG(channel.id, channel.url)
+            );
+            const epgResults = await Promise.all(channelsEPGS);
+
+            EPGService.epgs.push(
+              ...epgResults.map((result, index) => {
+                return {
+                  ...result,
+                  channelIcon: EPGService.channelsItems[index].icon,
+                  channelTitle: EPGService.channelsItems[index].title,
+                  src: EPGService.channelsItems[index].url,
+                };
+              })
+            );
+
+            const channelsEPGSAll = channels.map((channel) =>
+              EPGService.getEPG(channel.id, channel.url)
+            );
+            const epgResultsAll = await Promise.all(channelsEPGSAll);
+
+            EPGService.epgsAll.push(
+              ...epgResultsAll.map((result, index) => {
+                return {
+                  ...result,
+                  channelIcon: EPGService.channelsItems[index].icon,
+                  channelTitle: EPGService.channelsItems[index].title,
+                  src: EPGService.channelsItems[index].url,
+                };
+              })
+            );
+
+            EPGService.reCalculateEpgContainer();
+
+            EPGService.pointer++;
+            EPGService.stripesFetched = EPGService.epgs.length;
+
+            const channelsAll = channels
+              .map((channelInfo, index) => {
+                if (!channelInfo) {
+                  console.warn(`No channelInfo for index ${index}`);
+                  return null;
+                }
+
+                const matchingEpg = EPGService.epgs.find((epgInfo) => {
+                  return Number(epgInfo.channelId) === channelInfo.id;
+                });
+                const rails = constructRails(matchingEpg);
+
+                this._EPGData._appendItems(rails);
+                return {
+                  type: LiveChannelRailItem,
+                  channelInfo: channelInfo,
+                  channelEPG: matchingEpg,
+                  w: 190,
+                  h: 105,
+                  channelIndex: index,
+                  props: {
+                    icon: channelInfo.icon,
+                  },
+                };
+              })
+              .filter((channel) => channel !== null);
+            this._Channels._appendItems(channelsAll);
+
+            this._EPGData.setInitialOffset();
+          }
         }
       },
     ];

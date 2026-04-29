@@ -1,28 +1,35 @@
 import FetchingService from '../FetchingService';
 import { SimpleRailItem } from '../../Models';
 import { V2 } from '../utils';
+import { parseHomePageHeroSection, parseHomePageRailData } from '../../Models/parsers';
 import {
-  parseBannerData,
-  parseHomePageHeroSection,
-  parseHomePageRailData,
-} from '../../Models/parsers';
-import { API_METHODS, API_URLS, IMAGE_SIZES } from '../../constants/globalConstants';
+  API_METHODS,
+  API_URLS,
+  IMAGE_SIZES,
+  LOCAL_STORAGE_KEYS,
+} from '../../constants/globalConstants';
 
 class HomePageService extends FetchingService {
   #heroSectionItems;
   #stripes = [];
   #pointer = 2;
   stripesFetched = 0;
-  #currentRailLimit = 7; // Početni limit je 6
+  #currentRailLimit = 12; // Početni limit je 6
   #heroSectionPage = 1; // Page counter for Hero Section
   #isLastFetchEmpty = false; // Initialize to false
   #banner = [];
+  #page = 1;
+
+  get currentRailLimit() {
+    return this.#currentRailLimit;
+  }
 
   /**
    * Fetches initial stripes for Home page
    */
   async initialFetch() {
-    this.#banner = await this.#getBanner();
+    const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+    this.#banner = settings.ads?.creative?.banner;
 
     if (!this.#heroSectionItems) {
       //get gallery data
@@ -51,31 +58,52 @@ class HomePageService extends FetchingService {
 
           stripeData.stripeId = this.#pointer - newStripes.length + index;
           stripeData.page = 1;
-          this.#stripes.push(stripeData);
+          stripeData.items.length && this.#stripes.push(stripeData);
         }
       });
     }
+
+    this.#page = 1;
   }
 
   /**
    * Fetches more stripes for Home page
    */
   async fetchMoreStripes() {
-    let counter = 0;
+    const rows = [];
     const newStripes = [];
 
-    while (counter < 2 && this.#pointer < 25) {
-      const stripeData = await this.#getHomePage(this.#pointer, 1, this.#currentRailLimit);
+    while (rows.length < 2 && this.#pointer < 25) {
+      rows.push(this.#pointer);
       this.#pointer++;
+    }
 
-      if (stripeData?.items.length > 0) {
+    const requests = rows.map((row) => this.#getHomePage(row, this.#page, this.#currentRailLimit));
+
+    let results = await Promise.all(requests);
+    results = results.filter((result) => result);
+
+    for (let i = 0; i < results.length; i++) {
+      const stripeData = results[i];
+      const row = rows[i];
+
+      if (!stripeData) {
+        return;
+      }
+
+      if (stripeData.error) {
+        this.#page++;
+        this.#pointer = 1;
+        return;
+      }
+
+      if (stripeData && stripeData.items && stripeData.items.length > 0) {
         this.stripesFetched++;
-        counter++;
-        // each stripe has unique id
-        stripeData.stripeId = this.#pointer;
-        // each stripe page number so we can fetch more after
+
+        stripeData.stripeId = row;
         stripeData.page = 1;
         stripeData.hasMore = stripeData.items.length === this.#currentRailLimit;
+
         newStripes.push(stripeData);
       }
     }
@@ -138,8 +166,9 @@ class HomePageService extends FetchingService {
     this.#stripes = [];
     this.#pointer = 2;
     this.stripesFetched = 0;
-    this.#currentRailLimit = 7; // Reset limit to initial value
+    this.#currentRailLimit = 12; // Reset limit to initial value
     this.#banner = [];
+    this.#page = 1;
   }
 
   /**
@@ -189,6 +218,9 @@ class HomePageService extends FetchingService {
         page: page, // Use the passed page parameter
         limit: 6,
       },
+      headers: {
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
     }).then(parseHomePageHeroSection);
 
   #getHomePage = async (row, page, limit) =>
@@ -201,14 +233,12 @@ class HomePageService extends FetchingService {
         page,
         limit,
       },
-    }).then(parseHomePageRailData);
-
-  #getBanner = async () =>
-    this._request({
-      url: `/${API_URLS.GET_BANNER}`,
-      apiVersion: V2,
-      method: API_METHODS.GET,
-    }).then(parseBannerData);
+      headers: {
+        'X-API-Live-Key': process.env.APP_LIVE_KEY,
+      },
+    })
+      .then(parseHomePageRailData)
+      .catch((err) => err.data);
 }
 
 const homePageService = new HomePageService();

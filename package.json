@@ -3,16 +3,6 @@
   "version": "0.0.0",
   "description": "",
   "main": "src/index.js",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "./src/**/*.js": [
-      "npm run lint"
-    ]
-  },
   "scripts": {
     "cypress": "cypress open",
     "lint": "npx prettier --check \"./src/*/*.js\"",
@@ -49,7 +39,6 @@
     "axios": "^1.4.0",
     "hls.js": "^1.6.5",
     "qrcode": "^1.5.3",
-    "shaka-player": "^4.10.3",
     "srt-parser-2": "^1.2.3",
     "webvtt-parser": "^2.2.0"
   },

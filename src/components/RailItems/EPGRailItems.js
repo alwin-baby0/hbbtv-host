@@ -1,5 +1,6 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { IMG_PATH, VIDEO_TYPES, ROUTES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
@@ -51,8 +52,8 @@ export default class EPGRailItems extends Lightning.Component {
     this._props.lastId = props.id;
 
     const currentTime = new Date();
-    const startTime = new Date(props.extensions.start_time);
-    const endTime = new Date(props.extensions.end_time);
+    const startTime = new Date(props.startTime);
+    const endTime = new Date(props.endTime);
 
     const formatTime = (date) => {
       const hours = date.getHours().toString().padStart(2, '0');
@@ -205,6 +206,9 @@ export default class EPGRailItems extends Lightning.Component {
   }
 
   _handleEnter() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
     if (this.selectEPGTimeout) {
       clearTimeout(this.selectEPGTimeout);
       this.selectEPGTimeout = null;
@@ -216,9 +220,10 @@ export default class EPGRailItems extends Lightning.Component {
       this.fireAncestors('$unpunchHole');
 
       Router.navigate(ROUTES.PLAYER, {
-        videoUrl: this._props.content.src,
+        videoUrl: this._props.src,
         duration: 0,
         videoType: VIDEO_TYPES.STREAM_NOW,
+        shouldSaveProgress: false,
       });
     }, 500);
   }

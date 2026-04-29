@@ -1,5 +1,5 @@
 import { Advertising, Device, Metrics } from '@firebolt-js/sdk';
-import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, LOG_LEVEL } from '../constants/globalConstants';
 import { getTitanSDK } from '@titan-os/sdk';
 
 let deviceInfo = {};
@@ -28,15 +28,17 @@ const extractPhilipsModel = () => {
   }
 };
 
-const getTizenInfo = () => ({
+const getTizenInfo = () => {
   //Requires <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script> for older tizen OS versions
-  serialNumber: webapis.adinfo.getTIFA(),
-  model: webapis.productinfo.getModel(),
-  brand: 'samsung',
-  os: 'Tizen',
-  osVersion: webapis.tvinfo.getVersion(),
-  macAddress: webapis.network.getMac(),
-});
+  return {
+    serialNumber: webapis.adinfo.getTIFA(),
+    model: webapis.productinfo.getModel(),
+    brand: 'samsung',
+    os: 'Tizen',
+    osVersion: webapis.tvinfo.getVersion(),
+    macAddress: webapis.network.getMac(),
+  };
+};
 
 const getHisenseInfo = () => {
   const hisenseDeviceInfo = window.Hisense_GetDeviceInfo
@@ -70,6 +72,9 @@ const getHisenseInfo = () => {
 };
 
 const getWebOSInfo = async () => {
+  // Requires next scripts to be added in index.html
+  // <script src="./webOSTVjs-1.2.10/webOSTV-dev.js" charset="UTF-8"></script>
+  // <script src="./webOSTVjs-1.2.10/webOSTV.js" charset="UTF-8"></script>
   if (!webOS) {
     console.error('webOS scripts not loaded');
     return getWebInfo();
@@ -125,7 +130,6 @@ const getWebOSInfo = async () => {
       method: 'deviceid/getIDs',
       parameters: { idType: ['LGUDID'] },
       onSuccess: (response) => {
-        console.log('Advertising ID:', response.idList[0].idValue);
         resolve({ serialNumber: response.idList[0].idValue });
       },
       onFailure: function (error) {
@@ -141,8 +145,6 @@ const getWebOSInfo = async () => {
     deviceOsVersion,
     deviceSerialNumber,
   ]);
-
-  console.log(response);
 
   return response.reduce((acc, info) => ({ ...acc, ...info }), {});
 };
@@ -254,14 +256,17 @@ const getMetrologicalInfo = async () => {
     try {
       serialNumber = (await Advertising.advertisingId()).ifa;
     } catch (e) {
-      console.log(e);
+      Metrics.error(
+        Metrics.ErrorType.RESTRICTION,
+        e.status,
+        'Advertising id retrieval failed',
+        false
+      );
     }
 
     !serialNumber && (serialNumber = generateRandomUUID());
     localStorage.setItem(LOCAL_STORAGE_KEYS.METROLOGICAL_DEVICE_ID, serialNumber);
   }
-
-  console.log(serialNumber);
 
   let brand, model, os, versionInfo;
   try {
@@ -276,10 +281,8 @@ const getMetrologicalInfo = async () => {
     os = deviceInfo[2];
     versionInfo = deviceInfo[3];
   } catch (e) {
-    console.log(e);
+    Metrics.error(Metrics.ErrorType.RESTRICTION, e.status, 'Device info retrieval failed', false);
   }
-
-  console.log(brand, model, os, versionInfo);
 
   const osVersion = versionInfo ? versionInfo.os.readable.slice(-5) : 'unknown';
 
@@ -565,6 +568,12 @@ export const eventTrackPayload = (event, id, seriesID) => {
       console.error('event tracking object not attched', error);
     }
   } catch (error) {
+    const deviceInfo = getDeviceInfo();
+
+    LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+      message: 'w4track script not loaded',
+      error,
+    });
     const deviceType = getDeviceType();
     deviceType === 'metrological' &&
       Metrics.error(

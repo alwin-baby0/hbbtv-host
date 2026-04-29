@@ -1,6 +1,7 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
-import { CARD_TYPES } from '../../constants/globalConstants';
+import { CARD_SIZES, CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
@@ -52,13 +53,40 @@ export default class HorizontalContainer extends Lightning.Component {
       this._props.items.push(item);
       this.Items.childList.a(item);
     });
-    this.stage.update();
+
+    if (items[0].type.name === 'HeroRailItem') {
+      this._props.w = (CARD_SIZES.HERO?.width + 20) * this._props.items.length;
+
+      this.patch({
+        w: this._props.w,
+      });
+      this._props.railWidth = 1760;
+    }
+
+    if (this._props.page && this._props.seasonId) {
+      this._props.w = (CARD_SIZES.LANDSCAPE?.width + 20) * this._props.items.length;
+
+      this.patch({
+        w: this._props.w,
+      });
+      this._props.railWidth = 1760;
+    }
+
+    setTimeout(() => this.stage.update(), 200);
   }
 
   _setFocusedIndex(newIndex) {
     this._focusedIndex = clamp(newIndex, 0, this._props.items.length - 1);
     this._reCalibrateScroll();
-    this.fireAncestors('$horizontalContainerIndexChange', this._focusedIndex, this._scrollPosition);
+    this.fireAncestors(
+      '$horizontalContainerIndexChange',
+      this._focusedIndex,
+      this._scrollPosition,
+      this._props.page && this._props.page + 1,
+      this._props.seasonId && this._props.seasonId,
+      this._props.seriesId && this._props.seriesId
+    );
+    this._focusedIndex === this.Items.children.length - 1 && this._props.page++;
   }
 
   set props(props) {
@@ -68,10 +96,9 @@ export default class HorizontalContainer extends Lightning.Component {
     const { cardType, targetIndex, wrap } = rest;
 
     if (railTitle && railTitle !== '') {
-      const { h, flexItem } = rest;
+      const { h } = rest;
       this.patch({
         h: h + 95,
-        flexItem: flexItem,
         Title: {
           x: 9,
           y: 10,
@@ -88,11 +115,15 @@ export default class HorizontalContainer extends Lightning.Component {
         },
       });
     } else {
-      this.patch({ ...rest, Items: { h: rest.h } });
+      this.patch({
+        ...rest,
+        h: this._props.cardType !== CARD_TYPES.EPG_CARD_ITEM ? rest.h + 50 : rest.h,
+        Items: { h: rest.h },
+      });
     }
 
     this.patch({
-      flex: { wrap },
+      flex: { wrap: wrap },
       w: this._props.w,
     });
 
@@ -153,11 +184,11 @@ export default class HorizontalContainer extends Lightning.Component {
         isChildLive = startTime < currentTime && currentTime < endTime;
       }
 
-      const containerFinalWidth = this._props.railWidth ? this._props.railWidth : this.finalW;
+      const railWidth = this._props.railWidth ? this._props.railWidth : this.finalW;
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
 
-      if (isChildLive && elementW > containerFinalWidth) {
+      if (isChildLive && elementW > railWidth) {
         return;
       } else if (elementX < -this._scrollPosition) {
         // paddingOffset is used to offset first item in each
@@ -168,8 +199,8 @@ export default class HorizontalContainer extends Lightning.Component {
           ? -50
           : -10;
         this._scrollPosition = -elementX - paddingOffset;
-      } else if (elementX + elementW > containerFinalWidth - this._scrollPosition) {
-        this._scrollPosition = -(elementX + elementW - containerFinalWidth + 20);
+      } else if (elementX + elementW > railWidth - this._scrollPosition) {
+        this._scrollPosition = -(elementX + elementW - railWidth + 20);
       }
 
       this.Items.smooth = { x: this._scrollPosition };
@@ -177,7 +208,18 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _getFocused() {
+    this.patch({
+      collision: true,
+    });
     return this.Items?.children?.[this._focusedIndex];
+  }
+
+  setCollision(collision) {
+    if (this._props.railType === RAIL_TYPES.EPGS) return;
+
+    this.patch({
+      collision,
+    });
   }
 
   _handleDown() {
@@ -189,6 +231,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleRight() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     const { items } = this._props;
     if (this._focusedIndex < items.length - 1) {
       this.Items.children[this._focusedIndex]._unfocus();
@@ -198,8 +244,11 @@ export default class HorizontalContainer extends Lightning.Component {
       this.fireAncestors(
         '$horizontalContainerIndexChange',
         this._focusedIndex,
-        this._scrollPosition
+        this._scrollPosition,
+        this._props.page && this._props.page + 1,
+        this._props.seasonId && this._props.seasonId
       );
+      this._focusedIndex === this.Items.children.length - 1 && this._props.page++;
     } else {
       return false;
     }
@@ -207,6 +256,10 @@ export default class HorizontalContainer extends Lightning.Component {
   }
 
   _handleLeft() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (this._focusedIndex > 0) {
       this.Items.children[this._focusedIndex]?._unfocus();
       this._focusedIndex -= 1;
@@ -215,8 +268,11 @@ export default class HorizontalContainer extends Lightning.Component {
       this.fireAncestors(
         '$horizontalContainerIndexChange',
         this._focusedIndex,
-        this._scrollPosition
+        this._scrollPosition,
+        this._props.page && this._props.page + 1,
+        this._props.seasonId && this._props.seasonId
       );
+      this._focusedIndex === this.Items.children.length - 1 && this._props.page++;
     } else {
       return false;
     }

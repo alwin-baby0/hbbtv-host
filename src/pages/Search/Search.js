@@ -3,7 +3,7 @@ import KeyboardSearch from '../../components/Keyboard/components/KeyboardSearch'
 import InputField from '../../components/Input/Input';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { constructRails } from '../utils';
-import { HomePageService, SearchService, t } from '../../Services';
+import { HomePageService, SearchService } from '../../Services';
 import { eventTrackPayload } from '../../utils/device';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 import {
@@ -16,6 +16,8 @@ import {
   IMG_PATH,
 } from '../../constants/globalConstants';
 import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const search = {
   items: [],
@@ -90,14 +92,14 @@ export default class Search extends Lightning.Component {
       VODWrapper: {
         zIndex: 3,
         x: 600,
-        y: 160,
+        y: 100,
         w: 1760,
         h: 1080,
         clipping: true,
         visible: true,
         VODSection: {
           x: 20,
-          y: 0,
+          y: 20,
           w: 1760,
           h: 1080,
           type: VerticalContainer,
@@ -106,6 +108,7 @@ export default class Search extends Lightning.Component {
           props: {
             parentState: 'VODSection',
             enableScroll: false,
+            page: ROUTES.SEARCH,
           },
         },
       },
@@ -154,14 +157,6 @@ export default class Search extends Lightning.Component {
     return this.tag('VODSection');
   }
 
-  get _Content() {
-    return this.tag('InputWrapper');
-  }
-
-  get _Spinner() {
-    return this.tag('Spinner');
-  }
-
   get _Input() {
     return this.tag('Input');
   }
@@ -170,19 +165,15 @@ export default class Search extends Lightning.Component {
     return this.tag('Keyboard');
   }
 
-  get _SearchLabel() {
-    return this.tag('SearchLabel');
-  }
-
-  get _SearchQueries() {
-    return this.tag('SearchQueries');
-  }
-
   get _Queries() {
     return this.tag('Queries');
   }
 
   _handleKey(key) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (this.numberKeys.includes(key.key)) {
       this.$onSoftKey(key);
     }
@@ -269,9 +260,9 @@ export default class Search extends Lightning.Component {
     });
 
     if (inputValue.length > 2) {
-      SearchService.getSearch(inputValue, '').then((data) => {
+      SearchService.getSearch(inputValue).then((data) => {
         if (data?.items) {
-          data.items && this.$changedVODGenre(data);
+          data.items && this.$changedVODGenre({ ...data, railTitle: `Search for: ${inputValue}` });
         }
       });
 
@@ -302,6 +293,7 @@ export default class Search extends Lightning.Component {
         props: {
           items: search.items,
           enableScroll: rows.length > 2,
+          h: 960,
         },
         text: {
           text: '',
@@ -309,8 +301,10 @@ export default class Search extends Lightning.Component {
       });
     } else {
       this._VODSection.patch({
+        y: 65,
         text: {
           text: t(TRANSLATIONS.NO_RESULTS),
+          h: 100,
         },
         props: {
           items: [],
@@ -374,6 +368,10 @@ export default class Search extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -392,12 +390,20 @@ export default class Search extends Lightning.Component {
         _extended = true;
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Keyboard');
         }
 
@@ -443,7 +449,7 @@ export default class Search extends Lightning.Component {
           this._extended = this._VODSection._focusedIndex > 0;
           this.patch({
             VODWrapper: {
-              h: 1920,
+              h: 1080,
             },
           });
         }
@@ -461,6 +467,9 @@ export default class Search extends Lightning.Component {
               },
               VODSection: {
                 h: 795,
+                props: {
+                  y: 125,
+                },
               },
             });
           }
@@ -474,7 +483,7 @@ export default class Search extends Lightning.Component {
           }
         }
 
-        $verticalContainerIndexChange(index) {
+        $verticalContainerIndexChange() {
           this.correctContainerSize();
         }
       },
@@ -485,6 +494,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
@@ -495,6 +508,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._VODSection.Items.children.length > 0 && this._VodWrapper.visible) {
             this._setState('VODSection');
           } else {
@@ -503,6 +520,10 @@ export default class Search extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Queries');
         }
       },
@@ -513,10 +534,18 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('Keyboard');
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._VODSection.Items.children.length > 0 && this._VodWrapper.visible) {
             this._setState('VODSection');
           } else {

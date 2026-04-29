@@ -5,12 +5,11 @@ import {
   IMG_PATH,
   ROUTES,
   TRANSLATIONS,
-  VISIBLE_SPORT_COUNTRIES,
-  FILTER_TYPES,
+  LOCAL_STORAGE_KEYS,
+  VOD_PREVIEW_TYPES,
 } from '../../../../constants/globalConstants';
 import SidebarItem from './SidebarItem';
-import { t } from '../../../../Services';
-import { CountryService } from '../../../../Services';
+import { t } from '../../../../utils';
 import HorizontalContainer from '../../../HorizontalContainer/HorizontalContainer';
 
 export default class SidebarItems extends Lightning.Component {
@@ -51,8 +50,8 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   async _updateFocus() {
-    const location = await CountryService.getCountry();
-    const visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());
+    const visibleSport = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS)).navigation
+      .showSports;
     const activeHash = Router.getActiveHash();
 
     if (activeHash.includes('filterPage') && activeHash.includes('movie')) {
@@ -73,8 +72,8 @@ export default class SidebarItems extends Lightning.Component {
   }
 
   async _active() {
-    const location = await CountryService.getCountry();
-    this._visibleSport = VISIBLE_SPORT_COUNTRIES.includes(location.data.country.toLowerCase());
+    const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS));
+    this._visibleSport = settings.navigation.showSports;
 
     // setTimeout is used to give time for url hash to change before asign the right one
     setTimeout(() => {
@@ -87,13 +86,13 @@ export default class SidebarItems extends Lightning.Component {
       {
         id: 1,
         label: t(TRANSLATIONS.MOVIES),
-        route: `${ROUTES.VOD}/${FILTER_TYPES.MOVIES}`,
+        route: `${ROUTES.VOD}/${VOD_PREVIEW_TYPES.MOVIES}`,
         icon: '',
       },
       {
         id: 2,
         label: t(TRANSLATIONS.SERIES),
-        route: `${ROUTES.VOD}/${FILTER_TYPES.SERIES}`,
+        route: `${ROUTES.VOD}/${VOD_PREVIEW_TYPES.SERIES}`,
         icon: '',
       },
     ];
@@ -103,7 +102,7 @@ export default class SidebarItems extends Lightning.Component {
             {
               id: 3,
               label: t(TRANSLATIONS.SPORT),
-              route: `${ROUTES.VOD}/${FILTER_TYPES.SPORTS}`,
+              route: `${ROUTES.VOD}/${VOD_PREVIEW_TYPES.SPORTS}`,
               icon: '',
             },
             { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },

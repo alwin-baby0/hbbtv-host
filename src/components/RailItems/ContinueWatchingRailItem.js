@@ -5,6 +5,7 @@ import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
 import ProgressBar from '../../pages/Player/components/ProgressBar/ProgressBar';
+import { didomiVisible } from '../../App';
 
 export default class ContinueWatchingRailItem extends FocusableItem {
   _props = {
@@ -55,20 +56,32 @@ export default class ContinueWatchingRailItem extends FocusableItem {
           visible: false,
           props: {
             width: CARD_SIZES.CONTINUE_WATCHING.width - 40,
+            height: 7,
             flexItem: {
               marginLeft: 20,
               marginRight: 20,
             },
-            progressColor: Colors(colors.focus).get(),
+            progressColor: colors.focus,
             backgroundBarColor: colors.unfocus,
+            alpha: 0.6,
+          },
+        },
+        Title: {
+          h: 45,
+          w: 273,
+          y: -20,
+          text: {
+            text: 'Title',
+            fontFace: 'Montserrat-Regular',
+            fontSize: 18,
+            lineHeight: 22,
+            maxLines: 1,
+            wordWrapWidth: 273,
+            maxLinesSuffix: '...',
           },
         },
       },
     };
-  }
-
-  get _LandscapeImage() {
-    return this.tag('LandscapeImage');
   }
 
   get _ProgressBar() {
@@ -79,9 +92,14 @@ export default class ContinueWatchingRailItem extends FocusableItem {
     return this.tag('PlayButton');
   }
 
+  get Title() {
+    return this.tag('Title');
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, placeholderSrc, enableProgressBar } = this._props;
+    const { imageSrc, radius, placeholderSrc, enableProgressBar, itemTitle, duration, position } =
+      this._props;
 
     this.setProps({
       width: 385,
@@ -90,14 +108,27 @@ export default class ContinueWatchingRailItem extends FocusableItem {
 
     this._PlayButton.visible = enableProgressBar;
     this._ProgressBar.visible = enableProgressBar;
+    enableProgressBar && this._ProgressBar.progress(position / duration);
 
-    this._LandscapeImage.patch({
-      props: {
-        width: CARD_SIZES.CONTINUE_WATCHING.image_width,
-        height: CARD_SIZES.CONTINUE_WATCHING.image_height,
-        imageSrc: imageSrc,
-        placeholderSrc: placeholderSrc,
-        radius: radius,
+    this.patch({
+      Wrapper: {
+        Border: {
+          LandscapeImage: {
+            props: {
+              width: CARD_SIZES.CONTINUE_WATCHING.image_width,
+              height: CARD_SIZES.CONTINUE_WATCHING.image_height,
+              imageSrc: imageSrc,
+              placeholderSrc: placeholderSrc,
+              radius: radius,
+            },
+          },
+        },
+        Title: {
+          ...(!enableProgressBar && { y: 20 }),
+          text: {
+            text: itemTitle,
+          },
+        },
       },
     });
   }
@@ -111,6 +142,9 @@ export default class ContinueWatchingRailItem extends FocusableItem {
   }
 
   _handleEnter() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
     const { callback } = this._props;
     callback();
   }

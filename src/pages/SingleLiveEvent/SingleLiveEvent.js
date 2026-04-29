@@ -4,8 +4,10 @@ import GalleryItem from '../../components/GalleryItem/GalleryItem';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
-import { CMPService, t } from '../../Services';
 import { EVENT_NAMES, IMG_PATH, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
+import { checkCMP } from '../../utils';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
 
@@ -58,18 +60,23 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   set props(props) {
-    // Assuming dateRange[0] is the start date and dateRange[1] is the end date
-    // dateRange is in seconds
-    const startDate = props.galleryItem.dateRange[0] * 1000;
-    const endDate = props.galleryItem.dateRange[1] * 1000;
-    const currentDate = new Date().getTime();
+    this._props = { ...this._props, ...props };
+    this._render();
+  }
+
+  _render() {
+    const currentTime = new Date().getTime(); //in ms
+    let listSchedule = this._props.galleryItem.list_schedule;
+
+    let upcomingSchedule = listSchedule.filter((event) => event.end.timestamp * 1000 > currentTime);
+    const startTime = upcomingSchedule?.[0]?.start?.timestamp * 1000;
+    const endTime = upcomingSchedule?.[0]?.end?.timestamp * 1000;
 
     this._Column.props = {
       items: [],
       parentState: 'Items',
     };
 
-    this._props = { ...this._props, ...props };
     const { galleryItem, fallbackImage } = this._props;
 
     this._HeroSection.patch({
@@ -79,13 +86,18 @@ export default class SingleLiveEvent extends Lightning.Component {
         height: 883,
         yPos: 100,
         parentState: 'HeroSection',
-        startDate,
+        startTime,
+        endTime,
+        badgeText: galleryItem.badgeText,
       },
     });
 
     //Hide Button
-    if (currentDate >= startDate && currentDate <= endDate) {
+    if (currentTime >= startTime && currentTime <= endTime) {
       this._HeroSection.patch({
+        props: {
+          enabled: true,
+        },
         Info: {
           GalleryButton: {
             type: Button,
@@ -97,6 +109,7 @@ export default class SingleLiveEvent extends Lightning.Component {
               buttonIcon: Utils.asset(IMG_PATH.PLAY_BTN),
               width: 400,
               height: 78,
+              enabled: true,
             },
             visible: true,
           },
@@ -125,20 +138,12 @@ export default class SingleLiveEvent extends Lightning.Component {
     }
   }
 
-  async _active() {
-    if (!this._props.cmpShown) {
-      await CMPService.initialFetch();
-      const expireTimeInMS = CMPService.cmpData?.consent?.expire.timestamp;
-      const currentTimeInMS = Math.floor(Date.now() / 1000);
+  $updateEvent() {
+    this._render();
+  }
 
-      if (expireTimeInMS === 0 || currentTimeInMS > expireTimeInMS) {
-        Router.navigate(
-          ROUTES.CMP,
-          { movieId: this._props.galleryItem.id, url: ROUTES.EVENT_DETAILS },
-          false
-        );
-      }
-    }
+  async _active() {
+    checkCMP();
 
     const { galleryItem } = this._props;
 
@@ -151,10 +156,6 @@ export default class SingleLiveEvent extends Lightning.Component {
 
   get _HeroSection() {
     return this.tag('HeroSection');
-  }
-
-  get _HeroSectionInfo() {
-    return this.tag('HeroSection.Info');
   }
 
   get _SeriesWrapper() {
@@ -170,6 +171,10 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   _handleBack(e) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (Router.isNavigating()) {
       return;
     }
@@ -207,26 +212,47 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('HeroSection');
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('HeroSection');
         }
       },
       class HeroSection extends this {
         _getFocused() {
-          this._SeriesWrapper.patch({
-            y: 0,
+          this.patch({
+            BackButton: {
+              y: 30,
+            },
+            SeriesWrapper: {
+              y: 0,
+            },
           });
           return this._HeroSection;
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('BackButton');
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._Column.Items.children.length > 0) {
             this._setState('Items');
           } else {
@@ -267,6 +293,9 @@ export default class SingleLiveEvent extends Lightning.Component {
             });
           } else {
             this.patch({
+              BackButton: {
+                y: -180,
+              },
               SeriesWrapper: {
                 y: -140,
                 h: 1080,
@@ -279,6 +308,10 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('HeroSection');
         }
       },

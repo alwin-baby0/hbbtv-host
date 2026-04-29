@@ -1,11 +1,29 @@
-import { LOCAL_STORAGE_KEYS } from '../../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
+import { parseVodPlaylists } from '../../../Models';
 import { DetailService, UserService } from '../../../Services';
 import { constructRails } from '../../utils';
 
-export default async function (page, { seriesId, cmpShown }) {
+export default async function (page, { seriesId, seasonId, episodeId, title, cmpShown }) {
+  const episodeTitle = ''; //title was here
+
+  if (episodeId) {
+    localStorage.setItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL, episodeId);
+  }
+
   let galleryItemSingleEp;
-  let galleryItemLastPlayedEp;
   let ssaiLastEp;
+  let position = 0;
+  let lastPlayedEpisodeNumber;
+  let lastPlayedSeasonNumber;
+  let lastPlayedEpisodeUrl;
+  let lastPlayedEpisodeTitle;
+  let lastPlayedSeriesId;
+  let lastPlayedEpisodeDuration;
+
+  let seasonTitle = '';
+  let seasonNumberPlusOne = '';
+  let seasonFirstEpUrl = null;
+  let seasonFirstEpTitle = '';
 
   const hash = window.location.hash;
   const queryString = hash.split('?')[1];
@@ -15,72 +33,83 @@ export default async function (page, { seriesId, cmpShown }) {
     galleryItemSingleEp = await DetailService.getMovie(pathname.episodeId);
   }
 
-  const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(seriesId);
+  const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(
+    seriesId,
+    localStorage.getItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL)
+  );
 
-  const updatedSeasons = seasons.map((season) => {
-    return {
-      ...season,
-      items: season.items.map((episode) => {
-        const index = episode.title.indexOf(' - S');
-        episode.title = episode.title.substring(index + 3, episode.title.length);
-
-        return episode;
-      }),
-    };
-  });
-
-  let favorited = false;
-
-  if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
-    const response = await UserService.getFavorites();
-
-    favorited = response.data.favorites?.some((element) => element.id === seriesId);
-  }
-  const firstEpisodeId = seasons ? +seasons[0].items[0].id : undefined;
-  const firstEpisodeUrl = seasons ? seasons[0].items[0].url : undefined;
-  const firstEpisodeTitle = seasons ? updatedSeasons[0].items[0].title : undefined;
-
-  const lastPlayedEpisode = seasons
-    ? updatedSeasons.map((season) => {
-        const newSeason = season.items.filter(
-          (episode) => episode.id === galleryItem.lastPlayedId
-        )[0];
-
-        return newSeason;
-      })[0]
+  const seasonNumber = seasonId
+    ? seasons.indexOf(
+        seasons.filter((season) => {
+          if (season.seasonId === seasonId) return true;
+        })[0]
+      )
     : undefined;
 
-  if (galleryItem?.lastPlayedId) {
-    galleryItemLastPlayedEp = await DetailService.getMovie(galleryItem?.lastPlayedId);
-    ssaiLastEp = galleryItemLastPlayedEp?.ssai;
+  if (seasonId && !localStorage.getItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL)) {
+    //if there is seasonId and not episodeId, it is type of season
+    seasonNumberPlusOne = seasonNumber + 1;
+    seasonTitle = galleryItem.title + ` - S${seasonNumberPlusOne}`;
+    const seasonFirstEp = seasons.find((season) => season.seasonId === seasonId);
+    seasonFirstEpUrl = seasonFirstEp?.items?.[0]?.epFromSeasonUrl;
+    seasonFirstEpTitle = seasonFirstEp?.items?.[0]?.title;
   }
 
-  let ssai;
+  const episodeNumber =
+    seasonNumber && episodeId
+      ? seasons[seasonNumber].items.indexOf(
+          seasons[seasonNumber].items.filter((episode) => {
+            if (episode.id === episodeId) return true;
+          })[0]
+        )
+      : undefined;
 
-  if (galleryItemSingleEp) {
-    ssai = galleryItemSingleEp.ssai || undefined;
-  } else {
-    ssai = seasons ? seasons[0].items[0].ssai : undefined;
+  if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {
+    const resProgress = await UserService.getSeriesProgress(seriesId);
+    position = resProgress.data?.progress?.position;
+    lastPlayedEpisodeNumber = resProgress.data?.progress?.episode_id;
+    lastPlayedSeasonNumber = resProgress.data?.progress?.season_id;
+    lastPlayedEpisodeTitle = resProgress.data?.last_episode?.title || '';
+    lastPlayedEpisodeUrl = resProgress.data?.last_episode?.files?.[0]?.url || galleryItem.url || '';
+    lastPlayedSeriesId = resProgress.data?.progress?.video_id;
+    lastPlayedEpisodeDuration = resProgress.data?.last_episode?.duration || 0;
+  }
+
+  let seriesVODS;
+  if (galleryItem?.playlists) {
+    const parsedVODS = galleryItem.playlists.map((playlist) => parseVodPlaylists(playlist));
+    seriesVODS = constructRails(parsedVODS, ROUTES.VOD);
   }
 
   page.props = {
-    sectionTitle: seasons[0]?.sectionTitle,
+    sectionTitle: seasons[seasonId ? seasonId : 0]?.sectionTitle,
     galleryItem: pathname?.isDeeplinkEpisode ? galleryItemSingleEp : galleryItem,
-    favorited,
+    favorited: galleryItem.favorited,
     duration: seasons.duration,
-    position: galleryItem.position,
-    lastPlayedId: galleryItem.lastPlayedId,
-    lastPlayedUrl: lastPlayedEpisode ? lastPlayedEpisode.url : galleryItem.url,
-    lastPlayedTitle: lastPlayedEpisode ? lastPlayedEpisode.title : undefined,
-    firstEpisodeVideoId: seasons ? firstEpisodeId : undefined,
-    firstEpisodeUrl: firstEpisodeUrl,
-    firstEpisodeTitle: firstEpisodeTitle,
+    position: position,
+    lastPlayedId: lastPlayedSeriesId,
+    lastPlayedUrl: lastPlayedEpisodeUrl,
+    lastPlayedTitle: lastPlayedEpisodeTitle || undefined,
+    lastPlayedEpisodeNumber: lastPlayedEpisodeNumber,
+    lastPlayedSeasonNumber: lastPlayedSeasonNumber,
+    lastPlayedEpisodeDuration: lastPlayedEpisodeDuration,
+    firstEpisodeVideoId: episodeId ?? galleryItem.firstEpisodeId,
+    firstEpisodeUrl: galleryItem.videoUrl || seasonFirstEpUrl || galleryItem.firstEpisodeUrl,
+    firstEpisodeTitle: galleryItem.title || seasonFirstEpTitle || galleryItem.firstEpisodeTitle,
+    firstEpisodeEpisodeNumber: galleryItem.episodeNumber || galleryItem.firstEpisodeEpisodeNumber,
+    firstEpisodeSeasonNumber: galleryItem.seasonNumber || galleryItem.firstEpisodeSeasonNumber,
     seriesId: galleryItem.id,
     isDeeplinkEpisode: pathname.isDeeplinkEpisode,
     ssai: galleryItem.ssai,
     ssaiLastEp: ssaiLastEp,
     cmpShown,
-    allSeasons: updatedSeasons,
+    allSeasons: seasons,
+    playlistVODS: seriesVODS,
+    focusSeasonId: seasonNumber,
+    focusEpisodeId: episodeNumber,
+    episodeTitle: episodeTitle,
+    seasonNumber: seasonNumberPlusOne,
+    seasonTitle,
   };
 
   const seasonsRail = constructRails(seasonTabsParsed);
@@ -88,10 +117,13 @@ export default async function (page, { seriesId, cmpShown }) {
   page._SeasonsBar.props = {
     items: seasonsRail,
     parentState: 'SeasonBar',
+    seasonIndex: seasonNumber,
   };
 
   page._Column.props = {
-    items: constructRails(updatedSeasons[0]),
+    items: [...constructRails(seasons[seasonId ? seasonNumber : 0]), ...seriesVODS],
     parentState: 'Items',
+    seasonIndex: seasonNumber,
+    episodeIndex: episodeNumber,
   };
 }

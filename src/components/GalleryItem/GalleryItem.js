@@ -1,7 +1,7 @@
 import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
 import Button from '../Button/Button';
-import { DetailService, t } from '../../Services';
+import { DetailService } from '../../Services';
 import { capitalizeFirstLetter } from '../../utils';
 import {
   IMG_PATH,
@@ -10,6 +10,9 @@ import {
   VIDEO_TYPES,
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
+import { t } from '../../utils';
+
 export default class GalleryItem extends Lightning.Component {
   _props = {
     enabled: true,
@@ -23,7 +26,7 @@ export default class GalleryItem extends Lightning.Component {
   _hours = 0;
   _minutes = 0;
   _seconds = 0;
-  remaining = 0;
+  remainingUntilStart = 0;
 
   static _template() {
     return {
@@ -39,8 +42,18 @@ export default class GalleryItem extends Lightning.Component {
         y: 0,
         w: 1920,
       },
+      Spinner: {
+        w: 120,
+        h: 120,
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.SPINNER), 120, 120),
+        x: 960,
+        y: 400,
+        mount: 0.5,
+        rotation: 0,
+        zIndex: 3,
+      },
       Info: {
-        zIndex: 2,
+        zIndex: 3,
         x: 110,
         y: 310,
         w: 740,
@@ -80,7 +93,7 @@ export default class GalleryItem extends Lightning.Component {
         },
         Date: {
           visible: false,
-          w: 750,
+          w: 400,
           h: 40,
           y: -47,
           x: 230,
@@ -89,7 +102,7 @@ export default class GalleryItem extends Lightning.Component {
           shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
           Text: {
             h: 30,
-            w: 750,
+            w: 400,
             y: 5,
             text: {
               fontSize: 24,
@@ -108,12 +121,12 @@ export default class GalleryItem extends Lightning.Component {
             marginBottom: 20,
           },
           Summary: {
-            w: 165,
+            w: 650,
             h: 29,
             text: {
               fontSize: 24,
               lineHeight: 30,
-              fontFace: 'Montserrat-SemiBold',
+              fontFace: 'Montserrat-Regular',
             },
           },
           Subtitle: {
@@ -224,7 +237,7 @@ export default class GalleryItem extends Lightning.Component {
           wordWrapWidth: 900,
           text: {
             text: '',
-            fontSize: 59,
+            fontSize: 48,
             fontFace: 'Montserrat-SemiBold',
             maxLines: 2,
           },
@@ -234,10 +247,10 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
             marginBottom: 5,
           },
-          w: 900,
+          w: 1100,
           h: 150,
           text: {
-            wordWrapWidth: 500,
+            wordWrapWidth: 1100,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
@@ -262,9 +275,23 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
           },
         },
-        AuthorizedButtons: {
-          x: 445,
+        TrailerButton: {
+          type: Button,
+          collision: true,
+          x: 485,
           y: -88,
+          props: {
+            width: 250,
+            height: 78,
+          },
+          flexItem: {
+            marginTop: 10,
+          },
+          visible: false,
+        },
+        AuthorizedButtons: {
+          x: 715,
+          y: -176,
           h: 70,
           flex: { direction: 'row' },
           ContinueWatching: {
@@ -286,13 +313,12 @@ export default class GalleryItem extends Lightning.Component {
         },
         Metadata: {
           flex: { direction: 'column' },
-          y: 20,
+          y: -28,
           AgeRating: {
             w: 700,
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -303,8 +329,9 @@ export default class GalleryItem extends Lightning.Component {
               },
             },
             TextValue: {
-              w: 700,
+              w: 750,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -319,7 +346,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -330,8 +356,9 @@ export default class GalleryItem extends Lightning.Component {
               },
             },
             TextValue: {
-              w: 700,
+              w: 750,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -346,7 +373,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -359,6 +385,7 @@ export default class GalleryItem extends Lightning.Component {
             TextValue: {
               w: 700,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -375,7 +402,6 @@ export default class GalleryItem extends Lightning.Component {
             h: 30,
             flex: { direction: 'row', alignItems: 'center' },
             Title: {
-              w: 180,
               h: 90,
               text: {
                 text: '',
@@ -388,6 +414,7 @@ export default class GalleryItem extends Lightning.Component {
             TextValue: {
               w: 700,
               h: 90,
+              flexItem: { marginLeft: 10 },
               text: {
                 text: '',
                 fontSize: 22,
@@ -403,60 +430,88 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   set props(props) {
+    this._Info.visible = true;
+    this._Spinner.visible = false;
     this._props = { ...this._props, ...props };
     const {
       galleryItem,
-      height,
       enabled,
       firstEpisodeVideoId,
       firstEpisodeUrl,
       firstEpisodeTitle,
+      firstEpisodeEpisodeNumber,
+      firstEpisodeSeasonNumber,
       fallbackImage,
       isDeeplinkEpisode,
       seriesId,
       ssai,
       badgeText,
-      startDate,
+      startTime,
+      endTime,
       infoY,
       bgY,
       badgeY,
+      episodeTitle,
+      seasonTitle,
     } = this._props;
 
     const {
       title,
       summary,
-      description,
       buttonLabel,
       url,
       duration,
       videoType,
-      venue,
-      subtitle,
       director,
       cast,
       genre,
       rating,
+      durationString,
+      year,
+      country,
+      imdbScore,
+      eventDate,
+      eventTime,
+      streamUrl,
+      trailerUrl,
     } = galleryItem;
 
-    const titleLength = title.length;
+    const imdbScoreLabeled = `IMDB ${imdbScore}`;
+    let factLine;
 
-    const splitDirector = director && director.split(':');
-    const splitCast = cast && cast.split(':');
+    if (videoType !== 'event') {
+      factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
+    } else {
+      factLine =
+        eventDate && eventTime
+          ? [eventDate, eventTime].join(' | ')
+          : eventDate
+          ? eventDate
+          : eventTime
+          ? eventTime
+          : '';
+    }
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
     const tGenre = t(TRANSLATIONS.GENRE) + ':';
     const tCastTitle = t(TRANSLATIONS.CAST) + ':';
     const tDirTitle = t(TRANSLATIONS.DIRECTOR) + ':';
-    const castText = splitCast && splitCast[1];
-    const dirText = splitDirector && splitDirector[1];
+    const castText = cast ? cast.join(', ') : '';
+    const dirText = director
+      ? Array.isArray(director)
+        ? director.join(', ')
+        : director
+      : undefined;
+    const genreText = genre ? (Array.isArray(genre) ? genre.join(', ') : genre) : undefined;
 
-    if (videoType === 'application/x-mpegURL') {
-      const targetTimestamp = startDate;
-      this.remaining = targetTimestamp - Date.now();
+    if (videoType === 'event') {
+      const targetTimestamp = startTime;
+      const endTimestamp = endTime;
+      const eventEndsIn = endTimestamp - Date.now();
+      this.remainingUntilStart = targetTimestamp - Date.now();
+      const shouldCallUpdateInitially = this.remainingUntilStart > 0;
 
-      console.log('asdf start, remain', startDate, this.remaining);
-
-      const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+      const totalSeconds = Math.max(0, Math.floor(this.remainingUntilStart / 1000));
 
       this._days = Math.floor(totalSeconds / (24 * 60 * 60));
       this._hours = Math.floor((totalSeconds % (24 * 60 * 60)) / 3600);
@@ -465,13 +520,28 @@ export default class GalleryItem extends Lightning.Component {
 
       if (!this._countDownInterval) {
         this._countDownInterval = setInterval(() => {
-          this.remaining -= 1000;
-          if (this.remaining <= 0) {
-            this.remaining = 0;
+          this.remainingUntilStart -= 1000;
+          if (this.remainingUntilStart <= 0) {
+            this.remainingUntilStart = 0;
             clearInterval(this._countDownInterval);
+            this._countDownInterval = null;
+            if (shouldCallUpdateInitially) {
+              this.fireAncestors('$updateEvent', 'remaining = 0');
+            }
           }
           this.updateUI();
         }, 1000);
+      }
+
+      if (this._endAlarm) {
+        clearTimeout(this._endAlarm);
+        this._endAlarm = null;
+      }
+      if (eventEndsIn > 0 && !this._endAlarm) {
+        this._endAlarm = setTimeout(() => {
+          this._endAlarm = null;
+          this.fireAncestors('$updateEvent', 'event ended');
+        }, eventEndsIn);
       }
     }
 
@@ -483,20 +553,12 @@ export default class GalleryItem extends Lightning.Component {
       },
     });
 
-    if (videoType !== 'application/x-mpegURL') {
-      galleryItem.summary &&
-        this._Summary?.patch({
-          text: {
-            text: summary,
-          },
-        });
-      galleryItem.subtitle &&
-        this._Subtitle?.patch({
-          text: {
-            text: subtitle,
-          },
-        });
-
+    if (videoType !== 'event') {
+      this._Summary?.patch({
+        text: {
+          text: factLine,
+        },
+      });
       this._Info.patch({
         Date: undefined,
         Venue: undefined,
@@ -530,10 +592,10 @@ export default class GalleryItem extends Lightning.Component {
             },
             TextValue: {
               text: {
-                text: genre,
+                text: genreText,
               },
             },
-            visible: genre,
+            visible: genre?.length,
           },
           Director: {
             Title: {
@@ -546,7 +608,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: dirText,
               },
             },
-            visible: splitDirector[1] ? true : false,
+            visible: dirText,
           },
           Cast: {
             Title: {
@@ -559,7 +621,7 @@ export default class GalleryItem extends Lightning.Component {
                 text: castText,
               },
             },
-            visible: splitCast[1] ? true : false,
+            visible: cast?.length,
           },
         },
       });
@@ -574,44 +636,49 @@ export default class GalleryItem extends Lightning.Component {
           },
         },
         Date: {
-          visible: true,
+          visible: factLine ? true : false,
           Text: {
             text: {
-              text: summary,
+              text: factLine,
             },
           },
         },
-        Countdown: {
-          visible: this.remaining > 0,
-          Days: {
-            Number: {
-              text: {
-                text: this._days,
+      });
+      setTimeout(() => {
+        //this patch is delayed on purpose, without it countdown is not properly displayed
+        this._Info.patch({
+          Countdown: {
+            visible: this.remainingUntilStart > 0,
+            Days: {
+              Number: {
+                text: {
+                  text: this._days,
+                },
+              },
+            },
+            Hours: {
+              Number: {
+                text: {
+                  text: this._hours,
+                },
+              },
+            },
+            Mins: {
+              Number: {
+                text: {
+                  text: this._minutes,
+                },
+              },
+            },
+            Sec: {
+              Number: {
+                text: {
+                  text: this._seconds,
+                },
               },
             },
           },
-          Hours: {
-            Number: {
-              text: {
-                text: this._hours,
-              },
-            },
-          },
-          Mins: {
-            Number: {
-              text: {
-                text: this._minutes,
-              },
-            },
-          },
-          Sec: {
-            Number: {
-              text: {
-                text: this._seconds,
-              },
-            },
-          },
-        },
+        });
       });
     }
 
@@ -642,16 +709,47 @@ export default class GalleryItem extends Lightning.Component {
       Info: {
         Title: {
           text: {
-            text: title,
+            text: episodeTitle || seasonTitle || title,
+            fontSize: bgY !== 0 ? 59 : 48,
+            wordWrapWidth: bgY !== 0 ? 900 : 1100,
           },
         },
         Description: {
           text: {
-            text: description,
+            text: summary,
+            wordWrapWidth: bgY !== 0 ? 500 : 1100, //500 is for hero only
           },
         },
       },
     });
+
+    this._TrailerButton &&
+      (() => {
+        if (trailerUrl) {
+          const callback = () => {
+            Router.navigate(ROUTES.PLAYER, {
+              videoUrl: trailerUrl,
+              shouldSaveProgress: false,
+            });
+          };
+
+          const btnIcon = Utils.asset(IMG_PATH.PLAY_BTN);
+
+          this._TrailerButton.patch({
+            props: {
+              buttonLabel: t(TRANSLATIONS.TRAILER)?.toUpperCase(),
+              callback: callback,
+              buttonIcon: btnIcon,
+            },
+            visible: true,
+          });
+        } else {
+          this._AuthorizedButtons.patch({
+            y: -88,
+            x: 445,
+          });
+        }
+      })();
 
     this._GalleryButton &&
       (() => {
@@ -673,16 +771,38 @@ export default class GalleryItem extends Lightning.Component {
               });
               return;
             }
+            if (streamUrl) {
+              Router.navigate(ROUTES.PLAYER, {
+                videoUrl: streamUrl,
+                shouldSaveProgress: false,
+              });
+              return;
+            }
+
+            this._Info.visible = false;
+            this._Spinner.visible = true;
+            this._Spinner
+              .animation({
+                duration: 2, // animation duration in seconds
+                repeat: -1, // repeat indefinitely
+                actions: [
+                  { p: 'rotation', v: { 0: 0, 1: 10 * Math.PI } }, // rotate 360 degrees
+                ],
+              })
+              .start();
+
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
                 Router.navigate(ROUTES.PLAYER, {
-                  videoUrl: result[0]?.content?.src ?? firstEpisodeUrl,
+                  videoUrl: result?.entry[0]?.files?.url ?? firstEpisodeUrl,
                   episodeTitle: firstEpisodeTitle,
                   videoId: firstEpisodeVideoId,
+                  episodeNumber: firstEpisodeEpisodeNumber,
+                  seasonNumber: firstEpisodeSeasonNumber,
                   duration: duration,
                   videoType: VIDEO_TYPES.SERIES,
                   seriesID: seriesId,
-                  ssai: result[0].extensions?.ssai ?? ssai,
+                  ssai: result?.entry[0]?.extensions?.ssai ?? ssai,
                 });
               }
             );
@@ -703,7 +823,7 @@ export default class GalleryItem extends Lightning.Component {
   }
 
   updateUI() {
-    const totalSeconds = Math.max(0, Math.floor(this.remaining / 1000));
+    const totalSeconds = Math.max(0, Math.floor(this.remainingUntilStart / 1000));
     const days = Math.floor(totalSeconds / 86400);
     const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -713,6 +833,7 @@ export default class GalleryItem extends Lightning.Component {
 
     this._Info.patch({
       Countdown: {
+        visible: totalSeconds > 0,
         Days: {
           Number: {
             text: {
@@ -745,32 +866,28 @@ export default class GalleryItem extends Lightning.Component {
     });
   }
 
-  get _GradientOverlay() {
-    return this.tag('GradientOverlay');
-  }
-
   get _Info() {
     return this.tag('Info');
   }
 
-  get _Title() {
-    return this.tag('Title');
+  get _Spinner() {
+    return this.tag('Spinner');
   }
 
   get _Summary() {
     return this.tag('Summary');
   }
 
-  get _Subtitle() {
-    return this.tag('Subtitle');
-  }
-
-  get _Description() {
-    return this.tag('Description');
-  }
-
   get _GalleryButton() {
     return this.tag('GalleryButton');
+  }
+
+  get _TrailerButton() {
+    return this.tag('TrailerButton');
+  }
+
+  get _AuthorizedButtons() {
+    return this.tag('AuthorizedButtons');
   }
 
   get _ContinueWatching() {
@@ -785,22 +902,8 @@ export default class GalleryItem extends Lightning.Component {
     return this.tag('BackgroundImage');
   }
 
-  get _SummSub() {
-    return this.tag('SummSub');
-  }
-
-  get _AgeRating() {
-    return this.tag('AgeRating');
-  }
-  get _Genre() {
-    return this.tag('Genre');
-  }
-
-  get _Director() {
-    return this.tag('Director');
-  }
-  get _Cast() {
-    return this.tag('Cast');
+  _active() {
+    setTimeout(this._setState('GalleryButton'));
   }
 
   _firstActive() {
@@ -826,16 +929,25 @@ export default class GalleryItem extends Lightning.Component {
     switch (buttonName) {
       case 'GalleryButton':
         this._setState('GalleryButton');
+        this._TrailerButton.unfocus();
+        this._ContinueWatching._unfocus();
+        this._FavoriteButton._unfocus();
+        break;
+      case 'TrailerButton':
+        this._setState('TrailerButton');
+        this._GalleryButton._unfocus();
         this._ContinueWatching._unfocus();
         this._FavoriteButton._unfocus();
         break;
       case 'ContinueWatching':
         this._setState('ContinueWatching');
+        this._TrailerButton.unfocus();
         this._GalleryButton._unfocus();
         this._FavoriteButton._unfocus();
         break;
       case 'FavoriteButton':
         this._setState('FavoriteButton');
+        this._TrailerButton.unfocus();
         this._ContinueWatching._unfocus();
         this._GalleryButton._unfocus();
         break;
@@ -848,8 +960,15 @@ export default class GalleryItem extends Lightning.Component {
         _getFocused() {
           return this._GalleryButton;
         }
+
         _handleRight() {
-          if (this._ContinueWatching.alpha > 0) {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._TrailerButton.visible) {
+            this._setState('TrailerButton');
+          } else if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
           } else if (this._FavoriteButton.alpha > 0) {
             this._setState('FavoriteButton');
@@ -858,22 +977,66 @@ export default class GalleryItem extends Lightning.Component {
           }
         }
       },
+
+      class TrailerButton extends this {
+        _getFocused() {
+          return this._TrailerButton;
+        }
+
+        _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._ContinueWatching.alpha > 0) {
+            this._setState('ContinueWatching');
+          } else if (this._FavoriteButton.alpha > 0) {
+            this._setState('FavoriteButton');
+          } else {
+            return false;
+          }
+        }
+
+        _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          this._setState('GalleryButton');
+        }
+      },
       class ContinueWatching extends this {
         _getFocused() {
           return this._ContinueWatching;
         }
 
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._FavoriteButton.alpha > 0) {
             this._setState('FavoriteButton');
           } else return false;
         }
 
         _handleLeft() {
-          this._setState('GalleryButton');
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._TrailerButton.visible) {
+            this._setState('TrailerButton');
+          } else {
+            this._setState('GalleryButton');
+          }
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           return false;
         }
       },
@@ -882,11 +1045,21 @@ export default class GalleryItem extends Lightning.Component {
           return this._FavoriteButton;
         }
         _handleRight() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           return false;
         }
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (this._ContinueWatching.alpha > 0) {
             this._setState('ContinueWatching');
+          } else if (this._TrailerButton.visible) {
+            this._setState('TrailerButton');
           } else {
             this._setState('GalleryButton');
           }

@@ -1,11 +1,39 @@
 import { Metrics } from '@firebolt-js/sdk';
-import { TRANSLATIONS } from '../constants/globalConstants';
-import { t } from '../Services';
-import { getDeviceType } from '../utils/device';
+import { LOG_LEVEL, TRANSLATIONS } from '../constants/globalConstants';
+import { t } from '../utils';
+import { getDeviceInfo, getDeviceType } from '../utils/device';
+import { LoggingService } from '../Services/index.js';
 
 class GalleryItem {
   constructor(data) {
-    const { id, title, content, extensions, media_group, summary, type } = data;
+    const {
+      id,
+      title,
+      files,
+      summary,
+      type,
+      meta,
+      images,
+      schedule,
+      list_schedule,
+      streams,
+      date,
+      time,
+      playlists,
+      user,
+    } = data;
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let dateFormat = '';
+    if (time) {
+      const zeroDate = new Date(date + 'T' + time + 'Z');
+      dateFormat = Intl.DateTimeFormat('en-US', {
+        timeZone: timeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      }).format(zeroDate);
+    }
 
     this.id = id;
 
@@ -13,77 +41,68 @@ class GalleryItem {
     this.summary = summary;
     this.trailerSrc = ''; // this is not returned by backend
     this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
-
     this.type = type;
-    this.trailerUrl = extensions.preview_playback;
+    this.videoType = type;
+    this.videoUrl = files?.[1]?.url || files?.[0]?.url || null;
+    this.trailerUrl = meta && meta.trailer ? meta.trailer : null;
+    this.eventDate = date;
+    this.eventTime = time ? dateFormat : null;
+    this.playlists = playlists || null;
+    this.favorited = user?.isFavorite;
+    this.list_schedule = [];
 
-    this.dateRange = extensions.date_range?.timestamp[0];
-
-    if (content) {
-      this.url = content.src;
-      this.videoType = content.type;
-    }
-
-    if (extensions.ssai) {
-      this.ssai = extensions.ssai;
-    }
-
-    if (extensions.last_played_episode) {
-      this.url = extensions.last_played_episode.hls;
-      this.position = extensions.last_played_episode.position;
-      this.lastPlayedId = extensions.last_played_episode.video_id;
-    }
-
-    if (extensions) {
+    if (meta) {
       const {
-        button_text,
-        description,
-        duration,
-        genre,
-        director,
-        subtitle,
-        first_episode_mp4,
         cast,
-        venue,
-        is_favorite,
-        last_position,
-        trailer,
-        rating,
-      } = extensions;
+        director,
+        genre,
+        ratings,
+        duration,
+        year,
+        country,
+        imdb,
+        first_episode,
+        badges,
+        series,
+      } = meta;
 
-      if (button_text && button_text !== '') {
-        this.buttonLabel = button_text;
+      this.duration = duration?.seconds;
+      this.genre = genre || first_episode?.meta?.genre;
+      this.director = director || first_episode?.meta?.director;
+      this.cast = cast || first_episode?.meta?.cast;
+      this.rating = ratings?.fsk || first_episode?.meta?.rating?.fsk;
+      this.durationString = duration?.string || first_episode?.meta?.duration?.string;
+      this.year = year || first_episode?.meta?.year;
+      this.country = country || first_episode?.meta?.country;
+      this.imdbScore = imdb?.score || first_episode?.meta?.imdb?.score;
+      this.badgeText = badges?.[0]?.label;
+      this.seasonNumber = series?.season;
+      this.episodeNumber = series?.episode;
+
+      if (first_episode) {
+        this.firstEpisodeId = first_episode?.id;
+        this.firstEpisodeUrl = first_episode?.files[0]?.url;
+        this.firstEpisodeTitle = first_episode?.title;
+        this.firstEpisodeSeasonNumber = first_episode?.meta?.series?.season;
+        this.firstEpisodeEpisodeNumber = first_episode?.meta?.series?.episode;
       }
+    }
 
-      if (!this.url) {
-        this.url = first_episode_mp4;
-      }
+    if (schedule) {
+      const { start_time, end_time } = schedule;
+      this.startTime = new Date(start_time).getTime();
+      this.endTime = new Date(end_time).getTime();
+    }
 
-      if (!this.summary || this.summary === '') {
-        const { date, time, venue } = extensions;
-        this.summary = '';
-        if (date) {
-          this.summary += `${extensions.date} - `;
-        }
-        if (time) {
-          this.summary += `${extensions.time} | `;
-        }
-        if (venue) {
-          this.summary += `${extensions.venue}`;
-        }
-      }
+    if (list_schedule) {
+      this.list_schedule = list_schedule;
+    } else if (schedule) {
+      this.list_schedule = Array.isArray(schedule) ? schedule : [schedule];
+    }
 
-      this.description = description;
-      this.duration = duration;
-      this.genre = genre;
-      this.director = director;
-      this.subtitle = subtitle;
-      this.cast = cast;
-      this.venue = venue;
-      this.is_favorite = is_favorite;
-      this.last_position = last_position;
-      this.trailer = trailer;
-      this.rating = rating;
+    if (streams) {
+      const streamUrl = streams?.[0]?.m3u8 || streams?.[1]?.m3u8 || null;
+      this.streamUrl = streamUrl;
     }
 
     this.thumbnails = [];
@@ -91,27 +110,26 @@ class GalleryItem {
     this.portraitPosters = [];
     this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
-    media_group[0]?.media_item?.forEach((item) => {
-      switch (true) {
-        case item.key.includes('thumbnail'): {
-          this.thumbnails.push(item);
-          break;
-        }
-        case item.key.includes('poster_landscape'): {
-          this.landscapePosters.push(item);
-          break;
-        }
-        case item.key.includes('poster_portrait'): {
-          this.portraitPosters.push(item);
-          break;
-        }
-        case item.key.includes('stream_placeholder'): {
-          this.landscapePosters.push(item);
-        }
-        default:
-          break;
-      }
-    });
+    const landscapeKeysOriginal = Object.keys(images.landscape);
+    const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
+
+    landscapeKeys.forEach((item, index) =>
+      this.landscapePosters.push({ key: item, src: images.landscape[landscapeKeysOriginal[index]] })
+    );
+
+    const thumbnailKeysOriginal = Object.keys(images.thumbnail);
+    const thumbnailKeys = thumbnailKeysOriginal.map((item) => `thumbnail_${item}`);
+
+    thumbnailKeys.forEach((item, index) =>
+      this.thumbnails.push({ key: item, src: images.thumbnail[thumbnailKeysOriginal[index]] })
+    );
+
+    const portraitKeysOriginal = Object.keys(images.poster);
+    const portraitKeys = portraitKeysOriginal.map((item) => `poster_portrait_${item}`);
+
+    portraitKeys.forEach((item, index) =>
+      this.portraitPosters.push({ key: item, src: images.poster[portraitKeysOriginal[index]] })
+    );
   }
 
   preloadImages(size) {
@@ -127,6 +145,11 @@ class GalleryItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
+        const deviceInfo = getDeviceInfo();
+        LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+          message: 'Error parsing image',
+          error,
+        });
         const deviceType = getDeviceType();
         deviceType === 'metrological' &&
           Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);

@@ -3,6 +3,7 @@ import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
+import { didomiVisible } from '../../App';
 
 export default class LandscapeRailItem extends FocusableItem {
   _props = {
@@ -35,7 +36,7 @@ export default class LandscapeRailItem extends FocusableItem {
           },
         },
         Title: {
-          h: 40,
+          h: 60,
           flexItem: {
             marginTop: 15,
             marginLeft: 20,
@@ -45,7 +46,7 @@ export default class LandscapeRailItem extends FocusableItem {
             fontFace: 'Montserrat-Bold',
             fontSize: 24,
             lineHeight: 25,
-            maxLines: 1,
+            maxLines: 2,
             maxLinesSuffix: '...',
             wordWrapWidth: 400,
           },
@@ -90,22 +91,12 @@ export default class LandscapeRailItem extends FocusableItem {
     return this.tag('Wrapper');
   }
 
-  get _Title() {
-    return this.tag('Title');
-  }
-
-  get _Description() {
-    return this.tag('Description');
-  }
-
-  get _LandscapeImage() {
-    return this.tag('LandscapeImage');
-  }
-
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { imageSrc, radius, itemTitle, itemDescription, placeholderSrc, itemSummary } =
+    const { imageSrc, radius, itemTitle, placeholderSrc, itemSummary, durationString, year } =
       this._props;
+
+    const durYear = [durationString, year].join(`${durationString && year ? ' | ' : ''}`);
 
     this.setProps({
       width: CARD_SIZES.LANDSCAPE.width,
@@ -131,12 +122,12 @@ export default class LandscapeRailItem extends FocusableItem {
       },
       Description: {
         text: {
-          text: itemDescription || '',
+          text: itemSummary || '',
         },
       },
       Summary: {
         text: {
-          text: itemSummary || '',
+          text: durYear,
         },
       },
     });
@@ -151,6 +142,9 @@ export default class LandscapeRailItem extends FocusableItem {
   }
 
   _handleEnter() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
     const { callback } = this._props;
     callback();
   }

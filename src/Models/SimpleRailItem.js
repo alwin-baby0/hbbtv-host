@@ -1,26 +1,24 @@
 // This class is used as generic class for:
 // Home, Search, Movies, Series, Sports screens rails
 import { Metrics } from '@firebolt-js/sdk';
-import { ROUTES, RAIL_TYPES } from '../constants/globalConstants';
-import { getDeviceType } from '../utils/device';
+import { ROUTES, RAIL_TYPES, LOG_LEVEL } from '../constants/globalConstants';
+import { getDeviceInfo, getDeviceType } from '../utils/device';
+import { LoggingService } from '../Services/index.js';
 
 class SimpleRailItem {
   constructor(data) {
-    const { id, title, type, media_group, summary, extensions } = data;
+    const { id, title, type, summary, images, meta, orientation, duration, progress, files } = data;
 
     this.id = id;
     this.title = title;
-    this.type = type?.value;
+    this.type = type.value ? type.value : type;
     this.summary = summary;
+    this.orientation = orientation;
 
-    if (extensions) {
-      this.description = extensions.description;
-      this.episodeSeriesID = extensions?.series_id;
-      this.duration = extensions?.duration;
-    }
-
-    if (extensions?.ssai) {
-      this.ssai = extensions.ssai;
+    duration && (this.duration = duration);
+    if (progress) {
+      this.progress = progress;
+      this.position = progress.position;
     }
 
     switch (this.type) {
@@ -31,57 +29,89 @@ class SimpleRailItem {
       case RAIL_TYPES.SPORT:
       case RAIL_TYPES.SERIE:
       case RAIL_TYPES.SERIES:
-        if (this.episodeSeriesID) {
-          //case if you are coming from recently watched list
-          this.url = `${ROUTES.SERIES_DETAILS}/${this.episodeSeriesID}`;
-        } else {
-          this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
-        }
+        this.url = `${ROUTES.SERIES_DETAILS}/${this.id}`;
         break;
       case RAIL_TYPES.SHOW:
       case RAIL_TYPES.EVENT:
         this.url = `${ROUTES.EVENT_DETAILS}/${this.id}`;
         break;
+      case RAIL_TYPES.SEASON:
+        this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}/${id}`;
+        this.seriesId = data.series_id;
+        break;
       case RAIL_TYPES.EPISODE:
-        this.url = data.content?.src;
-        this.duration = data.extensions?.duration;
-        this.seriesId = data.seriesId;
+        this.url = `${ROUTES.SERIES_DETAILS}/${data.series_id}/${data.season_id}`;
+        this.seasonId = data.season_id;
+        this.seriesId = data.series_id;
+        break;
+      case RAIL_TYPES.CHANNEL:
+        this.url = `${ROUTES.LIVE}/${this.id}`;
+        break;
+      case RAIL_TYPES.PLAYLIST:
+        this.url = `${ROUTES.COLLECTION}/${this.id}`;
         break;
       default:
         console.warn('unknown rail item type', this.type);
     }
 
+    if (meta) {
+      const { duration, year, series } = meta;
+
+      this.durationString = duration?.string;
+      this.year = year;
+      this.seasonNumber = series?.season || null;
+      this.episodeNumber = series?.episode || null;
+    }
+
+    if (files) {
+      this.epFromSeasonUrl = files?.[0]?.url;
+    }
+
     this.thumbnails = [];
     this.landscapePosters = [];
     this.portraitPosters = [];
+    this.channelImages;
 
-    if (media_group) {
-      media_group[0]?.media_item?.forEach((item) => {
-        switch (true) {
-          case item.key.includes('thumbnail'): {
-            this.thumbnails.push(item);
-            break;
-          }
-          case item.key.includes('poster_landscape'): {
-            this.landscapePosters.push(item);
-            break;
-          }
-          case item.key.includes('poster_portrait'): {
-            this.portraitPosters.push(item);
-            break;
-          }
-          default:
-            break;
-        }
-      });
+    if (images && images.landscape) {
+      const landscapeKeysOriginal = Object.keys(images.landscape);
+      const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
+
+      landscapeKeys.forEach((item, index) =>
+        this.landscapePosters.push({
+          key: item,
+          src: images.landscape[landscapeKeysOriginal[index]],
+        })
+      );
+    }
+
+    if (images && images.thumbnail) {
+      const thumbnailKeysOriginal = Object.keys(images.thumbnail);
+      const thumbnailKeys = thumbnailKeysOriginal.map((item) => `thumbnail_${item}`);
+
+      thumbnailKeys.forEach((item, index) =>
+        this.thumbnails.push({ key: item, src: images.thumbnail[thumbnailKeysOriginal[index]] })
+      );
+    }
+
+    if (images && images.poster) {
+      const portraitKeysOriginal = Object.keys(images.poster);
+      const portraitKeys = portraitKeysOriginal.map((item) => `poster_portrait_${item}`);
+
+      portraitKeys.forEach((item, index) =>
+        this.portraitPosters.push({ key: item, src: images.poster[portraitKeysOriginal[index]] })
+      );
+    }
+
+    if (Array.isArray(images)) {
+      this.channelImages = images[0];
     }
   }
 
   preloadImages(size) {
     const imageUrls = [
-      this.getThumbnailImage(size).src,
-      this.getLandscapePoster(size).src,
-      this.getPortraitPoster(size).src,
+      this.getThumbnailImage(size)?.src,
+      this.getLandscapePoster(size)?.src,
+      this.getPortraitPoster(size)?.src,
     ];
 
     imageUrls.forEach((url) => {
@@ -90,6 +120,11 @@ class SimpleRailItem {
         const image = new Image();
         image.src = urlObj.toString();
       } catch {
+        const deviceInfo = getDeviceInfo();
+        LoggingService.postLog(LOG_LEVEL.ERROR, deviceInfo, {
+          message: 'Error parsing image',
+          error,
+        });
         const deviceType = getDeviceType();
         deviceType === 'metrological' &&
           Metrics.error(Metrics.ErrorType.MEDIA, '400', 'Error parsing image', true);
@@ -100,17 +135,23 @@ class SimpleRailItem {
 
   getThumbnailImage(size) {
     const thumbnail = this.thumbnails.find((thumbnail) => thumbnail.key.includes(size));
-    return thumbnail ?? this.thumbnails[0];
+    return thumbnail
+      ? this.thumbnails[0]
+      : { key: 'applicaster_logo', src: this.channelImages?.applicaster_logo };
   }
 
   getLandscapePoster(size) {
     const poster = this.landscapePosters.find((poster) => poster.key.includes(size));
-    return poster ?? this.landscapePosters[0];
+    return poster
+      ? this.landscapePosters[2]
+      : { key: 'applicaster_logo', src: this.channelImages?.applicaster_logo };
   }
 
   getPortraitPoster(size) {
     const poster = this.portraitPosters.find((poster) => poster.key.includes(size));
-    return poster ?? this.portraitPosters[0];
+    return poster
+      ? this.portraitPosters[2]
+      : { key: 'applicaster_logo', src: this.channelImages?.applicaster_logo };
   }
 }
 

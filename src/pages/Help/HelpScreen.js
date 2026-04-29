@@ -4,7 +4,8 @@ import colors from '../../../reskin/colors.json';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
-import { t } from '../../Services';
+import { t } from '../../utils';
+import { didomiVisible } from '../../App';
 
 const states = ['HelpItems', 'ScrollWrapper'];
 
@@ -108,10 +109,6 @@ export default class HelpScreen extends Lightning.Component {
     return this.tag('Row');
   }
 
-  get _LoadingIndicator() {
-    return this.tag('LoadingIndicator');
-  }
-
   get _ScrollWrapper() {
     return this.tag('ScrollWrapper');
   }
@@ -121,6 +118,10 @@ export default class HelpScreen extends Lightning.Component {
   }
 
   _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
     Router.back();
   }
@@ -136,7 +137,7 @@ export default class HelpScreen extends Lightning.Component {
   }
 
   $changeDescription(index) {
-    const content = this._props.texts[index - 1].map((chunk) => ({
+    const content = this._props.texts[index].map((chunk) => ({
       text: chunk,
       style: {
         alignContent: 'center',
@@ -167,12 +168,20 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           if (!Router.isNavigating()) {
             Router.focusWidget(ROUTES.MENU_WIDGET);
           }
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('ScrollWrapper');
         }
       },
@@ -182,6 +191,10 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
           this._setState('HelpItems');
           return false;
         }

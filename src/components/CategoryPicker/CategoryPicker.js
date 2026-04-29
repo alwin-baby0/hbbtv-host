@@ -1,6 +1,7 @@
 import { Lightning } from '@lightningjs/sdk';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import { CARD_SIZES } from '../../constants/globalConstants';
+import { didomiVisible } from '../../App';
 
 export default class CategoryPicker extends Lightning.Component {
   _props = {
@@ -25,7 +26,7 @@ export default class CategoryPicker extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
-    const { x, y, items, parentState } = this._props;
+    const { x, y, items, parentState, seasonIndex } = this._props;
 
     this.patch({
       x: x,
@@ -45,6 +46,10 @@ export default class CategoryPicker extends Lightning.Component {
         props: { ...(items && items[0].props), parentState },
       },
     });
+
+    if (seasonIndex && seasonIndex !== -1) {
+      this._CaterogyItems._focusedIndex = seasonIndex;
+    }
   }
 
   _getFocused() {
@@ -52,6 +57,10 @@ export default class CategoryPicker extends Lightning.Component {
   }
 
   _handleScroll(event) {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
     if (event.deltaY < 0) {
       this.fireAncestors('$setStateOnScroll', 'Hero');
     }

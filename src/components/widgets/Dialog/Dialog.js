@@ -2,7 +2,7 @@ import { Colors, Lightning, Router } from '@lightningjs/sdk';
 import { Key } from './components/Key';
 import { Row } from '@lightningjs/ui-components';
 import colors from '../../../../reskin/colors.json';
-import { t } from '../../../Services';
+import { t } from '../../../utils';
 import { TRANSLATIONS } from '../../../constants/globalConstants';
 
 export default class Dialog extends Lightning.Component {
