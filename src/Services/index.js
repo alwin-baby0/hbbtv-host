@@ -10,3 +10,4 @@ export * from './AuthorizationService';
 export * from './UserService';
 export * from './DidomiService';
 export * from './LoggingService';
+export * from './InactivityService';

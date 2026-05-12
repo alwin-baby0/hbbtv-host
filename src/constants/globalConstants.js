@@ -262,6 +262,7 @@ export const ROUTES = {
   ACC: 'account',
   HELP: 'help',
   PLAYER: 'player',
+  SCREENSAVER: 'screensaver',
   CMP: 'cmp',
   SETTINGS: 'settings',
   COLLECTION: 'collection-details',

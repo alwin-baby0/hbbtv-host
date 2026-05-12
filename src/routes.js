@@ -24,6 +24,7 @@ import CMP from './pages/CMP/CMP';
 import cmp from './pages/CMP/provider/cmp';
 import Settings from './pages/Settings/Settings';
 import settings from './pages/Settings/provider/settings';
+import Screensaver from './pages/Screensaver/Screensaver';
 import { ROUTES } from './constants/globalConstants';
 
 export default {
@@ -107,6 +108,10 @@ export default {
       options: {
         reuseInstance: false,
       },
+    },
+    {
+      path: ROUTES.SCREENSAVER,
+      component: Screensaver,
     },
     {
       path: `${ROUTES.COLLECTION}/:collectionId`,
