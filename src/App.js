@@ -4,7 +4,7 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { DetailService, DidomiService } from './Services';
+import { DetailService, DidomiService, InactivityService } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 import { t } from './utils';
@@ -83,6 +83,7 @@ export default class App extends Router.App {
         afterEachRoute: () => {
           // after each route update nav bar
           this._Menu.Items._updateFocus();
+          InactivityService.notifyRouteChanged();
         },
       },
       this
@@ -92,6 +93,7 @@ export default class App extends Router.App {
     window.addEventListener('offline', () => this.handleOffline());
 
     this.checkNetworkStatusOnline(navigator.onLine);
+    InactivityService.start();
   }
 
   async _init() {
@@ -104,6 +106,15 @@ export default class App extends Router.App {
     DidomiService.onConsentChanged(() => {
       this.handleConsentUpdate();
     });
+  }
+
+  _captureKey() {
+    if (Router.isNavigating()) {
+      return true;
+    }
+
+    InactivityService.reset();
+    return false;
   }
 
   _captureEnter() {
