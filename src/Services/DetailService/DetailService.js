@@ -28,7 +28,7 @@ class DetailService extends FetchingService {
 
   seasonTabsParsed;
 
-  getSerie = async (seriesId, episodeId) => {
+  getSerie = async (seriesId, seasonId = null, episodeId = null) => {
     const timestamp = new Date().getTime();
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 
@@ -39,7 +39,8 @@ class DetailService extends FetchingService {
       params: {
         _: timestamp,
         id: seriesId,
-        episode_id: episodeId,
+        ...(seasonId && { season_id: seasonId }),
+        ...(episodeId && { episode_id: episodeId }),
       },
       headers: {
         ...(userData &&

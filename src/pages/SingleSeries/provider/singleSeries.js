@@ -35,6 +35,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
 
   const { galleryItem, seasons, seasonTabsParsed } = await DetailService.getSerie(
     seriesId,
+    seasonId,
     localStorage.getItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL)
   );
 
