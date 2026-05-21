@@ -4,9 +4,9 @@
     "stage": {
       "clearColor": "0x00000000",
       "useImageWorker": false,
-      "w": 1920,
-      "h": 1080,
-      "precision": 1,
+      "w": 1280,
+      "h": 720,
+      "precision": 0.66666666,
       "readPixelsAfterDraw": true,
       "pauseRafLoopOnIdle": true,
       "defaultFontFace": "Montserrat-Regular"

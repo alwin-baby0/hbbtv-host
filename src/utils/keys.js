@@ -38,6 +38,8 @@ export const setupKeys = (deviceType) => {
         415: 'MediaPlay',
         19: 'MediaPause',
         413: 'MediaStop',
+        82: 'RedButton',
+        403: 'RedButton',
       };
     }
     case 'webos':

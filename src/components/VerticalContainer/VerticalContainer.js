@@ -238,6 +238,10 @@ export default class VerticalContainer extends Lightning.Component {
     return true;
   }
 
+  _handleRedButton() {
+    console.log('### red button');
+  }
+
   _handleUp() {
     if (window.Didomi && didomiVisible) {
       return true;
