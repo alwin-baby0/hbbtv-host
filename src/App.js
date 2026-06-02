@@ -8,6 +8,7 @@ import { DetailService, DidomiService, InactivityService } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 import { t } from './utils';
+import { unload } from './components/Player/HLS';
 
 let wasOffline = false; // Variable to track previous internet status
 export let didomiVisible = false;
@@ -74,6 +75,47 @@ export default class App extends Router.App {
 
   $setNavbarVisibility(isVisible) {
     this._Menu.setVisibility = isVisible;
+  }
+
+  _handleRedButton() {
+    const video = document.getElementById('video-player');
+    if (video) {
+      video.pause()
+      unload(video)
+      video.remove()
+    }
+    this.application.closeApp();
+    this.removeCanvasAndLightningScripts()
+    window.hideAppAndShowBroadcast()
+  }
+
+  removeCanvasAndLightningScripts = () => {
+    const canvas = document.body.querySelector('canvas');
+    if (canvas) {
+      canvas.remove()
+    }
+
+    const polyfillScript = document.getElementById('vite-legacy-polyfill');
+    if (polyfillScript) {
+      polyfillScript.remove();
+    }
+
+    const entryScript = document.getElementById('vite-legacy-entry');
+    if (entryScript) {
+      entryScript.remove();
+    }
+
+    // Remove google tag manager script from head
+    const googleTagScript = document.querySelector('script[src*="googletagmanager"]');
+    if (googleTagScript) {
+      googleTagScript.remove();
+    }
+
+    // Remove tracking.watch4.com script from body
+    const trackingScript = document.querySelector('script[src*="tracking.watch4.com"]');
+    if (trackingScript) {
+      trackingScript.remove();
+    }
   }
 
   _setup() {

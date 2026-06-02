@@ -133,7 +133,7 @@ export const loader = (url, videoEl, options = {}) => {
   });
 };
 
-const unload = (videoEl) => {
+export const unload = (videoEl) => {
   destroyPlayer();
   videoEl.removeAttribute('src');
   videoEl.load();

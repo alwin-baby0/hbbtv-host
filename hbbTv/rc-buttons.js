@@ -166,7 +166,7 @@ function insertLightningScripts() {
         const entryScript = document.createElement('script');
         entryScript.crossOrigin = 'anonymous';
         entryScript.id = 'vite-legacy-entry';
-        entryScript.setAttribute('data-src', './assets/index-legacy-Howl-GgN.js');
+        entryScript.setAttribute('data-src', './assets/index-legacy-B9uFLftc.js');
         entryScript.textContent = "System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))";
         document.body.appendChild(entryScript);
       }
@@ -178,13 +178,23 @@ function insertLightningScripts() {
     const entryScript = document.createElement('script');
     entryScript.crossOrigin = 'anonymous';
     entryScript.id = 'vite-legacy-entry';
-    entryScript.setAttribute('data-src', './assets/index-legacy-Howl-GgN.js');
+    entryScript.setAttribute('data-src', './assets/index-legacy-B9uFLftc.js');
     entryScript.textContent = "System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))";
     document.body.appendChild(entryScript);
   }
 }
 
 function removeCanvasAndLightningScripts() {
+  const video = document.getElementById('video-player');
+  if (video) {
+    video.pause()
+    if (window.unload) {
+      window.unload(video)
+      window.unload = null
+    }
+    video.remove()
+  }
+
   const canvas = document.body.querySelector('canvas');
   if (canvas) {
     canvas.remove()
@@ -221,7 +231,6 @@ function hideBroadcastAndShowApp() {
 }
 
 function hideAppAndShowBroadcast() {
-  removeCanvasAndLightningScripts()
   window.history.pushState({}, '', '/');
   showBroadcast()
   currentObject = TYPE.BROADCAST;
@@ -240,7 +249,7 @@ function handleKeyCode(kc) {
           hideBroadcastAndShowApp();
         }
         else {
-          hideAppAndShowBroadcast();
+          // hideAppAndShowBroadcast();
         }
         // no need to rerender complete scene
         shouldRender = false;
