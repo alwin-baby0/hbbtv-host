@@ -166,7 +166,7 @@ function insertLightningScripts() {
         const entryScript = document.createElement('script');
         entryScript.crossOrigin = 'anonymous';
         entryScript.id = 'vite-legacy-entry';
-        entryScript.setAttribute('data-src', './assets/index-legacy-B9uFLftc.js');
+        entryScript.setAttribute('data-src', './assets/index-legacy-B_XkFeP8.js');
         entryScript.textContent = "System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))";
         document.body.appendChild(entryScript);
       }
@@ -178,48 +178,9 @@ function insertLightningScripts() {
     const entryScript = document.createElement('script');
     entryScript.crossOrigin = 'anonymous';
     entryScript.id = 'vite-legacy-entry';
-    entryScript.setAttribute('data-src', './assets/index-legacy-B9uFLftc.js');
+    entryScript.setAttribute('data-src', './assets/index-legacy-B_XkFeP8.js');
     entryScript.textContent = "System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))";
     document.body.appendChild(entryScript);
-  }
-}
-
-function removeCanvasAndLightningScripts() {
-  const video = document.getElementById('video-player');
-  if (video) {
-    video.pause()
-    if (window.unload) {
-      window.unload(video)
-      window.unload = null
-    }
-    video.remove()
-  }
-
-  const canvas = document.body.querySelector('canvas');
-  if (canvas) {
-    canvas.remove()
-  }
-
-  const polyfillScript = document.getElementById('vite-legacy-polyfill');
-  if (polyfillScript) {
-    polyfillScript.remove();
-  }
-
-  const entryScript = document.getElementById('vite-legacy-entry');
-  if (entryScript) {
-    entryScript.remove();
-  }
-
-  // Remove google tag manager script from head
-  const googleTagScript = document.querySelector('script[src*="googletagmanager"]');
-  if (googleTagScript) {
-    googleTagScript.remove();
-  }
-
-  // Remove tracking.watch4.com script from body
-  const trackingScript = document.querySelector('script[src*="tracking.watch4.com"]');
-  if (trackingScript) {
-    trackingScript.remove();
   }
 }
 
