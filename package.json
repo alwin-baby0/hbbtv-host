@@ -21,7 +21,8 @@
     "build-foxxum": "vite build --mode production-foxxum",
     "build-ocilion": "vite build --mode production-ocilion",
     "build-metrological": "vite build --mode production-metrological",
-    "build-sunrise": "vite build --mode production-sunrise"
+    "build-sunrise": "vite build --mode production-sunrise",
+    "build-hbbTv": "node ./scripts/build-hbbtv.js"
   },
   "author": "",
   "license": "Apache-2.0",
