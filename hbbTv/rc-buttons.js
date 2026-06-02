@@ -152,19 +152,77 @@ function startHlsBroadcast() {
 
 }
 
+function insertLightningScripts() {
+  // Check and insert vite-legacy-polyfill if not present
+  if (!document.getElementById('vite-legacy-polyfill')) {
+    const polyfillScript = document.createElement('script');
+    polyfillScript.crossOrigin = 'anonymous';
+    polyfillScript.id = 'vite-legacy-polyfill';
+    polyfillScript.src = './assets/polyfills-legacy-brPzi115.js';
+
+    // Insert entry script after polyfill loads
+    polyfillScript.onload = function () {
+      if (!document.getElementById('vite-legacy-entry')) {
+        const entryScript = document.createElement('script');
+        entryScript.crossOrigin = 'anonymous';
+        entryScript.id = 'vite-legacy-entry';
+        entryScript.setAttribute('data-src', './assets/index-legacy-Howl-GgN.js');
+        entryScript.textContent = "System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))";
+        document.body.appendChild(entryScript);
+      }
+    };
+
+    document.body.appendChild(polyfillScript);
+  } else if (!document.getElementById('vite-legacy-entry')) {
+    // If polyfill already exists, just add entry script
+    const entryScript = document.createElement('script');
+    entryScript.crossOrigin = 'anonymous';
+    entryScript.id = 'vite-legacy-entry';
+    entryScript.setAttribute('data-src', './assets/index-legacy-Howl-GgN.js');
+    entryScript.textContent = "System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))";
+    document.body.appendChild(entryScript);
+  }
+}
+
+function removeCanvasAndLightningScripts() {
+  const canvas = document.body.querySelector('canvas');
+  if (canvas) {
+    canvas.remove()
+  }
+
+  const polyfillScript = document.getElementById('vite-legacy-polyfill');
+  if (polyfillScript) {
+    polyfillScript.remove();
+  }
+
+  const entryScript = document.getElementById('vite-legacy-entry');
+  if (entryScript) {
+    entryScript.remove();
+  }
+
+  // Remove google tag manager script from head
+  const googleTagScript = document.querySelector('script[src*="googletagmanager"]');
+  if (googleTagScript) {
+    googleTagScript.remove();
+  }
+
+  // Remove tracking.watch4.com script from body
+  const trackingScript = document.querySelector('script[src*="tracking.watch4.com"]');
+  if (trackingScript) {
+    trackingScript.remove();
+  }
+}
+
 function hideBroadcastAndShowApp() {
-  console.log('### ssaiEnabled', ssaiEnabled);
-  console.log('### ssaiEnabledFullManifestUrl', ssaiEnabledFullManifestUrl);
-  console.log('### ssaiDisabledFullManifestUrl', ssaiDisabledFullManifestUrl);
-  console.log('### playerType', playerType);
-  console.log('### hls', hls);
-  console.log('### dash', dash?.getSource(), dash);
   hideBroadcast()
+  insertLightningScripts()
   currentObject = TYPE.APP
   console.log('### hideBroadcastAndShowApp');
 }
 
 function hideAppAndShowBroadcast() {
+  removeCanvasAndLightningScripts()
+  window.history.pushState({}, '', '/');
   showBroadcast()
   currentObject = TYPE.BROADCAST;
   console.log('### hideAppAndShowBroadcast');

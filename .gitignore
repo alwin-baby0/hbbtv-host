@@ -10,3 +10,7 @@ public/static/devtools
 .DS_Store
 wedotv-lg-build-*
 lg
+
+# ignore all files under hbbTv/assets and hbbTv/static
+/hbbTv/assets/**
+/hbbTv/static/**
