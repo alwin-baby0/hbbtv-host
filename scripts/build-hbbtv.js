@@ -2,6 +2,7 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk').default || require('chalk');
 
 // Run the standard Vite build and relay stdout/stderr to the console.
 // This script is used to generate the production build before copying
@@ -81,7 +82,7 @@ async function patchLegacyAssets(hbbtvDir) {
 
   await replaceInFile(switchHandlersPath, /const LEGACY_ENTRY = .*;/, `const LEGACY_ENTRY = './assets/${legacyEntry}';`);
   await replaceInFile(switchHandlersPath, /const LEGACY_POLYFILL = .*;/, `const LEGACY_POLYFILL = './assets/${legacyPolyfill}';`);
-  console.log('Patched switchHandlers.js with:', legacyEntry, legacyPolyfill);
+  console.log(chalk.green('Patched'), chalk.cyan('switchHandlers.js'), chalk.green('with:'), chalk.cyan(legacyEntry), chalk.green('and'), chalk.cyan(legacyPolyfill));
 }
 
 async function main() {
@@ -105,7 +106,7 @@ async function main() {
     try {
       await deleteFolder(targetFolder);
       await copyFolder(sourceFolder, targetFolder);
-      console.log(`Copied ${folder} to ${targetFolder}`);
+      console.log(chalk.green('Copied'), chalk.cyan(`${folder}`), chalk.green('to'), chalk.cyan(`${targetFolder}`));
     } catch (e) {
       console.error(`Failed to copy ${folder}:`, e.message);
       process.exit(1);

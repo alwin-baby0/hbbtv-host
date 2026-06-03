@@ -78,6 +78,10 @@ export default class App extends Router.App {
   }
 
   _handleRedButton() {
+    this.$appClose()
+  }
+
+  closeHbbTvApp() {
     const video = document.getElementById('video-player');
     if (video) {
       video.pause()
@@ -383,7 +387,9 @@ export default class App extends Router.App {
                 this.application.closeApp();
                 break;
               case 'tizen':
-                window.tizen.application.getCurrentApplication().exit();
+                // TODO: change the logic
+                this.closeHbbTvApp()
+                // window.tizen.application.getCurrentApplication().exit();
                 break;
               default:
                 window.close();
