@@ -84,6 +84,7 @@ export default class App extends Router.App {
       unload(video)
       video.remove()
     }
+    InactivityService.stop();
     this.application.closeApp();
     this.removeCanvasAndLightningScripts()
     window.hideAppAndShowBroadcast()
