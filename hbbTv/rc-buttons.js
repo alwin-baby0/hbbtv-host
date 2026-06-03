@@ -92,8 +92,6 @@ function handleKeyCode(kc) {
     // process buttons
     switch (kc) {
       case VK_RED:
-        console.log('### here');
-
         // red button shows & hides the app scene
         if (currentObject === TYPE.BROADCAST) {
           hideBroadcastAndShowApp();
@@ -102,11 +100,10 @@ function handleKeyCode(kc) {
           // hideAppAndShowBroadcast();
         }
         // no need to rerender complete scene
-        shouldRender = false;
         break;
       default:
-        // pressed unhandled key
-        shouldRender = false;
+        break
+      // pressed unhandled key
     }
   }
   catch (e) {

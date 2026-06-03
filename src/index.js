@@ -91,7 +91,8 @@ sequence([
       }
     });
 
-    if (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
+    // commenting this out as we are handling consent in the hbbTv code
+    // if (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
 
     window.didomiOnReady &&
       window.didomiOnReady.push(async () => {
