@@ -403,7 +403,6 @@ function initMediaTailorSession(manifestUrl, adsParams, callback) {
   // Extract base URL (protocol + host) from manifest URL for later use
   // e.g., "https://d82fae046moue.cloudfront.net" from full URL
   var baseUrl = '';
-  console.log('### manifestUrl', manifestUrl);
 
   var urlMatch = manifestUrl.match(/^(https?:\/\/[^\/]+)/);
   if (urlMatch) {
@@ -446,14 +445,12 @@ function initMediaTailorSession(manifestUrl, adsParams, callback) {
   xhr.open('POST', sessionUrl, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.setRequestHeader('Accept', 'application/json');
-  console.log('### sessionUrl', sessionUrl);
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
         try {
           var response = JSON.parse(xhr.responseText);
-          console.log('### res', response);
 
           mediaTailorSessionUrl = response.manifestUrl;
           mediaTailorTrackingUrl = response.trackingUrl;
@@ -505,7 +502,6 @@ function initMediaTailorSession(manifestUrl, adsParams, callback) {
   });
 
   if (DEBUG_ENABLED) debugLog('SSAI: POST body: ' + postBody);
-  console.log('### postBody', postBody);
 
   xhr.send(postBody);
 }
@@ -1076,6 +1072,7 @@ function setVideo() {
       if (DEBUG_ENABLED) debugLog('PLAYER: appObject obtained, showing app');
       logInitStep('getOwnerApplication', 'success', 'appObject obtained and shown');
       appObject.show();
+      enableRedButton()
       // broadcastContainer.bindToCurrentChannel();
       var ch = broadcastContainer.currentChannel;
 
@@ -1294,6 +1291,7 @@ function setHlsVideo() {
     if (DEBUG_ENABLED) debugLog('PLAYER: appObject obtained, showing app');
     logInitStep('getOwnerApplication', 'success', 'appObject obtained and shown');
     appObject.show();
+    enableRedButton()
 
     broadcastContainer.style.display = 'none';
 

@@ -87,12 +87,19 @@ if (typeof (VK_0) === 'undefined') {
   var VK_9 = 0x39;
 }
 
+const keyConfiguration = { enableRedButton: false }
+
+const isRedButtonEnabled = () => keyConfiguration.enableRedButton === true
+const enableRedButton = () => keyConfiguration.enableRedButton = true
+const disableRedButton = () => keyConfiguration.enableRedButton = false
+
 function handleKeyCode(kc) {
   try {
     // process buttons
     switch (kc) {
       case VK_RED:
         // red button shows & hides the app scene
+        if (!isRedButtonEnabled()) break
         if (currentObject === TYPE.BROADCAST) {
           hideBroadcastAndShowApp();
         }

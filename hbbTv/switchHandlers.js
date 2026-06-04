@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-DEIjzCv8.js';
+const LEGACY_ENTRY = './assets/index-legacy-CuD7kE9z.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-brPzi115.js';
 
 function hideBroadcast() {
