@@ -10,6 +10,7 @@
     "test": "jest",
     "start-legacy": "cross-env LNG_LIVE_RELOAD=true LNG_LIVE_RELOAD_PORT=8991 lng dev",
     "start": "vite --mode development-web",
+    "start-hbbTv": "node ./scripts/hbbTv/start.js",
     "build": "vite build --mode production-web",
     "build-lg": "vite build --mode production-webos",
     "build-hisense": "vite build --mode production-hisense",
@@ -22,7 +23,8 @@
     "build-ocilion": "vite build --mode production-ocilion",
     "build-metrological": "vite build --mode production-metrological",
     "build-sunrise": "vite build --mode production-sunrise",
-    "build-hbbTv": "node ./scripts/build-hbbtv.js"
+    "build-hbbTv": "node ./scripts/hbbTv/build.js",
+    "update-hbbTv": "node ./scripts/hbbTv/update.js"
   },
   "author": "",
   "license": "Apache-2.0",
