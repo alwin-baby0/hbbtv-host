@@ -1,7 +1,27 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-CuD7kE9z.js';
+const LEGACY_ENTRY = './assets/index-legacy-fV3qKqHw.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-brPzi115.js';
+
+function showSplash() {
+  const splash = document.getElementById('splash');
+  if (!splash) return;
+  splash.style.visibility = 'visible';
+  splash.style.opacity = '0.99';
+}
+
+function hideSplash() {
+  const splash = document.getElementById('splash');
+  if (!splash) return;
+  splash.style.opacity = '0';
+  splash.style.visibility = 'hidden';
+}
+
+function wait(ms) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, ms);
+  });
+}
 
 function hideBroadcast() {
   if (playerType === 'dash') stopDashBroadcast()
@@ -101,15 +121,22 @@ function insertLightningScripts() {
 }
 
 function hideBroadcastAndShowApp() {
+  window.history.pushState({}, '', '/');
+  disableRedButton()
+  showSplash()
   hideBroadcast()
   insertLightningScripts()
   currentObject = TYPE.APP
   console.log('### hideBroadcastAndShowApp');
 }
 
-function hideAppAndShowBroadcast() {
+async function hideAppAndShowBroadcast() {
   window.history.pushState({}, '', '/');
-  showBroadcast()
+  // small pause to allow any pending tasks to settle before switching
+  showBroadcast();
+  await wait(1000);
   currentObject = TYPE.BROADCAST;
+  hideSplash()
+  enableRedButton()
   console.log('### hideAppAndShowBroadcast');
 }

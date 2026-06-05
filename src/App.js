@@ -78,10 +78,13 @@ export default class App extends Router.App {
   }
 
   _handleRedButton() {
+    if (!window.isRedButtonEnabled()) return true
     this.$appClose()
   }
 
   closeHbbTvApp() {
+    window.disableRedButton()
+    window.showSplash()
     const video = document.getElementById('video-player');
     if (video) {
       video.pause()

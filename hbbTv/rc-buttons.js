@@ -89,9 +89,17 @@ if (typeof (VK_0) === 'undefined') {
 
 const keyConfiguration = { enableRedButton: false }
 
-const isRedButtonEnabled = () => keyConfiguration.enableRedButton === true
-const enableRedButton = () => keyConfiguration.enableRedButton = true
-const disableRedButton = () => keyConfiguration.enableRedButton = false
+function isRedButtonEnabled() {
+  return keyConfiguration.enableRedButton === true
+}
+
+function enableRedButton() {
+  keyConfiguration.enableRedButton = true
+}
+
+function disableRedButton() {
+  keyConfiguration.enableRedButton = false
+}
 
 function handleKeyCode(kc) {
   try {

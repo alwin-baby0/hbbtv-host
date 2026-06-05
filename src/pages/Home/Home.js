@@ -93,6 +93,8 @@ export default class Home extends Lightning.Component {
   }
 
   _firstActive() {
+    window.hideSplash()
+    window.enableRedButton()
     this._setState('Hero');
   }
 
