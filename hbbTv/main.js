@@ -1110,12 +1110,11 @@ function setVideo() {
       logInitStep('initializePlayer', 'success', 'Player initialized with DASH URL');
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Starting playback...');
-      await dash.play();
+      dash.play();
       logInitStep('startPlayback', 'success', 'Playback started');
 
       if (DEBUG_ENABLED) debugLog('=== PLAYER: Initialization Complete ===');
       logInitStep('playerComplete', 'success', 'Player initialization fully completed');
-      video.play()
     }
   }
 

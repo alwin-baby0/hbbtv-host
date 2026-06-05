@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-fV3qKqHw.js';
+const LEGACY_ENTRY = './assets/index-legacy-Dr2PgV-F.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-brPzi115.js';
 
 function showSplash() {
@@ -132,7 +132,6 @@ function startDashBroadcast() {
 function startHlsBroadcast() {
   try {
     // kill any existing hls
-    stopHlsBroadcast()
     let video = document.getElementById('video');
     if (!video) appendBroadcastVideoElement()
     video.style.visibility = 'visible';
