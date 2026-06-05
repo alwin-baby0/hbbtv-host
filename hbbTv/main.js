@@ -1079,21 +1079,8 @@ function setVideo() {
       broadcastContainer.style.display = 'none';
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Creating video element...');
-      var video = document.createElement('video');
-      video.setAttribute('id', 'video');
-      video.setAttribute('controls', 'false');
-      video.controls = false;
-      video.setAttribute('autoplay', 'autoplay');
 
-      video.style.position = 'absolute';
-      video.style.left = 0;
-      video.style.top = 0;
-      video.style.width = '1280px';
-      video.style.height = '720px';
-      video.muted = true;
-
-      // Set z-index to be above broadcast
-      document.body.appendChild(video);
+      appendBroadcastVideoElement()
       logInitStep('createVideoElement', 'success', 'Video element created and appended');
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Checking dashjs library...');
@@ -1296,19 +1283,8 @@ function setHlsVideo() {
     broadcastContainer.style.display = 'none';
 
     if (DEBUG_ENABLED) debugLog('PLAYER: Creating video element...');
-    var video = document.createElement('video');
-    video.setAttribute('id', 'video');
-    video.setAttribute('controls', 'false');
-    video.controls = false;
-    video.setAttribute('autoplay', 'autoplay');
 
-    video.style.position = 'absolute';
-    video.style.left = 0;
-    video.style.top = 0;
-    video.style.width = '1280px';
-    video.style.height = '720px';
-
-    document.body.appendChild(video);
+    appendBroadcastVideoElement()
     logInitStep('createVideoElement', 'success', 'Video element created and appended');
 
     // Check for HLS.js library

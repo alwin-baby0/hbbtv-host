@@ -17,9 +17,24 @@ function hideSplash() {
   splash.style.visibility = 'hidden';
 }
 
+function resetConditionsForHidingSplash() {
+  window.broadcastPlaybackPlaying = false
+  window.appExitAnimationEnded = false
+}
+
+function checkConditionsAndHideSplash() {
+  if (window.broadcastPlaybackPlaying && window.appExitAnimationEnded) {
+    hideSplash()
+    resetConditionsForHidingSplash()
+  }
+}
+
 function wait(ms) {
   return new Promise(function (resolve) {
-    setTimeout(resolve, ms);
+    setTimeout(() => {
+      window.appExitAnimationEnded = true
+      resolve()
+    }, ms);
   });
 }
 
@@ -43,7 +58,27 @@ function stopDashBroadcast() {
 }
 
 function stopHlsBroadcast() {
+  if (hls && typeof hls.stopLoad === 'function') {
+    hls.stopLoad();
+  }
 
+  if (hls && typeof hls.loadSource === 'function') {
+    hls.loadSource('');
+  }
+
+  if (hls && typeof hls.detachMedia === 'function') {
+    hls.detachMedia();
+  }
+
+  const video = document.getElementById('video');
+  if (video) {
+    if (typeof video.pause === 'function') {
+      video.pause();
+    }
+    video.removeAttribute('src');
+    video.load && video.load();
+    video.style.visibility = 'hidden';
+  }
 }
 
 function showBroadcast() {
@@ -51,31 +86,41 @@ function showBroadcast() {
   if (playerType === 'hls') startHlsBroadcast()
 }
 
+
+const onPlaying = () => {
+  window.broadcastPlaybackPlaying = true;
+  checkConditionsAndHideSplash();
+};
+
+function appendBroadcastVideoElement() {
+  video = document.createElement('video');
+  video.setAttribute('id', 'video');
+  video.setAttribute('controls', 'false');
+  video.controls = false;
+  video.setAttribute('autoplay', 'autoplay');
+  video.style.position = 'absolute';
+  video.style.left = 0;
+  video.style.top = 0;
+  video.style.width = '1280px';
+  video.style.height = '720px';
+  video.addEventListener('playing', onPlaying);
+  document.body.appendChild(video);
+}
+
 function startDashBroadcast() {
   try {
     let video = document.getElementById('video');
-    if (!video) {
-      video = document.createElement('video');
-      video.setAttribute('id', 'video');
-      video.setAttribute('controls', 'false');
-      video.controls = false;
-      video.setAttribute('autoplay', 'autoplay');
-
-      video.style.position = 'absolute';
-      video.style.left = 0;
-      video.style.top = 0;
-      video.style.width = '1280px';
-      video.style.height = '720px';
-      video.muted = true;
-      document.body.appendChild(video);
-    }
+    if (!video) appendBroadcastVideoElement()
     video.style.visibility = 'visible'
+
     if (dash && typeof dash.attachView === 'function') {
       dash.attachView(video);
     }
+
     if (dash && typeof dash.attachSource === 'function') {
       dash.attachSource(ssaiEnabledFullManifestUrl);
     }
+
     if (typeof dash.play === 'function') {
       dash.play();
     }
@@ -85,7 +130,27 @@ function startDashBroadcast() {
 }
 
 function startHlsBroadcast() {
+  try {
+    // kill any existing hls
+    stopHlsBroadcast()
+    let video = document.getElementById('video');
+    if (!video) appendBroadcastVideoElement()
+    video.style.visibility = 'visible';
 
+    if (hls && typeof hls.attachMedia === 'function') {
+      hls.attachMedia(video);
+    }
+
+    if (hls && typeof hls.loadSource === 'function') {
+      hls.loadSource(ssaiEnabledFullManifestUrl);
+    }
+
+    if (typeof video.play === 'function') {
+      video.play().catch(() => { });
+    }
+  } catch (e) {
+    console.warn('startHlsBroadcast error', e);
+  }
 }
 
 function insertLightningScripts() {
@@ -123,6 +188,7 @@ function insertLightningScripts() {
 function hideBroadcastAndShowApp() {
   window.history.pushState({}, '', '/');
   disableRedButton()
+  resetConditionsForHidingSplash()
   showSplash()
   hideBroadcast()
   insertLightningScripts()
@@ -136,7 +202,7 @@ async function hideAppAndShowBroadcast() {
   showBroadcast();
   await wait(1000);
   currentObject = TYPE.BROADCAST;
-  hideSplash()
+  checkConditionsAndHideSplash()
   enableRedButton()
   console.log('### hideAppAndShowBroadcast');
 }
