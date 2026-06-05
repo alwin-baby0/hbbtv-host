@@ -78,13 +78,13 @@ export default class App extends Router.App {
   }
 
   _handleRedButton() {
-    if (!window.isRedButtonEnabled()) return true
+    if (window.isRedButtonEnabled && !window.isRedButtonEnabled()) return true
     this.$appClose()
   }
 
   closeHbbTvApp() {
-    window.disableRedButton()
-    window.showSplash()
+    if (window.disableRedButton) window.disableRedButton()
+    if (window.showSplash) window.showSplash()
     const video = document.getElementById('video-player');
     if (video) {
       video.pause()
@@ -94,7 +94,7 @@ export default class App extends Router.App {
     InactivityService.stop();
     this.application.closeApp();
     this.removeCanvasAndLightningScripts()
-    window.hideAppAndShowBroadcast()
+    if (window.hideAppAndShowBroadcast) window.hideAppAndShowBroadcast()
   }
 
   removeCanvasAndLightningScripts = () => {
