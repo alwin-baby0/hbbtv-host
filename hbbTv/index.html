@@ -64,7 +64,7 @@
       visibility: hidden;
     }
 
-    #splash img {
+    #splash video {
       max-width: 100%;
       max-height: 100%;
       width: auto;
@@ -76,7 +76,9 @@
 </head>
 
 <body onload="initApp();">
-  <div id="splash"><img src="/static/images/splash-screen.png" alt="Splash Screen" /></div>
+  <div id="splash">
+    <video id="splash-video" src="/static/videos/splash.mp4" preload="auto" playsinline="playsinline"></video>
+  </div>
   <div id="vidcontainer">
     <!-- @if ($versionApp == '2')
     <video id="broadcast-video" width="1280" height="720"></video>

@@ -1,41 +1,49 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-Dr2PgV-F.js';
+const LEGACY_ENTRY = './assets/index-legacy-BCylFCzo.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-brPzi115.js';
 
-function showSplash() {
-  const splash = document.getElementById('splash');
-  if (!splash) return;
-  splash.style.visibility = 'visible';
-  splash.style.opacity = '0.99';
-}
+const splash = document.getElementById('splash');
+const splashVideo = document.getElementById('splash-video')
 
-function hideSplash() {
-  const splash = document.getElementById('splash');
-  if (!splash) return;
-  splash.style.opacity = '0';
-  splash.style.visibility = 'hidden';
-}
-
-function resetConditionsForHidingSplash() {
-  window.broadcastPlaybackPlaying = false
-  window.appExitAnimationEnded = false
-}
-
-function checkConditionsAndHideSplash() {
-  if (window.broadcastPlaybackPlaying && window.appExitAnimationEnded) {
-    hideSplash()
-    resetConditionsForHidingSplash()
+function splashTimeUpdateHandler() {
+  if (splashVideo.currentTime >= 1.2) {
+    splashVideo.pause();
+    splashVideo.removeEventListener('timeupdate', splashTimeUpdateHandler);
   }
 }
 
-function wait(ms) {
-  return new Promise(function (resolve) {
-    setTimeout(() => {
-      window.appExitAnimationEnded = true
-      resolve()
-    }, ms);
-  });
+function playAndPauseAtOneSecond(video) {
+  video.addEventListener('timeupdate', splashTimeUpdateHandler);
+  video.play();
+}
+
+function onSplashVideoEnded() {
+  console.log('Splash video finished playing', splashVideo.currentTime);
+  splashVideo.removeEventListener('timeupdate', splashTimeUpdateHandler);
+  splashVideo.currentTime = 0;
+  if (!splash) return;
+  splash.style.opacity = '0';
+  splash.style.visibility = 'hidden';
+  splashVideo.removeEventListener('ended', onSplashVideoEnded);
+}
+
+function continuePlayingSplashTillEnd(video) {
+  console.log('### splashVideo.currentTime', splashVideo.currentTime);
+
+  video.addEventListener('ended', onSplashVideoEnded);
+  video.play();
+}
+
+function showSplash() {
+  if (!splash) return;
+  splash.style.visibility = 'visible';
+  splash.style.opacity = '0.99';
+  playAndPauseAtOneSecond(splashVideo);
+}
+
+function hideSplash() {
+  continuePlayingSplashTillEnd(splashVideo)
 }
 
 function hideBroadcast() {
@@ -86,12 +94,6 @@ function showBroadcast() {
   if (playerType === 'hls') startHlsBroadcast()
 }
 
-
-const onPlaying = () => {
-  window.broadcastPlaybackPlaying = true;
-  checkConditionsAndHideSplash();
-};
-
 function appendBroadcastVideoElement() {
   video = document.createElement('video');
   video.setAttribute('id', 'video');
@@ -103,7 +105,6 @@ function appendBroadcastVideoElement() {
   video.style.top = 0;
   video.style.width = '1280px';
   video.style.height = '720px';
-  video.addEventListener('playing', onPlaying);
   document.body.appendChild(video);
 }
 
@@ -184,10 +185,38 @@ function insertLightningScripts() {
   }
 }
 
+function removeCanvasAndLightningScripts() {
+  const canvas = document.body.querySelector('canvas');
+  if (canvas) {
+    canvas.remove()
+  }
+
+  const polyfillScript = document.getElementById('vite-legacy-polyfill');
+  if (polyfillScript) {
+    polyfillScript.remove();
+  }
+
+  const entryScript = document.getElementById('vite-legacy-entry');
+  if (entryScript) {
+    entryScript.remove();
+  }
+
+  // Remove google tag manager script from head
+  const googleTagScript = document.querySelector('script[src*="googletagmanager"]');
+  if (googleTagScript) {
+    googleTagScript.remove();
+  }
+
+  // Remove tracking.watch4.com script from body
+  const trackingScript = document.querySelector('script[src*="tracking.watch4.com"]');
+  if (trackingScript) {
+    trackingScript.remove();
+  }
+}
+
 function hideBroadcastAndShowApp() {
   window.history.pushState({}, '', '/');
   disableRedButton()
-  resetConditionsForHidingSplash()
   showSplash()
   hideBroadcast()
   insertLightningScripts()
@@ -199,9 +228,7 @@ async function hideAppAndShowBroadcast() {
   window.history.pushState({}, '', '/');
   // small pause to allow any pending tasks to settle before switching
   showBroadcast();
-  await wait(1000);
   currentObject = TYPE.BROADCAST;
-  checkConditionsAndHideSplash()
   enableRedButton()
   console.log('### hideAppAndShowBroadcast');
 }

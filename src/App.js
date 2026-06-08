@@ -84,7 +84,6 @@ export default class App extends Router.App {
 
   closeHbbTvApp() {
     if (window.disableRedButton) window.disableRedButton()
-    if (window.showSplash) window.showSplash()
     const video = document.getElementById('video-player');
     if (video) {
       video.pause()
@@ -93,37 +92,8 @@ export default class App extends Router.App {
     }
     InactivityService.stop();
     this.application.closeApp();
-    this.removeCanvasAndLightningScripts()
+    if (window.removeCanvasAndLightningScripts) window.removeCanvasAndLightningScripts()
     if (window.hideAppAndShowBroadcast) window.hideAppAndShowBroadcast()
-  }
-
-  removeCanvasAndLightningScripts = () => {
-    const canvas = document.body.querySelector('canvas');
-    if (canvas) {
-      canvas.remove()
-    }
-
-    const polyfillScript = document.getElementById('vite-legacy-polyfill');
-    if (polyfillScript) {
-      polyfillScript.remove();
-    }
-
-    const entryScript = document.getElementById('vite-legacy-entry');
-    if (entryScript) {
-      entryScript.remove();
-    }
-
-    // Remove google tag manager script from head
-    const googleTagScript = document.querySelector('script[src*="googletagmanager"]');
-    if (googleTagScript) {
-      googleTagScript.remove();
-    }
-
-    // Remove tracking.watch4.com script from body
-    const trackingScript = document.querySelector('script[src*="tracking.watch4.com"]');
-    if (trackingScript) {
-      trackingScript.remove();
-    }
   }
 
   _setup() {
