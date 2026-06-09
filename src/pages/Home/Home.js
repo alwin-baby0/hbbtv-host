@@ -92,9 +92,12 @@ export default class Home extends Lightning.Component {
     this.fireAncestors('$unpunchHole');
   }
 
-  _firstActive() {
-    if (window.hideSplash) window.hideSplash()
+  _firstEnable() {
+    if (window.hideHbbtvSplash) window.hideHbbtvSplash()
     if (window.enableRedButton) window.enableRedButton()
+  }
+
+  _firstActive() {
     this._setState('Hero');
   }
 

@@ -4,19 +4,21 @@ import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
 
 export default class Splash extends Lightning.Component {
   static _template() {
+    const isHbbTvApp = !!window.hbbtvApp
+
     return {
       Background: {
         rect: true,
         w: 1920,
         h: 1080,
-        // src: Utils.asset(IMG_PATH.BACKGROUND),
+        src: isHbbTvApp ? '' : Utils.asset(IMG_PATH.BACKGROUND),
         zIndex: 999,
       },
       Logo: {
         w: 1920,
         h: 1080,
         rect: true,
-        // src: Utils.asset(IMG_PATH.SPLASH_SCREEN),
+        src: isHbbTvApp ? '' : Utils.asset(IMG_PATH.SPLASH_SCREEN),
         zIndex: 1000,
       },
     };

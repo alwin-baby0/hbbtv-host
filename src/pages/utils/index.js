@@ -3,6 +3,7 @@ import HorizontalContainer from '../../components/HorizontalContainer/Horizontal
 import { EPGService } from '../../Services';
 import Empty from '../LiveTV/components/Empty';
 import { CARD_TYPES, RAIL_TYPES, CARD_SIZES, ROUTES } from '../../constants/globalConstants';
+import { Registry } from '@lightningjs/sdk';
 
 const RAIL_WIDTHS = {
   [RAIL_TYPES.MOVIE]: 1760,
@@ -34,7 +35,7 @@ export const constructRails = (rails) => {
       const items = rail.items;
       const itemsPerRow = rail.itemsPerRow;
 
-      window.addEventListener('verticalIndexReset', verticalIndexReset);
+      Registry.addEventListener(window, 'verticalIndexReset', verticalIndexReset);
 
       if (itemsPerRow && items.length - 1 >= itemsPerRow) {
         const chunkedItems = chunkArray(items, itemsPerRow); // chunk the items into rows
@@ -100,14 +101,14 @@ export const cronstructSingleLineRail = (rail, index) => {
     railType === RAIL_TYPES.LIVETV
       ? { h: 100, w: 100 }
       : {
-          h:
-            items && items.length && items[0].orientation
-              ? items[0].orientation === 'landscape'
-                ? CARD_SIZES[cardType]?.landscape_height
-                : CARD_SIZES[cardType]?.poster_height
-              : CARD_SIZES[cardType]?.height || 500,
-          w: RAIL_WIDTHS[railType] || 1500,
-        };
+        h:
+          items && items.length && items[0].orientation
+            ? items[0].orientation === 'landscape'
+              ? CARD_SIZES[cardType]?.landscape_height
+              : CARD_SIZES[cardType]?.poster_height
+            : CARD_SIZES[cardType]?.height || 500,
+        w: RAIL_WIDTHS[railType] || 1500,
+      };
 
   return {
     type: HorizontalContainer,

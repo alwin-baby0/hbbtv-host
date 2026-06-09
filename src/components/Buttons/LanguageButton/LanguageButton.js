@@ -4,6 +4,8 @@ import { createApiCtx } from '../../../Services/utils';
 import axios from 'axios';
 import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
 import { didomiVisible } from '../../../App';
+import { InactivityService } from '../../../Services';
+import { unload } from '../../Player/HLS';
 
 export default class LanguageButton extends Lightning.Component {
   _props = {
@@ -65,14 +67,34 @@ export default class LanguageButton extends Lightning.Component {
     }
   }
 
+  restartHbbTvApp() {
+    if (window.disableRedButton) window.disableRedButton()
+    const video = document.getElementById('video-player');
+    if (video) {
+      video.pause()
+      unload(video)
+      video.remove()
+    }
+    InactivityService.stop();
+    this.application.closeApp();
+    if (window.removeCanvasAndLightningScripts) window.removeCanvasAndLightningScripts()
+    window.history.pushState({}, '', '/');
+    if (window.showHbbtvSplash) window.showHbbtvSplash()
+    if (window.insertLightningScripts) window.insertLightningScripts()
+  }
+
   async _handleEnter() {
     if (window.Didomi && didomiVisible) {
       return true;
     }
 
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageCode);
-    Router.navigate(ROUTES.HOME);
-    window.location.reload();
+    if (!!window.hbbtvApp) {
+      this.restartHbbTvApp()
+    } else {
+      Router.navigate(ROUTES.HOME);
+      window.location.reload();
+    }
   }
 
   _focus() {
