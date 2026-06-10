@@ -108,6 +108,10 @@ export default class VerticalContainer extends Lightning.Component {
       if (episodeIndex && episodeIndex !== -1)
         this.Items.children[this._focusedIndex]._focusedIndex = episodeIndex;
     }
+
+    if (props.hasSelectedLanguage && props.customLanguageIndex !== undefined) {
+      this._focusedIndex = props.customLanguageIndex
+    }
   }
 
   _getFocused() {

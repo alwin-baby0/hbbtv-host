@@ -2,7 +2,7 @@ import { Colors, Lightning, Router, Utils } from '@lightningjs/sdk';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButton';
 // import { CMPService } from '../../Services';
-import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
+import { ROUTES, TRANSLATIONS, IMG_PATH, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import Button from '../../components/Button/Button';
 import { didomiVisible } from '../../App';
@@ -118,13 +118,24 @@ export default class Settings extends Lightning.Component {
     const itemsPerCol = 4;
     const cols = [];
 
-    const langArray = Object.entries(languages).map(([key, value]) => ({
-      key,
-      value,
-    }));
+    const languageCode = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE);
+    let selectedLanguageIndex = 0
+
+    const langArray = Object.entries(languages).map(([key, value], index) => {
+      const isSelecetedLang = key === languageCode
+      if (isSelecetedLang) selectedLanguageIndex = index
+
+      return ({
+        key,
+        value,
+        isSelecetedLang,
+      })
+    });
 
     for (let i = 0; i < langArray.length; i += itemsPerCol) {
-      cols.push({ items: langArray.slice(i, i + itemsPerCol) });
+      let hasSelectedLanguage = false
+      if (selectedLanguageIndex >= i && selectedLanguageIndex < i + itemsPerCol) hasSelectedLanguage = true
+      cols.push({ items: langArray.slice(i, i + itemsPerCol), hasSelectedLanguage });
     }
 
     return cols;
@@ -146,34 +157,47 @@ export default class Settings extends Lightning.Component {
 
     const languages = this._props.languagesData;
     const cols = this._arrangeLngBtns(languages);
+    let languageFocusIndexForHorizontalContainer = 0
 
     this._LanguagesRowContainer.props = {
       parentState: 'Languages',
-      items: cols.map((col) => ({
-        type: VerticalContainer,
-        collision: true,
-        h: 500,
-        w: 300,
-        flexItem: {
-          marginRight: 20,
-        },
-        props: {
-          parentState: 'Languages',
-          disableScroll: true,
-          items: col.items.map((item, index) => ({
-            type: LanguageButton,
-            collision: true,
-            props: {
-              languageInfo: item.value,
-              languageIndex: index,
-              languageCode: item.key,
-            },
-            w: 300,
-            h: 65,
-          })),
-        },
-      })),
+      items: cols.map((col, index) => {
+        if (col.hasSelectedLanguage) languageFocusIndexForHorizontalContainer = index
+        let languageFocusIndexForVerticalContainer
+        return ({
+          type: VerticalContainer,
+          collision: true,
+          h: 500,
+          w: 300,
+          flexItem: {
+            marginRight: 20,
+          },
+          props: {
+            parentState: 'Languages',
+            disableScroll: true,
+            hasSelectedLanguage: col.hasSelectedLanguage,
+            items: col.items.map((item, index) => {
+              if (col.hasSelectedLanguage && item.isSelecetedLang) languageFocusIndexForVerticalContainer = index
+              return ({
+                type: LanguageButton,
+                collision: true,
+                props: {
+                  languageInfo: item.value,
+                  languageIndex: index,
+                  languageCode: item.key,
+                  isSelecetedLang: item.isSelecetedLang,
+                },
+                w: 300,
+                h: 65,
+              })
+            }),
+            customLanguageIndex: languageFocusIndexForVerticalContainer !== undefined ? languageFocusIndexForVerticalContainer : 0,
+          },
+        })
+      }
+      ),
     };
+    this._LanguagesRowContainer._focusedIndex = languageFocusIndexForHorizontalContainer
 
     this._Content.patch({
       CMPContainer: {

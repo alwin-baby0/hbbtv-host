@@ -74,8 +74,8 @@ export default class CategoryPickerItem extends FocusableItem {
           text: title
             ? title.toUpperCase()
             : data.localised
-            ? data.localised.toUpperCase()
-            : data.value.toUpperCase(),
+              ? data.localised.toUpperCase()
+              : data.value?.toUpperCase(),
         },
       },
     });
