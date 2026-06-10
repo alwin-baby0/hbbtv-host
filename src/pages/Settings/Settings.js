@@ -85,11 +85,10 @@ export default class Settings extends Lightning.Component {
         h: 100,
         zIndex: 3,
         Text: {
-          w: 230,
           h: 35,
           text: {
             text: 'VERSION: ' + process.env.APP_VERSION,
-            textAlign: 'center',
+            textAlign: 'left',
             fontFace: 'Montserrat-Medium',
             fontSize: 30,
             lineHeight: 35,
