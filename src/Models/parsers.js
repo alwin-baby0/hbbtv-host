@@ -1,8 +1,9 @@
 import { Category, SimpleRailItem, LiveEventsRailItem, GalleryItem } from './';
 import { VODS_PER_ROW } from '../Services';
-import { RAIL_TYPES, CARD_TYPES, CONTENT_TYPE } from '../constants/globalConstants';
+import { RAIL_TYPES, CARD_TYPES, CONTENT_TYPE, TRANSLATIONS } from '../constants/globalConstants';
 import { Banner } from './Banner';
 import { ViewMoreRailItem } from './ViewMore';
+import { t } from '../utils';
 
 // Home page
 export const parseHomePageRailData = ({ data }) => {
@@ -10,11 +11,11 @@ export const parseHomePageRailData = ({ data }) => {
     data.entry &&
     (data.entry.items && data.entry.items.length
       ? data.entry?.items.map(
-          (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
-        )
+        (item) => new SimpleRailItem({ ...item, orientation: data.entry.poster_format })
+      )
       : data.contentType === CARD_TYPES.BANNER
-      ? [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]
-      : []);
+        ? [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]
+        : []);
   if (!railItems || railItems.length === 0) return;
   data.entry.has_more &&
     railItems.push(
@@ -54,9 +55,9 @@ export const parseVodMoviesPageData = ({ data }) => {
     data.entry &&
     (data.entry.items
       ? data.entry.items.map(
-          (item) =>
-            new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.MOVIE)
-        )
+        (item) =>
+          new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.MOVIE)
+      )
       : [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]);
   if (!railItems || railItems?.length === 0) return;
   data.entry?.has_more &&
@@ -83,9 +84,9 @@ export const parseSeriesPageData = ({ data }) => {
     data.entry &&
     (data.entry.items
       ? data.entry.items.map(
-          (item) =>
-            new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.SERIE)
-        )
+        (item) =>
+          new SimpleRailItem({ ...item, orientation: data.entry.poster_format }, RAIL_TYPES.SERIE)
+      )
       : [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]);
   if (!railItems || railItems?.length === 0) return;
   data.entry.has_more &&
@@ -144,16 +145,16 @@ export const parseSportsPageData = ({ data }) => {
     data.entry &&
     (data.entry.items
       ? data.entry.items.map(
-          (item) =>
-            new SimpleRailItem(
-              {
-                ...item,
-                type: { value: item.type ? item.type : RAIL_TYPES.SPORT },
-                orientation: data.entry.poster_format,
-              },
-              RAIL_TYPES.SPORT
-            )
-        )
+        (item) =>
+          new SimpleRailItem(
+            {
+              ...item,
+              type: { value: item.type ? item.type : RAIL_TYPES.SPORT },
+              orientation: data.entry.poster_format,
+            },
+            RAIL_TYPES.SPORT
+          )
+      )
       : [new Banner({ ...data.entry, type: RAIL_TYPES.BANNER })]);
   if (!railItems || railItems?.length === 0) return;
   data.entry.has_more &&
@@ -295,9 +296,11 @@ export const parseVodPlaylists = (data) => {
       })
     );
 
+  const relatedPlaylistTitle = t(TRANSLATIONS.RELATED_MOVIE_PLAYLIST_TITLE)
+
   return {
     railType: RAIL_TYPES.MOVIE,
-    railTitle: data?.name || data?.label,
+    railTitle: relatedPlaylistTitle || data?.name || data?.label,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
     railId: null,

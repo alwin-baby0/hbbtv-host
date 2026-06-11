@@ -191,6 +191,7 @@ export const TRANSLATIONS = {
   NO_RESUME: 'no_resume',
   NO_STREAM: 'no_stream',
   OFF: 'off',
+  RELATED_MOVIE_PLAYLIST_TITLE: 'related_movie_playlist_title',
   SEARCH: 'search',
   SIGNUP_DESCRIPTION: 'signup_description',
   SIGNUP_SCAN: 'signup_scan',
