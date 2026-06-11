@@ -44,7 +44,7 @@ export default class Gallery extends Lightning.Component {
     this._Info.patch({
       GalleryButton: undefined,
       Summary: undefined,
-      SummSub: undefined,
+      TopSection: { SummSub: undefined },
       Metadata: {
         visible: false,
       },

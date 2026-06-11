@@ -56,90 +56,86 @@ export default class GalleryItem extends Lightning.Component {
         zIndex: 3,
         x: 110,
         y: 310,
-        w: 740,
         flex: { direction: 'column' },
-        Badge: {
-          visible: false,
-          rect: true,
-          texture: Lightning.Tools.getRoundRect(
-            200,
-            55,
-            10,
-            2,
-            Colors(colors.white).get(),
-            true,
-            Colors('#4a4a49').get()
-          ),
-          h: 55,
-          flex: {
-            direction: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-          flexItem: {
-            marginRight: 40,
-          },
-          Text: {
-            flexItem: {
-              alignSelf: 'center',
-            },
-            text: {
-              text: 'Home',
-              fontSize: 24,
-              fontFace: 'Montserrat-Regular',
-              textColor: Colors(colors.white).get(),
-            },
-          },
-        },
-        Date: {
-          visible: false,
-          w: 400,
-          h: 40,
-          y: -47,
-          x: 230,
-          color: Colors('#cf1c1e').get(),
-          rect: true,
-          shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
-          Text: {
-            h: 30,
-            w: 400,
-            y: 5,
-            text: {
-              fontSize: 24,
-              fontFace: 'Montserrat-Semibold',
-              textColor: Colors('#FFFFFF').get(),
-              textAlign: 'center',
-              maxLines: 1,
-            },
-          },
-        },
-        SummSub: {
-          x: 230,
-          y: -43,
+        TopSection: {
           flex: { direction: 'row', alignItems: 'center' },
           flexItem: {
-            marginBottom: 20,
+            marginBottom: 25,
           },
-          Summary: {
-            w: 650,
-            h: 29,
-            text: {
-              fontSize: 24,
-              lineHeight: 30,
-              fontFace: 'Montserrat-Regular',
+          Badge: {
+            visible: false,
+            rect: true,
+            texture: Lightning.Tools.getRoundRect(
+              200,
+              55,
+              10,
+              2,
+              Colors(colors.white).get(),
+              true,
+              Colors('#4a4a49').get()
+            ),
+            h: 55,
+            flex: {
+              direction: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
             },
-          },
-          Subtitle: {
-            w: 400,
-            h: 29,
-            text: {
-              fontSize: 24,
-              lineHeight: 30,
+            Text: {
+              flexItem: {
+                alignSelf: 'center',
+              },
+              text: {
+                text: 'Home',
+                fontSize: 24,
+                fontFace: 'Montserrat-Regular',
+                textColor: Colors(colors.white).get(),
+              },
             },
             flexItem: {
-              marginLeft: 10,
+              marginRight: 40,
             },
           },
+          Date: {
+            visible: false,
+            w: 330,
+            h: 50,
+            color: Colors('#cf1c1e').get(),
+            rect: true,
+            shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
+            flex: { direction: ' row', alignItems: 'center' },
+            Text: {
+              h: 30,
+              y: 9,
+              text: {
+                text: 'babuuuuu',
+                fontSize: 24,
+                fontFace: 'Montserrat-Semibold',
+                textColor: Colors('#FFFFFF').get(),
+                textAlign: 'center',
+                maxLines: 1,
+              },
+            },
+            flexItem: {
+              marginRight: 40,
+            },
+          },
+          SummSub: {
+            flex: { direction: 'row', alignItems: 'center' },
+            Summary: {
+              text: {
+                fontSize: 24,
+                fontFace: 'Montserrat-Regular',
+              },
+            },
+            Subtitle: {
+              text: {
+                fontSize: 24,
+              },
+              flexItem: {
+                marginLeft: 10,
+              },
+            },
+          }
         },
         Countdown: {
           visible: false,
@@ -486,10 +482,10 @@ export default class GalleryItem extends Lightning.Component {
         eventDate && eventTime
           ? [eventDate, eventTime].join(' | ')
           : eventDate
-          ? eventDate
-          : eventTime
-          ? eventTime
-          : '';
+            ? eventDate
+            : eventTime
+              ? eventTime
+              : '';
     }
 
     const tAgeR = t(TRANSLATIONS.AGE_RATING) + ':';
@@ -547,9 +543,10 @@ export default class GalleryItem extends Lightning.Component {
 
     this._Info.patch({
       y: infoY,
-      Badge: {
-        y: badgeY,
-        visible: true,
+      TopSection: {
+        Badge: {
+          visible: true,
+        }
       },
     });
 
@@ -560,15 +557,17 @@ export default class GalleryItem extends Lightning.Component {
         },
       });
       this._Info.patch({
-        Date: undefined,
         Venue: undefined,
         Countdown: undefined,
-        Badge: {
-          Text: {
-            text: {
-              text: capitalizeFirstLetter(badgeText) || capitalizeFirstLetter(TRANSLATIONS.SERIES),
+        TopSection: {
+          Date: undefined,
+          Badge: {
+            Text: {
+              text: {
+                text: capitalizeFirstLetter(badgeText) || capitalizeFirstLetter(TRANSLATIONS.SERIES),
+              },
             },
-          },
+          }
         },
         Metadata: {
           AgeRating: {
@@ -627,21 +626,23 @@ export default class GalleryItem extends Lightning.Component {
       });
     } else {
       this._Info.patch({
-        SummSub: undefined,
-        Badge: {
-          Text: {
-            text: {
-              text: capitalizeFirstLetter(TRANSLATIONS.SPORTS),
+        TopSection: {
+          SummSub: undefined,
+          Badge: {
+            Text: {
+              text: {
+                text: capitalizeFirstLetter(TRANSLATIONS.SPORTS),
+              },
             },
           },
-        },
-        Date: {
-          visible: factLine ? true : false,
-          Text: {
-            text: {
-              text: factLine,
+          Date: {
+            visible: factLine ? true : false,
+            Text: {
+              text: {
+                text: factLine,
+              },
             },
-          },
+          }
         },
       });
       setTimeout(() => {
