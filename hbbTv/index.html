@@ -319,7 +319,7 @@
     window.didomiConsentString = '';
     window.didomiGppString = '';
     window.didomiOnReady = window.didomiOnReady || [];
-    window.didomiOnReady.push(function (Didomi) {
+    window.didomiOnReady.push(async function (Didomi) {
       // Capture IAB TCF consent string using standard TCF API (async with callback)
       function captureTcfString(callback) {
         if (typeof __tcfapi === 'function') {
@@ -458,7 +458,16 @@
         shouldShowNotice = Didomi.shouldConsentBeCollected();
       }
 
-      if (shouldShowNotice) {
+      let userConsent = await window.Didomi.getCurrentUserStatus();
+      let isDeclined = true;
+      Object.keys(userConsent.purposes).forEach((key) => {
+        if (userConsent.purposes[key].enabled) {
+          isDeclined = false;
+        }
+      });
+
+
+      if (shouldShowNotice || isDeclined) {
         // New user - show the notice and wait for it to be hidden
         Didomi.notice.show();
 
