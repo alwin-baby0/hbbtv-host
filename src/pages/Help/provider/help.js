@@ -11,11 +11,15 @@ function splitTextIntoChunks(text, chunkSize) {
 
 export default async function (page) {
   const { data } = await SettingsService.getPages();
+  let translatedItemTitles = {}
 
   const texts = (
     await Promise.all(data.entry.map((page) => SettingsService.getSinglePage(page.id)))
   ).map((text) => {
+    const id = text.data.entry.id;
+    const title = text.data.entry.title;
     const plainText = text.data.entry.content_plain;
+    translatedItemTitles[`${id}`] = title
     let decodedText = '';
 
     if (typeof plainText === 'string') {
@@ -29,13 +33,19 @@ export default async function (page) {
     return decodedText;
   });
 
-  const items = data.entry.map((pageInfo, index) => ({
-    type: HelpButton,
-    pageInfoData: pageInfo,
-    w: 450,
-    h: 100,
-    pageIndex: index,
-  }));
+  const items = data.entry.map((pageInfo, index) => {
+    const id = pageInfo?.id
+    const translatedTitle = translatedItemTitles[`${id}`]
+    if (pageInfo) pageInfo.title = translatedTitle
+
+    return ({
+      type: HelpButton,
+      pageInfoData: pageInfo,
+      w: 450,
+      h: 100,
+      pageIndex: index,
+    })
+  });
 
   page._Row.props = {
     items: items,

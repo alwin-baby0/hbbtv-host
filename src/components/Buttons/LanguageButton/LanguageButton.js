@@ -27,8 +27,11 @@ export default class LanguageButton extends Lightning.Component {
       rect: true,
       shader: { type: Lightning.shaders.RoundedRectangle, radius: 12 },
       Text: {
+        y: 2,
         text: {
-          paddingLeft: 20,
+          fontSize: 32,
+          fontFace: 'Montserrat-Bold',
+          paddingLeft: 35,
         },
       },
     };
