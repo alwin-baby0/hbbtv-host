@@ -1,4 +1,4 @@
-import { Lightning, Router } from '@lightningjs/sdk';
+import { Lightning, Registry, Router } from '@lightningjs/sdk';
 import { constructRails } from '../utils';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import Gallery from '../../components/Gallery/Gallery';
@@ -94,6 +94,7 @@ export default class Home extends Lightning.Component {
 
   _firstEnable() {
     if (window.hideHbbtvSplash) window.hideHbbtvSplash()
+    if (window.hideHbbtvLoader) Registry.setTimeout(window.hideHbbtvLoader, 200)
     if (window.enableRedButton) window.enableRedButton()
   }
 

@@ -84,6 +84,7 @@ export default class App extends Router.App {
 
   closeHbbTvApp() {
     if (window.disableRedButton) window.disableRedButton()
+    if (window.showHbbtvLoader) window.showHbbtvLoader()
     const video = document.getElementById('video-player');
     if (video) {
       video.pause()

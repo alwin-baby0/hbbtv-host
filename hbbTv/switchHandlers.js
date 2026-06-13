@@ -1,10 +1,11 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-Dd9l3FZD.js';
+const LEGACY_ENTRY = './assets/index-legacy-B68VwDbz.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-brPzi115.js';
 
 const splash = document.getElementById('splash');
 const splashVideo = document.getElementById('splash-video')
+const loader = document.getElementById('loader');
 
 function splashTimeUpdateHandler() {
   if (splashVideo.currentTime >= 1.2) {
@@ -42,6 +43,19 @@ function showHbbtvSplash() {
 
 function hideHbbtvSplash() {
   continuePlayingSplashTillEnd(splashVideo)
+}
+
+function showHbbtvLoader() {
+  if (!loader) return;
+  loader.style.visibility = 'visible';
+  loader.style.opacity = '1';
+
+}
+
+function hideHbbtvLoader() {
+  if (!loader) return;
+  loader.style.visibility = 'hidden';
+  loader.style.opacity = '0';
 }
 
 function hideBroadcast() {
@@ -93,6 +107,7 @@ function showBroadcast() {
 }
 
 function onPlaying(params) {
+  hideHbbtvLoader()
   startPropmtingUserWithOverlay()
 }
 

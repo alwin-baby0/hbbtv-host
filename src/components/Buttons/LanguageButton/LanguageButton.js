@@ -82,7 +82,7 @@ export default class LanguageButton extends Lightning.Component {
     this.application.closeApp();
     if (window.removeCanvasAndLightningScripts) window.removeCanvasAndLightningScripts()
     window.history.pushState({}, '', '/');
-    if (window.showHbbtvSplash) window.showHbbtvSplash()
+    if (window.showHbbtvLoader) window.showHbbtvLoader()
     if (window.insertLightningScripts) window.insertLightningScripts()
   }
 
