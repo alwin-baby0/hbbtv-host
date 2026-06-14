@@ -182,8 +182,9 @@ export default class SingleSeries extends Lightning.Component {
           props: {
             width: 465,
             height: 78,
-            buttonLabel: `${t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase()} S${seasonNumber || firstEpisodeSeasonNumber
-              } E${seasonNumber ? '1' : firstEpisodeEpisodeNumber}`,
+            buttonLabel: `${t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase()}${(seasonNumber || firstEpisodeSeasonNumber) ? ` S${seasonNumber || firstEpisodeSeasonNumber}` : ''
+              }${(seasonNumber ? '1' : firstEpisodeEpisodeNumber) ? ` E${seasonNumber ? '1' : firstEpisodeEpisodeNumber}` : ''
+              }`,
           },
         },
       },

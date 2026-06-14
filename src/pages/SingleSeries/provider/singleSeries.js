@@ -41,17 +41,17 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
 
   const seasonNumber = seasonId
     ? seasons.indexOf(
-        seasons.filter((season) => {
-          if (season.seasonId === seasonId) return true;
-        })[0]
-      )
+      seasons.filter((season) => {
+        if (season?.seasonId === seasonId) return true;
+      })[0]
+    )
     : undefined;
 
   if (seasonId && !localStorage.getItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL)) {
     //if there is seasonId and not episodeId, it is type of season
     seasonNumberPlusOne = seasonNumber + 1;
     seasonTitle = galleryItem.title + ` - S${seasonNumberPlusOne}`;
-    const seasonFirstEp = seasons.find((season) => season.seasonId === seasonId);
+    const seasonFirstEp = seasons.find((season) => season?.seasonId === seasonId);
     seasonFirstEpUrl = seasonFirstEp?.items?.[0]?.epFromSeasonUrl;
     seasonFirstEpTitle = seasonFirstEp?.items?.[0]?.title;
   }
@@ -59,10 +59,10 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
   const episodeNumber =
     seasonNumber && episodeId
       ? seasons[seasonNumber].items.indexOf(
-          seasons[seasonNumber].items.filter((episode) => {
-            if (episode.id === episodeId) return true;
-          })[0]
-        )
+        seasons[seasonNumber].items.filter((episode) => {
+          if (episode?.id === episodeId) return true;
+        })[0]
+      )
       : undefined;
 
   if (localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)) {

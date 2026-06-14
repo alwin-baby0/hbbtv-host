@@ -472,11 +472,16 @@ export default class GalleryItem extends Lightning.Component {
       trailerUrl,
     } = galleryItem;
 
-    const imdbScoreLabeled = `IMDB ${imdbScore}`;
+    const imdbScoreLabeled = imdbScore ? `IMDB ${imdbScore}` : '';
     let factLine;
 
     if (videoType !== 'event') {
-      factLine = [durationString, year, country, imdbScoreLabeled].join(' | ');
+      const factItems = [durationString, year, country, imdbScoreLabeled]
+      const filteredFactItems = []
+      for (const item of factItems) {
+        if (item) filteredFactItems.push(item)
+      }
+      factLine = filteredFactItems.join(' | ');
     } else {
       factLine =
         eventDate && eventTime
