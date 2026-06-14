@@ -145,7 +145,7 @@ function startDashBroadcast() {
       dash.play();
     }
   } catch (e) {
-    console.warn('hideAppAndShowBroadcast error', e);
+    console.warn('startDashBroadcast error', e);
   }
 }
 
@@ -245,11 +245,16 @@ function hideBroadcastAndShowApp() {
   console.log('### hideBroadcastAndShowApp');
 }
 
-async function hideAppAndShowBroadcast() {
+function hideAppAndShowBroadcast() {
   window.history.pushState({}, '', '/');
-  // small pause to allow any pending tasks to settle before switching
   showBroadcast();
   currentObject = TYPE.BROADCAST;
   enableRedButton()
   console.log('### hideAppAndShowBroadcast');
+}
+
+function cleanupBroadcastBeforeReleasing() {
+  hidePromptOverlay()
+  stopPropmtingUserWithOverlay()
+  hideBroadcast()
 }
