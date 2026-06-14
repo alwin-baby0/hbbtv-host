@@ -62,7 +62,6 @@ export default class SingleSeries extends Lightning.Component {
         HeroSection: {
           collision: true,
           h: 1080,
-          y: 120,
           type: GalleryItem,
         },
       },
@@ -93,6 +92,7 @@ export default class SingleSeries extends Lightning.Component {
 
   set props(props) {
     this._props = { ...this._props, ...props };
+    if (this._HeroSection?._Info) this._HeroSection._Info.y = 120
   }
 
   async addToFavorite() {
