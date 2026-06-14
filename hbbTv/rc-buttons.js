@@ -101,20 +101,41 @@ function disableRedButton() {
   keyConfiguration.enableRedButton = false
 }
 
+function handleUpKey() {
+  console.log('broadcast currentObject', currentObject, 'up');
+}
+
+function handleDownKey() {
+  console.log('broadcast currentObject', currentObject, 'down');
+}
+
 function handleKeyCode(kc) {
   try {
     // process buttons
     switch (kc) {
       case VK_RED:
-        // red button shows & hides the app scene
+        // red button shows & hides the app
         if (!isRedButtonEnabled()) break
         if (currentObject === TYPE.BROADCAST) {
           hideBroadcastAndShowApp();
         }
         else {
-          // hideAppAndShowBroadcast();
+          // hideAppAndShowBroadcast called from App.js;
         }
-        // no need to rerender complete scene
+        break;
+      case VK_UP:
+        // red button shows & hides the app
+        // if (!isRedButtonEnabled()) break
+        if (currentObject === TYPE.BROADCAST) {
+          handleUpKey();
+        }
+        break;
+      case VK_DOWN:
+        // red button shows & hides the app
+        // if (!isRedButtonEnabled()) break
+        if (currentObject === TYPE.BROADCAST) {
+          handleDownKey();
+        }
         break;
       default:
         break

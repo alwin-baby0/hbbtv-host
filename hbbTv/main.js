@@ -1076,7 +1076,10 @@ function setVideo() {
       // broadcastContainer.bindToCurrentChannel();
       var ch = broadcastContainer.currentChannel;
 
-      broadcastContainer.style.display = 'none';
+      if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
+      if (broadcastControlObject.objectsInitialized) {
+        broadcastControlObject.hideAndMuteBroadcast()
+      }
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Creating video element...');
 
@@ -1279,7 +1282,10 @@ function setHlsVideo() {
     appObject.show();
     enableRedButton()
 
-    broadcastContainer.style.display = 'none';
+    if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
+    if (broadcastControlObject.objectsInitialized) {
+      broadcastControlObject.hideAndMuteBroadcast()
+    }
 
     if (DEBUG_ENABLED) debugLog('PLAYER: Creating video element...');
 

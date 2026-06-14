@@ -106,7 +106,8 @@ function showBroadcast() {
   if (playerType === 'hls') startHlsBroadcast()
 }
 
-function onPlaying(params) {
+function onBroadcastVideoPlaying(params) {
+  if (!broadcastControlObject.controlAssumed) broadcastControlObject.assumeControl()
   hideHbbtvLoader()
   startPropmtingUserWithOverlay()
 }
@@ -122,7 +123,7 @@ function appendBroadcastVideoElement() {
   video.style.top = 0;
   video.style.width = '1280px';
   video.style.height = '720px';
-  video.addEventListener('playing', onPlaying);
+  video.addEventListener('playing', onBroadcastVideoPlaying);
   document.body.appendChild(video);
 }
 
