@@ -57,12 +57,12 @@ export default class SingleSeries extends Lightning.Component {
         src: Utils.asset(IMG_PATH.BACKGROUND),
       },
       SeriesWrapper: {
-        rect: true,
         h: 883,
         w: 1570,
         HeroSection: {
           collision: true,
           h: 1080,
+          y: 120,
           type: GalleryItem,
         },
       },
@@ -182,9 +182,8 @@ export default class SingleSeries extends Lightning.Component {
           props: {
             width: 465,
             height: 78,
-            buttonLabel: `${t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase()} S${
-              seasonNumber || firstEpisodeSeasonNumber
-            } E${seasonNumber ? '1' : firstEpisodeEpisodeNumber}`,
+            buttonLabel: `${t(TRANSLATIONS.WATCH_FIRST_EPISODE)?.toUpperCase()} S${seasonNumber || firstEpisodeSeasonNumber
+              } E${seasonNumber ? '1' : firstEpisodeEpisodeNumber}`,
           },
         },
       },
@@ -312,7 +311,6 @@ export default class SingleSeries extends Lightning.Component {
     });
   }
 
-  _disable() {}
 
   get _HeroSection() {
     return this.tag('HeroSection');
