@@ -32,6 +32,7 @@ export default class SingleMovie extends Lightning.Component {
         w: 1920,
         h: 1080,
         GradientOverlay: {
+          x: 200,
           w: 1920,
           zIndex: 2,
         },
@@ -118,10 +119,10 @@ export default class SingleMovie extends Lightning.Component {
             flex: { direction: 'column' },
             Title: {
               w: 900,
-              wordWrapWidth: 900,
+              wordWrapWidth: 850,
               text: {
                 text: '',
-                fontSize: 59,
+                fontSize: 50,
                 fontFace: 'Montserrat-SemiBold',
                 maxLines: 2,
               },
@@ -133,7 +134,7 @@ export default class SingleMovie extends Lightning.Component {
                 fontSize: 25,
                 lineHeight: 31,
                 maxLines: 4,
-                wordWrapWidth: 900,
+                wordWrapWidth: 850,
                 fontFace: 'Montserrat-Regular',
               },
             },

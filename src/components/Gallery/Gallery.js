@@ -73,8 +73,8 @@ export default class Gallery extends Lightning.Component {
   }
 
   _enable() {
-    VideoPlayer.position(0, 350);
-    VideoPlayer.size(1570, 883);
+    VideoPlayer.position(0, 380);
+    VideoPlayer.size(1540, 883);
     VideoPlayer.consumer(this);
     VideoPlayer.loader(loader);
     VideoPlayer.unloader(unloader);

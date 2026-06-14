@@ -41,6 +41,7 @@ export default class GalleryItem extends Lightning.Component {
         zIndex: 1,
         y: 0,
         w: 1920,
+        x: 200,
       },
       Spinner: {
         w: 120,
@@ -55,8 +56,8 @@ export default class GalleryItem extends Lightning.Component {
       Info: {
         zIndex: 3,
         x: 110,
-        y: 310,
-        flex: { direction: 'column' },
+        h: 550,
+        flex: { direction: 'column', justifyContent: 'center' },
         TopSection: {
           flex: { direction: 'row', alignItems: 'center' },
           flexItem: {
@@ -141,6 +142,7 @@ export default class GalleryItem extends Lightning.Component {
           visible: false,
           flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
           flexItem: {
+            marginTop: 15,
             marginBottom: 25,
           },
           texture: Lightning.Tools.getRoundRect(800, 100, 10, 2, '#FFFFFF', false, false),
@@ -244,7 +246,6 @@ export default class GalleryItem extends Lightning.Component {
             marginBottom: 5,
           },
           w: 1100,
-          h: 150,
           text: {
             wordWrapWidth: 1100,
             fontFace: 'Montserrat-Regular',
@@ -309,7 +310,6 @@ export default class GalleryItem extends Lightning.Component {
         },
         Metadata: {
           flex: { direction: 'column' },
-          y: -28,
           AgeRating: {
             w: 700,
             h: 30,
@@ -542,7 +542,6 @@ export default class GalleryItem extends Lightning.Component {
     }
 
     this._Info.patch({
-      y: infoY,
       TopSection: {
         Badge: {
           visible: true,
@@ -711,14 +710,14 @@ export default class GalleryItem extends Lightning.Component {
         Title: {
           text: {
             text: episodeTitle || seasonTitle || title,
-            fontSize: bgY !== 0 ? 59 : 48,
-            wordWrapWidth: bgY !== 0 ? 900 : 1100,
+            fontSize: bgY !== 0 ? 50 : 50,
+            wordWrapWidth: bgY !== 0 ? 800 : 800,
           },
         },
         Description: {
           text: {
             text: summary,
-            wordWrapWidth: bgY !== 0 ? 500 : 1100, //500 is for hero only
+            wordWrapWidth: bgY !== 0 ? 850 : 850, //500 is for hero only
           },
         },
       },

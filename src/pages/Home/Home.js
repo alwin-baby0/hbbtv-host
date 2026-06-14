@@ -17,7 +17,6 @@ export default class Home extends Lightning.Component {
       Background: {},
       HeroSection: {
         x: 0,
-        y: 150,
         w: 1920,
         h: 650,
         collision: true,
