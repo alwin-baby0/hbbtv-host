@@ -102,11 +102,11 @@ function disableRedButton() {
 }
 
 function handleUpKey() {
-  broadcastControlObject.setPreviousChannel()
+  // broadcastControlObject.setPreviousChannel()
 }
 
 function handleDownKey() {
-  broadcastControlObject.setNextChannel()
+  // broadcastControlObject.setNextChannel()
 }
 
 function handleKeyCode(kc) {

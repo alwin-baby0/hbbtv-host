@@ -107,7 +107,7 @@ function showBroadcast() {
 }
 
 function onBroadcastVideoPlaying(params) {
-  if (!broadcastControlObject.controlAssumed) broadcastControlObject.assumeControl()
+  // if (!broadcastControlObject.controlAssumed) broadcastControlObject.assumeControl()
   hideHbbtvLoader()
   startPropmtingUserWithOverlay()
 }
