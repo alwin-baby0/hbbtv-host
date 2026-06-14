@@ -113,9 +113,9 @@ var broadcastControlObject = {
     }
   },
   resetObjects: function () {
-    broadcastControlObject.videoObj.removeEventlistener('PlayStateChange', broadcastControlObject.playStateChangeEventHandler);
-    broadcastControlObject.videoObj.removeEventlistener('ChannelChangeSucceeded', broadcastControlObject.channelChangeSucceededEvenetHandler);
-    broadcastControlObject.videoObj.removeEventlistener('ChannelChangeError', broadcastControlObject.channelChangeErrorEventHandler);
+    broadcastControlObject.videoObj.removeEventListener('PlayStateChange', broadcastControlObject.playStateChangeEventHandler);
+    broadcastControlObject.videoObj.removeEventListener('ChannelChangeSucceeded', broadcastControlObject.channelChangeSucceededEvenetHandler);
+    broadcastControlObject.videoObj.removeEventListener('ChannelChangeError', broadcastControlObject.channelChangeErrorEventHandler);
     broadcastControlObject.objectsInitialized = false
     broadcastControlObject.controlAssumed = false
     broadcastControlObject.videoObj = null
