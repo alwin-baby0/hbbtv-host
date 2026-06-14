@@ -52,49 +52,49 @@ var broadcastControlObject = {
       return false
     }
   },
-  assumeControl: function () {
-    try {
-      if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
-      broadcastControlObject.videoObj.bindToCurrentChannel();
-      broadcastControlObject.currentLiveChannel = broadcastControlObject.videoObj.currentChannel;
-      broadcastControlObject.controlAssumed = true
-      console.log('broadcastControlObject: assumeControl success')
-      return true;
-    } catch (error) {
-      broadcastControlObject.currentLiveChannel = null;
-      broadcastControlObject.controlAssumed = false
-      console.log('broadcastControlObject: assumeControl failed', error)
-      return false;
-    }
-  },
-  setNextChannel: function () {
-    try {
-      if (broadcastControlObject.controlAssumed) {
-        if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
-        cleanupBroadcastBeforeReleasing()
-        broadcastControlObject.showAndUnmuteBroadcast()
-        broadcastControlObject.videoObj.nextChannel()
-        console.log('broadcastControlObject: setNextChannel initiated successfully');
-      }
-    } catch (error) {
-      console.log('broadcastControlObject: setNextChannel failed, attempting releaseControl', error);
-      broadcastControlObject.releaseControl()
-    }
-  },
-  setPreviousChannel: function () {
-    try {
-      if (broadcastControlObject.controlAssumed) {
-        if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
-        cleanupBroadcastBeforeReleasing()
-        broadcastControlObject.showAndUnmuteBroadcast()
-        broadcastControlObject.videoObj.prevChannel()
-        console.log('broadcastControlObject: setPreviousChannel initiated successfully');
-      }
-    } catch (error) {
-      console.log('broadcastControlObject: setPreviousChannel failed, attempting releaseControl', error);
-      broadcastControlObject.releaseControl()
-    }
-  },
+  // assumeControl: function () {
+  //   try {
+  //     if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
+  //     broadcastControlObject.videoObj.bindToCurrentChannel();
+  //     broadcastControlObject.currentLiveChannel = broadcastControlObject.videoObj.currentChannel;
+  //     broadcastControlObject.controlAssumed = true
+  //     console.log('broadcastControlObject: assumeControl success')
+  //     return true;
+  //   } catch (error) {
+  //     broadcastControlObject.currentLiveChannel = null;
+  //     broadcastControlObject.controlAssumed = false
+  //     console.log('broadcastControlObject: assumeControl failed', error)
+  //     return false;
+  //   }
+  // },
+  // setNextChannel: function () {
+  //   try {
+  //     if (broadcastControlObject.controlAssumed) {
+  //       if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
+  //       cleanupBroadcastBeforeReleasing()
+  //       broadcastControlObject.showAndUnmuteBroadcast()
+  //       broadcastControlObject.videoObj.nextChannel()
+  //       console.log('broadcastControlObject: setNextChannel initiated successfully');
+  //     }
+  //   } catch (error) {
+  //     console.log('broadcastControlObject: setNextChannel failed, attempting releaseControl', error);
+  //     broadcastControlObject.releaseControl()
+  //   }
+  // },
+  // setPreviousChannel: function () {
+  //   try {
+  //     if (broadcastControlObject.controlAssumed) {
+  //       if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
+  //       cleanupBroadcastBeforeReleasing()
+  //       broadcastControlObject.showAndUnmuteBroadcast()
+  //       broadcastControlObject.videoObj.prevChannel()
+  //       console.log('broadcastControlObject: setPreviousChannel initiated successfully');
+  //     }
+  //   } catch (error) {
+  //     console.log('broadcastControlObject: setPreviousChannel failed, attempting releaseControl', error);
+  //     broadcastControlObject.releaseControl()
+  //   }
+  // },
   releaseControl: function () {
     try {
       cleanupBroadcastBeforeReleasing()
@@ -122,17 +122,17 @@ var broadcastControlObject = {
     broadcastControlObject.videoTag = null
     broadcastControlObject.currentLiveChannel = null
   },
-  getChannelList: function () {
-    try {
-      return broadcastControlObject.videoObj.getChannelConfig().channelList;
-    } catch (error) {
-      return null;
-    }
-  },
-  getChannelInfo: function (ch) {
-    var channelInfo = '' + ch.name + '(' + ch.onid + ',' + ch.tsid + ',' + ch.sid + ')';
-    return channelInfo;
-  },
+  // getChannelList: function () {
+  //   try {
+  //     return broadcastControlObject.videoObj.getChannelConfig().channelList;
+  //   } catch (error) {
+  //     return null;
+  //   }
+  // },
+  // getChannelInfo: function (ch) {
+  //   var channelInfo = '' + ch.name + '(' + ch.onid + ',' + ch.tsid + ',' + ch.sid + ')';
+  //   return channelInfo;
+  // },
   playStateChangeEventHandler: function () {
     try {
       // var playStateField = document.getElementById('playState_field');

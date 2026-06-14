@@ -123,20 +123,16 @@ function handleKeyCode(kc) {
           // hideAppAndShowBroadcast called from App.js;
         }
         break;
-      case VK_UP:
-        // red button shows & hides the app
-        // if (!isRedButtonEnabled()) break
-        if (currentObject === TYPE.BROADCAST) {
-          handleUpKey();
-        }
-        break;
-      case VK_DOWN:
-        // red button shows & hides the app
-        // if (!isRedButtonEnabled()) break
-        if (currentObject === TYPE.BROADCAST) {
-          handleDownKey();
-        }
-        break;
+      // case VK_UP:
+      //   if (currentObject === TYPE.BROADCAST) {
+      //     handleUpKey();
+      //   }
+      //   break;
+      // case VK_DOWN:
+      //   if (currentObject === TYPE.BROADCAST) {
+      //     handleDownKey();
+      //   }
+      //   break;
       default:
         break
       // pressed unhandled key
