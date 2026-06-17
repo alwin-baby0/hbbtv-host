@@ -38,8 +38,6 @@ export const setupKeys = (deviceType) => {
         415: 'MediaPlay',
         19: 'MediaPause',
         413: 'MediaStop',
-        82: 'RedButton',
-        403: 'RedButton',
       };
     }
     case 'webos':
@@ -105,6 +103,21 @@ export const setupKeys = (deviceType) => {
         56: 'MediaPause',
         52: 'MediaStop',
       };
+    case 'hbbTv':
+      return {
+        10009: 'Back',
+        10182: 'Exit',
+        427: 'ChannelUp',
+        428: 'ChannelDown',
+        10252: 'MediaPlayPause',
+        412: 'MediaRewind',
+        417: 'MediaFastForward',
+        415: 'MediaPlay',
+        19: 'MediaPause',
+        413: 'MediaStop',
+        82: 'RedButton',
+        403: 'RedButton',
+      }
     default:
       // Ocilion Key Codes
       // 461 || 17: 'Back',

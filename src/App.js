@@ -361,9 +361,10 @@ export default class App extends Router.App {
                 this.application.closeApp();
                 break;
               case 'tizen':
-                // TODO: change the logic
+                window.tizen.application.getCurrentApplication().exit();
+                break;
+              case 'hbbTv':
                 this.closeHbbTvApp()
-                // window.tizen.application.getCurrentApplication().exit();
                 break;
               default:
                 window.close();
