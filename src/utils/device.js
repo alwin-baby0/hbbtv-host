@@ -463,6 +463,14 @@ const getWebInfo = () => {
   };
 };
 
+const getHbbTvInfo = () => {
+  if (window?.broadcastControlObject?.getHbbTvDeviceDetails) {
+    return window.broadcastControlObject.getHbbTvDeviceDetails()
+  } else {
+    return getWebInfo()
+  }
+};
+
 /**
  *
  * @param { "samsung" | "tizen" | "webos" | "hisense" | "titan" | "web" | "foxxum" | "metrological" | "netgem" | "ocilion" | "sunrise" | "xperi" } deviceType
@@ -497,6 +505,8 @@ const setUpDeviceInfo = async (deviceType) => {
       return getMetrologicalInfo();
     case 'web':
       return getWebInfo();
+    case 'hbbTv':
+      return getHbbTvInfo();
     default: {
       console.warn('Unknown device');
       return getWebInfo();

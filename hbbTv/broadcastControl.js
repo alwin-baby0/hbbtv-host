@@ -1,3 +1,11 @@
+const generateRandomUUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
+    const randomHex = Math.floor(Math.random() * 16);
+    const value = char === 'x' ? randomHex : (randomHex & 0x3) | 0x8;
+    return value.toString(16);
+  });
+};
+
 var broadcastControlObject = {
   objectsInitialized: false,
   controlAssumed: false,
@@ -163,5 +171,33 @@ var broadcastControlObject = {
   channelChangeErrorEventHandler: function (channel, errorState) {
     console.log('broadcastControlObject: channel change error, attempting releaseControl', errorState);
     broadcastControlObject.releaseControl()
+  },
+  getHbbTvVersion: function () {
+    // fetch the user agent string from the navigator object
+    var userAgent = navigator.userAgent;
+    // find the version number within the user agent string
+    var hbbtvVersion = userAgent.match(/HbbTV\/([0-9.]+)/);
+    if (hbbtvVersion && hbbtvVersion[1]) {
+      return hbbtvVersion[1];
+    } else {
+      return 'unknown';
+    }
+  },
+  getHbbTvDeviceDetails: function () {
+    let serialNumber = localStorage.getItem('hbbtv_uniqid');
+
+    if (!serialNumber) {
+      serialNumber = generateRandomUUID()
+      localStorage.setItem('hbbtv_uniqid', serialNumber);
+    }
+
+    return {
+      serialNumber: serialNumber,
+      model: 'model-unknown',
+      brand: 'HbbTv',
+      os: 'HbbTv',
+      osVersion: broadcastControlObject.getHbbTvVersion(),
+      macAddress: 'unknown',
+    };
   }
 };
