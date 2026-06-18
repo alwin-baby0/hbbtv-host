@@ -27,7 +27,7 @@ export default class Settings extends Lightning.Component {
         w: 1310,
         h: 920,
         x: 80,
-        y: 150,
+        y: 175,
         zIndex: 3,
         LanguagesContainer: {
           Title: {
