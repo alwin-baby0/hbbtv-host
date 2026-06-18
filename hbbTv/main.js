@@ -868,9 +868,6 @@ function setVideo() {
       var ch = broadcastContainer.currentChannel;
 
       if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
-      if (broadcastControlObject.objectsInitialized) {
-        broadcastControlObject.hideAndMuteBroadcast()
-      }
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Creating video element...');
 
@@ -899,12 +896,11 @@ function setVideo() {
       logInitStep('createDashPlayer', 'success', 'DASH MediaPlayer instance created');
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Initializing player with URL...');
-      dash.initialize(video, dash_link_fast, true);
-      dash.setAutoPlay(true);
+      dash.initialize(video, dash_link_fast, false);
+      dash.setAutoPlay(false);
       logInitStep('initializePlayer', 'success', 'Player initialized with DASH URL');
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Starting playback...');
-      dash.play();
       logInitStep('startPlayback', 'success', 'Playback started');
 
       if (DEBUG_ENABLED) debugLog('=== PLAYER: Initialization Complete ===');
@@ -1074,9 +1070,6 @@ function setHlsVideo() {
     enableRedButton()
 
     if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
-    if (broadcastControlObject.objectsInitialized) {
-      broadcastControlObject.hideAndMuteBroadcast()
-    }
 
     if (DEBUG_ENABLED) debugLog('PLAYER: Creating video element...');
 
@@ -1146,7 +1139,6 @@ function setHlsVideo() {
     hls.on(Hls.Events.MANIFEST_PARSED, function () {
       if (DEBUG_ENABLED) debugLog('PLAYER: HLS manifest parsed, starting playback...');
       logInitStep('manifestParsed', 'success', 'HLS manifest parsed');
-      video.play();
       logInitStep('startPlayback', 'success', 'HLS playback started');
     });
 
