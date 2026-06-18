@@ -34,11 +34,11 @@ export default class HelpScreen extends Lightning.Component {
         w: 420,
         h: 80,
         x: 100,
-        y: 150,
+        y: 175,
         text: {
           text: t(TRANSLATIONS.HELP_INFO_LABEL),
           fontFace: 'Montserrat-Bold',
-          fontSize: 50,
+          fontSize: 40,
         },
       },
       Wrapper: {
