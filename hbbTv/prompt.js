@@ -1,7 +1,7 @@
 const prompt_overlay = document.getElementById('prompt_overlay')
 
 const first_prompt_time = 15 * 1000 // 15 seconds
-const prompt_visibility_duration = 10 * 1000 // 10 seconds
+const prompt_visibility_duration = 25 * 1000 // 25 seconds
 const continous_promt_interval = 15 * 60 * 1000 // 15 minutes
 
 let _showTimer = null;

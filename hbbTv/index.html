@@ -1,32 +1,15 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<!-- {!! $xmlHeader !!}
-{!! $htmlHead !!} -->
 <!DOCTYPE html PUBLIC '-//HbbTV//1.2.1//EN' 'http://www.hbbtv.org/dtd/HbbTV-1.2.1.dtd'>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
   <title>
-    <!-- HbbTV Wedo {{ strtoupper($distributor->lang) }} -->
     HbbTV Wedo DE
   </title>
   <meta http-equiv="content-type" content="{CONTENT_TYPE}; charset=UTF-8" />
   <meta http-equiv="pragma" content="no-cache" />
   <script data-consolejs-channel="6d058a2a-0df3-104b-324a-8baf6a726099"
     src="https://remotejs.com/agent/agent.js"></script>
-  <!-- @if ($distributor->has_rtl)
-  <script type="text/javascript" src="https://cdn.hbbtv.smartclip.net/smartclip.min.js"
-    data-channel="wedotv.hbbtv.x.{{ $distributor->rtl_country }}.smartclip"></script>
-  @endif -->
-  <!-- <script type="text/javascript" src="https://cdn.hbbtv.smartclip.net/smartclip.min.js"
-    data-channel="wedotv.hbbtv.x.de.smartclip"></script> -->
-
-  <!-- @if ($distributor->has_player)
-  @if ($distributor->player_type === 'hls')
-  <script src="/hbbtv/app/hls.min.js"></script>
-  @else
-  <script src="/hbbtv/app/dash.min.js"></script>
-  @endif
-  @endif -->
   <script src="/dash.min.js"></script>
   <script src="/hls.min.js"></script>
 
@@ -53,11 +36,6 @@
   </div>
   <img id="prompt_overlay" src="./prompt_overlay/prompt.png"></img>
   <div id="vidcontainer">
-    <!-- @if ($versionApp == '2')
-    <video id="broadcast-video" width="1280" height="720"></video>
-    @else
-    <object type="video/broadcast" id="broadcast-video" width="1280" height="720"> </object>
-    @endif -->
     <object type="video/broadcast" id="broadcast-video" width="1280" height="720"> </object>
   </div>
   <object type="application/oipfApplicationManager" id="applicationManager"> </object>
@@ -66,26 +44,6 @@
     <span id="identifierConsent"></span>
     <span id="identifierHLS"></span>
   </div>
-  <!-- <span id="slug" style="display:none;">{{ $distributor->slug }}</span>
-  <span id="lang" style="display:none;">{{ $distributor->lang ?? 'EN' }}</span>
-  <span id="content_language" style="display:none;">{{ $distributor->content_language }}</span>
-  <span id="device_language" style="display:none;">{{ $distributor->device_language }}</span>
-  <span id="ta_id" style="display:none;">{{ $distributor->ta_id }}</span>
-  <span id="distId" style="display:none;">{{ $distributor->id }}</span>
-  <span id="ad_provider" style="display:none;">{{ $distributor->ad_provider }}</span>
-  <span id="dash_link" style="display:none;">{{ $distributor->dash_link }}</span>
-  <span id="baseUrl" style="display:none;">{{ env('APP_URL') }}</span>
-  <span id="has_analytics" style="display:none;">{{ $distributor->has_analytics }}</span>
-  <span id="has_consent" style="display:none;">{{ $distributor->has_consent }}</span>
-  <span id="has_didomi_consent" style="display:none;">{{ $distributor->has_didomi_consent }}</span>
-  <span id="has_rtl" style="display:none;">{{ $distributor->has_rtl }}</span>
-  <span id="has_player" style="display:none;">{{ $distributor->has_player }}</span>
-  <span id="is_vod" style="display:none;">{{ $distributor->is_vod ?? 0 }}</span>
-  <span id="app_store_url" style="display:none;">{{ $distributor->app_store_url }}</span>
-  <span id="is_aws_ssai" style="display:none;">{{ $distributor->is_aws_ssai }}</span>
-  <span id="stagger_count" style="display:none;">{{ $distributor->stagger_count ?? 0 }}</span>
-  <span id="player_type" style="display:none;">{{ $distributor->player_type ?? 'dash' }}</span>
-  <span id="app_bundle" style="display:none;">{{ $distributor->app_bundle }}</span> -->
   <span id="slug" style="display:none;">ses-astra</span>
   <span id="lang" style="display:none;">DE</span>
   <span id="content_language" style="display:none;">DE</span>
@@ -112,179 +70,6 @@
   <!-- <span id="player_type" style="display:none;">hls</span> -->
   <span id="app_bundle" style="display:none;"></span>
 
-  <!-- @if ($distributor->has_didomi_consent)
-  <script src="/hbbtv/app/rc-buttons.js"></script>
-  <script type="text/javascript">
-    //<![CDATA[
-    window.didomiConsentReady = false;
-    window.didomiConsentString = '';
-    window.didomiGppString = '';
-    window.didomiOnReady = window.didomiOnReady || [];
-    window.didomiOnReady.push(function (Didomi) {
-      // Capture IAB TCF consent string using standard TCF API (async with callback)
-      function captureTcfString(callback) {
-        if (typeof __tcfapi === 'function') {
-          __tcfapi('getTCData', 2, function (tcData, success) {
-            if (success && tcData && tcData.tcString) {
-              window.didomiConsentString = tcData.tcString;
-            }
-            if (callback) {
-              callback();
-            }
-          });
-        } else {
-          if (callback) {
-            callback();
-          }
-        }
-      }
-
-      // Capture IAB GPP (Global Privacy Platform) string (async with callback)
-      function captureGppString(callback) {
-        // Method 1: Via Didomi SDK (sync)
-        var userStatus = Didomi.getCurrentUserStatus();
-        if (userStatus && userStatus.gpp_string) {
-          window.didomiGppString = userStatus.gpp_string;
-          if (callback) {
-            callback();
-          }
-          return;
-        }
-        // Method 2: Fallback to __gpp API if available (async)
-        if (typeof __gpp === 'function') {
-          __gpp('ping', function (data, success) {
-            if (success && data && data.gppString) {
-              window.didomiGppString = data.gppString;
-            }
-            if (callback) {
-              callback();
-            }
-          });
-        } else {
-          if (callback) {
-            callback();
-          }
-        }
-      }
-
-      // Capture all consent strings (TCF + GPP) - waits for async callbacks
-      function captureAllConsentStrings(callback) {
-        // Capture TCF first, then GPP, then call final callback
-        captureTcfString(function () {
-          captureGppString(function () {
-            if (callback) {
-              callback();
-            }
-          });
-        });
-      }
-
-      // Persist the original opt-in moment so SMARTNS.getOptState() can return a
-      // stable timestamp. Smartclip blocks ads until consent is >= 24h old, so the
-      // stamp must NEVER be refreshed on subsequent visits — only written once and
-      // cleared on opt-out. We mirror to localStorage because HbbTV devices
-      // routinely lose session cookies across reboots.
-      function readStoredConsentTime() {
-        try {
-          var ls = window.localStorage && window.localStorage.getItem('consent_time_given');
-          if (ls) return ls;
-        } catch (e) { }
-        var match = document.cookie.match(/(?:^|; )consent_time_given=([^;]+)/);
-        return match ? match[1] : null;
-      }
-      function writeConsentTime(ms) {
-        var value = String(ms);
-        document.cookie = 'consent_time_given=' + value + '; path=/; max-age=31536000';
-        try { window.localStorage && window.localStorage.setItem('consent_time_given', value); } catch (e) { }
-      }
-      function clearConsentTime() {
-        document.cookie = 'consent_time_given=; path=/; max-age=0';
-        try { window.localStorage && window.localStorage.removeItem('consent_time_given'); } catch (e) { }
-      }
-      function didomiOriginalConsentMs() {
-        // Prefer Didomi's own creation timestamp — the truest "moment of original
-        // consent". Falls back to now only when the SDK doesn't expose it.
-        try {
-          if (typeof Didomi.getCurrentUserStatus === 'function') {
-            var status = Didomi.getCurrentUserStatus();
-            var raw = status && (status.created || status.created_at || (status.user_status && status.user_status.created));
-            if (raw) {
-              var ms = typeof raw === 'number' ? raw : new Date(raw).getTime();
-              if (!isNaN(ms) && ms > 0) return ms;
-            }
-          }
-        } catch (e) { }
-        return Date.now();
-      }
-
-      // Signal that consent is ready and trigger callback (waits for async capture)
-      function signalConsentReady() {
-        captureAllConsentStrings(function () {
-          // Determine actual opt-in/out from Didomi SDK user status
-          var consentStatus = Didomi.getUserConsentStatusForAll();
-          window.didomiUserConsented = consentStatus
-            && consentStatus.purposes
-            && consentStatus.purposes.enabled
-            && consentStatus.purposes.enabled.length > 0;
-
-          if (window.didomiUserConsented) {
-            if (!readStoredConsentTime()) {
-              writeConsentTime(didomiOriginalConsentMs());
-            }
-          } else {
-            clearConsentTime();
-          }
-
-          window.didomiConsentReady = true;
-          if (typeof window.onDidomiConsentReady === 'function') {
-            window.onDidomiConsentReady();
-          }
-        });
-      }
-
-      // Guard to prevent duplicate signalConsentReady calls
-      var consentSignaled = false;
-      var safeSignalReady = function () {
-        if (consentSignaled) return;
-        consentSignaled = true;
-        signalConsentReady();
-      };
-
-      // Check if notice should be shown (user has NOT made a choice yet)
-      // Use shouldUserStatusBeCollected() if available (shouldConsentBeCollected is deprecated)
-      var shouldShowNotice = false;
-      if (typeof Didomi.shouldUserStatusBeCollected === 'function') {
-        shouldShowNotice = Didomi.shouldUserStatusBeCollected();
-      } else {
-        shouldShowNotice = Didomi.shouldConsentBeCollected();
-      }
-
-      if (shouldShowNotice) {
-        // New user - show the notice and wait for it to be hidden
-        Didomi.notice.show();
-
-        // Listen for notice being hidden (user made a choice or dismissed)
-        Didomi.on('notice.hidden', function () {
-          safeSignalReady();
-        });
-
-        // Also listen to consent.changed as fallback
-        Didomi.on('consent.changed', function () {
-          safeSignalReady();
-        });
-      } else {
-        // Returning user - consent already collected, ready immediately
-        safeSignalReady();
-      }
-    });
-    //]]>
-  </script>
-  <script type="text/javascript">
-    //<![CDATA[
-    (function () { function r(e) { if (!window.frames[e]) { if (document.body && document.body.firstChild) { var t = document.body; var n = document.createElement("iframe"); n.style.display = "none"; n.name = e; n.title = e; t.insertBefore(n, t.firstChild) } else { setTimeout(function () { r(e) }, 5) } } } function e(n, a, o, c, d) { function e(e, t, n, r) { if (typeof n !== "function") { return } if (!window[a]) { window[a] = [] } var i = false; if (d) { i = d(e, r, n) } if (!i) { window[a].push({ command: e, version: t, callback: n, parameter: r }) } } e.stub = true; e.stubVersion = 2; function t(r) { if (!window[n] || window[n].stub !== true) { return } if (!r.data) { return } var i = typeof r.data === "string"; var e; try { e = i ? JSON.parse(r.data) : r.data } catch (t) { return } if (e[o]) { var a = e[o]; window[n](a.command, a.version, function (e, t) { var n = {}; n[c] = { returnValue: e, success: t, callId: a.callId }; if (r.source) { r.source.postMessage(i ? JSON.stringify(n) : n, "*") } }, a.parameter) } } if (typeof window[n] !== "function") { window[n] = e; if (window.addEventListener) { window.addEventListener("message", t, false) } else { window.attachEvent("onmessage", t) } } } e("__tcfapi", "__tcfapiBuffer", "__tcfapiCall", "__tcfapiReturn"); r("__tcfapiLocator"); (function (e, t) { var n = document.createElement("link"); n.rel = "preconnect"; n.as = "script"; var r = document.createElement("link"); r.rel = "dns-prefetch"; r.as = "script"; var i = document.createElement("script"); i.id = "spcloader"; i.type = "text/javascript"; i["async"] = true; i.charset = "utf-8"; var a = "https://sdk.privacy-center.org/" + e + "/loader.js?platform=ctv&target_type=notice&target=" + t; if (window.didomiConfig && window.didomiConfig.user) { var o = window.didomiConfig.user; var c = o.country; var d = o.region; if (c) { a = a + "&country=" + c; if (d) { a = a + "&region=" + d } } } n.href = "https://sdk.privacy-center.org/"; r.href = "https://sdk.privacy-center.org/"; i.src = a; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(n, s); s.parentNode.insertBefore(r, s); s.parentNode.insertBefore(i, s) })("45bc0cac-837c-4445-bcfb-38d46c396898", "zx8CYeNG") })();
-    //]]>
-  </script>
-  @endif -->
   <script src="/prompt.js"></script>
   <script src="/switchHandlers.js"></script>
   <script src="/rc-buttons.js"></script>
@@ -498,9 +283,6 @@
       });
     })();
   </script>
-  <script>
-
-  </script>
   <script type="text/javascript">
     //<![CDATA[
     window.didomiConfig = {
@@ -518,11 +300,6 @@
   <script type="text/javascript" async="async" src="https://sdk.privacy-center.org/"></script>
   <script type="text/javascript" src="./didomiScript.js"></script>
 
-  <!-- @if (app()->environment('production'))
-  <script src="/hbbtv/app/main.min.js"></script>
-  @else
-  <script src="/hbbtv/app/main.js"></script>
-  @endif -->
   <script src="/main.js"></script>
 
 </body>
