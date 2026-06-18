@@ -722,7 +722,7 @@ export default class GalleryItem extends Lightning.Component {
         Description: {
           text: {
             text: summary,
-            wordWrapWidth: bgY !== 0 ? 850 : 850, //500 is for hero only
+            wordWrapWidth: bgY !== 0 ? 800 : 800,
           },
         },
       },

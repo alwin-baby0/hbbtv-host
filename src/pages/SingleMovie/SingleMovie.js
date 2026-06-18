@@ -119,7 +119,7 @@ export default class SingleMovie extends Lightning.Component {
             flex: { direction: 'column' },
             Title: {
               w: 900,
-              wordWrapWidth: 850,
+              wordWrapWidth: 800,
               text: {
                 text: '',
                 fontSize: 50,
@@ -134,7 +134,7 @@ export default class SingleMovie extends Lightning.Component {
                 fontSize: 25,
                 lineHeight: 31,
                 maxLines: 4,
-                wordWrapWidth: 850,
+                wordWrapWidth: 800,
                 fontFace: 'Montserrat-Regular',
               },
             },
