@@ -36,7 +36,7 @@ async function minifyTopLevelJsFiles(folderPath) {
     await fs.promises.writeFile(filePath, result.code, 'utf8');
     const after = (await fs.promises.stat(filePath)).size;
     const afterColor = after > 102400 ? chalk.yellow : chalk.gray;
-    console.log(chalk.green('Minified'), chalk.cyan(file.name), chalk.gray(`${(before / 1024).toFixed(1)}KB`), chalk.green('→'), afterColor(`${(after / 1024).toFixed(1)}KB`));
+    console.log(chalk.green('✓ Minified'), chalk.cyan(file.name), chalk.gray(`${(before / 1024).toFixed(1)}KB`), chalk.green('→'), afterColor(`${(after / 1024).toFixed(1)}KB`));
   }
 }
 
@@ -44,7 +44,7 @@ async function main() {
   try {
     await runUpdateScript();
     console.log('')
-    console.log(chalk.green('Build updated successfully'));
+    console.log(chalk.green('✓ Build updated successfully'));
   } catch (e) {
     console.error('Failed to execute update.js:', e.message);
     process.exit(1);
@@ -57,7 +57,7 @@ async function main() {
   try {
     await cleanAndRecreateFolder(outputDir);
     console.log('')
-    console.log(chalk.green('Cleaned'), chalk.cyan('build-hbbTv'));
+    console.log(chalk.green('✓ Cleaned'), chalk.cyan('build-hbbTv'));
   } catch (e) {
     console.error('Failed to clean build-hbbTv:', e.message);
     process.exit(1);
@@ -66,7 +66,7 @@ async function main() {
   // Copy all contents from hbbTv into build-hbbTv.
   try {
     await copyFolder(hbbtvDir, outputDir);
-    console.log(chalk.green('Copied'), chalk.cyan('hbbTv'), chalk.green('→'), chalk.cyan('build-hbbTv'));
+    console.log(chalk.green('✓ Copied'), chalk.cyan('hbbTv'), chalk.green('→'), chalk.cyan('build-hbbTv'));
     console.log('')
   } catch (e) {
     console.error('Failed to copy hbbTv to build-hbbTv:', e.message);
@@ -75,9 +75,10 @@ async function main() {
 
   // Minify top-level JS files in build-hbbTv in-place.
   try {
-    await minifyTopLevelJsFiles(outputDir);
+    console.log(chalk.green('Minifying...'));
     console.log('');
-    console.log(chalk.green('Minification complete'));
+    await minifyTopLevelJsFiles(outputDir);
+    console.log(chalk.green('✓ Minification complete'));
   } catch (e) {
     console.error('Failed to minify JS files:', e.message);
     process.exit(1);
@@ -85,6 +86,7 @@ async function main() {
 
   if (process.env.npm_config_launch === 'true') {
     try {
+      console.log('');
       console.log(chalk.green('Starting http-server for build-hbbTv on port 4001...'));
       console.log('');
       await runHttpServer(outputDir, 4001);
@@ -93,7 +95,8 @@ async function main() {
       process.exit(1);
     }
   } else {
-    console.log(chalk.green('Build Succesfull →'), chalk.cyan('build-hbbTv'));
+    console.log('');
+    console.log(chalk.green('✓ Build Succesfull →'), chalk.cyan('build-hbbTv'));
   }
 }
 

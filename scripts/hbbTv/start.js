@@ -21,7 +21,7 @@ async function main() {
   try {
     await runUpdateScript();
     console.log('')
-    console.log(chalk.green('Build updated successfully'));
+    console.log(chalk.green('✓ Build updated successfully'));
   } catch (e) {
     console.error('Failed to execute update.js:', e.message);
     process.exit(1);
@@ -30,6 +30,7 @@ async function main() {
   // Serve the HbbTV folder once update completes.
   try {
     const hbbTvDir = path.join(__dirname, '..', '..', 'hbbTv');
+    console.log('')
     console.log(chalk.green('Starting http-server for hbbTv...'));
     console.log('')
     await runHttpServer(hbbTvDir);
