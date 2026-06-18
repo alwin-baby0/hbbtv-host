@@ -700,6 +700,19 @@ function getIpData() {
   };
 }
 
+function setBroadcastComputedStyles() {
+  var broadcast = document.getElementById('broadcast-video');
+  var computedBroadcast = window.getComputedStyle(broadcast);
+  let width = 1280
+  let height = 720
+  if (computedBroadcast.width && computedBroadcast.height) {
+    width = parseInt(computedBroadcast.width, 10)
+    height = parseInt(computedBroadcast.height, 10)
+  }
+  const hbbTvBroadcastDimensions = { width, height }
+  localStorage.setItem('hbbTvBroadcastDimensions', JSON.stringify(hbbTvBroadcastDimensions))
+}
+
 /**
  * Function to match DASH video player to broadcast element dimensions
  * Used when SmartClip L-banner ads are displayed to resize video accordingly
@@ -1274,6 +1287,7 @@ function initApp() {
   logInitStep('initApp', 'started', 'HbbTV application initialization started');
 
   setUniqId();
+  setBroadcastComputedStyles()
   logInitStep('setUniqId', 'success', 'Unique ID set: ' + (uniqid || 'not available'));
 
   // Enable debug and console overlay for 'genius' slug (MUST BE FIRST)

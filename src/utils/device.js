@@ -542,7 +542,18 @@ export const initDeviceInfo = async (deviceType) => {
 export const getDeviceInfo = () => deviceInfo;
 
 export const getDeviceStageProps = () => {
-  const { innerHeight, innerWidth } = window;
+  let { innerHeight, innerWidth } = window;
+  if (getDeviceType() === 'hbbTv') {
+    const hbbTvBroadcastDimensionsString = localStorage.getItem('hbbTvBroadcastDimensions')
+    if (hbbTvBroadcastDimensionsString) {
+      const hbbTvBroadcastDimensions = JSON.parse(hbbTvBroadcastDimensionsString)
+      const { width = 0, height = 0 } = hbbTvBroadcastDimensions
+      if (width && height) {
+        innerWidth = width
+        innerHeight = height
+      }
+    }
+  }
   const height = innerHeight || 1080;
   const width = innerWidth || 1920;
   return {
