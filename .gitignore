@@ -4,6 +4,7 @@ dist
 releases
 .tmp
 build
+build-hbbTv
 .env
 .env.*
 public/static/devtools

@@ -3,6 +3,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk').default || require('chalk');
+const { deleteFolder, copyFolder } = require('./utils');
 
 // Run the standard Vite build and relay stdout/stderr to the console.
 // This script is used to generate the production build before copying
@@ -16,35 +17,6 @@ function runBuild() {
       else reject(new Error('build failed with code ' + code));
     });
   });
-}
-
-// Remove a folder and all contents, but ignore it if it does not exist.
-// This ensures the target HbbTV folder is clean before copying a fresh build.
-async function deleteFolder(folderPath) {
-  try {
-    await fs.promises.rm(folderPath, { recursive: true, force: true });
-  } catch (e) {
-    if (e.code !== 'ENOENT') throw e;
-  }
-}
-
-// Recursively copy a folder from the build output into the HbbTV deployment directory.
-// Keeps symlinks intact when possible and preserves the build folder layout.
-async function copyFolder(src, dest) {
-  await fs.promises.mkdir(dest, { recursive: true });
-  const entries = await fs.promises.readdir(src, { withFileTypes: true });
-  for (const entry of entries) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-    if (entry.isDirectory()) {
-      await copyFolder(srcPath, destPath);
-    } else if (entry.isSymbolicLink()) {
-      const target = await fs.promises.readlink(srcPath);
-      await fs.promises.symlink(target, destPath).catch(() => { });
-    } else {
-      await fs.promises.copyFile(srcPath, destPath);
-    }
-  }
 }
 
 // Find a generated Vite asset filename by regex, such as the legacy entry or polyfill.
@@ -75,6 +47,7 @@ async function replaceInFile(filePath, search, replace) {
 // Update the HbbTV loader with the actual legacy bundle filenames produced by Vite.
 // The HbbTV app uses these constants to load the legacy polyfill and entry script.
 async function patchLegacyAssets(hbbtvDir) {
+  console.log('')
   const legacyDir = path.join(hbbtvDir, 'assets');
   const legacyEntry = await findAssetName(legacyDir, /^index-legacy-.*\.js$/);
   const legacyPolyfill = await findAssetName(legacyDir, /^polyfills-legacy-.*\.js$/);
@@ -93,6 +66,7 @@ async function main() {
     console.error('Build failed:', e.message);
     process.exit(1);
   }
+  console.log('')
 
   const buildDir = path.join(process.cwd(), 'build');
   const hbbtvDir = path.join(process.cwd(), 'hbbTv');
