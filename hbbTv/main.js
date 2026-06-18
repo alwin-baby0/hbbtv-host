@@ -12,6 +12,8 @@ var DEBUG_SMARTCLIP = false;
 var DEBUG_ENABLED = false;  // Master switch for all debugging
 var DEBUG_CONSOLE_OVERLAY = false;  // Enable on-screen console overlay display
 var ENABLE_INIT_LOGGING = false;  // Enable initialization step logging to Laravel API
+var ENABLE_ERROR_LOGGING = false;  // Enable error logging to Laravel API
+var ENABLE_ANALYTICS_LOGGING = false;  // Enable analytics logging
 
 const TYPE = { BROADCAST: 'broadcast', APP: 'app' }
 var playerType = 'dash'
@@ -45,14 +47,16 @@ var debugLog = function () {
    * Uses XMLHttpRequest for IE8+ compatibility
    */
   function sendErrorToServer(errorData) {
-    // Wait for baseUrl to be available (it's defined later in the script)
+    if (!ENABLE_ERROR_LOGGING) return
+
+    // Wait for apiUrl to be available (it's defined later in the script)
     if (!ERROR_LOG_ENDPOINT) {
-      // Try to get baseUrl from DOM element
-      var baseUrlElement = document.getElementById('baseUrl');
-      if (baseUrlElement && baseUrlElement.innerText) {
-        ERROR_LOG_ENDPOINT = baseUrlElement.innerText + '/api/hbbtv-storeErrors';
+      // Try to get apiUrl from DOM element
+      var apiUrlElement = document.getElementById('apiUrl');
+      if (apiUrlElement && apiUrlElement.innerText) {
+        ERROR_LOG_ENDPOINT = apiUrlElement.innerText + '/hbbtv-storeErrors';
       } else {
-        // baseUrl not available yet, will retry on next error
+        // apiUrl not available yet, will retry on next error
         return;
       }
     }
@@ -248,11 +252,11 @@ var debugLog = function () {
 
     // Wait for baseUrl to be available
     if (!INIT_LOG_ENDPOINT) {
-      var baseUrlElement = document.getElementById('baseUrl');
-      if (baseUrlElement && baseUrlElement.innerText) {
-        INIT_LOG_ENDPOINT = baseUrlElement.innerText + '/api/hbbtv-storeInitLogs';
+      var apiUrlElement = document.getElementById('apiUrl');
+      if (apiUrlElement && apiUrlElement.innerText) {
+        INIT_LOG_ENDPOINT = apiUrlElement.innerText + '/hbbtv-storeInitLogs';
       } else {
-        // baseUrl not available yet, skip this log
+        // apiUrl not available yet, skip this log
         return;
       }
     }
@@ -321,10 +325,13 @@ var expire_tcf_string = '';
 var dash_link = document.getElementById('dash_link').innerText;
 var lang = document.getElementById('lang').innerText;
 var baseUrl = document.getElementById('baseUrl').innerText;
+var apiUrl = document.getElementById('apiUrl').innerText;
 var distId = document.getElementById('distId').innerText;
-var amteccoAnalytics = baseUrl + '/api/hbbtv-storeAnalytics';
+var amteccoAnalytics = apiUrl + '/hbbtv-storeAnalytics';
 var amteccoQuarileAnalytics = baseUrl + '/api/hbbtv-storeQuartiles';
-var amteccoIp = baseUrl + '/api/hbbtv-ip';
+// var amteccoIp = baseUrl + '/api/hbbtv-ip';
+var amteccoIp = apiUrl + '/hbbtv-ip';
+
 var amteccoApi = baseUrl + '/api/hbbtv-api';
 var dashFailureLog = baseUrl + '/api/dash/log-failure';
 
@@ -606,7 +613,7 @@ function initConsoleOverlay() {
  */
 function sendAnalytics() {
   console.log('### Analytics mocked and returned');
-  return
+  if (!ENABLE_ANALYTICS_LOGGING) return
 
   var xhr = new XMLHttpRequest();
   xhr.open('POST', amteccoAnalytics, true);
@@ -688,46 +695,6 @@ function getIpData() {
 
         return res;
       } else {
-        var res = {
-          "ipData": {
-            "ip": "213.211.234.22",
-            "country": "Germany",
-            "countryCode": "DE",
-            "region": "Saxony-Anhalt",
-            "regionCode": "ST",
-            "city": "Magdeburg",
-            "zip": "39106",
-            "lat": "52.1426",
-            "latitude": "52.1426",
-            "lon": "11.6462",
-            "longitude": "11.6462",
-            "timezone": "Europe\/Berlin",
-            "isp": null
-          },
-          "userAgent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/148.0.0.0 Safari\/537.36",
-          "distId": "3",
-          "uniqid": null
-        }
-        res.userAgent = navigator.userAgent;
-        ipData = res;
-
-        // Extract the IP address from the response
-        if (ipData && ipData.ipData && ipData.ipData.ip) {
-          ipAddr = ipData.ipData.ip;
-        }
-
-        if (ipData) {
-          debugLog('IP data received:', ipData);
-
-          // Send initial analytics
-          sendAnalytics();
-
-          // Set up 60-second interval for analytics updates
-          setInterval(function () {
-            sendAnalytics();
-          }, 60000);
-        }
-        return res;
         debugLog('Failed to get IP data, status: ' + xhr.status);
       }
     }
