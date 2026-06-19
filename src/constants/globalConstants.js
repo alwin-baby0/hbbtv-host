@@ -212,6 +212,11 @@ export const TRANSLATIONS = {
   NO_CONTINUE_WATCHING: 'no_continue_watching',
   HELP_INFO_LABEL: 'help_info_label',
   NO_RECENT_SEARCHES: 'no_recent_searches',
+  START_IN: 'start_in',
+  DAYS_LABEL: 'days_label',
+  HOURS_LABEL: 'hours_label',
+  MINUTESS_LABEL: 'minutes_label',
+  SECONDS_LABEL: 'seconds_label',
 };
 
 export const IMG_PATH = {

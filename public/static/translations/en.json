@@ -68,11 +68,16 @@
   "search_for": "Search For",
   "cmp_title": "We value your privacy",
   "cmp_description": "'We use cookies to enhance browsing experience. By clicking “Yes” you consent to our use of cookies. You can customize your consent preferences by clicking “Customize”'",
-  "refresh":"refresh",
-  "close":"close",
+  "refresh": "refresh",
+  "close": "close",
   "no_favorites": "Your favorite list is empty",
   "no_continue_watching": "No titles for continue watching",
   "help_info_label": "Info",
   "view_all": "View all",
-  "all_genre": "All"
+  "all_genre": "All",
+  "start_in": "Starts in",
+  "days_label": "Days",
+  "hours_label": "Hours",
+  "minutes_label": "Minutes",
+  "seconds_label": "Secs"
 }

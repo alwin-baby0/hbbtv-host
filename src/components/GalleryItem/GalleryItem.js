@@ -159,6 +159,7 @@ export default class GalleryItem extends Lightning.Component {
           Start: {
             flexItem: { marginLeft: 50, marginTop: 8 },
             text: {
+              text: t(TRANSLATIONS.START_IN),
               fontSize: 24,
               fontFace: 'Montserrat-Semibold',
             },
@@ -176,6 +177,7 @@ export default class GalleryItem extends Lightning.Component {
               y: 19,
               flexItem: { marginLeft: 5, },
               text: {
+                text: t(TRANSLATIONS.DAYS_LABEL),
                 fontSize: 24,
               },
             },
@@ -193,6 +195,7 @@ export default class GalleryItem extends Lightning.Component {
               y: 19,
               flexItem: { marginLeft: 5, },
               text: {
+                text: t(TRANSLATIONS.HOURS_LABEL),
                 fontSize: 24,
               },
             },
@@ -210,6 +213,7 @@ export default class GalleryItem extends Lightning.Component {
               y: 19,
               flexItem: { marginLeft: 5, },
               text: {
+                text: t(TRANSLATIONS.MINUTESS_LABEL),
                 fontSize: 24,
               },
             },
@@ -227,6 +231,7 @@ export default class GalleryItem extends Lightning.Component {
               y: 19,
               flexItem: { marginLeft: 5, },
               text: {
+                text: t(TRANSLATIONS.SECONDS_LABEL),
                 fontSize: 24,
               },
             },
@@ -658,37 +663,6 @@ export default class GalleryItem extends Lightning.Component {
       this._Info.patch({
         Countdown: {
           visible: this.remainingUntilStart > 0,
-          Start: {
-            text: 'Starts in:'
-          },
-          Days: {
-            Label: {
-              text: {
-                text: 'Days',
-              },
-            },
-          },
-          Hours: {
-            Label: {
-              text: {
-                text: 'Hours',
-              },
-            },
-          },
-          Mins: {
-            Label: {
-              text: {
-                text: 'Mins',
-              },
-            },
-          },
-          Sec: {
-            Label: {
-              text: {
-                text: 'Sec',
-              },
-            },
-          },
         },
       });
     }
