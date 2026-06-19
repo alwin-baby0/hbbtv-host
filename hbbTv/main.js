@@ -49,14 +49,14 @@ var debugLog = function () {
   function sendErrorToServer(errorData) {
     if (!ENABLE_ERROR_LOGGING) return
 
-    // Wait for apiUrl to be available (it's defined later in the script)
+    // Wait for baseUrl to be available (it's defined later in the script)
     if (!ERROR_LOG_ENDPOINT) {
-      // Try to get apiUrl from DOM element
-      var apiUrlElement = document.getElementById('apiUrl');
-      if (apiUrlElement && apiUrlElement.innerText) {
-        ERROR_LOG_ENDPOINT = apiUrlElement.innerText + '/hbbtv-storeErrors';
+      // Try to get baseUrl from DOM element
+      var baseUrlElement = document.getElementById('baseUrl');
+      if (baseUrlElement && baseUrlElement.innerText) {
+        ERROR_LOG_ENDPOINT = baseUrlElement.innerText + '/api/hbbtv-storeErrors';
       } else {
-        // apiUrl not available yet, will retry on next error
+        // baseUrl not available yet, will retry on next error
         return;
       }
     }
@@ -252,11 +252,11 @@ var debugLog = function () {
 
     // Wait for baseUrl to be available
     if (!INIT_LOG_ENDPOINT) {
-      var apiUrlElement = document.getElementById('apiUrl');
-      if (apiUrlElement && apiUrlElement.innerText) {
-        INIT_LOG_ENDPOINT = apiUrlElement.innerText + '/hbbtv-storeInitLogs';
+      var baseUrlElement = document.getElementById('baseUrl');
+      if (baseUrlElement && baseUrlElement.innerText) {
+        INIT_LOG_ENDPOINT = baseUrlElement.innerText + '/api/hbbtv-storeInitLogs';
       } else {
-        // apiUrl not available yet, skip this log
+        // baseUrl not available yet, skip this log
         return;
       }
     }
@@ -325,12 +325,10 @@ var expire_tcf_string = '';
 var dash_link = document.getElementById('dash_link').innerText;
 var lang = document.getElementById('lang').innerText;
 var baseUrl = document.getElementById('baseUrl').innerText;
-var apiUrl = document.getElementById('apiUrl').innerText;
 var distId = document.getElementById('distId').innerText;
-var amteccoAnalytics = apiUrl + '/hbbtv-storeAnalytics';
+var amteccoAnalytics = baseUrl + '/api/hbbtv-storeAnalytics';
 var amteccoQuarileAnalytics = baseUrl + '/api/hbbtv-storeQuartiles';
-// var amteccoIp = baseUrl + '/api/hbbtv-ip';
-var amteccoIp = apiUrl + '/hbbtv-ip';
+var amteccoIp = baseUrl + '/api/hbbtv-ip';
 
 var amteccoApi = baseUrl + '/api/hbbtv-api';
 var dashFailureLog = baseUrl + '/api/dash/log-failure';
