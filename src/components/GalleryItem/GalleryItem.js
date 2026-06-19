@@ -140,99 +140,99 @@ export default class GalleryItem extends Lightning.Component {
         },
         Countdown: {
           visible: false,
-          flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+          flex: { direction: 'row', alignItems: 'center', justifyContent: 'flex-start' },
           flexItem: {
             marginTop: 15,
             marginBottom: 25,
           },
-          texture: Lightning.Tools.getRoundRect(800, 100, 10, 2, '#FFFFFF', false, false),
-          h: 100,
-          w: 800,
+          Container: {
+            rect: true,
+            flexItem: false,
+            shader: {
+              type: Lightning.shaders.RoundedRectangle,
+              radius: 12,
+              stroke: 2.2,
+              strokeColor: 0xFFFFFFFF,
+              fillColor: 0x401b1b23,
+            },
+          },
           Start: {
-            w: 200,
-            x: 50,
+            flexItem: { marginLeft: 50, marginTop: 8 },
             text: {
-              text: 'Start in:',
               fontSize: 24,
               fontFace: 'Montserrat-Semibold',
             },
           },
           Days: {
-            w: 230,
             flex: { direction: 'row' },
+            flexItem: { marginLeft: 50, marginTop: 8 },
             Number: {
               text: {
-                text: '7',
                 fontFace: 'Montserrat-Bold',
                 fontSize: 44,
               },
             },
             Label: {
               y: 19,
+              flexItem: { marginLeft: 5, },
               text: {
-                text: 'Days',
                 fontSize: 24,
               },
             },
           },
           Hours: {
-            w: 230,
+            flexItem: { marginLeft: 50, marginTop: 8 },
             flex: { direction: 'row' },
             Number: {
               text: {
-                text: '8',
                 fontSize: 44,
                 fontFace: 'Montserrat-Bold',
               },
             },
             Label: {
               y: 19,
+              flexItem: { marginLeft: 5, },
               text: {
-                text: 'Hours',
                 fontSize: 24,
               },
             },
           },
           Mins: {
-            w: 230,
+            flexItem: { marginLeft: 50, marginTop: 8 },
             flex: { direction: 'row' },
             Number: {
               text: {
-                text: '13',
                 fontSize: 44,
                 fontFace: 'Montserrat-Bold',
               },
             },
             Label: {
               y: 19,
+              flexItem: { marginLeft: 5, },
               text: {
-                text: 'Min',
                 fontSize: 24,
               },
             },
           },
           Sec: {
-            w: 230,
+            flexItem: { marginLeft: 50, marginTop: 8, marginRight: 50 },
             flex: { direction: 'row' },
             Number: {
               text: {
-                text: '4',
                 fontSize: 44,
                 fontFace: 'Montserrat-Bold',
               },
             },
             Label: {
               y: 19,
+              flexItem: { marginLeft: 5, },
               text: {
-                text: 'Sec',
                 fontSize: 24,
               },
             },
           },
         },
         Title: {
-          w: 900,
-          wordWrapWidth: 900,
           text: {
             text: '',
             fontSize: 48,
@@ -245,9 +245,7 @@ export default class GalleryItem extends Lightning.Component {
             marginTop: 10,
             marginBottom: 5,
           },
-          w: 1100,
           text: {
-            wordWrapWidth: 1100,
             fontFace: 'Montserrat-Regular',
             fontSize: 25,
             lineHeight: 31,
@@ -519,6 +517,7 @@ export default class GalleryItem extends Lightning.Component {
       this._minutes = Math.floor((totalSeconds % 3600) / 60);
       this._seconds = totalSeconds % 60;
 
+      this.updateUI();
       if (!this._countDownInterval) {
         this._countDownInterval = setInterval(() => {
           this.remainingUntilStart -= 1000;
@@ -629,7 +628,14 @@ export default class GalleryItem extends Lightning.Component {
         },
       });
     } else {
+      const _handleOnAfterUpdate = () => {
+        if (this._Countdown?.finalW > this._CountdownContainer?.w) this._Countdown.patch({ Container: { w: this._Countdown.finalW } })
+        if (this._Countdown?.finalH > this._CountdownContainer?.h) this._Countdown.patch({ Container: { h: this._Countdown.finalH } })
+      }
       this._Info.patch({
+        Countdown: {
+          onAfterUpdate: _handleOnAfterUpdate
+        },
         TopSection: {
           SummSub: undefined,
           Badge: {
@@ -649,41 +655,41 @@ export default class GalleryItem extends Lightning.Component {
           }
         },
       });
-      setTimeout(() => {
-        //this patch is delayed on purpose, without it countdown is not properly displayed
-        this._Info.patch({
-          Countdown: {
-            visible: this.remainingUntilStart > 0,
-            Days: {
-              Number: {
-                text: {
-                  text: this._days,
-                },
-              },
-            },
-            Hours: {
-              Number: {
-                text: {
-                  text: this._hours,
-                },
-              },
-            },
-            Mins: {
-              Number: {
-                text: {
-                  text: this._minutes,
-                },
-              },
-            },
-            Sec: {
-              Number: {
-                text: {
-                  text: this._seconds,
-                },
+      this._Info.patch({
+        Countdown: {
+          visible: this.remainingUntilStart > 0,
+          Start: {
+            text: 'Starts in:'
+          },
+          Days: {
+            Label: {
+              text: {
+                text: 'Days',
               },
             },
           },
-        });
+          Hours: {
+            Label: {
+              text: {
+                text: 'Hours',
+              },
+            },
+          },
+          Mins: {
+            Label: {
+              text: {
+                text: 'Mins',
+              },
+            },
+          },
+          Sec: {
+            Label: {
+              text: {
+                text: 'Sec',
+              },
+            },
+          },
+        },
       });
     }
 
@@ -873,6 +879,14 @@ export default class GalleryItem extends Lightning.Component {
 
   get _Info() {
     return this.tag('Info');
+  }
+
+  get _Countdown() {
+    return this.tag('Countdown');
+  }
+
+  get _CountdownContainer() {
+    return this.tag('Countdown.Container');
   }
 
   get _Spinner() {
