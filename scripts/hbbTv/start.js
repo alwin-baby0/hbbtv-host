@@ -33,7 +33,7 @@ async function main() {
     console.log('')
     console.log(chalk.green('Starting http-server for hbbTv...'));
     console.log('')
-    await runHttpServer(hbbTvDir);
+    await runHttpServer(hbbTvDir, 3001);
   } catch (e) {
     console.error('Failed to start http-server:', e.message);
     process.exit(1);

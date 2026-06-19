@@ -523,7 +523,7 @@ export default class GalleryItem extends Lightning.Component {
       this._seconds = totalSeconds % 60;
 
       this.updateUI();
-      if (!this._countDownInterval) {
+      if (!this._countDownInterval && !!this.remainingUntilStart) {
         this._countDownInterval = setInterval(() => {
           this.remainingUntilStart -= 1000;
           if (this.remainingUntilStart <= 0) {
