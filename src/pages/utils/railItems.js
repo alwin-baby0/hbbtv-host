@@ -214,7 +214,7 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       itemDescription: railItem.description,
       durationString: railItem.durationString,
       year: railItem.year,
-      imageSrc: railItem.getThumbnailImage(IMAGE_SIZES.M).src,
+      imageSrc: railItem?.getThumbnailImage?.(IMAGE_SIZES.M).src,
       index,
       callback: () => {
         DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(
@@ -329,7 +329,7 @@ const constructBannerRailItems = (railItems, railItemsOptions) => {
       itemTitle: railItem.title ? railItem.title : '',
       imageSrc: railItem.getCtvPoster(1080),
       itemType: railItem.type,
-      callback: () => {},
+      callback: () => { },
     },
   }));
 };

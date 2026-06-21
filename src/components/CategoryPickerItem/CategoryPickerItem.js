@@ -10,6 +10,8 @@ export default class CategoryPickerItem extends FocusableItem {
     itemInfo: null,
     callback: () => null,
   };
+  _paddingForEachSide = 15
+  _focused = false
 
   static _template() {
     return {
@@ -28,15 +30,62 @@ export default class CategoryPickerItem extends FocusableItem {
           textAlign: 'center',
           textColor: Colors(colors.white).get(),
           textOverflow: 'ellipsis',
-          wordWrapWidth: 220,
           wordWrap: false,
         },
       },
     };
   }
 
+  _getMinimumWidth(width) {
+    const total = width + 2 * this._paddingForEachSide;
+    return Math.max(total, this._props?.w);
+  }
+
+
+  _onTitleTextureLoaded = () => {
+    const labelTextRenderWidth = this.tag('Title')?.texture?.getRenderWidth()
+    const minWidth = this._getMinimumWidth(labelTextRenderWidth)
+    if (this.w === minWidth + 10) return
+    console.log('######### labelTextRenderWidth', labelTextRenderWidth);
+
+    const { itemInfo, w, h, strokeWidth, radius } = this._props;
+    const { title, data } = itemInfo;
+
+    this.setProps({
+      x: -2,
+      y: -1,
+      width: minWidth + 10,
+      height: h + 10,
+      radius: 12,
+      strokeWidth: 2,
+      strokeColor: Colors(colors.focus).get(),
+    });
+
+    this.patch({
+      w: minWidth + 10,
+      h: h + 10,
+      Button: {
+        x: 5,
+        y: 6,
+        minWidth,
+        h,
+        texture: Lightning.Tools.getRoundRect(
+          minWidth,
+          h,
+          radius,
+          strokeWidth,
+          Colors(this._focused ? colors.focus : colors.white).get(),
+          true,
+          Colors(this._focused ? colors.focus : colors.catPickerItemUnf).get()
+        ),
+      },
+    });
+
+  }
+
   set props(props) {
     this._props = { ...this._props, ...props };
+    this.w = 0
 
     const { itemInfo, w, h, strokeWidth, radius } = this._props;
     const { title, data } = itemInfo;
@@ -52,23 +101,6 @@ export default class CategoryPickerItem extends FocusableItem {
     });
 
     this.patch({
-      w: w + 10,
-      h: h + 10,
-      Button: {
-        x: 5,
-        y: 6,
-        w,
-        h,
-        texture: Lightning.Tools.getRoundRect(
-          w,
-          h,
-          radius,
-          strokeWidth,
-          Colors(colors.white).get(),
-          true,
-          Colors(colors.catPickerItemUnf).get()
-        ),
-      },
       Title: {
         text: {
           text: title
@@ -79,6 +111,7 @@ export default class CategoryPickerItem extends FocusableItem {
         },
       },
     });
+    this.tag('Title').on('txLoaded', this._onTitleTextureLoaded);
   }
 
   _handleHover() {
@@ -105,17 +138,20 @@ export default class CategoryPickerItem extends FocusableItem {
   }
 
   _focus() {
+    this._focused = true
+    const labelTextRenderWidth = this.tag('Title')?.texture?.getRenderWidth()
     const { w, h, radius, strokeWidth } = this._props;
+    const minWidth = this._getMinimumWidth(labelTextRenderWidth)
 
     super._focus();
     this.patch({
       Button: {
         x: 5,
         y: 6,
-        w,
+        w: minWidth,
         h,
         texture: Lightning.Tools.getRoundRect(
-          w,
+          minWidth,
           h,
           radius,
           strokeWidth,
@@ -128,17 +164,20 @@ export default class CategoryPickerItem extends FocusableItem {
   }
 
   _unfocus() {
+    this._focused = false
+    const labelTextRenderWidth = this.tag('Title')?.texture?.getRenderWidth()
     const { w, h, radius, strokeWidth } = this._props;
+    const minWidth = this._getMinimumWidth(labelTextRenderWidth)
 
     super._unfocus();
     this.patch({
       Button: {
         x: 5,
         y: 6,
-        w,
+        w: minWidth,
         h,
         texture: Lightning.Tools.getRoundRect(
-          w,
+          minWidth,
           h,
           radius,
           strokeWidth,
