@@ -77,7 +77,7 @@ export default class HeroRailItem extends FocusableItem {
     this._timeoutId = setTimeout(() => {
       this.fireAncestors('$punchHoleTV', 350, 0, 1570, 883, 0);
       this.fireAncestors('$playTrailer', url);
-    }, 1000);
+    }, 300);
     this.fireAncestors('$changeGalleryItem', index);
   }
 
@@ -121,7 +121,7 @@ export default class HeroRailItem extends FocusableItem {
     this._timeoutId = setTimeout(() => {
       this.fireAncestors('$punchHoleTV', 350, 0, 1570, 883, 0);
       this.fireAncestors('$playTrailer', url);
-    }, 1000);
+    }, 300);
     this.fireAncestors('$changeGalleryItem', index);
   }
 }

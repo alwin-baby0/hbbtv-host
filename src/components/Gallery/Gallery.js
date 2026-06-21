@@ -80,12 +80,14 @@ export default class Gallery extends Lightning.Component {
     VideoPlayer.unloader(unloader);
   }
 
-  $playTrailer(url) {
+  $videoPlayerCanPlay() {
     this._HeroSection._BackgroundImage.visible = false;
-    VideoPlayer.loop(true);
-
-    VideoPlayer.open(url);
     VideoPlayer.play();
+  }
+
+  $playTrailer(url) {
+    VideoPlayer.loop(true);
+    VideoPlayer.open(url);
   }
 
   $stopVideo() {

@@ -46,7 +46,6 @@ export default class CategoryPickerItem extends FocusableItem {
     const labelTextRenderWidth = this.tag('Title')?.texture?.getRenderWidth()
     const minWidth = this._getMinimumWidth(labelTextRenderWidth)
     if (this.w === minWidth + 10) return
-    console.log('######### labelTextRenderWidth', labelTextRenderWidth);
 
     const { itemInfo, w, h, strokeWidth, radius } = this._props;
     const { title, data } = itemInfo;
