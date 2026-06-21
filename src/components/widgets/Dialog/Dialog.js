@@ -37,19 +37,21 @@ export default class Dialog extends Lightning.Component {
       },
       Wrapper: {
         y: 260,
-        w: 1920,
         h: 480,
         Labels: {
+          w: 660,
+          x: 1920 / 2,
           y: 220,
+          mountX: 0.5,
           mountY: 1,
           flex: { direction: 'column' },
           Header: {
             mountX: 0.5,
-            x: 1920 / 2,
+            x: (w) => w / 2,
           },
           Message: {
             mountX: 0.5,
-            x: 1920 / 2,
+            x: (w) => w / 2,
             y: 25,
             color: Colors('#FAFAFA').alpha(1).get(),
             text: {
@@ -63,10 +65,8 @@ export default class Dialog extends Lightning.Component {
         Buttons: {
           collision: true,
           zIndex: 300,
-          flex: { justifyContent: 'center' },
           type: Row,
           y: 300,
-          w: 1920,
           neverScroll: true,
           style: { itemSpacing: 50 },
           autoResize: true,
@@ -82,6 +82,7 @@ export default class Dialog extends Lightning.Component {
         this.visible = false;
       }
     });
+    this._Buttons.onAfterUpdate = this._handleButtonsOnAfterUpdate
   }
 
   get _Buttons() {
@@ -122,6 +123,13 @@ export default class Dialog extends Lightning.Component {
 
   $BtnClicked() {
     this._handleEnter();
+  }
+
+  _handleButtonsOnAfterUpdate = () => {
+    const nnnn = this._Buttons.tag('Items')
+    if (this._Buttons.x !== 1920 / 2 - nnnn.w / 2) {
+      this._Buttons.x = 1920 / 2 - nnnn.w / 2
+    }
   }
 
   open({ header = '', message = '', actions = [] }) {
