@@ -235,9 +235,10 @@ export default class Settings extends Lightning.Component {
           ConsentChangeButton: {
             type: Button,
             props: {
-              width: 300,
               height: 95,
               buttonLabel: t(TRANSLATIONS.COOKIE_PREFERENCES),
+              autoWidth: true,
+              textProps: { fontSize: 25 },
               callback: async () => {
                 await window.Didomi.notice.show();
 
