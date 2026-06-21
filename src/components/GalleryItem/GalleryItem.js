@@ -764,7 +764,7 @@ export default class GalleryItem extends Lightning.Component {
               return;
             }
 
-            this._Info.visible = false;
+            // this._Info.visible = false;
             this._Spinner.visible = true;
             this._Spinner
               .animation({

@@ -81,7 +81,7 @@ export default class Gallery extends Lightning.Component {
   }
 
   $videoPlayerCanPlay() {
-    this._HeroSection._BackgroundImage.visible = false;
+    this._HeroSection._BackgroundImage.setSmooth('alpha', 0);
     VideoPlayer.play();
   }
 
@@ -114,6 +114,7 @@ export default class Gallery extends Lightning.Component {
       w: 1570,
       h: 883,
       src: sliderData.items[index].getLandscapePoster(IMAGE_SIZES.S)?.src,
+      alpha: 1,
     });
   }
 

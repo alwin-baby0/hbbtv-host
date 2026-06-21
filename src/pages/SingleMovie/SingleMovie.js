@@ -565,8 +565,8 @@ export default class SingleMovie extends Lightning.Component {
                 if (item.buttonName === 'FAVORITE') {
                   this.addToFavorite();
                 } else if (item.buttonName === 'WATCH NOW') {
-                  this._Card.visible = false;
-                  this._CardInfo.visible = false;
+                  // this._Card.visible = false;
+                  // this._CardInfo.visible = false;
                   this._Spinner.visible = true;
                   this._Spinner
                     .animation({

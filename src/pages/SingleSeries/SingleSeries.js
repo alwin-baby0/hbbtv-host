@@ -216,7 +216,7 @@ export default class SingleSeries extends Lightning.Component {
                   position,
                   duration: lastPlayedEpisodeDuration,
                   callback: () => {
-                    this._HeroSection._Info.visible = false;
+                    // this._HeroSection._Info.visible = false;
                     this._HeroSection._Spinner.visible = true;
                     this._HeroSection._Spinner
                       .animation({
