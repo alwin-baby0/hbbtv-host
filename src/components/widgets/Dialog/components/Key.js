@@ -1,30 +1,32 @@
 import { Lightning, Colors } from '@lightningjs/sdk';
 export class Key extends Lightning.Component {
+  _paddingLeft = 25
+  _paddingTop = 15
+  _paddingRight = 25
+  _paddingBottom = 15
+
   static _template() {
     return {
       Button: {
         collision: true,
         rect: true,
-        w: 235,
-        h: 75,
         color: Colors('#292929').get(),
-        texture: Lightning.Tools.getRoundRect(235, 75, 12, 3, false),
-        Wrapper: {
-          Label: {
-            w: 235,
-            h: 75,
-            alpha: 0.8,
-            color: Colors('white').get(),
-            text: { fontFace: 'Montserrat-Regular', fontSize: 32 },
-          },
+        flex: { justifyContent: 'center', alignItems: 'center' },
+        Label: {
+          alpha: 0.8,
+          color: Colors('white').get(),
+          text: { fontFace: 'Montserrat-Regular', fontSize: 32 },
         },
-        ButtonBorder: {},
       },
     };
   }
 
   get _Button() {
     return this.tag('Button');
+  }
+
+  get _Label() {
+    return this.tag('Label');
   }
 
   set data(obj) {
@@ -46,20 +48,32 @@ export class Key extends Lightning.Component {
     }
     const { label } = this._data;
     this.patch({
-      Label: {
-        w: 235,
-        h: 75,
-        flex: { justifyContent: 'center', alignItems: 'center' },
-        Text: {
+      Button: {
+        Label: {
           text: {
             text: label,
             fontSize: 32,
             textAlign: 'center',
-            wordWrapWidth: 220,
           },
-        },
+        }
       },
     });
+  }
+
+  _onTxLoadedHandler = () => {
+    const keyWidth = this._Label.texture.getRenderWidth() + this._paddingLeft + this._paddingRight
+    const keyHeight = this._Label.texture.getRenderHeight() + this._paddingTop + this._paddingBottom
+    this.patch({
+      w: keyWidth,
+      h: keyHeight,
+      Button: {
+        texture: Lightning.Tools.getRoundRect(keyWidth, keyHeight, 12, 3, false)
+      }
+    })
+  }
+
+  _init() {
+    this._Label.on('txLoaded', this._onTxLoadedHandler);
   }
 
   _active() {
@@ -71,6 +85,7 @@ export class Key extends Lightning.Component {
     this._Button.patch({
       color: Colors('#C40000').get(),
     });
+    this.setSmooth('scale', 1.02)
   }
 
   _unfocus() {
@@ -78,6 +93,7 @@ export class Key extends Lightning.Component {
     this._Button.patch({
       color: Colors('#292929').get(),
     });
+    this.setSmooth('scale', 1)
   }
 
   _handleClick() {
