@@ -874,7 +874,6 @@ function setVideo() {
       if (DEBUG_ENABLED) debugLog('PLAYER: appObject obtained, showing app');
       logInitStep('getOwnerApplication', 'success', 'appObject obtained and shown');
       appObject.show();
-      enableRedButton()
       // broadcastContainer.bindToCurrentChannel();
       var ch = broadcastContainer.currentChannel;
 
@@ -1078,7 +1077,6 @@ function setHlsVideo() {
     if (DEBUG_ENABLED) debugLog('PLAYER: appObject obtained, showing app');
     logInitStep('getOwnerApplication', 'success', 'appObject obtained and shown');
     appObject.show();
-    enableRedButton()
 
     if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
 

@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-VhcLjUrG.js';
+const LEGACY_ENTRY = './assets/index-legacy-Chonl_DI.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-brPzi115.js';
 
 const splash = document.getElementById('splash');
@@ -112,10 +112,13 @@ function onBroadcastVideoCanPlay(e) {
     broadcastControlObject.hideAndMuteBroadcast()
   }
   if (e.srcElement && e.srcElement.play) e.srcElement.play()
+  // log('broadcast video can play')
 }
 
 function onBroadcastVideoPlaying() {
   // if (!broadcastControlObject.controlAssumed) broadcastControlObject.assumeControl()
+  enableRedButton()
+  // log('broadcast video playing')
   hideHbbtvLoader()
   startPropmtingUserWithOverlay()
 }
@@ -250,7 +253,7 @@ function hideBroadcastAndShowApp() {
   hideBroadcast()
   insertLightningScripts()
   currentObject = TYPE.APP
-  console.log('### hideBroadcastAndShowApp');
+  log('### hideBroadcastAndShowApp');
 }
 
 function hideAppAndShowBroadcast() {
@@ -258,7 +261,7 @@ function hideAppAndShowBroadcast() {
   showBroadcast();
   currentObject = TYPE.BROADCAST;
   enableRedButton()
-  console.log('### hideAppAndShowBroadcast');
+  log('### hideAppAndShowBroadcast');
 }
 
 function cleanupBroadcastBeforeReleasing() {
