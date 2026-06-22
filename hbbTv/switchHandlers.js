@@ -136,12 +136,13 @@ function appendBroadcastVideoElement() {
   video.addEventListener('canplay', onBroadcastVideoCanPlay);
   video.addEventListener('playing', onBroadcastVideoPlaying);
   document.body.appendChild(video);
+  return video
 }
 
 function startDashBroadcast() {
   try {
     let video = document.getElementById('video');
-    if (!video) appendBroadcastVideoElement()
+    if (!video) video = appendBroadcastVideoElement()
     video.style.visibility = 'visible'
 
     if (dash && typeof dash.attachView === 'function') {
@@ -164,7 +165,7 @@ function startHlsBroadcast() {
   try {
     // kill any existing hls
     let video = document.getElementById('video');
-    if (!video) appendBroadcastVideoElement()
+    if (!video) video = appendBroadcastVideoElement()
     video.style.visibility = 'visible';
 
     if (hls && typeof hls.attachMedia === 'function') {
@@ -253,7 +254,7 @@ function hideBroadcastAndShowApp() {
   hideBroadcast()
   insertLightningScripts()
   currentObject = TYPE.APP
-  log('### hideBroadcastAndShowApp');
+  // log('### hideBroadcastAndShowApp');
 }
 
 function hideAppAndShowBroadcast() {
@@ -261,7 +262,7 @@ function hideAppAndShowBroadcast() {
   showBroadcast();
   currentObject = TYPE.BROADCAST;
   enableRedButton()
-  log('### hideAppAndShowBroadcast');
+  // log('### hideAppAndShowBroadcast');
 }
 
 function cleanupBroadcastBeforeReleasing() {
