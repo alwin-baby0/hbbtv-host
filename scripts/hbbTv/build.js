@@ -32,7 +32,7 @@ async function minifyTopLevelJsFiles(folderPath) {
     const filePath = path.join(folderPath, file.name);
     const before = (await fs.promises.stat(filePath)).size;
     const content = await fs.promises.readFile(filePath, 'utf8');
-    const result = await esbuild.transform(content, { minify: true, keepNames: true });
+    const result = await esbuild.transform(content, { minify: true, keepNames: true, target: 'es5' });
     await fs.promises.writeFile(filePath, result.code, 'utf8');
     const after = (await fs.promises.stat(filePath)).size;
     const afterColor = after > 102400 ? chalk.yellow : chalk.gray;
