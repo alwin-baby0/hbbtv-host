@@ -881,7 +881,7 @@ function setVideo() {
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Creating video element...');
 
-      appendBroadcastVideoElement()
+      var video = appendBroadcastVideoElement()
       logInitStep('createVideoElement', 'success', 'Video element created and appended');
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Checking dashjs library...');
@@ -1082,7 +1082,7 @@ function setHlsVideo() {
 
     if (DEBUG_ENABLED) debugLog('PLAYER: Creating video element...');
 
-    appendBroadcastVideoElement()
+    var video = appendBroadcastVideoElement()
     logInitStep('createVideoElement', 'success', 'Video element created and appended');
 
     // Check for HLS.js library
