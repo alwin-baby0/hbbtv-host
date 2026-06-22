@@ -81,8 +81,8 @@ export default class Gallery extends Lightning.Component {
   }
 
   $videoPlayerCanPlay() {
+    VideoPlayer.play()
     this._HeroSection._BackgroundImage.setSmooth('alpha', 0);
-    VideoPlayer.play();
   }
 
   $playTrailer(url) {
