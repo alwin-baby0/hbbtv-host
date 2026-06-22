@@ -5,6 +5,7 @@ const path = require('path');
 const chalk = require('chalk').default || require('chalk');
 const { deleteFolder, copyFolder, runHttpServer } = require('./utils');
 const esbuild = require('esbuild');
+const babel = require('@babel/core');
 
 function runUpdateScript() {
   return new Promise((resolve, reject) => {
@@ -32,7 +33,10 @@ async function minifyTopLevelJsFiles(folderPath) {
     const filePath = path.join(folderPath, file.name);
     const before = (await fs.promises.stat(filePath)).size;
     const content = await fs.promises.readFile(filePath, 'utf8');
-    const result = await esbuild.transform(content, { minify: true, keepNames: true, target: 'es5' });
+    const transpiled = await babel.transformAsync(content, {
+      presets: [['@babel/preset-env', { targets: { ie: '11' } }]],
+    });
+    const result = await esbuild.transform(transpiled.code, { minify: true });
     await fs.promises.writeFile(filePath, result.code, 'utf8');
     const after = (await fs.promises.stat(filePath)).size;
     const afterColor = after > 102400 ? chalk.yellow : chalk.gray;

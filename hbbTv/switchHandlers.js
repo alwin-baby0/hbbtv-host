@@ -1,7 +1,7 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-Chonl_DI.js';
-const LEGACY_POLYFILL = './assets/polyfills-legacy-brPzi115.js';
+const LEGACY_ENTRY = './assets/index-legacy-C9sL7rVT.js';
+const LEGACY_POLYFILL = './assets/polyfills-legacy-XyIu8j-J.js';
 
 const splash = document.getElementById('splash');
 const splashVideo = document.getElementById('splash-video')
@@ -124,7 +124,7 @@ function onBroadcastVideoPlaying() {
 }
 
 function appendBroadcastVideoElement() {
-  video = document.createElement('video');
+  const video = document.createElement('video');
   video.setAttribute('id', 'video');
   video.setAttribute('controls', 'false');
   video.controls = false;
