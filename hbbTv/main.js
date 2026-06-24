@@ -724,7 +724,7 @@ function matchVideoToBroadcast() {
   }
 
   // Get the DASH video element
-  var video = document.getElementById('video');
+  var video = document.getElementById('ssai-broadcast-video');
   if (!video) {
     debugLog('DASH video element not found');
     return;

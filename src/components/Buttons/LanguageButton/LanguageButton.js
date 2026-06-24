@@ -72,7 +72,7 @@ export default class LanguageButton extends Lightning.Component {
 
   restartHbbTvApp() {
     if (window.disableRedButton) window.disableRedButton()
-    const video = document.getElementById('video-player');
+    const video = document.getElementById('lightning-video-player');
     if (video) {
       video.pause()
       unload(video)

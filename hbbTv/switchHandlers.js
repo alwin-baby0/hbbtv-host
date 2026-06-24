@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-u5xj-C3_.js';
+const LEGACY_ENTRY = './assets/index-legacy-BwSsRJaW.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-XyIu8j-J.js';
 
 const splash = document.getElementById('splash');
@@ -73,7 +73,7 @@ function stopDashBroadcast() {
   if (dash && typeof dash.attachView === 'function') {
     dash.attachView(null);
   }
-  const video = document.getElementById('video');
+  const video = document.getElementById('ssai-broadcast-video');
   if (video) video.style.visibility = 'hidden'
 }
 
@@ -90,7 +90,7 @@ function stopHlsBroadcast() {
     hls.detachMedia();
   }
 
-  const video = document.getElementById('video');
+  const video = document.getElementById('ssai-broadcast-video');
   if (video) {
     if (typeof video.pause === 'function') {
       video.pause();
@@ -125,7 +125,7 @@ function onBroadcastVideoPlaying() {
 
 function appendBroadcastVideoElement() {
   const video = document.createElement('video');
-  video.setAttribute('id', 'video');
+  video.setAttribute('id', 'ssai-broadcast-video');
   video.setAttribute('controls', 'false');
   video.controls = false;
   video.style.position = 'absolute';
@@ -141,7 +141,7 @@ function appendBroadcastVideoElement() {
 
 function startDashBroadcast() {
   try {
-    let video = document.getElementById('video');
+    let video = document.getElementById('ssai-broadcast-video');
     if (!video) video = appendBroadcastVideoElement()
     video.style.visibility = 'visible'
 
@@ -164,7 +164,7 @@ function startDashBroadcast() {
 function startHlsBroadcast() {
   try {
     // kill any existing hls
-    let video = document.getElementById('video');
+    let video = document.getElementById('ssai-broadcast-video');
     if (!video) video = appendBroadcastVideoElement()
     video.style.visibility = 'visible';
 
