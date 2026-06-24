@@ -160,11 +160,30 @@ var rcUtils = {
   MASK_CONSTANT_OTHER: 0x400,
   setKeyset: function (app, mask) {
     try {
+      console.log('### app.privateData.keyset', app.privateData.keyset);
+      console.log('### app.privateData.keyset.value', app.privateData.keyset.value);
+      console.log('### app.privateData.keyset.otherKeys', app.privateData.keyset.otherKeys);
+      console.log('### app.privateData.keyset.maximumValue', app.privateData.keyset.maximumValue);
+      console.log('### app.privateData.keyset.maximumOtherKeys', app.privateData.keyset.maximumOtherKeys);
+      console.log('### app.privateData.keyset.supportsPointer', app.privateData.keyset.supportsPointer);
+
       app.privateData.keyset.setValue(mask);
+      console.log('### app.privateData.keyset', app.privateData.keyset);
+      console.log('### app.privateData.keyset.value', app.privateData.keyset.value);
+      console.log('### app.privateData.keyset.otherKeys', app.privateData.keyset.otherKeys);
+      console.log('### app.privateData.keyset.maximumValue', app.privateData.keyset.maximumValue);
+      console.log('### app.privateData.keyset.maximumOtherKeys', app.privateData.keyset.maximumOtherKeys);
+      console.log('### app.privateData.keyset.supportsPointer', app.privateData.keyset.supportsPointer);
     } catch (e) {
       // try as per OIPF DAE v1.1
       try {
         app.private.keyset.setValue(mask);
+        console.log('### app.privateData.keyset', app.privateData.keyset);
+        console.log('### app.privateData.keyset.value', app.privateData.keyset.value);
+        console.log('### app.privateData.keyset.otherKeys', app.privateData.keyset.otherKeys);
+        console.log('### app.privateData.keyset.maximumValue', app.privateData.keyset.maximumValue);
+        console.log('### app.privateData.keyset.maximumOtherKeys', app.privateData.keyset.maximumOtherKeys);
+        console.log('### app.privateData.keyset.supportsPointer', app.privateData.keyset.supportsPointer);
       }
       catch (ee) {
         // catch the error while setting keyset value
