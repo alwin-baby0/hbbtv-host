@@ -37,6 +37,7 @@ export default class Screensaver extends Lightning.Component {
     VideoPlayer.loader(loader);
     VideoPlayer.unloader(unloader);
     VideoPlayer.loop(true);
+    VideoPlayer.mute();
 
     this.fireAncestors('$punchHole');
 
@@ -47,6 +48,7 @@ export default class Screensaver extends Lightning.Component {
 
   _cleanupVideo() {
     VideoPlayer.pause();
+    VideoPlayer.mute(false);
     VideoPlayer.clear();
     VideoPlayer.close();
     this.fireAncestors('$unpunchHole');
