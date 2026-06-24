@@ -19,6 +19,9 @@ var broadcastControlObject = {
         console.log('broadcastControlObject: videoObj initialization success')
       }
       broadcastControlObject.videoTag = broadcastControlObject.videoObj.querySelector('video')
+      console.log('### broadcastControlObject: broadcastControlObject.videoTag.id', broadcastControlObject.videoTag.id);
+      console.log('### broadcastControlObject: broadcastControlObject.videoTag.muted', broadcastControlObject.videoTag.muted);
+      broadcastControlObject.videoTag.muted = false
       if (broadcastControlObject.videoTag) {
         broadcastControlObject.videoObj.addEventListener('PlayStateChange', broadcastControlObject.playStateChangeEventHandler);
         broadcastControlObject.videoObj.addEventListener('ChannelChangeSucceeded', broadcastControlObject.channelChangeSucceededEvenetHandler);
@@ -43,6 +46,7 @@ var broadcastControlObject = {
       broadcastControlObject.videoObj.style.display = 'none';
       broadcastControlObject.videoTag.muted = true;
       console.log('broadcastControlObject: hideAndMuteBroadcast sucess');
+      console.log('### broadcastControlObject: broadcastControlObject.videoTag.muted', broadcastControlObject.videoTag.muted);
       return true
     } catch (error) {
       console.log('broadcastControlObject: hideAndMuteBroadcast failed', error);

@@ -86,6 +86,8 @@ export const loader = (url, videoEl, options = {}) => {
       });
 
       player.on(Hls.Events.ERROR, (event, data) => {
+        console.log('### hls error', event, data);
+
         if (data.fatal) {
           handleUnrecoverableError(player, event);
           switch (data.type) {
@@ -121,6 +123,7 @@ export const loader = (url, videoEl, options = {}) => {
 
       player.loadSource(url);
       player.attachMedia(videoEl);
+      if (window.broadcastControlObject) window.broadcastControlObject.hideAndMuteBroadcast()
     } else if (url.includes('.mp4')) {
       videoEl.src = url;
       videoEl.load();
@@ -128,15 +131,18 @@ export const loader = (url, videoEl, options = {}) => {
       videoEl.preload = 'auto';
       videoEl.setAttribute('preload', 'auto');
       videoEl.setAttribute('buffer', '10');
+      if (window.broadcastControlObject) window.broadcastControlObject.hideAndMuteBroadcast()
       resolve();
     }
   });
 };
 
 export const unload = (videoEl) => {
+  console.log('### unloading');
   destroyPlayer();
   videoEl.removeAttribute('src');
   videoEl.load();
+  if (window.broadcastControlObject) window.broadcastControlObject.hideAndMuteBroadcast()
 };
 
 export const unloader = (videoEl) => {
