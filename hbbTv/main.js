@@ -903,6 +903,12 @@ function setVideo() {
         // // dash.seek(dash.duration());
         // dash.play()
       });
+      dash.on(dashjs.MediaPlayer.events.ERROR, function (e, f) {
+        console.log('### error ', e);
+        console.log('DASH error:', e.error, e.event);
+        console.log('dashError', 'failure', 'DASH error: ' + (e.error || '') + ' ' + (e.event ? JSON.stringify(e.event) : ''));
+      });
+
       logInitStep('createDashPlayer', 'success', 'DASH MediaPlayer instance created');
 
       if (DEBUG_ENABLED) debugLog('PLAYER: Initializing player with URL...');

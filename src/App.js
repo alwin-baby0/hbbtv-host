@@ -83,18 +83,27 @@ export default class App extends Router.App {
   }
 
   closeHbbTvApp() {
-    if (window.disableRedButton) window.disableRedButton()
-    if (window.showHbbtvLoader) window.showHbbtvLoader()
-    const video = document.getElementById('lightning-video-player');
-    if (video) {
-      video.pause()
-      unload(video)
-      video.remove()
+    try {
+      console.log('### inside close app');
+
+      if (window.disableRedButton) window.disableRedButton()
+      if (window.showHbbtvLoader) window.showHbbtvLoader()
+      const video = document.getElementById('lightning-video-player');
+      console.log('### video element', video);
+
+      if (video) {
+        video.pause()
+        unload(video)
+        video.remove()
+      }
+      console.log('### document.getElementById(lightning - video - player)', document.getElementById('lightning-video-player'));
+      InactivityService.stop();
+      this.application.closeApp();
+      if (window.removeCanvasAndLightningScripts) window.removeCanvasAndLightningScripts()
+      if (window.hideAppAndShowBroadcast) window.hideAppAndShowBroadcast()
+    } catch (error) {
+      console.log('### error', error);
     }
-    InactivityService.stop();
-    this.application.closeApp();
-    if (window.removeCanvasAndLightningScripts) window.removeCanvasAndLightningScripts()
-    if (window.hideAppAndShowBroadcast) window.hideAppAndShowBroadcast()
   }
 
   _setup() {
