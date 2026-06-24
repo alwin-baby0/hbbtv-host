@@ -171,6 +171,12 @@ var rcUtils = {
   },
   registerKeyEventListener: function () {
     document.addEventListener('keydown', function (e) {
+      console.log('### keydown', e);
+      console.log('### keydown e.keyCode', e.keyCode);
+      console.log('### keydown e.charCode', e.charCode);
+      console.log('### keydown e.code', e.code);
+      console.log('### keydown e.key', e.key);
+      console.log('### keydown e.which', e.which);
       if (handleKeyCode(e.keyCode)) {
         e.preventDefault();
       }
