@@ -156,6 +156,8 @@ var rcUtils = {
   MASK_CONSTANT_NAVIGATION: 0x10,
   MASK_CONSTANT_PLAYBACK: 0x20,
   MASK_CONSTANT_NUMERIC: 0x100,
+  MASK_CONSTANT_ALPHA: 0x200,
+  MASK_CONSTANT_OTHER: 0x400,
   setKeyset: function (app, mask) {
     try {
       app.privateData.keyset.setValue(mask);
