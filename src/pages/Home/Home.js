@@ -92,7 +92,9 @@ export default class Home extends Lightning.Component {
   }
 
   _firstEnable() {
+    window.homepageLoaded = true;
     if (window.hideHbbtvSplash) window.hideHbbtvSplash()
+    if (window.hideSplash) window.hideSplash()
     if (window.hideHbbtvLoader) Registry.setTimeout(window.hideHbbtvLoader, 200)
     if (window.enableRedButton) window.enableRedButton()
   }
