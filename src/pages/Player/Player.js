@@ -368,6 +368,10 @@ export default class Player extends Lightning.Component {
     this._props = props;
     const { isLive, videoUrl, continueTime, episodeTitle } = props;
     setTimeout(() => {
+      if (!videoUrl) {
+        Router.back()
+        return
+      }
       const focusedColor = Colors(colors.focus).get();
       const margin = isLive ? 0 : 20;
 

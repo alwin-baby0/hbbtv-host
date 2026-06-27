@@ -7,7 +7,7 @@ import { LoggingService } from '../Services/index.js';
 class GalleryItem {
   constructor(data) {
     const {
-      id,
+      id = '',
       title,
       files,
       summary,
@@ -110,21 +110,21 @@ class GalleryItem {
     this.portraitPosters = [];
     this.buttonLabel = t(TRANSLATIONS.WATCH_NOW);
 
-    const landscapeKeysOriginal = Object.keys(images.landscape);
+    const landscapeKeysOriginal = Object.keys(images?.landscape ?? {});
     const landscapeKeys = landscapeKeysOriginal.map((item) => `poster_landscape_${item}`);
 
     landscapeKeys.forEach((item, index) =>
       this.landscapePosters.push({ key: item, src: images.landscape[landscapeKeysOriginal[index]] })
     );
 
-    const thumbnailKeysOriginal = Object.keys(images.thumbnail);
+    const thumbnailKeysOriginal = Object.keys(images?.thumbnail ?? {});
     const thumbnailKeys = thumbnailKeysOriginal.map((item) => `thumbnail_${item}`);
 
     thumbnailKeys.forEach((item, index) =>
       this.thumbnails.push({ key: item, src: images.thumbnail[thumbnailKeysOriginal[index]] })
     );
 
-    const portraitKeysOriginal = Object.keys(images.poster);
+    const portraitKeysOriginal = Object.keys(images?.poster ?? {});
     const portraitKeys = portraitKeysOriginal.map((item) => `poster_portrait_${item}`);
 
     portraitKeys.forEach((item, index) =>
