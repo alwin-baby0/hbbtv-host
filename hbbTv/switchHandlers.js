@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-DK6MaAeK.js';
+const LEGACY_ENTRY = './assets/index-legacy-K7pZ63Wx.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-XyIu8j-J.js';
 
 const splash = document.getElementById('splash');
@@ -10,6 +10,7 @@ const loader = document.getElementById('loader');
 function splashTimeUpdateHandler() {
   if (splashVideo.currentTime >= 1.2) {
     splashVideo.pause();
+    insertLightningScripts()
     splashVideo.removeEventListener('timeupdate', splashTimeUpdateHandler);
   }
 }
@@ -260,7 +261,6 @@ function hideBroadcastAndShowApp() {
   disableRedButton()
   showHbbtvSplash()
   hideBroadcast()
-  insertLightningScripts()
   currentObject = TYPE.APP
   // log('### hideBroadcastAndShowApp');
 }
