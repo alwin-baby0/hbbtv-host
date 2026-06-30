@@ -6,9 +6,9 @@ import { didomiVisible } from '../../../../App';
 export default class SidebarItem extends Lightning.Component {
   _props = {
     selected: false,
-    extraItemSpacing: 20,
+    extraItemSpacing: 0,
     borderGap: 14,
-    w: 170,
+    w: 220,
     h: 60,
     iconW: 60,
     radius: 16,
@@ -47,9 +47,9 @@ export default class SidebarItem extends Lightning.Component {
           fontFace: 'Montserrat-Bold',
           fontSize: 24,
           textAlign: 'center',
-          wordWrapWidth: 100,
+          wordWrapWidth: 200,
           maxLines: 1,
-          maxLinesSuffix: '...',
+          maxLinesSuffix: '',
         },
         zIndex: 2,
       },

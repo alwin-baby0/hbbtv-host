@@ -36,7 +36,7 @@ export default class SidebarItems extends Lightning.Component {
           collision: true,
           x: 300,
           h: 70,
-          style: { itemSpacing: 30 },
+          style: { itemSpacing: 0 },
           props: {
             disableScroll: true,
           },
@@ -98,39 +98,39 @@ export default class SidebarItems extends Lightning.Component {
     ];
     this._visibleSport
       ? menuItems.push(
-          ...[
-            {
-              id: 3,
-              label: t(TRANSLATIONS.SPORT),
-              route: `${ROUTES.VOD}/${VOD_PREVIEW_TYPES.SPORTS}`,
-              icon: '',
-            },
-            { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
-            { id: 5, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
-            { id: 6, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
-            {
-              id: 7,
-              label: 'settings',
-              route: ROUTES.SETTINGS,
-              icon: IMG_PATH.NAVBAR_SETTINGS,
-            },
-            { id: 8, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
-          ]
-        )
+        ...[
+          {
+            id: 3,
+            label: t(TRANSLATIONS.SPORT),
+            route: `${ROUTES.VOD}/${VOD_PREVIEW_TYPES.SPORTS}`,
+            icon: '',
+          },
+          { id: 4, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
+          { id: 5, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
+          { id: 6, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
+          {
+            id: 7,
+            label: 'settings',
+            route: ROUTES.SETTINGS,
+            icon: IMG_PATH.NAVBAR_SETTINGS,
+          },
+          { id: 8, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
+        ]
+      )
       : menuItems.push(
-          ...[
-            { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
-            { id: 4, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
-            { id: 5, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
-            {
-              id: 6,
-              label: 'settings',
-              route: ROUTES.SETTINGS,
-              icon: IMG_PATH.NAVBAR_SETTINGS,
-            },
-            { id: 7, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
-          ]
-        );
+        ...[
+          { id: 3, label: t(TRANSLATIONS.LIVE_TV), route: ROUTES.LIVE, icon: '' },
+          { id: 4, label: 'search', route: ROUTES.SEARCH, icon: IMG_PATH.NAVBAR_SEARCH },
+          { id: 5, label: 'user', route: ROUTES.ACC, icon: IMG_PATH.NAVBAR_USER },
+          {
+            id: 6,
+            label: 'settings',
+            route: ROUTES.SETTINGS,
+            icon: IMG_PATH.NAVBAR_SETTINGS,
+          },
+          { id: 7, label: 'terms', route: ROUTES.HELP, icon: IMG_PATH.NAVBAR_INFO },
+        ]
+      );
 
     this._menuItemRoutes = menuItems.map((item) => item.route);
 
@@ -143,16 +143,16 @@ export default class SidebarItems extends Lightning.Component {
             type: SidebarItem,
             collision: true,
             flexItem: {
-              marginLeft: 5,
-              marginRight: 5,
+              // marginLeft: 5,
+              // marginRight: 5,
             },
-            w: this._visibleSport ? (item.id < 5 ? 170 : 50) : item.id < 4 ? 170 : 50,
+            w: this._visibleSport ? (item.id < 5 ? 220 : 50) : item.id < 4 ? 220 : 50,
             h: 60,
             props: {
               selected: false,
               index: item.id,
               data: item,
-              extraItemSpacing: item.route === ROUTES.LIVE ? (this._visibleSport ? 270 : 480) : 20,
+              extraItemSpacing: item.route === ROUTES.LIVE ? (this._visibleSport ? 70 : 280) : 20,
             },
           };
         }),
