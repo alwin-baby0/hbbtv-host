@@ -254,7 +254,13 @@ function removeCanvasAndLightningScripts() {
   console.log('### remove scripts end');
 }
 
+function isVodEnabled() {
+  const isVod = document.getElementById('is_vod')?.innerHTML
+  return Number(isVod) === 1
+}
+
 function hideBroadcastAndShowApp() {
+  if (!isVodEnabled()) return;
   window.history.pushState({}, '', '/');
   hidePromptOverlay()
   stopPropmtingUserWithOverlay()
