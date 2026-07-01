@@ -419,7 +419,8 @@ function initMediaTailorSession(manifestUrl, adsParams, callback) {
   //   HLS manifest  → /v1/master/.../channel.m3u8
   // /v1/hls/ doesn't fire for AWS today but stays in the list to defend
   // against any non-AWS SSAI integration that uses that shape.
-  var sessionUrl = manifestUrl.replace(/\/v1\/(?:dash|hls|master)\//, '/v1/session/');
+  var cleanManifestUrl = manifestUrl.split('?')[0];
+  var sessionUrl = cleanManifestUrl.replace(/\/v1\/(?:dash|hls|master)\//, '/v1/session/');
 
   if (DEBUG_ENABLED) debugLog('SSAI: Initializing MediaTailor session: ' + sessionUrl);
 
@@ -500,6 +501,7 @@ function initMediaTailorSession(manifestUrl, adsParams, callback) {
       adsParamsObj[key] = value;
     }
   }
+  adsParamsObj.format = /\.m3u8(\?|$)/.test(cleanManifestUrl) ? 'hls' : 'dash'
 
   var postBody = JSON.stringify({
     adsParams: adsParamsObj,
