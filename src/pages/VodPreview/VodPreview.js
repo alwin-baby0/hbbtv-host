@@ -278,6 +278,18 @@ export default class VodPreview extends Lightning.Component {
           this.fireAncestors('$setNavbarVisibility', true);
         }
 
+        _handleBack(e) {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (Router.isNavigating()) {
+            return;
+          }
+          e.preventDefault();
+          this._setState('Hero');
+        }
+
         _handleUp() {
           if (window.Didomi && didomiVisible) {
             return true;
@@ -360,6 +372,18 @@ export default class VodPreview extends Lightning.Component {
 
         _getFocused() {
           return this._Column;
+        }
+
+        _handleBack(e) {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (Router.isNavigating()) {
+            return;
+          }
+          e.preventDefault();
+          this._setState('Hero');
         }
 
         _handleUp() {

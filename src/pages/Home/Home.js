@@ -263,7 +263,7 @@ export default class Home extends Lightning.Component {
             return;
           }
           e.preventDefault();
-          this.fireAncestors('$appClose');
+          this._setState('Hero');
         }
 
         async $verticalContainerIndexChange(index) {

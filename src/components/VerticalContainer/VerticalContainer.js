@@ -2,6 +2,7 @@ import Lightning from '@lightningjs/sdk/src/Lightning';
 import { getClosestElementIndex } from '../../utils/focus';
 import { CARD_SIZES, CARD_TYPES, ROUTES } from '../../constants/globalConstants';
 import { didomiVisible } from '../../App';
+import { Router } from '@lightningjs/sdk';
 
 export default class VerticalContainer extends Lightning.Component {
   _props = {
@@ -167,6 +168,18 @@ export default class VerticalContainer extends Lightning.Component {
         }
       }
     }
+  }
+
+  _handleBack() {
+    const heroRoutes = [ROUTES.HOME, `${ROUTES.VOD}/:vodType`]
+    if (heroRoutes.includes(Router.getActiveRoute())) {
+      this._focusedIndex = 0;
+      this._scrollPosition = 0;
+      this.Items.y = this._scrollPosition
+      this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);
+    }
+
+    return false
   }
 
   _handleDown() {
