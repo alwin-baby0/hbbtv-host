@@ -160,30 +160,11 @@ var rcUtils = {
   MASK_CONSTANT_OTHER: 0x400,
   setKeyset: function (app, mask) {
     try {
-      console.log('### app.privateData.keyset', app.privateData.keyset);
-      console.log('### app.privateData.keyset.value', app.privateData.keyset.value);
-      console.log('### app.privateData.keyset.otherKeys', app.privateData.keyset.otherKeys);
-      console.log('### app.privateData.keyset.maximumValue', app.privateData.keyset.maximumValue);
-      console.log('### app.privateData.keyset.maximumOtherKeys', app.privateData.keyset.maximumOtherKeys);
-      console.log('### app.privateData.keyset.supportsPointer', app.privateData.keyset.supportsPointer);
-
       app.privateData.keyset.setValue(mask);
-      console.log('### app.privateData.keyset', app.privateData.keyset);
-      console.log('### app.privateData.keyset.value', app.privateData.keyset.value);
-      console.log('### app.privateData.keyset.otherKeys', app.privateData.keyset.otherKeys);
-      console.log('### app.privateData.keyset.maximumValue', app.privateData.keyset.maximumValue);
-      console.log('### app.privateData.keyset.maximumOtherKeys', app.privateData.keyset.maximumOtherKeys);
-      console.log('### app.privateData.keyset.supportsPointer', app.privateData.keyset.supportsPointer);
     } catch (e) {
       // try as per OIPF DAE v1.1
       try {
         app.private.keyset.setValue(mask);
-        console.log('### app.privateData.keyset', app.privateData.keyset);
-        console.log('### app.privateData.keyset.value', app.privateData.keyset.value);
-        console.log('### app.privateData.keyset.otherKeys', app.privateData.keyset.otherKeys);
-        console.log('### app.privateData.keyset.maximumValue', app.privateData.keyset.maximumValue);
-        console.log('### app.privateData.keyset.maximumOtherKeys', app.privateData.keyset.maximumOtherKeys);
-        console.log('### app.privateData.keyset.supportsPointer', app.privateData.keyset.supportsPointer);
       }
       catch (ee) {
         // catch the error while setting keyset value
@@ -192,12 +173,6 @@ var rcUtils = {
   },
   registerKeyEventListener: function () {
     document.addEventListener('keydown', function (e) {
-      console.log('### keydown', e);
-      console.log('### keydown e.keyCode', e.keyCode);
-      console.log('### keydown e.charCode', e.charCode);
-      console.log('### keydown e.code', e.code);
-      console.log('### keydown e.key', e.key);
-      console.log('### keydown e.which', e.which);
       if (handleKeyCode(e.keyCode)) {
         e.preventDefault();
       }

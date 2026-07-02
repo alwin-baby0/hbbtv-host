@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-7TsgTUUE.js';
+const LEGACY_ENTRY = './assets/index-legacy-C5qMAqfl.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-XyIu8j-J.js';
 
 const splash = document.getElementById('splash');
@@ -103,7 +103,6 @@ function stopHlsBroadcast() {
 }
 
 function showBroadcast() {
-  console.log('### playerType', playerType);
   if (playerType === 'dash') startDashBroadcast()
   if (playerType === 'hls') startHlsBroadcast()
 }
@@ -146,10 +145,6 @@ function startDashBroadcast() {
     let video = document.getElementById('ssai-broadcast-video');
     if (!video) video = appendBroadcastVideoElement()
     video.style.visibility = 'visible'
-    console.log('### startDashBroadcast video', video);
-    console.log('### startDashBroadcast ssaiEnabledFullManifestUrl', ssaiEnabledFullManifestUrl);
-    console.log('### startDashBroadcast dash', dash);
-
 
     if (dash && typeof dash.attachView === 'function') {
       dash.attachView(video);
@@ -223,8 +218,6 @@ function insertLightningScripts() {
 }
 
 function removeCanvasAndLightningScripts() {
-  console.log('### remove scripts start');
-
   const canvas = document.body.querySelector('canvas');
   if (canvas) {
     canvas.remove()
@@ -251,7 +244,6 @@ function removeCanvasAndLightningScripts() {
   if (trackingScript) {
     trackingScript.remove();
   }
-  console.log('### remove scripts end');
 }
 
 function isVodEnabled() {
