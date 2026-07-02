@@ -113,13 +113,11 @@ function onBroadcastVideoCanPlay(e) {
     broadcastControlObject.hideAndMuteBroadcast()
   }
   if (e.srcElement && e.srcElement.play) e.srcElement.play()
-  // log('broadcast video can play')
 }
 
 function onBroadcastVideoPlaying() {
   // if (!broadcastControlObject.controlAssumed) broadcastControlObject.assumeControl()
   enableRedButton()
-  // log('broadcast video playing')
   hideHbbtvLoader()
   startPropmtingUserWithOverlay()
 }
@@ -260,7 +258,6 @@ function hideBroadcastAndShowApp() {
   showHbbtvSplash()
   hideBroadcast()
   currentObject = TYPE.APP
-  // log('### hideBroadcastAndShowApp');
 }
 
 function hideAppAndShowBroadcast() {
@@ -268,7 +265,6 @@ function hideAppAndShowBroadcast() {
   showBroadcast();
   currentObject = TYPE.BROADCAST;
   enableRedButton()
-  // log('### hideAppAndShowBroadcast');
 }
 
 function cleanupBroadcastBeforeReleasing() {

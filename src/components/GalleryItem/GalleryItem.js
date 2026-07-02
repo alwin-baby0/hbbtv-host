@@ -428,6 +428,14 @@ export default class GalleryItem extends Lightning.Component {
     };
   }
 
+  _init() {
+    const gradientOverlay = this.tag('GradientOverlay')
+    const gradientOverlayTxLoadedHandler = () => {
+      if (gradientOverlay?.texture?.source) gradientOverlay.texture.source.permanent = true;
+    }
+    gradientOverlay.on('txLoaded', gradientOverlayTxLoadedHandler)
+  }
+
   set props(props) {
     this._Info.visible = true;
     this._Spinner.visible = false;

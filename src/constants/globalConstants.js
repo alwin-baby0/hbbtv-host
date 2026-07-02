@@ -294,8 +294,8 @@ export const CARD_SIZES = {
   },
   LANDSCAPE: {
     width: 425,
-    height: 485,
-    container_height: 485,
+    height: 350,
+    container_height: 350,
     image_width: 425,
     image_height: 235,
   },
@@ -305,7 +305,7 @@ export const CARD_SIZES = {
   },
   SPORTS: {
     width: 350,
-    height: 390,
+    height: 310,
   },
   CATEGORY: {
     height: 75,

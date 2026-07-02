@@ -72,20 +72,20 @@ export default class SportsEventsRailItem extends FocusableItem {
             maxLinesSuffix: '...',
           },
         },
-        Description: {
-          flexItem: {
-            marginTop: 4,
-            marginLeft: 21,
-          },
-          text: {
-            fontFace: 'Montserrat-Regular',
-            fontSize: 16,
-            lineHeight: 20,
-            wordWrapWidth: 300,
-            maxLines: 4,
-            maxLinesSuffix: '...',
-          },
-        },
+        // Description: {
+        //   flexItem: {
+        //     marginTop: 4,
+        //     marginLeft: 21,
+        //   },
+        //   text: {
+        //     fontFace: 'Montserrat-Regular',
+        //     fontSize: 16,
+        //     lineHeight: 20,
+        //     wordWrapWidth: 300,
+        //     maxLines: 4,
+        //     maxLinesSuffix: '...',
+        //   },
+        // },
       },
       shader: {
         type: Lightning.shaders.RoundedRectangle,
@@ -132,9 +132,9 @@ export default class SportsEventsRailItem extends FocusableItem {
         Title: {
           text: { text: itemTitle },
         },
-        Description: {
-          text: { text: itemDescription },
-        },
+        // Description: {
+        //   text: { text: itemDescription },
+        // },
       },
     });
   }

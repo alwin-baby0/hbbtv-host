@@ -3,7 +3,7 @@ import { Lightning } from '@lightningjs/sdk';
 export default class Image extends Lightning.Component {
   _props = {};
   static _template() {
-    return {};
+    return { alpha: 0.01 };
   }
 
   set props(props) {
@@ -20,10 +20,21 @@ export default class Image extends Lightning.Component {
     });
   }
 
+  _onTxLoadedHandler = () => {
+    this.setSmooth('alpha', 1);
+    if (this.texture.source) this.texture.source.permanent = true;
+  };
+
   _init() {
     this.on('txError', () => {
       this.showPlaceholder();
     });
+    this.on('txLoaded', this._onTxLoadedHandler)
+  }
+
+  _detach() {
+    this.off('txLoaded', this._onTxLoadedHandler)
+    if (this.texture.source) this.texture.source.permanent = false;
   }
 
   showPlaceholder() {

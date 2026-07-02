@@ -146,11 +146,11 @@ export default class Home extends Lightning.Component {
           this.fireAncestors('$setNavbarVisibility', true);
 
           this._Wrapper.patch({
-            y: 980,
             Column: {
               y: 0,
             },
           });
+          this._Wrapper.setSmooth('y', 980)
 
           this._HeroSection.patch({
             y: 150,
@@ -207,12 +207,13 @@ export default class Home extends Lightning.Component {
               y: -980,
             },
             Wrapper: {
-              y: 0,
               Column: {
                 y: 20,
               },
             },
           });
+
+          this._Wrapper.setSmooth('y', 0)
 
           this._HeroSection.patch({
             props: {

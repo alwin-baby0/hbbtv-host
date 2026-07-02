@@ -187,7 +187,7 @@ export const parseSportsEventsData = ({ data }) => {
     items: railItems,
     h: 400,
     railItemsOptions: {
-      h: 390,
+      // h: 390,
     },
   };
 };

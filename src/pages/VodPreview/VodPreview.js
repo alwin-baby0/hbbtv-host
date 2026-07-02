@@ -127,8 +127,8 @@ export default class VodPreview extends Lightning.Component {
           this._props.vodType === VOD_PREVIEW_TYPES.MOVIES
             ? ROUTES.MOVIES
             : this._props.vodType === VOD_PREVIEW_TYPES.SERIES
-            ? ROUTES.SERIES
-            : ROUTES.SPORTS,
+              ? ROUTES.SERIES
+              : ROUTES.SPORTS,
       };
       if (sliderData) {
         this._setState('Hero');
@@ -192,12 +192,13 @@ export default class VodPreview extends Lightning.Component {
               y: 820,
             },
             VodContainer: {
-              y: 1080,
               Column: {
                 y: 20,
               },
             },
           });
+
+          this.tag('VodContainer').setSmooth('y', 1080)
         }
 
         _handleUp() {
@@ -265,13 +266,13 @@ export default class VodPreview extends Lightning.Component {
               y: 0,
             },
             VodContainer: {
-              y: this.calculateContentOffset(this._VodContentContainer.contentType),
               h: 1920,
               Column: {
                 y: 20,
               },
             },
           });
+          this._VodContainer.setSmooth('y', this.calculateContentOffset(this._VodContentContainer.contentType))
         }
 
         _enable() {

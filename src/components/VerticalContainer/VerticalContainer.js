@@ -332,6 +332,11 @@ export default class VerticalContainer extends Lightning.Component {
         this._props.page === ROUTES.HOME ? 120 : this._props.page === ROUTES.LIVE ? 170 : 20;
       this._scrollPosition = -(elementY + elementH - containerHeight + offset);
     }
+    // this.Items.setSmooth('y', this._scrollPosition, {
+    //   // delay: 0.025,
+    //   duration: 0.3,
+    //   timingFunction: 'cubic-bezier(0.25, 0.25, 0.25, 0.25)',
+    // })
     this.Items.smooth = { y: this._scrollPosition };
 
     this.Items.children[oldIndex]?._unfocus();

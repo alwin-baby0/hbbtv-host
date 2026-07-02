@@ -196,13 +196,18 @@ export default class HorizontalContainer extends Lightning.Component {
         const paddingOffset = currentFocus.flex?._paddingLeft
           ? currentFocus.flex?._paddingLeft
           : this._focusedIndex !== 0
-          ? -50
-          : -10;
+            ? -50
+            : -10;
         this._scrollPosition = -elementX - paddingOffset;
       } else if (elementX + elementW > railWidth - this._scrollPosition) {
         this._scrollPosition = -(elementX + elementW - railWidth + 20);
       }
 
+      // this.Items.setSmooth('x', this._scrollPosition, {
+      //   // delay: 0.025,
+      //   duration: 0.3,
+      //   timingFunction: 'cubic-bezier(0.25, 0.25, 0.25, 0.25)',
+      // })
       this.Items.smooth = { x: this._scrollPosition };
     }
   }
@@ -286,14 +291,14 @@ export default class HorizontalContainer extends Lightning.Component {
     }
     this._reCalibrateScroll();
     this.parent.parent.type &&
-    (this.parent.parent.type.name === 'VerticalContainer' ||
-      this.parent.parent.type.name === 'EPGContainer')
+      (this.parent.parent.type.name === 'VerticalContainer' ||
+        this.parent.parent.type.name === 'EPGContainer')
       ? this.fireAncestors('$handleItemHover', this.parent.children.indexOf(this))
       : this.fireAncestors(
-          '$handleStateHover',
-          this.parent.children.indexOf(this),
-          this._props.parentState
-        );
+        '$handleStateHover',
+        this.parent.children.indexOf(this),
+        this._props.parentState
+      );
   }
 
   _focus() {

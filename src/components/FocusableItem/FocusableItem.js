@@ -18,6 +18,7 @@ export default class FocusableItem extends Lightning.Component {
         x: -2,
         y: -2,
         zIndex: 100,
+        alpha: 0,
       },
     };
   }
@@ -41,13 +42,14 @@ export default class FocusableItem extends Lightning.Component {
     const { radius, strokeWidth, strokeColor, width, height } = this._props;
 
     this._FocusBorder.patch({
-      texture: Lightning.Tools.getRoundRect(width, height, radius, strokeWidth, strokeColor, false),
+      texture: Lightning.Tools.getRoundRect(width, height, radius, strokeWidth + 1, strokeColor, false),
     });
+    this._FocusBorder.setSmooth('alpha', 1, { duration: 0.2 })
+    this.setSmooth('scale', 1.015)
   }
 
   _unfocus() {
-    this._FocusBorder.patch({
-      texture: null,
-    });
+    this._FocusBorder.setSmooth('alpha', 0)
+    this.setSmooth('scale', 1)
   }
 }

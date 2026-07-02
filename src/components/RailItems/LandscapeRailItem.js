@@ -51,23 +51,23 @@ export default class LandscapeRailItem extends FocusableItem {
             wordWrapWidth: 400,
           },
         },
-        Description: {
-          h: 140,
-          w: 415,
-          flexItem: {
-            marginLeft: 20,
-            marginRight: 20,
-          },
-          text: {
-            fontFace: 'Montserrat-Regular',
-            fontSize: 18,
-            lineHeight: 25,
-            wordWrapWidth: 385,
-            maxLines: 5,
-            maxLinesSuffix: '...',
-            textColor: Colors('#cccccf').get(),
-          },
-        },
+        // Description: {
+        //   h: 140,
+        //   w: 415,
+        //   // flexItem: {
+        //   //   marginLeft: 20,
+        //   //   marginRight: 20,
+        //   // },
+        //   text: {
+        //     fontFace: 'Montserrat-Regular',
+        //     fontSize: 18,
+        //     lineHeight: 25,
+        //     wordWrapWidth: 385,
+        //     maxLines: 5,
+        //     maxLinesSuffix: '...',
+        //     textColor: Colors('#cccccf').get(),
+        //   },
+        // },
         Summary: {
           h: 30,
           w: 400,
@@ -120,11 +120,11 @@ export default class LandscapeRailItem extends FocusableItem {
           text: itemTitle,
         },
       },
-      Description: {
-        text: {
-          text: itemSummary || '',
-        },
-      },
+      // Description: {
+      //   text: {
+      //     text: itemSummary || '',
+      //   },
+      // },
       Summary: {
         text: {
           text: durYear,
