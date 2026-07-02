@@ -106,6 +106,10 @@ export const setupKeys = (deviceType) => {
     case 'hbbTv':
       return {
         10009: 'Back',
+        461: 'Back',
+        8: 'Back',
+        17: 'Back',
+        27: 'Back',
         10182: 'Exit',
         427: 'ChannelUp',
         428: 'ChannelDown',
