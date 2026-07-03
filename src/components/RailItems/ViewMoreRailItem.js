@@ -26,16 +26,15 @@ export default class ViewMoreRailItem extends FocusableItem {
           flex: { justifyContent: 'center', alignItems: 'center' },
           PosterImage: {
             flex: { justifyContent: 'center', alignItems: 'center' },
-            Logo: {
-              y: -20,
-              h: 80,
-              w: 80,
-              src: Utils.asset(IMG_PATH.SHOW_MORE_ICON),
+            Container: {
+              flex: { direction: 'column', justifyContent: 'center', alignItems: 'center' },
+              Logo: {
+                h: 80,
+                w: 80,
+                src: Utils.asset(IMG_PATH.SHOW_MORE_ICON),
+              },
               Title: {
-                y: 85,
-                h: 45,
-                w: 273,
-                x: -10,
+                flexItem: { marginTop: 10 },
                 text: {
                   fontFace: 'Montserrat-Regular',
                   fontSize: 24,
@@ -81,7 +80,9 @@ export default class ViewMoreRailItem extends FocusableItem {
       Wrapper: {
         Border: {
           PosterImage: {
-            Logo: {
+            Container: {
+              Logo: {
+              },
               Title: {
                 text: {
                   text: t(TRANSLATIONS.VIEW_MORE),

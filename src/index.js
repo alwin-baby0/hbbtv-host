@@ -99,7 +99,7 @@ sequence([
       }
     });
 
-    // commenting this out as we are handling consent in the hbbTv code
+    // TODO: commenting this out as we are handling consent in the hbbTv code
     // if (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0) window.Didomi.notice.show();
 
     window.didomiOnReady &&
