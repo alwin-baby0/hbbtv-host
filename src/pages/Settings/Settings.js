@@ -54,6 +54,7 @@ export default class Settings extends Lightning.Component {
           },
         },
         CMPContainer: {
+          visible: !!window.Didomi,
           y: 350,
           Title: {
             text: {
@@ -200,7 +201,8 @@ export default class Settings extends Lightning.Component {
 
     this._Content.patch({
       CMPContainer: {
-        collision: true,
+        visible: !!window.Didomi,
+        collision: !!window.Didomi,
         CMPData: {
           collision: true,
           flex: { direction: 'column' },
@@ -240,8 +242,8 @@ export default class Settings extends Lightning.Component {
               autoWidth: true,
               textProps: { fontSize: 25 },
               callback: async () => {
+                if (!window.Didomi) return
                 await window.Didomi.notice.show();
-
                 this.fireAncestors('$didomiVisible', true);
                 this.fireAncestors('$settingsDidomi', true);
               },
@@ -291,7 +293,7 @@ export default class Settings extends Lightning.Component {
         }
 
         _handleDown() {
-          this._setState('CMP');
+          if (window.Didomi) this._setState('CMP');
         }
       },
 

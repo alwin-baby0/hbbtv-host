@@ -44,6 +44,8 @@ import { EVENT_NAMES, LOCAL_STORAGE_KEYS, LOG_LEVEL } from './constants/globalCo
  * variables and used elsewhere in the project.
  */
 
+const isHbbTvApp = !!window.hbbtvApp
+
 const sequence = (steps) => {
   return steps.reduce((promise, method) => {
     return promise.then(() => method());
@@ -79,6 +81,12 @@ sequence([
   },
   async () => await initDeviceInfo(deviceType),
   async () => {
+    if (isHbbTvApp) {
+      const didomiConsentElement = document.getElementById('has_didomi_consent');
+      const isDidomiEnabled = didomiConsentElement && didomiConsentElement.innerText == '1';
+      if (!isDidomiEnabled) return
+    }
+
     await DidomiService.init();
     const userNotice = window.Didomi.getConfig();
 

@@ -33,7 +33,7 @@ export async function checkCMP() {
     }
   });
 
-  if (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0) {
+  if (window.Didomi && (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0)) {
     await window.Didomi.notice.show();
     setDidomiVisible(true);
   }

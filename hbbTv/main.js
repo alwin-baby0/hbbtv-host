@@ -1364,18 +1364,18 @@ function initApp() {
     };
 
     // If Didomi is enabled, wait for consent popup to close before starting player
+
+    // Register navigation keyset
+    if (hbbtvApp && typeof rcUtils !== 'undefined') {
+      rcUtils.setKeyset(hbbtvApp, rcUtils.MASK_CONSTANT_NAVIGATION + rcUtils.MASK_CONSTANT_RED + rcUtils.MASK_CONSTANT_ALPHA + rcUtils.MASK_CONSTANT_OTHER);
+      rcUtils.registerKeyEventListener()
+      if (DEBUG_ENABLED) debugLog('INIT: Registered navigation keyset for Didomi consent popup');
+      logInitStep('setKeyset', 'success', 'Navigation keyset registered for Didomi consent');
+    }
+
     if (didomiEnabled) {
       if (DEBUG_ENABLED) debugLog('INIT: Didomi consent enabled - waiting for user consent before starting player...');
       logInitStep('setVideo', 'started', 'Waiting for Didomi consent popup to close');
-
-      // Register navigation keyset for Didomi consent UI (arrows + OK/ENTER)
-      // This allows users to navigate the consent popup with their TV remote
-      if (hbbtvApp && typeof rcUtils !== 'undefined') {
-        rcUtils.setKeyset(hbbtvApp, rcUtils.MASK_CONSTANT_NAVIGATION + rcUtils.MASK_CONSTANT_RED + rcUtils.MASK_CONSTANT_ALPHA + rcUtils.MASK_CONSTANT_OTHER);
-        rcUtils.registerKeyEventListener()
-        if (DEBUG_ENABLED) debugLog('INIT: Registered navigation keyset for Didomi consent popup');
-        logInitStep('setKeyset', 'success', 'Navigation keyset registered for Didomi consent');
-      }
 
       // Guard to prevent double player initialization
       var playerStarted = false;
