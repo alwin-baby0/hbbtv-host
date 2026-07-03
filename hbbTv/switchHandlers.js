@@ -6,10 +6,12 @@ const LEGACY_POLYFILL = './assets/polyfills-legacy-XyIu8j-J.js';
 const splash = document.getElementById('splash');
 const splashVideo = document.getElementById('splash-video')
 const loader = document.getElementById('loader');
+const loaderImage = document.getElementById('loader-image');
 
 function splashTimeUpdateHandler() {
   if (splashVideo.currentTime >= 1.2) {
     splashVideo.pause();
+    showHbbtvLoader(true)
     insertLightningScripts()
     splashVideo.removeEventListener('timeupdate', splashTimeUpdateHandler);
   }
@@ -43,20 +45,27 @@ function showHbbtvSplash() {
 }
 
 function hideHbbtvSplash() {
+  hideHbbtvLoader()
   continuePlayingSplashTillEnd(splashVideo)
 }
 
-function showHbbtvLoader() {
-  if (!loader) return;
+function showHbbtvLoader(isSplash = false) {
+  if (!loader || !loaderImage) return;
+  if (isSplash) {
+    loader.style.background = 'transparent'
+    loaderImage.style.bottom = '25%'
+  }
   loader.style.visibility = 'visible';
   loader.style.opacity = '1';
 
 }
 
 function hideHbbtvLoader() {
-  if (!loader) return;
+  if (!loader || !loaderImage) return;
   loader.style.visibility = 'hidden';
   loader.style.opacity = '0';
+  loader.style.background = '#1b1b23'
+  loaderImage.style.bottom = '50%'
 }
 
 function hideBroadcast() {
