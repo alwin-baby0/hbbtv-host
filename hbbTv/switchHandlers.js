@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-BOfSECM-.js';
+const LEGACY_ENTRY = './assets/index-legacy-DwRTRDWw.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-XyIu8j-J.js';
 
 const splash = document.getElementById('splash');
@@ -116,7 +116,7 @@ function onBroadcastVideoCanPlay(e) {
 }
 
 function onBroadcastVideoPlaying() {
-  // if (!broadcastControlObject.controlAssumed) broadcastControlObject.assumeControl()
+  if (!isVodEnabled()) return;
   enableRedButton()
   hideHbbtvLoader()
   startPropmtingUserWithOverlay()
@@ -250,7 +250,6 @@ function isVodEnabled() {
 }
 
 function hideBroadcastAndShowApp() {
-  if (!isVodEnabled()) return;
   window.history.pushState({}, '', '/');
   hidePromptOverlay()
   stopPropmtingUserWithOverlay()
