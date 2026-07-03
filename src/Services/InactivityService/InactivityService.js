@@ -184,6 +184,78 @@ class InactivityService {
       this.timerId = null;
     }
   }
+
+  async getSessionUrl(url) {
+    var returnUrl = url;
+    var baseUrl = '';
+
+    var urlMatch = url.match(/^(https?:\/\/[^\/]+)/);
+    if (urlMatch) {
+      baseUrl = urlMatch[1];
+    }
+    var sessionUrl = url.replace(/\/v1\/(?:dash|hls|master)\//, '/v1/session/');
+
+    const body = {
+      adsParams: {
+        app_bundle: "com.wedotv.ses-astra.wedomovies",
+        app_name: "wedotv",
+        app_store_url: "",
+        url: "wedotv.com",
+        pod_duration: "120",
+        cb: "59685711",
+        channel_name: "ses-astra",
+        gdpr: "1",
+        gdpr_consent: "CQmuKQAQmuKQAAHABBENClFkAP_gAEPgAAQ4MHNR_G__bWlr-bb3abtkeYxP9_hr7sQxBgbIkm4FzLvW7JwGx2EZNAyatiIKmRIAu3TBIQNlHJDURUCgKIgFryDMaE2U4TNKJ6BkiFMZI2tQCFhvm4tjWQCYYur_9kc0mB-t7dr-2dzyy6hHn3a5fmS1UJCdIYesDfv8ZBOS-9IEd-x8v4v4_EbpEm8eSVn_pGtp4jc6YnM6dBmxt-Tyff6Pn_f71fe7X_ve_n3zv8oXH7rr6-__f_-7___-b_-___b-8GDQATDQ6IIyyIFAgUBCCBAAoKwgAoEAQAAJAUQEAJgwIcgYALrCJACAFAAMEAIAAQYAAgAAEgAQiACAAgEAIEAgUAAYAEAQEABAwABgAoRAIAAQHQMUgIIBAsAEiMKAwQIQAEggJbKhBKBgQVwhSLHAIIERMFAAAiAAUAACAeFgISSglYkEAXEF0ACAAAAFECLAikLMAUVBkC0FYEnAZGmAJPmCRJDoIgCYISEgyITUBIPFMUQIIcgNilmAOniCgBl2skAA.IMHNR_G__bXlv-bb36btkeYxf9_hr7sQxBgbIsm4FzLvW7JwG32EbNEyatiYKmRIAu3TBIQNtHJjURUChKIgVrzDsaE2U4TtKJ-BkiHMZY2tQCFhvm4tjWQCZYur_90d0mR-t7dr-2dzy27hnv3a9fuS1UJidKYetHfv8ZBOS-_IU9_x-_4v4_MbpEm8eSVv_tWtt43c64vP6dpuxt-Tyff6f__f73fe7X__e__33_-qXX_r76-__________f_______8AA.f_wACHwAAAAA",
+        consent: "CQmuKQAQmuKQAAHABBENClFkAP_gAEPgAAQ4MHNR_G__bWlr-bb3abtkeYxP9_hr7sQxBgbIkm4FzLvW7JwGx2EZNAyatiIKmRIAu3TBIQNlHJDURUCgKIgFryDMaE2U4TNKJ6BkiFMZI2tQCFhvm4tjWQCYYur_9kc0mB-t7dr-2dzyy6hHn3a5fmS1UJCdIYesDfv8ZBOS-9IEd-x8v4v4_EbpEm8eSVn_pGtp4jc6YnM6dBmxt-Tyff6Pn_f71fe7X_ve_n3zv8oXH7rr6-__f_-7___-b_-___b-8GDQATDQ6IIyyIFAgUBCCBAAoKwgAoEAQAAJAUQEAJgwIcgYALrCJACAFAAMEAIAAQYAAgAAEgAQiACAAgEAIEAgUAAYAEAQEABAwABgAoRAIAAQHQMUgIIBAsAEiMKAwQIQAEggJbKhBKBgQVwhSLHAIIERMFAAAiAAUAACAeFgISSglYkEAXEF0ACAAAAFECLAikLMAUVBkC0FYEnAZGmAJPmCRJDoIgCYISEgyITUBIPFMUQIIcgNilmAOniCgBl2skAA.IMHNR_G__bXlv-bb36btkeYxf9_hr7sQxBgbIsm4FzLvW7JwG32EbNEyatiYKmRIAu3TBIQNtHJjURUChKIgVrzDsaE2U4TtKJ-BkiHMZY2tQCFhvm4tjWQCZYur_90d0mR-t7dr-2dzy27hnv3a9fuS1UJidKYetHfv8ZBOS-_IU9_x-_4v4_MbpEm8eSVv_tWtt43c64vP6dpuxt-Tyff6f__f73fe7X__e__33_-qXX_r76-__________f_______8AA.f_wACHwAAAAA",
+        max_ad_duration: "60",
+        app_category: "movies",
+        content_cat: "IAB1-5",
+        content_genre: "movies",
+        content_keywords: "movies",
+        device_type: "CONNECTED_TV",
+        did: "mr3k-jdh7-nc4x-sq",
+        dnt: "",
+        coppa: "",
+        min_ad_duration: "6",
+        player_width: "1920",
+        player_height: "1080",
+        livestream: "1",
+        ifa_type: "dpid",
+        content_channel: "ses-astra",
+        content_url: "wedotv.com",
+        content_language: "DE",
+        device_language: "DE",
+        format: "hls"
+      },
+      reportingMode: "server"
+    }
+
+    const res = await fetch(sessionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      return returnUrl;
+    }
+
+    const data = await res.json();
+    const mediaTailorSessionUrl = data?.manifestUrl;
+    if (mediaTailorSessionUrl) {
+      // If manifest URL is relative (starts with /), prepend the base URL
+      let fullManifestUrl = mediaTailorSessionUrl;
+      if (mediaTailorSessionUrl && mediaTailorSessionUrl.charAt(0) === '/' && baseUrl) {
+        fullManifestUrl = baseUrl + mediaTailorSessionUrl;
+      }
+      returnUrl = fullManifestUrl ?? url
+    }
+
+    return returnUrl
+  }
 }
 
 export default new InactivityService();

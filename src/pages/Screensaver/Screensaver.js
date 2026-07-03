@@ -6,6 +6,7 @@ import { InactivityService } from '../../Services';
 
 const SCREENSAVER_VIDEO_URL =
   'https://cdn1.amtecco.com/v1/master/31e5c7a6a57f51f4ab8b46003ad27724c9261988/sf-a5bfc9e0-wedotvappsscreensaver/playlist.m3u8';
+let SSAI_SCREENSAVER_VIDEO_URL = SCREENSAVER_VIDEO_URL
 
 export default class Screensaver extends Lightning.Component {
   static _template() {
@@ -15,6 +16,15 @@ export default class Screensaver extends Lightning.Component {
       x: 0,
       y: 0,
     };
+  }
+
+  _getSessionUrl = async () => {
+    const sessionUrl = await InactivityService.getSessionUrl(SCREENSAVER_VIDEO_URL)
+    if (sessionUrl) SSAI_SCREENSAVER_VIDEO_URL = sessionUrl
+  }
+
+  _init() {
+    this._getSessionUrl()
   }
 
   _active() {
@@ -41,7 +51,7 @@ export default class Screensaver extends Lightning.Component {
 
     this.fireAncestors('$punchHole');
 
-    VideoPlayer.open(SCREENSAVER_VIDEO_URL);
+    VideoPlayer.open(SSAI_SCREENSAVER_VIDEO_URL);
     console.log('Playing screensaver video', SCREENSAVER_VIDEO_URL);
     // VideoPlayer.play();
   }
