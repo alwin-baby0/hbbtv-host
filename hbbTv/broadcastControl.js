@@ -1,3 +1,23 @@
+/*
+ * NOTE — video/broadcast (analog tuner) handling on single-video-plane HbbTV devices
+ * (verified on a real Sony BRAVIA, HbbTV 1.5.1):
+ *
+ * 1. NESTED <video> REQUIRED. The host page's
+ *      <object type="video/broadcast" id="broadcast-video"> ... </object>
+ *    MUST contain a nested <video></video>. initializeObjects() below does
+ *    videoObj.querySelector('video') and fails ("videoTag not found", app doesn't load) without it.
+ *
+ * 2. HIDING IS NOT STOPPING. A video/broadcast object that is only covered graphically (or has
+ *    visibility:hidden) keeps DECODING AUDIO while presenting. display:none and videoTag.muted do
+ *    NOT silence the external tuner. Per HbbTV/OIPF the reliable way to blank + silence broadcast
+ *    is to TAKE CONTROL then STOP the object:
+ *        videoObj.style.display = 'block';   // display:none RELEASES it -> terminal shows its tuner
+ *        videoObj.bindToCurrentChannel();    // unrealized(0) -> presenting(2)
+ *        videoObj.stop();                    // -> stopped(3): blank + silent, decoders freed
+ *    stop() on an unrealized (playState 0) object is a no-op — you must bindToCurrentChannel first.
+ *    Re-apply this whenever the app's own HTML5 player is idle; it frees the single broadband
+ *    decoder for that player (HbbTV 2.0.1), so it never competes with it.
+ */
 const generateRandomUUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
     const randomHex = Math.floor(Math.random() * 16);
