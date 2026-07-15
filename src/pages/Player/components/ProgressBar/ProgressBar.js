@@ -1,7 +1,8 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 
 export default class ProgressBar extends Lightning.Component {
-  _props = { enterCallback: () => {}, index: -1, interval: null, alpha: 0.2 };
+  _props = { enterCallback: () => { }, index: -1, interval: null, alpha: 0.2 };
+  _progressValue = 0
   static _template() {
     return {
       BackgroundBar: {
@@ -12,6 +13,10 @@ export default class ProgressBar extends Lightning.Component {
         w: 0,
       },
     };
+  }
+
+  get _BackgroundBar() {
+    return this.tag('BackgroundBar');
   }
 
   get _Progress() {
@@ -48,7 +53,31 @@ export default class ProgressBar extends Lightning.Component {
 
   progress(progress) {
     !this._props.width && (this._props.width = this.finalW);
+    this._progressValue = progress
     this._Progress.setSmooth('w', progress * this._props.width);
+  }
+
+  _handleRight() {
+    const progress = Math.min((this._Progress.w / this._BackgroundBar.w) + (1 / 50), 1)
+    this.progress(progress)
+  }
+
+  _handleLeft() {
+    const progress = Math.max((this._Progress.w / this._BackgroundBar.w) - (1 / 50), 0)
+    this.progress(progress)
+  }
+
+  _handleEnter() {
+    this.signal('onProgressBarEnter', this._progressValue);
+  }
+
+  _focus() {
+    this.setSmooth('scaleY', 1.5)
+  }
+
+  _unfocus() {
+    console.trace('')
+    this.setSmooth('scaleY', 1)
   }
 
   _clearProgressInterval() {

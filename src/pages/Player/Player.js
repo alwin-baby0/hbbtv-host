@@ -156,6 +156,10 @@ export default class Player extends Lightning.Component {
           },
           ProgressBar: {
             type: ProgressBar,
+
+            signals: {
+              onProgressBarEnter: true,
+            },
             props: {
               width: 1400,
               height: 10,
@@ -815,14 +819,19 @@ export default class Player extends Lightning.Component {
     return true;
   }
 
-  _skipVideo(forward) {
+  _skipVideo(forward, progress) {
     this.$hideSbutitles();
     if (!this._props.isAdVisible) {
       this._isSkipping = true;
-      if (forward) {
-        this._videoSkipTimeSum += 20;
+
+      if (progress !== undefined) {
+        this._videoSkipTimeSum = (progress * VideoPlayer.duration) - VideoPlayer.currentTime
       } else {
-        this._videoSkipTimeSum -= 20;
+        if (forward) {
+          this._videoSkipTimeSum += 20;
+        } else {
+          this._videoSkipTimeSum -= 20;
+        }
       }
 
       clearTimeout(this._seekTimeout);
@@ -1088,15 +1097,17 @@ export default class Player extends Lightning.Component {
         this._Backdrop.visible = true;
         this._Wrapper.visible = true;
         this._updateProgressBar();
-        if (!this._props.isLive) {
-          this._progressInterval = setInterval(() => {
-            this._updateProgressBar();
-          }, 1000);
-        }
+        // TODO: change this dummy implementation
+        this._progressInterval = 2
       }
       clearTimeout(this._hideWrapperTimeout);
       this._hideWrapperDebounce();
     }
+  }
+
+  onProgressBarEnter(progress) {
+    this._isSkipping = true;
+    this._skipVideo(undefined, progress)
   }
 
   _hideWrapperDebounce() {
@@ -1115,6 +1126,7 @@ export default class Player extends Lightning.Component {
       this._progressInterval = null;
     }
     clearTimeout(this._hideWrapperTimeout);
+    this._setState('Controls')
     this._Controls._setFocusedIndex(1);
   }
 
@@ -1149,6 +1161,10 @@ export default class Player extends Lightning.Component {
 
   $videoPlayerWaiting() {
     this._showSpinner();
+  }
+
+  $videoPlayerTimeUpdate() {
+    this._updateProgressBar();
   }
 
   $videoPlayerEnded() {
@@ -1388,6 +1404,15 @@ export default class Player extends Lightning.Component {
 
           // this._setState('SubtitlesButton');
         }
+        _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._props.isLive) return;
+
+          this._setState('SeekBar');
+        }
       },
       class Subtitles extends this {
         _getFocused() {
@@ -1493,6 +1518,30 @@ export default class Player extends Lightning.Component {
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          this._setState('Controls');
+        }
+      },
+
+      class SeekBar extends this {
+        _getFocused() {
+          return this._ProgressBar;
+        }
+
+        $enter() {
+          VideoPlayer.pause()
+          console.log('##### enter');
+        }
+
+        $exit() {
+          if (!this._isSkipping) VideoPlayer.play()
+          console.log('##### this._isSkipping', this._isSkipping);
+        }
+
+        _handleUp() {
           if (window.Didomi && didomiVisible) {
             return true;
           }
