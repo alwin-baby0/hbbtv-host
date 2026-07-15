@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-Bw3k4QDH.js';
+const LEGACY_ENTRY = './assets/index-legacy-BjIlfBiX.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-XyIu8j-J.js';
 
 const splash = document.getElementById('splash');

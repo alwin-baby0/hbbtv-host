@@ -36,8 +36,8 @@ export default class PlayerButtons extends Lightning.Component {
 
   _enable() {
     const { buttonInfo } = this._props;
-    const width = buttonInfo.width ? buttonInfo.width : buttonInfo.label === 'pause' ? 90 : 66;
-    const height = buttonInfo.height ? buttonInfo.height : buttonInfo.label === 'pause' ? 90 : 66;
+    const width = 66;
+    const height = 66;
     this._Icon.patch({
       ...(buttonInfo.y && { y: buttonInfo.y }),
       ...(buttonInfo.x && { x: buttonInfo.x }),
@@ -48,8 +48,8 @@ export default class PlayerButtons extends Lightning.Component {
 
   _active() {
     const { buttonInfo } = this._props;
-    const width = buttonInfo.width ? buttonInfo.width : buttonInfo.label === 'pause' ? 90 : 66;
-    const height = buttonInfo.height ? buttonInfo.height : buttonInfo.label === 'pause' ? 90 : 66;
+    const width = 66;
+    const height = 66;
     if (buttonInfo.label === 'pause') {
       this._Icon.patch({
         ...(buttonInfo.y && { y: buttonInfo.y }),
@@ -150,8 +150,8 @@ export default class PlayerButtons extends Lightning.Component {
       buttonInfo.label === 'subtitles'
         ? 'SubtitlesButton'
         : buttonInfo.label === 'back'
-        ? 'Back'
-        : 'Controls';
+          ? 'Back'
+          : 'Controls';
     this.fireAncestors('$horizontalPosterIndexChange', this.parent.children.indexOf(this));
     this.fireAncestors('$setState', state);
     this._focus();

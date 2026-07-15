@@ -76,7 +76,6 @@ export default class ProgressBar extends Lightning.Component {
   }
 
   _unfocus() {
-    console.trace('')
     this.setSmooth('scaleY', 1)
   }
 
