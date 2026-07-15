@@ -3,6 +3,8 @@ import { Colors, Lightning } from '@lightningjs/sdk';
 export default class ProgressBar extends Lightning.Component {
   _props = { enterCallback: () => { }, index: -1, interval: null, alpha: 0.2 };
   _progressValue = 0
+  _duration = null
+  _repeatStartedTimestamp = null
   static _template() {
     return {
       BackgroundBar: {
@@ -58,13 +60,43 @@ export default class ProgressBar extends Lightning.Component {
     this._Progress.setSmooth('w', progress * this._props.width);
   }
 
-  _handleRight() {
-    const progress = Math.min((this._Progress.w / this._BackgroundBar.w) + (1 / 50), 1)
+  duration(duration) {
+    this._duration = duration
+  }
+
+  _calculateOffset = () => {
+    const holdThreshold = 1.5 * 1000
+    const minSeekSeconds = 20
+    const progressEquivalentOfMinimumSeekSeconds = minSeekSeconds / this._duration
+    const maxOffset = 1 / 50
+    let isUserHoldingSeekForMoreThanThreshold = false
+    if (this._repeatStartedTimestamp && Date.now() > this._repeatStartedTimestamp + holdThreshold) {
+      isUserHoldingSeekForMoreThanThreshold = true
+    }
+    return isUserHoldingSeekForMoreThanThreshold ? maxOffset : progressEquivalentOfMinimumSeekSeconds
+  }
+
+  _handleRight(e) {
+    if (e.repeat && !this._repeatStartedTimestamp) {
+      this._repeatStartedTimestamp = Date.now()
+    } else if (!e.repeat) {
+      this._repeatStartedTimestamp = null
+    }
+
+    const offset = this._calculateOffset()
+    const progress = Math.min((this._Progress.w / this._BackgroundBar.w) + offset, 1)
     this.progress(progress, true)
   }
 
-  _handleLeft() {
-    const progress = Math.max((this._Progress.w / this._BackgroundBar.w) - (1 / 50), 0)
+  _handleLeft(e) {
+    if (e.repeat && !this._repeatStartedTimestamp) {
+      this._repeatStartedTimestamp = Date.now()
+    } else if (!e.repeat) {
+      this._repeatStartedTimestamp = null
+    }
+
+    const offset = this._calculateOffset()
+    const progress = Math.max((this._Progress.w / this._BackgroundBar.w) - offset, 0)
     this.progress(progress, true)
   }
 

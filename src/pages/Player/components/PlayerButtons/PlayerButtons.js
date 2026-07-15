@@ -36,8 +36,8 @@ export default class PlayerButtons extends Lightning.Component {
 
   _enable() {
     const { buttonInfo } = this._props;
-    const width = 66;
-    const height = 66;
+    const width = buttonInfo.width ? buttonInfo.width : 66;
+    const height = buttonInfo.height ? buttonInfo.height : 66;
     this._Icon.patch({
       ...(buttonInfo.y && { y: buttonInfo.y }),
       ...(buttonInfo.x && { x: buttonInfo.x }),
@@ -48,8 +48,8 @@ export default class PlayerButtons extends Lightning.Component {
 
   _active() {
     const { buttonInfo } = this._props;
-    const width = 66;
-    const height = 66;
+    const width = buttonInfo.width ? buttonInfo.width : 66;
+    const height = buttonInfo.height ? buttonInfo.height : 66;
     if (buttonInfo.label === 'pause') {
       this._Icon.patch({
         ...(buttonInfo.y && { y: buttonInfo.y }),

@@ -1079,6 +1079,7 @@ export default class Player extends Lightning.Component {
       this._ProgressBar.progress(1);
     } else {
       this._ProgressBar.progress(progress);
+      this._ProgressBar.duration(VideoPlayer.duration - this._cumulativeTime);
     }
 
     if (!isLive) {
