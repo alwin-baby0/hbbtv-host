@@ -54,6 +54,7 @@ export default class Player extends Lightning.Component {
   _debounceVideoPause;
   _isSkipping = false;
   _watchedAds = [];
+  _wasHidden = false;
 
   static _template() {
     return {
@@ -1133,6 +1134,7 @@ export default class Player extends Lightning.Component {
       this._progressInterval = null;
     }
     clearTimeout(this._hideWrapperTimeout);
+    this._wasHidden = true
     this._setState('Controls')
     this._Controls._setFocusedIndex(1);
   }
@@ -1355,6 +1357,10 @@ export default class Player extends Lightning.Component {
     }
 
     const keyName = window.keyCodes[keyCode];
+    const NAVIGATION_KEY_CODES = [37, 38, 39, 40];
+    function isNavigationKeyCode(keyCode) {
+      return NAVIGATION_KEY_CODES.includes(keyCode);
+    }
 
     const isMediaKey =
       keyName === 'MediaRewind' ||
@@ -1365,6 +1371,7 @@ export default class Player extends Lightning.Component {
       keyName === 'MediaStop';
 
     if (this._getState() !== 'Subtitles') {
+      if (!isNavigationKeyCode(keyCode) && this._wasHidden) this._wasHidden = false
       this._showWrapper();
     }
 
@@ -1398,10 +1405,22 @@ export default class Player extends Lightning.Component {
             return true;
           }
 
+          if (this._wasHidden) {
+            this._wasHidden = false
+            this._setState('SeekBar')
+            return true;
+          }
+
           this._setState('Back');
         }
         _handleRight() {
           if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._wasHidden) {
+            this._wasHidden = false
+            this._setState('SeekBar')
             return true;
           }
 
@@ -1414,7 +1433,24 @@ export default class Player extends Lightning.Component {
 
           if (this._props.isLive) return;
 
+          if (this._wasHidden) {
+            this._wasHidden = false
+            return true;
+          }
+
           this._setState('SeekBar');
+        }
+        _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._props.isLive) return;
+
+          if (this._wasHidden) {
+            this._wasHidden = false
+            return true;
+          }
         }
       },
       class Subtitles extends this {
@@ -1513,6 +1549,16 @@ export default class Player extends Lightning.Component {
 
           this._setState('Controls');
         }
+
+        _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._props.isLive) return;
+
+          this._setState('SeekBar');
+        }
       },
 
       class SubtitlesButton extends this {
@@ -1543,6 +1589,14 @@ export default class Player extends Lightning.Component {
         }
 
         _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          this._setState('Controls');
+        }
+
+        _handleBack() {
           if (window.Didomi && didomiVisible) {
             return true;
           }
