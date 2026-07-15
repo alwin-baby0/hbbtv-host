@@ -51,20 +51,21 @@ export default class ProgressBar extends Lightning.Component {
     });
   }
 
-  progress(progress) {
+  progress(progress, fireSignal) {
     !this._props.width && (this._props.width = this.finalW);
     this._progressValue = progress
+    if (fireSignal) this.signal('onProgressUpdte', this._progressValue);
     this._Progress.setSmooth('w', progress * this._props.width);
   }
 
   _handleRight() {
     const progress = Math.min((this._Progress.w / this._BackgroundBar.w) + (1 / 50), 1)
-    this.progress(progress)
+    this.progress(progress, true)
   }
 
   _handleLeft() {
     const progress = Math.max((this._Progress.w / this._BackgroundBar.w) - (1 / 50), 0)
-    this.progress(progress)
+    this.progress(progress, true)
   }
 
   _handleEnter() {

@@ -140,6 +140,7 @@ export default class Player extends Lightning.Component {
 
             signals: {
               onProgressBarEnter: true,
+              onProgressUpdte: true,
             },
             props: {
               width: 1400,
@@ -1110,6 +1111,10 @@ export default class Player extends Lightning.Component {
   onProgressBarEnter(progress) {
     this._isSkipping = true;
     this._skipVideo(undefined, progress)
+  }
+
+  onProgressUpdte(progress) {
+    this._CurrentTime.text = formatTimeHMS(progress * VideoPlayer.duration)
   }
 
   _hideWrapperDebounce() {
