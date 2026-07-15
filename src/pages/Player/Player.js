@@ -1096,7 +1096,7 @@ export default class Player extends Lightning.Component {
 
   _showWrapper() {
     if (!this._props.isAdVisible) {
-      if (!this._progressInterval || this._props.isLive) {
+      if (!this._progressInterval) {
         this._setState('Controls');
         this._Backdrop.visible = true;
         this._Wrapper.visible = true;
@@ -1131,8 +1131,8 @@ export default class Player extends Lightning.Component {
     this._Wrapper.visible = false;
     if (!this._props.isLive) {
       clearInterval(this._progressInterval);
-      this._progressInterval = null;
     }
+    this._progressInterval = null;
     clearTimeout(this._hideWrapperTimeout);
     this._wasHidden = true
     this._setState('Controls')
@@ -1407,8 +1407,10 @@ export default class Player extends Lightning.Component {
 
           if (this._wasHidden) {
             this._wasHidden = false
-            this._setState('SeekBar')
-            return true;
+            if (!this._props.isLive) {
+              this._setState('SeekBar')
+              return true;
+            }
           }
 
           this._setState('Back');
@@ -1420,8 +1422,10 @@ export default class Player extends Lightning.Component {
 
           if (this._wasHidden) {
             this._wasHidden = false
-            this._setState('SeekBar')
-            return true;
+            if (!this._props.isLive) {
+              this._setState('SeekBar')
+              return true;
+            }
           }
 
           // this._setState('SubtitlesButton');
