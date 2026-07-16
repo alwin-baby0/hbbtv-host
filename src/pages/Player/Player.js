@@ -1378,7 +1378,7 @@ export default class Player extends Lightning.Component {
       keyName === 'MediaPause' ||
       keyName === 'MediaStop';
 
-    if (this._getState() !== 'Subtitles') {
+    if (this._getState() !== 'Subtitles' && keyName !== 'Back') {
       if (!isNavigationKeyCode(keyCode) && this._wasHidden) this._wasHidden = false
       this._showWrapper();
     }
@@ -1597,14 +1597,6 @@ export default class Player extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
-            return true;
-          }
-
-          this._setState('Controls');
-        }
-
-        _handleBack() {
           if (window.Didomi && didomiVisible) {
             return true;
           }
