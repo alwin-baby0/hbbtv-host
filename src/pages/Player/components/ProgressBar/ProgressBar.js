@@ -53,7 +53,7 @@ export default class ProgressBar extends Lightning.Component {
           true,
           Colors(backgroundBarColor).alpha(alpha).get()
         ),
-        h: height,
+        h: height * 1.1,
         w: width,
       },
       Progress: {
