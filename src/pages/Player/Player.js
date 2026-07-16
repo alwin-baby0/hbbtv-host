@@ -824,7 +824,7 @@ export default class Player extends Lightning.Component {
   }
 
   _skipVideo(forward, progress) {
-    this.$hideSbutitles();
+    this.$hideSbutitles(progress !== undefined);
     if (!this._props.isAdVisible) {
       this._isSkipping = true;
 
@@ -885,8 +885,8 @@ export default class Player extends Lightning.Component {
     }, 500);
   };
 
-  $hideSbutitles() {
-    this._setState('Controls');
+  $hideSbutitles(preventStateChange) {
+    if (!preventStateChange) this._setState('Controls');
     this.getByRef('Subtitles').visible = false;
     this._subtitleMenuOpen = false;
   }
@@ -987,6 +987,12 @@ export default class Player extends Lightning.Component {
       this.$hideSbutitles();
       return;
     }
+
+    if (this._Wrapper.visible) {
+      this._hideWrapper();
+      return;
+    }
+
     e.preventDefault();
 
     console.log('routerHistory in player back: ', Router.getHistory());
@@ -1116,6 +1122,7 @@ export default class Player extends Lightning.Component {
   }
 
   onProgressUpdte(progress) {
+    if (VideoPlayer.playing) VideoPlayer.pause()
     this._CurrentTime.text = formatTimeHMS(progress * VideoPlayer.duration)
   }
 
@@ -1174,7 +1181,7 @@ export default class Player extends Lightning.Component {
   }
 
   $videoPlayerTimeUpdate() {
-    this._updateProgressBar();
+    if (this._getState() !== 'SeekBar') this._updateProgressBar();
   }
 
   $videoPlayerEnded() {
@@ -1583,10 +1590,6 @@ export default class Player extends Lightning.Component {
       class SeekBar extends this {
         _getFocused() {
           return this._ProgressBar;
-        }
-
-        $enter() {
-          VideoPlayer.pause()
         }
 
         $exit() {
