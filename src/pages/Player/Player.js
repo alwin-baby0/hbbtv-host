@@ -598,7 +598,8 @@ export default class Player extends Lightning.Component {
                     w: 1920,
                     h: 200,
                     y: 880,
-                    color: 0x66000000,
+                    colorTop: Colors('#000000').alpha(0).get(),
+                    colorBottom: Colors('#000000').get(),
                   },
                   ProgressBarAd: {
                     type: ProgressBar,
@@ -609,6 +610,7 @@ export default class Player extends Lightning.Component {
                       height: 10,
                       backgroundBarColor: Colors(colors.adProgress).get(),
                       progressColor: undefined,
+                      alpha: 0.5,
                     },
                   },
                   AdIcon: {
@@ -623,7 +625,7 @@ export default class Player extends Lightning.Component {
                   },
                   AdInfoContainer: {
                     x: 20,
-                    y: 930,
+                    y: 920,
                     w: 300,
                     h: 35,
                     flex: { direction: 'row', alignItems: 'center' },
