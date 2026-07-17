@@ -96,7 +96,7 @@ export default class Player extends Lightning.Component {
           EpisodeBackdrop: {
             rect: true,
             w: 800,
-            h: 150,
+            h: 250,
             colorBottom: Colors('#000000').alpha(0).get(),
             colorTop: Colors('#000000').alpha(0.5).get(),
             colorRight: Colors('#000000').alpha(0).get(),
@@ -104,8 +104,8 @@ export default class Player extends Lightning.Component {
           Text: {
             w: 700,
             h: 100,
-            x: 20,
-            y: 20,
+            x: 100,
+            y: 70,
             text: {
               text: '',
               fontSize: 40,
@@ -117,7 +117,7 @@ export default class Player extends Lightning.Component {
         ProgressBarWrapper: {
           w: 1670,
           x: 115,
-          y: 150,
+          y: 200,
           flex: { flex: 'row', justifyContent: 'center', alignItems: 'center' },
           CurrentTime: {
             y: -2,
@@ -176,7 +176,7 @@ export default class Player extends Lightning.Component {
           w: 1690,
           h: 100,
           x: 115,
-          y: 200,
+          y: 250,
           flex: { direction: 'row', alignItems: 'center' },
           Controls: {
             type: HorizontalContainer,
@@ -459,7 +459,7 @@ export default class Player extends Lightning.Component {
       this._Wrapper.patch({
         Back: {
           x: 115,
-          y: 100,
+          y: 150,
           type: PlayerButtons,
           collision: true,
           props: {
@@ -1115,8 +1115,8 @@ export default class Player extends Lightning.Component {
         this._Backdrop.visible = true;
         this._Wrapper.visible = true;
         this._Wrapper.setSmooth('alpha', 1)
-        this._ProgressBarWrapper.setSmooth('y', 50)
-        this._ControlsWrapper.setSmooth('y', 100)
+        this._ProgressBarWrapper.setSmooth('y', 100)
+        this._ControlsWrapper.setSmooth('y', 150)
         this._updateProgressBar();
         // TODO: change this dummy implementation
         this._progressInterval = 2
@@ -1148,8 +1148,8 @@ export default class Player extends Lightning.Component {
     this._Backdrop.visible = false;
     this._Wrapper.visible = false;
     this._Wrapper.setSmooth('alpha', 0)
-    this._ProgressBarWrapper.setSmooth('y', 150)
-    this._ControlsWrapper.setSmooth('y', 200)
+    this._ProgressBarWrapper.setSmooth('y', 200)
+    this._ControlsWrapper.setSmooth('y', 250)
     if (!this._props.isLive) {
       clearInterval(this._progressInterval);
     }
