@@ -1,10 +1,15 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 
+const HOLD_THRESHOLD_MS = 1.5 * 1000;
+const MIN_SEEK_SECONDS = 20;
+const MAX_OFFSET = 1 / 100;
+
 export default class ProgressBar extends Lightning.Component {
   _props = { enterCallback: () => { }, index: -1, interval: null, alpha: 0.2 };
   _progressValue = 0
   _realProgress = 0
   _duration = null
+  _minSeekOffset = 0
   _repeatStartedTimestamp = null
   static _template() {
     return {
@@ -82,6 +87,7 @@ export default class ProgressBar extends Lightning.Component {
 
   duration(duration) {
     this._duration = duration
+    this._minSeekOffset = MIN_SEEK_SECONDS / duration
   }
 
   _setProgress = (progress, fireSignal) => {
@@ -93,15 +99,10 @@ export default class ProgressBar extends Lightning.Component {
   }
 
   _calculateOffset = () => {
-    const holdThreshold = 1.5 * 1000
-    const minSeekSeconds = 20
-    const progressEquivalentOfMinimumSeekSeconds = minSeekSeconds / this._duration
-    const maxOffset = 1 / 50
-    let isUserHoldingSeekForMoreThanThreshold = false
-    if (this._repeatStartedTimestamp && Date.now() > this._repeatStartedTimestamp + holdThreshold) {
-      isUserHoldingSeekForMoreThanThreshold = true
+    if (this._repeatStartedTimestamp && Date.now() > this._repeatStartedTimestamp + HOLD_THRESHOLD_MS) {
+      return MAX_OFFSET
     }
-    return isUserHoldingSeekForMoreThanThreshold ? maxOffset : progressEquivalentOfMinimumSeekSeconds
+    return this._minSeekOffset
   }
 
   _handleRight(e) {
@@ -111,8 +112,7 @@ export default class ProgressBar extends Lightning.Component {
       this._repeatStartedTimestamp = null
     }
 
-    const offset = this._calculateOffset()
-    const progress = Math.min((this._Progress.w / this._BackgroundBar.w) + offset, 1)
+    const progress = Math.min(this._progressValue + this._calculateOffset(), 1)
     this._setProgress(progress, true)
   }
 
@@ -123,8 +123,7 @@ export default class ProgressBar extends Lightning.Component {
       this._repeatStartedTimestamp = null
     }
 
-    const offset = this._calculateOffset()
-    const progress = Math.max((this._Progress.w / this._BackgroundBar.w) - offset, 0)
+    const progress = Math.max(this._progressValue - this._calculateOffset(), 0)
     this._setProgress(progress, true)
   }
 
