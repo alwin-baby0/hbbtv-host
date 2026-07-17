@@ -88,20 +88,19 @@ export default class Player extends Lightning.Component {
         collision: true,
         visible: false,
         alpha: 0,
-        EpisodeTitleWrapper: {
+        TitleWrapper: {
           visible: false,
           w: 700,
           h: 100,
           y: -750,
-          EpisodeBackdrop: {
+          TitleBackdrop: {
             rect: true,
-            w: 800,
+            w: 1920,
             h: 250,
             colorBottom: Colors('#000000').alpha(0).get(),
             colorTop: Colors('#000000').alpha(0.5).get(),
-            colorRight: Colors('#000000').alpha(0).get(),
           },
-          Text: {
+          TitleText: {
             w: 700,
             h: 100,
             x: 100,
@@ -251,8 +250,8 @@ export default class Player extends Lightning.Component {
     return this.tag('Controls');
   }
 
-  get _Episode() {
-    return this.tag('EpisodeTitleWrapper');
+  get _Title() {
+    return this.tag('TitleWrapper');
   }
 
   get _Back() {
@@ -378,7 +377,7 @@ export default class Player extends Lightning.Component {
 
   set props(props) {
     this._props = props;
-    const { isLive, videoUrl, continueTime, episodeTitle } = props;
+    const { isLive, videoUrl, continueTime, episodeTitle, title } = props;
     setTimeout(() => {
       if (!videoUrl) {
         Router.back()
@@ -413,14 +412,26 @@ export default class Player extends Lightning.Component {
         },
       });
 
-      episodeTitle &&
-        episodeTitle !== '' &&
-        this._Episode.patch({
+      title &&
+        title !== '' &&
+        this._Title.patch({
           visible: true,
-          EpisodeBackdrop: {
+          TitleBackdrop: {
             visible: true,
           },
-          Text: {
+          TitleText: {
+            text: title,
+          },
+        });
+
+      episodeTitle &&
+        episodeTitle !== '' &&
+        this._Title.patch({
+          visible: true,
+          TitleBackdrop: {
+            visible: true,
+          },
+          TitleText: {
             text: episodeTitle,
           },
         });

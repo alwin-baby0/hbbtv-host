@@ -460,6 +460,7 @@ export default class GalleryItem extends Lightning.Component {
       badgeY,
       episodeTitle,
       seasonTitle,
+      seriesTitle,
     } = this._props;
 
     const {
@@ -789,6 +790,7 @@ export default class GalleryItem extends Lightning.Component {
                 Router.navigate(ROUTES.PLAYER, {
                   videoUrl: result?.entry[0]?.files?.url ?? firstEpisodeUrl,
                   episodeTitle: firstEpisodeTitle,
+                  title: seriesTitle,
                   videoId: firstEpisodeVideoId,
                   episodeNumber: firstEpisodeEpisodeNumber,
                   seasonNumber: firstEpisodeSeasonNumber,
