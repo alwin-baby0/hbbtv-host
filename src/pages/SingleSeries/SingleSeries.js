@@ -19,8 +19,7 @@ import {
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import { constructRails } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
-import { checkCMP } from '../../utils';
-import { didomiVisible } from '../../App';
+import { hideElementsAndCheckCmp } from '../../utils';
 import { t } from '../../utils';
 import { V2 } from '../../Services/utils';
 import { parseSeasonData } from '../../Models';
@@ -131,7 +130,7 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   async _active() {
-    checkCMP();
+    hideElementsAndCheckCmp();
 
     const {
       galleryItem,

@@ -1,6 +1,5 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
-import { didomiVisible } from '../../../App';
 
 export default class PageItem extends Lightning.Component {
   static _template() {

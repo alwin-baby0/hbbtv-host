@@ -5,7 +5,6 @@ import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButt
 import { ROUTES, TRANSLATIONS, IMG_PATH, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import Button from '../../components/Button/Button';
-import { didomiVisible } from '../../App';
 import { t } from '../../utils';
 
 export default class Settings extends Lightning.Component {

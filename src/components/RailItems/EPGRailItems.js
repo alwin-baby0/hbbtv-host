@@ -1,6 +1,5 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { IMG_PATH, VIDEO_TYPES, ROUTES } from '../../constants/globalConstants';
-import { didomiVisible } from '../../App';
 
 export default class EPGRailItems extends Lightning.Component {
   _props = {
@@ -167,27 +166,27 @@ export default class EPGRailItems extends Lightning.Component {
     this._lastClickedItemId = null;
     this._props.isActive !== true
       ? this._Wrapper.patch({
-          texture: Lightning.Tools.getRoundRect(
-            this._epgWidth,
-            95,
-            8,
-            4,
-            Colors('#252835').get(),
-            true,
-            Colors('#252835').get()
-          ),
-        })
+        texture: Lightning.Tools.getRoundRect(
+          this._epgWidth,
+          95,
+          8,
+          4,
+          Colors('#252835').get(),
+          true,
+          Colors('#252835').get()
+        ),
+      })
       : this._Wrapper.patch({
-          texture: Lightning.Tools.getRoundRect(
-            this._epgWidth,
-            95,
-            8,
-            4,
-            Colors('#353849').get(),
-            true,
-            Colors('#353849').get()
-          ),
-        });
+        texture: Lightning.Tools.getRoundRect(
+          this._epgWidth,
+          95,
+          8,
+          4,
+          Colors('#353849').get(),
+          true,
+          Colors('#353849').get()
+        ),
+      });
   }
 
   selectEPG() {

@@ -10,7 +10,6 @@ import {
   VIDEO_TYPES,
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
-import { didomiVisible } from '../../App';
 import { t } from '../../utils';
 
 export default class GalleryItem extends Lightning.Component {

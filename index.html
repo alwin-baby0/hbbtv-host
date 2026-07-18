@@ -64,9 +64,24 @@
       //   regionCode: 'IDF',
       // }
     };
+    window.didomiVisible = false;
+    window.didomiOnReady = window.didomiOnReady || [];
+    window.didomiOnReady.push(function (Didomi) {
+      Didomi.on('notice.hidden', function () {
+        setTimeout(() => {
+          window.didomiVisible = false;
+        })
+      });
+      Didomi.on('notice.shown', function () {
+        window.didomiVisible = true;
+      });
+      Didomi.notice.hide(); // Suppresses the UI container actively
+    });
   </script>
   <script type="text/javascript" async="true" src="https://sdk.privacy-center.org/"></script>
   <script type="text/javascript" src="/static/scripts/fix.js"></script>
+  <script type="text/javascript" src="/static/scripts/didomiService.js"></script>
+  <script type="text/javascript" src="/static/scripts/main.js"></script>
 </head>
 
 <body>
@@ -87,18 +102,17 @@
       function onCanPlay() {
         var route = window.location.hash || '/';
         console.log('[splash-video] canplay | route:', route);
-        if (splashRoutes.indexOf(route) !== -1) {
-          var splashEl = document.getElementById('splash');
-          if (splashEl) {
-            splashEl.style.visibility = 'visible';
-            splashEl.style.opacity = '1';
-          }
-          splashVideo.play();
+        var splashEl = document.getElementById('splash');
+        if (splashEl) {
+          splashEl.style.visibility = 'visible';
+          splashEl.style.opacity = '1';
         }
+        splashVideo.play();
       }
       function onTimeUpdate() {
         if (splashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
           splashVideo.pause();
+          insertLightningScript()
         }
       }
       function onEnded() {
@@ -116,7 +130,7 @@
       splashVideo.addEventListener('ended', onEnded);
     }
   </script>
-  <script type="module" src="/src/index.js"></script>
+  <!-- <script type="module" src="/src/index.js"></script> -->
 </body>
 
 </html>

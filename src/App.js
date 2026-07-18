@@ -4,18 +4,13 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { DetailService, DidomiService, InactivityService } from './Services';
+import { DetailService, InactivityService } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 import { t } from './utils';
 import { unload } from './components/Player/HLS';
 
 let wasOffline = false; // Variable to track previous internet status
-export let didomiVisible = false;
-
-export const setDidomiVisible = (value) => {
-  didomiVisible = value;
-};
 
 export default class App extends Router.App {
   enteredApp = 0;
@@ -127,20 +122,24 @@ export default class App extends Router.App {
   }
 
   async _init() {
-    const analyticsAllowed = DidomiService.hasConsentForPurpose('analytics');
+    const analyticsAllowed = window.DidomiService.hasConsentForPurpose('analytics');
 
     if (analyticsAllowed) {
       this.startAnalytics();
     }
 
-    DidomiService.onConsentChanged(() => {
+    window.DidomiService.onConsentChanged(() => {
       this.handleConsentUpdate();
     });
   }
 
-  _captureKey() {
+  _captureKey(e) {
     if (Router.isNavigating()) {
       return true;
+    }
+
+    if (didomiVisible) {
+      return true
     }
 
     InactivityService.reset();
@@ -167,7 +166,7 @@ export default class App extends Router.App {
   }
 
   $didomiVisible(didomiVisibility) {
-    didomiVisible = didomiVisibility;
+    // didomiVisible = didomiVisibility;
   }
 
   $settingsDidomi(value) {
@@ -179,7 +178,7 @@ export default class App extends Router.App {
   }
 
   async handleConsentUpdate() {
-    if (DidomiService.hasConsentForPurpose('analytics')) {
+    if (window.DidomiService.hasConsentForPurpose('analytics')) {
       this.startAnalytics();
     } else {
       console.log('Analytics disabled');

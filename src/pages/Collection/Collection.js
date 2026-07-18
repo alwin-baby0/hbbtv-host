@@ -2,8 +2,7 @@ import { Lightning, Utils } from '@lightningjs/sdk';
 import BackBtn from '../../components/BackButton/BackBtn';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import { IMG_PATH } from '../../constants/globalConstants';
-import { checkCMP } from '../../utils';
-import { didomiVisible } from '../../App';
+import { hideElementsAndCheckCmp } from '../../utils';
 
 export default class Collection extends Lightning.Component {
   _props = {};
@@ -62,9 +61,8 @@ export default class Collection extends Lightning.Component {
     return this.tag('BackButton');
   }
 
-  _active() {
-    checkCMP();
-
+  _firstEnable() {
+    hideElementsAndCheckCmp();
     this._setState('Column');
   }
 

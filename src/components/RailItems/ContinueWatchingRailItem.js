@@ -5,7 +5,6 @@ import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
 import ProgressBar from '../../pages/Player/components/ProgressBar/ProgressBar';
-import { didomiVisible } from '../../App';
 
 export default class ContinueWatchingRailItem extends FocusableItem {
   _props = {

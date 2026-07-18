@@ -16,7 +16,6 @@ import {
   IMG_PATH,
 } from '../../constants/globalConstants';
 import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
-import { didomiVisible } from '../../App';
 import { t } from '../../utils';
 
 const search = {

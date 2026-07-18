@@ -4,7 +4,6 @@ import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import { IMAGE_SIZES } from '../../constants/globalConstants';
 import { railItemConstructor } from '../../pages/utils/railItems';
 import { loader, unloader } from '../Player/HLS';
-import { didomiVisible } from '../../App';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;

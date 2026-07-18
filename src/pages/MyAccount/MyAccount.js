@@ -12,7 +12,6 @@ import {
 } from '../../constants/globalConstants';
 import { parseVodUserContentData } from '../../Models';
 import LogoutButton from '../../components/Buttons/LogoutButton/LogoutButton';
-import { didomiVisible } from '../../App';
 import { t } from '../../utils';
 
 const states = ['LogoutButton', 'UserRecentlyWatched', 'UserFavorites'];
@@ -117,16 +116,16 @@ export default class MyAccount extends Lightning.Component {
 
     const parsedMovies = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
       ? parseVodUserContentData({
-          data: {
-            railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
-            railType: RAIL_TYPES.CONTINUE_WATCHING,
-            entry: recentlyWatched.data.recently_watched,
-          },
-          itemsPerRow:
-            recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length
-              ? recentlyWatched.data.recently_watched.length
-              : 0,
-        })
+        data: {
+          railTitle: t(TRANSLATIONS.CONTINUE_WATCHING),
+          railType: RAIL_TYPES.CONTINUE_WATCHING,
+          entry: recentlyWatched.data.recently_watched,
+        },
+        itemsPerRow:
+          recentlyWatched.data.recently_watched && recentlyWatched.data.recently_watched.length
+            ? recentlyWatched.data.recently_watched.length
+            : 0,
+      })
       : undefined;
 
     const favorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
@@ -135,18 +134,18 @@ export default class MyAccount extends Lightning.Component {
 
     const parsedFavorites = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
       ? parseVodUserContentData({
-          data: {
-            railTitle: t(TRANSLATIONS.FAVORITES),
-            railType: RAIL_TYPES.FAVORITES,
-            entry: favorites.data.favorites,
-          },
-          itemsPerRow:
-            favorites.data.favorites && favorites.data.favorites.length
-              ? favorites.data.favorites.length < VODS_PER_ROW
-                ? favorites.data.favorites.length
-                : VODS_PER_ROW
-              : 0,
-        })
+        data: {
+          railTitle: t(TRANSLATIONS.FAVORITES),
+          railType: RAIL_TYPES.FAVORITES,
+          entry: favorites.data.favorites,
+        },
+        itemsPerRow:
+          favorites.data.favorites && favorites.data.favorites.length
+            ? favorites.data.favorites.length < VODS_PER_ROW
+              ? favorites.data.favorites.length
+              : VODS_PER_ROW
+            : 0,
+      })
       : undefined;
 
     this._props = { ...this._props, recentlyWatched, parsedMovies, favorites, parsedFavorites };
@@ -263,7 +262,7 @@ export default class MyAccount extends Lightning.Component {
             w: 1450,
             h:
               !recentlyWatched?.data?.recently_watched ||
-              recentlyWatched?.data?.recently_watched?.length === 0
+                recentlyWatched?.data?.recently_watched?.length === 0
                 ? 95
                 : 320,
             props: {
@@ -294,8 +293,8 @@ export default class MyAccount extends Lightning.Component {
             type: LogoutButton,
             ...(favorites?.data?.favorites &&
               favorites?.data?.favorites?.length !== 0 && {
-                y: 350,
-              }),
+              y: 350,
+            }),
             collision: true,
             h: 65,
             props: {
@@ -314,7 +313,7 @@ export default class MyAccount extends Lightning.Component {
       });
 
       !recentlyWatched?.data?.recently_watched ||
-      recentlyWatched?.data?.recently_watched?.length === 0
+        recentlyWatched?.data?.recently_watched?.length === 0
         ? !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
           ? this._setState('LogoutButton')
           : this._setState('UserFavorites')
@@ -364,13 +363,13 @@ export default class MyAccount extends Lightning.Component {
           const { recentlyWatched, favorites } = this._props;
 
           !recentlyWatched?.data?.recently_watched ||
-          recentlyWatched?.data?.recently_watched?.length === 0
+            recentlyWatched?.data?.recently_watched?.length === 0
             ? !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
               ? Router.focusWidget(ROUTES.MENU_WIDGET)
               : this._setState('UserFavorites')
             : !favorites?.data?.favorites || favorites?.data?.favorites?.length === 0
-            ? this._setState('UserRecentlyWatched')
-            : this._setState('UserFavorites');
+              ? this._setState('UserRecentlyWatched')
+              : this._setState('UserFavorites');
         }
       },
 
@@ -415,7 +414,7 @@ export default class MyAccount extends Lightning.Component {
           const { recentlyWatched } = this._props;
 
           !recentlyWatched?.data?.recently_watched ||
-          recentlyWatched?.data?.recently_watched?.length === 0
+            recentlyWatched?.data?.recently_watched?.length === 0
             ? Router.focusWidget(ROUTES.MENU_WIDGET)
             : this._setState('UserRecentlyWatched');
         }

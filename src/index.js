@@ -33,7 +33,6 @@ import {
   SettingsService,
   LoggingService,
   AuthorizationService,
-  DidomiService,
 } from './Services/index.js';
 import { EVENT_NAMES, LOCAL_STORAGE_KEYS, LOG_LEVEL } from './constants/globalConstants.js';
 
@@ -87,7 +86,7 @@ sequence([
       if (!isDidomiEnabled) return
     }
 
-    await DidomiService.init();
+    await window.DidomiService.init();
     const userNotice = window.Didomi.getConfig();
 
     let userConsent = await window.Didomi.getCurrentUserStatus();

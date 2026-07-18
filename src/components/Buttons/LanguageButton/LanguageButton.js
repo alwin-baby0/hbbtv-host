@@ -3,7 +3,6 @@ import colors from '../../../../reskin/colors.json';
 import { createApiCtx } from '../../../Services/utils';
 import axios from 'axios';
 import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
-import { didomiVisible } from '../../../App';
 import { InactivityService } from '../../../Services';
 import { unload } from '../../Player/HLS';
 

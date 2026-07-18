@@ -1,7 +1,6 @@
 import { Lightning } from '@lightningjs/sdk';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import { CARD_SIZES } from '../../constants/globalConstants';
-import { didomiVisible } from '../../App';
 
 export default class CategoryPicker extends Lightning.Component {
   _props = {

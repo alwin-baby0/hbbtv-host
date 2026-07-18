@@ -5,7 +5,6 @@ import LoadingScreenComponent from '../../components/LoadingScreenComponent/Load
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
 import { t } from '../../utils';
-import { didomiVisible } from '../../App';
 
 const states = ['HelpItems', 'ScrollWrapper'];
 

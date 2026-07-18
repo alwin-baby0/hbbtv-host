@@ -11,8 +11,7 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { didomiVisible } from '../../App';
-import { t, clamp, checkCMP } from '../../utils';
+import { t, clamp, checkCMP, hideElements } from '../../utils';
 
 export default class LiveTV extends Lightning.Component {
   _props = {
@@ -136,7 +135,7 @@ export default class LiveTV extends Lightning.Component {
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(
       EPGService.filteredChannelsItems[
-        this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+      this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
       ]
     );
 
@@ -304,6 +303,7 @@ export default class LiveTV extends Lightning.Component {
   async _active() {
     const { cmpShown } = this._props;
 
+    hideElements()
     const canProceed = await checkCMP({
       cmpShown,
       url: ROUTES.LIVE,
@@ -316,7 +316,7 @@ export default class LiveTV extends Lightning.Component {
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(
       EPGService.filteredChannelsItems[
-        this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+      this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
       ]
     );
 
@@ -427,7 +427,7 @@ export default class LiveTV extends Lightning.Component {
 
       this.$updateChannel(
         EPGService.filteredChannelsItems[
-          this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+        this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
         ]
       );
     }

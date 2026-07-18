@@ -5,8 +5,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { EVENT_NAMES, IMG_PATH, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { checkCMP } from '../../utils';
-import { didomiVisible } from '../../App';
+import { hideElementsAndCheckCmp } from '../../utils';
 import { t } from '../../utils';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
@@ -143,7 +142,7 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   async _active() {
-    checkCMP();
+    hideElementsAndCheckCmp();
 
     const { galleryItem } = this._props;
 

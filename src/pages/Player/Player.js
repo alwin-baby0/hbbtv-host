@@ -24,7 +24,6 @@ import {
   VIDEO_TYPES,
 } from '../../constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
-import { didomiVisible } from '../../App';
 import { t } from '../../utils';
 
 const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'];

@@ -1,6 +1,5 @@
 import { Colors, Utils } from '@lightningjs/sdk';
 import Lightning from '@lightningjs/sdk/src/Lightning';
-import { didomiVisible } from '../../../App';
 
 export default class Key extends Lightning.Component {
   static _template() {

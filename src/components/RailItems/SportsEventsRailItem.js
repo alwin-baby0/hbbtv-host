@@ -3,7 +3,6 @@ import { CARD_SIZES, IMG_PATH } from '../../constants/globalConstants';
 import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
-import { didomiVisible } from '../../App';
 
 export default class SportsEventsRailItem extends FocusableItem {
   _props = {

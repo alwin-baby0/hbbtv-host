@@ -1,7 +1,6 @@
 import Lightning from '@lightningjs/sdk/src/Lightning';
 import { getClosestElementIndex } from '../../utils/focus';
 import { CARD_SIZES, CARD_TYPES, ROUTES } from '../../constants/globalConstants';
-import { didomiVisible } from '../../App';
 import { Router } from '@lightningjs/sdk';
 
 export default class VerticalContainer extends Lightning.Component {
