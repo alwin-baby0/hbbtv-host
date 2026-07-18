@@ -11,7 +11,7 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { t, clamp, checkCMP, hideElements, hideElementsAndCheckCmp } from '../../utils';
+import { t, clamp, hideElementsAndCheckCmp } from '../../utils';
 
 export default class LiveTV extends Lightning.Component {
   _props = {

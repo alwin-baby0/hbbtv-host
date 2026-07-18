@@ -4,7 +4,7 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { DetailService, InactivityService } from './Services';
+import { DetailService, DidomiService, InactivityService } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 import { t } from './utils';
@@ -122,13 +122,13 @@ export default class App extends Router.App {
   }
 
   async _init() {
-    const analyticsAllowed = window.DidomiService.hasConsentForPurpose('analytics');
+    const analyticsAllowed = DidomiService.hasConsentForPurpose('analytics');
 
     if (analyticsAllowed) {
       this.startAnalytics();
     }
 
-    window.DidomiService.onConsentChanged(() => {
+    DidomiService.onConsentChanged(() => {
       this.handleConsentUpdate();
     });
   }
@@ -178,7 +178,7 @@ export default class App extends Router.App {
   }
 
   async handleConsentUpdate() {
-    if (window.DidomiService.hasConsentForPurpose('analytics')) {
+    if (DidomiService.hasConsentForPurpose('analytics')) {
       this.startAnalytics();
     } else {
       console.log('Analytics disabled');

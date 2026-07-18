@@ -12,7 +12,7 @@ import {
   RAIL_TYPES,
 } from '../../constants/globalConstants';
 import { railItemConstructor } from '../utils/railItems';
-import { checkCMP, hideElements } from '../../utils/index';
+import { hideElementsAndCheckCmp } from '../../utils/index';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -56,18 +56,7 @@ export default class VodPreview extends Lightning.Component {
   }
 
   async _firstEnable() {
-    const { cmpShown, vodType } = this._props;
-    const returnUrl = `${ROUTES.VOD}/${vodType}`;
-
-    hideElements()
-    const canProceed = await checkCMP({
-      cmpShown,
-      url: returnUrl,
-    });
-
-    if (!canProceed) {
-      return;
-    }
+    hideElementsAndCheckCmp()
   }
 
   get _HeroSection() {

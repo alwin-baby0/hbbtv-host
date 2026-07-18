@@ -1,4 +1,4 @@
-import { AuthorizationService } from '../Services';
+import { AuthorizationService, DidomiService } from '../Services';
 import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
 import { Router } from '@lightningjs/sdk';
 
@@ -15,21 +15,21 @@ export function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function hideElementsAndCheckCmp() {
+export async function hideElementsAndCheckCmp() {
+  await checkCMP()
   hideElements()
-  checkCMP()
 }
 
 export function hideElements() {
   window.homepageLoaded = true;
   if (window.hideHbbtvSplash) window.hideHbbtvSplash()
   if (window.hideSplash) window.hideSplash()
-  if (window.hideHbbtvLoader) Registry.setTimeout(window.hideHbbtvLoader, 200)
+  if (window.hideHbbtvLoader) setTimeout(window.hideHbbtvLoader, 200)
   if (window.enableRedButton) window.enableRedButton()
 }
 
 export async function checkCMP() {
-  await window.DidomiService.init();
+  await DidomiService.init();
   const userNotice = window.Didomi.getConfig();
 
   if (Router.getHistory().length) {
