@@ -101,7 +101,7 @@ export default class Player extends Lightning.Component {
             colorTop: Colors('#000000').alpha(0.5).get(),
           },
           TitleText: {
-            w: 700,
+            w: 1700,
             h: 100,
             x: 100,
             y: 70,
