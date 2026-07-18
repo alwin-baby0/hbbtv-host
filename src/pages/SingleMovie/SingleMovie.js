@@ -585,6 +585,7 @@ export default class SingleMovie extends Lightning.Component {
                         duration: duration,
                         videoId: movieId,
                         ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
+                        title: movie.title
                       });
                     }
                   );
@@ -594,8 +595,8 @@ export default class SingleMovie extends Lightning.Component {
                     videoId: movieTrailerId,
                   });
                 } else if (item.buttonName === 'CONTINUE WATCHING') {
-                  this._Card.visible = false;
-                  this._CardInfo.visible = false;
+                  // this._Card.visible = false;
+                  // this._CardInfo.visible = false;
                   this._Spinner.visible = true;
                   this._Spinner
                     .animation({
@@ -615,6 +616,7 @@ export default class SingleMovie extends Lightning.Component {
                         videoId: movieId,
                         continueTime: last_position,
                         ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
+                        title: movie.title
                       });
                     }
                   );

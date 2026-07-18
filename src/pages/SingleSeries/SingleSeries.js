@@ -155,6 +155,7 @@ export default class SingleSeries extends Lightning.Component {
       episodeTitle,
       seasonTitle,
       seasonNumber,
+      seriesTitle,
     } = this._props;
     const { id, badgeText } = galleryItem;
 
@@ -176,6 +177,7 @@ export default class SingleSeries extends Lightning.Component {
         episodeTitle,
         seasonTitle,
         seasonNumber,
+        seriesTitle,
       },
       Info: {
         GalleryButton: {

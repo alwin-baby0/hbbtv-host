@@ -10,34 +10,10 @@ export const playerButtonsVOD = [
     collision: true,
     props: {
       buttonInfo: {
-        label: 'backward',
-        icon: IMG_PATH.FAST_BACKWARD_PLAYER,
-        onLiveContent: false,
-        position: 660,
-      },
-    },
-  },
-  {
-    type: PlayerButtons,
-    collision: true,
-    props: {
-      buttonInfo: {
         label: 'pause',
         icon: IMG_PATH.PAUSE_BTN_PLAYER,
         onLiveContent: true,
         position: 690,
-      },
-    },
-  },
-  {
-    type: PlayerButtons,
-    collision: true,
-    props: {
-      buttonInfo: {
-        label: 'forward',
-        icon: IMG_PATH.FAST_FORWARD_PLAYER,
-        onLiveContent: false,
-        position: 720,
       },
     },
   },
@@ -49,36 +25,10 @@ export const playerButtonsLive = [
     collision: true,
     props: {
       buttonInfo: {
-        label: 'back',
-        icon: IMG_PATH.BACK_BTN_PLAYER,
-        onLiveContent: true,
-        position: 60,
-      },
-      isLive: true,
-    },
-  },
-  {
-    type: PlayerButtons,
-    collision: true,
-    props: {
-      buttonInfo: {
         label: 'pause',
         icon: IMG_PATH.PAUSE_BTN_PLAYER,
         onLiveContent: true,
-        position: 810,
-      },
-      isLive: true,
-    },
-  },
-  {
-    type: PlayerButtons,
-    collision: true,
-    props: {
-      buttonInfo: {
-        label: 'subtitles',
-        icon: IMG_PATH.SUBTITLES,
-        onLiveContent: true,
-        position: 810,
+        position: 690,
       },
       isLive: true,
     },

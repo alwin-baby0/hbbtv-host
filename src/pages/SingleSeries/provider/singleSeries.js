@@ -96,7 +96,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     lastPlayedEpisodeDuration: lastPlayedEpisodeDuration,
     firstEpisodeVideoId: episodeId ?? galleryItem.firstEpisodeId,
     firstEpisodeUrl: galleryItem.videoUrl || seasonFirstEpUrl || galleryItem.firstEpisodeUrl,
-    firstEpisodeTitle: galleryItem.title || seasonFirstEpTitle || galleryItem.firstEpisodeTitle,
+    firstEpisodeTitle: galleryItem.firstEpisodeTitle || galleryItem.title || seasonFirstEpTitle,
     firstEpisodeEpisodeNumber: galleryItem.episodeNumber || galleryItem.firstEpisodeEpisodeNumber,
     firstEpisodeSeasonNumber: galleryItem.seasonNumber || galleryItem.firstEpisodeSeasonNumber,
     seriesId: galleryItem.id,
@@ -111,6 +111,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
     episodeTitle: episodeTitle,
     seasonNumber: seasonNumberPlusOne,
     seasonTitle,
+    seriesTitle: galleryItem.title,
   };
 
   const seasonsRail = constructRails(seasonTabsParsed);

@@ -31,7 +31,7 @@ const states = ['Controls', 'Subtitles', 'SkipButton', 'Back', 'SubtitlesButton'
 
 export default class Player extends Lightning.Component {
   _props = {
-    pausedItemId: 1,
+    pausedItemId: 0,
     isAdVisible: false,
     currentAd: null,
     skipTo: 0,
@@ -54,6 +54,7 @@ export default class Player extends Lightning.Component {
   _debounceVideoPause;
   _isSkipping = false;
   _watchedAds = [];
+  _wasHidden = false;
 
   static _template() {
     return {
@@ -86,24 +87,24 @@ export default class Player extends Lightning.Component {
         w: 1690,
         collision: true,
         visible: false,
-        EpisodeTitleWrapper: {
+        alpha: 0,
+        TitleWrapper: {
           visible: false,
           w: 700,
           h: 100,
           y: -750,
-          EpisodeBackdrop: {
+          TitleBackdrop: {
             rect: true,
-            w: 800,
-            h: 150,
+            w: 1920,
+            h: 250,
             colorBottom: Colors('#000000').alpha(0).get(),
             colorTop: Colors('#000000').alpha(0.5).get(),
-            colorRight: Colors('#000000').alpha(0).get(),
           },
-          Text: {
+          TitleText: {
             w: 700,
             h: 100,
-            x: 20,
-            y: 20,
+            x: 100,
+            y: 70,
             text: {
               text: '',
               fontSize: 40,
@@ -112,29 +113,10 @@ export default class Player extends Lightning.Component {
             },
           },
         },
-        ControlsWrapper: {
-          w: 1690,
-          h: 100,
-          x: 115,
-          flex: { direction: 'row', alignItems: 'center' },
-          Controls: {
-            type: HorizontalContainer,
-            collision: true,
-            h: 100,
-            w: 1690,
-            flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
-            rect: true,
-            y: 0,
-            color: Colors('#000000').alpha(0).get(),
-            props: {
-              parentState: 'Controls',
-            },
-          },
-        },
         ProgressBarWrapper: {
           w: 1670,
           x: 115,
-          y: 100,
+          y: 200,
           flex: { flex: 'row', justifyContent: 'center', alignItems: 'center' },
           CurrentTime: {
             y: -2,
@@ -156,6 +138,11 @@ export default class Player extends Lightning.Component {
           },
           ProgressBar: {
             type: ProgressBar,
+
+            signals: {
+              onProgressBarEnter: true,
+              onProgressUpdte: true,
+            },
             props: {
               width: 1400,
               height: 10,
@@ -181,6 +168,26 @@ export default class Player extends Lightning.Component {
                 textAlign: 'center',
                 fontFace: 'Montserrat-Bold',
               },
+            },
+          },
+        },
+        ControlsWrapper: {
+          w: 1690,
+          h: 100,
+          x: 115,
+          y: 250,
+          flex: { direction: 'row', alignItems: 'center' },
+          Controls: {
+            type: HorizontalContainer,
+            collision: true,
+            h: 100,
+            w: 1690,
+            flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
+            rect: true,
+            y: 0,
+            color: Colors('#000000').alpha(0).get(),
+            props: {
+              parentState: 'Controls',
             },
           },
         },
@@ -243,8 +250,8 @@ export default class Player extends Lightning.Component {
     return this.tag('Controls');
   }
 
-  get _Episode() {
-    return this.tag('EpisodeTitleWrapper');
+  get _Title() {
+    return this.tag('TitleWrapper');
   }
 
   get _Back() {
@@ -261,6 +268,10 @@ export default class Player extends Lightning.Component {
 
   get _ProgressBarWrapper() {
     return this.tag('ProgressBarWrapper');
+  }
+
+  get _ControlsWrapper() {
+    return this.tag('ControlsWrapper');
   }
 
   get _ProgressBar() {
@@ -359,14 +370,14 @@ export default class Player extends Lightning.Component {
       ...rest,
       videoUrl,
       ads: ssai,
-      pausedItemId: 1,
+      pausedItemId: 0,
       isLive: videoType === VIDEO_TYPES.STREAM_NOW || videoType === 'application/x-mpegURL',
     };
   }
 
   set props(props) {
     this._props = props;
-    const { isLive, videoUrl, continueTime, episodeTitle } = props;
+    const { isLive, videoUrl, continueTime, episodeTitle, title } = props;
     setTimeout(() => {
       if (!videoUrl) {
         Router.back()
@@ -401,14 +412,26 @@ export default class Player extends Lightning.Component {
         },
       });
 
-      episodeTitle &&
-        episodeTitle !== '' &&
-        this._Episode.patch({
+      title &&
+        title !== '' &&
+        this._Title.patch({
           visible: true,
-          EpisodeBackdrop: {
+          TitleBackdrop: {
             visible: true,
           },
-          Text: {
+          TitleText: {
+            text: title,
+          },
+        });
+
+      episodeTitle &&
+        episodeTitle !== '' &&
+        this._Title.patch({
+          visible: true,
+          TitleBackdrop: {
+            visible: true,
+          },
+          TitleText: {
             text: episodeTitle,
           },
         });
@@ -438,44 +461,45 @@ export default class Player extends Lightning.Component {
 
       this._Controls._setFocusedIndex(1);
 
-      if (isLive) {
-        this._Wrapper.patch({
-          Back: undefined,
-          SubtitlesButton: undefined,
-        });
-      } else {
-        this._Wrapper.patch({
-          Back: {
-            x: 115,
-            type: PlayerButtons,
-            collision: true,
-            props: {
-              buttonInfo: {
-                label: 'back',
-                icon: IMG_PATH.BACK_BTN_PLAYER,
-                onLiveContent: true,
-                position: 60,
-              },
-              parentState: 'Back',
+      // if (isLive) {
+      //   this._Wrapper.patch({
+      //     Back: undefined,
+      //     SubtitlesButton: undefined,
+      //   });
+      // } else {
+      this._Wrapper.patch({
+        Back: {
+          x: 115,
+          y: 150,
+          type: PlayerButtons,
+          collision: true,
+          props: {
+            buttonInfo: {
+              label: 'back',
+              icon: IMG_PATH.BACK_BTN_PLAYER,
+              onLiveContent: true,
+              position: 60,
             },
+            parentState: 'Back',
           },
-          // SubtitlesButton: {
-          //   x: 1715,
-          //   type: PlayerButtons,
-          //   collision: true,
-          //   props: {
-          //     buttonInfo: {
-          //       label: 'subtitles',
-          //       icon: `/icons/player/commands/subtitles.svg`,
-          //       onLiveContent: true,
-          //       position: 60,
-          //     },
-          //     parentState: 'SubtitlesButton'
-          //   },
-          // },
-          SubtitlesButton: undefined,
-        });
-      }
+        },
+        // SubtitlesButton: {
+        //   x: 1715,
+        //   type: PlayerButtons,
+        //   collision: true,
+        //   props: {
+        //     buttonInfo: {
+        //       label: 'subtitles',
+        //       icon: `/icons/player/commands/subtitles.svg`,
+        //       onLiveContent: true,
+        //       position: 60,
+        //     },
+        //     parentState: 'SubtitlesButton'
+        //   },
+        // },
+        SubtitlesButton: undefined,
+      });
+      // }
     }, 0);
   }
 
@@ -585,7 +609,8 @@ export default class Player extends Lightning.Component {
                     w: 1920,
                     h: 200,
                     y: 880,
-                    color: 0x66000000,
+                    colorTop: Colors('#000000').alpha(0).get(),
+                    colorBottom: Colors('#000000').get(),
                   },
                   ProgressBarAd: {
                     type: ProgressBar,
@@ -596,6 +621,7 @@ export default class Player extends Lightning.Component {
                       height: 10,
                       backgroundBarColor: Colors(colors.adProgress).get(),
                       progressColor: undefined,
+                      alpha: 0.5,
                     },
                   },
                   AdIcon: {
@@ -610,7 +636,7 @@ export default class Player extends Lightning.Component {
                   },
                   AdInfoContainer: {
                     x: 20,
-                    y: 930,
+                    y: 920,
                     w: 300,
                     h: 35,
                     flex: { direction: 'row', alignItems: 'center' },
@@ -815,14 +841,19 @@ export default class Player extends Lightning.Component {
     return true;
   }
 
-  _skipVideo(forward) {
-    this.$hideSbutitles();
+  _skipVideo(forward, progress) {
+    this.$hideSbutitles(progress !== undefined);
     if (!this._props.isAdVisible) {
       this._isSkipping = true;
-      if (forward) {
-        this._videoSkipTimeSum += 20;
+
+      if (progress !== undefined) {
+        this._videoSkipTimeSum = (progress * VideoPlayer.duration) - VideoPlayer.currentTime
       } else {
-        this._videoSkipTimeSum -= 20;
+        if (forward) {
+          this._videoSkipTimeSum += 20;
+        } else {
+          this._videoSkipTimeSum -= 20;
+        }
       }
 
       clearTimeout(this._seekTimeout);
@@ -872,8 +903,8 @@ export default class Player extends Lightning.Component {
     }, 500);
   };
 
-  $hideSbutitles() {
-    this._setState('Controls');
+  $hideSbutitles(preventStateChange) {
+    if (!preventStateChange) this._setState('Controls');
     this.getByRef('Subtitles').visible = false;
     this._subtitleMenuOpen = false;
   }
@@ -974,6 +1005,12 @@ export default class Player extends Lightning.Component {
       this.$hideSbutitles();
       return;
     }
+
+    if (this._Wrapper.visible) {
+      this._hideWrapper();
+      return;
+    }
+
     e.preventDefault();
 
     console.log('routerHistory in player back: ', Router.getHistory());
@@ -1018,7 +1055,7 @@ export default class Player extends Lightning.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 66, 66),
       });
     }
   }
@@ -1039,7 +1076,7 @@ export default class Player extends Lightning.Component {
       }
 
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 66, 66),
       });
     }
   }
@@ -1066,6 +1103,7 @@ export default class Player extends Lightning.Component {
       this._ProgressBar.progress(1);
     } else {
       this._ProgressBar.progress(progress);
+      this._ProgressBar.duration(VideoPlayer.duration - this._cumulativeTime);
     }
 
     if (!isLive) {
@@ -1087,16 +1125,26 @@ export default class Player extends Lightning.Component {
         this._setState('Controls');
         this._Backdrop.visible = true;
         this._Wrapper.visible = true;
+        this._Wrapper.setSmooth('alpha', 1)
+        this._ProgressBarWrapper.setSmooth('y', 100)
+        this._ControlsWrapper.setSmooth('y', 150)
         this._updateProgressBar();
-        if (!this._props.isLive) {
-          this._progressInterval = setInterval(() => {
-            this._updateProgressBar();
-          }, 1000);
-        }
+        // TODO: change this dummy implementation
+        this._progressInterval = 2
       }
       clearTimeout(this._hideWrapperTimeout);
       this._hideWrapperDebounce();
     }
+  }
+
+  onProgressBarEnter(progress) {
+    this._isSkipping = true;
+    this._skipVideo(undefined, progress)
+  }
+
+  onProgressUpdte(progress) {
+    if (VideoPlayer.playing) VideoPlayer.pause()
+    this._CurrentTime.text = formatTimeHMS(progress * VideoPlayer.duration)
   }
 
   _hideWrapperDebounce() {
@@ -1110,11 +1158,16 @@ export default class Player extends Lightning.Component {
   _hideWrapper() {
     this._Backdrop.visible = false;
     this._Wrapper.visible = false;
+    this._Wrapper.setSmooth('alpha', 0)
+    this._ProgressBarWrapper.setSmooth('y', 200)
+    this._ControlsWrapper.setSmooth('y', 250)
     if (!this._props.isLive) {
       clearInterval(this._progressInterval);
-      this._progressInterval = null;
     }
+    this._progressInterval = null;
     clearTimeout(this._hideWrapperTimeout);
+    this._wasHidden = true
+    this._setState('Controls')
     this._Controls._setFocusedIndex(1);
   }
 
@@ -1151,6 +1204,10 @@ export default class Player extends Lightning.Component {
     this._showSpinner();
   }
 
+  $videoPlayerTimeUpdate() {
+    if (this._getState() !== 'SeekBar') this._updateProgressBar();
+  }
+
   $videoPlayerEnded() {
     UserService.deleteRecentlyWatched(this._props.videoId);
 
@@ -1177,7 +1234,7 @@ export default class Player extends Lightning.Component {
     const { pausedItemId } = this._props;
 
     this._Controls.Items.children[pausedItemId]._Icon.patch({
-      texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
+      texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 66, 66),
     });
   }
 
@@ -1256,12 +1313,12 @@ export default class Player extends Lightning.Component {
     if (isCurrentlyPlaying) {
       // The video was playing, now it will be paused
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PLAY_BTN_PLAYER), 66, 66),
       });
     } else {
       // The video was paused, now it will be playing
       this._Controls.Items.children[pausedItemId]._Icon.patch({
-        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 90, 90),
+        texture: Lightning.Tools.getSvgTexture(Utils.asset(IMG_PATH.PAUSE_BTN_PLAYER), 66, 66),
       });
     }
   }
@@ -1332,6 +1389,10 @@ export default class Player extends Lightning.Component {
     }
 
     const keyName = window.keyCodes[keyCode];
+    const NAVIGATION_KEY_CODES = [37, 38, 39, 40];
+    function isNavigationKeyCode(keyCode) {
+      return NAVIGATION_KEY_CODES.includes(keyCode);
+    }
 
     const isMediaKey =
       keyName === 'MediaRewind' ||
@@ -1341,7 +1402,8 @@ export default class Player extends Lightning.Component {
       keyName === 'MediaPause' ||
       keyName === 'MediaStop';
 
-    if (this._getState() !== 'Subtitles') {
+    if (this._getState() !== 'Subtitles' && keyName !== 'Back') {
+      if (!isNavigationKeyCode(keyCode) && this._wasHidden) this._wasHidden = false
       this._showWrapper();
     }
 
@@ -1375,7 +1437,13 @@ export default class Player extends Lightning.Component {
             return true;
           }
 
-          if (this._props.isLive) return;
+          if (this._wasHidden) {
+            this._wasHidden = false
+            if (!this._props.isLive) {
+              this._setState('SeekBar')
+              return true;
+            }
+          }
 
           this._setState('Back');
         }
@@ -1384,9 +1452,41 @@ export default class Player extends Lightning.Component {
             return true;
           }
 
-          if (this._props.isLive) return;
+          if (this._wasHidden) {
+            this._wasHidden = false
+            if (!this._props.isLive) {
+              this._setState('SeekBar')
+              return true;
+            }
+          }
 
           // this._setState('SubtitlesButton');
+        }
+        _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._props.isLive) return;
+
+          if (this._wasHidden) {
+            this._wasHidden = false
+            return true;
+          }
+
+          this._setState('SeekBar');
+        }
+        _handleDown() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._props.isLive) return;
+
+          if (this._wasHidden) {
+            this._wasHidden = false
+            return true;
+          }
         }
       },
       class Subtitles extends this {
@@ -1485,6 +1585,16 @@ export default class Player extends Lightning.Component {
 
           this._setState('Controls');
         }
+
+        _handleUp() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          if (this._props.isLive) return;
+
+          this._setState('SeekBar');
+        }
       },
 
       class SubtitlesButton extends this {
@@ -1493,6 +1603,24 @@ export default class Player extends Lightning.Component {
         }
 
         _handleLeft() {
+          if (window.Didomi && didomiVisible) {
+            return true;
+          }
+
+          this._setState('Controls');
+        }
+      },
+
+      class SeekBar extends this {
+        _getFocused() {
+          return this._ProgressBar;
+        }
+
+        $exit() {
+          if (!this._isSkipping) VideoPlayer.play()
+        }
+
+        _handleDown() {
           if (window.Didomi && didomiVisible) {
             return true;
           }
