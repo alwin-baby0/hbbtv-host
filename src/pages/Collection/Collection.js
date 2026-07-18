@@ -1,7 +1,7 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import BackBtn from '../../components/BackButton/BackBtn';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import { IMG_PATH } from '../../constants/globalConstants';
+import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
 import { hideElementsAndCheckCmp } from '../../utils';
 
 export default class Collection extends Lightning.Component {
@@ -68,6 +68,17 @@ export default class Collection extends Lightning.Component {
 
   _getFocused() {
     return this._Column;
+  }
+
+
+
+  _handleBack() {
+    if (window.Didomi && didomiVisible) {
+      return true;
+    }
+
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $handleStateHover(index, stateName = null) {

@@ -5,7 +5,7 @@ import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButt
 import { ROUTES, TRANSLATIONS, IMG_PATH, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import Button from '../../components/Button/Button';
-import { t } from '../../utils';
+import { hideElementsAndCheckCmp, t } from '../../utils';
 
 export default class Settings extends Lightning.Component {
   static _template() {
@@ -253,6 +253,10 @@ export default class Settings extends Lightning.Component {
     });
   }
 
+  _firstEnable() {
+    hideElementsAndCheckCmp()
+  }
+
   _active() {
     this._setState('Languages');
   }
@@ -262,8 +266,8 @@ export default class Settings extends Lightning.Component {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $handleStateHover(index, stateName = null) {

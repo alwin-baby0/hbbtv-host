@@ -4,7 +4,7 @@ import colors from '../../../reskin/colors.json';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
-import { t } from '../../utils';
+import { hideElementsAndCheckCmp, t } from '../../utils';
 
 const states = ['HelpItems', 'ScrollWrapper'];
 
@@ -112,6 +112,10 @@ export default class HelpScreen extends Lightning.Component {
     return this.tag('ScrollWrapper');
   }
 
+  _firstEnable() {
+    hideElementsAndCheckCmp();
+  }
+
   _active() {
     this._setState('HelpItems');
   }
@@ -121,8 +125,8 @@ export default class HelpScreen extends Lightning.Component {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $setFocus(id) {

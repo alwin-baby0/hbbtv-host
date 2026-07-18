@@ -12,7 +12,7 @@ import {
 } from '../../constants/globalConstants';
 import { parseVodUserContentData } from '../../Models';
 import LogoutButton from '../../components/Buttons/LogoutButton/LogoutButton';
-import { t } from '../../utils';
+import { hideElementsAndCheckCmp, t } from '../../utils';
 
 const states = ['LogoutButton', 'UserRecentlyWatched', 'UserFavorites'];
 
@@ -93,6 +93,10 @@ export default class MyAccount extends Lightning.Component {
   set props(props) {
     this._props = { ...this._props, ...props };
     this.$changeContent();
+  }
+
+  _firstEnable() {
+    hideElementsAndCheckCmp()
   }
 
   _enable() {
@@ -336,8 +340,8 @@ export default class MyAccount extends Lightning.Component {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $handleStateHover(index, stateName = null) {

@@ -93,6 +93,7 @@ export default class Home extends Lightning.Component {
 
   _firstEnable() {
     hideElementsAndCheckCmp()
+    Router.setHistory([]);
   }
 
   _firstActive() {

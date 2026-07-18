@@ -16,7 +16,7 @@ import {
   IMG_PATH,
 } from '../../constants/globalConstants';
 import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
-import { t } from '../../utils';
+import { hideElementsAndCheckCmp, t } from '../../utils';
 
 const search = {
   items: [],
@@ -325,6 +325,10 @@ export default class Search extends Lightning.Component {
     return this._Input._Input;
   }
 
+  _firstEnable() {
+    hideElementsAndCheckCmp()
+  }
+
   _active() {
     this.fireAncestors('$unpunchHole');
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH))
@@ -371,8 +375,8 @@ export default class Search extends Lightning.Component {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $handleStateHover(index, stateName = null) {
