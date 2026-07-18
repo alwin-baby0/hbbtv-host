@@ -127,7 +127,7 @@ export default class Gallery extends Lightning.Component {
   }
 
   _handleScroll(event) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

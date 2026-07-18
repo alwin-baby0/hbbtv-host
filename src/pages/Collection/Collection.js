@@ -73,7 +73,7 @@ export default class Collection extends Lightning.Component {
 
 
   _handleBack() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -101,7 +101,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -109,7 +109,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -123,7 +123,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -131,7 +131,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

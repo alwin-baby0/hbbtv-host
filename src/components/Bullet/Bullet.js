@@ -47,7 +47,7 @@ export default class Bullet extends HeroRailItem {
   }
 
   _handleEnter() {
-    if (didomiVisible) {
+    if (window.didomiVisible) {
       return true;
     }
 

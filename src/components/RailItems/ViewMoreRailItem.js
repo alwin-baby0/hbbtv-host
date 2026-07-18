@@ -122,7 +122,7 @@ export default class ViewMoreRailItem extends FocusableItem {
   }
 
   _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

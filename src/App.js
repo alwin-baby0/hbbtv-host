@@ -138,7 +138,7 @@ export default class App extends Router.App {
       return true;
     }
 
-    if (didomiVisible) {
+    if (window.didomiVisible) {
       return true
     }
 
@@ -152,12 +152,12 @@ export default class App extends Router.App {
     }
 
     if (this.enteredApp === 1) {
-      didomiVisible = false;
+      window.didomiVisible = false;
       this.enteredApp = 0;
       return false;
     }
 
-    if (didomiVisible && this.enteredApp === 0) {
+    if (window.didomiVisible && this.enteredApp === 0) {
       this.enteredApp = 1;
       return true;
     }

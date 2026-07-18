@@ -336,7 +336,7 @@ export default class MyAccount extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -360,7 +360,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -383,7 +383,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -393,7 +393,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -411,7 +411,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -424,7 +424,7 @@ export default class MyAccount extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

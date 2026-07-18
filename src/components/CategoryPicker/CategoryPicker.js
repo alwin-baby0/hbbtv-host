@@ -56,7 +56,7 @@ export default class CategoryPicker extends Lightning.Component {
   }
 
   _handleScroll(event) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

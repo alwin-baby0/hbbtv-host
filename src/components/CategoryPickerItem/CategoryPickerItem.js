@@ -188,7 +188,7 @@ export default class CategoryPickerItem extends FocusableItem {
   }
 
   async _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

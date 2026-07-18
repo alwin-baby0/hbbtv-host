@@ -147,7 +147,7 @@ export default class VerticalContainer extends Lightning.Component {
   }, 250);
 
   _handleScroll(event) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -182,7 +182,7 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleDown() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -255,7 +255,7 @@ export default class VerticalContainer extends Lightning.Component {
   }
 
   _handleUp() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

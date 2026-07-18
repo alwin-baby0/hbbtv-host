@@ -75,7 +75,7 @@ export default class PageItem extends Lightning.Component {
   }
 
   _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

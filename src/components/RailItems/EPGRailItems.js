@@ -205,7 +205,7 @@ export default class EPGRailItems extends Lightning.Component {
   }
 
   _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
     if (this.selectEPGTimeout) {

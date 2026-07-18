@@ -992,7 +992,7 @@ export default class Player extends Lightning.Component {
   }
 
   _handleBack(e) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -1293,7 +1293,7 @@ export default class Player extends Lightning.Component {
 
   // COMANDS
   _handleMediaPlayPause() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -1323,7 +1323,7 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaRewind() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -1338,7 +1338,7 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaFastForward() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -1353,7 +1353,7 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaPlay() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -1361,7 +1361,7 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaPause() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -1369,7 +1369,7 @@ export default class Player extends Lightning.Component {
   }
 
   _handleMediaStop() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -1383,7 +1383,7 @@ export default class Player extends Lightning.Component {
   }
 
   _captureKey({ keyCode }) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -1432,7 +1432,7 @@ export default class Player extends Lightning.Component {
           return this._Controls;
         }
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1447,7 +1447,7 @@ export default class Player extends Lightning.Component {
           this._setState('Back');
         }
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1462,7 +1462,7 @@ export default class Player extends Lightning.Component {
           // this._setState('SubtitlesButton');
         }
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1476,7 +1476,7 @@ export default class Player extends Lightning.Component {
           this._setState('SeekBar');
         }
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1493,7 +1493,7 @@ export default class Player extends Lightning.Component {
           return this._SubtitlesLanguages;
         }
         _handleBack() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1501,7 +1501,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1509,7 +1509,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1523,7 +1523,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleEnter() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1531,7 +1531,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1545,7 +1545,7 @@ export default class Player extends Lightning.Component {
         }
 
         _captureEnter(e) {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1554,7 +1554,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1564,7 +1564,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleUnhover() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1578,7 +1578,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1586,7 +1586,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1602,7 +1602,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1620,7 +1620,7 @@ export default class Player extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

@@ -66,7 +66,7 @@ export default class PlayerButtons extends Lightning.Component {
   }
 
   _handleEnter(e) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

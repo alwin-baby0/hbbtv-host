@@ -37,7 +37,7 @@ export default class BackBtn extends Lightning.Component {
   }
 
   _handleEnter() {
-    if (didomiVisible) {
+    if (window.didomiVisible) {
       return true;
     }
 

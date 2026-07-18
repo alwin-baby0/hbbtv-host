@@ -51,7 +51,7 @@ export default class QueryButton extends Lightning.Component {
   }
 
   _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
