@@ -129,9 +129,11 @@ export default class SingleSeries extends Lightning.Component {
     }
   }
 
-  async _active() {
+  _firstEnable() {
     hideElementsAndCheckCmp();
+  }
 
+  async _active() {
     const {
       galleryItem,
       favorited,

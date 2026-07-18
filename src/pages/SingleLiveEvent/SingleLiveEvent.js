@@ -141,9 +141,11 @@ export default class SingleLiveEvent extends Lightning.Component {
     this._render();
   }
 
-  async _active() {
+  _firstEnable() {
     hideElementsAndCheckCmp();
+  }
 
+  async _active() {
     const { galleryItem } = this._props;
 
     eventTrackPayload(EVENT_NAMES.VIEW_STREAM, galleryItem.id);

@@ -4,8 +4,8 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
-import { ROUTES, RAIL_TYPES } from '../../constants/globalConstants';
-import { hideElementsAndCheckCmp } from '../../utils';
+import { ROUTES, RAIL_TYPES, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { hideElements, hideElementsAndCheckCmp } from '../../utils';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -92,7 +92,14 @@ export default class Home extends Lightning.Component {
   }
 
   _firstEnable() {
-    hideElementsAndCheckCmp()
+    const languageSwitched = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED);
+    if (languageSwitched) {
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED);
+      hideElements()
+    } else {
+      hideElementsAndCheckCmp()
+    }
+
     Router.setHistory([]);
   }
 

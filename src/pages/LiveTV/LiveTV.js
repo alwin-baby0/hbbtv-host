@@ -11,7 +11,7 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { t, clamp, checkCMP, hideElements } from '../../utils';
+import { t, clamp, checkCMP, hideElements, hideElementsAndCheckCmp } from '../../utils';
 
 export default class LiveTV extends Lightning.Component {
   _props = {
@@ -273,6 +273,7 @@ export default class LiveTV extends Lightning.Component {
   };
 
   _firstEnable() {
+    hideElementsAndCheckCmp()
     this.fireAncestors('$punchHoleTV');
     this.$updateChannel({ ...EPGService.channelsItems[0], src: EPGService.channelsItems[0].url });
     this._setState('Categories');
@@ -301,16 +302,6 @@ export default class LiveTV extends Lightning.Component {
   }
 
   async _active() {
-    const { cmpShown } = this._props;
-
-    hideElements()
-    const canProceed = await checkCMP({
-      cmpShown,
-      url: ROUTES.LIVE,
-    });
-
-    if (!canProceed) return;
-
     this.fireAncestors('$setNavbarVisibility', true);
 
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);

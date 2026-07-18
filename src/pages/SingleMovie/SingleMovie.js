@@ -630,9 +630,11 @@ export default class SingleMovie extends Lightning.Component {
     this._setState('Buttons');
   }
 
-  async _active() {
+  _firstEnable() {
     hideElementsAndCheckCmp();
+  }
 
+  async _active() {
     const { movieId } = this._props;
 
     this._setState('Buttons');

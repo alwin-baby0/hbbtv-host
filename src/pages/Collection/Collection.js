@@ -77,8 +77,12 @@ export default class Collection extends Lightning.Component {
       return true;
     }
 
-    Router.setHistory([]);
-    Router.navigate(ROUTES.HOME);
+    if (Router.getHistory().length) {
+      Router.back()
+    } else {
+      Router.setHistory([]);
+      Router.navigate(ROUTES.HOME);
+    }
   }
 
   $handleStateHover(index, stateName = null) {

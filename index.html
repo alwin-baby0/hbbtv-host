@@ -89,46 +89,56 @@
     <video id="splash-video" src="/static/videos/splash.mp4" preload="auto" muted playsinline></video>
   </div>
   <script type="text/javascript">
-    window.homepageLoaded = false;
-    var splashVideo = document.getElementById('splash-video');
-    var splashRoutes = ['/', '#home', '#splash'];
-    window.hideSplash = function () {
-      window.homepageLoaded = true;
-      if (splashVideo && splashVideo.currentTime < splashVideo.duration) {
-        splashVideo.play();
-      }
-    };
-    if (splashVideo) {
-      function onCanPlay() {
-        var route = window.location.hash || '/';
-        console.log('[splash-video] canplay | route:', route);
-        var splashEl = document.getElementById('splash');
-        if (splashEl) {
-          splashEl.style.visibility = 'visible';
-          splashEl.style.opacity = '1';
+    setTimeout(() => {
+      window.homepageLoaded = false;
+      var splashVideo = document.getElementById('splash-video');
+      window.hideSplash = function () {
+        window.homepageLoaded = true;
+        if (splashVideo && splashVideo.currentTime < splashVideo.duration) {
+          splashVideo.play();
         }
-        splashVideo.play();
-      }
-      function onTimeUpdate() {
-        if (splashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
-          splashVideo.pause();
-          insertLightningScript()
+      };
+
+      if (splashVideo && !localStorage.getItem('languageSwitched')) {
+        function onCanPlay() {
+          var route = window.location.hash || '/';
+          console.log('[splash-video] canplay | route:', route);
+          var splashEl = document.getElementById('splash');
+          if (splashEl) {
+            splashEl.style.visibility = 'visible';
+            splashEl.style.opacity = '1';
+          }
+          splashVideo.play();
         }
-      }
-      function onEnded() {
-        splashVideo.removeEventListener('canplay', onCanPlay);
-        splashVideo.removeEventListener('timeupdate', onTimeUpdate);
-        splashVideo.removeEventListener('ended', onEnded);
-        var splashEl = document.getElementById('splash');
-        if (splashEl) {
-          splashEl.style.visibility = 'hidden';
-          splashEl.style.opacity = '0';
+        function onTimeUpdate() {
+          if (splashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
+            splashVideo.pause();
+            insertLightningScript()
+          }
         }
-      }
-      splashVideo.addEventListener('canplay', onCanPlay);
-      splashVideo.addEventListener('timeupdate', onTimeUpdate);
-      splashVideo.addEventListener('ended', onEnded);
-    }
+        function onEnded() {
+          splashVideo.removeEventListener('canplay', onCanPlay);
+          splashVideo.removeEventListener('timeupdate', onTimeUpdate);
+          splashVideo.removeEventListener('ended', onEnded);
+          var splashEl = document.getElementById('splash');
+          if (splashEl) {
+            splashEl.style.visibility = 'hidden';
+            splashEl.style.opacity = '0';
+          }
+        }
+        splashVideo.addEventListener('canplay', onCanPlay);
+        splashVideo.addEventListener('timeupdate', onTimeUpdate);
+        splashVideo.addEventListener('ended', onEnded);
+        try {
+          onCanPlay();
+        } catch (error) {
+          //
+        }
+
+      } else { insertLightningScript() }
+
+    }, 500)
+
   </script>
   <!-- <script type="module" src="/src/index.js"></script> -->
 </body>

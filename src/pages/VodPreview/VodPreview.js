@@ -55,7 +55,7 @@ export default class VodPreview extends Lightning.Component {
     };
   }
 
-  async _onChanged() {
+  async _firstEnable() {
     const { cmpShown, vodType } = this._props;
     const returnUrl = `${ROUTES.VOD}/${vodType}`;
 

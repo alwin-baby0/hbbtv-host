@@ -91,6 +91,7 @@ export default class LanguageButton extends Lightning.Component {
     }
 
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageCode);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED, true);
     if (!!window.hbbtvApp) {
       this.restartHbbTvApp()
     } else {
