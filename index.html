@@ -90,15 +90,15 @@
   <script type="text/javascript">
     setTimeout(() => {
       window.homepageLoaded = false;
-      var splashVideo = document.getElementById('splash-video');
+      window.appSplashVideo = document.getElementById('splash-video');
       window.hideSplash = function () {
         window.homepageLoaded = true;
-        if (splashVideo && splashVideo.currentTime < splashVideo.duration) {
-          splashVideo.play();
+        if (window.appSplashVideo && window.appSplashVideo.currentTime < window.appSplashVideo.duration) {
+          window.appSplashVideo.play();
         }
       };
 
-      if (splashVideo && !localStorage.getItem('languageSwitched')) {
+      if (window.appSplashVideo && !localStorage.getItem('languageSwitched')) {
         function onCanPlay() {
           var route = window.location.hash || '/';
           console.log('[splash-video] canplay | route:', route);
@@ -107,39 +107,40 @@
             splashEl.style.visibility = 'visible';
             splashEl.style.opacity = '1';
           }
-          splashVideo.play();
+          window.appSplashVideo.play();
         }
         function onTimeUpdate() {
-          if (splashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
-            splashVideo.pause();
-            insertLightningScript()
+          if (window.appSplashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
+            window.appSplashVideo.removeEventListener('timeupdate', onTimeUpdate);
+            window.appSplashVideo.pause();
+            insertLightningScripts()
           }
         }
         function onEnded() {
-          splashVideo.removeEventListener('canplay', onCanPlay);
-          splashVideo.removeEventListener('timeupdate', onTimeUpdate);
-          splashVideo.removeEventListener('ended', onEnded);
+          window.appSplashVideo.removeEventListener('canplay', onCanPlay);
           var splashEl = document.getElementById('splash');
           if (splashEl) {
             splashEl.style.visibility = 'hidden';
             splashEl.style.opacity = '0';
           }
         }
-        splashVideo.addEventListener('canplay', onCanPlay);
-        splashVideo.addEventListener('timeupdate', onTimeUpdate);
-        splashVideo.addEventListener('ended', onEnded);
+        window.appSplashVideo.addEventListener('canplay', onCanPlay);
+        window.appSplashVideo.addEventListener('timeupdate', onTimeUpdate);
+        window.appSplashVideo.onended = onEnded;
         try {
           onCanPlay();
         } catch (error) {
           //
         }
 
-      } else { insertLightningScript() }
+      } else {
+        insertLightningScripts()
+      }
 
     }, 500)
 
   </script>
-  <!-- <script type="module" src="/src/index.js"></script> -->
+  <script type="module" src="/src/index.js"></script>
 </body>
 
 </html>
