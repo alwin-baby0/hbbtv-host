@@ -46,7 +46,7 @@ async function replaceInFile(filePath, search, replace) {
   }
 }
 
-const INSERT_LIGHTNING_SCRIPTS_IMPL = `function insertLightningScripts() {
+const INSERT_LIGHTNING_SCRIPTS_FUNCTION_FOR_BUILD = `function insertLightningScripts() {
   // Check and insert vite-legacy-polyfill if not present
   if (!document.getElementById('vite-legacy-polyfill')) {
     const polyfillScript = document.createElement('script');
@@ -77,6 +77,31 @@ const INSERT_LIGHTNING_SCRIPTS_IMPL = `function insertLightningScripts() {
     document.body.appendChild(entryScript);
   }
 }`;
+
+const DEV_ENTRY_SCRIPT_TAG = '<script type="module" src="/src/index.js"></script>';
+
+// Matches the whole line the dev entry script sits on (leading indentation
+// through the trailing newline), so removing it doesn't leave a blank line behind.
+const DEV_ENTRY_SCRIPT_LINE_REGEX = /^[ \t]*<script type="module" src="\/src\/index\.js"><\/script>[ \t]*\r?\n/m;
+
+const INSERT_LIGHTNING_SCRIPTS_FUNCTION_FOR_DEV = `function insertLightningScripts() {
+  const entryScript = document.createElement('script');
+  entryScript.type = 'module';
+  entryScript.setAttribute('src', "/src/index.js");
+  document.body.appendChild(entryScript);
+}`;
+
+// Remove the dev-only entry script tag from the source index.html, if present,
+// so it doesn't linger into the next vite build.
+async function removeDevEntryScript(rootIndexHtmlPath) {
+  const html = await fs.promises.readFile(rootIndexHtmlPath, 'utf8');
+  if (!DEV_ENTRY_SCRIPT_LINE_REGEX.test(html)) {
+    return;
+  }
+  await replaceInFile(rootIndexHtmlPath, DEV_ENTRY_SCRIPT_LINE_REGEX, '');
+  console.log(chalk.green('✓ Removed'), chalk.cyan(DEV_ENTRY_SCRIPT_TAG), chalk.green('from'), chalk.cyan('index.html'));
+  console.log('')
+}
 
 // Read the vite-legacy-entry/vite-legacy-polyfill script src values out of
 // build/index.html and patch them into build/static/scripts/main.js's
@@ -113,12 +138,20 @@ async function patchMainJs(buildDir) {
     console.log('')
   }
 
-  await replaceInFile(mainJsPath, /function insertLightningScripts\(\) \{\s*\}/, INSERT_LIGHTNING_SCRIPTS_IMPL);
+  await replaceInFile(mainJsPath, INSERT_LIGHTNING_SCRIPTS_FUNCTION_FOR_DEV, INSERT_LIGHTNING_SCRIPTS_FUNCTION_FOR_BUILD);
   console.log(chalk.green('✓ Restored'), chalk.cyan('insertLightningScripts()'), chalk.green('implementation in'), chalk.cyan('main.js'));
 }
 
 async function main() {
+  const rootIndexHtmlPath = path.join(process.cwd(), 'index.html');
   const buildDir = path.join(process.cwd(), 'build');
+
+  try {
+    await removeDevEntryScript(rootIndexHtmlPath);
+  } catch (e) {
+    console.error('Failed to clean index.html:', e.message);
+    process.exit(1);
+  }
 
   try {
     await patchMainJs(buildDir);

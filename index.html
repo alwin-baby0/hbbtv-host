@@ -70,10 +70,12 @@
       Didomi.on('notice.hidden', function () {
         setTimeout(() => {
           window.didomiVisible = false;
+          document.dispatchEvent(new CustomEvent('didomiVisibilityChanged', { detail: { visible: false } }));
         })
       });
       Didomi.on('notice.shown', function () {
         window.didomiVisible = true;
+        document.dispatchEvent(new CustomEvent('didomiVisibilityChanged', { detail: { visible: true } }));
       });
       Didomi.notice.hide(); // Suppresses the UI container actively
     });
@@ -85,21 +87,23 @@
 
 <body>
   <div id="splash">
-    <video id="splash-video" src="/static/videos/splash.mp4" preload="auto" muted playsinline></video>
+    <video id="splash-video" src="/static/videos/splash.mp4" muted playsinline autoplay="false"></video>
   </div>
   <script type="text/javascript">
-    setTimeout(() => {
-      window.homepageLoaded = false;
-      window.appSplashVideo = document.getElementById('splash-video');
-      window.hideSplash = function () {
-        window.homepageLoaded = true;
-        if (window.appSplashVideo && window.appSplashVideo.currentTime < window.appSplashVideo.duration) {
-          window.appSplashVideo.play();
-        }
-      };
+    window.homepageLoaded = false;
+    window.appSplashVideo = document.getElementById('splash-video');
+    window.appSplashVideo.pause()
+    window.hideSplash = function () {
+      window.homepageLoaded = true;
+      if (window.appSplashVideo) {
+        window.appSplashVideo.play();
+        window.hideSplash = function () { }
+      }
+    };
 
-      if (window.appSplashVideo && !localStorage.getItem('languageSwitched')) {
-        function onCanPlay() {
+    if (window.appSplashVideo && !localStorage.getItem('languageSwitched')) {
+      function onCanPlay() {
+        setTimeout(() => {
           var route = window.location.hash || '/';
           console.log('[splash-video] canplay | route:', route);
           var splashEl = document.getElementById('splash');
@@ -108,39 +112,30 @@
             splashEl.style.opacity = '1';
           }
           window.appSplashVideo.play();
-        }
-        function onTimeUpdate() {
-          if (window.appSplashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
-            window.appSplashVideo.removeEventListener('timeupdate', onTimeUpdate);
-            window.appSplashVideo.pause();
-            insertLightningScripts()
-          }
-        }
-        function onEnded() {
-          window.appSplashVideo.removeEventListener('canplay', onCanPlay);
-          var splashEl = document.getElementById('splash');
-          if (splashEl) {
-            splashEl.style.visibility = 'hidden';
-            splashEl.style.opacity = '0';
-          }
-        }
-        window.appSplashVideo.addEventListener('canplay', onCanPlay);
-        window.appSplashVideo.addEventListener('timeupdate', onTimeUpdate);
-        window.appSplashVideo.onended = onEnded;
-        try {
-          onCanPlay();
-        } catch (error) {
-          //
-        }
-
-      } else {
-        insertLightningScripts()
+        }, 500)
       }
-
-    }, 500)
-
+      function onTimeUpdate() {
+        if (window.appSplashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
+          window.appSplashVideo.removeEventListener('timeupdate', onTimeUpdate);
+          window.appSplashVideo.pause();
+          insertLightningScripts()
+        }
+      }
+      function onEnded() {
+        window.appSplashVideo.removeEventListener('canplay', onCanPlay);
+        var splashEl = document.getElementById('splash');
+        if (splashEl) {
+          splashEl.style.visibility = 'hidden';
+          splashEl.style.opacity = '0';
+        }
+      }
+      window.appSplashVideo.addEventListener('canplay', onCanPlay);
+      window.appSplashVideo.addEventListener('timeupdate', onTimeUpdate);
+      window.appSplashVideo.onended = onEnded;
+    } else {
+      insertLightningScripts()
+    }
   </script>
-  <script type="module" src="/src/index.js"></script>
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-import { Lightning, VideoPlayer } from '@lightningjs/sdk';
+import { Lightning, VideoPlayer, Registry } from '@lightningjs/sdk';
 import GalleryItem from '../GalleryItem/GalleryItem';
 import HorizontalContainer from '../HorizontalContainer/HorizontalContainer';
 import { IMAGE_SIZES } from '../../constants/globalConstants';
@@ -7,6 +7,7 @@ import { loader, unloader } from '../Player/HLS';
 
 export default class Gallery extends Lightning.Component {
   _sliderIndex = 0;
+  _trailerPlayAttempted = false
   _props = {
     sliderData: [],
     parentState: null,
@@ -71,6 +72,20 @@ export default class Gallery extends Lightning.Component {
     return this.tag('Bullets');
   }
 
+  _handleDidomiVisibilityChanged = ({ detail }) => {
+    if (!detail.visible && this._trailerPlayAttempted) {
+      Registry.setTimeout(() => {
+        VideoPlayer.play();
+        this._HeroSection._BackgroundImage.setSmooth('alpha', 0);
+        this._trailerPlayAttempted = false;
+      }, 500);
+    }
+  }
+
+  _firstEnable() {
+    Registry.addEventListener(document, 'didomiVisibilityChanged', this._handleDidomiVisibilityChanged);
+  }
+
   _enable() {
     VideoPlayer.position(0, 380);
     VideoPlayer.size(1540, 883);
@@ -79,12 +94,22 @@ export default class Gallery extends Lightning.Component {
     VideoPlayer.unloader(unloader);
   }
 
+  _disable() {
+    Registry.removeEventListener(document, 'didomiVisibilityChanged', this._handleDidomiVisibilityChanged);
+  }
+
   $videoPlayerCanPlay() {
+    if (window.didomiVisible) {
+      VideoPlayer.pause()
+      this._trailerPlayAttempted = true;
+      return
+    }
     VideoPlayer.play()
     this._HeroSection._BackgroundImage.setSmooth('alpha', 0);
   }
 
   $playTrailer(url) {
+    this._trailerPlayAttempted = false;
     VideoPlayer.loop(true);
     VideoPlayer.open(url);
   }
