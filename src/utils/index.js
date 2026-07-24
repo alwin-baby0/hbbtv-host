@@ -31,6 +31,7 @@ export function hideElements() {
   if (window.hideHbbtvSplash) window.hideHbbtvSplash()
   if (window.hideSplash) window.hideSplash()
   if (window.hideHbbtvLoader) setTimeout(window.hideHbbtvLoader, 200)
+  if (window.hideAppLoader) setTimeout(window.hideAppLoader, 200)
   if (window.enableRedButton) window.enableRedButton()
 }
 

@@ -26,7 +26,8 @@
     }
 
 
-    #splash {
+    #splash,
+    #loader {
       position: absolute;
       top: 0;
       left: 0;
@@ -51,6 +52,15 @@
       height: auto;
       display: block;
       margin: 0 auto;
+    }
+
+    #loader img {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      width: 50px;
+      height: 50px;
+      transform: translateX(-50%) translateY(50%);
     }
   </style>
   <script type="text/javascript">
@@ -89,10 +99,37 @@
   <div id="splash">
     <video id="splash-video" src="/static/videos/splash.mp4" muted playsinline autoplay="false"></video>
   </div>
+  <div id="loader">
+    <img id="loader-image" src="/static/images/spinner.svg"></img>
+  </div>
   <script type="text/javascript">
     window.homepageLoaded = false;
     window.appSplashVideo = document.getElementById('splash-video');
     window.appSplashVideo.pause()
+    const loader = document.getElementById('loader');
+    const loaderImage = document.getElementById('loader-image');
+
+    function showAppLoader(isSplash = false) {
+      if (!loader || !loaderImage) return;
+      if (isSplash) {
+        loader.style.background = 'transparent'
+        loaderImage.style.bottom = '25%'
+      }
+      loader.style.visibility = 'visible';
+      loader.style.opacity = '1';
+
+    }
+
+    function hideAppLoader() {
+      if (!loader || !loaderImage) return;
+      loader.style.visibility = 'hidden';
+      loader.style.opacity = '0';
+      loader.style.background = '#1b1b23'
+      loaderImage.style.bottom = '50%'
+    }
+    window.showAppLoader = showAppLoader
+    window.hideAppLoader = hideAppLoader
+
     window.hideSplash = function () {
       window.homepageLoaded = true;
       if (window.appSplashVideo) {
@@ -118,6 +155,7 @@
         if (window.appSplashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
           window.appSplashVideo.removeEventListener('timeupdate', onTimeUpdate);
           window.appSplashVideo.pause();
+          showAppLoader(true)
           insertLightningScripts()
         }
       }
