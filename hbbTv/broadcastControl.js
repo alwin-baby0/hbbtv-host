@@ -30,26 +30,19 @@ var broadcastControlObject = {
   objectsInitialized: false,
   controlAssumed: false,
   videoObj: null,
-  videoTag: null,
   currentLiveChannel: null,
   initializeObjects: function () {
     broadcastControlObject.videoObj = document.getElementById('broadcast-video');
     try {
       if (broadcastControlObject.videoObj) {
-        console.log('broadcastControlObject: videoObj initialization success')
-      }
-      broadcastControlObject.videoTag = broadcastControlObject.videoObj.querySelector('video')
-      if (broadcastControlObject.videoTag) {
         broadcastControlObject.videoObj.addEventListener('PlayStateChange', broadcastControlObject.playStateChangeEventHandler);
         broadcastControlObject.videoObj.addEventListener('ChannelChangeSucceeded', broadcastControlObject.channelChangeSucceededEvenetHandler);
         broadcastControlObject.videoObj.addEventListener('ChannelChangeError', broadcastControlObject.channelChangeErrorEventHandler);
         broadcastControlObject.objectsInitialized = true
-        console.log('broadcastControlObject: videoTag initialization success')
-        console.log('broadcastControlObject: initializeObjects success')
+        broadcastControlObject.assumeControl()
         return true
       } else {
         broadcastControlObject.objectsInitialized = false
-        console.log('broadcastControlObject: initializeObjects failed: videoTag not found')
         return false
       }
     } catch (error) {
@@ -61,7 +54,7 @@ var broadcastControlObject = {
   hideAndMuteBroadcast: function () {
     try {
       broadcastControlObject.videoObj.style.display = 'none';
-      broadcastControlObject.videoTag.muted = true;
+      broadcastControlObject.videoObj.stop();
       console.log('broadcastControlObject: hideAndMuteBroadcast sucess');
       return true
     } catch (error) {
@@ -72,7 +65,6 @@ var broadcastControlObject = {
   showAndUnmuteBroadcast: function () {
     try {
       broadcastControlObject.videoObj.style.display = 'block';
-      broadcastControlObject.videoTag.muted = false;
       console.log('broadcastControlObject: showAndUnmuteBroadcast sucess');
       return true
     } catch (error) {
@@ -80,21 +72,20 @@ var broadcastControlObject = {
       return false
     }
   },
-  // assumeControl: function () {
-  //   try {
-  //     if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
-  //     broadcastControlObject.videoObj.bindToCurrentChannel();
-  //     broadcastControlObject.currentLiveChannel = broadcastControlObject.videoObj.currentChannel;
-  //     broadcastControlObject.controlAssumed = true
-  //     console.log('broadcastControlObject: assumeControl success')
-  //     return true;
-  //   } catch (error) {
-  //     broadcastControlObject.currentLiveChannel = null;
-  //     broadcastControlObject.controlAssumed = false
-  //     console.log('broadcastControlObject: assumeControl failed', error)
-  //     return false;
-  //   }
-  // },
+  assumeControl: function () {
+    try {
+      if (!broadcastControlObject.objectsInitialized) broadcastControlObject.initializeObjects()
+      broadcastControlObject.videoObj.bindToCurrentChannel();
+      broadcastControlObject.currentLiveChannel = broadcastControlObject.videoObj.currentChannel;
+      broadcastControlObject.controlAssumed = true
+      return true;
+    } catch (error) {
+      broadcastControlObject.currentLiveChannel = null;
+      broadcastControlObject.controlAssumed = false
+      console.log('broadcastControlObject: assumeControl failed', error)
+      return false;
+    }
+  },
   // setNextChannel: function () {
   //   try {
   //     if (broadcastControlObject.controlAssumed) {
@@ -147,7 +138,6 @@ var broadcastControlObject = {
     broadcastControlObject.objectsInitialized = false
     broadcastControlObject.controlAssumed = false
     broadcastControlObject.videoObj = null
-    broadcastControlObject.videoTag = null
     broadcastControlObject.currentLiveChannel = null
   },
   // getChannelList: function () {
@@ -163,22 +153,17 @@ var broadcastControlObject = {
   // },
   playStateChangeEventHandler: function () {
     try {
-      // var playStateField = document.getElementById('playState_field');
       switch (broadcastControlObject.videoObj.playState) {
         case 0:	// unrealized
-          // playStateField.innerHTML = 'Unrealized';
           break;
         case 1:	// connecting
-          // playStateField.innerHTML = 'Connecting';
           break;
         case 2:	// presenting
-          // playStateField.innerHTML = 'Presenting';
           break;
         case 3:	// stopped
-          // playStateField.innerHTML = 'Stopped';
           break;
         default:
-        // playStateField.innerHTML = 'Error';
+          break
       }
     } catch (error) {
       console.log('broadcastControlObject: playStateChangeEventHandler error', error);
