@@ -11,8 +11,7 @@ import EPGContainer from '../../components/EPGContainer/EPGContainer';
 import { eventTrackPayload } from '../../utils/device';
 import colors from '../../../reskin/colors.json';
 import { EVENT_NAMES, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { didomiVisible } from '../../App';
-import { t, clamp, checkCMP } from '../../utils';
+import { t, clamp, hideElementsAndCheckCmp } from '../../utils';
 
 export default class LiveTV extends Lightning.Component {
   _props = {
@@ -136,7 +135,7 @@ export default class LiveTV extends Lightning.Component {
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(
       EPGService.filteredChannelsItems[
-        this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+      this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
       ]
     );
 
@@ -274,6 +273,7 @@ export default class LiveTV extends Lightning.Component {
   };
 
   _firstEnable() {
+    hideElementsAndCheckCmp()
     this.fireAncestors('$punchHoleTV');
     this.$updateChannel({ ...EPGService.channelsItems[0], src: EPGService.channelsItems[0].url });
     this._setState('Categories');
@@ -302,21 +302,12 @@ export default class LiveTV extends Lightning.Component {
   }
 
   async _active() {
-    const { cmpShown } = this._props;
-
-    const canProceed = await checkCMP({
-      cmpShown,
-      url: ROUTES.LIVE,
-    });
-
-    if (!canProceed) return;
-
     this.fireAncestors('$setNavbarVisibility', true);
 
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
     this.$updateChannel(
       EPGService.filteredChannelsItems[
-        this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+      this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
       ]
     );
 
@@ -361,12 +352,12 @@ export default class LiveTV extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $updateChannel(singleChannel) {
@@ -427,7 +418,7 @@ export default class LiveTV extends Lightning.Component {
 
       this.$updateChannel(
         EPGService.filteredChannelsItems[
-          this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
+        this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
         ]
       );
     }
@@ -562,7 +553,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -571,7 +562,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -586,7 +577,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -596,7 +587,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -611,7 +602,7 @@ export default class LiveTV extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

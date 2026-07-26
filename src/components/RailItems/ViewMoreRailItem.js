@@ -5,7 +5,6 @@ import { CARD_SIZES, IMG_PATH, TRANSLATIONS } from '../../constants/globalConsta
 import Image from '../Image/Image';
 import colors from '../../../reskin/colors.json';
 import { t } from '../../utils';
-import { didomiVisible } from '../../App';
 
 export default class ViewMoreRailItem extends FocusableItem {
   _props = {
@@ -123,7 +122,7 @@ export default class ViewMoreRailItem extends FocusableItem {
   }
 
   _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

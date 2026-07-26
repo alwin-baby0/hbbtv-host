@@ -1,11 +1,10 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
-import { didomiVisible } from '../../../App';
 
 export default class LogoutButton extends Lightning.Component {
   _props = {
     label: '',
-    callback: () => {},
+    callback: () => { },
   };
 
   static _template() {
@@ -82,7 +81,7 @@ export default class LogoutButton extends Lightning.Component {
   }
 
   async _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

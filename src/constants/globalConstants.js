@@ -59,6 +59,7 @@ export const LOCAL_STORAGE_KEYS = {
   HISENSE_DEVICE_ID: 'hisenseDeviceID',
   WEB_DEVICE_INFO: 'webDeviceID',
   LANGUAGE_CODE: 'languageCode',
+  LANGUAGE_SWITCHED: 'languageSwitched',
   LANGUAGE_TRANSLATIONS: 'languageTr',
   USER_DATA: 'userData',
   SELECTED_SUBTITLES_CHANNEL: 'selectedSubtitlesForChannel',

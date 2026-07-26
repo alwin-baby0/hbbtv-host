@@ -26,7 +26,8 @@
     }
 
 
-    #splash {
+    #splash,
+    #loader {
       position: absolute;
       top: 0;
       left: 0;
@@ -52,6 +53,15 @@
       display: block;
       margin: 0 auto;
     }
+
+    #loader img {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      width: 50px;
+      height: 50px;
+      transform: translateX(-50%) translateY(50%);
+    }
   </style>
   <script type="text/javascript">
     window.didomiConfig = {
@@ -64,59 +74,106 @@
       //   regionCode: 'IDF',
       // }
     };
+    window.didomiVisible = false;
+    window.didomiOnReady = window.didomiOnReady || [];
+    window.didomiOnReady.push(function (Didomi) {
+      Didomi.on('notice.hidden', function () {
+        setTimeout(() => {
+          window.didomiVisible = false;
+          document.dispatchEvent(new CustomEvent('didomiVisibilityChanged', { detail: { visible: false } }));
+        })
+      });
+      Didomi.on('notice.shown', function () {
+        window.didomiVisible = true;
+        document.dispatchEvent(new CustomEvent('didomiVisibilityChanged', { detail: { visible: true } }));
+      });
+      Didomi.notice.hide(); // Suppresses the UI container actively
+    });
   </script>
   <script type="text/javascript" async="true" src="https://sdk.privacy-center.org/"></script>
   <script type="text/javascript" src="/static/scripts/fix.js"></script>
+  <script type="text/javascript" src="/static/scripts/main.js"></script>
 </head>
 
 <body>
   <div id="splash">
-    <video id="splash-video" src="/static/videos/splash.mp4" preload="auto" muted playsinline></video>
+    <video id="splash-video" src="/static/videos/splash.mp4" muted playsinline autoplay="false"></video>
+  </div>
+  <div id="loader">
+    <img id="loader-image" src="/static/images/spinner.svg"></img>
   </div>
   <script type="text/javascript">
     window.homepageLoaded = false;
-    var splashVideo = document.getElementById('splash-video');
-    var splashRoutes = ['/', '#home', '#splash'];
+    window.appSplashVideo = document.getElementById('splash-video');
+    window.appSplashVideo.pause()
+    const loader = document.getElementById('loader');
+    const loaderImage = document.getElementById('loader-image');
+
+    function showAppLoader(isSplash = false) {
+      if (!loader || !loaderImage) return;
+      if (isSplash) {
+        loader.style.background = 'transparent'
+        loaderImage.style.bottom = '25%'
+      }
+      loader.style.visibility = 'visible';
+      loader.style.opacity = '1';
+
+    }
+
+    function hideAppLoader() {
+      if (!loader || !loaderImage) return;
+      loader.style.visibility = 'hidden';
+      loader.style.opacity = '0';
+      loader.style.background = '#1b1b23'
+      loaderImage.style.bottom = '50%'
+    }
+    window.showAppLoader = showAppLoader
+    window.hideAppLoader = hideAppLoader
+
     window.hideSplash = function () {
       window.homepageLoaded = true;
-      if (splashVideo && splashVideo.currentTime < splashVideo.duration) {
-        splashVideo.play();
+      if (window.appSplashVideo) {
+        window.appSplashVideo.play();
+        window.hideSplash = function () { }
       }
     };
-    if (splashVideo) {
+
+    if (window.appSplashVideo && !localStorage.getItem('languageSwitched')) {
       function onCanPlay() {
-        var route = window.location.hash || '/';
-        console.log('[splash-video] canplay | route:', route);
-        if (splashRoutes.indexOf(route) !== -1) {
+        setTimeout(() => {
+          var route = window.location.hash || '/';
+          console.log('[splash-video] canplay | route:', route);
           var splashEl = document.getElementById('splash');
           if (splashEl) {
             splashEl.style.visibility = 'visible';
             splashEl.style.opacity = '1';
           }
-          splashVideo.play();
-        }
+          window.appSplashVideo.play();
+        }, 500)
       }
       function onTimeUpdate() {
-        if (splashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
-          splashVideo.pause();
+        if (window.appSplashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
+          window.appSplashVideo.removeEventListener('timeupdate', onTimeUpdate);
+          window.appSplashVideo.pause();
+          showAppLoader(true)
+          insertLightningScripts()
         }
       }
       function onEnded() {
-        splashVideo.removeEventListener('canplay', onCanPlay);
-        splashVideo.removeEventListener('timeupdate', onTimeUpdate);
-        splashVideo.removeEventListener('ended', onEnded);
+        window.appSplashVideo.removeEventListener('canplay', onCanPlay);
         var splashEl = document.getElementById('splash');
         if (splashEl) {
           splashEl.style.visibility = 'hidden';
           splashEl.style.opacity = '0';
         }
       }
-      splashVideo.addEventListener('canplay', onCanPlay);
-      splashVideo.addEventListener('timeupdate', onTimeUpdate);
-      splashVideo.addEventListener('ended', onEnded);
+      window.appSplashVideo.addEventListener('canplay', onCanPlay);
+      window.appSplashVideo.addEventListener('timeupdate', onTimeUpdate);
+      window.appSplashVideo.onended = onEnded;
+    } else {
+      insertLightningScripts()
     }
   </script>
-  <script type="module" src="/src/index.js"></script>
 </body>
 
 </html>

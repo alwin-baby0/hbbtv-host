@@ -1,6 +1,5 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../reskin/colors.json';
-import { didomiVisible } from '../../../App';
 
 export default class PageItem extends Lightning.Component {
   static _template() {
@@ -76,7 +75,7 @@ export default class PageItem extends Lightning.Component {
   }
 
   _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

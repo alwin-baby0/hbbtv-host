@@ -1,7 +1,6 @@
 import { Colors, Utils, VideoPlayer, Lightning } from '@lightningjs/sdk';
 import colors from '../../../../../reskin/colors.json';
 import { IMG_PATH } from '../../../../constants/globalConstants';
-import { didomiVisible } from '../../../../App';
 
 export default class PlayerButtons extends Lightning.Component {
   _props = {
@@ -67,7 +66,7 @@ export default class PlayerButtons extends Lightning.Component {
   }
 
   _handleEnter(e) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

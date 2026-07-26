@@ -10,7 +10,6 @@ import {
   VIDEO_TYPES,
   IMAGE_SIZES,
 } from '../../constants/globalConstants';
-import { didomiVisible } from '../../App';
 import { t } from '../../utils';
 
 export default class GalleryItem extends Lightning.Component {
@@ -965,7 +964,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -987,7 +986,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1001,7 +1000,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1014,7 +1013,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1024,7 +1023,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1036,7 +1035,7 @@ export default class GalleryItem extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -1048,14 +1047,14 @@ export default class GalleryItem extends Lightning.Component {
           return this._FavoriteButton;
         }
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
           return false;
         }
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

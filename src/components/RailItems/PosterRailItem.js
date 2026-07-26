@@ -4,7 +4,6 @@ import { Utils, Router, Colors } from '@lightningjs/sdk';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import Image from '../Image/Image';
 import colors from '../../../reskin/colors.json';
-import { didomiVisible } from '../../App';
 
 export default class PosterRailItem extends FocusableItem {
   _props = {
@@ -111,7 +110,7 @@ export default class PosterRailItem extends FocusableItem {
   }
 
   _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
     const { callback } = this._props;

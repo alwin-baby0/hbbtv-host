@@ -1,9 +1,8 @@
-import { Lightning, Utils } from '@lightningjs/sdk';
+import { Lightning, Router, Utils } from '@lightningjs/sdk';
 import BackBtn from '../../components/BackButton/BackBtn';
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
-import { IMG_PATH } from '../../constants/globalConstants';
-import { checkCMP } from '../../utils';
-import { didomiVisible } from '../../App';
+import { IMG_PATH, ROUTES } from '../../constants/globalConstants';
+import { hideElementsAndCheckCmp } from '../../utils';
 
 export default class Collection extends Lightning.Component {
   _props = {};
@@ -62,14 +61,28 @@ export default class Collection extends Lightning.Component {
     return this.tag('BackButton');
   }
 
-  _active() {
-    checkCMP();
-
+  _firstEnable() {
+    hideElementsAndCheckCmp();
     this._setState('Column');
   }
 
   _getFocused() {
     return this._Column;
+  }
+
+
+
+  _handleBack() {
+    if (window.Didomi && window.didomiVisible) {
+      return true;
+    }
+
+    if (Router.getHistory().length) {
+      Router.back()
+    } else {
+      Router.setHistory([]);
+      Router.navigate(ROUTES.HOME);
+    }
   }
 
   $handleStateHover(index, stateName = null) {
@@ -88,7 +101,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -96,7 +109,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -110,7 +123,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -118,7 +131,7 @@ export default class Collection extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

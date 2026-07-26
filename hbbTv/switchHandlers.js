@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-a7saKVMz.js';
+const LEGACY_ENTRY = './assets/index-legacy-CuGqgOgy.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-XyIu8j-J.js';
 
 const splash = document.getElementById('splash');
@@ -35,16 +35,18 @@ function onSplashVideoEnded() {
 function continuePlayingSplashTillEnd(video) {
   video.addEventListener('ended', onSplashVideoEnded);
   video.play();
+  window.hideHbbtvSplash = function () { }
 }
 
 function showHbbtvSplash() {
+  window.hideHbbtvSplash = hideHbbtvSplashOriginal
   if (!splash) return;
   splash.style.visibility = 'visible';
   splash.style.opacity = '1';
   playAndPauseAtOneSecond(splashVideo);
 }
 
-function hideHbbtvSplash() {
+function hideHbbtvSplashOriginal() {
   hideHbbtvLoader()
   continuePlayingSplashTillEnd(splashVideo)
 }

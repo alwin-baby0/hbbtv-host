@@ -5,8 +5,7 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Button from '../../components/Button/Button';
 import { eventTrackPayload } from '../../utils/device';
 import { EVENT_NAMES, IMG_PATH, ROUTES, TRANSLATIONS } from '../../constants/globalConstants';
-import { checkCMP } from '../../utils';
-import { didomiVisible } from '../../App';
+import { hideElementsAndCheckCmp } from '../../utils';
 import { t } from '../../utils';
 
 const states = ['BackButton', 'HeroSection', 'Items'];
@@ -142,9 +141,11 @@ export default class SingleLiveEvent extends Lightning.Component {
     this._render();
   }
 
-  async _active() {
-    checkCMP();
+  _firstEnable() {
+    hideElementsAndCheckCmp();
+  }
 
+  async _active() {
     const { galleryItem } = this._props;
 
     eventTrackPayload(EVENT_NAMES.VIEW_STREAM, galleryItem.id);
@@ -171,7 +172,7 @@ export default class SingleLiveEvent extends Lightning.Component {
   }
 
   _handleBack(e) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -212,7 +213,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -220,7 +221,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -241,7 +242,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -249,7 +250,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -308,7 +309,7 @@ export default class SingleLiveEvent extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

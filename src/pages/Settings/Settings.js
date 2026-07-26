@@ -5,8 +5,7 @@ import LanguageButton from '../../components/Buttons/LanguageButton/LanguageButt
 import { ROUTES, TRANSLATIONS, IMG_PATH, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import Button from '../../components/Button/Button';
-import { didomiVisible } from '../../App';
-import { t } from '../../utils';
+import { hideElementsAndCheckCmp, t } from '../../utils';
 
 export default class Settings extends Lightning.Component {
   static _template() {
@@ -254,17 +253,21 @@ export default class Settings extends Lightning.Component {
     });
   }
 
+  _firstEnable() {
+    hideElementsAndCheckCmp()
+  }
+
   _active() {
     this._setState('Languages');
   }
 
   _handleBack() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $handleStateHover(index, stateName = null) {
@@ -283,7 +286,7 @@ export default class Settings extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -303,7 +306,7 @@ export default class Settings extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

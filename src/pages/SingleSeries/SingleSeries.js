@@ -19,8 +19,7 @@ import {
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import { constructRails } from '../utils';
 import { Metrics } from '@firebolt-js/sdk';
-import { checkCMP } from '../../utils';
-import { didomiVisible } from '../../App';
+import { hideElementsAndCheckCmp } from '../../utils';
 import { t } from '../../utils';
 import { V2 } from '../../Services/utils';
 import { parseSeasonData } from '../../Models';
@@ -130,9 +129,11 @@ export default class SingleSeries extends Lightning.Component {
     }
   }
 
-  async _active() {
-    checkCMP();
+  _firstEnable() {
+    hideElementsAndCheckCmp();
+  }
 
+  async _active() {
     const {
       galleryItem,
       favorited,
@@ -334,7 +335,7 @@ export default class SingleSeries extends Lightning.Component {
   _handleBack(e) {
     localStorage.removeItem(LOCAL_STORAGE_KEYS.EPISODE_ID_DETAIL);
 
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return;
     }
 
@@ -395,7 +396,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -403,7 +404,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -416,7 +417,7 @@ export default class SingleSeries extends Lightning.Component {
           return this._BackButton;
         }
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -429,14 +430,14 @@ export default class SingleSeries extends Lightning.Component {
           return this._SeasonsBar;
         }
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
           this._setState('HeroSection');
         }
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -523,7 +524,7 @@ export default class SingleSeries extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 

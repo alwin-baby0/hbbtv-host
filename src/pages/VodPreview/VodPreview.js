@@ -12,8 +12,7 @@ import {
   RAIL_TYPES,
 } from '../../constants/globalConstants';
 import { railItemConstructor } from '../utils/railItems';
-import { checkCMP } from '../../utils/index';
-import { didomiVisible } from '../../App';
+import { hideElementsAndCheckCmp } from '../../utils/index';
 
 const states = ['VodContentContainer', 'VodContainer'];
 
@@ -56,18 +55,8 @@ export default class VodPreview extends Lightning.Component {
     };
   }
 
-  async _onChanged() {
-    const { cmpShown, vodType } = this._props;
-    const returnUrl = `${ROUTES.VOD}/${vodType}`;
-
-    const canProceed = await checkCMP({
-      cmpShown,
-      url: returnUrl,
-    });
-
-    if (!canProceed) {
-      return;
-    }
+  async _firstEnable() {
+    hideElementsAndCheckCmp()
   }
 
   get _HeroSection() {
@@ -165,12 +154,12 @@ export default class VodPreview extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   static _states() {
@@ -202,7 +191,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -212,7 +201,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -280,7 +269,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleBack(e) {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -292,7 +281,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -304,7 +293,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -376,7 +365,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleBack(e) {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -388,7 +377,7 @@ export default class VodPreview extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

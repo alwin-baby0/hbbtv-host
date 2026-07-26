@@ -1,6 +1,5 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import colors from '../../../reskin/colors.json';
-import { didomiVisible } from '../../App';
 
 export default class Button extends Lightning.Component {
   _isFocused = false;
@@ -408,11 +407,11 @@ export default class Button extends Lightning.Component {
     }
 
     this.entered = (this.entered + 1) % 2;
-    if (didomiVisible && this.entered === 1) {
+    if (window.didomiVisible && this.entered === 1) {
       return true;
     }
 
-    if (didomiVisible && this.entered === 0) {
+    if (window.didomiVisible && this.entered === 0) {
       this.fireAncestors('$didomiVisible', false);
       return;
     }

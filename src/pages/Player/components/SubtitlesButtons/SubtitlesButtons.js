@@ -1,6 +1,5 @@
 import { Colors, Lightning } from '@lightningjs/sdk';
 import { LOCAL_STORAGE_KEYS } from '../../../../constants/globalConstants';
-import { didomiVisible } from '../../../../App';
 
 export default class SubtitlesButtons extends Lightning.Component {
   _props = {
@@ -71,7 +70,7 @@ export default class SubtitlesButtons extends Lightning.Component {
   }
 
   _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

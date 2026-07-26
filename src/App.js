@@ -11,11 +11,6 @@ import { t } from './utils';
 import { unload } from './components/Player/HLS';
 
 let wasOffline = false; // Variable to track previous internet status
-export let didomiVisible = false;
-
-export const setDidomiVisible = (value) => {
-  didomiVisible = value;
-};
 
 export default class App extends Router.App {
   enteredApp = 0;
@@ -84,19 +79,14 @@ export default class App extends Router.App {
 
   closeHbbTvApp() {
     try {
-      console.log('### inside close app');
-
       if (window.disableRedButton) window.disableRedButton()
       if (window.showHbbtvLoader) window.showHbbtvLoader()
       const video = document.getElementById('lightning-video-player');
-      console.log('### video element', video);
-
       if (video) {
         video.pause()
         unload(video)
         video.remove()
       }
-      console.log('### document.getElementById(lightning - video - player)', document.getElementById('lightning-video-player'));
       InactivityService.stop();
       this.application.closeApp();
       if (window.removeCanvasAndLightningScripts) window.removeCanvasAndLightningScripts()
@@ -138,9 +128,13 @@ export default class App extends Router.App {
     });
   }
 
-  _captureKey() {
+  _captureKey(e) {
     if (Router.isNavigating()) {
       return true;
+    }
+
+    if (window.didomiVisible) {
+      return true
     }
 
     InactivityService.reset();
@@ -153,12 +147,12 @@ export default class App extends Router.App {
     }
 
     if (this.enteredApp === 1) {
-      didomiVisible = false;
+      window.didomiVisible = false;
       this.enteredApp = 0;
       return false;
     }
 
-    if (didomiVisible && this.enteredApp === 0) {
+    if (window.didomiVisible && this.enteredApp === 0) {
       this.enteredApp = 1;
       return true;
     }
@@ -167,7 +161,7 @@ export default class App extends Router.App {
   }
 
   $didomiVisible(didomiVisibility) {
-    didomiVisible = didomiVisibility;
+    // didomiVisible = didomiVisibility;
   }
 
   $settingsDidomi(value) {

@@ -3,7 +3,6 @@ import colors from '../../../reskin/colors.json';
 import FocusableItem from '../FocusableItem/FocusableItem';
 import { Metrics } from '@firebolt-js/sdk';
 import { getDeviceType } from '../../utils/device';
-import { didomiVisible } from '../../App';
 
 export default class CategoryPickerItem extends FocusableItem {
   _props = {
@@ -189,7 +188,7 @@ export default class CategoryPickerItem extends FocusableItem {
   }
 
   async _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 

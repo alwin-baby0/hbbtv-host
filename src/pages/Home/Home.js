@@ -4,8 +4,8 @@ import VerticalContainer from '../../components/VerticalContainer/VerticalContai
 import Gallery from '../../components/Gallery/Gallery';
 import { HomePageService } from '../../Services';
 import { railItemConstructor } from '../utils/railItems';
-import { ROUTES, RAIL_TYPES } from '../../constants/globalConstants';
-import { didomiVisible } from '../../App';
+import { ROUTES, RAIL_TYPES, LOCAL_STORAGE_KEYS } from '../../constants/globalConstants';
+import { hideElements, hideElementsAndCheckCmp } from '../../utils';
 
 export default class Home extends Lightning.Component {
   _props = {
@@ -92,11 +92,15 @@ export default class Home extends Lightning.Component {
   }
 
   _firstEnable() {
-    window.homepageLoaded = true;
-    if (window.hideHbbtvSplash) window.hideHbbtvSplash()
-    if (window.hideSplash) window.hideSplash()
-    if (window.hideHbbtvLoader) Registry.setTimeout(window.hideHbbtvLoader, 200)
-    if (window.enableRedButton) window.enableRedButton()
+    const languageSwitched = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED);
+    if (languageSwitched) {
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED);
+      hideElements()
+    } else {
+      hideElementsAndCheckCmp()
+    }
+
+    Router.setHistory([]);
   }
 
   _firstActive() {
@@ -104,7 +108,7 @@ export default class Home extends Lightning.Component {
   }
 
   _handleBack(e) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -158,7 +162,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleBack(e) {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -170,7 +174,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -180,7 +184,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -248,7 +252,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -256,7 +260,7 @@ export default class Home extends Lightning.Component {
         }
 
         _handleBack(e) {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

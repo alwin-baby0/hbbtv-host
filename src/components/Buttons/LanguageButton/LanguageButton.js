@@ -3,7 +3,6 @@ import colors from '../../../../reskin/colors.json';
 import { createApiCtx } from '../../../Services/utils';
 import axios from 'axios';
 import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
-import { didomiVisible } from '../../../App';
 import { InactivityService } from '../../../Services';
 import { unload } from '../../Player/HLS';
 
@@ -87,11 +86,12 @@ export default class LanguageButton extends Lightning.Component {
   }
 
   async _handleEnter() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
     localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_CODE, this._props.languageCode);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED, true);
     if (!!window.hbbtvApp) {
       this.restartHbbTvApp()
     } else {

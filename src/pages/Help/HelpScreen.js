@@ -4,8 +4,7 @@ import colors from '../../../reskin/colors.json';
 import LoadingScreenComponent from '../../components/LoadingScreenComponent/LoadinScreenComponent';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import { ROUTES, TRANSLATIONS, IMG_PATH } from '../../constants/globalConstants';
-import { t } from '../../utils';
-import { didomiVisible } from '../../App';
+import { hideElementsAndCheckCmp, t } from '../../utils';
 
 const states = ['HelpItems', 'ScrollWrapper'];
 
@@ -113,17 +112,21 @@ export default class HelpScreen extends Lightning.Component {
     return this.tag('ScrollWrapper');
   }
 
+  _firstEnable() {
+    hideElementsAndCheckCmp();
+  }
+
   _active() {
     this._setState('HelpItems');
   }
 
   _handleBack() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $setFocus(id) {
@@ -168,7 +171,7 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -178,7 +181,7 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -191,7 +194,7 @@ export default class HelpScreen extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

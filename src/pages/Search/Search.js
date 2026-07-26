@@ -16,8 +16,7 @@ import {
   IMG_PATH,
 } from '../../constants/globalConstants';
 import QueryButton from '../../components/Buttons/QueryButton/QueryButton';
-import { didomiVisible } from '../../App';
-import { t } from '../../utils';
+import { hideElementsAndCheckCmp, t } from '../../utils';
 
 const search = {
   items: [],
@@ -170,7 +169,7 @@ export default class Search extends Lightning.Component {
   }
 
   _handleKey(key) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
@@ -326,6 +325,10 @@ export default class Search extends Lightning.Component {
     return this._Input._Input;
   }
 
+  _firstEnable() {
+    hideElementsAndCheckCmp()
+  }
+
   _active() {
     this.fireAncestors('$unpunchHole');
     if (!localStorage.getItem(LOCAL_STORAGE_KEYS.RECENT_SEARCH))
@@ -368,12 +371,12 @@ export default class Search extends Lightning.Component {
   }
 
   _handleBack() {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return true;
     }
 
-    Router.setHistory([{ hash: ROUTES.HOME, state: null }]);
-    Router.back();
+    Router.setHistory([]);
+    Router.navigate(ROUTES.HOME);
   }
 
   $handleStateHover(index, stateName = null) {
@@ -390,7 +393,7 @@ export default class Search extends Lightning.Component {
         _extended = true;
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -400,7 +403,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -494,7 +497,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -508,7 +511,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -520,7 +523,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -534,7 +537,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 
@@ -542,7 +545,7 @@ export default class Search extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return true;
           }
 

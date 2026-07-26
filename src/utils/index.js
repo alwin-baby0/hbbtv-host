@@ -1,6 +1,5 @@
 import { AuthorizationService, DidomiService } from '../Services';
 import { LOCAL_STORAGE_KEYS } from '../constants/globalConstants';
-import { setDidomiVisible } from '../App';
 import { Router } from '@lightningjs/sdk';
 
 const defTr = await import(`../../public/static/translations/en.json`);
@@ -14,6 +13,26 @@ export function capitalizeFirstLetter(str) {
     return str; // Handle non-string or empty inputs
   }
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export async function hideElementsAndCheckCmp() {
+  if (window.appSplashVideo) {
+    const currentOnended = window.appSplashVideo.onended || function () { }
+    window.appSplashVideo.onended = async function () {
+      await checkCMP()
+      setTimeout(currentOnended, 500)
+    }
+  }
+  hideElements()
+}
+
+export function hideElements() {
+  window.homepageLoaded = true;
+  if (window.hideHbbtvSplash) window.hideHbbtvSplash()
+  if (window.hideSplash) window.hideSplash()
+  if (window.hideHbbtvLoader) setTimeout(window.hideHbbtvLoader, 200)
+  if (window.hideAppLoader) setTimeout(window.hideAppLoader, 200)
+  if (window.enableRedButton) window.enableRedButton()
 }
 
 export async function checkCMP() {
@@ -35,7 +54,6 @@ export async function checkCMP() {
 
   if (window.Didomi && (isDeclined || userNotice.notice.daysBeforeShowingAgain <= 0)) {
     await window.Didomi.notice.show();
-    setDidomiVisible(true);
   }
 
   window.didomiOnReady &&

@@ -15,9 +15,8 @@ import {
 import VerticalContainer from '../../components/VerticalContainer/VerticalContainer';
 import HorizontalContainer from '../../components/HorizontalContainer/HorizontalContainer';
 import colors from '../../../reskin/colors.json';
-import { capitalizeFirstLetter, checkCMP } from '../../utils';
+import { capitalizeFirstLetter, hideElementsAndCheckCmp } from '../../utils';
 import { Metrics } from '@firebolt-js/sdk';
-import { didomiVisible } from '../../App';
 import { t } from '../../utils';
 
 const states = ['Buttons', 'ContinueBtn', 'BackButton'];
@@ -631,9 +630,11 @@ export default class SingleMovie extends Lightning.Component {
     this._setState('Buttons');
   }
 
-  async _active() {
-    checkCMP();
+  _firstEnable() {
+    hideElementsAndCheckCmp();
+  }
 
+  async _active() {
     const { movieId } = this._props;
 
     this._setState('Buttons');
@@ -644,7 +645,7 @@ export default class SingleMovie extends Lightning.Component {
   }
 
   _handleBack(e) {
-    if (window.Didomi && didomiVisible) {
+    if (window.Didomi && window.didomiVisible) {
       return;
     }
 
@@ -735,7 +736,7 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -743,7 +744,7 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -751,7 +752,7 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -764,7 +765,7 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -772,7 +773,7 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleLeft() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -786,7 +787,7 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleDown() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -794,7 +795,7 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleRight() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
@@ -808,7 +809,7 @@ export default class SingleMovie extends Lightning.Component {
         }
 
         _handleUp() {
-          if (window.Didomi && didomiVisible) {
+          if (window.Didomi && window.didomiVisible) {
             return;
           }
 
