@@ -1,3 +1,4 @@
+import { Router } from '@lightningjs/sdk';
 import { LOCAL_STORAGE_KEYS, ROUTES } from '../../../constants/globalConstants';
 import { parseVodPlaylists } from '../../../Models';
 import { DetailService, UserService } from '../../../Services';
@@ -79,7 +80,7 @@ export default async function (page, { seriesId, seasonId, episodeId, title, cmp
   let seriesVODS;
   if (galleryItem?.playlists) {
     const parsedVODS = galleryItem.playlists.map((playlist) => parseVodPlaylists(playlist));
-    seriesVODS = constructRails(parsedVODS, ROUTES.VOD);
+    seriesVODS = constructRails(parsedVODS, !!ROUTES.VOD);
   }
 
   page.props = {

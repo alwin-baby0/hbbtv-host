@@ -23,7 +23,7 @@ const RAIL_WIDTHS = {
 
 let globalVerticalIndex = 0;
 
-export const constructRails = (rails) => {
+export const constructRails = (rails, isDetailsPlaylistAsset) => {
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
     return constructRails([rails]);
@@ -48,10 +48,10 @@ export const constructRails = (rails) => {
           const currentIndex = globalVerticalIndex;
           globalVerticalIndex += 1;
 
-          return cronstructSingleLineRail(newRail, currentIndex);
+          return cronstructSingleLineRail(newRail, currentIndex, isDetailsPlaylistAsset);
         });
       }
-      return cronstructSingleLineRail(rail, index); //-1 is placeholder value if items are not chunked
+      return cronstructSingleLineRail(rail, index, isDetailsPlaylistAsset); //-1 is placeholder value if items are not chunked
     });
 };
 
@@ -60,7 +60,7 @@ const verticalIndexReset = () => {
   globalVerticalIndex = 0;
 };
 
-export const cronstructSingleLineRail = (rail, index) => {
+export const cronstructSingleLineRail = (rail, index, isDetailsPlaylistAsset) => {
   const {
     items,
     railType,
@@ -143,7 +143,8 @@ export const cronstructSingleLineRail = (rail, index) => {
         items.length === 0 ? [{ type: Empty }] : items,
         railType,
         railItemsOptions,
-        cardType
+        cardType,
+        isDetailsPlaylistAsset
       ),
       paddingLeft,
       targetIndex: targetIndex,

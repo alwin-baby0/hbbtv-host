@@ -35,7 +35,7 @@ export default async function (page, { movieId, cmpShown }) {
   let movieVODS;
   if (movie?.playlists) {
     const parsedMovies = movie.playlists.map((playlist) => parseVodPlaylists(playlist));
-    movieVODS = constructRails(parsedMovies, ROUTES.VOD);
+    movieVODS = constructRails(parsedMovies, !!ROUTES.VOD);
   }
 
   page.props = {

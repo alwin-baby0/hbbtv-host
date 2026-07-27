@@ -21,13 +21,13 @@ import ContinueWatchingRailItem from '../../components/RailItems/ContinueWatchin
 import ViewMoreRailItem from '../../components/RailItems/ViewMoreRailItem';
 import { formatTimeHMS } from '../Player/utils';
 
-export const railItemConstructor = (railItems, railType, railItemsOptions, cardType) => {
+export const railItemConstructor = (railItems, railType, railItemsOptions, cardType, isDetailsPlaylistAsset) => {
   switch (railType) {
     case RAIL_TYPES.MOVIE:
     case RAIL_TYPES.SERIE:
     case RAIL_TYPES.SPORT:
     case RAIL_TYPES.SEARCH:
-      return constructSimpleRailItems(railItems, railItemsOptions, cardType);
+      return constructSimpleRailItems(railItems, railItemsOptions, cardType, isDetailsPlaylistAsset);
     case RAIL_TYPES.EPISODE:
       return constructEpisodeRailItems(railItems, railItemsOptions, cardType);
     case RAIL_TYPES.SPORT_LIVE:
@@ -55,7 +55,7 @@ export const railItemConstructor = (railItems, railType, railItemsOptions, cardT
   }
 };
 
-const constructSimpleRailItems = (railItems, railItemsOptions, cardType) => {
+const constructSimpleRailItems = (railItems, railItemsOptions, cardType, isDetailsPlaylistAsset) => {
   return railItems.map((railItem, index) => ({
     type: railItem.type !== RAIL_TYPES.VIEW_MORE ? PosterRailItem : ViewMoreRailItem,
     collision: true,
@@ -79,9 +79,14 @@ const constructSimpleRailItems = (railItems, railItemsOptions, cardType) => {
       itemType: railItem.type,
       index: index,
       callback: () => {
+
+        let storeRoute = true
+        const lastRoute = Router.getHistory()?.at(-1)?.hash
+        const wasInDetailsPage = lastRoute?.includes('details')
+        if (isDetailsPlaylistAsset && wasInDetailsPage) storeRoute = false
         railItem.type === RAIL_TYPES.EPISODE
           ? Router.navigate(railItem.url, { episodeId: railItem.id, title: railItem.title })
-          : Router.navigate(railItem.url);
+          : Router.navigate(railItem.url, storeRoute);
       },
       orientation: railItem.orientation,
     },
