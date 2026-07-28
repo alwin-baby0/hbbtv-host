@@ -309,7 +309,7 @@ export default class MyAccount extends Lightning.Component {
               callback: async () => {
                 localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
                 AuthorizationService.clearPollingInterval();
-                window.location.reload();
+                Router.reload()
               },
             },
           },
