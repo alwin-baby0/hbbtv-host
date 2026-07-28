@@ -784,20 +784,23 @@ export default class GalleryItem extends Lightning.Component {
               })
               .start();
 
+            const hash = Router.getActiveHash()
             DetailService.getAdCues(firstEpisodeVideoId, seriesId, firstEpisodeUrl).then(
               ({ data: result }) => {
-                Router.navigate(ROUTES.PLAYER, {
-                  videoUrl: result?.entry[0]?.files?.url ?? firstEpisodeUrl,
-                  episodeTitle: firstEpisodeTitle,
-                  title: seriesTitle,
-                  videoId: firstEpisodeVideoId,
-                  episodeNumber: firstEpisodeEpisodeNumber,
-                  seasonNumber: firstEpisodeSeasonNumber,
-                  duration: duration,
-                  videoType: VIDEO_TYPES.SERIES,
-                  seriesID: seriesId,
-                  ssai: result?.entry[0]?.extensions?.ssai ?? ssai,
-                });
+                if (hash === Router.getActiveHash()) {
+                  Router.navigate(ROUTES.PLAYER, {
+                    videoUrl: result?.entry[0]?.files?.url ?? firstEpisodeUrl,
+                    episodeTitle: firstEpisodeTitle,
+                    title: seriesTitle,
+                    videoId: firstEpisodeVideoId,
+                    episodeNumber: firstEpisodeEpisodeNumber,
+                    seasonNumber: firstEpisodeSeasonNumber,
+                    duration: duration,
+                    videoType: VIDEO_TYPES.SERIES,
+                    seriesID: seriesId,
+                    ssai: result?.entry[0]?.extensions?.ssai ?? ssai,
+                  });
+                }
               }
             );
           };

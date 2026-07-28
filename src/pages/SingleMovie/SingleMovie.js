@@ -577,15 +577,18 @@ export default class SingleMovie extends Lightning.Component {
                     })
                     .start();
 
+                  const hash = Router.getActiveHash()
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
-                      Router.navigate(ROUTES.PLAYER, {
-                        videoUrl: result?.entry[0]?.files.url ?? videoUrl,
-                        duration: duration,
-                        videoId: movieId,
-                        ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
-                        title: movie.title
-                      });
+                      if (hash === Router.getActiveHash()) {
+                        Router.navigate(ROUTES.PLAYER, {
+                          videoUrl: result?.entry[0]?.files.url ?? videoUrl,
+                          duration: duration,
+                          videoId: movieId,
+                          ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
+                          title: movie.title
+                        });
+                      }
                     }
                   );
                 } else if (item.buttonName === 'TRAILER') {
@@ -607,16 +610,19 @@ export default class SingleMovie extends Lightning.Component {
                     })
                     .start();
 
+                  const hash = Router.getActiveHash()
                   DetailService.getAdCues(movieId, undefined, movie[item.stream]).then(
                     ({ data: result }) => {
-                      Router.navigate(ROUTES.PLAYER, {
-                        videoUrl: result?.entry[0]?.files.url ?? videoUrl,
-                        duration: duration,
-                        videoId: movieId,
-                        continueTime: last_position,
-                        ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
-                        title: movie.title
-                      });
+                      if (hash === Router.getActiveHash()) {
+                        Router.navigate(ROUTES.PLAYER, {
+                          videoUrl: result?.entry[0]?.files.url ?? videoUrl,
+                          duration: duration,
+                          videoId: movieId,
+                          continueTime: last_position,
+                          ssai: result?.entry[0]?.extensions?.ssai ?? movie.ssai,
+                          title: movie.title
+                        });
+                      }
                     }
                   );
                 }

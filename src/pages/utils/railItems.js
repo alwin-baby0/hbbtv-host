@@ -222,19 +222,22 @@ const constructEpisodeRailItems = (railItems, railItemsOptions) => {
       imageSrc: railItem?.getThumbnailImage?.(IMAGE_SIZES.M).src,
       index,
       callback: () => {
+        const hash = Router.getActiveHash()
         DetailService.getAdCues(railItem.id, railItem.seriesId, railItem.videoUrl).then(
           ({ data: result }) => {
-            Router.navigate(ROUTES.PLAYER, {
-              videoUrl: result?.entry[0]?.files?.url ?? railItem.src,
-              videoId: railItem.id,
-              duration: railItem.duration,
-              videoType: VIDEO_TYPES.SERIES,
-              seriesID: railItem.seriesId,
-              ssai: result?.entry[0]?.extensions?.ssai ?? railItem.ssai,
-              episodeTitle: railItem.title,
-              seasonNumber: railItem.seasonNumber,
-              episodeNumber: railItem.episodeNumber,
-            });
+            if (hash === Router.getActiveHash()) {
+              Router.navigate(ROUTES.PLAYER, {
+                videoUrl: result?.entry[0]?.files?.url ?? railItem.src,
+                videoId: railItem.id,
+                duration: railItem.duration,
+                videoType: VIDEO_TYPES.SERIES,
+                seriesID: railItem.seriesId,
+                ssai: result?.entry[0]?.extensions?.ssai ?? railItem.ssai,
+                episodeTitle: railItem.title,
+                seasonNumber: railItem.seasonNumber,
+                episodeNumber: railItem.episodeNumber,
+              });
+            }
           }
         );
       },

@@ -231,20 +231,23 @@ export default class SingleSeries extends Lightning.Component {
                       })
                       .start();
 
+                    const hash = Router.getActiveHash()
                     DetailService.getAdCues(lastPlayedId, seriesId, lastPlayedUrl).then(
                       ({ data: result }) => {
-                        Router.navigate(ROUTES.PLAYER, {
-                          videoUrl: result?.entry[0]?.files?.url ?? lastPlayedUrl,
-                          duration: lastPlayedEpisodeDuration,
-                          videoType: VIDEO_TYPES.SERIES,
-                          seriesID: seriesId,
-                          videoId: lastPlayedId,
-                          episodeNumber: lastPlayedEpisodeNumber,
-                          seasonNumber: lastPlayedSeasonNumber,
-                          continueTime: position,
-                          episodeTitle: lastPlayedTitle,
-                          ssai: result?.entry[0]?.extensions?.ssai ?? ssaiLastEp,
-                        });
+                        if (hash === Router.getActiveHash()) {
+                          Router.navigate(ROUTES.PLAYER, {
+                            videoUrl: result?.entry[0]?.files?.url ?? lastPlayedUrl,
+                            duration: lastPlayedEpisodeDuration,
+                            videoType: VIDEO_TYPES.SERIES,
+                            seriesID: seriesId,
+                            videoId: lastPlayedId,
+                            episodeNumber: lastPlayedEpisodeNumber,
+                            seasonNumber: lastPlayedSeasonNumber,
+                            continueTime: position,
+                            episodeTitle: lastPlayedTitle,
+                            ssai: result?.entry[0]?.extensions?.ssai ?? ssaiLastEp,
+                          });
+                        }
                       }
                     );
                   },

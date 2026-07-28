@@ -215,15 +215,17 @@ export default class EPGRailItems extends Lightning.Component {
 
     VideoPlayer.close();
 
+    const hash = Router.getActiveHash()
     setTimeout(() => {
       this.fireAncestors('$unpunchHole');
-
-      Router.navigate(ROUTES.PLAYER, {
-        videoUrl: this._props.src,
-        duration: 0,
-        videoType: VIDEO_TYPES.STREAM_NOW,
-        shouldSaveProgress: false,
-      });
+      if (hash === Router.getActiveHash()) {
+        Router.navigate(ROUTES.PLAYER, {
+          videoUrl: this._props.src,
+          duration: 0,
+          videoType: VIDEO_TYPES.STREAM_NOW,
+          shouldSaveProgress: false,
+        });
+      }
     }, 500);
   }
 
