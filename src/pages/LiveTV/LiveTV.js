@@ -340,11 +340,9 @@ export default class LiveTV extends Lightning.Component {
       this._EPGData.setInitialOffset();
     });
 
-    this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
-  }
-
-  _inactive() {
-    this.fireAncestors('$unpunchHole');
+    if (!this.channelUpdateInterval) {
+      this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
+    }
   }
 
   _disable() {
