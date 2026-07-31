@@ -122,6 +122,12 @@ export default class Collection extends Lightning.Component {
           return this._Column;
         }
 
+        $enter() {
+          if (this._Column?.Items?.children?.length === 0) {
+            this._setState('BackButton')
+          }
+        }
+
         _handleUp() {
           if (window.Didomi && window.didomiVisible) {
             return true;

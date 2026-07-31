@@ -107,7 +107,7 @@ const constructLandscapeRailItems = (railItems, railItemsOptions, cardType) => {
     ...railItemsOptions,
     props: {
       itemTitle: railItem.title ? railItem.title : '',
-      imageSrc: railItem.getLandscapePoster(IMAGE_SIZES.S).src,
+      imageSrc: railItem?.getLandscapePoster?.(IMAGE_SIZES.S)?.src || '',
       itemType: railItem.type,
       index,
       callback: () => {

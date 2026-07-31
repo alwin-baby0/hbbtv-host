@@ -154,7 +154,7 @@ export default class VerticalContainer extends Lightning.Component {
     if (this.hasFocus()) {
       if (event.deltaY > 0) {
         const { items } = this._props;
-        if (items && items[0].channelId) {
+        if (items && items[0]?.channelId) {
           return this.handleDownEPG();
         } else {
           return this.handleDown();
@@ -187,7 +187,7 @@ export default class VerticalContainer extends Lightning.Component {
     }
 
     const { items } = this._props;
-    if (items && items[0].channelId) {
+    if (items && items[0]?.channelId) {
       return this.handleDownEPG();
     } else {
       return this.handleDown();
@@ -260,7 +260,7 @@ export default class VerticalContainer extends Lightning.Component {
     }
 
     const { items } = this._props;
-    if (items && items[0].channelId) {
+    if (items && items[0]?.channelId) {
       if (this._focusedIndex > 0) return this.handleUpEPG();
       else {
         this.fireAncestors('$verticalContainerIndexChange', this._focusedIndex);

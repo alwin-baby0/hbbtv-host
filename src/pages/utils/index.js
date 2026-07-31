@@ -24,6 +24,9 @@ const RAIL_WIDTHS = {
 let globalVerticalIndex = 0;
 
 export const constructRails = (rails, isDetailsPlaylistAsset) => {
+  if (Array.isArray(rails?.items) && rails?.items?.length === 0) {
+    return []
+  }
   // Ensure rails is an array
   if (!Array.isArray(rails)) {
     return constructRails([rails]);
@@ -135,7 +138,7 @@ export const cronstructSingleLineRail = (rail, index, isDetailsPlaylistAsset) =>
       railWidth: RAIL_WIDTHS[railType] || 1500,
       railTitle: railTitle,
       railType,
-      cardType: items[0].type === RAIL_TYPES.BANNER ? CARD_TYPES.BANNER : cardType,
+      cardType: items[0]?.type === RAIL_TYPES.BANNER ? CARD_TYPES.BANNER : cardType,
       ...((railType === RAIL_TYPES.EPGS ||
         railType === RAIL_TYPES.CONTINUE_WATCHING ||
         railType === RAIL_TYPES.FAVORITES) && { wrap: true }),
