@@ -589,8 +589,10 @@ export default class LiveTV extends Lightning.Component {
             return true;
           }
 
-          this._setState('EPGS');
-          this.focusedState = 'EPGS';
+          if (this._EPGData?.Items?.children?.length) {
+            this._setState('EPGS');
+            this.focusedState = 'EPGS';
+          }
         }
       },
 

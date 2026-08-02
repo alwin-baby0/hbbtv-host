@@ -56,8 +56,8 @@ class EPGService extends FetchingService {
               item !== 'all'
                 ? settings.genres.localized[item]
                 : settings.translation
-                ? settings.translation.all
-                : 'ALL',
+                  ? settings.translation.all
+                  : 'ALL',
           };
         }),
       },
@@ -154,7 +154,7 @@ class EPGService extends FetchingService {
   async fetchMoreChannels() {
     const channels = await this.getGenresCategory(this.type, '', '', this.page, this.limit);
     this.page++;
-    if (this.channelsItems.some((channelsItem) => channelsItem.id === channels[0].id)) return [];
+    if (this.channelsItems.some((channelsItem) => channelsItem.id === channels[0]?.id)) return [];
 
     this.channelsItems.push(...channels);
     this.allChannels = this.channelsItems.map((channel) => channel.id);
@@ -177,14 +177,14 @@ class EPGService extends FetchingService {
     const firstFiveChannels = channels.slice(0, EPG_ROWS_PER_FETCH);
 
     const channelEPG = await Promise.all(
-      firstFiveChannels.map((channelId) => {
+      fetchedResult.map((channel) => {
         try {
-          return this.getEPG(channelId);
+          return this.getEPG(channel.id, channel.url);
         } catch (error) {
           const deviceType = getDeviceType();
           deviceType === 'metrological' &&
             Metrics.error(Metrics.ErrorType.MEDIA, '404', 'Failed to get EPG for channel', false);
-          console.error(`Failed to get EPG for channelId ${channelId}`, error);
+          console.error(`Failed to get EPG for channelId ${channel.id}`, error);
           return null;
         }
       })
@@ -192,7 +192,17 @@ class EPGService extends FetchingService {
 
     const epgResults = await Promise.all(channelEPG);
 
-    this.epgs = [...epgResults];
+    this.epgs = [];
+    this.epgs.push(
+      ...epgResults.map((result, index) => {
+        return {
+          ...result,
+          channelIcon: this.channelsItems[index].icon,
+          channelTitle: this.channelsItems[index].title,
+          src: this.channelsItems[index].url,
+        };
+      })
+    );
 
     this.filteredChannelsItems = this.channelsItems.filter((channel) =>
       channels.includes(channel.id)

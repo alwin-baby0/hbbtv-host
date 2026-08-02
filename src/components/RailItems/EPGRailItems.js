@@ -208,6 +208,7 @@ export default class EPGRailItems extends Lightning.Component {
     if (window.Didomi && window.didomiVisible) {
       return true;
     }
+    if (!this._props.src) return true
     if (this.selectEPGTimeout) {
       clearTimeout(this.selectEPGTimeout);
       this.selectEPGTimeout = null;
