@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-DTfk7oIX.js';
+const LEGACY_ENTRY = './assets/index-legacy-D5zrA_aO.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-CVVjtyMm.js';
 
 const splash = document.getElementById('splash');
@@ -19,6 +19,7 @@ function splashTimeUpdateHandler() {
 
 function playAndPauseAtOneSecond(video) {
   video.addEventListener('timeupdate', splashTimeUpdateHandler);
+  video.addEventListener('ended', onSplashVideoEnded);
   video.play();
 }
 
@@ -33,7 +34,6 @@ function onSplashVideoEnded() {
 }
 
 function continuePlayingSplashTillEnd(video) {
-  video.addEventListener('ended', onSplashVideoEnded);
   video.play();
   window.hideHbbtvSplash = function () { }
 }
