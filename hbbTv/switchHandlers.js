@@ -1,6 +1,6 @@
 
 
-const LEGACY_ENTRY = './assets/index-legacy-D5zrA_aO.js';
+const LEGACY_ENTRY = './assets/index-legacy-pasRm1I2.js';
 const LEGACY_POLYFILL = './assets/polyfills-legacy-CVVjtyMm.js';
 
 const splash = document.getElementById('splash');
@@ -254,6 +254,7 @@ function removeCanvasAndLightningScripts() {
     trackingScript.remove();
   }
 }
+window.removeCanvasAndLightningScripts = removeCanvasAndLightningScripts
 
 function isVodEnabled() {
   const isVod = document.getElementById('is_vod')?.innerHTML
