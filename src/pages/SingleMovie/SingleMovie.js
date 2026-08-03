@@ -376,6 +376,16 @@ export default class SingleMovie extends Lightning.Component {
     return rows;
   }
 
+  removePoster = () => {
+    this.patch({
+      Content: {
+        Image: {
+          texture: undefined,
+        }
+      }
+    })
+  }
+
   set props(props) {
     this._Spinner.visible = false;
     this._Card.visible = true;

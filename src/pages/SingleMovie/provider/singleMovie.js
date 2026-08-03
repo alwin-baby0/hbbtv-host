@@ -4,6 +4,7 @@ import { DetailService, UserService } from '../../../Services';
 import { constructRails } from '../../utils';
 
 export default async function (page, { movieId, cmpShown }) {
+  page.removePoster?.()
   const movie = await DetailService.getMovie(movieId);
 
   let movieTrailerId = '';
