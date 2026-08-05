@@ -25,7 +25,7 @@ class GalleryItem {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     let dateFormat = '';
     if (time) {
-      const zeroDate = new Date(date + 'T' + time + 'Z');
+      const zeroDate = new Date(date + 'T' + time);
       dateFormat = Intl.DateTimeFormat('en-US', {
         timeZone: timeZone,
         hour: '2-digit',

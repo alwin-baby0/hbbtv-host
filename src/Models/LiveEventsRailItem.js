@@ -20,7 +20,7 @@ class LiveEventsRailItem extends SimpleRailItem {
       }).format(zeroDate);
     }
 
-    this.dateWithTime = time && time !== '00:00:00' ? date + ': ' + dateFormat : date;
+    this.dateWithTime = time && time !== '00:00:00' ? date + ': ' + time : date;
     this.description = summary;
 
     this.buttonText = button_text;

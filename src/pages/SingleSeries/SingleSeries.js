@@ -369,7 +369,7 @@ export default class SingleSeries extends Lightning.Component {
   }
 
   switchSeason(seasonId) {
-    let targetSeason = this._props.allSeasons.find((season) => season.seasonId === seasonId);
+    let targetSeason = this._props.allSeasons.find((season) => season?.seasonId === seasonId);
     this._Column.props = {
       items: [...constructRails(targetSeason), ...this._props.playlistVODS],
       parentState: 'Items',
