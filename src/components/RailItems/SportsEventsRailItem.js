@@ -30,9 +30,9 @@ export default class SportsEventsRailItem extends FocusableItem {
       },
       EventTime: {
         x: 3,
-        y: 180,
+        y: 175,
         rect: true,
-        h: 30,
+        h: 40,
         color: Colors(colors.focus).get(),
         shader: {
           type: Lightning.shaders.RoundedRectangle,
@@ -40,12 +40,12 @@ export default class SportsEventsRailItem extends FocusableItem {
         },
         flex: { direction: 'row', alignItems: 'center', justifyContent: 'center' },
         DateTime: {
-          flexItem: { marginLeft: 10, marginRight: 10 },
+          flexItem: { marginLeft: 13, marginRight: 13 },
           h: 16,
           text: {
             text: '',
             fontFace: 'Montserrat-SemiBold',
-            fontSize: 13,
+            fontSize: 16,
             lineHeight: 16,
           },
         },
