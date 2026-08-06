@@ -67,7 +67,7 @@ export default class SportsEventsRailItem extends FocusableItem {
             fontSize: 20,
             lineHeight: 24,
             wordWrapWidth: 270,
-            maxLines: 2,
+            maxLines: 3,
             maxLinesSuffix: '...',
           },
         },

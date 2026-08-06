@@ -306,7 +306,7 @@ export const CARD_SIZES = {
   },
   SPORTS: {
     width: 350,
-    height: 310,
+    height: 315,
   },
   CATEGORY: {
     height: 75,
