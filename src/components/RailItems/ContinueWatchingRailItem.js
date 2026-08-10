@@ -70,7 +70,7 @@ export default class ContinueWatchingRailItem extends FocusableItem {
           w: 273,
           y: -20,
           text: {
-            text: 'Title',
+            // text: 'Title',
             fontFace: 'Montserrat-Regular',
             fontSize: 18,
             lineHeight: 22,
@@ -125,7 +125,7 @@ export default class ContinueWatchingRailItem extends FocusableItem {
         Title: {
           ...(!enableProgressBar && { y: 20 }),
           text: {
-            text: itemTitle,
+            // text: itemTitle,
           },
         },
       },

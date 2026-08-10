@@ -35,7 +35,7 @@ export default class CollectionRailItem extends FocusableItem {
           h: 45,
           w: 410,
           text: {
-            text: 'Title',
+            // text: 'Title',
             fontFace: 'Montserrat-Regular',
             fontSize: 18,
             lineHeight: 22,
@@ -75,7 +75,7 @@ export default class CollectionRailItem extends FocusableItem {
       },
       Title: {
         text: {
-          text: itemTitle,
+          // text: itemTitle,
         },
       },
     });
