@@ -377,6 +377,9 @@ export default class Player extends Lightning.Component {
   set props(props) {
     this._props = props;
     const { isLive, videoUrl, continueTime, episodeTitle, title } = props;
+    const parsedAdData = this._getParsedAdData()
+    this._props.parsedAdData = parsedAdData
+
     setTimeout(() => {
       if (!videoUrl) {
         Router.back()
@@ -526,6 +529,29 @@ export default class Player extends Lightning.Component {
     });
   }
 
+  _getParsedAdData() {
+    const parsedSlots = []
+    let cumilativeAdDuration = 0
+    for (let index = 0; index < this._props?.ads?.slots?.length; index++) {
+      const slot = this._props?.ads?.slots?.[index];
+      let podStart = convertCueTimeToSeconds(slot?.ads?.[0]?.cue?.from)
+      let podEnd = convertCueTimeToSeconds(slot?.ads?.[slot?.ads?.length - 1]?.cue?.to)
+      const podDuration = podEnd - podStart
+      if (index > 0 && index < this._props?.ads?.slots?.length - 1) {
+        podStart += cumilativeAdDuration
+        podEnd += cumilativeAdDuration
+        for (const ad of slot.ads ?? []) {
+          ad.cue.from = formatTimeHMS(convertCueTimeToSeconds(ad.cue.from) + cumilativeAdDuration)
+          ad.cue.to = formatTimeHMS(convertCueTimeToSeconds(ad.cue.to) + cumilativeAdDuration)
+        }
+      }
+      cumilativeAdDuration += podDuration
+      const parsedPodData = { ...slot, podStart, podEnd, podDuration }
+      parsedSlots.push(parsedPodData)
+    }
+    return parsedSlots
+  }
+
   _showErrorMessage() {
     this._ErrorMessage.visible = true;
     this._hideWrapper();
@@ -574,12 +600,12 @@ export default class Player extends Lightning.Component {
 
   _checkAdCuePoints() {
     const currentTime = VideoPlayer.currentTime;
-    const ssai_params = this._props.ads;
+    const ssai_params = this._props.parsedAdData;
 
     // Check if `ssai` has a `slots` array
-    if (ssai_params && Array.isArray(ssai_params.slots)) {
+    if (ssai_params && Array.isArray(ssai_params)) {
       // Iterate over each slot in the `slots` array
-      ssai_params.slots.forEach((slot, slotIndex) => {
+      ssai_params.forEach((slot, slotIndex) => {
         this._slotTimeCumulated = slotIndex - 1;
         // Iterate over each ad in the current slot
         slot.ads.forEach((ad, index) => {
@@ -590,7 +616,7 @@ export default class Player extends Lightning.Component {
           }
           const time = slotIndex === 0 ? currentTime : currentTime - this._slotTime;
           console.log(time, currentTime, this._slotTime);
-          if (time >= from && time < to) {
+          if (currentTime >= from && currentTime < to) {
             if (this._props.currentAd !== ad) {
               const lastAd = slot.ads[slot.ads.length - 1];
               const lastAdTo = convertCueTimeToSeconds(lastAd.cue.to);
@@ -752,7 +778,7 @@ export default class Player extends Lightning.Component {
           }
 
           // Provera da li je trenutna reklama završena
-          if (time >= to && this._props.currentAd === ad) {
+          if (currentTime >= to && this._props.currentAd === ad) {
             this._handleAdEnd(ad);
 
             //check if the current ad is the last ad in the pod
@@ -866,16 +892,16 @@ export default class Player extends Lightning.Component {
   }
 
   _checkAdCuePointsSeek() {
-    const ssai_params = this._props.ads;
+    const ssai_params = this._props.parsedAdData;
     const seekTime = Math.max(
       this._props.skipTo + 1,
       VideoPlayer.currentTime + this._videoSkipTimeSum
     );
 
     // Check if `ssai` has a `slots` array
-    if (ssai_params && Array.isArray(ssai_params.slots)) {
+    if (ssai_params && Array.isArray(ssai_params)) {
       // Iterate over each slot in the `slots` array
-      ssai_params.slots.forEach((slot) => {
+      ssai_params.forEach((slot) => {
         // Iterate over each ad in the current slot
         slot.ads.forEach((ad) => {
           const from = convertCueTimeToSeconds(ad.cue.from);
@@ -1096,17 +1122,17 @@ export default class Player extends Lightning.Component {
         VideoPlayer.duration - this._cumulativeTime
       )
     );
-    const progress = currentTime / (VideoPlayer.duration - this._cumulativeTime);
+    const progress = VideoPlayer.currentTime / VideoPlayer.duration;
 
     if (isLive) {
       this._ProgressBar.progress(1);
     } else {
       this._ProgressBar.progress(progress);
-      this._ProgressBar.duration(VideoPlayer.duration - this._cumulativeTime);
+      this._ProgressBar.duration(VideoPlayer.duration);
     }
 
     if (!isLive) {
-      this._CurrentTime.text = formatTimeHMS(currentTime);
+      this._CurrentTime.text = formatTimeHMS(VideoPlayer.currentTime);
     }
   }
 

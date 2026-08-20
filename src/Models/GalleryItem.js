@@ -5,7 +5,7 @@ import { getDeviceInfo, getDeviceType } from '../utils/device';
 import { LoggingService } from '../Services/index.js';
 
 class GalleryItem {
-  constructor(data) {
+  constructor(data = {}) {
     const {
       id = '',
       title,
