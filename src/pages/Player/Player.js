@@ -47,6 +47,9 @@ export default class Player extends Lightning.Component {
   _currentAdTime = 1;
   _selectedTranslationIndex = 0;
   _videoSkipTimeSum = 0;
+  _seekStartTime = null;
+  _seekEndTime = null;
+  _skippedUnwatchedPod = null;
   _progressInterval = null;
   _debouncePlayVideoId;
   _debounceVideoStart;
@@ -783,6 +786,13 @@ export default class Player extends Lightning.Component {
 
             //check if the current ad is the last ad in the pod
             if (ad === slot.ads[slot.ads.length - 1]) {
+              if (this._skippedUnwatchedPod && this._seekEndTime) {
+                VideoPlayer.seek(this._seekEndTime);
+                this._videoSkipTimeSum = 0;
+                this.debouncePlayVideo();
+                this._resetSeekTimesRefs()
+              }
+              slot.isWatched = true
               this._handleSlotEnd();
             }
 
@@ -873,6 +883,8 @@ export default class Player extends Lightning.Component {
 
       if (progress !== undefined) {
         this._videoSkipTimeSum = (progress * VideoPlayer.duration) - VideoPlayer.currentTime
+        this._seekStartTime = VideoPlayer.currentTime
+        this._seekEndTime = progress * VideoPlayer.duration
       } else {
         if (forward) {
           this._videoSkipTimeSum += 20;
@@ -891,33 +903,59 @@ export default class Player extends Lightning.Component {
     }
   }
 
+  _resetSeekTimesRefs() {
+    this._seekStartTime = null
+    this._seekEndTime = null
+    this._skippedUnwatchedPod = null
+  }
+
   _checkAdCuePointsSeek() {
     const ssai_params = this._props.parsedAdData;
     const seekTime = Math.max(
       this._props.skipTo + 1,
       VideoPlayer.currentTime + this._videoSkipTimeSum
     );
+    const isForwardSeek = (this._seekEndTime - this._seekStartTime) > 0
+    this._skippedUnwatchedPod;
 
+    let isBetweenAds = false
     // Check if `ssai` has a `slots` array
     if (ssai_params && Array.isArray(ssai_params)) {
+
       // Iterate over each slot in the `slots` array
       ssai_params.forEach((slot) => {
+        if (isForwardSeek && !slot.isWatched && this._seekStartTime < slot.podStart && this._seekEndTime > slot.podEnd) {
+          this._skippedUnwatchedPod = slot
+        }
         // Iterate over each ad in the current slot
         slot.ads.forEach((ad) => {
           const from = convertCueTimeToSeconds(ad.cue.from);
           const to = convertCueTimeToSeconds(ad.cue.to);
           if (seekTime >= from && seekTime < to) {
-            VideoPlayer.seek(from);
+            isBetweenAds = true
+            const seekPosition = slot.isWatched ? slot.podEnd + 1 : slot.podStart
+            VideoPlayer.seek(seekPosition);
             this._videoSkipTimeSum = 0;
             VideoPlayer.play();
+            this._resetSeekTimesRefs()
             return;
           }
         });
       });
     }
+    if (this._skippedUnwatchedPod) {
+      VideoPlayer.seek(this._skippedUnwatchedPod.podStart);
+      this._videoSkipTimeSum = 0;
+      this.debouncePlayVideo();
+      return
+    }
+
+    if (isBetweenAds) return
+
     VideoPlayer.seek(seekTime);
     this._videoSkipTimeSum = 0;
     this.debouncePlayVideo();
+    this._resetSeekTimesRefs()
   }
 
   debouncePlayVideo = () => {
