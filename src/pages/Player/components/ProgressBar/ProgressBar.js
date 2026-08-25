@@ -11,6 +11,7 @@ export default class ProgressBar extends Lightning.Component {
   _duration = null
   _minSeekOffset = 0
   _repeatStartedTimestamp = null
+  _adMarkersCreated = false
   static _template() {
     return {
       BackgroundBar: {
@@ -19,6 +20,10 @@ export default class ProgressBar extends Lightning.Component {
       Progress: {
         rect: true,
         w: 0,
+      },
+      AdMarkerContainer: {
+        rect: true,
+        color: Colors('transparent').get()
       },
       Knob: {
         rect: true,
@@ -34,6 +39,10 @@ export default class ProgressBar extends Lightning.Component {
 
   get _Progress() {
     return this.tag('Progress');
+  }
+
+  get _AdMarkerContainer() {
+    return this.tag('AdMarkerContainer');
   }
 
   get _Knob() {
@@ -65,6 +74,10 @@ export default class ProgressBar extends Lightning.Component {
         color: Colors(progressColor).get(),
         h: height,
       },
+      AdMarkerContainer: {
+        h: height * 1.1,
+        w: width,
+      },
       Knob: {
         texture: Lightning.Tools.getRoundRect(
           height * 3.6,
@@ -88,6 +101,25 @@ export default class ProgressBar extends Lightning.Component {
   duration(duration) {
     this._duration = duration
     this._minSeekOffset = MIN_SEEK_SECONDS / duration
+    if (duration !== Infinity && duration !== 0 && !this._adMarkersCreated && this._props.adData?.length) {
+      this._createAdMarkers()
+    }
+  }
+
+  _createAdMarkers() {
+    if (this._props.adData?.length) {
+      this._props.adData.forEach((pod, index) => {
+        this._AdMarkerContainer.childList.add({
+          ref: `Marker${index}`,
+          rect: true,
+          x: (pod.podStart / this._duration) * this._props.width,
+          w: (pod.podDuration / this._duration) * this._props.width,
+          h: this._props.height,
+          color: 0xFFFFCC00,
+        });
+      });
+      this._adMarkersCreated = true
+    }
   }
 
   _setProgress = (progress, fireSignal) => {

@@ -413,6 +413,7 @@ export default class Player extends Lightning.Component {
             width: isLive ? 1550 : 1400,
             progressColor: focusedColor,
             backgroundBarColor: isLive ? focusedColor : colors.unfocus,
+            adData: this._props.parsedAdData,
           },
         },
       });
@@ -620,6 +621,14 @@ export default class Player extends Lightning.Component {
           const time = slotIndex === 0 ? currentTime : currentTime - this._slotTime;
           console.log(time, currentTime, this._slotTime);
           if (currentTime >= from && currentTime < to) {
+            if (slot.isWatched) {
+              VideoPlayer.pause()
+              VideoPlayer.seek(slot.podEnd);
+              this._videoSkipTimeSum = 0;
+              this.debouncePlayVideo();
+              this._resetSeekTimesRefs()
+              return
+            }
             if (this._props.currentAd !== ad) {
               const lastAd = slot.ads[slot.ads.length - 1];
               const lastAdTo = convertCueTimeToSeconds(lastAd.cue.to);
