@@ -647,7 +647,8 @@ export default class GalleryItem extends Lightning.Component {
       }
       this._Info.patch({
         Countdown: {
-          onAfterUpdate: _handleOnAfterUpdate
+          onAfterUpdate: _handleOnAfterUpdate,
+          visible: this.remainingUntilStart > 0,
         },
         TopSection: {
           SummSub: undefined,
@@ -684,11 +685,6 @@ export default class GalleryItem extends Lightning.Component {
           }
         },
       });
-      this._Info.patch({
-        Countdown: {
-          visible: this.remainingUntilStart > 0,
-        },
-      });
     }
 
     const bgImageSrc = () => {
@@ -718,14 +714,14 @@ export default class GalleryItem extends Lightning.Component {
       Info: {
         Title: {
           text: {
-            text: episodeTitle || seasonTitle || title,
+            text: episodeTitle || seasonTitle || title || '',
             fontSize: bgY !== 0 ? 50 : 50,
             wordWrapWidth: bgY !== 0 ? 800 : 800,
           },
         },
         Description: {
           text: {
-            text: summary,
+            text: summary || '',
             wordWrapWidth: bgY !== 0 ? 800 : 800,
           },
         },
@@ -847,31 +843,103 @@ export default class GalleryItem extends Lightning.Component {
     this._Info.patch({
       Countdown: {
         visible: totalSeconds > 0,
+        flex: { direction: 'row', alignItems: 'center', justifyContent: 'flex-start' },
+        flexItem: {
+          marginTop: 15,
+          marginBottom: 25,
+        },
+        Container: {
+          rect: true,
+          flexItem: false,
+          shader: {
+            type: Lightning.shaders.RoundedRectangle,
+            radius: 12,
+            stroke: 2.2,
+            strokeColor: 0xFFFFFFFF,
+            fillColor: 0x401b1b23,
+          },
+        },
+        Start: {
+          flexItem: { marginLeft: 50, marginTop: 8 },
+          text: {
+            text: t(TRANSLATIONS.START_IN),
+            fontSize: 24,
+            fontFace: 'Montserrat-Semibold',
+          },
+        },
         Days: {
+          flex: { direction: 'row' },
+          flexItem: { marginLeft: 50, marginTop: 8 },
           Number: {
             text: {
               text: days,
+              fontFace: 'Montserrat-Bold',
+              fontSize: 44,
+            },
+          },
+          Label: {
+            y: 19,
+            flexItem: { marginLeft: 5, },
+            text: {
+              text: t(TRANSLATIONS.DAYS_LABEL),
+              fontSize: 24,
             },
           },
         },
         Hours: {
+          flexItem: { marginLeft: 50, marginTop: 8 },
+          flex: { direction: 'row' },
           Number: {
             text: {
               text: hours,
+              fontSize: 44,
+              fontFace: 'Montserrat-Bold',
+            },
+          },
+          Label: {
+            y: 19,
+            flexItem: { marginLeft: 5, },
+            text: {
+              text: t(TRANSLATIONS.HOURS_LABEL),
+              fontSize: 24,
             },
           },
         },
         Mins: {
+          flexItem: { marginLeft: 50, marginTop: 8 },
+          flex: { direction: 'row' },
           Number: {
             text: {
               text: minutes,
+              fontSize: 44,
+              fontFace: 'Montserrat-Bold',
+            },
+          },
+          Label: {
+            y: 19,
+            flexItem: { marginLeft: 5, },
+            text: {
+              text: t(TRANSLATIONS.MINUTESS_LABEL),
+              fontSize: 24,
             },
           },
         },
         Sec: {
+          flexItem: { marginLeft: 50, marginTop: 8, marginRight: 50 },
+          flex: { direction: 'row' },
           Number: {
             text: {
               text: seconds,
+              fontSize: 44,
+              fontFace: 'Montserrat-Bold',
+            },
+          },
+          Label: {
+            y: 19,
+            flexItem: { marginLeft: 5, },
+            text: {
+              text: t(TRANSLATIONS.SECONDS_LABEL),
+              fontSize: 24,
             },
           },
         },
