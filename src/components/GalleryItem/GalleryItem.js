@@ -107,7 +107,7 @@ export default class GalleryItem extends Lightning.Component {
               h: 30,
               y: 9,
               text: {
-                text: 'babuuuuu',
+                text: '',
                 fontSize: 24,
                 fontFace: 'Montserrat-Semibold',
                 textColor: Colors('#FFFFFF').get(),
@@ -654,15 +654,31 @@ export default class GalleryItem extends Lightning.Component {
           Badge: {
             Text: {
               text: {
-                text: capitalizeFirstLetter(TRANSLATIONS.SPORTS),
+                text: capitalizeFirstLetter(badgeText ?? 'Event'),
               },
             },
           },
           Date: {
             visible: factLine ? true : false,
+            w: 330,
+            h: 50,
+            color: Colors('#cf1c1e').get(),
+            rect: true,
+            shader: { type: Lightning.shaders.RoundedRectangle, radius: 10 },
+            flex: { direction: ' row', alignItems: 'center' },
+            flexItem: {
+              marginRight: 40,
+            },
             Text: {
+              h: 30,
+              y: 9,
               text: {
                 text: factLine,
+                fontSize: 24,
+                fontFace: 'Montserrat-Semibold',
+                textColor: Colors('#FFFFFF').get(),
+                textAlign: 'center',
+                maxLines: 1,
               },
             },
           }
