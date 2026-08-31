@@ -1318,7 +1318,7 @@ export default class Player extends Lightning.Component {
     this._EndTime.text = this._props.isLive ? '' : formattedDuration;
 
     this._setState('Controls');
-    this._showWrapper();
+    this._hideWrapper();
 
     // Get the available subtitle tracks
     const subtitleTracks = getPlayer()?.subtitleTrackController?.tracks;
@@ -1532,7 +1532,7 @@ export default class Player extends Lightning.Component {
             }
           }
 
-          // this._setState('SubtitlesButton');
+          this._setState('SeekBar');
         }
         _handleUp() {
           if (window.Didomi && window.didomiVisible) {
@@ -1659,6 +1659,16 @@ export default class Player extends Lightning.Component {
         }
 
         _handleUp() {
+          if (window.Didomi && window.didomiVisible) {
+            return true;
+          }
+
+          if (this._props.isLive) return;
+
+          this._setState('SeekBar');
+        }
+
+        _handleLeft() {
           if (window.Didomi && window.didomiVisible) {
             return true;
           }
