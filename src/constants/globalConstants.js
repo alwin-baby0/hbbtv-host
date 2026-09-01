@@ -361,4 +361,5 @@ export const SEARCH_TYPES = {
   EVENT: 'event',
   SEASON: 'season',
   CAST: 'cast',
+  SPORTS: 'sport',
 };
