@@ -27,7 +27,7 @@ export const parseHomePageRailData = ({ data }) => {
     );
 
   return {
-    railType: data.railType ? data.railType : railItems[0].type,
+    railType: data.railType ? data.railType : railItems[0].type === RAIL_TYPES.EPISODE ? RAIL_TYPES.SERIE : railItems[0].type,
     railTitle: data.entry.name,
     cardType: CARD_TYPES.POSTER,
     items: railItems,
