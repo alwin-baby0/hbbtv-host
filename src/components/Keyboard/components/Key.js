@@ -34,7 +34,8 @@ export default class Key extends Lightning.Component {
   }
 
   set data({ w, h, key, icon }) {
-    this._data = { w, h, key, icon };
+    const scaleX = 1 + (3 / w)
+    this._data = { w, h, key, icon, scaleX };
   }
 
   _enable() {
@@ -71,7 +72,8 @@ export default class Key extends Lightning.Component {
         color: Colors('#000000').get(),
       },
     });
-    this._Key.smooth = { scale: 1.2 };
+    this._Key.smooth = { scaleX: this._data.scaleX };
+    this._Key.smooth = { scaleY: 1.05 };
   }
 
   _unfocus() {
@@ -84,7 +86,8 @@ export default class Key extends Lightning.Component {
         color: Colors('#ffffff').get(),
       },
     });
-    this._Key.smooth = { scale: 1.0 };
+    this._Key.smooth = { scaleX: 1.0 };
+    this._Key.smooth = { scaleY: 1.0 };
   }
 
   _handleHover() {
