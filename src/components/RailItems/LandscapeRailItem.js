@@ -50,23 +50,22 @@ export default class LandscapeRailItem extends FocusableItem {
             wordWrapWidth: 400,
           },
         },
-        // Description: {
-        //   h: 140,
-        //   w: 415,
-        //   // flexItem: {
-        //   //   marginLeft: 20,
-        //   //   marginRight: 20,
-        //   // },
-        //   text: {
-        //     fontFace: 'Montserrat-Regular',
-        //     fontSize: 18,
-        //     lineHeight: 25,
-        //     wordWrapWidth: 385,
-        //     maxLines: 5,
-        //     maxLinesSuffix: '...',
-        //     textColor: Colors('#cccccf').get(),
-        //   },
-        // },
+        Description: {
+          w: 415,
+          flexItem: {
+            marginLeft: 20,
+            marginRight: 20,
+          },
+          text: {
+            fontFace: 'Montserrat-Regular',
+            fontSize: 18,
+            lineHeight: 25,
+            wordWrapWidth: 385,
+            maxLines: 4,
+            maxLinesSuffix: '...',
+            textColor: Colors('#cccccf').get(),
+          },
+        },
         Summary: {
           h: 30,
           w: 400,
@@ -119,11 +118,11 @@ export default class LandscapeRailItem extends FocusableItem {
           text: itemTitle,
         },
       },
-      // Description: {
-      //   text: {
-      //     text: itemSummary || '',
-      //   },
-      // },
+      Description: {
+        text: {
+          text: '',
+        },
+      },
       Summary: {
         text: {
           text: durYear,
@@ -134,10 +133,33 @@ export default class LandscapeRailItem extends FocusableItem {
 
   _focus() {
     super._focus();
+
+    const { radius, strokeWidth, strokeColor, width, height, itemSummary } = this._props;
+    this._FocusBorder.patch({
+      texture: Lightning.Tools.getRoundRect(width, CARD_SIZES.LANDSCAPE.height, radius, strokeWidth + 1, strokeColor, false),
+    });
+
+
+    this._Wrapper.patch({
+      Description: {
+        text: {
+          text: itemSummary || '',
+        },
+      },
+    });
+    this.setSmooth('h', CARD_SIZES.LANDSCAPE.container_height)
   }
 
   _unfocus() {
     super._unfocus();
+    this._Wrapper.patch({
+      Description: {
+        text: {
+          text: '',
+        },
+      },
+    });
+    this.setSmooth('h', CARD_SIZES.LANDSCAPE.container_height)
   }
 
   _handleEnter() {
