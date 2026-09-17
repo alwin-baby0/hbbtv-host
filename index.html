@@ -103,7 +103,11 @@
   <script type="text/javascript">
     window.homepageLoaded = false;
     window.appSplashVideo = document.getElementById('splash-video');
-    window.appSplashVideo.pause()
+    var splashEl = document.getElementById('splash');
+    if (splashEl) {
+      splashEl.style.visibility = 'visible';
+      splashEl.style.opacity = '1';
+    }
     const loader = document.getElementById('loader');
     const loaderImage = document.getElementById('loader-image');
 
@@ -130,48 +134,24 @@
 
     window.hideSplash = function () {
       window.homepageLoaded = true;
-      if (window.appSplashVideo) {
-        window.appSplashVideo.play();
-        window.hideSplash = function () { }
-      }
+      splashEl.style.visibility = 'hidden';
+      splashEl.style.opacity = '0';
     };
 
     if (window.appSplashVideo && !localStorage.getItem('languageSwitched')) {
-      function onCanPlay() {
-        setTimeout(() => {
-          var route = window.location.hash || '/';
-          console.log('[splash-video] canplay | route:', route);
-          var splashEl = document.getElementById('splash');
-          if (splashEl) {
-            splashEl.style.visibility = 'visible';
-            splashEl.style.opacity = '1';
-          }
-          window.appSplashVideo.play();
-        }, 500)
-      }
-      function onTimeUpdate() {
-        if (window.appSplashVideo.currentTime >= 1.2 && !window.homepageLoaded) {
-          window.appSplashVideo.removeEventListener('timeupdate', onTimeUpdate);
-          window.appSplashVideo.pause();
-          showAppLoader(true)
-          insertLightningScripts()
-        }
-      }
       function onEnded() {
-        window.appSplashVideo.removeEventListener('canplay', onCanPlay);
+        showAppLoader()
         var splashEl = document.getElementById('splash');
         if (splashEl) {
           splashEl.style.visibility = 'hidden';
           splashEl.style.opacity = '0';
+          window.appSplashVideo.onended = function () { };
         }
       }
-      window.appSplashVideo.addEventListener('canplay', onCanPlay);
-      window.appSplashVideo.addEventListener('timeupdate', onTimeUpdate);
       window.appSplashVideo.onended = onEnded;
-    } else {
-      insertLightningScripts()
-    }
+    } else showAppLoader()
   </script>
+  <script type="module" src="/src/index.js"></script>
 </body>
 
 </html>

@@ -28,7 +28,7 @@ import Screensaver from './pages/Screensaver/Screensaver';
 import { ROUTES } from './constants/globalConstants';
 
 export default {
-  root: ROUTES.SPLASH,
+  root: ROUTES.HOME,
   routes: [
     {
       path: ROUTES.SPLASH,

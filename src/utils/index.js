@@ -16,13 +16,7 @@ export function capitalizeFirstLetter(str) {
 }
 
 export async function hideElementsAndCheckCmp() {
-  if (window.appSplashVideo) {
-    const currentOnended = window.appSplashVideo.onended || function () { }
-    window.appSplashVideo.onended = async function () {
-      await checkCMP()
-      setTimeout(currentOnended, 500)
-    }
-  }
+  await checkCMP()
   hideElements()
 }
 
