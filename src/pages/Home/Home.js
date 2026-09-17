@@ -91,7 +91,7 @@ export default class Home extends Lightning.Component {
     this.fireAncestors('$unpunchHole');
   }
 
-  _firstEnable() {
+  _init() {
     const languageSwitched = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED);
     if (languageSwitched) {
       localStorage.removeItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED);

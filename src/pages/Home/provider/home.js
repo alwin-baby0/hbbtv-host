@@ -31,25 +31,28 @@ export default async function (page) {
 
   const parsedMovies = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA)
     ? parseHomePageRailData({
-        data: {
-          railType: RAIL_TYPES.CONTINUE_WATCHING,
-          entry: {
-            items: recentlyWatched.data.recently_watched,
-            hasMore: recentlyWatched.data.total > HomePageService.currentRailLimit,
-            name: t(TRANSLATIONS.CONTINUE_WATCHING),
-            poster_format: 'landscape',
-          },
+      data: {
+        railType: RAIL_TYPES.CONTINUE_WATCHING,
+        entry: {
+          items: recentlyWatched.data.recently_watched,
+          hasMore: recentlyWatched.data.total > HomePageService.currentRailLimit,
+          name: t(TRANSLATIONS.CONTINUE_WATCHING),
+          poster_format: 'landscape',
         },
-      })
+      },
+    })
     : undefined;
 
-  const isBannerImageExist = await checkImageVisibility(
-    HomePageService.banner // ovo je undefined
-  );
+  // commented out to improve app loading time
+  // const isBannerImageExist = await checkImageVisibility(
+  //   HomePageService.banner // ovo je undefined
+  // );
 
   const modifiedRailData = [
     HomePageService.stripes[0],
-    ...(isBannerImageExist ? [HomePageService.banner] : []),
+    // commented out to improve app loading time
+    // ...(isBannerImageExist ? [HomePageService.banner] : []),
+    ...[HomePageService.banner],
     parsedMovies,
     ...HomePageService.stripes.slice(1),
   ];

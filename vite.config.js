@@ -1,5 +1,15 @@
 import { defineConfig, loadEnv } from 'vite';
 import legacy from '@vitejs/plugin-legacy';
+import { dependencies } from './package.json';
+
+function renderChunks(deps) {
+  const chunks = {};
+  Object.keys(deps).forEach((key) => {
+    if (['@lightningjs/sdk'].includes(key)) return;
+    chunks[key] = [key];
+  });
+  return chunks;
+}
 
 export default ({ mode }) => {
   const outDir = 'build';
@@ -48,6 +58,14 @@ export default ({ mode }) => {
       emptyOutDir: true,
       minify: false,
       sourcemap: platform !== 'web',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['@lightningjs/sdk'],
+            ...renderChunks(dependencies),
+          },
+        },
+      },
     },
     esbuild: {
       drop: platform === 'web' ? ['console'] : [],
