@@ -140,7 +140,7 @@
 
     if (window.appSplashVideo && !localStorage.getItem('languageSwitched')) {
       function onEnded() {
-        showAppLoader()
+        if (!window.homepageLoaded) showAppLoader()
         var splashEl = document.getElementById('splash');
         if (splashEl) {
           splashEl.style.visibility = 'hidden';
