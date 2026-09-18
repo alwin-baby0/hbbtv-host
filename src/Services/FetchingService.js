@@ -25,6 +25,17 @@ export default class FetchingService {
     });
   }
 
+  static async refreshCtx() {
+    if (window.Didomi) {
+      const userConsent = await window.Didomi.getCurrentUserStatus();
+      const userNotice = await window.Didomi.getConfig();
+      localStorage.setItem(LOCAL_STORAGE_KEYS.USER_CONSENT, JSON.stringify(userConsent));
+      localStorage.setItem(LOCAL_STORAGE_KEYS.DIDOMI_CONFIG, JSON.stringify(userNotice));
+    }
+
+    FetchingService.axiosInstance.defaults.params.ctx = createApiCtx();
+  }
+
   // propery to check if we are fetching currently
   #loading = false;
 

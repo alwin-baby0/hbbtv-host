@@ -9,6 +9,7 @@ import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 import { t } from './utils';
 import { unload } from './components/Player/HLS';
+import FetchingService from './Services/FetchingService';
 
 let wasOffline = false; // Variable to track previous internet status
 
@@ -173,6 +174,7 @@ export default class App extends Router.App {
   }
 
   async handleConsentUpdate() {
+    FetchingService.refreshCtx()
     if (DidomiService.hasConsentForPurpose('analytics')) {
       this.startAnalytics();
     } else {
