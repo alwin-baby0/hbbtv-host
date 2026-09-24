@@ -31,7 +31,7 @@ export default class App extends Router.App {
         w: 1920,
         h: 1080,
         zIndex: 102,
-        color: Colors('#000000').get(),
+        color: Colors('#1b1b23').get(),
         props: {
           xPos: 960,
           yPos: 540,
