@@ -52,11 +52,21 @@ const sequence = (steps) => {
   }, Promise.resolve(null));
 };
 
-const loadJS = (url) => {
+// Always resolves (on load, error or timeout) so a blocked third-party script can't stall app startup
+const loadJS = (url, timeout = 8000) => {
   return new Promise((resolve) => {
     const scriptTag = document.createElement('script');
     scriptTag.type = 'text/javascript';
-    scriptTag.onload = resolve;
+    const done = (loaded) => {
+      clearTimeout(timer);
+      scriptTag.onload = scriptTag.onerror = null;
+      if (loaded) console.log('### LOADED', url);
+      else console.warn('### FAILED TO LOAD', url);
+      resolve(loaded);
+    };
+    const timer = setTimeout(() => done(false), timeout);
+    scriptTag.onload = () => done(true);
+    scriptTag.onerror = () => done(false);
     scriptTag.src = url;
     document.body.appendChild(scriptTag);
   });

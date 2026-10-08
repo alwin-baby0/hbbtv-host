@@ -566,7 +566,7 @@ export const getDeviceStageProps = () => {
 export const eventTrackPayload = (event, id, seriesID) => {
   const { serialNumber, osVersion, os, model, brand } = getDeviceInfo();
   try {
-    if (w4track)
+    if (typeof w4track === 'function')
       w4track(
         {
           event,
@@ -586,7 +586,7 @@ export const eventTrackPayload = (event, id, seriesID) => {
         process.env.APP_WATCH4_API_KEY
       );
     else {
-      console.error('event tracking object not attched', error);
+      console.warn('event tracking object not attached');
     }
   } catch (error) {
     const deviceInfo = getDeviceInfo();
