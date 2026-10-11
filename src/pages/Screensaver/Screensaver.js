@@ -1,6 +1,6 @@
 import { Lightning, Router, VideoPlayer } from '@lightningjs/sdk';
 import { loader, unloader } from '../../components/Player/HLS';
-import { ROUTES } from '../../constants/globalConstants';
+import { LOCAL_STORAGE_KEYS, ROUTES } from '../../constants/globalConstants';
 import Color from '@lightningjs/sdk/src/Colors';
 import { InactivityService } from '../../Services';
 
@@ -9,6 +9,8 @@ const SCREENSAVER_VIDEO_URL =
 let SSAI_SCREENSAVER_VIDEO_URL = SCREENSAVER_VIDEO_URL
 
 export default class Screensaver extends Lightning.Component {
+  _reloadTimeout = null;
+
   static _template() {
     return {
       w: 1920,
@@ -29,6 +31,12 @@ export default class Screensaver extends Lightning.Component {
 
   _active() {
     this._prepareScreensaver();
+    clearTimeout(this._reloadTimeout);
+    this._reloadTimeout = setTimeout(() => {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED, true);
+      Router.navigate(ROUTES.HOME);
+      window.location.reload();
+    }, 60 * 60 * 1000)
   }
 
   set params(params) {
@@ -70,6 +78,8 @@ export default class Screensaver extends Lightning.Component {
 
   _inactive() {
     this._cleanupVideo();
+    clearTimeout(this._reloadTimeout);
+    this._reloadTimeout = null;
   }
 
   _closeScreensaver() {

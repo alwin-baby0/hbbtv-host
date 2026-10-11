@@ -10,6 +10,7 @@ import {
   VOD_PREVIEW_TYPES,
   CONTENT_TYPE,
   RAIL_TYPES,
+  LOCAL_STORAGE_KEYS,
 } from '../../constants/globalConstants';
 import { railItemConstructor } from '../utils/railItems';
 import { hideElementsAndCheckCmp } from '../../utils/index';
@@ -22,6 +23,7 @@ export default class VodPreview extends Lightning.Component {
     fetchMoreStripes: async () => null,
     fetchMoreHeroStripes: async () => null,
   };
+  _reloadTimeout = null;
 
   static _template() {
     return {
@@ -55,7 +57,27 @@ export default class VodPreview extends Lightning.Component {
     };
   }
 
-  async _firstEnable() {
+  _active() {
+    console.log('### inside');
+
+    clearTimeout(this._reloadTimeout);
+    this._reloadTimeout = setTimeout(() => {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED, true);
+      window.location.reload()
+    }, 60 * 60 * 1000)
+  }
+
+  _inactive() {
+    clearTimeout(this._reloadTimeout);
+    this._reloadTimeout = null;
+  }
+
+  _init() {
+    const languageSwitched = localStorage.getItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED);
+    if (languageSwitched) localStorage.removeItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED)
+  }
+
+  _firstEnable() {
     hideElementsAndCheckCmp()
   }
 

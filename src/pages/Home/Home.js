@@ -12,6 +12,8 @@ export default class Home extends Lightning.Component {
     sliderData: null,
     railData: [],
   };
+  _reloadTimeout = null;
+
   static _template() {
     return {
       Background: {},
@@ -56,7 +58,18 @@ export default class Home extends Lightning.Component {
       });
     }
 
+    clearTimeout(this._reloadTimeout);
+    this._reloadTimeout = setTimeout(() => {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED, true);
+      window.location.reload()
+    }, 60 * 60 * 1000)
+
     Router.setHistory([]);
+  }
+
+  _inactive() {
+    clearTimeout(this._reloadTimeout);
+    this._reloadTimeout = null;
   }
 
   /**
