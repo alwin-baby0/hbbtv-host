@@ -4,7 +4,7 @@ import Navbar from './components/widgets/Navbar/Navbar';
 import LoadingScreenComponent from './components/LoadingScreenComponent/LoadinScreenComponent';
 import Dialog from './components/widgets/Dialog/Dialog';
 import { getDeviceType } from './utils/device';
-import { DetailService, DidomiService, InactivityService } from './Services';
+import { DetailService, DidomiService, InactivityService, UserService } from './Services';
 import { IMG_PATH, ROUTES, TRANSLATIONS } from './constants/globalConstants';
 import { Lifecycle, Metrics } from '@firebolt-js/sdk';
 import { t } from './utils';
@@ -115,6 +115,7 @@ export default class App extends Router.App {
 
     this.checkNetworkStatusOnline(navigator.onLine);
     InactivityService.start();
+    UserService.startHourlyTimer()
   }
 
   async _init() {

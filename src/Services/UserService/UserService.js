@@ -3,7 +3,40 @@ import { refreshTokenOnOauth } from '../../utils';
 import FetchingService from '../FetchingService';
 import { V2 } from '../utils';
 
+const ONE_HOUR_MS = 60 * 60 * 1000;
+
 class UserService extends FetchingService {
+  _hourlyTimeout = null;
+
+  // Fires on every full hour of the clock (hh:00:00) + 1500ms buffer, starting from the next one after the call.
+  // Lives on the service singleton, so it is unaffected by route changes.
+  startHourlyTimer = () => {
+    if (this._hourlyTimeout) return;
+
+    const scheduleNext = () => {
+      const now = Date.now();
+      // Time left until the next full hour of the clock (hh:00:00):
+      //   now % ONE_HOUR_MS                 -> ms already elapsed in the current hour
+      //   ONE_HOUR_MS - (now % ONE_HOUR_MS) -> ms remaining until that hour ends
+      // +1500ms buffer so the callback lands safely after the boundary, even if the timer fires slightly early.
+      let msToNext = ONE_HOUR_MS - (now % ONE_HOUR_MS) + 1500;
+      this._hourlyTimeout = setTimeout(onFullHour, msToNext);
+    };
+
+    const onFullHour = () => {
+      window.refreshFeed = true
+      console.log(`### Full hour mark reached at ${new Date().toLocaleTimeString()}`);
+      scheduleNext();
+    };
+
+    scheduleNext();
+  };
+
+  stopHourlyTimer = () => {
+    clearTimeout(this._hourlyTimeout);
+    this._hourlyTimeout = null;
+  };
+
   getFavorites = async (page, limit = 8) => {
     const userData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA));
 

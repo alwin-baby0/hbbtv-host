@@ -59,10 +59,20 @@ export default class Home extends Lightning.Component {
     }
 
     clearTimeout(this._reloadTimeout);
+    // Reload at the next full hour of the clock (hh:00:00):
+    //   Date.now() % 1h        -> ms already elapsed in the current hour
+    //   1h - (Date.now() % 1h) -> ms remaining until that hour ends
+    // +1500ms buffer so the reload lands safely after the boundary, even if the timer fires slightly early.
     this._reloadTimeout = setTimeout(() => {
       localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED, true);
       window.location.reload()
-    }, 60 * 60 * 1000)
+    }, 60 * 60 * 1000 - (Date.now() % (60 * 60 * 1000)) + 1500)
+
+    if (window.refreshFeed) {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.LANGUAGE_SWITCHED, true);
+      window.location.reload()
+      clearTimeout(this._reloadTimeout);
+    }
 
     Router.setHistory([]);
   }
