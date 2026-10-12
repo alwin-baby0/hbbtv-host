@@ -62,7 +62,7 @@ export default class VerticalContainer extends Lightning.Component {
       });
     } else {
       this.patch({
-        h: 360,
+        ...(this.ref === 'Channels' && { h: 360 }),
         Title: undefined,
         ...(this._props.h && { h: this._props.h }),
       });
