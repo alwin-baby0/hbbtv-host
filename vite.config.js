@@ -41,6 +41,12 @@ export default ({ mode }) => {
       renderModernChunks: false,
       targets: ['Chrome >= 53', 'not dead'],
     }),
+    // Replaces %APP_*% placeholders in index.html with values from the platform's .env file
+    {
+      name: 'html-app-env',
+      transformIndexHtml: (html) =>
+        html.replace(/%(APP_\w+)%/g, (match, key) => (key in appEnv ? appEnv[key] : match)),
+    },
   ];
 
   return defineConfig({
