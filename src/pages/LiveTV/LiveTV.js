@@ -622,7 +622,7 @@ export default class LiveTV extends Lightning.Component {
           }
 
           this._Channels._focusedIndex = index;
-          this._Channels.Items.smooth = { y: index === 0 ? 0 : this._EPGData.Items.y };
+          this._Channels.Items.smooth = { y: index === 0 ? 0 : this._EPGData._scrollPosition };
 
           if (
             EPGService.hasMoreChannels &&
