@@ -1,6 +1,6 @@
 import { Lightning } from '@lightningjs/sdk';
 import { VideoPlayer } from '@lightningjs/sdk';
-import { loader, unloader } from '../../../components/Player/HLS';
+import { loader, unloader, getPlayer } from '../../../components/Player/HLS';
 import { EPGService } from '../../../Services';
 import { Metrics } from '@firebolt-js/sdk';
 import { getDeviceType } from '../../../utils/device';
@@ -40,6 +40,22 @@ export default class LiveTVPlayer extends Lightning.Component {
     VideoPlayer.open(src);
   }
 
+  // True if this stream is already loaded and playing. With hls.js the <video> src is a blob: URL,
+  // so the loaded source is read from the hls instance (null once the player is cleared/destroyed).
+  // hls.js stores the url absolutised/normalised, so compare both forms; a miss just reloads.
+  _isPlayingTheSameChannel(src) {
+    if (!src || !VideoPlayer.playing) return false;
+    const hls = getPlayer();
+    const currentSrc = hls ? hls.url : VideoPlayer.src;
+    if (!currentSrc) return false;
+    if (currentSrc === src) return true;
+    try {
+      return currentSrc === new URL(src, window.location.href).href;
+    } catch (e) {
+      return false;
+    }
+  }
+
   _changeChannel(previousChannel) {
     const channelName = previousChannel?.channelId
       ? previousChannel.channelId
@@ -60,7 +76,8 @@ export default class LiveTVPlayer extends Lightning.Component {
 
           // Update the channel using the matching entry's src
           if (src) {
-            this._updateChannel(src);
+            // Don't restart the stream if this channel is already playing
+            if (!this._isPlayingTheSameChannel(src)) this._updateChannel(src);
             this.fireAncestors('$updateChannelInfo', matchingEntry, singleChannel);
           }
         }
