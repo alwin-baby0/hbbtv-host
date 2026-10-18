@@ -3,6 +3,7 @@ import { IMG_PATH, VIDEO_TYPES, ROUTES } from '../../constants/globalConstants';
 
 const TEXT_PADDING = 25;
 const LIVE_ICON_RIGHT = 140 + 20; // Icon x + w
+const GROW_MARGIN = 20; // Gap kept between a grown card and the rail's right edge
 
 let measureCtx = null;
 // Full (untruncated) text width; Lightning's finalW is already cut by wordWrapWidth/maxLines
@@ -178,8 +179,9 @@ export default class EPGRailItems extends Lightning.Component {
     return this._requiredWidth;
   }
 
-  // Grow to the right by default. Grow to the left only when growing right would push the
-  // card's right edge out of the visible rail, and growing left keeps it fully in view.
+  // Grow to the right by default. If that pushes the card's right edge out of the visible rail,
+  // shift it left only by the hidden amount plus a small margin, never more than the extra width
+  // (= growing fully left) and never past the rail's left edge.
   _applyGrowDirection() {
     const row = this.parent && this.parent.parent;
     if (!row || typeof row._scrollPosition !== 'number') return;
@@ -188,11 +190,15 @@ export default class EPGRailItems extends Lightning.Component {
     // The first item in a row has a (negative) flex paddingLeft that shifts the Wrapper
     const paddingLeft = (this.flex && this.flex._paddingLeft) || 0;
     const cardLeft = row._scrollPosition + this.finalX + paddingLeft;
-    const overflowsRight = cardLeft + this._displayWidth > railWidth;
-    const fitsLeft = cardLeft + this._epgWidth - this._displayWidth >= 0;
-    const growLeft = overflowsRight && fitsLeft;
+    const hiddenRight = cardLeft + this._displayWidth - railWidth;
 
-    this._Wrapper.x = growLeft ? this._epgWidth - this._displayWidth : 0;
+    let shift = 0;
+    if (hiddenRight > 0) {
+      const maxShift = Math.min(this._displayWidth - this._epgWidth, Math.max(cardLeft, 0));
+      shift = Math.min(hiddenRight + GROW_MARGIN, maxShift);
+    }
+
+    this._Wrapper.x = -shift;
   }
 
   // If the card starts left of the visible rail, slide the text (and live icon) right so it
