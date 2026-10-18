@@ -99,7 +99,7 @@ class EPGService extends FetchingService {
       );
 
       const channelsEPGsAll = this.channelsItems.slice(0, EPG_ROWS_PER_FETCH).map((channel) => {
-        return this.getEPG(channel.id);
+        return this.getEPG(channel.id, channel.url);
       });
 
       const epgResultsAll = await Promise.all(channelsEPGsAll);
@@ -135,7 +135,7 @@ class EPGService extends FetchingService {
     );
 
     const channelEPG = channelsEPGs.map(async (channel) => {
-      return this.getEPG(channel.id);
+      return this.getEPG(channel.id, channel.url);
     });
 
     const epgResults = await Promise.all(channelEPG);
