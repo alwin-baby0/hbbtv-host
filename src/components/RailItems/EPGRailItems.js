@@ -178,15 +178,19 @@ export default class EPGRailItems extends Lightning.Component {
     return this._requiredWidth;
   }
 
-  // Grow to the left when the card's right edge is in the right half of the visible rail,
-  // as long as the grown card still fits on the left side.
+  // Grow to the right by default. Grow to the left only when growing right would push the
+  // card's right edge out of the visible rail, and growing left keeps it fully in view.
   _applyGrowDirection() {
     const row = this.parent && this.parent.parent;
     if (!row || typeof row._scrollPosition !== 'number') return;
 
     const railWidth = (row._props && row._props.railWidth) || row.finalW;
-    const rightEdge = this.finalX + row._scrollPosition + this._epgWidth;
-    const growLeft = rightEdge > railWidth / 2 && rightEdge - this._displayWidth >= 0;
+    // The first item in a row has a (negative) flex paddingLeft that shifts the Wrapper
+    const paddingLeft = (this.flex && this.flex._paddingLeft) || 0;
+    const cardLeft = row._scrollPosition + this.finalX + paddingLeft;
+    const overflowsRight = cardLeft + this._displayWidth > railWidth;
+    const fitsLeft = cardLeft + this._epgWidth - this._displayWidth >= 0;
+    const growLeft = overflowsRight && fitsLeft;
 
     this._Wrapper.x = growLeft ? this._epgWidth - this._displayWidth : 0;
   }
