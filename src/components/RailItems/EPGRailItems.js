@@ -103,6 +103,7 @@ export default class EPGRailItems extends Lightning.Component {
       },
     });
     this._applyWidth(this._epgWidth);
+    this._Wrapper.patch({ TitleText: { x: 0 } });
 
     if (currentTime >= startTime && currentTime <= endTime) {
       this._props.isActive = true;
@@ -190,6 +191,28 @@ export default class EPGRailItems extends Lightning.Component {
     this._Wrapper.x = growLeft ? this._epgWidth - this._displayWidth : 0;
   }
 
+  // If the card starts left of the visible rail, slide the text (and live icon) right so it
+  // starts at the rail's left edge, without pushing it past the card's right edge.
+  // Only x/w of the clipping container change, so the text texture is not re-rendered.
+  _shiftTextIntoView() {
+    const row = this.parent && this.parent.parent;
+    if (!row || typeof row._scrollPosition !== 'number') return;
+
+    // The first item in a row has a (negative) flex paddingLeft that shifts the Wrapper
+    const paddingLeft = (this.flex && this.flex._paddingLeft) || 0;
+    const cardLeft = row._scrollPosition + this.finalX + paddingLeft + this._Wrapper.x;
+    const textWidth = Math.min(this._getRequiredWidth(), this._displayWidth);
+    const shift = Math.min(Math.max(-cardLeft, 0), this._displayWidth - textWidth);
+
+    this._setTextShift(shift);
+  }
+
+  _setTextShift(shift) {
+    this._Wrapper.patch({ TitleText: { x: shift, w: this._displayWidth - shift } });
+    const icon = this.tag('Icon');
+    if (icon) icon.x = 140 + shift;
+  }
+
   _focus() {
     // Too narrow to read the full text: grow the visible card while focused.
     // zIndex keeps it on top of the next programs it overlaps.
@@ -198,14 +221,14 @@ export default class EPGRailItems extends Lightning.Component {
     this._displayWidth = isTooNarrow ? requiredWidth : this._epgWidth;
     this._applyWidth(this._displayWidth);
 
-    // The row updates its scroll right after focusing the item, so pick the grow direction
+    // The row updates its scroll right after focusing the item, so position the card and its text
     // in a microtask (after that scroll, before the next frame). The token skips stale callbacks.
     const focusToken = (this._focusToken = (this._focusToken || 0) + 1);
-    if (isTooNarrow) {
-      Promise.resolve().then(() => {
-        if (focusToken === this._focusToken) this._applyGrowDirection();
-      });
-    }
+    Promise.resolve().then(() => {
+      if (focusToken !== this._focusToken) return;
+      if (isTooNarrow) this._applyGrowDirection();
+      this._shiftTextIntoView();
+    });
 
     this._Wrapper.patch({
       zIndex: 200,
@@ -236,6 +259,7 @@ export default class EPGRailItems extends Lightning.Component {
     this._displayWidth = this._epgWidth;
     this._applyWidth(this._epgWidth);
     this._Wrapper.x = 0;
+    this._setTextShift(0);
     this._props.isActive !== true
       ? this._Wrapper.patch({
         zIndex: 1,
