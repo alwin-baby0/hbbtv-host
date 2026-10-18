@@ -1,6 +1,17 @@
 import { Colors, Lightning, Router, Utils, VideoPlayer } from '@lightningjs/sdk';
 import { IMG_PATH, VIDEO_TYPES, ROUTES } from '../../constants/globalConstants';
 
+const TEXT_PADDING = 25;
+const LIVE_ICON_RIGHT = 140 + 20; // Icon x + w
+
+let measureCtx = null;
+// Full (untruncated) text width; Lightning's finalW is already cut by wordWrapWidth/maxLines
+const measureTextWidth = (text, fontSize, fontFace) => {
+  if (!measureCtx) measureCtx = document.createElement('canvas').getContext('2d');
+  measureCtx.font = `${fontSize}px ${fontFace}`;
+  return measureCtx.measureText(text || '').width;
+};
+
 export default class EPGRailItems extends Lightning.Component {
   _props = {
     isActive: false,
@@ -68,32 +79,22 @@ export default class EPGRailItems extends Lightning.Component {
     const width = (durationInMinutes / 60000) * (500 / 60);
 
     this._epgWidth = width - 5;
-
-    const fixedWidth = this._epgWidth > 200 ? this._epgWidth : this._epgWidth;
-    const fixedWordWrapWidth = this._epgWidth > 200 ? this._epgWidth - 20 : this._epgWidth - 50;
+    this._displayWidth = this._epgWidth;
+    this._requiredWidth = null;
 
     this._Wrapper.patch({
-      w: this._epgWidth,
       TitleText: {
-        w: fixedWidth,
         Text: {
-          flexItem: {
-            marginTop: 20,
-            marginLeft: this._epgWidth > 150 ? 25 : 0,
-          },
+          flexItem: { marginTop: 20 },
           text: {
             text: this._props.title,
-            wordWrapWidth: fixedWordWrapWidth,
             maxLines: 1,
             fontSize: 20,
             fontFace: 'Montserrat-SemiBold',
           },
         },
         Time: {
-          flexItem: {
-            marginTop: 5,
-            marginLeft: this._epgWidth > 150 ? 25 : 0,
-          },
+          flexItem: { marginTop: 5 },
           text: {
             text: `${formattedStartTime} - ${formattedEndTime}`,
             fontFace: 'Montserrat-Light',
@@ -101,6 +102,7 @@ export default class EPGRailItems extends Lightning.Component {
         },
       },
     });
+    this._applyWidth(this._epgWidth);
 
     if (currentTime >= startTime && currentTime <= endTime) {
       this._props.isActive = true;
@@ -139,10 +141,76 @@ export default class EPGRailItems extends Lightning.Component {
     }
   }
 
-  _focus() {
+  // Sets the visible card width and the text layout that depends on it.
+  // Only the Wrapper changes; the item's own w (its slot in the grid) stays the same.
+  _applyWidth(width) {
+    const hasPadding = width > 150;
+    const wordWrapWidth =
+      width === this._epgWidth && width > 200 ? width - 20 : width - TEXT_PADDING * 2;
+
     this._Wrapper.patch({
+      w: width,
+      TitleText: {
+        w: width,
+        Text: {
+          flexItem: { marginLeft: hasPadding ? TEXT_PADDING : 0 },
+          text: { wordWrapWidth },
+        },
+        Time: {
+          flexItem: { marginLeft: hasPadding ? TEXT_PADDING : 0 },
+        },
+      },
+    });
+  }
+
+  // Width needed to show the full title, time and (for live programs) the play icon.
+  // Cached per program; reset when props change.
+  _getRequiredWidth() {
+    if (this._requiredWidth == null) {
+      const titleWidth = measureTextWidth(this._props.title, 20, 'Montserrat-SemiBold');
+      const timeWidth = measureTextWidth(this.tag('Time').text.text, 18, 'Montserrat-Light');
+      const textWidth = Math.ceil(Math.max(titleWidth, timeWidth)) + TEXT_PADDING * 2;
+      this._requiredWidth = this._props.isActive
+        ? Math.max(textWidth, LIVE_ICON_RIGHT + TEXT_PADDING)
+        : textWidth;
+    }
+    return this._requiredWidth;
+  }
+
+  // Grow to the left when the card's right edge is in the right half of the visible rail,
+  // as long as the grown card still fits on the left side.
+  _applyGrowDirection() {
+    const row = this.parent && this.parent.parent;
+    if (!row || typeof row._scrollPosition !== 'number') return;
+
+    const railWidth = (row._props && row._props.railWidth) || row.finalW;
+    const rightEdge = this.finalX + row._scrollPosition + this._epgWidth;
+    const growLeft = rightEdge > railWidth / 2 && rightEdge - this._displayWidth >= 0;
+
+    this._Wrapper.x = growLeft ? this._epgWidth - this._displayWidth : 0;
+  }
+
+  _focus() {
+    // Too narrow to read the full text: grow the visible card while focused.
+    // zIndex keeps it on top of the next programs it overlaps.
+    const requiredWidth = this._getRequiredWidth();
+    const isTooNarrow = this._epgWidth < requiredWidth;
+    this._displayWidth = isTooNarrow ? requiredWidth : this._epgWidth;
+    this._applyWidth(this._displayWidth);
+
+    // The row updates its scroll right after focusing the item, so pick the grow direction
+    // in a microtask (after that scroll, before the next frame). The token skips stale callbacks.
+    const focusToken = (this._focusToken = (this._focusToken || 0) + 1);
+    if (isTooNarrow) {
+      Promise.resolve().then(() => {
+        if (focusToken === this._focusToken) this._applyGrowDirection();
+      });
+    }
+
+    this._Wrapper.patch({
+      zIndex: 200,
       texture: Lightning.Tools.getRoundRect(
-        this._epgWidth,
+        this._displayWidth,
         95,
         8,
         4,
@@ -164,8 +232,13 @@ export default class EPGRailItems extends Lightning.Component {
     }
 
     this._lastClickedItemId = null;
+    this._focusToken = (this._focusToken || 0) + 1;
+    this._displayWidth = this._epgWidth;
+    this._applyWidth(this._epgWidth);
+    this._Wrapper.x = 0;
     this._props.isActive !== true
       ? this._Wrapper.patch({
+        zIndex: 1,
         texture: Lightning.Tools.getRoundRect(
           this._epgWidth,
           95,
@@ -177,6 +250,7 @@ export default class EPGRailItems extends Lightning.Component {
         ),
       })
       : this._Wrapper.patch({
+        zIndex: 1,
         texture: Lightning.Tools.getRoundRect(
           this._epgWidth,
           95,
