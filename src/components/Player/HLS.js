@@ -10,11 +10,13 @@ const adUrlPattern = /\/break_\d+\.ts$/i;
 
 function handleUnrecoverableError(player, errorEvent) {
   if (VideoPlayer._consumer) {
-    const deviceType = getDeviceType();
-    deviceType === 'metrological' &&
-      Metrics.error(Metrics.ErrorType.NETWORK, 'Player error', 'Error in the player', true);
-    VideoPlayer._consumer.fire('$videoPlayerError', errorEvent, VideoPlayer.currentTime);
-    VideoPlayer._consumer.fire('$videoPlayerEvent', 'Error', errorEvent, VideoPlayer.currentTime);
+    setTimeout(() => {
+      const deviceType = getDeviceType();
+      deviceType === 'metrological' &&
+        Metrics.error(Metrics.ErrorType.NETWORK, 'Player error', 'Error in the player', true);
+      VideoPlayer._consumer.fire('$videoPlayerError', errorEvent, VideoPlayer.currentTime);
+      VideoPlayer._consumer.fire('$videoPlayerEvent', 'Error', errorEvent, VideoPlayer.currentTime);
+    }, 1000)
   }
   destroyPlayer();
 }
@@ -66,6 +68,33 @@ const onFragmentChanged = (fragment) => {
   }
 };
 
+// Blocked fragments in a row (reset whenever any fragment buffers) before giving up
+const BLOCKED_FRAGMENT_LIMIT = 10;
+
+// Segment request blocked by the browser (e.g. the CDN sends no CORS headers). hls.js doesn't retry
+// these: it marks the fragment as a gap and moves on, so the error never becomes fatal.
+// - FRAG_LOAD_ERROR excludes real #EXT-X-GAP segments (those come as FRAG_GAP)
+// - status 0 while online = blocked (status 0 while offline is retried by hls.js)
+// Not using errorAction.retryCount: it sums errors over all levels and a buffered fragment only
+// resets its own level, so it can accumulate across a long session.
+const isBlockedFragmentError = (data) =>
+  data.details === Hls.ErrorDetails.FRAG_LOAD_ERROR &&
+  data.response?.code === 0 &&
+  navigator.onLine !== false;
+
+const reportBlockedFragment = (videoEl, data) => {
+  if (!VideoPlayer._consumer) return;
+  // Consumers read e.event.code, so pass an event object (not the hls event name)
+  VideoPlayer._consumer.fire(
+    '$videoPlayerError',
+    {
+      videoElement: videoEl,
+      event: { code: 'FRAG_BLOCKED', details: data.details, url: data.frag && data.frag.url },
+    },
+    VideoPlayer.currentTime
+  );
+};
+
 export const loader = (url, videoEl, options = {}) => {
   return new Promise((resolve) => {
     unload(videoEl);
@@ -73,6 +102,13 @@ export const loader = (url, videoEl, options = {}) => {
     if (url.includes('m3u8')) {
       player = createPlayer(options);
       player.autoLevelCapping = options.autoLevelCapping || -1;
+      let blockedFragmentReported = false;
+      let blockedFragmentsInARow = 0;
+
+      // Any buffered fragment means segments are loading again
+      player.on(Hls.Events.FRAG_BUFFERED, () => {
+        blockedFragmentsInARow = 0;
+      });
 
       player.on(Hls.Events.MANIFEST_PARSED, () => {
         const subtitleTracks = getSubtitleTracks();
@@ -86,6 +122,30 @@ export const loader = (url, videoEl, options = {}) => {
       });
 
       player.on(Hls.Events.ERROR, (event, data) => {
+        if (isBlockedFragmentError(data)) {
+          blockedFragmentsInARow++;
+          console.log(
+            `### Blocked fragment ${blockedFragmentsInARow}/${BLOCKED_FRAGMENT_LIMIT}`,
+            '| hls retryCount:',
+            data.errorAction?.retryCount,
+            '| fatal:',
+            data.fatal,
+            '| url:',
+            data.frag && data.frag.url
+          );
+          // Fatal (e.g. no alternate level): hls.js has stopped, so report without waiting for the limit
+          if (
+            !blockedFragmentReported &&
+            (data.fatal || blockedFragmentsInARow >= BLOCKED_FRAGMENT_LIMIT)
+          ) {
+            blockedFragmentReported = true;
+            console.warn('HLS segments blocked (status 0, likely missing CORS):', data.frag && data.frag.url);
+            player && player.stopLoad();
+            reportBlockedFragment(videoEl, data);
+          }
+          return;
+        }
+
         if (data.fatal) {
           handleUnrecoverableError(player, event);
           switch (data.type) {

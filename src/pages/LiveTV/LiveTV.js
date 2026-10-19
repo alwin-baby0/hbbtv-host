@@ -169,7 +169,7 @@ export default class LiveTV extends Lightning.Component {
     });
 
     if (!this.channelUpdateInterval) {
-      this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
+      this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60 * 60000);
     }
   }
 
@@ -341,7 +341,7 @@ export default class LiveTV extends Lightning.Component {
     });
 
     if (!this.channelUpdateInterval) {
-      this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60000);
+      this.channelUpdateInterval = setInterval(() => this.fetchChannels(), 60 * 60000);
     }
   }
 
