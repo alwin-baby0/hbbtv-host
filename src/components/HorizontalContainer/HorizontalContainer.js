@@ -2,11 +2,6 @@ import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
 import { CARD_SIZES, CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
 
-// EPG grid scale (500px per hour) and where the now line sits, matching EPGContainer.setInitialOffset
-const EPG_PX_PER_MINUTE = 8.33;
-const EPG_NOW_X = 750;
-const EPG_NOW_MARGIN = 50;
-
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
     items: [],
@@ -192,28 +187,15 @@ export default class HorizontalContainer extends Lightning.Component {
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
 
-      // Live EPG program: keep the "now" point on screen rather than the program's start,
-      // otherwise a long live program scrolls the grid hours away from the now line
-      const { startTime, endTime } = currentFocus._props || {};
-      const now = Date.now();
-      if (
-        this._props.cardType === CARD_TYPES.EPG_CARD_ITEM &&
-        typeof startTime === 'number' &&
-        startTime <= now &&
-        now <= endTime
-      ) {
-        // The first item in a row is shifted by a (negative) flex paddingLeft when it started before the EPG window
-        const paddingLeft = currentFocus.flex?._paddingLeft || 0;
-        const nowX =
-          elementX + paddingLeft + ((now - startTime) / (1000 * 60)) * EPG_PX_PER_MINUTE;
-        const visibleLeft = -this._scrollPosition;
-        const nowVisible =
-          nowX >= visibleLeft + EPG_NOW_MARGIN && nowX <= visibleLeft + railWidth - EPG_NOW_MARGIN;
-        if (!nowVisible) {
-          this._scrollPosition = EPG_NOW_X - nowX;
-          this.Items.smooth = { x: this._scrollPosition };
+      // Live EPG program already partly on screen: keep the scroll, so a long live program
+      // doesn't scroll the grid back to its start (away from the now line)
+      if (this._props.cardType === CARD_TYPES.EPG_CARD_ITEM) {
+        const { startTime, endTime } = currentFocus._props || {};
+        const now = Date.now();
+        if (startTime <= now && now <= endTime) {
+          const visibleLeft = elementX + (currentFocus.flex?._paddingLeft || 0) + this._scrollPosition;
+          if (visibleLeft < railWidth && visibleLeft + elementW > 0) return;
         }
-        return;
       }
 
       if (isChildLive && elementW > railWidth) {

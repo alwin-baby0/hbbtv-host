@@ -597,6 +597,11 @@ export default class LiveTV extends Lightning.Component {
       },
 
       class EPGS extends this {
+        // Coming into the EPG from the categories or the channel list: land on the live program
+        $enter() {
+          this._EPGData.focusLiveProgram();
+        }
+
         _getFocused() {
           return this._EPGData;
         }
