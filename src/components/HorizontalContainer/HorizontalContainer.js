@@ -2,6 +2,12 @@ import Lightning from '@lightningjs/sdk/src/Lightning';
 import { clamp } from '../../utils/index';
 import { CARD_SIZES, CARD_TYPES, RAIL_TYPES } from '../../constants/globalConstants';
 
+// EPG grid scale (500px per hour), where the now line is placed, and the margin within which it
+// counts as visible. Same values as in EPGContainer.
+const EPG_PX_PER_MINUTE = 8.33;
+const EPG_NOW_X = 750;
+const EPG_NOW_MARGIN = 50;
+
 export default class HorizontalContainer extends Lightning.Component {
   _props = {
     items: [],
@@ -187,14 +193,23 @@ export default class HorizontalContainer extends Lightning.Component {
       const elementX = currentFocus.finalX;
       const elementW = currentFocus.finalW;
 
-      // Live EPG program already partly on screen: keep the scroll, so a long live program
-      // doesn't scroll the grid back to its start (away from the now line)
-      if (this._props.cardType === CARD_TYPES.EPG_CARD_ITEM) {
+      // Live EPG program wider than the rail: the normal logic below would align its start or end
+      // with the rail edge, pushing the now line off screen. Keep the scroll while "now" is visible,
+      // otherwise put "now" where EPGContainer.setInitialOffset puts it.
+      // (A live card that fits uses the normal logic: showing the whole card shows "now" too.)
+      // Both outcomes are stable, so repeated calls (e.g. Lightning's own _focus) change nothing.
+      if (this._props.cardType === CARD_TYPES.EPG_CARD_ITEM && elementW > railWidth) {
         const { startTime, endTime } = currentFocus._props || {};
         const now = Date.now();
         if (startTime <= now && now <= endTime) {
-          const visibleLeft = elementX + (currentFocus.flex?._paddingLeft || 0) + this._scrollPosition;
-          if (visibleLeft < railWidth && visibleLeft + elementW > 0) return;
+          // The first item in a row is shifted by a (negative) flex paddingLeft
+          const cardLeft = elementX + (currentFocus.flex?._paddingLeft || 0) + this._scrollPosition;
+          const nowOnScreen = cardLeft + ((now - startTime) / 60000) * EPG_PX_PER_MINUTE;
+          if (nowOnScreen < EPG_NOW_MARGIN || nowOnScreen > railWidth - EPG_NOW_MARGIN) {
+            this._scrollPosition += EPG_NOW_X - nowOnScreen;
+            this.Items.smooth = { x: this._scrollPosition };
+          }
+          return;
         }
       }
 

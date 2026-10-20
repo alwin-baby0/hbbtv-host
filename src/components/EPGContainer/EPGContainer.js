@@ -2,11 +2,10 @@ import { EPGService } from '../../Services';
 import { getClosestElementIndexEPG } from '../../utils/focus';
 import VerticalContainer from '../VerticalContainer/VerticalContainer';
 
-// EPG grid scale (500px per hour), where setInitialOffset puts the now line, and the margin
-// within which the now line counts as visible
+// EPG grid scale (500px per hour) and where setInitialOffset puts the now line.
+// Same values as in HorizontalContainer.
 const EPG_PX_PER_MINUTE = 8.33;
 const EPG_NOW_X = 750;
-const EPG_NOW_MARGIN = 50;
 
 export default class EPGContainer extends VerticalContainer {
   static _template() {
@@ -49,23 +48,21 @@ export default class EPGContainer extends VerticalContainer {
     return index;
   }
 
-  // Rows share one horizontal scroll, so the now line is at the same x in every row
-  _isNowVisible(row) {
-    const nowX = ((Date.now() - EPGService.startTime) / (1000 * 60)) * EPG_PX_PER_MINUTE;
-    const railWidth = (row._props && row._props.railWidth) || row.finalW;
-    const visibleX = nowX + row._scrollPosition;
-    return visibleX >= EPG_NOW_MARGIN && visibleX <= railWidth - EPG_NOW_MARGIN;
-  }
-
-  // Lands on a row's live program. Only scrolls the grid (all rows) when the now line is off screen;
-  // otherwise just moves the row's focus index, without touching other rows.
+  // Lands on a row's live program (Up/Down, or entering the EPG). The row's scroll correction keeps
+  // the live card and the now line in view; all rows are only scrolled when that correction moves.
   focusLiveProgram(row = this.Items.children[this._focusedIndex]) {
     if (!row || !row.Items) return false;
     const liveIndex = this._getLiveIndex(row);
     if (liveIndex < 0) return false;
 
-    if (!this._isNowVisible(row)) this.setInitialOffset();
     row._focusedIndex = liveIndex;
+    // Run the row's scroll correction once here and sync all rows if it moved. Its result is stable,
+    // so the later _focus() calls on the row (VerticalContainer's and Lightning's) change nothing.
+    const scrollBefore = row._scrollPosition;
+    row._reCalibrateScroll();
+    if (row._scrollPosition !== scrollBefore) {
+      this.$horizontalContainerIndexChange(liveIndex, row._scrollPosition);
+    }
     return true;
   }
 
