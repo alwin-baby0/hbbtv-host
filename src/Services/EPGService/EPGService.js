@@ -38,7 +38,11 @@ class EPGService extends FetchingService {
     // Reset state variables to ensure a fresh start
     // this.channelsItems = null;
     this.filteredChannelsItems = null; // Reset filtered channels
+    // Start the channel list from the first page again; otherwise every LiveTV visit
+    // (e.g. returning from the screensaver) loads the next page, until one comes back empty
+    this.page = 1;
     this.epgs = [];
+    this.epgsAll = [];
     this.pointer = 1;
     this.stripesFetched = 0;
     this.genreItems = [];

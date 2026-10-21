@@ -133,11 +133,11 @@ export default class LiveTV extends Lightning.Component {
     this.fireAncestors('$setNavbarVisibility', true);
 
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
-    this.$updateChannel(
-      EPGService.filteredChannelsItems[
+    // filteredChannelsItems is null if the channel request returned nothing
+    const focusedChannel = EPGService.filteredChannelsItems?.[
       this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
-      ]
-    );
+    ];
+    if (focusedChannel) this.$updateChannel(focusedChannel);
 
     this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
       const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
@@ -305,11 +305,11 @@ export default class LiveTV extends Lightning.Component {
     this.fireAncestors('$setNavbarVisibility', true);
 
     eventTrackPayload(EVENT_NAMES.BROWSE_CHANNELS, 4);
-    this.$updateChannel(
-      EPGService.filteredChannelsItems[
+    // filteredChannelsItems is null if the channel request returned nothing
+    const focusedChannel = EPGService.filteredChannelsItems?.[
       this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
-      ]
-    );
+    ];
+    if (focusedChannel) this.$updateChannel(focusedChannel);
 
     this.createTimeArray(EPGService.startTime, EPGService.endTime).then((result) => {
       const calculatedPixels = (result.startMinutes / 60) * this.pixelPerHour;
@@ -414,11 +414,10 @@ export default class LiveTV extends Lightning.Component {
       this.focusedState === 'EPGS' &&
         this._EPGData.Items.children[this._EPGData._focusedIndex]._focus();
 
-      this.$updateChannel(
-        EPGService.filteredChannelsItems[
+      const focusedChannel = EPGService.filteredChannelsItems?.[
         this._Channels._focusedIndex !== -1 ? this._Channels._focusedIndex : 0
-        ]
-      );
+      ];
+      if (focusedChannel) this.$updateChannel(focusedChannel);
     }
   }
 
