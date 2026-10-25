@@ -108,6 +108,7 @@ export const setupKeys = (deviceType) => {
         10009: 'Back',
         461: 'Back',
         8: 'Back',
+        4: 'Back',
         17: 'Back',
         27: 'Back',
         10182: 'Exit',
