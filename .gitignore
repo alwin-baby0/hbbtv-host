@@ -16,3 +16,4 @@ lg
 /hbbTv/assets/**
 /hbbTv/static/**
 /scripts/remote-debug/logs/**
+/scripts/partner-build/partner-build.js
