@@ -16,7 +16,7 @@ export function capitalizeFirstLetter(str) {
 }
 
 export async function hideElementsAndCheckCmp() {
-  await checkCMP()
+  if (!window.hbbtvApp) await checkCMP()
   hideElements()
 }
 

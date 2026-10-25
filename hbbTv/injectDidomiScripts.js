@@ -143,13 +143,34 @@ if (isDidomiEnabled) {
 
       Didomi.on('notice.hidden', function () {
         safeSignalReady();
+        setTimeout(() => {
+          window.didomiVisible = false;
+          document.dispatchEvent(new CustomEvent('didomiVisibilityChanged', { detail: { visible: false } }));
+        })
       });
 
       Didomi.on('consent.changed', function () {
         safeSignalReady();
       });
+
+      Didomi.on('notice.shown', function () {
+        window.didomiVisible = true;
+        document.dispatchEvent(new CustomEvent('didomiVisibilityChanged', { detail: { visible: true } }));
+      });
     } else {
       safeSignalReady();
+
+      Didomi.on('notice.hidden', function () {
+        setTimeout(() => {
+          window.didomiVisible = false;
+          document.dispatchEvent(new CustomEvent('didomiVisibilityChanged', { detail: { visible: false } }));
+        })
+      });
+
+      Didomi.on('notice.shown', function () {
+        window.didomiVisible = true;
+        document.dispatchEvent(new CustomEvent('didomiVisibilityChanged', { detail: { visible: true } }));
+      });
     }
   });
 
